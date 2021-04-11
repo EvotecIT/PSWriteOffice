@@ -1,5 +1,5 @@
 ﻿Clear-Host
-Import-Module .\PSOffice.psd1 -Force
+Import-Module .\PSWriteOffice.psd1 -Force
 
 $Document = New-OfficeWord -FilePath $PSScriptRoot\Documents\Test.docx
 

@@ -1,4 +1,4 @@
-@{
+﻿@{
     AliasesToExport      = @()
     Author               = 'Przemyslaw Klys'
     CmdletsToExport      = @()
@@ -18,8 +18,8 @@
     }
     RequiredModules      = @(@{
             ModuleVersion = '0.0.198'
-            Guid          = 'ee272aa8-baaa-4edf-9f45-b6d6f7d844fe'
             ModuleName    = 'PSSharedGoods'
+            Guid          = 'ee272aa8-baaa-4edf-9f45-b6d6f7d844fe'
         })
-    RootModule           = 'PSOffice.psm1'
+    RootModule           = 'PSWriteOffice.psm1'
 }

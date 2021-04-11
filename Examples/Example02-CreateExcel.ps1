@@ -1,8 +1,8 @@
 ﻿Clear-Host
-Import-Module .\PSOffice.psd1 -Force
+Import-Module .\PSWriteOffice.psd1 -Force
 
 #$Excel = New-OfficeExcel -FilePath $PSScriptRoot\Documents\Excel.xlsx
-$Excel = New-OfficeExcel -FilePath "C:\Support\GitHub\PSOffice\Examples\Documents\pswriteexcel_cell.xlsx"
+$Excel = New-OfficeExcel -FilePath "C:\Support\GitHub\PSWriteOffice\Examples\Documents\pswriteexcel_cell.xlsx"
 
 #$WorkSheet = $Excel.Worksheets.Add('Contacts3')
 
