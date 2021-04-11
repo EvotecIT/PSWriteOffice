@@ -1,4 +1,4 @@
-﻿function New-OfficeWordDocument {
+﻿function New-OfficeWord {
     [cmdletBinding()]
     param(
         [string] $FilePath

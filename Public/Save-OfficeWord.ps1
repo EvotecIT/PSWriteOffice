@@ -1,4 +1,4 @@
-﻿function Save-OfficeWordDocument {
+﻿function Save-OfficeWord {
     [cmdletBinding()]
     param(
         [alias('WordDocument')] $Document,
