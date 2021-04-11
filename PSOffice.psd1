@@ -6,7 +6,7 @@
     CompatiblePSEditions = @('Desktop', 'Core')
     Copyright            = '(c) 2011 - 2021 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description          = 'Simple project to create Microsoft Word in PowerShell without having Office installed.'
-    FunctionsToExport    = @('Add-OfficeExcelWorkSheet', 'New-OfficePowerPoint', 'New-OfficeWord', 'New-OfficeWordText', 'Save-OfficeExcel', 'Save-OfficePowerPoint', 'Save-OfficeWord')
+    FunctionsToExport    = @('Add-OfficeExcelWorkSheet', 'New-OfficeExcel', 'New-OfficePowerPoint', 'New-OfficeWord', 'New-OfficeWordText', 'Save-OfficeExcel', 'Save-OfficePowerPoint', 'Save-OfficeWord')
     GUID                 = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
     ModuleVersion        = '0.0.1'
     PowerShellVersion    = '5.1'
