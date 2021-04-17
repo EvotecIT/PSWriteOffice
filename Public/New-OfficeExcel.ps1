@@ -1,22 +1,55 @@
 ﻿function New-OfficeExcel {
     [cmdletBinding()]
     param(
+        [scriptblock] $ExcelContent,
         [Parameter(Mandatory)][string] $FilePath,
         [switch] $Template,
         [nullable[bool]] $RecalculateAllFormulas,
-        [ClosedXML.Excel.XLEventTracking] $EventTracking
+        [ClosedXML.Excel.XLEventTracking] $EventTracking,
+        [switch] $Show,
+        [switch] $Save
     )
+    if ($ExcelContent) {
+        $Script:OfficeTrackerExcel = [ordered] @{}
+    }
 
-    if ($FilePath) {
-        if (Test-Path -LiteralPath $FilePath) {
-            Write-Warning "New-OfficeExcel - File $FilePath already exists. Loading up."
+    if (Test-Path -LiteralPath $FilePath) {
+        Write-Warning -Message "New-OfficeExcel - File $FilePath already exists. Loading up."
+        try {
             $WorkBook = [ClosedXML.Excel.XLWorkbook]::new($FilePath)
-            $WorkBook | Add-Member -MemberType NoteProperty -Name 'OpenType' -Value 'Existing' -Force
-        } else {
-            $WorkBook = [ClosedXML.Excel.XLWorkbook]::new()
-            $WorkBook | Add-Member -MemberType NoteProperty -Name 'OpenType' -Value 'New' -Force
+        } catch {
+            # lets clean up
+            $Script:OfficeTrackerExcel = $null
+            if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                throw
+            } else {
+                Write-Warning -Message "New-OfficeExcel - File $FilePath returned error: $($_.Exception.Message)"
+                return
+            }
         }
-        $WorkBook | Add-Member -MemberType NoteProperty -Name 'FilePath' -Value $FilePath -Force
+        $WorkBook | Add-Member -MemberType NoteProperty -Name 'OpenType' -Value 'Existing' -Force
+    } else {
+        $WorkBook = [ClosedXML.Excel.XLWorkbook]::new()
+        $WorkBook | Add-Member -MemberType NoteProperty -Name 'OpenType' -Value 'New' -Force
+    }
+    $WorkBook | Add-Member -MemberType NoteProperty -Name 'FilePath' -Value $FilePath -Force
+
+    # Lets execute what user wanted to execute
+    if ($ExcelContent) {
+        $Script:OfficeTrackerExcel['WorkBook'] = $WorkBook
+        $Script:OfficeTrackerExcel['OpenType'] = 'Existing'
+        $ExecutedContent = & $ExcelContent
+        $ExecutedContent
+    }
+
+    # This means we use all in one cmdlet, so we're saving
+    if ($ExcelContent) {
+        if ($Save) {
+            Save-OfficeExcel -Show:$Show.IsPresent-FilePath $FilePath -Excel $WorkBook
+        }
+        # lets clean up
+        $Script:OfficeTrackerExcel = $null
+    } else {
         $WorkBook
     }
 }
