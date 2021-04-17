@@ -2,8 +2,42 @@
 Import-Module .\PSWriteOffice.psd1 -Force
 
 #$Excel = New-OfficeExcel -FilePath $PSScriptRoot\Documents\Excel.xlsx
-$Excel = New-OfficeExcel -FilePath "C:\Support\GitHub\PSWriteOffice\Examples\Documents\pswriteexcel_cell.xlsx"
+#$Excel = Get-OfficeExcel -FilePath "C:\Support\GitHub\PSWriteOffice\Examples\Documents\Excel1.xlsx"
+$Excel = New-OfficeExcel -FilePath "C:\Support\GitHub\PSWriteOffice\Examples\Documents\Excel1.xlsx"
 
+#Add-OfficeExcelWorkSheet -Excel $Excel -WorksheetName 'Contact1' -Suppress
+#Add-OfficeExcelWorkSheet -Excel $Excel -WorksheetName 'Contact2' -Suppress
+
+$Worksheet = Get-OfficeExcelWorkSheet -Excel $Excel -Name 'Contact1'
+#Get-OfficeExcelWorkSheet -Excel $Excel -Index 2 -NameOnly | Format-Table
+
+#$Worksheet = Add-OfficeExcelWorkSheet -Excel $Excel -WorksheetName 'Contact3'
+
+$Strings = @(
+    'Test'
+    'Test2'
+    'Test3'
+)
+$Objects = @(
+    [PSCustomObject] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+    [PSCustomObject] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+)
+
+$Objects2 = @(
+    [ordered] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+    [ordered] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+)
+
+
+
+#$Worksheet.Cell(1, 1).Value = 'FromStrings'
+#$Worksheet.Range(1, 3, 1, 8).Merge().AddToNamed('Titles')
+#$Worksheet.Cell(2, 1).InsertData($Strings)
+#$Worksheet.cell(10, 1).InsertTable($table)
+
+
+
+#Add-OfficeExcelWorkSheet -Excel $Excel
 #$WorkSheet = $Excel.Worksheets.Add('Contacts3')
 
 <#
@@ -14,24 +48,10 @@ $WorkSheet.Cell("A2").FormulaA1 = "=MID(A1, 7, 5)";
 #>
 
 
-$WorkSheet = $Excel.Worksheets | Where-Object { $_.Name -eq 'Sheet1' }
+#$WorkSheet = $Excel.Worksheets | Where-Object { $_.Name -eq 'Sheet1' }
 
 
-foreach ($Cell in $WorkSheet.Cells()) {
-    if ($Cell.FormulaA1) {
-        if ($Cell.FormulaA1.StartsWith('_xlfn.FORMULATEXT')) {
-            $Cell.FormulaA1 = $Cell.CachedValue
-        }
-    }
-}
+New-OfficeExcelTable -DataTable $Objects -Worksheet $Worksheet -Row 30 -Column 5
+New-OfficeExcelTable -DataTable $Objects2 -Worksheet $Worksheet -Row 40 -Column 5
 
-$WorkSheet.RecalculateAllFormulas()
-
-#$WorkSheet.Cell('E1') | Format-Table *
-#$WorkSheet.Cell('E1').FormulaA1 = $WorkSheet.Cell('E1').CachedValue
-
-$WorkSheet.cell('C1').Value = 30.5
-$WorkSheet.RecalculateAllFormulas()
-
-$WorkSheet.CellsUsed('E') | Format-Table
-#Save-OfficeExcel -Excel $Excel -Show
+Save-OfficeExcel -Excel $Excel -Show
