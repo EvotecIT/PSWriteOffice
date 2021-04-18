@@ -18,7 +18,7 @@
         if ($WhenExists -eq 'Stop') {
             Write-Warning -Message "New-OfficeExcel - File $FilePath already exists. Terminating."
             # lets clean up
-            Remove-Variable -Name $Script:OfficeTrackerExcel
+            $Script:OfficeTrackerExcel = $null
             return
         } elseif ($WhenExists -eq 'Overwrite') {
             $WorkBook = [ClosedXML.Excel.XLWorkbook]::new()
@@ -29,7 +29,7 @@
                 $WorkBook = [ClosedXML.Excel.XLWorkbook]::new($FilePath)
             } catch {
                 # lets clean up
-                Remove-Variable -Name $Script:OfficeTrackerExcel
+                $Script:OfficeTrackerExcel = $null
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
                     throw
                 } else {
