@@ -13,12 +13,11 @@
         $Excel = $Script:OfficeTrackerExcel['WorkBook']
     }
     if ($Excel.Worksheets.Contains($WorksheetName)) {
+        Write-Warning -Message "New-OfficeExcelWorkSheet - WorkSheet with name $WorksheetName already exists. Using..."
         $Worksheet = $Excel.Worksheets.Worksheet($WorksheetName)
     } else {
         $Worksheet = $Excel.Worksheets.Add($WorksheetName)
     }
-
-
     if ($Worksheet) {
         if ($ExcelContent) {
             # This is to support inline mode
@@ -33,11 +32,9 @@
             } else {
                 $Worksheet
             }
+            if (-not $Suppress) {
+                $Worksheet
+            }
         }
-        if (-not $Suppress) {
-            $Worksheet
-        }
-    } else {
-
     }
 }
