@@ -7,27 +7,38 @@
         [nullable[bool]] $RecalculateAllFormulas,
         [ClosedXML.Excel.XLEventTracking] $EventTracking,
         [switch] $Show,
-        [switch] $Save
+        [switch] $Save,
+        [validateSet('Reuse', 'Overwrite', 'Stop')][string] $WhenExists = 'Reuse'
     )
     if ($ExcelContent) {
         $Script:OfficeTrackerExcel = [ordered] @{}
     }
 
     if (Test-Path -LiteralPath $FilePath) {
-        Write-Warning -Message "New-OfficeExcel - File $FilePath already exists. Loading up."
-        try {
-            $WorkBook = [ClosedXML.Excel.XLWorkbook]::new($FilePath)
-        } catch {
+        if ($WhenExists -eq 'Stop') {
+            Write-Warning -Message "New-OfficeExcel - File $FilePath already exists. Terminating."
             # lets clean up
-            $Script:OfficeTrackerExcel = $null
-            if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                throw
-            } else {
-                Write-Warning -Message "New-OfficeExcel - File $FilePath returned error: $($_.Exception.Message)"
-                return
+            Remove-Variable -Name $Script:OfficeTrackerExcel
+            return
+        } elseif ($WhenExists -eq 'Overwrite') {
+            $WorkBook = [ClosedXML.Excel.XLWorkbook]::new()
+            $WorkBook | Add-Member -MemberType NoteProperty -Name 'OpenType' -Value 'New' -Force
+        } elseif ($WhenExists -eq 'ReUse') {
+            Write-Warning -Message "New-OfficeExcel - File $FilePath already exists. Loading up."
+            try {
+                $WorkBook = [ClosedXML.Excel.XLWorkbook]::new($FilePath)
+            } catch {
+                # lets clean up
+                Remove-Variable -Name $Script:OfficeTrackerExcel
+                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                    throw
+                } else {
+                    Write-Warning -Message "New-OfficeExcel - File $FilePath returned error: $($_.Exception.Message)"
+                    return
+                }
             }
+            $WorkBook | Add-Member -MemberType NoteProperty -Name 'OpenType' -Value 'Existing' -Force
         }
-        $WorkBook | Add-Member -MemberType NoteProperty -Name 'OpenType' -Value 'Existing' -Force
     } else {
         $WorkBook = [ClosedXML.Excel.XLWorkbook]::new()
         $WorkBook | Add-Member -MemberType NoteProperty -Name 'OpenType' -Value 'New' -Force
