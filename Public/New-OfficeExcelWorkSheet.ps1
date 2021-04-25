@@ -33,14 +33,13 @@
             $ExecutedContent
             $Script:OfficeTrackerExcel['WorkSheet'] = $null
         } else {
-            # Standalone approach
-            if ($NameOnly) {
-                $Worksheet.Name
-            } else {
-                $Worksheet
-            }
             if (-not $Suppress) {
-                $Worksheet
+                # Standalone approach
+                if ($NameOnly) {
+                    $Worksheet.Name
+                } else {
+                    $Worksheet
+                }
             }
         }
     }
