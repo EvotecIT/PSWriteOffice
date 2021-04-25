@@ -2,12 +2,13 @@
     [cmdletBinding()]
     param(
         [Array] $DataTable,
-        [Parameter(Mandatory)][int] $Row,
-        [Parameter(Mandatory)][int] $Column,
-        $Worksheet,
-        [switch] $AllProperties,
+        [Object] $Worksheet,
+        [alias('Row')][int] $StartRow = 1,
+        [alias('Column')][int] $StartCell = 1,
         [switch] $ReturnObject,
         [ClosedXML.Excel.XLTransposeOptions] $Transpose,
+        [switch] $AllProperties,
+        [switch] $SkipHeader,
         [switch] $ShowRowStripes,
         [switch] $ShowColumnStripes,
         [switch] $DisableAutoFilter,
@@ -22,90 +23,65 @@
         $WorkSheet = $Script:OfficeTrackerExcel['WorkSheet']
     }
 
-    [System.Data.DataTable] $Table = [System.Data.DataTable]::new('MyTable')
-    if ($DataTable.Count -eq 0) {
-        return
-    }
-
-    if ($DataTable[0] -isnot [System.Collections.IDictionary]) {
-        $Properties = Select-Properties -Objects $DataTable -AllProperties:$AllProperties -Property $IncludeProperty -ExcludeProperty $ExcludeProperty
-    } else {
+    $Cell = $StartCell - 1
+    # Table header
+    if ($DataTable[0] -is [System.Collections.IDictionary]) {
         $Properties = 'Name', 'Value'
+    } else {
+        $Properties = Select-Properties -Objects $DataTable -AllProperties:$AllProperties -Property $IncludeProperty -ExcludeProperty $ExcludeProperty
     }
-
-    foreach ($Property in $Properties) {
-        $null = $table.Columns.Add($Property, [string])
-    }
-
-    # Add data
-    foreach ($Object in $DataTable) {
-        if ($Object -isnot [System.Collections.IDictionary]) {
-            $Values = foreach ($Property in $Properties) {
-                $Value = $Object.$Property
-                if ($Value.Count -gt 1) {
-                    $Value = $Value -join ','
-                }
-                $Value
-            }
-            try {
-                $null = $table.Rows.Add($Values)
-            } catch {
-                Write-Warning -Message "New-OfficeExcelTable - Error when adding values to row $($_.Exception.Message). Skipping."
-            }
-        } else {
-            foreach ($Entry in $Object.Keys) {
-                $null = $table.Rows.Add($Entry, $Object[$Entry])
-            }
+    # Add Table Header (Title)
+    if (-not $SkipHeader) {
+        foreach ($Property in $Properties) {
+            $Cell++
+            New-OfficeExcelValue -Row $StartRow -Value $Property -Column $Cell -Worksheet $Worksheet
         }
     }
-
-    try {
-        $TableOutput = $Worksheet.cell($Row, $Column).InsertTable($table)
-    } catch {
-        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-            throw
-        } else {
-            Write-Warning -Message "New-OfficeExcelTable - Error occured: $($_.Exception.Message)"
+    # Table content
+    if ($DataTable[0] -is [System.Collections.IDictionary]) {
+        # By Ordered Dictionary
+        #$Row = 1 # we already added header
+        foreach ($Data in $DataTable) {
+            foreach ($Key in $Data.Keys) {
+                $Row++
+                New-OfficeExcelValue -Row ($Row + $StartRow) -Value $Key -Column ($StartCell) -Worksheet $Worksheet
+                New-OfficeExcelValue -Row ($Row + $StartRow) -Value $Data[$Key] -Column ($StartCell + 1) -Worksheet $Worksheet
+            }
         }
+        $LastCell = $Worksheet.Row($StartRow + $Row).Cell($Cell)
+    } elseif ($Properties -eq '*') {
+        foreach ($Data in $DataTable) {
+            $Row++
+            New-OfficeExcelValue -Row ($Row + $StartRow) -Value $Data -Column ($StartCell) -Worksheet $Worksheet
+        }
+        $LastCell = $Worksheet.Row($StartRow + $Row).Cell($StartCell)
+    } else {
+        # By PSCustomObject
+        for ($Row = 1; $Row -le $DataTable.Count; $Row++) {
+            $Cell = $StartCell - 1
+            foreach ($Property in $Properties) {
+                $Cell++
+                New-OfficeExcelValue -Row ($Row + $StartRow) -Value $DataTable[$Row - 1].$Property -Column $Cell -Worksheet $Worksheet
+            }
+        }
+        $LastCell = $Worksheet.Row($StartRow - 1 + $Row).Cell($Cell)
     }
-    if ($null -ne $Transpose) {
-        $TableOutput.Transpose($Transpose)
-    }
-    if ($AutoFilter) {
-        $TableOutput.InitializeAutoFilter()
-    }
-    if ($ShowColumnStripes) {
-        $TableOutput.ShowColumnStripes = $true
-    }
-    if ($ShowRowStripes) {
-        $TableOutput.ShowRowStripes = $true
-    }
-    if ($DisableAutoFilter) {
-        $TableOutput.ShowAutoFilter = $false
-    }
-    if ($ShowTotalsRow) {
-        $TableOutput.ShowsTotalRow = $true
-    }
-    if ($null -ne $Theme) {
-        $TableOutput.Theme = $Theme
-    }
-    if ($EmphasizeFirstColumn) {
-        $TableOutput.EmphasizeFirstColumn = $true
-    }
-    if ($EmphasizeLastColumn) {
-        $TableOutput.EmphasizeLastColumn = $true
-    }
-    if ($HideHeaderRow) {
-        $TableOutput.ShowHeaderRow = $false
-    }
-    if ($ReturnObject) {
-        $TableOutput
-    }
-}
+    $FirstCell = $Worksheet.Row($StartRow).Cell($StartCell)
+    $Range = $Worksheet.Range($FirstCell.Address, $LastCell.Address)
+    $TableOutput = $Range.CreateTable()
 
-$Script:ScriptBlockThemes = {
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-    [ClosedXML.Excel.XLTableTheme]::GetAllThemes() | Where-Object { $_ -like "*$wordToComplete*" }
+    $SplatOptions = @{
+        Table                = $TableOutput
+        Transpose            = $Transpose
+        ShowRowStripes       = $ShowRowStripes.IsPresent
+        ShowColumnStripes    = $ShowColumnStripes.IsPresent
+        DisableAutoFilter    = $DisableAutoFilter.IsPresent
+        HideHeaderRow        = $HideHeaderRow.IsPresent
+        ShowTotalsRow        = $ShowTotalsRow.IsPresent
+        EmphasizeFirstColumn = $EmphasizeFirstColumn.IsPresent
+        EmphasizeLastColumn  = $EmphasizeLastColumn.IsPresent
+        Theme                = $Theme
+    }
+    Remove-EmptyValue -Hashtable $SplatOptions
+    New-OfficeExcelTableOptions @SplatOptions
 }
-
-Register-ArgumentCompleter -CommandName New-OfficeExcelTable -ParameterName Theme -ScriptBlock $Script:ScriptBlockThemes
