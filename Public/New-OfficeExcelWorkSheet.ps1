@@ -5,7 +5,8 @@
         [alias('ExcelDocument')][ClosedXML.Excel.XLWorkbook]$Excel,
         [parameter(Mandatory)][alias('Name')][string] $WorksheetName,
         [ValidateSet("Replace", "Skip", "Rename")][string] $Option = 'Skip',
-        [switch] $Suppress
+        [switch] $Suppress,
+        [string] $TabColor
     )
     $Worksheet = $null
     # This decides between inline and standalone usage of the command
@@ -26,6 +27,9 @@
         $Worksheet = $Excel.Worksheets.Add($WorksheetName)
     }
     if ($Worksheet) {
+        if ($TabColor) {
+            Set-OfficeExcelWorkSheetStyle -TabColor $TabColor -Worksheet $Worksheet
+        }
         if ($ExcelContent) {
             # This is to support inline mode
             $Script:OfficeTrackerExcel['WorkSheet'] = $Worksheet
@@ -44,3 +48,5 @@
         }
     }
 }
+
+Register-ArgumentCompleter -CommandName New-OfficeExcelWorkSheet -ParameterName TabColor -ScriptBlock $Script:ScriptBlockColors

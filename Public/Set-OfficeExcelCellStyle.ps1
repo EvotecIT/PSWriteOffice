@@ -1,4 +1,4 @@
-﻿function Set-OfficeExcelValueStyle {
+﻿function Set-OfficeExcelCellStyle {
     [cmdletBinding()]
     param(
         $Worksheet,

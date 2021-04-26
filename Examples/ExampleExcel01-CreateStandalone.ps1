@@ -11,6 +11,9 @@ if ($Cell) {
     Write-Color "Good" -Color Green
 }
 
+# A tab color to WorkSheet
+Set-OfficeExcelWorkSheetStyle -TabColor Red -WorkSheetName 'Contact1' -Excel $Excel
+
 New-OfficeExcelValue -Row 1 -Column 1 -Value 'Test1' -Worksheet $Worksheet
 New-OfficeExcelValue -Row 1 -Column 2 -Value 'Test2' -Worksheet $Worksheet
 New-OfficeExcelValue -Row 1 -Column 3 -Value 'Test3' -Worksheet $Worksheet

@@ -6,7 +6,7 @@
     CompatiblePSEditions = @('Desktop', 'Core')
     Copyright            = '(c) 2011 - 2021 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description          = 'Experimental PowerShell Module to create and edit Microsoft Word, Microsoft Excel, and Microsoft PowerPoint documents without having Microsoft Office installed.'
-    FunctionsToExport    = @('Export-OfficeExcel', 'Get-OfficeExcel', 'Get-OfficeExcelValue', 'Get-OfficeExcelWorkSheet', 'New-OfficeExcel', 'New-OfficeExcelTable', 'New-OfficeExcelTableOptions', 'New-OfficeExcelValue', 'New-OfficeExcelWorkSheet', 'New-OfficePowerPoint', 'New-OfficeWord', 'New-OfficeWordText', 'Save-OfficeExcel', 'Save-OfficePowerPoint', 'Save-OfficeWord', 'Set-OfficeExcelValueStyle')
+    FunctionsToExport    = @('Export-OfficeExcel', 'Get-OfficeExcel', 'Get-OfficeExcelValue', 'Get-OfficeExcelWorkSheet', 'New-OfficeExcel', 'New-OfficeExcelTable', 'New-OfficeExcelTableOptions', 'New-OfficeExcelValue', 'New-OfficeExcelWorkSheet', 'New-OfficePowerPoint', 'New-OfficeWord', 'New-OfficeWordText', 'Save-OfficeExcel', 'Save-OfficePowerPoint', 'Save-OfficeWord', 'Set-OfficeExcelCellStyle', 'Set-OfficeExcelWorkSheetStyle')
     GUID                 = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
     ModuleVersion        = '0.0.1'
     PowerShellVersion    = '5.1'
