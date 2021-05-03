@@ -1,14 +1,16 @@
 ﻿function New-OfficeWordText {
     [cmdletBinding()]
     param(
-        $Document,
+        [DocumentFormat.OpenXml.Packaging.WordprocessingDocument] $Document,
+        [DocumentFormat.OpenXml.Wordprocessing.Paragraph] $Paragraph,
         [string[]]$Text,
         [DocumentFormat.OpenXml.SpaceProcessingModeValues] $Space = [DocumentFormat.OpenXml.SpaceProcessingModeValues]::Preserve,
         [nullable[bool][]] $Bold,
         [nullable[bool][]] $Italic,
         [nullable[bool][]] $Underline,
         [string[]] $Color,
-        [DocumentFormat.OpenXml.Wordprocessing.JustificationValues] $Alignment
+        [DocumentFormat.OpenXml.Wordprocessing.JustificationValues] $Alignment,
+        [switch] $ReturnObject
     )
     for ($T = 0; $T -le $Text.Count; $T++) {
         $WordText = [DocumentFormat.OpenXml.Wordprocessing.Text] @{
@@ -48,18 +50,23 @@
             }
         }
 
-        $Run.AppendChild($RunProperties)
-        $Run.AppendChild($WordText)
+        $null = $Run.AppendChild($RunProperties)
+        $null = $Run.AppendChild($WordText)
         if (-not $Paragraph) {
             $Paragraph = [DocumentFormat.OpenXml.Wordprocessing.Paragraph]::new()
             if ($ParagraphProperties) {
                 # Paragraph properties apply only on first run
-                $Paragraph.Append($ParagraphProperties)
+                $null = $Paragraph.Append($ParagraphProperties)
             }
-            $Paragraph.Append($Run)
-            $Paragraph = $Document.MainDocumentPart.Document.Body.AppendChild($Paragraph)
+            $null = $Paragraph.Append($Run)
+            if ($Document) {
+                $null = $Document.MainDocumentPart.Document.Body.AppendChild($Paragraph)
+            }
         } else {
-            $Paragraph = $Paragraph.AppendChild($Run)
+            $null = $Paragraph.Append($Run)
         }
+    }
+    if ($ReturnObject) {
+        , $Paragraph
     }
 }
