@@ -3,8 +3,11 @@
     param(
         [alias('WordDocument')][DocumentFormat.OpenXml.Packaging.WordprocessingDocument] $Document,
         [switch] $Show,
-        [string] $FilePath
+        [string] $FilePath,
+        [int] $Retry = 2
     )
+    $Saved = $false
+    $Count = 0
     if (-not $Document.FilePath -and -not $FilePath) {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw
@@ -13,28 +16,42 @@
             return
         }
     }
-    if ($FilePath) {
-        # File path was given so we use SaveAs
-        try {
-            $NewDocument = $Document.SaveAs($FilePath)
-        } catch {
-            if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                throw
-            } else {
-                Write-Warning "Save-OfficeWord - Couldn't save $FilePath. Error: $($_.Exception.Message)"
-            }
-        }
-    } else {
-        $FilePath = $Document.FilePath
-        if (-not $Document.AutoSave) {
+    while ($Count -le $Retry -and $Saved -eq $false) {
+        $Count++
+        if ($FilePath) {
+            # File path was given so we use SaveAs
             try {
-                $Document.Save()
+                $NewDocument = $Document.SaveAs($FilePath)
+                $Saved = $true
             } catch {
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
                     throw
                 } else {
                     Write-Warning "Save-OfficeWord - Couldn't save $FilePath. Error: $($_.Exception.Message)"
                 }
+            }
+
+        } else {
+            $FilePath = $Document.FilePath
+            if (-not $Document.AutoSave) {
+                try {
+                    $Document.Save()
+                    $Saved = $true
+                } catch {
+                    if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                        throw
+                    } else {
+                        Write-Warning "Save-OfficeWord - Couldn't save $FilePath. Error: $($_.Exception.Message)"
+                    }
+                }
+            }
+        }
+        if (-not $Saved) {
+            if ($Retry -ge $Count) {
+                $FilePath = [io.path]::GetTempFileName().Replace('.tmp', '.docx')
+                Write-Warning -Message "Save-OfficeWord - Couldn't save using provided file name, retrying with $FilePath"
+            } else {
+                Write-Warning -Message "Save-OfficeWord - Couldn't save using provided file name. Run out of retries ($Count / $Retry)."
             }
         }
     }
