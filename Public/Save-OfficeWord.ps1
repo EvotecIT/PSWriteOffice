@@ -6,6 +6,10 @@
         [string] $FilePath,
         [int] $Retry = 2
     )
+    if (-not $Document) {
+        Write-Warning "Save-OfficeWord - Couldn't save Word Document. Document is null."
+        return
+    }
     $Saved = $false
     $Count = 0
     if (-not $Document.FilePath -and -not $FilePath) {
