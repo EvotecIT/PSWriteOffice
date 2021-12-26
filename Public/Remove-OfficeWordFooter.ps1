@@ -6,6 +6,10 @@
     try {
         [OfficeImo.Footers]::RemoveFooters($Document)
     } catch {
-        Write-Warning -Message "Remove-OfficeWordFooter - Couldn't remove footer. Error: $($_.Exception.Message)"
+        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+            throw
+        } else {
+            Write-Warning -Message "Remove-OfficeWordFooter - Couldn't remove footer. Error: $($_.Exception.Message)"
+        }
     }
 }
