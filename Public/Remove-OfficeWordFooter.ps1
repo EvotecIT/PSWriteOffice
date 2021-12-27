@@ -4,7 +4,7 @@
         [DocumentFormat.OpenXml.Packaging.WordprocessingDocument] $Document
     )
     try {
-        [OfficeImo.Footers]::RemoveFooters($Document)
+        [OfficeIMO.Word.Footers]::RemoveFooters($Document)
     } catch {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw

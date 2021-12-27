@@ -4,7 +4,7 @@
         [DocumentFormat.OpenXml.Packaging.WordprocessingDocument] $Document
     )
     try {
-        [OfficeImo.Headers]::RemoveHeaders($Document)
+        [OfficeIMO.Word.Headers]::RemoveHeaders($Document)
     } catch {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw

@@ -10,7 +10,7 @@
     while ($Count -le $Retry -and $Saved -eq $false) {
         $Count++
         try {
-            $WordDocument = [DocumentFormat.OpenXml.Packaging.WordprocessingDocument]::Create($FilePath, [DocumentFormat.OpenXml.WordprocessingDocumentType]::Document, $AutoSave.IsPresent)
+            $WordDocument = [OfficeImo.Word.WordDocument]::Create($FilePath, $AutoSave.IsPresent)
             $Saved = $true
         } catch {
             if ($PSBoundParameters.ErrorAction -eq 'Stop') {
@@ -29,9 +29,6 @@
             }
         }
     }
-    $null = $WordDocument.AddMainDocumentPart();
-    $WordDocument.MainDocumentPart.Document = [DocumentFormat.OpenXml.Wordprocessing.Document]::new()
-    $WordDocument.MainDocumentPart.Document.Body = [DocumentFormat.OpenXml.Wordprocessing.Body]::new()
     $WordDocument | Add-Member -Name 'FilePath' -Value $FilePath -Force -MemberType NoteProperty
-    $WordDocument #.MainDocumentPart.Document
+    $WordDocument
 }
