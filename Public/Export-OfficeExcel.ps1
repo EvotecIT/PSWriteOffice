@@ -46,7 +46,7 @@
                 }
                 Remove-EmptyValue -Hashtable $SplatOfficeExcelTable
                 New-OfficeExcelTable @SplatOfficeExcelTable #-DataTable $Data -Row $Row -Column $Column -AllProperties:$AllProperties -AutoFilter -Transpose $Transpose
-            }
+            } -Option Replace
         } -Show:$Show.IsPresent -Save
     }
 }
