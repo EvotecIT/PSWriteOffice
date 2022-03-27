@@ -47,25 +47,10 @@ Locale: en-US
 ### [New-OfficeExcelWorkSheet](New-OfficeExcelWorkSheet.md)
 {{ Fill in the Description }}
 
-### [New-OfficePowerPoint](New-OfficePowerPoint.md)
-{{ Fill in the Description }}
-
 ### [New-OfficeWord](New-OfficeWord.md)
 {{ Fill in the Description }}
 
 ### [New-OfficeWordTable](New-OfficeWordTable.md)
-{{ Fill in the Description }}
-
-### [New-OfficeWordTableBorder](New-OfficeWordTableBorder.md)
-{{ Fill in the Description }}
-
-### [New-OfficeWordTableLayout](New-OfficeWordTableLayout.md)
-{{ Fill in the Description }}
-
-### [New-OfficeWordTableLook](New-OfficeWordTableLook.md)
-{{ Fill in the Description }}
-
-### [New-OfficeWordTableStyle](New-OfficeWordTableStyle.md)
 {{ Fill in the Description }}
 
 ### [New-OfficeWordText](New-OfficeWordText.md)
@@ -78,9 +63,6 @@ Locale: en-US
 {{ Fill in the Description }}
 
 ### [Save-OfficeExcel](Save-OfficeExcel.md)
-{{ Fill in the Description }}
-
-### [Save-OfficePowerPoint](Save-OfficePowerPoint.md)
 {{ Fill in the Description }}
 
 ### [Save-OfficeWord](Save-OfficeWord.md)

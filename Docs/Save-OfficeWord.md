@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Save-OfficeWord [[-Document] <WordprocessingDocument>] [-Show] [[-FilePath] <String>] [[-Retry] <Int32>]
+Save-OfficeWord [[-Document] <WordDocument>] [-Show] [[-FilePath] <String>] [[-Retry] <Int32>]
  [<CommonParameters>]
 ```
 
@@ -35,7 +35,7 @@ PS C:\> {{ Add example code here }}
 {{ Fill Document Description }}
 
 ```yaml
-Type: WordprocessingDocument
+Type: WordDocument
 Parameter Sets: (All)
 Aliases: WordDocument
 

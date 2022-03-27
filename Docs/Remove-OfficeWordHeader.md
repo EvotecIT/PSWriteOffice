@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Remove-OfficeWordHeader [[-Document] <WordprocessingDocument>] [<CommonParameters>]
+Remove-OfficeWordHeader [[-Document] <WordDocument>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,7 +34,7 @@ PS C:\> {{ Add example code here }}
 {{ Fill Document Description }}
 
 ```yaml
-Type: WordprocessingDocument
+Type: WordDocument
 Parameter Sets: (All)
 Aliases:
 

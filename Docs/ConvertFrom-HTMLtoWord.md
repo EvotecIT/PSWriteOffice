@@ -8,30 +8,61 @@ schema: 2.0.0
 # ConvertFrom-HTMLtoWord
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Converts HTML input to Microsoft Word Document
 
 ## SYNTAX
 
+### HTML (Default)
 ```
-ConvertFrom-HTMLtoWord [-FilePath] <String> [-HTML] <String> [-Show] [<CommonParameters>]
+ConvertFrom-HTMLtoWord -OutputFile <String> -SourceHTML <String> [-Show] [<CommonParameters>]
+```
+
+### HTMLFile
+```
+ConvertFrom-HTMLtoWord -OutputFile <String> -FileHTML <String> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Converts HTML input to Microsoft Word Document
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
+```
+$Objects = @(
 ```
 
-{{ Add example description here }}
+\[PSCustomObject\] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+    \[PSCustomObject\] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+)
+
+New-HTML {
+    New-HTMLText -Text 'This is a test', ' another test' -FontSize 30pt
+    New-HTMLTable -DataTable $Objects -Simplify
+} -Online -FilePath $PSScriptRoot\Documents\Test.html
+
+ConvertFrom-HTMLToWord -OutputFile $PSScriptRoot\Documents\TestHTML.docx -FileHTML $PSScriptRoot\Documents\Test.html -Show
+
+### EXAMPLE 2
+```
+$Objects = @(
+```
+
+\[PSCustomObject\] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+\[PSCustomObject\] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+)
+
+$Test = New-HTML {
+    New-HTMLText -Text 'This is a test', ' another test' -FontSize 30pt
+    New-HTMLTable -DataTable $Objects -simplify
+} -Online
+
+ConvertFrom-HTMLToWord -OutputFile $PSScriptRoot\Documents\TestHTML.docx -HTML $Test -Show
 
 ## PARAMETERS
 
-### -FilePath
-{{ Fill FilePath Description }}
+### -OutputFile
+Path to the file to save converted HTML
 
 ```yaml
 Type: String
@@ -39,38 +70,53 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 0
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -HTML
-{{ Fill HTML Description }}
+### -FileHTML
+Input HTML loaded straight from file
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: HTMLFile
+Aliases: InputFile
 
 Required: True
-Position: 1
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SourceHTML
+Input HTML loaded from string
+
+```yaml
+Type: String
+Parameter Sets: HTML
+Aliases: HTML
+
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Show
-{{ Fill Show Description }}
+Once conversion ends show the resulting document
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -80,11 +126,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
+General notes
 
 ## RELATED LINKS

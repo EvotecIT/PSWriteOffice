@@ -13,10 +13,9 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-New-OfficeWordText [[-Document] <WordprocessingDocument>] [[-Paragraph] <Paragraph>] [[-Text] <String[]>]
- [[-Space] <SpaceProcessingModeValues>] [[-Bold] <Nullable`1[]>] [[-Italic] <Nullable`1[]>]
- [[-Underline] <Nullable`1[]>] [[-Color] <String[]>] [[-Alignment] <JustificationValues>] [-ReturnObject]
- [<CommonParameters>]
+New-OfficeWordText [[-Document] <WordDocument>] [[-Paragraph] <WordParagraph>] [[-Text] <String[]>]
+ [[-Bold] <Nullable`1[]>] [[-Italic] <Nullable`1[]>] [[-Underline] <Nullable`1[]>] [[-Color] <String[]>]
+ [[-Alignment] <JustificationValues>] [-ReturnObject] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -43,7 +42,7 @@ Aliases:
 Accepted values: Left, Start, Center, Right, End, Both, MediumKashida, Distribute, NumTab, HighKashida, LowKashida, ThaiDistribute
 
 Required: False
-Position: 8
+Position: 7
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -58,7 +57,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 4
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -73,7 +72,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 7
+Position: 6
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -83,7 +82,7 @@ Accept wildcard characters: False
 {{ Fill Document Description }}
 
 ```yaml
-Type: WordprocessingDocument
+Type: WordDocument
 Parameter Sets: (All)
 Aliases:
 
@@ -103,7 +102,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 5
+Position: 4
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -113,7 +112,7 @@ Accept wildcard characters: False
 {{ Fill Paragraph Description }}
 
 ```yaml
-Type: Paragraph
+Type: WordParagraph
 Parameter Sets: (All)
 Aliases:
 
@@ -134,22 +133,6 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Space
-{{ Fill Space Description }}
-
-```yaml
-Type: SpaceProcessingModeValues
-Parameter Sets: (All)
-Aliases:
-Accepted values: Default, Preserve
-
-Required: False
-Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -179,7 +162,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 6
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
