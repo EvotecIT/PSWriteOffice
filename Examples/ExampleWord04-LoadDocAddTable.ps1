@@ -11,6 +11,7 @@ $DataTable = @(
     [PSCustomObject] @{ Test = 3; DateTime = (Get-Date).AddDays(1); TimeSpan = (New-TimeSpan -Minutes 10); TestString = 'Nope' }
 )
 
+# Not working yet
 New-OfficeWordTable -DataTable $DataTable -TableLayout Autofit
 
 Save-OfficeWord -Document $Document -Show -FilePath $PSScriptRoot\Documents\Doc1Updated.docx

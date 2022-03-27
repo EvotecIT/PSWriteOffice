@@ -1,9 +1,9 @@
-﻿Clear-Host
+﻿#Clear-Host
 Import-Module .\PSWriteOffice.psd1 -Force
 
 $Document = New-OfficeWord -FilePath $PSScriptRoot\Documents\Test.docx
 
-New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bold' -Bold $null, $true -Underline $null, $true -Space Preserve, Preserve
+New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bold' -Bold $null, $true -Underline Dash, $null
 
 New-OfficeWordText -Document $Document -Text 'This is a test, very big test', 'ooops' -Color Blue, Gold -Alignment Right
 
