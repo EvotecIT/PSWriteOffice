@@ -14,6 +14,7 @@ if ($AssemblyFolders.BaseName -contains 'Standard') {
         $Assembly = @( Get-ChildItem -Path $PSScriptRoot\Lib\Default\*.dll -ErrorAction SilentlyContinue )
     }
 }
+# [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object Location | Sort-Object -Property FullName | Select-Object -Property FullName, Location, GlobalAssemblyCache, IsFullyTrusted | Out-GridView
 $FoundErrors = @(
     Foreach ($Import in @($Assembly)) {
         try {
@@ -28,11 +29,15 @@ $FoundErrors = @(
             #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
         } catch {
             Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
-            $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
-            foreach ($E in $LoaderExceptions) {
-                Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
+            if ($_.Exception.Message -like "*Assembly with same name is already loaded") {
+                # we ignore it, because it's already being used from installed modules
+            } else {
+                $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
+                foreach ($E in $LoaderExceptions) {
+                    Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
+                }
+                $true
             }
-            $true
             #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
         }
     }
