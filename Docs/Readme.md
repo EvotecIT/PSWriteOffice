@@ -12,65 +12,65 @@ Locale: en-US
 
 ## PSWriteOffice Cmdlets
 ### [Close-OfficeWord](Close-OfficeWord.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [ConvertFrom-HTMLtoWord](ConvertFrom-HTMLtoWord.md)
-{{ Fill in the Description }}
+Converts HTML input to Microsoft Word Document
 
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Get-OfficeExcel](Get-OfficeExcel.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Get-OfficeExcelValue](Get-OfficeExcelValue.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Get-OfficeExcelWorkSheet](Get-OfficeExcelWorkSheet.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Get-OfficeWord](Get-OfficeWord.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [New-OfficeExcel](New-OfficeExcel.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [New-OfficeExcelTable](New-OfficeExcelTable.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [New-OfficeExcelTableOptions](New-OfficeExcelTableOptions.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [New-OfficeExcelValue](New-OfficeExcelValue.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [New-OfficeExcelWorkSheet](New-OfficeExcelWorkSheet.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [New-OfficeWord](New-OfficeWord.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [New-OfficeWordTable](New-OfficeWordTable.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [New-OfficeWordText](New-OfficeWordText.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Remove-OfficeWordFooter](Remove-OfficeWordFooter.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Remove-OfficeWordHeader](Remove-OfficeWordHeader.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Save-OfficeExcel](Save-OfficeExcel.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Save-OfficeWord](Save-OfficeWord.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Set-OfficeExcelCellStyle](Set-OfficeExcelCellStyle.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Set-OfficeExcelWorkSheetStyle](Set-OfficeExcelWorkSheetStyle.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
