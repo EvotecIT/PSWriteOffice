@@ -21,7 +21,7 @@
         }
         if (-not $Saved) {
             if ($Retry -ge $Count) {
-                $FilePath = [io.path]::GetTempFileName().Replace('.tmp', '.docx')
+                $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "$($([System.IO.Path]::GetRandomFileName()).Split('.')[0]).docx")
                 Write-Warning -Message "New-OfficeWord - Couldn't save using provided file name, retrying with $FilePath"
             } else {
                 Write-Warning -Message "New-OfficeWord - Couldn't save using provided file name. Run out of retries ($Count / $Retry)."
@@ -29,6 +29,5 @@
             }
         }
     }
-    $WordDocument | Add-Member -Name 'FilePath' -Value $FilePath -Force -MemberType NoteProperty
     $WordDocument
 }

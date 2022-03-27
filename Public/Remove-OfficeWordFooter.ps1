@@ -1,10 +1,10 @@
 ﻿function Remove-OfficeWordFooter {
     [cmdletBinding()]
     param(
-        [DocumentFormat.OpenXml.Packaging.WordprocessingDocument] $Document
+        [OfficeIMO.Word.WordDocument] $Document
     )
     try {
-        [OfficeIMO.Word.Footers]::RemoveFooters($Document)
+        [OfficeIMO.Word.WordFooter]::RemoveFooters($Document)
     } catch {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw

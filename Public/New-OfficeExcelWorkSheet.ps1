@@ -21,8 +21,20 @@
     }
 
     if ($Excel.Worksheets.Contains($WorksheetName)) {
-        Write-Warning -Message "New-OfficeExcelWorkSheet - WorkSheet with name $WorksheetName already exists. Using..."
-        $Worksheet = $Excel.Worksheets.Worksheet($WorksheetName)
+        if ($Option -eq 'Skip') {
+            Write-Warning -Message "New-OfficeExcelWorkSheet - WorkSheet with name $WorksheetName already exists. Skipping..."
+            return
+        } elseif ($Option -eq 'Replace') {
+            Write-Warning -Message "New-OfficeExcelWorkSheet - WorkSheet with name $WorksheetName already exists. Replacing..."
+            $Excel.Worksheets.Worksheet($WorksheetName).Delete()
+            $Worksheet = $Excel.Worksheets.Add($WorksheetName)
+        } elseif ($Option -eq 'Rename') {
+            $NewName = "Sheet" + (Get-RandomStringName -Size 6)
+            Write-Warning -Message "New-OfficeExcelWorkSheet - WorkSheet with name $WorksheetName already exists. Renaming to $NewName..."
+            # $Worksheet = $Excel.Worksheets.Worksheet($WorksheetName)
+            $WorkSheetName = $NewName
+            $Worksheet = $Excel.Worksheets.Add($WorksheetName)
+        }
     } else {
         $Worksheet = $Excel.Worksheets.Add($WorksheetName)
     }

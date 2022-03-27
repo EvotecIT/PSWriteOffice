@@ -1,10 +1,18 @@
 ﻿function Remove-OfficeWordHeader {
     [cmdletBinding()]
     param(
-        [DocumentFormat.OpenXml.Packaging.WordprocessingDocument] $Document
+        [OfficeIMO.Word.WordDocument] $Document
     )
     try {
-        [OfficeIMO.Word.Headers]::RemoveHeaders($Document)
+        if ($Document) {
+            [OfficeIMO.Word.WordHeader]::RemoveHeaders($Document)
+        } else {
+            if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                throw "Couldn't remove footer. Document not provided."
+            } else {
+                Write-Warning -Message "Remove-OfficeWordHeader - Couldn't remove footer. Document not provided."
+            }
+        }
     } catch {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw
