@@ -1,83 +1,57 @@
 ﻿function New-OfficeWordTable {
     [cmdletBinding()]
     param(
+        [OfficeIMO.Word.WordDocument] $Document,
         [Array] $DataTable,
-        [DocumentFormat.OpenXml.Wordprocessing.TableLayoutValues] $TableLayout,
-        [switch] $SkipHeader
+        [OfficeIMO.Word.WordTableStyle] $Style = [OfficeIMO.Word.WordTableStyle]::TableGrid,
+        [string] $TableLayout,
+        [switch] $SkipHeader,
+        [switch] $Suppress
     )
 
-
-    
-
-    return
+    if (-not $Document) {
+        Write-Warning -Message "New-OfficeWordTable - Document is not specified. Please provide valid document."
+        return
+    }
 
     if ($DataTable[0] -is [System.Collections.IDictionary]) {
         $Properties = 'Name', 'Value'
     } else {
         $Properties = Select-Properties -Objects $DataTable -AllProperties:$AllProperties -Property $IncludeProperty -ExcludeProperty $ExcludeProperty
     }
+    $CountRows = 0
+    $CountColumns = 0
 
-   # $Table = [DocumentFormat.OpenXml.Wordprocessing.Table]::new()
-    $Table = [DocumentFormat.OpenXml.Wordprocessing.TableGrid]::new()
-
-    $TableProperties = [DocumentFormat.OpenXml.Wordprocessing.TableProperties]::new()
-
-
-    #TextWrappingValues tableTextWrapping = TextWrappingValues.Around;
-
-    #$TableProperties.TableLayout = [DocumentFormat.OpenXml.Wordprocessing.TableLayout] @{
-    #    Type = $TableLayout #[DocumentFormat.OpenXml.Wordprocessing.TableLayoutValues]::Autofit
-    #}
-    # $TableProperties.TableWidth = [DocumentFormat.OpenXml.Wordprocessing.TableWidth] @{
-    # Width = "0"
-    #    Type = [DocumentFormat.OpenXml.Wordprocessing.TableWidthUnitValues]::Auto
-    # }
-
-
-   # $TextWrapping = [DocumentFormat.OpenXml.Wordprocessing.TextWrappingValues]::Auto
-    #$tableProperties.Append($TextWrapping);
-    #$tableProperties.Append($TableLook);
-    #$TableProperties.Append($TableStyle);
-   # $TableStyle = [DocumentFormat.OpenXml.Wordprocessing.TableStyle]::new()
-   # $TableStyle.Val = "LightShading-Accent1"
-   # $TableStyle.Val = "TableGrid"
-
-
-   # $TableProperties.TableStyle = New-OfficeWordTableStyle
-   # $TableProperties.TableStyle = $TableStyle
-    # $TableProperties.TableLook = New-OfficeWordTableLook
-    #$TableProperties.TableBorders = New-OfficeWordTableBorder
-
-   # $TableProperties.TableBorders = New-OfficeWordTableBorder
-
-
-
-    #$table.AppendChild($TableProperties)
-
+    $RowsCount = $DataTable.Count
+    $ColumnsCount = $Properties.Count
 
     if (-not $SkipHeader) {
-        $TableRow = [DocumentFormat.OpenXml.Wordprocessing.TableRow]::new()
+        # Since we need header we add additional row
+        $Table = $Document.AddTable($RowsCount + 1, $ColumnsCount, $Style)
+        # Add table header, if we don't explicitly ask for it to be skipped
         foreach ($Property in $Properties) {
-            $TableCell = [DocumentFormat.OpenXml.Wordprocessing.TableCell]::new()
-            $Paragraph = [DocumentFormat.OpenXml.Wordprocessing.Paragraph]::new()
-            $TextProperty = New-OfficeWordText -Paragraph $Paragraph -Text $Property -ReturnObject
-
-
-            $TableCellProperty = [DocumentFormat.OpenXml.Wordprocessing.TableCellProperties]::new()
-
-            $TableCellWidth = [DocumentFormat.OpenXml.Wordprocessing.TableCellWidth]::new()
-            $TableCellWidth.Width = 2400
-            #$TableCellWidth.Type = [DocumentFormat.OpenXml.Wordprocessing.TableWidthUnitValues]::Auto
-            $TableCellProperty.TableCellWidth = $TableCellWidth
-            $TableCellWidth.Type = [DocumentFormat.OpenXml.Wordprocessing.TableWidthUnitValues]::Dxa
-            # new TableCellProperties(new TableCellWidth { Type = TableWidthUnitValues.Auto })
-
-            # $TableCell.Append($TableCellProperty)
-            $TableCell.Append($TextProperty)
-            $TableRow.Append($TableCell)
-
+            $Table.Rows[0].Cells[$CountColumns].Paragraphs[0].Text = $Property
+            $CountColumns += 1
         }
-        $Table.Append($TableRow)
+        $CountRows += 1
+    } else {
+        # No header so less rows
+        $Table = $Document.AddTable($RowsCount, $ColumnsCount, $Style)
+    }
+
+    # add table data
+    foreach ($Row in $DataTable) {
+        $CountColumns = 0
+        foreach ($P in $Properties) {
+            $Table.Rows[$CountRows].Cells[$CountColumns].Paragraphs[0].Text = $Row.$P
+            $CountColumns += 1
+        }
+        $CountRows += 1
+    }
+
+    # return table object
+    if (-not $Suppress) {
+        $Table
     }
 
     <#
@@ -106,5 +80,5 @@
         }
     }
     #>
-    $null = $Document.MainDocumentPart.Document.Body.Append($Table)
+
 }
