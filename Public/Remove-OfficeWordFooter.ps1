@@ -1,7 +1,7 @@
 ﻿function Remove-OfficeWordFooter {
     [cmdletBinding()]
     param(
-        [OfficeIMO.Word.WordDocument] $Document
+        [parameter(Mandatory)][OfficeIMO.Word.WordDocument] $Document
     )
     try {
         [OfficeIMO.Word.WordFooter]::RemoveFooters($Document)

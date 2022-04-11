@@ -1,7 +1,7 @@
 ﻿function Remove-OfficeWordHeader {
     [cmdletBinding()]
     param(
-        [OfficeIMO.Word.WordDocument] $Document
+        [parameter(Mandatory)][OfficeIMO.Word.WordDocument] $Document
     )
     try {
         if ($Document) {
