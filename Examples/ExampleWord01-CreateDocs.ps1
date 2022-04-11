@@ -1,7 +1,7 @@
 ﻿#Clear-Host
 Import-Module .\PSWriteOffice.psd1 -Force
 
-$Document = New-OfficeWord -FilePath $PSScriptRoot\Documents\Test.docx
+$Document = New-OfficeWord -FilePath $PSScriptRoot\Documents\BasicDocument.docx
 
 New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bold' -Bold $null, $true -Underline Dash, $null
 

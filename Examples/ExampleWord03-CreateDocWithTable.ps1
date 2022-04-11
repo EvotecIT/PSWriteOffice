@@ -10,8 +10,12 @@ $DataTable = @(
     [PSCustomObject] @{ Test = 3; DateTime = (Get-Date).AddDays(1); TimeSpan = (New-TimeSpan -Minutes 10); TestString = 'Nope' }
 )
 
-# not working yet
-New-OfficeWordTable -DataTable $DataTable -TableLayout Autofit #-SkipHeader
+New-OfficeWordTable -Document $Document -DataTable $DataTable -TableLayout Autofit -Style GridTable1LightAccent1
+
+New-OfficeWordText -Document $Document
+New-OfficeWordText -Document $Document -Text "Another table below" -Bold $true -Color RedBerry -Alignment Center
+
+New-OfficeWordTable -Document $Document -DataTable $DataTable -TableLayout Autofit -Style GridTable2 -SkipHeader
 
 Save-OfficeWord -Document $Document #-Show
 
