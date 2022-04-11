@@ -50,6 +50,12 @@ Converts HTML input to Microsoft Word Document
 ### [New-OfficeWord](New-OfficeWord.md)
 {{ Fill in the Synopsis }}
 
+### [New-OfficeWordList](New-OfficeWordList.md)
+{{ Fill in the Synopsis }}
+
+### [New-OfficeWordListItem](New-OfficeWordListItem.md)
+{{ Fill in the Synopsis }}
+
 ### [New-OfficeWordTable](New-OfficeWordTable.md)
 {{ Fill in the Synopsis }}
 
