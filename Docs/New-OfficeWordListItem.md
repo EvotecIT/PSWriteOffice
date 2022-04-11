@@ -13,7 +13,9 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-New-OfficeWordListItem [[-Text] <String[]>] [<CommonParameters>]
+New-OfficeWordListItem [[-List] <WordList>] [[-Level] <Int32>] [[-Text] <String[]>] [[-Bold] <Nullable`1[]>]
+ [[-Italic] <Nullable`1[]>] [[-Underline] <Nullable`1[]>] [[-Color] <String[]>]
+ [[-Alignment] <JustificationValues>] [-Suppress] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +32,112 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
+### -Alignment
+{{ Fill Alignment Description }}
+
+```yaml
+Type: JustificationValues
+Parameter Sets: (All)
+Aliases:
+Accepted values: Left, Start, Center, Right, End, Both, MediumKashida, Distribute, NumTab, HighKashida, LowKashida, ThaiDistribute
+
+Required: False
+Position: 7
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Bold
+{{ Fill Bold Description }}
+
+```yaml
+Type: Nullable`1[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Color
+{{ Fill Color Description }}
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 6
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Italic
+{{ Fill Italic Description }}
+
+```yaml
+Type: Nullable`1[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Level
+{{ Fill Level Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -List
+{{ Fill List Description }}
+
+```yaml
+Type: WordList
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Suppress
+{{ Fill Suppress Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Text
 {{ Fill Text Description }}
 
@@ -39,7 +147,22 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 0
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Underline
+{{ Fill Underline Description }}
+
+```yaml
+Type: Nullable`1[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -13,7 +13,8 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-New-OfficeWordList [[-Content] <ScriptBlock>] [[-Document] <WordDocument>] [<CommonParameters>]
+New-OfficeWordList [[-Content] <ScriptBlock>] [[-Document] <WordDocument>] [[-Style] <WordListStyle>]
+ [-Suppress] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,6 +56,37 @@ Aliases:
 
 Required: False
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Style
+{{ Fill Style Description }}
+
+```yaml
+Type: WordListStyle
+Parameter Sets: (All)
+Aliases:
+Accepted values: Bulleted, ArticleSections, Headings111, HeadingIA1, Chapters, BulletedChars, Heading1ai, Headings111Shifted
+
+Required: False
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Suppress
+{{ Fill Suppress Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
