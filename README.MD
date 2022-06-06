@@ -27,3 +27,10 @@ This module long term goal is to fully replace:
 - [PSWriteExcel](https://github.com/EvotecIT/PSWriteExcel) - this module worked cross-platform but DLL maintainer moved to pay project leaving the old DLL unmaintained.
 
 While at this moment this module doesn't expose all DLL features, and some features are strictly available in by using their net methods, the goal is to expose it fully using PowerShell.
+
+This module is built using following libraries:
+- [Open XML SDK for .NET](https://github.com/OfficeDev/Open-XML-SDK) licensed MIT - Microsoft's library doing heavy lifting for all other Open XML projects.
+- [ClosedXML](https://github.com/ClosedXML/ClosedXML) licensed MIT - library for reading and writing Excel files.
+- [HtmlToOpenXml](https://github.com/onizet/html2openxml) licensed MIT - library for converting HTML to Word documents.
+- [OfficeIMO](https://github.com/EvotecIT/OfficeIMO) - library for reading and writing Word and Excel files.
+- [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) licensed Apache 2.0 - library for image processing.
