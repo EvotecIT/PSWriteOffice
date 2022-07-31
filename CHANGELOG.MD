@@ -1,4 +1,8 @@
-﻿#### 0.0.3 - 2022.06.05
+﻿#### 0.0.4 - 2022.07.31
+- Library `OfficeIMO.Word` updated to **0.2.1**
+- Library `ClosedXML` updated to **0.96.0**
+
+#### 0.0.3 - 2022.06.05
 - Library `OfficeIMO.Word` updated to **0.1.5** which fixes
   - Tables styles are now added to Office document created with Microsoft Word
   - It's now possible to manage table cell borders
