@@ -19,7 +19,16 @@
             $WorkBook = [ClosedXML.Excel.XLWorkbook]::new($FilePath, $LoadOptions)
         } else {
             if ($FilePath) {
-                $WorkBook = [ClosedXML.Excel.XLWorkbook]::new($FilePath)
+                try {
+                    $WorkBook = [ClosedXML.Excel.XLWorkbook]::new($FilePath)
+                } catch {
+                    if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                        throw
+                    } else {
+                        Write-Warning -Message "Get-OfficeExcel - Failed to open $FilePath. Eror: $($_.Exception.Message)"
+                        return
+                    }
+                }
             } else {
                 $WorkBook = [ClosedXML.Excel.XLWorkbook]::new()
             }
@@ -27,15 +36,4 @@
         $WorkBook | Add-Member -MemberType NoteProperty -Name 'FilePath' -Value $FilePath -Force
         $WorkBook
     }
-    <#
-    ClosedXML.Excel.XLWorkbook new()
-    ClosedXML.Excel.XLWorkbook new(ClosedXML.Excel.XLEventTracking eventTracking)
-    ClosedXML.Excel.XLWorkbook new(ClosedXML.Excel.LoadOptions loadOptions)
-    ClosedXML.Excel.XLWorkbook new(string file)
-    ClosedXML.Excel.XLWorkbook new(string file, ClosedXML.Excel.XLEventTracking eventTracking)
-    ClosedXML.Excel.XLWorkbook new(string file, ClosedXML.Excel.LoadOptions loadOptions)
-    ClosedXML.Excel.XLWorkbook new(System.IO.Stream stream)
-    ClosedXML.Excel.XLWorkbook new(System.IO.Stream stream, ClosedXML.Excel.XLEventTracking eventTracking)
-    ClosedXML.Excel.XLWorkbook new(System.IO.Stream stream, ClosedXML.Excel.LoadOptions loadOptions)
-    #>
 }
