@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-OfficeExcelValue
+# Get-OfficeExcelWorkSheetData
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Get-OfficeExcelValue [[-Worksheet] <IXLWorksheet>] [[-Row] <Int32>] [[-Column] <Int32>] [<CommonParameters>]
+Get-OfficeExcelWorkSheetData [[-WorkSheet] <IXLWorksheet>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,38 +30,8 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Column
-{{ Fill Column Description }}
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Row
-{{ Fill Row Description }}
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Worksheet
-{{ Fill Worksheet Description }}
+### -WorkSheet
+{{ Fill WorkSheet Description }}
 
 ```yaml
 Type: IXLWorksheet
