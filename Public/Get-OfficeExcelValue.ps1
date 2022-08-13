@@ -1,7 +1,7 @@
 ﻿function Get-OfficeExcelValue {
     [cmdletBinding()]
     param(
-        $Worksheet,
+        [ClosedXML.Excel.IXLWorksheet] $Worksheet,
         [int] $Row,
         [int] $Column
     )
