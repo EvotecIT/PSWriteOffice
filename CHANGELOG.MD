@@ -1,5 +1,6 @@
-﻿#### 0.0.4 - 2022.07.31
-- Library `OfficeIMO.Word` updated to **0.2.1**
+﻿#### 0.0.4 - 2022.08.14
+- Added `Import-OfficeExcel` to import Excel files as PowerShell objects
+- Library `OfficeIMO.Word` updated to **0.2.1** which has many improvements around Tables and basic Charts support
 - Library `ClosedXML` updated to **0.96.0**
 
 #### 0.0.3 - 2022.06.05
