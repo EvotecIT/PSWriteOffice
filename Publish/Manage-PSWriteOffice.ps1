@@ -12,7 +12,7 @@ $Configuration = @{
         FunctionsToExport    = 'Public'
         AliasesToExport      = 'Public'
 
-        LibrariesCore        = 'Lib\Standard'
+        LibrariesCore        = 'Lib\Core'
         LibrariesDefault     = 'Lib\Default'
 
         Manifest             = @{
