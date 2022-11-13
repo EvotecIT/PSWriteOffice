@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Close-OfficeWord [[-Document] <Object>] [<CommonParameters>]
+Close-OfficeWord [[-Document] <WordDocument>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,7 +34,7 @@ PS C:\> {{ Add example code here }}
 {{ Fill Document Description }}
 
 ```yaml
-Type: Object
+Type: WordDocument
 Parameter Sets: (All)
 Aliases: WordDocument
 
