@@ -11,6 +11,11 @@ $List = New-OfficeWordList -Document $Document {
     New-OfficeWordListItem -Text 'Test3' -Level 2
 } -Style Heading1ai
 
+$Document.AddParagraph()
+$Document.AddParagraph()
+$Document.AddParagraph()
+$Document.AddParagraph()
+
 $P1 = New-OfficeWordListItem -Text 'Test4' -List $List
 
 New-OfficeWordText -Document $Document -Text "But lists don't really have to be next to each other" -Bold $true -Alignment Center -Color RoseBud
