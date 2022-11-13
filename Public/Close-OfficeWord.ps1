@@ -1,10 +1,10 @@
 ﻿function Close-OfficeWord {
     [cmdletBinding()]
     param(
-        [alias('WordDocument')] $Document
+        [alias('WordDocument')][OfficeIMO.Word.WordDocument] $Document
     )
     try {
-        $Document.Close()
+        $Document.Dispose()
     } catch {
         if ( $_.Exception.InnerException.Message -eq "Memory stream is not expandable.") {
             # we swallow this exception because it only fails on PS 7.
