@@ -6,8 +6,6 @@
 
     $HeaderNames = [System.Collections.Generic.List[string]]::new()
     foreach ($Cell in $WorkSheet.RangeUsed().Row(1).Cells()) {
-        # There is a bug in closed xml that causes
-        # reported on https://github.com/ClosedXML/ClosedXML/issues/1852
         if ($Cell.InnerText -ne "") {
             $Name = $Cell.InnerText
         } else {
