@@ -9,7 +9,7 @@
     DotNetFrameworkVersion = '4.7.2'
     FunctionsToExport      = @('Close-OfficeWord', 'ConvertFrom-HTMLtoWord', 'Export-OfficeExcel', 'Get-OfficeExcel', 'Get-OfficeExcelValue', 'Get-OfficeExcelWorkSheet', 'Get-OfficeExcelWorkSheetData', 'Get-OfficeWord', 'Import-OfficeExcel', 'New-OfficeExcel', 'New-OfficeExcelTable', 'New-OfficeExcelTableOptions', 'New-OfficeExcelValue', 'New-OfficeExcelWorkSheet', 'New-OfficeWord', 'New-OfficeWordList', 'New-OfficeWordListItem', 'New-OfficeWordTable', 'New-OfficeWordText', 'Remove-OfficeWordFooter', 'Remove-OfficeWordHeader', 'Save-OfficeExcel', 'Save-OfficeWord', 'Set-OfficeExcelCellStyle', 'Set-OfficeExcelWorkSheetStyle')
     GUID                   = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
-    ModuleVersion          = '0.0.4'
+    ModuleVersion          = '0.0.5'
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
@@ -20,7 +20,7 @@
         }
     }
     RequiredModules        = @(@{
-            ModuleVersion = '0.0.233'
+            ModuleVersion = '0.0.251'
             ModuleName    = 'PSSharedGoods'
             Guid          = 'ee272aa8-baaa-4edf-9f45-b6d6f7d844fe'
         })
