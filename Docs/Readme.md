@@ -29,8 +29,14 @@ Converts HTML input to Microsoft Word Document
 ### [Get-OfficeExcelWorkSheet](Get-OfficeExcelWorkSheet.md)
 {{ Fill in the Synopsis }}
 
+### [Get-OfficeExcelWorkSheetData](Get-OfficeExcelWorkSheetData.md)
+{{ Fill in the Synopsis }}
+
 ### [Get-OfficeWord](Get-OfficeWord.md)
 {{ Fill in the Synopsis }}
+
+### [Import-OfficeExcel](Import-OfficeExcel.md)
+Provides a way to converting an Excel file into PowerShell objects.
 
 ### [New-OfficeExcel](New-OfficeExcel.md)
 {{ Fill in the Synopsis }}
