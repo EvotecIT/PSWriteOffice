@@ -6,8 +6,8 @@ $Configuration = @{
         ModuleName           = 'PSWriteOffice'
 
         DirectoryProjects    = 'C:\Support\GitHub'
-        DirectoryModulesCore = "$Env:USERPROFILE\Documents\PowerShell\Modules"
-        DirectoryModules     = "$Env:USERPROFILE\Documents\WindowsPowerShell\Modules"
+        #DirectoryModulesCore = "$Env:USERPROFILE\Documents\PowerShell\Modules"
+        #DirectoryModules     = "$Env:USERPROFILE\Documents\WindowsPowerShell\Modules"
 
         FunctionsToExport    = 'Public'
         AliasesToExport      = 'Public'
