@@ -1,4 +1,11 @@
-﻿#### 0.0.4 - 2022.08.14
+﻿#### 0.0.5 - 2022.11.13
+- Library `OfficeIMO.Word` updated to **0.4.0** which has many improvements
+  - Summary of changes for OfficeIMO 0.4.0 -> https://github.com/EvotecIT/OfficeIMO/releases/tag/v0.4.0
+  - Summary of changes for OfficeIMO 0.3.1 -> https://github.com/EvotecIT/OfficeIMO/releases/tag/v0.3.1
+  - Summary of changes for OfficeIMO 0.3.0 -> https://github.com/EvotecIT/OfficeIMO/releases/tag/v0.3.0
+- Fixes `Close-OfficeWord` to properly dipose of document
+
+#### 0.0.4 - 2022.08.14
 - Added `Import-OfficeExcel` to import Excel files as PowerShell objects
 - Library `OfficeIMO.Word` updated to **0.2.1** which has many improvements around Tables and basic Charts support
 - Library `ClosedXML` updated to **0.96.0**
