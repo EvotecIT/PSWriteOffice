@@ -1,14 +1,32 @@
 ﻿function New-OfficeWordText {
-    [cmdletBinding()]
+    [cmdletBinding(DefaultParameterSetName = 'Document')]
     param(
-        [OfficeIMO.Word.WordDocument] $Document,
-        [OfficeIMO.Word.WordParagraph] $Paragraph,
+        [Parameter(ParameterSetName = 'Document')][OfficeIMO.Word.WordDocument] $Document,
+        [Parameter(ParameterSetName = 'Paragraph')][OfficeIMO.Word.WordParagraph] $Paragraph,
+
+        [Parameter(ParameterSetName = 'Document')]
+        [Parameter(ParameterSetName = 'Paragraph')]
         [string[]]$Text,
+        [Parameter(ParameterSetName = 'Document')]
+        [Parameter(ParameterSetName = 'Paragraph')]
         [nullable[bool][]] $Bold,
+        [Parameter(ParameterSetName = 'Document')]
+        [Parameter(ParameterSetName = 'Paragraph')]
         [nullable[bool][]] $Italic,
+        [Parameter(ParameterSetName = 'Document')]
+        [Parameter(ParameterSetName = 'Paragraph')]
         [nullable[DocumentFormat.OpenXml.Wordprocessing.UnderlineValues][]] $Underline,
+        [Parameter(ParameterSetName = 'Document')]
+        [Parameter(ParameterSetName = 'Paragraph')]
         [string[]] $Color,
+        [Parameter(ParameterSetName = 'Document')]
+        [Parameter(ParameterSetName = 'Paragraph')]
         [DocumentFormat.OpenXml.Wordprocessing.JustificationValues] $Alignment,
+        [Parameter(ParameterSetName = 'Document')]
+        [Parameter(ParameterSetName = 'Paragraph')]
+        [OfficeIMO.Word.WordParagraphStyles] $Style,
+        [Parameter(ParameterSetName = 'Document')]
+        [Parameter(ParameterSetName = 'Paragraph')]
         [switch] $ReturnObject
     )
     if (-not $Paragraph) {
@@ -31,6 +49,9 @@
             if ($ColorToSet) {
                 $Paragraph.Color = $ColorToSet
             }
+        }
+        if ($Style) {
+            $Paragraph.Style = $Style
         }
         if ($Alignment) {
             $Paragraph.ParagraphAlignment = $Alignment
