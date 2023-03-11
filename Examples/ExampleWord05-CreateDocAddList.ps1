@@ -42,4 +42,13 @@ $P3.FontSize = 20
 $List.ListItems | Format-Table
 $List.ListItems[0].Bold = $true
 
+for ($i = 1; $i -le 3; $i++) {
+    New-OfficeWordText -Document $Document -Text "Software Category #$i" -Style Heading1
+    New-OfficeWordList {
+        New-OfficeWordListItem -Text 'Test1'
+        New-OfficeWordListItem -Text 'Test2'
+        New-OfficeWordListItem -Text 'Test3' -Level 2
+    } -Style Headings111 -Document $Document
+}
+
 Save-OfficeWord -Document $Document -Show -FilePath $PSScriptRoot\Documents\Doc1Updated.docx
