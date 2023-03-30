@@ -13,8 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Get-OfficeExcel [-FilePath] <String> [-Template] [[-RecalculateAllFormulas] <Boolean>]
- [[-EventTracking] <XLEventTracking>] [<CommonParameters>]
+Get-OfficeExcel [-FilePath] <String> [-Template] [[-RecalculateAllFormulas] <Boolean>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,22 +29,6 @@ PS C:\> {{ Add example code here }}
 {{ Add example description here }}
 
 ## PARAMETERS
-
-### -EventTracking
-{{ Fill EventTracking Description }}
-
-```yaml
-Type: XLEventTracking
-Parameter Sets: (All)
-Aliases:
-Accepted values: Enabled, Disabled
-
-Required: False
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -FilePath
 {{ Fill FilePath Description }}

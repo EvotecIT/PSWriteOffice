@@ -14,8 +14,7 @@ schema: 2.0.0
 
 ```
 New-OfficeExcel [[-ExcelContent] <ScriptBlock>] [-FilePath] <String> [-Template]
- [[-RecalculateAllFormulas] <Boolean>] [[-EventTracking] <XLEventTracking>] [-Show] [-Save]
- [[-WhenExists] <String>] [<CommonParameters>]
+ [[-RecalculateAllFormulas] <Boolean>] [-Show] [-Save] [[-WhenExists] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,22 +30,6 @@ PS C:\> {{ Add example code here }}
 {{ Add example description here }}
 
 ## PARAMETERS
-
-### -EventTracking
-{{ Fill EventTracking Description }}
-
-```yaml
-Type: XLEventTracking
-Parameter Sets: (All)
-Aliases:
-Accepted values: Enabled, Disabled
-
-Required: False
-Position: 3
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -ExcelContent
 {{ Fill ExcelContent Description }}
@@ -148,7 +131,7 @@ Aliases:
 Accepted values: Reuse, Overwrite, Stop
 
 Required: False
-Position: 4
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -12,10 +12,18 @@ schema: 2.0.0
 
 ## SYNTAX
 
+### Document (Default)
 ```
-New-OfficeWordText [[-Document] <WordDocument>] [[-Paragraph] <WordParagraph>] [[-Text] <String[]>]
- [[-Bold] <Nullable`1[]>] [[-Italic] <Nullable`1[]>] [[-Underline] <Nullable`1[]>] [[-Color] <String[]>]
- [[-Alignment] <JustificationValues>] [-ReturnObject] [<CommonParameters>]
+New-OfficeWordText -Document <WordDocument> [-Text <String[]>] [-Bold <Nullable`1[]>] [-Italic <Nullable`1[]>]
+ [-Underline <Nullable`1[]>] [-Color <String[]>] [-Alignment <JustificationValues>]
+ [-Style <WordParagraphStyles>] [-ReturnObject] [<CommonParameters>]
+```
+
+### Paragraph
+```
+New-OfficeWordText [-Document <WordDocument>] -Paragraph <WordParagraph> [-Text <String[]>]
+ [-Bold <Nullable`1[]>] [-Italic <Nullable`1[]>] [-Underline <Nullable`1[]>] [-Color <String[]>]
+ [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-ReturnObject] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,7 +50,7 @@ Aliases:
 Accepted values: Left, Start, Center, Right, End, Both, MediumKashida, Distribute, NumTab, HighKashida, LowKashida, ThaiDistribute
 
 Required: False
-Position: 7
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -57,7 +65,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -72,7 +80,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 6
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -83,11 +91,23 @@ Accept wildcard characters: False
 
 ```yaml
 Type: WordDocument
-Parameter Sets: (All)
+Parameter Sets: Document
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+```yaml
+Type: WordDocument
+Parameter Sets: Paragraph
 Aliases:
 
 Required: False
-Position: 0
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -102,7 +122,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 4
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -113,11 +133,11 @@ Accept wildcard characters: False
 
 ```yaml
 Type: WordParagraph
-Parameter Sets: (All)
+Parameter Sets: Paragraph
 Aliases:
 
-Required: False
-Position: 1
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -138,6 +158,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Style
+{{ Fill Style Description }}
+
+```yaml
+Type: WordParagraphStyles
+Parameter Sets: (All)
+Aliases:
+Accepted values: Normal, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Heading7, Heading8, Heading9, ListParagraph
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Text
 {{ Fill Text Description }}
 
@@ -147,7 +183,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -162,7 +198,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 5
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
