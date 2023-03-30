@@ -42,6 +42,9 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
         } else if (args.Name.StartsWith("System.IO.Packaging,")) {
             string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "System.IO.Packaging");
             return Assembly.LoadFile(binPath);
+        } else if (args.Name.StartsWith("DocumentFormat.OpenXml,")) {
+            string binPath = Path.Combine(Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location), "DocumentFormat.OpenXml.dll");
+            return Assembly.LoadFile(binPath);
         }
         return null;
     }

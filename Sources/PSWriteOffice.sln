@@ -4,10 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSWriteOffice", "PSWriteOffice\PSWriteOffice.csproj", "{EEF3BFAD-C8A5-474C-BA52-5C20E66EF0F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DF25B35F-296A-4B7C-8E55-975F3BC8C0A4} = {DF25B35F-296A-4B7C-8E55-975F3BC8C0A4}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HtmlToOpenXml", "..\..\html2openxml\src\Html2OpenXml\HtmlToOpenXml.csproj", "{7391AC3E-2156-49C6-A228-15B6A7946FBA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfficeIMO.Word", "..\..\OfficeIMO\OfficeIMO.Word\OfficeIMO.Word.csproj", "{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML", "..\..\ClosedXML\ClosedXML\ClosedXML.csproj", "{DF25B35F-296A-4B7C-8E55-975F3BC8C0A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +32,10 @@ Global
 		{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF25B35F-296A-4B7C-8E55-975F3BC8C0A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF25B35F-296A-4B7C-8E55-975F3BC8C0A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF25B35F-296A-4B7C-8E55-975F3BC8C0A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF25B35F-296A-4B7C-8E55-975F3BC8C0A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
