@@ -3,19 +3,12 @@ Import-Module 'C:\Support\GitHub\PSPublishModule\PSPublishModule.psd1' -Force
 
 $Configuration = @{
     Information = @{
-        ModuleName           = 'PSWriteOffice'
+        ModuleName       = 'PSWriteOffice'
 
-        DirectoryProjects    = 'C:\Support\GitHub'
-        #DirectoryModulesCore = "$Env:USERPROFILE\Documents\PowerShell\Modules"
-        #DirectoryModules     = "$Env:USERPROFILE\Documents\WindowsPowerShell\Modules"
+        LibrariesCore    = 'Lib\Core'
+        LibrariesDefault = 'Lib\Default'
 
-        FunctionsToExport    = 'Public'
-        AliasesToExport      = 'Public'
-
-        LibrariesCore        = 'Lib\Core'
-        LibrariesDefault     = 'Lib\Default'
-
-        Manifest             = @{
+        Manifest         = @{
             # Minimum version of the Windows PowerShell engine required by this module
             PowerShellVersion      = '5.1'
             # prevent using over CORE/PS 7
@@ -52,7 +45,7 @@ $Configuration = @{
             Sort           = 'None'
             FormatCodePSM1 = @{
                 Enabled           = $true
-                RemoveComments    = $true
+                RemoveComments    = $false
                 FormatterSettings = @{
                     IncludeRules = @(
                         'PSPlaceOpenBrace',
@@ -144,31 +137,29 @@ $Configuration = @{
         }
     }
     Steps       = @{
-        <#
-        BuildModule        = @{  # requires Enable to be on to process all of that
-            Enable              = $true
-            DeleteBefore        = $true
-            Merge               = $true
-            LibrarySeparateFile = $false
-            MergeMissing        = $true
-            Releases            = $true
-            ReleasesUnpacked    = $false
-            RefreshPSD1Only     = $false
+        BuildLibraries     = @{
+            Enable        = $true # build once every time nuget gets updated
+            Configuration = 'Release'
+            Framework     = 'netstandard2.0', 'net472'
+            ProjectName   = 'PSWriteOffice'
         }
-        #>
         BuildModule        = @{  # requires Enable to be on to process all of that
-            Enable              = $true
-            DeleteBefore        = $true
-            Merge               = $true
-            MergeMissing        = $true
-            LibrarySeparateFile = $true
-            LibraryDotSource    = $false
-            ClassesDotSource    = $false
-            SignMerged          = $true
-            CreateFileCatalog   = $false # not working
-            Releases            = $true
-            ReleasesUnpacked    = $false
-            RefreshPSD1Only     = $false
+            Enable                 = $true
+            DeleteBefore           = $true
+            Merge                  = $true
+            MergeMissing           = $true
+            LibrarySeparateFile    = $false
+            LibraryDotSource       = $true
+            ClassesDotSource       = $false
+            SignMerged             = $true
+            CreateFileCatalog      = $false # not working
+            Releases               = $true
+            ReleasesUnpacked       = $false
+            RefreshPSD1Only        = $false
+            ResolveBinaryConflicts = @{
+                ProjectName = 'PSWriteOffice'
+            }
+            DebugDLL               = $true
         }
         BuildDocumentation = $true
         ImportModules      = @{
