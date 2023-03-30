@@ -1,24 +1,32 @@
 ﻿function New-OfficeWordText {
     [cmdletBinding(DefaultParameterSetName = 'Document')]
     param(
-        [Parameter(ParameterSetName = 'Document')][OfficeIMO.Word.WordDocument] $Document,
-        [Parameter(ParameterSetName = 'Paragraph')][OfficeIMO.Word.WordParagraph] $Paragraph,
+        [Parameter(ParameterSetName = 'Paragraph')]
+        [Parameter(ParameterSetName = 'Document', Mandatory)][OfficeIMO.Word.WordDocument] $Document,
+
+        [Parameter(ParameterSetName = 'Paragraph', Mandatory)]
+        [OfficeIMO.Word.WordParagraph] $Paragraph,
 
         [Parameter(ParameterSetName = 'Document')]
         [Parameter(ParameterSetName = 'Paragraph')]
         [string[]]$Text,
+
         [Parameter(ParameterSetName = 'Document')]
         [Parameter(ParameterSetName = 'Paragraph')]
         [nullable[bool][]] $Bold,
+
         [Parameter(ParameterSetName = 'Document')]
         [Parameter(ParameterSetName = 'Paragraph')]
         [nullable[bool][]] $Italic,
+
         [Parameter(ParameterSetName = 'Document')]
         [Parameter(ParameterSetName = 'Paragraph')]
         [nullable[DocumentFormat.OpenXml.Wordprocessing.UnderlineValues][]] $Underline,
+
         [Parameter(ParameterSetName = 'Document')]
         [Parameter(ParameterSetName = 'Paragraph')]
         [string[]] $Color,
+
         [Parameter(ParameterSetName = 'Document')]
         [Parameter(ParameterSetName = 'Paragraph')]
         [DocumentFormat.OpenXml.Wordprocessing.JustificationValues] $Alignment,
