@@ -3,8 +3,8 @@
     param(
         [Parameter(Mandatory)][string] $FilePath,
         [switch] $Template,
-        [nullable[bool]] $RecalculateAllFormulas,
-        [ClosedXML.Excel.XLEventTracking] $EventTracking
+        [nullable[bool]] $RecalculateAllFormulas #,
+       # [ClosedXML.Excel.XLEventTracking] $EventTracking
     )
 
     if ($FilePath -and (Test-Path -LiteralPath $FilePath)) {
