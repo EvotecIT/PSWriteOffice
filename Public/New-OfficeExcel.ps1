@@ -5,7 +5,7 @@
         [Parameter(Mandatory)][string] $FilePath,
         [switch] $Template,
         [nullable[bool]] $RecalculateAllFormulas,
-        [ClosedXML.Excel.XLEventTracking] $EventTracking,
+      #  [ClosedXML.Excel.XLEventTracking] $EventTracking,
         [switch] $Show,
         [switch] $Save,
         [validateSet('Reuse', 'Overwrite', 'Stop')][string] $WhenExists = 'Reuse'
