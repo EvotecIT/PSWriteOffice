@@ -20,7 +20,7 @@
         if ($null -eq $Value) {
             $Worksheet.Cell($Row, $Column).Value = ''
         } elseif ($Value.GetType().Name -match $KnownTypes) {
-            $Worksheet.Cell($Row, $Column).Value = $Value
+            $Worksheet.Cell($Row, $Column).Value = [ClosedXML.Excel.XLCellValue]::FromObject($Value)
         } else {
             $Worksheet.Cell($Row, $Column).Value = [string] $Value
         }
