@@ -7,7 +7,7 @@ Save-OfficeWord -Document $Document
 
 $Document = Get-OfficeWord -FilePath $PSScriptRoot\Documents\Doc1.docx
 
-New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bol' -Bold $null, $true -Underline $null, 'Dashed'
+New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bold' -Bold $null, $true -Underline $null, 'Dashed'
 
 $DataTable = @(
     [PSCustomObject] @{ Test = 1; DateTime = (Get-Date); TimeSpan = (New-TimeSpan -Minutes 10); TestString = 'string' }
