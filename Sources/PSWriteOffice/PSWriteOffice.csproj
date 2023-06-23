@@ -12,13 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.101.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
     <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ClosedXML\ClosedXML\ClosedXML.csproj" />
     <ProjectReference Include="..\..\..\html2openxml\src\Html2OpenXml\HtmlToOpenXml.csproj" />
     <ProjectReference Include="..\..\..\OfficeIMO\OfficeIMO.Word\OfficeIMO.Word.csproj" />
   </ItemGroup>

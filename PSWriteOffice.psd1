@@ -13,16 +13,17 @@
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
-            Tags       = @('word', 'docx', 'write', 'PSWord', 'office', 'windows', 'doc', 'pswriteword', 'linux', 'macos')
-            LicenseUri = 'https://github.com/EvotecIT/PSWriteOffice/blob/master/License'
-            ProjectUri = 'https://github.com/EvotecIT/PSWriteOffice'
-            IconUri    = 'https://evotec.xyz/wp-content/uploads/2018/10/PSWriteWord.png'
+            Tags                       = @('word', 'docx', 'write', 'PSWord', 'office', 'windows', 'doc', 'pswriteword', 'linux', 'macos')
+            LicenseUri                 = 'https://github.com/EvotecIT/PSWriteOffice/blob/master/License'
+            IconUri                    = 'https://evotec.xyz/wp-content/uploads/2018/10/PSWriteWord.png'
+            ProjectUri                 = 'https://github.com/EvotecIT/PSWriteOffice'
+            ExternalModuleDependencies = @('Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Management')
         }
     }
     RequiredModules        = @(@{
-            ModuleVersion = '0.0.259'
             ModuleName    = 'PSSharedGoods'
+            ModuleVersion = '0.0.264'
             Guid          = 'ee272aa8-baaa-4edf-9f45-b6d6f7d844fe'
-        })
+        }, 'Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Management')
     RootModule             = 'PSWriteOffice.psm1'
 }
