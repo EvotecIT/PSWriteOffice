@@ -1,6 +1,4 @@
 ﻿Clear-Host
-Import-Module 'C:\Support\GitHub\PSPublishModule\PSPublishModule.psd1' -Force
-
 
 Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
     # Usual defaults as per standard module
@@ -88,13 +86,15 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
         SignModule                        = $true
         MergeModuleOnBuild                = $true
         MergeFunctionsFromApprovedModules = $true
-        CertificateThumbprint             = '36A8A2D0E227D81A2D3B60DCE0CFCF23BEFC343B'
+        CertificateThumbprint             = '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
         ResolveBinaryConflicts            = $true
         ResolveBinaryConflictsName        = 'PSWriteOffice'
         NETProjectName                    = 'PSWriteOffice'
         NETConfiguration                  = 'Release'
         NETFramework                      = 'netstandard2.0', 'net472'
         DotSourceLibraries                = $true
+        DeleteTargetModuleBeforeBuild     = $true
+        NETHandleAssemblyWithSameName     = $true
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat
