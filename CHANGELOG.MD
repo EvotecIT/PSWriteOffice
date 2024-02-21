@@ -1,4 +1,8 @@
-﻿#### 0.1.0 - 2023.06.23
+﻿#### 0.2.0 - 2024.02.21
+- Updated `OfficeIMO.Word` to `0.13.0`
+- Updated `ClosedXML` to `0.102.2`
+
+#### 0.1.0 - 2023.06.23
 - Updated `OfficeIMO.Word` to **0.5.0** which has many improvements and new features
 - Other features and updates
 
