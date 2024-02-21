@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSWriteOffice", "PSWriteOff
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HtmlToOpenXml", "..\..\html2openxml\src\Html2OpenXml\HtmlToOpenXml.csproj", "{7391AC3E-2156-49C6-A228-15B6A7946FBA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfficeIMO.Word", "..\..\OfficeIMO\OfficeIMO.Word\OfficeIMO.Word.csproj", "{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{7391AC3E-2156-49C6-A228-15B6A7946FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7391AC3E-2156-49C6-A228-15B6A7946FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7391AC3E-2156-49C6-A228-15B6A7946FBA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3349FCA-EF1E-4AFF-8F4C-522530B18D54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
