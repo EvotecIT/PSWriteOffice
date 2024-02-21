@@ -12,15 +12,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.101.0" />
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
-    <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
+    <PackageReference Include="OfficeIMO.Word" Version="0.13.0" />
+    <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
     <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\html2openxml\src\Html2OpenXml\HtmlToOpenXml.csproj" />
-    <ProjectReference Include="..\..\..\OfficeIMO\OfficeIMO.Word\OfficeIMO.Word.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
