@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using System.Reflection;
+using System.Collections.Generic;
 
 public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemblyCleanup {
     public void OnImport() {
@@ -17,38 +18,41 @@ public class OnModuleImportAndRemove : IModuleAssemblyInitializer, IModuleAssemb
     }
 
     private static Assembly MyResolveEventHandler(object sender, ResolveEventArgs args) {
-        //This code is used to resolve the assemblies
-        //Console.WriteLine($"Resolving {args.Name}");
-        var directoryPath = Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location);
-        var filesInDirectory = Directory.GetFiles(directoryPath);
+        var libDirectory = Path.GetDirectoryName(typeof(OnModuleImportAndRemove).Assembly.Location);
+        var directoriesToSearch = new List<string> { libDirectory };
 
-        foreach (var file in filesInDirectory) {
-            var fileName = Path.GetFileName(file);
-            var assemblyName = Path.GetFileNameWithoutExtension(file);
+        if (Directory.Exists(libDirectory)) {
+            directoriesToSearch.AddRange(Directory.GetDirectories(libDirectory, "*", SearchOption.AllDirectories));
+        }
 
-            if (args.Name.StartsWith(assemblyName)) {
-                //Console.WriteLine($"Loading {args.Name} assembly {fileName}");
-                return Assembly.LoadFile(file);
+        var requestedAssemblyName = new AssemblyName(args.Name).Name + ".dll";
+
+        foreach (var directory in directoriesToSearch) {
+            var assemblyPath = Path.Combine(directory, requestedAssemblyName);
+
+            if (File.Exists(assemblyPath)) {
+                try {
+                    return Assembly.LoadFrom(assemblyPath);
+                } catch (Exception ex) {
+                    Console.WriteLine($"Failed to load assembly from {assemblyPath}: {ex.Message}");
+                }
             }
         }
+
         return null;
     }
 
     private bool IsNetFramework() {
-        // Get the version of the CLR
-        Version clrVersion = System.Environment.Version;
-        // Check if the CLR version is 4.x.x.x
-        return clrVersion.Major == 4;
+        return System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
     }
-
     private bool IsNetCore() {
         return System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase);
     }
-
     private bool IsNet5OrHigher() {
         return System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET 5", StringComparison.OrdinalIgnoreCase) ||
                System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET 6", StringComparison.OrdinalIgnoreCase) ||
                System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET 7", StringComparison.OrdinalIgnoreCase) ||
-               System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET 8", StringComparison.OrdinalIgnoreCase);
+               System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET 8", StringComparison.OrdinalIgnoreCase) ||
+               System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET 9", StringComparison.OrdinalIgnoreCase);
     }
 }
