@@ -16,14 +16,15 @@ schema: 2.0.0
 ```
 New-OfficeWordText -Document <WordDocument> [-Text <String[]>] [-Bold <Nullable`1[]>] [-Italic <Nullable`1[]>]
  [-Underline <Nullable`1[]>] [-Color <String[]>] [-Alignment <JustificationValues>]
- [-Style <WordParagraphStyles>] [-ReturnObject] [<CommonParameters>]
+ [-Style <WordParagraphStyles>] [-ReturnObject] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ### Paragraph
 ```
 New-OfficeWordText [-Document <WordDocument>] -Paragraph <WordParagraph> [-Text <String[]>]
  [-Bold <Nullable`1[]>] [-Italic <Nullable`1[]>] [-Underline <Nullable`1[]>] [-Color <String[]>]
- [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-ReturnObject] [<CommonParameters>]
+ [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-ReturnObject]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -47,7 +48,6 @@ PS C:\> {{ Add example code here }}
 Type: JustificationValues
 Parameter Sets: (All)
 Aliases:
-Accepted values: Left, Start, Center, Right, End, Both, MediumKashida, Distribute, NumTab, HighKashida, LowKashida, ThaiDistribute
 
 Required: False
 Position: Named
@@ -165,7 +165,7 @@ Accept wildcard characters: False
 Type: WordParagraphStyles
 Parameter Sets: (All)
 Aliases:
-Accepted values: Normal, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Heading7, Heading8, Heading9, ListParagraph
+Accepted values: Normal, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Heading7, Heading8, Heading9, ListParagraph, Custom
 
 Required: False
 Position: Named
@@ -196,6 +196,21 @@ Accept wildcard characters: False
 Type: Nullable`1[]
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

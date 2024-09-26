@@ -15,19 +15,19 @@ schema: 2.0.0
 ### All (Default)
 ```
 Get-OfficeExcelWorkSheet [[-ExcelContent] <ScriptBlock>] [-Excel <XLWorkbook>] [-All] [-NameOnly]
- [<CommonParameters>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ### Index
 ```
 Get-OfficeExcelWorkSheet [[-ExcelContent] <ScriptBlock>] [-Excel <XLWorkbook>] [-Index <Int32>] [-NameOnly]
- [<CommonParameters>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ### Name
 ```
 Get-OfficeExcelWorkSheet [[-ExcelContent] <ScriptBlock>] [-Excel <XLWorkbook>] [-WorksheetName <String>]
- [-NameOnly] [<CommonParameters>]
+ [-NameOnly] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -126,6 +126,21 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: Name
 Aliases: Name
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
 
 Required: False
 Position: Named

@@ -14,7 +14,8 @@ schema: 2.0.0
 
 ```
 New-OfficeWordTable [[-Document] <WordDocument>] [[-DataTable] <Array>] [[-Style] <WordTableStyle>]
- [[-TableLayout] <String>] [-SkipHeader] [-Suppress] [<CommonParameters>]
+ [[-TableLayout] <TableLayoutValues>] [-SkipHeader] [-Suppress] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -111,12 +112,27 @@ Accept wildcard characters: False
 {{ Fill TableLayout Description }}
 
 ```yaml
-Type: String
+Type: TableLayoutValues
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -14,7 +14,8 @@ schema: 2.0.0
 
 ```
 New-OfficeExcel [[-ExcelContent] <ScriptBlock>] [-FilePath] <String> [-Template]
- [[-RecalculateAllFormulas] <Boolean>] [-Show] [-Save] [[-WhenExists] <String>] [<CommonParameters>]
+ [[-RecalculateAllFormulas] <Boolean>] [-Show] [-Save] [[-WhenExists] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -132,6 +133,21 @@ Accepted values: Reuse, Overwrite, Stop
 
 Required: False
 Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
