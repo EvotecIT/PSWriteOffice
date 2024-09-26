@@ -71,7 +71,7 @@
 
     try {
         $Converter = [HtmlToOpenXml.HtmlConverter]::new($Document._document.MainDocumentPart)
-        $Converter.ParseHtml($HTML)
+        $null = $Converter.ParseHtml($HTML)
     } catch {
         Write-Warning -Message "ConvertFrom-HTMLtoWord - Couldn't convert HTML to Word. Error: $($_.Exception.Message)"
     }
