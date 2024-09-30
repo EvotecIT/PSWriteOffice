@@ -14,8 +14,7 @@ schema: 2.0.0
 
 ```
 New-OfficeExcelValue [[-Worksheet] <Object>] [[-Value] <Object>] [[-Row] <Int32>] [[-Column] <Int32>]
- [[-DateFormat] <String>] [[-NumberFormat] <String>] [[-FormatID] <Int32>] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+ [[-DateFormat] <String>] [[-NumberFormat] <String>] [[-FormatID] <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -132,21 +131,6 @@ Aliases:
 
 Required: False
 Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{ Fill ProgressAction Description }}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

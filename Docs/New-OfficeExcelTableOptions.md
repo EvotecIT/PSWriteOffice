@@ -15,7 +15,7 @@ schema: 2.0.0
 ```
 New-OfficeExcelTableOptions [[-Table] <Object>] [[-Transpose] <XLTransposeOptions>] [-ShowRowStripes]
  [-ShowColumnStripes] [-DisableAutoFilter] [-HideHeaderRow] [-ShowTotalsRow] [-EmphasizeFirstColumn]
- [-EmphasizeLastColumn] [[-Theme] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [-EmphasizeLastColumn] [[-Theme] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -178,21 +178,6 @@ Accepted values: MoveCells, ReplaceCells
 
 Required: False
 Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{ Fill ProgressAction Description }}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

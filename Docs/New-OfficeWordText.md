@@ -16,15 +16,14 @@ schema: 2.0.0
 ```
 New-OfficeWordText -Document <WordDocument> [-Text <String[]>] [-Bold <Nullable`1[]>] [-Italic <Nullable`1[]>]
  [-Underline <Nullable`1[]>] [-Color <String[]>] [-Alignment <JustificationValues>]
- [-Style <WordParagraphStyles>] [-ReturnObject] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [-Style <WordParagraphStyles>] [-ReturnObject] [<CommonParameters>]
 ```
 
 ### Paragraph
 ```
 New-OfficeWordText [-Document <WordDocument>] -Paragraph <WordParagraph> [-Text <String[]>]
  [-Bold <Nullable`1[]>] [-Italic <Nullable`1[]>] [-Underline <Nullable`1[]>] [-Color <String[]>]
- [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-ReturnObject]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-ReturnObject] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -196,21 +195,6 @@ Accept wildcard characters: False
 Type: Nullable`1[]
 Parameter Sets: (All)
 Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{ Fill ProgressAction Description }}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
 
 Required: False
 Position: Named

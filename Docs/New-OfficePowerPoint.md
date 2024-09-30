@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-OfficeExcelWorkSheetData
+# New-OfficePowerPoint
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Get-OfficeExcelWorkSheetData [[-WorkSheet] <IXLWorksheet>] [<CommonParameters>]
+New-OfficePowerPoint [[-FilePath] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,11 +30,11 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -WorkSheet
-{{ Fill WorkSheet Description }}
+### -FilePath
+{{ Fill FilePath Description }}
 
 ```yaml
-Type: IXLWorksheet
+Type: String
 Parameter Sets: (All)
 Aliases:
 

@@ -15,19 +15,18 @@ schema: 2.0.0
 ### Name (Default)
 ```
 Set-OfficeExcelWorkSheetStyle [-Excel <XLWorkbook>] [-TabColor <String>] [-WorksheetName <String>]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [<CommonParameters>]
 ```
 
 ### Native
 ```
 Set-OfficeExcelWorkSheetStyle [-Excel <XLWorkbook>] [-TabColor <String>] [-Worksheet <Object>]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [<CommonParameters>]
 ```
 
 ### Index
 ```
-Set-OfficeExcelWorkSheetStyle [-Excel <XLWorkbook>] [-TabColor <String>] [-Index <Int32>]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Set-OfficeExcelWorkSheetStyle [-Excel <XLWorkbook>] [-TabColor <String>] [-Index <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -111,21 +110,6 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: Name
 Aliases: Name
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{ Fill ProgressAction Description }}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
 
 Required: False
 Position: Named

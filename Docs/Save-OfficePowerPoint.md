@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-OfficeExcelWorkSheetData
+# Save-OfficePowerPoint
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Get-OfficeExcelWorkSheetData [[-WorkSheet] <IXLWorksheet>] [<CommonParameters>]
+Save-OfficePowerPoint [-Presentation] <Presentation> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,16 +30,31 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -WorkSheet
-{{ Fill WorkSheet Description }}
+### -Presentation
+{{ Fill Presentation Description }}
 
 ```yaml
-Type: IXLWorksheet
+Type: Presentation
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Show
+{{ Fill Show Description }}
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 0
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -53,6 +53,9 @@ Provides a way to converting an Excel file into PowerShell objects.
 ### [New-OfficeExcelWorkSheet](New-OfficeExcelWorkSheet.md)
 {{ Fill in the Synopsis }}
 
+### [New-OfficePowerPoint](New-OfficePowerPoint.md)
+{{ Fill in the Synopsis }}
+
 ### [New-OfficeWord](New-OfficeWord.md)
 {{ Fill in the Synopsis }}
 
@@ -75,6 +78,9 @@ Provides a way to converting an Excel file into PowerShell objects.
 {{ Fill in the Synopsis }}
 
 ### [Save-OfficeExcel](Save-OfficeExcel.md)
+{{ Fill in the Synopsis }}
+
+### [Save-OfficePowerPoint](Save-OfficePowerPoint.md)
 {{ Fill in the Synopsis }}
 
 ### [Save-OfficeWord](Save-OfficeWord.md)

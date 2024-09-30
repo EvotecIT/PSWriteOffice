@@ -14,14 +14,12 @@ Converts HTML input to Microsoft Word Document
 
 ### HTML (Default)
 ```
-ConvertFrom-HTMLtoWord -OutputFile <String> -SourceHTML <String> [-Show] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+ConvertFrom-HTMLtoWord -OutputFile <String> -SourceHTML <String> [-Show] [<CommonParameters>]
 ```
 
 ### HTMLFile
 ```
-ConvertFrom-HTMLtoWord -OutputFile <String> -FileHTML <String> [-Show] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+ConvertFrom-HTMLtoWord -OutputFile <String> -FileHTML <String> [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,10 +30,11 @@ Converts HTML input to Microsoft Word Document
 ### EXAMPLE 1
 ```
 $Objects = @(
-    [PSCustomObject] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
-    [PSCustomObject] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
-)
 ```
+
+\[PSCustomObject\] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+    \[PSCustomObject\] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+)
 
 New-HTML {
     New-HTMLText -Text 'This is a test', ' another test' -FontSize 30pt
@@ -47,10 +46,11 @@ ConvertFrom-HTMLToWord -OutputFile $PSScriptRoot\Documents\TestHTML.docx -FileHT
 ### EXAMPLE 2
 ```
 $Objects = @(
-[PSCustomObject] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
-[PSCustomObject] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
-)
 ```
+
+\[PSCustomObject\] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+\[PSCustomObject\] @{ Test = 1; Test2 = 'Test'; Test3 = 'Ok' }
+)
 
 $Test = New-HTML {
     New-HTMLText -Text 'This is a test', ' another test' -FontSize 30pt
@@ -117,21 +117,6 @@ Aliases:
 Required: True
 Position: Named
 Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{ Fill ProgressAction Description }}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
-Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
