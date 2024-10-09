@@ -16,7 +16,7 @@
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
     <PackageReference Include="OfficeIMO.Word" Version="0.13.0" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
-    <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
+    <PackageReference Include="System.IO.Packaging" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
