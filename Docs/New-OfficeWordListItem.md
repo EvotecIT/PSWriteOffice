@@ -15,7 +15,7 @@ schema: 2.0.0
 ```
 New-OfficeWordListItem [[-List] <WordList>] [[-Level] <Int32>] [[-Text] <String[]>] [[-Bold] <Nullable`1[]>]
  [[-Italic] <Nullable`1[]>] [[-Underline] <Nullable`1[]>] [[-Color] <String[]>]
- [[-Alignment] <JustificationValues>] [-Suppress] [<CommonParameters>]
+ [[-Alignment] <JustificationValues>] [-Suppress] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -162,6 +162,21 @@ Aliases:
 
 Required: False
 Position: 5
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

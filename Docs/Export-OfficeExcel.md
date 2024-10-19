@@ -16,7 +16,7 @@ schema: 2.0.0
 Export-OfficeExcel [[-FilePath] <String>] [[-WorksheetName] <String>] [[-DataTable] <Array>] [[-Row] <Int32>]
  [[-Column] <Int32>] [-Show] [-AllProperties] [[-Transpose] <XLTransposeOptions>] [-ShowRowStripes]
  [-ShowColumnStripes] [-DisableAutoFilter] [-HideHeaderRow] [-ShowTotalsRow] [-EmphasizeFirstColumn]
- [-EmphasizeLastColumn] [[-Theme] <String>] [<CommonParameters>]
+ [-EmphasizeLastColumn] [[-Theme] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -269,6 +269,21 @@ Aliases: Name
 
 Required: False
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

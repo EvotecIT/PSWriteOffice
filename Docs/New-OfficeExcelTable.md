@@ -16,7 +16,8 @@ schema: 2.0.0
 New-OfficeExcelTable [[-DataTable] <Array>] [[-Worksheet] <Object>] [[-StartRow] <Int32>]
  [[-StartCell] <Int32>] [-ReturnObject] [[-Transpose] <XLTransposeOptions>] [-AllProperties] [-SkipHeader]
  [-ShowRowStripes] [-ShowColumnStripes] [-DisableAutoFilter] [-HideHeaderRow] [-ShowTotalsRow]
- [-EmphasizeFirstColumn] [-EmphasizeLastColumn] [[-Theme] <String>] [<CommonParameters>]
+ [-EmphasizeFirstColumn] [-EmphasizeLastColumn] [[-Theme] <String>] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -269,6 +270,21 @@ Aliases:
 
 Required: False
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
