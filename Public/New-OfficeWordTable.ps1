@@ -4,7 +4,7 @@
         [OfficeIMO.Word.WordDocument] $Document,
         [Array] $DataTable,
         [OfficeIMO.Word.WordTableStyle] $Style = [OfficeIMO.Word.WordTableStyle]::TableGrid,
-        [string] $TableLayout,
+        [DocumentFormat.OpenXml.Wordprocessing.TableLayoutValues] $TableLayout,
         [switch] $SkipHeader,
         [switch] $Suppress
     )
@@ -37,6 +37,10 @@
     } else {
         # No header so less rows
         $Table = $Document.AddTable($RowsCount, $ColumnsCount, $Style)
+    }
+
+    if ($TableLayout) {
+        $Table.LayoutType = $TableLayout
     }
 
     # add table data
