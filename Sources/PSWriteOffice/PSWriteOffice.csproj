@@ -14,7 +14,7 @@
     <ItemGroup>
         <PackageReference Include="ClosedXML" Version="0.104.0-rc1" />
         <PackageReference Include="HtmlToOpenXml.dll" Version="3.2.0" />
-        <PackageReference Include="OfficeIMO.Word" Version="0.19.0" />
+        <PackageReference Include="OfficeIMO.Word" Version="0.20.0" />
         <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
         <PackageReference Include="ShapeCrawler" Version="0.54.2" />
     </ItemGroup>
