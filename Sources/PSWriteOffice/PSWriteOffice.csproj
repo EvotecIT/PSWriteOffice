@@ -21,10 +21,10 @@
                 <PackageReference Include="ShapeCrawler" Version="0.71.1" />
         </ItemGroup>
 
-	<ItemGroup>
-		<Compile Update="Cmdlets/**/*.cs" />
-		<Compile Update="Services/**/*.cs" />
-	</ItemGroup>
+        <ItemGroup>
+                <Compile Update="Cmdlets/**/*.cs" />
+                <Compile Update="Services/**/*.cs" />
+        </ItemGroup>
 
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
 		<DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>

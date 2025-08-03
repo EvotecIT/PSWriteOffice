@@ -1,0 +1,17 @@
+using System.Management.Automation;
+using ClosedXML.Excel;
+using PSWriteOffice.Services.Excel;
+
+namespace PSWriteOffice.Cmdlets.Excel;
+
+[Cmdlet(VerbsCommon.Close, "OfficeExcel")]
+public class CloseOfficeExcelCommand : PSCmdlet
+{
+    [Parameter(Mandatory = true)]
+    public XLWorkbook Workbook { get; set; } = null!;
+
+    protected override void ProcessRecord()
+    {
+        ExcelDocumentService.CloseWorkbook(Workbook);
+    }
+}
