@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 17
+# Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSWriteOffice", "PSWriteOffice\PSWriteOffice.csproj", "{EEF3BFAD-C8A5-474C-BA52-5C20E66EF0F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSWriteOffice.TestingGround", "PSWriteOffice.TestingGround\PSWriteOffice.TestingGround.csproj", "{454D23ED-E33C-4933-A915-56065BA3A8F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSWriteOffice.TestingGround", "PSWriteOffice.TestingGround\PSWriteOffice.TestingGround.csproj", "{454D23ED-E33C-4933-A915-56065BA3A8F3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EEF3BFAD-C8A5-474C-BA52-5C20E66EF0F9} = {EEF3BFAD-C8A5-474C-BA52-5C20E66EF0F9}
 	EndProjectSection

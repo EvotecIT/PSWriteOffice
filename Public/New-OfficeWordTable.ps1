@@ -4,7 +4,7 @@
         [OfficeIMO.Word.WordDocument] $Document,
         [Array] $DataTable,
         [OfficeIMO.Word.WordTableStyle] $Style = [OfficeIMO.Word.WordTableStyle]::TableGrid,
-        [DocumentFormat.OpenXml.Wordprocessing.TableLayoutValues] $TableLayout,
+        [ValidateSet('Autofit', 'Fixed')][string] $TableLayout,
         [switch] $SkipHeader,
         [switch] $Suppress
     )
@@ -40,7 +40,7 @@
     }
 
     if ($TableLayout) {
-        $Table.LayoutType = $TableLayout
+        $Table.LayoutType = $TableLayout.ToLower()
     }
 
     # add table data
