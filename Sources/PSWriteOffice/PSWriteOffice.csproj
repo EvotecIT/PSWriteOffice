@@ -4,8 +4,9 @@
 		<Company>Evotec</Company>
 		<Authors>Przemyslaw Klys</Authors>
 		<VersionPrefix>1.0.0</VersionPrefix>
-                <TargetFrameworks>net472;net8.0;net9.0</TargetFrameworks>
-		<AssemblyName>PSWriteOffice</AssemblyName>
+                <TargetFrameworks>net472;net8.0</TargetFrameworks>
+                <TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals($(NETCoreSdkVersion), '9.0'))">$(TargetFrameworks);net9.0</TargetFrameworks>
+                <AssemblyName>PSWriteOffice</AssemblyName>
 
 		<Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
                 <LangVersion>latest</LangVersion>
