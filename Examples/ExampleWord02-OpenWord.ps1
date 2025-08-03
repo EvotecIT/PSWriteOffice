@@ -11,5 +11,5 @@ if (Test-Path -LiteralPath "$PSScriptRoot\Documents\Test5.docx") {
     New-OfficeWordText -Document $Document -Text 'Add more things!', ' a bit more  with bold' -Bold $null, $true -Underline Dash -Color Red
 
     #$Document.Settings.UpdateFieldsOnOpen = $true
-    Save-OfficeWord -Document $Document -Show -FilePath $PSScriptRoot\Documents\Test6.docx -Retry 1
+    Save-OfficeWord -Document $Document -Show -FilePath $PSScriptRoot\Documents\Test6.docx
 }
