@@ -1,13 +1,13 @@
 ﻿@{
     AliasesToExport        = @()
     Author                 = 'Przemyslaw Klys'
-    CmdletsToExport        = @()
+    CmdletsToExport        = @('Get-OfficeWord', 'New-OfficeWord', 'Close-OfficeWord', 'Save-OfficeWord', 'Remove-OfficeWordFooter', 'Remove-OfficeWordHeader', 'New-OfficeWordText', 'New-OfficeWordList', 'New-OfficeWordListItem', 'New-OfficeWordTable')
     CompanyName            = 'Evotec'
     CompatiblePSEditions   = @('Desktop', 'Core')
     Copyright              = '(c) 2011 - 2024 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description            = 'Experimental PowerShell Module to create and edit Microsoft Word, Microsoft Excel, and Microsoft PowerPoint documents without having Microsoft Office installed.'
     DotNetFrameworkVersion = '4.7.2'
-    FunctionsToExport      = @('Close-OfficeWord', 'ConvertFrom-HTMLtoWord', 'Export-OfficeExcel', 'Get-OfficeExcel', 'Get-OfficeExcelValue', 'Get-OfficeExcelWorkSheet', 'Get-OfficeExcelWorkSheetData', 'Get-OfficeWord', 'Import-OfficeExcel', 'New-OfficeExcel', 'New-OfficeExcelTable', 'New-OfficeExcelTableOptions', 'New-OfficeExcelValue', 'New-OfficeExcelWorkSheet', 'New-OfficePowerPoint', 'New-OfficeWord', 'New-OfficeWordList', 'New-OfficeWordListItem', 'New-OfficeWordTable', 'New-OfficeWordText', 'Remove-OfficeWordFooter', 'Remove-OfficeWordHeader', 'Save-OfficeExcel', 'Save-OfficePowerPoint', 'Save-OfficeWord', 'Set-OfficeExcelCellStyle', 'Set-OfficeExcelWorkSheetStyle')
+    FunctionsToExport      = @('ConvertFrom-HTMLtoWord', 'Export-OfficeExcel', 'Get-OfficeExcel', 'Get-OfficeExcelValue', 'Get-OfficeExcelWorkSheet', 'Get-OfficeExcelWorkSheetData', 'Import-OfficeExcel', 'New-OfficeExcel', 'New-OfficeExcelTable', 'New-OfficeExcelTableOptions', 'New-OfficeExcelValue', 'New-OfficeExcelWorkSheet', 'New-OfficePowerPoint', 'Save-OfficeExcel', 'Save-OfficePowerPoint', 'Set-OfficeExcelCellStyle', 'Set-OfficeExcelWorkSheetStyle')
     GUID                   = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
     ModuleVersion          = '0.3.0'
     PowerShellVersion      = '5.1'

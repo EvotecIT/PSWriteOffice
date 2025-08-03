@@ -21,10 +21,6 @@
         </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\OfficeIMO\OfficeIMO.Word\OfficeIMO.Word.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Compile Update="Cmdlets/**/*.cs" />
 		<Compile Update="Services/**/*.cs" />
 	</ItemGroup>
