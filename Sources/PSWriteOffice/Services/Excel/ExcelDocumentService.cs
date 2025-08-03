@@ -1,6 +1,5 @@
-namespace PSWriteOffice.Services.Excel
+namespace PSWriteOffice.Services.Excel;
+
+public static partial class ExcelDocumentService
 {
-    public class ExcelDocumentService
-    {
-    }
 }
