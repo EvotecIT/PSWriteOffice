@@ -3,9 +3,14 @@ Import-Module .\PSWriteOffice.psd1 -Force
 
 $Document = New-OfficeWord -FilePath $PSScriptRoot\Documents\BasicDocument.docx
 
-$Document.Settings.FontFamily = 'Times New Roman'
+$Document.Settings.FontFamily = 'Times New Roman' 
 
 $Document.AddHeadersAndFooters()
+
+
+$Document | Get-Member
+
+$MyParagraph = $Document.Header.Default.AddParagraph("This is a header")
 
 New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bold' -Bold $null, $true -Underline Dash, $null
 

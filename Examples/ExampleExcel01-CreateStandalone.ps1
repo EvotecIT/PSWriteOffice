@@ -1,7 +1,7 @@
 ﻿Clear-Host
 Import-Module .\PSWriteOffice.psd1 -Force
 
-$Excel = New-OfficeExcel -FilePath "$PSScriptRoot\Documents\Excel2.xlsx" -WhenExists Reuse
+$Excel = New-OfficeExcel -FilePath "$PSScriptRoot\Documents\Excel3.xlsx" -WhenExists Overwrite
 $Worksheet = Get-OfficeExcelWorkSheet -Excel $Excel -Name 'Contact1'
 if (-not $Worksheet) {
     $Worksheet = New-OfficeExcelWorksheet -Excel $Excel -Name 'Contact1'

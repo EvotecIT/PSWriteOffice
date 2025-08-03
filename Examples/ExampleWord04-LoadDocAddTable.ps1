@@ -2,12 +2,13 @@
 Import-Module .\PSWriteOffice.psd1 -Force
 
 $Document = New-OfficeWord -FilePath $PSScriptRoot\Documents\Doc1.docx
-New-OfficeWordText -Document $Document -Text 'This is document' -Bold $true -Underline 'Double'
+New-OfficeWordText -Document $Document -Text 'This is document' -Bold $true -Underline 
+New-OfficeWordText -Document $Document -Text 'This is document' -Bold $true -Underline ([DocumentFormat.OpenXml.Wordprocessing.UnderlineValues]::Dash)
 Save-OfficeWord -Document $Document
 
 $Document = Get-OfficeWord -FilePath $PSScriptRoot\Documents\Doc1.docx
 
-New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bold' -Bold $null, $true -Underline $null, 'Dashed'
+New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bold' -Bold $null, $true -Underline $null, 'Dash'
 
 $DataTable = @(
     [PSCustomObject] @{ Test = 1; DateTime = (Get-Date); TimeSpan = (New-TimeSpan -Minutes 10); TestString = 'string' }
@@ -16,6 +17,6 @@ $DataTable = @(
 )
 
 $Table = New-OfficeWordTable -Document $Document -DataTable $DataTable -TableLayout Autofit
-$Table.Style = [OfficeIMO.Word.WordTableStyle]::ListTable6ColorfulAccent3
+$Table.Style = 'PlainTable5'
 
 Save-OfficeWord -Document $Document -Show

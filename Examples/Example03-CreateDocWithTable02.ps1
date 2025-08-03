@@ -1,7 +1,11 @@
 ﻿Clear-Host
-Import-Module .\PSWriteOffice.psd1 -Force
+#Import-Module .\PSWriteOffice.psd1 -Force
 
 $Document = New-OfficeWord -FilePath $PSScriptRoot\Documents\TestTable.docx
+$Paragraph = $Document.AddParagraph()
+$Paragraph.AddImage("C:\Users\przemyslaw.klys\Downloads\s2-3.jpg")
+Save-OfficeWord -Document $Document -Show
+return
 New-OfficeWordText -Document $Document -Text 'This is a test, very big test ', 'and this should be bold' -Bold $null, $true -Underline $null, 'Double'
 
 $DataTable = @(
