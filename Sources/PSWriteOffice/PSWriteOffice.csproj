@@ -4,20 +4,21 @@
 		<Company>Evotec</Company>
 		<Authors>Przemyslaw Klys</Authors>
 		<VersionPrefix>1.0.0</VersionPrefix>
-		<TargetFrameworks>net472;netstandard2.0;net8.0</TargetFrameworks>
+                <TargetFrameworks>net472;net8.0;net9.0</TargetFrameworks>
 		<AssemblyName>PSWriteOffice</AssemblyName>
 
 		<Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
-		<LangVersion>10.0</LangVersion>
-	</PropertyGroup>
+                <LangVersion>latest</LangVersion>
+                <Nullable>enable</Nullable>
+        </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ClosedXML" Version="0.105.0-rc" />
-		<PackageReference Include="HtmlToOpenXml.dll" Version="3.2.2" />
-		<PackageReference Include="OfficeIMO.Word" Version="0.21.0" />
-		<PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
-		<PackageReference Include="ShapeCrawler" Version="0.64.2" />
-	</ItemGroup>
+                <PackageReference Include="ClosedXML" Version="0.105.0" />
+                <PackageReference Include="HtmlToOpenXml.dll" Version="3.2.5" />
+                <PackageReference Include="OfficeIMO.Word" Version="1.0.6" />
+                <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
+                <PackageReference Include="ShapeCrawler" Version="0.71.1" />
+        </ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\OfficeIMO\OfficeIMO.Word\OfficeIMO.Word.csproj" />
