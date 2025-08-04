@@ -8,4 +8,13 @@ Describe 'Excel workbook cmdlets' {
         $loaded.Worksheets.Count | Should -Be 1
         Close-OfficeExcel -Workbook $loaded
     }
+
+    It 'supports -WhatIf parameter' {
+        $path = Join-Path $TestDrive 'test.xlsx'
+        $workbook = New-OfficeExcel
+        Save-OfficeExcel -Workbook $workbook -FilePath $path -WhatIf
+        Test-Path $path | Should -BeFalse
+        Close-OfficeExcel -Workbook $workbook -WhatIf
+        { $workbook.Worksheets.Count } | Should -Not -Throw
+    }
 }

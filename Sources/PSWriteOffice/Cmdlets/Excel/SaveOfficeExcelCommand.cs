@@ -5,7 +5,7 @@ using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
-[Cmdlet(VerbsData.Save, "OfficeExcel")]
+[Cmdlet(VerbsData.Save, "OfficeExcel", SupportsShouldProcess = true)]
 public class SaveOfficeExcelCommand : PSCmdlet
 {
     [Parameter(Mandatory = true)]
@@ -21,7 +21,10 @@ public class SaveOfficeExcelCommand : PSCmdlet
     {
         try
         {
-            ExcelDocumentService.SaveWorkbook(Workbook, FilePath, Show);
+            if (ShouldProcess(FilePath, "Save workbook"))
+            {
+                ExcelDocumentService.SaveWorkbook(Workbook, FilePath, Show);
+            }
         }
         catch (Exception ex)
         {
