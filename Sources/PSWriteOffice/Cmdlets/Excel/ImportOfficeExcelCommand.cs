@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using PSWriteOffice.Services.Excel;
+using ValidateScriptAttribute = PSWriteOffice.Validation.ValidateScriptAttribute;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -12,6 +13,8 @@ public class ImportOfficeExcelCommand : PSCmdlet
 {
     [Alias("LiteralPath")]
     [Parameter(Mandatory = true)]
+    [ValidateNotNullOrEmpty]
+    [ValidateScript("{ Test-Path $_ }")]
     public string FilePath { get; set; } = string.Empty;
 
     [Parameter]

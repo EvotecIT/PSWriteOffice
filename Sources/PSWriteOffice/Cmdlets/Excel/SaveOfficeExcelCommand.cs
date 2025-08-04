@@ -2,6 +2,7 @@ using System;
 using System.Management.Automation;
 using ClosedXML.Excel;
 using PSWriteOffice.Services.Excel;
+using ValidateScriptAttribute = PSWriteOffice.Validation.ValidateScriptAttribute;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -12,6 +13,8 @@ public class SaveOfficeExcelCommand : PSCmdlet
     public XLWorkbook Workbook { get; set; } = null!;
 
     [Parameter(Mandatory = true)]
+    [ValidateNotNullOrEmpty]
+    [ValidateScript("{ Test-Path $_ }")]
     public string FilePath { get; set; } = string.Empty;
 
     [Parameter]
