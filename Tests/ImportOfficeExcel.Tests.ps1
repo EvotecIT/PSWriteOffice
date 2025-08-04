@@ -1,6 +1,7 @@
 Describe 'Import-OfficeExcel cmdlet' {
     It 'imports specified worksheet data' {
         $path = Join-Path $TestDrive 'import.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
         New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Name'
@@ -12,5 +13,9 @@ Describe 'Import-OfficeExcel cmdlet' {
         $rows = Import-OfficeExcel -FilePath $path -WorkSheetName 'Data'
         $rows[0].Name | Should -Be 'Jane'
         $rows[0].Age | Should -Be 31
+    }
+
+    It 'throws for invalid path' {
+        { Import-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
     }
 }
