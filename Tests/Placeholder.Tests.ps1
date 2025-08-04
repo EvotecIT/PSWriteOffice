@@ -17,4 +17,10 @@ Describe 'Placeholder classes' {
     It 'PowerPointDocumentService exists' {
         [Type]::GetType('PSWriteOffice.Services.PowerPoint.PowerPointDocumentService', $false) | Should -Not -BeNullOrEmpty
     }
+    It 'AddOfficePowerPointSlideCommand exists' {
+        [Type]::GetType('PSWriteOffice.Cmdlets.PowerPoint.AddOfficePowerPointSlideCommand', $false) | Should -Not -BeNullOrEmpty
+    }
+    It 'MergeOfficePowerPointCommand exists' {
+        [Type]::GetType('PSWriteOffice.Cmdlets.PowerPoint.MergeOfficePowerPointCommand', $false) | Should -Not -BeNullOrEmpty
+    }
 }
