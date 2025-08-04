@@ -47,6 +47,22 @@ Describe 'Word cmdlets' {
         Close-OfficeWord -Document $doc
     }
 
+    It 'converts HTML to word document' {
+        $path = Join-Path $TestDrive 'html.docx'
+        ConvertFrom-HTMLtoWord -OutputFile $path -SourceHTML '<p>Hello</p>'
+        $doc = [DocumentFormat.OpenXml.Packaging.WordprocessingDocument]::Open($path, $false)
+        $doc.MainDocumentPart.Document.Body.InnerText | Should -Be 'Hello'
+        $doc.Dispose()
+    }
+
+    It 'embeds HTML as-is when requested' {
+        $path = Join-Path $TestDrive 'htmlasis.docx'
+        ConvertFrom-HTMLtoWord -OutputFile $path -SourceHTML '<p>Hello</p>' -Mode AsIs
+        $doc = [DocumentFormat.OpenXml.Packaging.WordprocessingDocument]::Open($path, $false)
+        $doc.MainDocumentPart.Document.Body.InnerXml | Should -Match 'altChunk'
+        $doc.Dispose()
+    }
+
     It 'throws when saving with null document' {
         { Save-OfficeWord -Document $null } | Should -Throw
     }
