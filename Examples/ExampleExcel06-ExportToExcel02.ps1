@@ -1,4 +1,4 @@
-﻿Clear-Host
+Clear-Host
 Import-Module .\PSWriteOffice.psd1 -Force
 
 $Excel = New-OfficeExcel -FilePath "C:\Support\GitHub\PSWriteOffice\Examples\Documents\Excel2.xlsx" -WhenExists Overwrite
@@ -18,8 +18,7 @@ $Data = @(
 )
 
 $Worksheet = New-OfficeExcelWorksheet -Excel $Excel -Name 'WorkSheet1'
-$Table = New-OfficeExcelTable -DataTable $Data -Worksheet $Worksheet -StartRow 1 -StartCell 1 -AllProperties -ReturnObject
-New-OfficeExcelTableOptions -Theme 'TableStyleMedium11' -Table $Table -ShowRowStripes -ShowColumnStripes
+New-OfficeExcelTable -Worksheet $Worksheet -DataTable $Data -StartRow 1 -StartColumn 1 -Theme 'TableStyleMedium11' -ShowRowStripes -ShowColumnStripes
 
 $Data = @(
     [ordered] @{
@@ -37,14 +36,12 @@ $Data = @(
 )
 
 $Worksheet = New-OfficeExcelWorksheet -Excel $Excel -Name 'WorkSheet2'
-$Table = New-OfficeExcelTable -DataTable $Data -Worksheet $Worksheet -StartRow 1 -StartCell 1 -AllProperties -ReturnObject
-New-OfficeExcelTableOptions -Theme 'TableStyleMedium11' -Table $Table -ShowRowStripes -ShowColumnStripes
+New-OfficeExcelTable -Worksheet $Worksheet -DataTable $Data -StartRow 1 -StartColumn 1 -Theme 'TableStyleMedium11' -ShowRowStripes -ShowColumnStripes
 
 $Data = Get-Process | Select-Object -First 100
 
 $Worksheet = New-OfficeExcelWorksheet -Excel $Excel -Name 'WorkSheet3'
-$Table = New-OfficeExcelTable -DataTable $Data -Worksheet $Worksheet -StartRow 1 -StartCell 1 -AllProperties -ReturnObject
-New-OfficeExcelTableOptions -Theme 'TableStyleMedium11' -Table $Table -ShowRowStripes -ShowColumnStripes
+New-OfficeExcelTable -Worksheet $Worksheet -DataTable $Data -StartRow 1 -StartColumn 1 -Theme 'TableStyleMedium11' -ShowRowStripes -ShowColumnStripes
 
 $Data = @(
     1
@@ -54,7 +51,6 @@ $Data = @(
 )
 
 $Worksheet = New-OfficeExcelWorksheet -Excel $Excel -Name 'WorkSheet4'
-$Table = New-OfficeExcelTable -DataTable $Data -Worksheet $Worksheet -StartRow 1 -StartCell 1 -AllProperties -ReturnObject
-New-OfficeExcelTableOptions -Theme 'TableStyleMedium11' -Table $Table -ShowRowStripes -ShowColumnStripes
+New-OfficeExcelTable -Worksheet $Worksheet -DataTable $Data -StartRow 1 -StartColumn 1 -Theme 'TableStyleMedium11' -ShowRowStripes -ShowColumnStripes
 
 Save-OfficeExcel -Excel $Excel -Show

@@ -1,13 +1,13 @@
 ﻿@{
     AliasesToExport        = @()
     Author                 = 'Przemyslaw Klys'
-    CmdletsToExport        = @('Get-OfficeWord', 'New-OfficeWord', 'Close-OfficeWord', 'Save-OfficeWord', 'Remove-OfficeWordFooter', 'Remove-OfficeWordHeader', 'New-OfficeWordText', 'New-OfficeWordList', 'New-OfficeWordListItem', 'New-OfficeWordTable', 'ConvertFrom-HTMLtoWord', 'Get-OfficeExcel', 'New-OfficeExcel', 'New-OfficeExcelWorkSheet', 'Get-OfficeExcelWorkSheet', 'Get-OfficeExcelValue', 'New-OfficeExcelValue', 'Get-OfficeExcelWorkSheetData', 'Close-OfficeExcel', 'Save-OfficeExcel', 'Export-OfficeExcel', 'Import-OfficeExcel', 'Get-OfficePowerPoint', 'New-OfficePowerPoint', 'Save-OfficePowerPoint', 'Add-OfficePowerPointSlide', 'Merge-OfficePowerPoint', 'Get-OfficePowerPointSlide', 'Add-OfficePowerPointTextBox', 'Set-OfficePowerPointSlideTitle')
+    CmdletsToExport        = @('Get-OfficeWord', 'New-OfficeWord', 'Close-OfficeWord', 'Save-OfficeWord', 'Remove-OfficeWordFooter', 'Remove-OfficeWordHeader', 'New-OfficeWordText', 'New-OfficeWordList', 'New-OfficeWordListItem', 'New-OfficeWordTable', 'ConvertFrom-HTMLtoWord', 'Get-OfficeExcel', 'New-OfficeExcel', 'New-OfficeExcelWorkSheet', 'Get-OfficeExcelWorkSheet', 'Get-OfficeExcelValue', 'New-OfficeExcelValue', 'Get-OfficeExcelWorkSheetData', 'Close-OfficeExcel', 'Save-OfficeExcel', 'Export-OfficeExcel', 'Import-OfficeExcel', 'Get-OfficePowerPoint', 'New-OfficePowerPoint', 'Save-OfficePowerPoint', 'Add-OfficePowerPointSlide', 'Merge-OfficePowerPoint', 'Get-OfficePowerPointSlide', 'Add-OfficePowerPointTextBox', 'Set-OfficePowerPointSlideTitle', 'New-OfficeExcelTable', 'Set-OfficeExcelCellStyle', 'Set-OfficeExcelWorkSheetStyle')
     CompanyName            = 'Evotec'
     CompatiblePSEditions   = @('Desktop', 'Core')
     Copyright              = '(c) 2011 - 2024 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description            = 'Experimental PowerShell Module to create and edit Microsoft Word, Microsoft Excel, and Microsoft PowerPoint documents without having Microsoft Office installed.'
     DotNetFrameworkVersion = '4.7.2'
-    FunctionsToExport      = @('New-OfficeExcelTable', 'New-OfficeExcelTableOptions', 'Set-OfficeExcelCellStyle', 'Set-OfficeExcelWorkSheetStyle')
+    FunctionsToExport      = @()
     GUID                   = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
     ModuleVersion          = '0.3.0'
     PowerShellVersion      = '5.1'
