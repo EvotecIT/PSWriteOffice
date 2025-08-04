@@ -1,10 +1,8 @@
 Clear-Host
 Import-Module .\PSWriteOffice.psd1 -Force
 
-$docAsIs = New-OfficeWord -FilePath "$PSScriptRoot\Documents\HtmlAsIs.docx"
-[PSWriteOffice.Services.Word.WordDocumentService]::AddHtml($docAsIs, '<p>Hello <b>World</b></p>', [PSWriteOffice.Services.Word.HtmlImportMode]::AsIs)
-Save-OfficeWord -Document $docAsIs -Show
+$pathAsIs = "$PSScriptRoot\Documents\HtmlAsIs.docx"
+ConvertFrom-HTMLtoWord -OutputFile $pathAsIs -SourceHTML '<p>Hello <b>World</b></p>' -Mode AsIs -Show
 
-$docParsed = New-OfficeWord -FilePath "$PSScriptRoot\Documents\HtmlParsed.docx"
-[PSWriteOffice.Services.Word.WordDocumentService]::AddHtml($docParsed, '<p>Hello <b>World</b></p>')
-Save-OfficeWord -Document $docParsed -Show
+$pathParsed = "$PSScriptRoot\Documents\HtmlParsed.docx"
+ConvertFrom-HTMLtoWord -OutputFile $pathParsed -SourceHTML '<p>Hello <b>World</b></p>' -Mode Parse -Show
