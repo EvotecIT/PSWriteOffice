@@ -3,7 +3,7 @@
 
 $Presentation = New-OfficePowerPoint -FilePath "$PSScriptRoot\Documents\ExamplePowerPoint1.pptx"
 
-$Presentation.Slides.AddEmptySlide([ShapeCrawler.SlideLayoutType]::Title)
+Add-OfficePowerPointSlide -Presentation $Presentation -Layout 1
 
 Write-Color -Text $Presentation.Slides.Count -Color Green
 
