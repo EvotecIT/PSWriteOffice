@@ -18,4 +18,13 @@ Describe 'Excel workbook cmdlets' {
     It 'throws when loading from invalid path' {
         { Get-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
     }
+        
+    It 'supports -WhatIf parameter' {
+        $path = Join-Path $TestDrive 'test.xlsx'
+        $workbook = New-OfficeExcel
+        Save-OfficeExcel -Workbook $workbook -FilePath $path -WhatIf
+        Test-Path $path | Should -BeFalse
+        Close-OfficeExcel -Workbook $workbook -WhatIf
+        { $workbook.Worksheets.Count } | Should -Not -Throw
+    }
 }
