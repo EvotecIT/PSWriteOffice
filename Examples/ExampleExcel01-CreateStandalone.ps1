@@ -1,4 +1,4 @@
-﻿Clear-Host
+Clear-Host
 Import-Module .\PSWriteOffice.psd1 -Force
 
 $Excel = New-OfficeExcel -FilePath "$PSScriptRoot\Documents\Excel3.xlsx" -WhenExists Overwrite
@@ -8,7 +8,7 @@ if (-not $Worksheet) {
 }
 $Cell = Get-OfficeExcelValue -Worksheet $Worksheet -Row 2 -Column 6
 if ($Cell) {
-    Write-Color "Good" -Color Green
+    Write-Host "Good" -ForegroundColor Green
 }
 
 # A tab color to WorkSheet

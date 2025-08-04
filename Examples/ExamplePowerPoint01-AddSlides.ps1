@@ -1,11 +1,11 @@
-﻿Clear-Host
+Clear-Host
 #Import-Module .\PSWriteOffice.psd1 -Force
 
 $Presentation = New-OfficePowerPoint -FilePath "$PSScriptRoot\Documents\ExamplePowerPoint1.pptx"
 
 Add-OfficePowerPointSlide -Presentation $Presentation -Layout 1
 
-Write-Color -Text $Presentation.Slides.Count -Color Green
+Write-Host $Presentation.Slides.Count -ForegroundColor Green
 
 # Get the shapes collection from the first slide
 $shapes = $Presentation.Slides[0].Shapes
