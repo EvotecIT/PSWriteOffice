@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -20,11 +21,14 @@ public class ImportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public string[]? WorkSheetName { get; set; }
 
+    [Parameter]
+    public CultureInfo? Culture { get; set; }
+
     protected override void ProcessRecord()
     {
         try
         {
-            var data = ExcelDocumentService.ImportWorkbook(FilePath, WorkSheetName);
+            var data = ExcelDocumentService.ImportWorkbook(FilePath, WorkSheetName, Culture);
             if (WorkSheetName != null && WorkSheetName.Length == 1 && data.TryGetValue(WorkSheetName[0], out var single))
             {
                 WriteObject(single, true);
