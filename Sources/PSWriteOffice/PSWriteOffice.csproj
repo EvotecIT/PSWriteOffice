@@ -8,14 +8,20 @@
                 <TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals($(NETCoreSdkVersion), '9.0'))">$(TargetFrameworks);net9.0</TargetFrameworks>
                 <AssemblyName>PSWriteOffice</AssemblyName>
 
-		<Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
+                <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
                 <LangVersion>latest</LangVersion>
                 <Nullable>enable</Nullable>
+                <GenerateDocumentationFile>true</GenerateDocumentationFile>
+                <XmlDoc2CmdletDocArguments>-strict</XmlDoc2CmdletDocArguments>
         </PropertyGroup>
 
 	<ItemGroup>
                 <PackageReference Include="ClosedXML" Version="0.105.0" />
                 <PackageReference Include="HtmlToOpenXml.dll" Version="3.2.5" />
+                <PackageReference Include="MatejKafka.XmlDoc2CmdletDoc" Version="0.7.0">
+                  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+                  <PrivateAssets>all</PrivateAssets>
+                </PackageReference>
                 <PackageReference Include="OfficeIMO.Word" Version="1.0.6" />
                 <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
                 <PackageReference Include="ShapeCrawler" Version="0.71.1" />
