@@ -32,6 +32,9 @@ public class ExportOfficeExcelCommand : PSCmdlet
     public int Column { get; set; } = 1;
 
     [Parameter]
+    public SwitchParameter Append { get; set; }
+
+    [Parameter]
     public SwitchParameter Show { get; set; }
 
     [Parameter]
@@ -85,7 +88,10 @@ public class ExportOfficeExcelCommand : PSCmdlet
                 ? ExcelDocumentService.LoadWorkbook(FilePath)
                 : ExcelDocumentService.CreateWorkbook();
 
-            var worksheet = ExcelDocumentService.AddWorksheet(workbook, WorksheetName, WorksheetExistOption.Replace);
+            var worksheet = ExcelDocumentService.AddWorksheet(
+                workbook,
+                WorksheetName,
+                Append ? WorksheetExistOption.Skip : WorksheetExistOption.Replace);
 
             var tableData = _data.Select(item =>
             {
@@ -103,20 +109,43 @@ public class ExportOfficeExcelCommand : PSCmdlet
                 return (IDictionary<string, object?>)result;
             }).ToList();
 
-            ExcelDocumentService.InsertTable(
-                worksheet,
-                tableData,
-                Row,
-                Column,
-                Theme,
-                ShowRowStripes,
-                ShowColumnStripes,
-                !DisableAutoFilter,
-                !HideHeaderRow,
-                ShowTotalsRow,
-                EmphasizeFirstColumn,
-                EmphasizeLastColumn,
-                Transpose);
+            if (Append && worksheet.Tables.Any())
+            {
+                var existing = ExcelDocumentService.GetWorksheetData(worksheet).ToList();
+                existing.AddRange(tableData);
+                worksheet.Clear();
+                ExcelDocumentService.InsertTable(
+                    worksheet,
+                    existing,
+                    Row,
+                    Column,
+                    Theme,
+                    ShowRowStripes,
+                    ShowColumnStripes,
+                    !DisableAutoFilter,
+                    !HideHeaderRow,
+                    ShowTotalsRow,
+                    EmphasizeFirstColumn,
+                    EmphasizeLastColumn,
+                    Transpose);
+            }
+            else
+            {
+                ExcelDocumentService.InsertTable(
+                    worksheet,
+                    tableData,
+                    Row,
+                    Column,
+                    Theme,
+                    ShowRowStripes,
+                    ShowColumnStripes,
+                    !DisableAutoFilter,
+                    !HideHeaderRow,
+                    ShowTotalsRow,
+                    EmphasizeFirstColumn,
+                    EmphasizeLastColumn,
+                    Transpose);
+            }
 
             ExcelDocumentService.SaveWorkbook(workbook, FilePath, Show);
         }
