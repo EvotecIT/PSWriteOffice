@@ -5,10 +5,11 @@ using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
-[Cmdlet(VerbsData.Save, "OfficePowerPoint")]
+[Cmdlet(VerbsData.Save, "OfficePowerPoint", SupportsShouldProcess = true)]
 public class SaveOfficePowerPointCommand : PSCmdlet
 {
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
+    [ValidateNotNull]
     public Presentation Presentation { get; set; } = null!;
 
     [Parameter]
@@ -24,7 +25,10 @@ public class SaveOfficePowerPointCommand : PSCmdlet
 
         try
         {
-            PowerPointDocumentService.SavePresentation(Presentation, Show.IsPresent);
+            if (ShouldProcess("PowerPoint presentation", "Save"))
+            {
+                PowerPointDocumentService.SavePresentation(Presentation, Show.IsPresent);
+            }
         }
         catch (Exception ex)
         {

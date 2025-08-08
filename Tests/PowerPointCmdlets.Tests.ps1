@@ -12,6 +12,13 @@ Describe 'PowerPoint cmdlets' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'supports WhatIf when saving presentation' {
+        $path = Join-Path $TestDrive 'whatif.pptx'
+        $pres = New-OfficePowerPoint -FilePath $path
+        Save-OfficePowerPoint -Presentation $pres -WhatIf
+        Test-Path $path | Should -BeFalse
+    }
+
     It 'adds slide to presentation' {
         $path = Join-Path $TestDrive 'addslide.pptx'
         $pres = New-OfficePowerPoint -FilePath $path
