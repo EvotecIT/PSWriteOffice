@@ -1,3 +1,14 @@
+/*
+.SYNOPSIS
+Adds a list to a Word document.
+
+.DESCRIPTION
+Creates a list in a Word document and optionally populates it with list items.
+
+.EXAMPLE
+PS> .\Examples\Word\New-OfficeWordList.ps1
+Illustrates creating a list with list items.
+*/
 using System;
 using System.Management.Automation;
 using OfficeIMO.Word;

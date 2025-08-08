@@ -1,3 +1,14 @@
+/*
+.SYNOPSIS
+Adds text to a Word document or paragraph.
+
+.DESCRIPTION
+Appends text to a Word document or paragraph with optional formatting and alignment.
+
+.EXAMPLE
+PS> .\Examples\Word\New-OfficeWordText.ps1
+Demonstrates adding formatted text to a document.
+*/
 using System;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Wordprocessing;

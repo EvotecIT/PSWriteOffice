@@ -1,3 +1,14 @@
+/*
+.SYNOPSIS
+Converts HTML content into a Word document.
+
+.DESCRIPTION
+Creates a Word document from HTML content or an HTML file, with optional display after conversion.
+
+.EXAMPLE
+PS> .\Examples\Word\ConvertFrom-HTMLtoWord.ps1
+Converts an HTML snippet into a Word document.
+*/
 using System;
 using System.IO;
 using System.Management.Automation;

@@ -1,3 +1,14 @@
+/*
+.SYNOPSIS
+Closes a Word document.
+
+.DESCRIPTION
+Closes the specified Word document and releases associated resources.
+
+.EXAMPLE
+PS> .\Examples\Word\Close-OfficeWord.ps1
+Illustrates closing an open document.
+*/
 using System;
 using System.Management.Automation;
 using OfficeIMO.Word;

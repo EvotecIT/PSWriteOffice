@@ -1,3 +1,14 @@
+/*
+.SYNOPSIS
+Creates a list item for a Word list.
+
+.DESCRIPTION
+Adds a list item to an existing list or returns data representing a list item.
+
+.EXAMPLE
+PS> .\Examples\Word\New-OfficeWordListItem.ps1
+Shows how to add an item to a list.
+*/
 using System;
 using System.Collections.Specialized;
 using System.Management.Automation;

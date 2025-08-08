@@ -1,3 +1,14 @@
+/*
+.SYNOPSIS
+Removes footers from a Word document.
+
+.DESCRIPTION
+Deletes all footers from the provided Word document.
+
+.EXAMPLE
+PS> .\Examples\Word\Remove-OfficeWordFooter.ps1
+Demonstrates removing footers from a document.
+*/
 using System;
 using System.Management.Automation;
 using OfficeIMO.Word;

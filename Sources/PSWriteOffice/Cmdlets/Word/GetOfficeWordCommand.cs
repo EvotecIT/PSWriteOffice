@@ -1,3 +1,14 @@
+/*
+.SYNOPSIS
+Opens an existing Word document.
+
+.DESCRIPTION
+Loads a Word document from disk, optionally in read-only mode or with automatic saving.
+
+.EXAMPLE
+PS> .\Examples\Word\Get-OfficeWord.ps1
+Shows how to load a Word document from a file.
+*/
 using System;
 using System.IO;
 using System.Management.Automation;

@@ -1,3 +1,14 @@
+/*
+.SYNOPSIS
+Adds a table to a Word document.
+
+.DESCRIPTION
+Creates a table in a Word document from an array of objects with optional style and layout.
+
+.EXAMPLE
+PS> .\Examples\Word\New-OfficeWordTable.ps1
+Shows how to insert a table into a document.
+*/
 using System;
 using System.Management.Automation;
 using OfficeIMO.Word;
