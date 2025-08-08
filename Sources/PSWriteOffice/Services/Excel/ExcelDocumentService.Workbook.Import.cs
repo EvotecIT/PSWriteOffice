@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using ClosedXML.Excel;
 
@@ -7,6 +8,9 @@ namespace PSWriteOffice.Services.Excel;
 public static partial class ExcelDocumentService
 {
     public static IDictionary<string, IList<IDictionary<string, object?>>> ImportWorkbook(string filePath, IEnumerable<string>? worksheetNames = null)
+        => ImportWorkbook(filePath, worksheetNames, null);
+
+    public static IDictionary<string, IList<IDictionary<string, object?>>> ImportWorkbook(string filePath, IEnumerable<string>? worksheetNames, CultureInfo? culture)
     {
         using var workbook = LoadWorkbook(filePath);
         var result = new Dictionary<string, IList<IDictionary<string, object?>>>();
@@ -18,7 +22,7 @@ public static partial class ExcelDocumentService
                 continue;
             }
 
-            var rows = GetWorksheetData(worksheet).ToList();
+            var rows = GetWorksheetData(worksheet, culture).ToList();
             result[worksheet.Name] = rows;
         }
 

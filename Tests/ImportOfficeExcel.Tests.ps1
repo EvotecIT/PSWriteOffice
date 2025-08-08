@@ -15,6 +15,19 @@ Describe 'Import-OfficeExcel cmdlet' {
         $rows[0].Age | Should -Be 31
     }
 
+    It 'imports data using specified culture' {
+        $path = Join-Path $TestDrive 'culture.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
+        $workbook = New-OfficeExcel
+        $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Number'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 1 -Value '1,23'
+        Save-OfficeExcel -Workbook $workbook -FilePath $path
+        $culture = [System.Globalization.CultureInfo]'pl-PL'
+        $rows = Import-OfficeExcel -FilePath $path -Culture $culture
+        $rows[0].Number | Should -Be 1.23
+    }
+
     It 'throws for invalid path' {
         { Import-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
     }
