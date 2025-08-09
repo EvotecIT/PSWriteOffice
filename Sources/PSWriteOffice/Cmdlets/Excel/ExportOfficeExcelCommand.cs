@@ -93,21 +93,75 @@ public class ExportOfficeExcelCommand : PSCmdlet
                 WorksheetName,
                 Append ? WorksheetExistOption.Skip : WorksheetExistOption.Replace);
 
-            var tableData = _data.Select(item =>
+            List<IDictionary<string, object?>> tableData;
+
+            if (AllProperties)
             {
-                if (item.BaseObject is IDictionary<string, object?> dict)
+                var propertyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var item in _data)
                 {
-                    return dict;
+                    if (item.BaseObject is IDictionary<string, object?> dict)
+                    {
+                        foreach (var key in dict.Keys)
+                        {
+                            propertyNames.Add(key);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var prop in item.Properties)
+                        {
+                            propertyNames.Add(prop.Name);
+                        }
+                    }
                 }
 
-                var psobj = item;
-                var result = new Dictionary<string, object?>();
-                foreach (var prop in psobj.Properties)
+                tableData = _data.Select(item =>
                 {
-                    result[prop.Name] = prop.Value;
-                }
-                return (IDictionary<string, object?>)result;
-            }).ToList();
+                    IDictionary<string, object?> dict;
+                    if (item.BaseObject is IDictionary<string, object?> existing)
+                    {
+                        dict = new Dictionary<string, object?>(existing, StringComparer.OrdinalIgnoreCase);
+                    }
+                    else
+                    {
+                        var psobj = item;
+                        dict = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+                        foreach (var prop in psobj.Properties)
+                        {
+                            dict[prop.Name] = prop.Value;
+                        }
+                    }
+
+                    foreach (var name in propertyNames)
+                    {
+                        if (!dict.ContainsKey(name))
+                        {
+                            dict[name] = null;
+                        }
+                    }
+
+                    return dict;
+                }).ToList();
+            }
+            else
+            {
+                tableData = _data.Select(item =>
+                {
+                    if (item.BaseObject is IDictionary<string, object?> dict)
+                    {
+                        return dict;
+                    }
+
+                    var psobj = item;
+                    var result = new Dictionary<string, object?>();
+                    foreach (var prop in psobj.Properties)
+                    {
+                        result[prop.Name] = prop.Value;
+                    }
+                    return (IDictionary<string, object?>)result;
+                }).ToList();
+            }
 
             if (Append && worksheet.Tables.Any())
             {

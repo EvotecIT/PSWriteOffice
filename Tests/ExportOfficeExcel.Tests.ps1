@@ -19,6 +19,20 @@ Describe 'Export-OfficeExcel cmdlet' {
         $rows[-1].Value | Should -Be 4
     }
 
+    It 'includes all properties when AllProperties is used' {
+        $path = Join-Path $TestDrive 'allprops.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
+        $data = @(
+            [PSCustomObject]@{ First = 1; Second = 'A' },
+            [PSCustomObject]@{ First = 2 }
+        )
+        $data | Export-OfficeExcel -FilePath $path -AllProperties
+        $rows = Import-OfficeExcel -FilePath $path
+        $rows[0].PSObject.Properties.Name | Should -Contain 'Second'
+        $rows[1].PSObject.Properties.Name | Should -Contain 'Second'
+        $rows[1].Second | Should -BeNullOrEmpty
+    }
+
     It 'throws for invalid path' {
         $data = 1..3 | ForEach-Object { [PSCustomObject]@{ Value = $_ } }
         { $data | Export-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
