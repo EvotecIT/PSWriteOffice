@@ -21,6 +21,21 @@ Describe 'Word cmdlets' {
         Close-OfficeWord -Document $doc
     }
 
+    It 'throws when optional array length mismatches Text' {
+        $path = Join-Path $TestDrive 'mismatch.docx'
+        $doc = New-OfficeWord -FilePath $path
+        { New-OfficeWordText -Document $doc -Text @('one','two') -Bold @($true) } | Should -Throw
+        { New-OfficeWordText -Document $doc -Text @('one','two') -Color @('FF0000') } | Should -Throw
+        Close-OfficeWord -Document $doc
+    }
+
+    It 'throws in service when array length mismatches Text' {
+        $path = Join-Path $TestDrive 'mismatchService.docx'
+        $doc = New-OfficeWord -FilePath $path
+        { [PSWriteOffice.Services.Word.WordDocumentService]::AddText($doc, $null, @('a','b'), @($true), $null, $null, $null, $null, $null) } | Should -Throw
+        Close-OfficeWord -Document $doc
+    }
+
     It 'adds table' {
         $path = Join-Path $TestDrive 'table.docx'
         $doc = New-OfficeWord -FilePath $path
