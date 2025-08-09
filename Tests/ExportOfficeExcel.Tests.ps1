@@ -33,6 +33,20 @@ Describe 'Export-OfficeExcel cmdlet' {
         $rows[1].Second | Should -BeNullOrEmpty
     }
 
+    It 'auto sizes columns and freezes panes when switches are used' {
+        $path = Join-Path $TestDrive 'format.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
+        $data = 1..2 | ForEach-Object { [PSCustomObject]@{ Name = "Row$_"; Value = "Some very long value $_" } }
+        $data | Export-OfficeExcel -FilePath $path -WorksheetName 'Data' -AutoSize -FreezeTopRow -FreezeFirstColumn
+        $dll = Join-Path $PSScriptRoot '..' 'Sources' 'PSWriteOffice' 'bin' 'Debug' 'net8.0' 'ClosedXML.dll'
+        Add-Type -Path $dll
+        $wb = [ClosedXML.Excel.XLWorkbook]::new($path)
+        $ws = $wb.Worksheet('Data')
+        $ws.Column(1).Width | Should -BeGreaterThan 8.43
+        $ws.SheetView.SplitRow | Should -Be 1
+        $ws.SheetView.SplitColumn | Should -Be 1
+    }
+
     It 'throws for invalid path' {
         $data = 1..3 | ForEach-Object { [PSCustomObject]@{ Value = $_ } }
         { $data | Export-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw

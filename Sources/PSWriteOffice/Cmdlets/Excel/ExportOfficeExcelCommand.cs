@@ -65,6 +65,15 @@ public class ExportOfficeExcelCommand : PSCmdlet
     public SwitchParameter EmphasizeLastColumn { get; set; }
 
     [Parameter]
+    public SwitchParameter AutoSize { get; set; }
+
+    [Parameter]
+    public SwitchParameter FreezeTopRow { get; set; }
+
+    [Parameter]
+    public SwitchParameter FreezeFirstColumn { get; set; }
+
+    [Parameter]
     public XLTableTheme Theme { get; set; } = XLTableTheme.None;
 
     private readonly List<PSObject> _data = new();
@@ -199,6 +208,21 @@ public class ExportOfficeExcelCommand : PSCmdlet
                     EmphasizeFirstColumn,
                     EmphasizeLastColumn,
                     Transpose);
+            }
+
+            if (AutoSize)
+            {
+                ExcelDocumentService.AutoSizeColumns(worksheet);
+            }
+
+            if (FreezeTopRow)
+            {
+                ExcelDocumentService.FreezeTopRow(worksheet);
+            }
+
+            if (FreezeFirstColumn)
+            {
+                ExcelDocumentService.FreezeFirstColumn(worksheet);
             }
 
             ExcelDocumentService.SaveWorkbook(workbook, FilePath, Show);

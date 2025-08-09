@@ -41,4 +41,19 @@ public static partial class ExcelDocumentService
         }
         return worksheet;
     }
+
+    public static void AutoSizeColumns(IXLWorksheet worksheet)
+    {
+        worksheet.Columns().AdjustToContents();
+    }
+
+    public static void FreezeTopRow(IXLWorksheet worksheet)
+    {
+        worksheet.SheetView.FreezeRows(1);
+    }
+
+    public static void FreezeFirstColumn(IXLWorksheet worksheet)
+    {
+        worksheet.SheetView.FreezeColumns(1);
+    }
 }
