@@ -42,22 +42,34 @@ public class ImportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter NoHeader { get; set; }
 
+    [Parameter]
+    public Type? Type { get; set; }
+
+    [Parameter]
+    public SwitchParameter AsDataTable { get; set; }
+
     protected override void ProcessRecord()
     {
         try
         {
-            var data = ExcelDocumentService.ImportWorkbook(FilePath, WorkSheetName, Culture, StartRow, EndRow, StartColumn, EndColumn, HeaderRow, NoHeader);
-            if (WorkSheetName != null && WorkSheetName.Length == 1 && data.TryGetValue(WorkSheetName[0], out var single))
+            var raw = ExcelDocumentService.ImportWorkbook(FilePath, WorkSheetName, Culture, StartRow, EndRow, StartColumn, EndColumn, HeaderRow, NoHeader);
+            var converted = new Dictionary<string, object>();
+            foreach (var kvp in raw)
             {
-                WriteObject(single, true);
+                converted[kvp.Key] = ExcelDocumentService.ConvertWorksheetData(kvp.Value, Type, AsDataTable);
             }
-            else if ((WorkSheetName == null || WorkSheetName.Length == 0) && data.Count == 1)
+
+            if (WorkSheetName != null && WorkSheetName.Length == 1 && converted.TryGetValue(WorkSheetName[0], out var single))
             {
-                WriteObject(data.Values.First(), true);
+                WriteObject(single, !AsDataTable.IsPresent);
+            }
+            else if ((WorkSheetName == null || WorkSheetName.Length == 0) && converted.Count == 1)
+            {
+                WriteObject(converted.Values.First(), !AsDataTable.IsPresent);
             }
             else
             {
-                WriteObject(data);
+                WriteObject(converted);
             }
         }
         catch (FileNotFoundException ex)

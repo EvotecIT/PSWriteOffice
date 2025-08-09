@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
+using System.Linq;
 using ClosedXML.Excel;
 
 namespace PSWriteOffice.Services.Excel;
@@ -86,5 +88,75 @@ public static partial class ExcelDocumentService
 
             yield return rowData;
         }
+    }
+
+    private static IEnumerable<object> MapRowsToType(IEnumerable<IDictionary<string, object?>> rows, Type type)
+    {
+        var properties = type.GetProperties().Where(p => p.CanWrite).ToArray();
+        foreach (var row in rows)
+        {
+            var instance = Activator.CreateInstance(type);
+            if (instance == null)
+            {
+                continue;
+            }
+
+            foreach (var property in properties)
+            {
+                var matchingKey = row.Keys.FirstOrDefault(k => string.Equals(k, property.Name, StringComparison.OrdinalIgnoreCase));
+                if (matchingKey == null)
+                {
+                    continue;
+                }
+
+                var value = row[matchingKey];
+                if (value == null)
+                {
+                    property.SetValue(instance, null);
+                    continue;
+                }
+
+                try
+                {
+                    var targetType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                    var converted = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+                    property.SetValue(instance, converted);
+                }
+                catch
+                {
+                    // ignore conversion failures
+                }
+            }
+
+            yield return instance;
+        }
+    }
+
+    private static DataTable BuildDataTable(IEnumerable<IDictionary<string, object?>> rows)
+    {
+        var table = new DataTable();
+        var columnsAdded = false;
+
+        foreach (var row in rows)
+        {
+            if (!columnsAdded)
+            {
+                foreach (var key in row.Keys)
+                {
+                    table.Columns.Add(key, typeof(object));
+                }
+
+                columnsAdded = true;
+            }
+
+            var dataRow = table.NewRow();
+            foreach (var key in row.Keys)
+            {
+                dataRow[key] = row[key] ?? DBNull.Value;
+            }
+            table.Rows.Add(dataRow);
+        }
+
+        return table;
     }
 }
