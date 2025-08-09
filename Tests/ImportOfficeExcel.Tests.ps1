@@ -80,6 +80,43 @@ Describe 'Import-OfficeExcel cmdlet' {
         $rows[0].Column2 | Should -Be 30
     }
 
+    It 'imports data as specified type' {
+        class Person {
+            [string]$Name
+            [int]$Age
+        }
+
+        $path = Join-Path $TestDrive 'typed.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
+        $workbook = New-OfficeExcel
+        $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Name'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 2 -Value 'Age'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 1 -Value 'John'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 2 -Value 30
+        Save-OfficeExcel -Workbook $workbook -FilePath $path
+        $rows = Import-OfficeExcel -FilePath $path -Type ([Person])
+        $rows[0].GetType().FullName | Should -Be ([Person]).FullName
+        $rows[0].Name | Should -Be 'John'
+        $rows[0].Age | Should -Be 30
+    }
+
+    It 'imports data as DataTable' {
+        $path = Join-Path $TestDrive 'datatable.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
+        $workbook = New-OfficeExcel
+        $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Name'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 2 -Value 'Age'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 1 -Value 'Jane'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 2 -Value 31
+        Save-OfficeExcel -Workbook $workbook -FilePath $path
+        $table = Import-OfficeExcel -FilePath $path -AsDataTable
+        $table.GetType().FullName | Should -Be ([System.Data.DataTable]).FullName
+        $table.Rows.Count | Should -Be 1
+        $table.Rows[0].Name | Should -Be 'Jane'
+    }
+
     It 'throws for invalid path' {
         { Import-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
     }
