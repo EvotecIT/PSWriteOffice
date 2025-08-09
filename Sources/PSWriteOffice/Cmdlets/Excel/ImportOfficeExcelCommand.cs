@@ -24,11 +24,29 @@ public class ImportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public CultureInfo? Culture { get; set; }
 
+    [Parameter]
+    public int? StartRow { get; set; }
+
+    [Parameter]
+    public int? EndRow { get; set; }
+
+    [Parameter]
+    public int? StartColumn { get; set; }
+
+    [Parameter]
+    public int? EndColumn { get; set; }
+
+    [Parameter]
+    public int? HeaderRow { get; set; }
+
+    [Parameter]
+    public SwitchParameter NoHeader { get; set; }
+
     protected override void ProcessRecord()
     {
         try
         {
-            var data = ExcelDocumentService.ImportWorkbook(FilePath, WorkSheetName, Culture);
+            var data = ExcelDocumentService.ImportWorkbook(FilePath, WorkSheetName, Culture, StartRow, EndRow, StartColumn, EndColumn, HeaderRow, NoHeader);
             if (WorkSheetName != null && WorkSheetName.Length == 1 && data.TryGetValue(WorkSheetName[0], out var single))
             {
                 WriteObject(single, true);

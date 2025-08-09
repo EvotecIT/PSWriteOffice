@@ -8,9 +8,18 @@ namespace PSWriteOffice.Services.Excel;
 public static partial class ExcelDocumentService
 {
     public static IDictionary<string, IList<IDictionary<string, object?>>> ImportWorkbook(string filePath, IEnumerable<string>? worksheetNames = null)
-        => ImportWorkbook(filePath, worksheetNames, null);
+        => ImportWorkbook(filePath, worksheetNames, null, null, null, null, null, null, false);
 
-    public static IDictionary<string, IList<IDictionary<string, object?>>> ImportWorkbook(string filePath, IEnumerable<string>? worksheetNames, CultureInfo? culture)
+    public static IDictionary<string, IList<IDictionary<string, object?>>> ImportWorkbook(
+        string filePath,
+        IEnumerable<string>? worksheetNames,
+        CultureInfo? culture,
+        int? startRow,
+        int? endRow,
+        int? startColumn,
+        int? endColumn,
+        int? headerRow,
+        bool noHeader)
     {
         using var workbook = LoadWorkbook(filePath);
         var result = new Dictionary<string, IList<IDictionary<string, object?>>>();
@@ -22,7 +31,7 @@ public static partial class ExcelDocumentService
                 continue;
             }
 
-            var rows = GetWorksheetData(worksheet, culture).ToList();
+            var rows = GetWorksheetData(worksheet, startRow, endRow, startColumn, endColumn, headerRow, noHeader, culture).ToList();
             result[worksheet.Name] = rows;
         }
 

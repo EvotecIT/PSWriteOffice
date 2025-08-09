@@ -28,6 +28,58 @@ Describe 'Import-OfficeExcel cmdlet' {
         $rows[0].Number | Should -Be 1.23
     }
 
+    It 'imports data within specified range' {
+        $path = Join-Path $TestDrive 'range.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
+        $workbook = New-OfficeExcel
+        $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Name'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 2 -Value 'Age'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 1 -Value 'John'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 2 -Value 30
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 3 -Column 1 -Value 'Jane'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 3 -Column 2 -Value 25
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 4 -Column 1 -Value 'Bob'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 4 -Column 2 -Value 40
+        Save-OfficeExcel -Workbook $workbook -FilePath $path
+        $rows = Import-OfficeExcel -FilePath $path -StartRow 2 -EndRow 3 -StartColumn 1 -EndColumn 2
+        $rows.Count | Should -Be 2
+        $rows[0].Name | Should -Be 'John'
+        $rows[1].Name | Should -Be 'Jane'
+    }
+
+    It 'imports data using custom header row' {
+        $path = Join-Path $TestDrive 'headerrow.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
+        $workbook = New-OfficeExcel
+        $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Skip'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 2 -Value 'Skip'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 1 -Value 'Name'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 2 -Value 'Age'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 3 -Column 1 -Value 'John'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 3 -Column 2 -Value 30
+        Save-OfficeExcel -Workbook $workbook -FilePath $path
+        $rows = Import-OfficeExcel -FilePath $path -StartRow 2 -EndRow 3 -HeaderRow 2
+        $rows[0].Name | Should -Be 'John'
+        $rows[0].Age | Should -Be 30
+    }
+
+    It 'imports data without header row' {
+        $path = Join-Path $TestDrive 'noheader.xlsx'
+        New-Item -Path $path -ItemType File | Out-Null
+        $workbook = New-OfficeExcel
+        $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'John'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 2 -Value 30
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 1 -Value 'Jane'
+        New-OfficeExcelValue -Worksheet $sheet1 -Row 2 -Column 2 -Value 25
+        Save-OfficeExcel -Workbook $workbook -FilePath $path
+        $rows = Import-OfficeExcel -FilePath $path -NoHeader -StartRow 1 -EndRow 2 -StartColumn 1 -EndColumn 2
+        $rows[0].Column1 | Should -Be 'John'
+        $rows[0].Column2 | Should -Be 30
+    }
+
     It 'throws for invalid path' {
         { Import-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
     }
