@@ -2,16 +2,19 @@ using System;
 using System.Management.Automation;
 using ClosedXML.Excel;
 using PSWriteOffice.Services.Excel;
+using ValidateScriptAttribute = PSWriteOffice.Validation.ValidateScriptAttribute;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
-[Cmdlet(VerbsData.Save, "OfficeExcel")]
+[Cmdlet(VerbsData.Save, "OfficeExcel", SupportsShouldProcess = true)]
 public class SaveOfficeExcelCommand : PSCmdlet
 {
     [Parameter(Mandatory = true)]
     public XLWorkbook Workbook { get; set; } = null!;
 
     [Parameter(Mandatory = true)]
+    [ValidateNotNullOrEmpty]
+    [ValidateScript("{ Test-Path $_ }")]
     public string FilePath { get; set; } = string.Empty;
 
     [Parameter]
@@ -21,7 +24,10 @@ public class SaveOfficeExcelCommand : PSCmdlet
     {
         try
         {
-            ExcelDocumentService.SaveWorkbook(Workbook, FilePath, Show);
+            if (ShouldProcess(FilePath, "Save workbook"))
+            {
+                ExcelDocumentService.SaveWorkbook(Workbook, FilePath, Show);
+            }
         }
         catch (Exception ex)
         {

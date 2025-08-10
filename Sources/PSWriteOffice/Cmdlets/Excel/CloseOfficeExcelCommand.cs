@@ -4,7 +4,7 @@ using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
-[Cmdlet(VerbsCommon.Close, "OfficeExcel")]
+[Cmdlet(VerbsCommon.Close, "OfficeExcel", SupportsShouldProcess = true)]
 public class CloseOfficeExcelCommand : PSCmdlet
 {
     [Parameter(Mandatory = true)]
@@ -12,6 +12,9 @@ public class CloseOfficeExcelCommand : PSCmdlet
 
     protected override void ProcessRecord()
     {
-        ExcelDocumentService.CloseWorkbook(Workbook);
+        if (ShouldProcess("Workbook", "Close workbook"))
+        {
+            ExcelDocumentService.CloseWorkbook(Workbook);
+        }
     }
 }

@@ -49,6 +49,24 @@ public class NewOfficeWordTextCommand : PSCmdlet
 
     protected override void ProcessRecord()
     {
+        var textLength = Text.Length;
+        if (Bold != null && Bold.Length != textLength)
+        {
+            throw new ArgumentException("Bold length must match Text length.", nameof(Bold));
+        }
+        if (Italic != null && Italic.Length != textLength)
+        {
+            throw new ArgumentException("Italic length must match Text length.", nameof(Italic));
+        }
+        if (Underline != null && Underline.Length != textLength)
+        {
+            throw new ArgumentException("Underline length must match Text length.", nameof(Underline));
+        }
+        if (Color != null && Color.Length != textLength)
+        {
+            throw new ArgumentException("Color length must match Text length.", nameof(Color));
+        }
+
         var paragraph = WordDocumentService.AddText(
             ParameterSetName == "Document" ? Document : null,
             ParameterSetName == "Paragraph" ? Paragraph : null,

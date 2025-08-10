@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
 using ShapeCrawler;
 
 namespace PSWriteOffice.Services.PowerPoint;
@@ -13,6 +14,18 @@ public static class PowerPointDocumentService
     {
         var presentation = new Presentation();
         Presentations[presentation] = (filePath, true);
+        return presentation;
+    }
+
+    public static Presentation LoadPresentation(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException($"File {filePath} doesn't exist.", filePath);
+        }
+
+        var presentation = new Presentation(filePath);
+        Presentations[presentation] = (filePath, false);
         return presentation;
     }
 

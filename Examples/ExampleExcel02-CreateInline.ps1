@@ -1,4 +1,4 @@
-﻿Clear-Host
+Clear-Host
 Import-Module .\PSWriteOffice.psd1 -Force
 
 New-OfficeExcel -FilePath "C:\Support\GitHub\PSWriteOffice\Examples\Documents\Excel1.xlsx" {
@@ -13,7 +13,7 @@ New-OfficeExcel -FilePath "C:\Support\GitHub\PSWriteOffice\Examples\Documents\Ex
 
         $Cell = Get-OfficeExcelValue -Row 2 -Column 6
         if ($Cell.DataType -eq 'Boolean') {
-            Write-Color -Color Red -Text "Good"
+            Write-Host "Good" -ForegroundColor Red
         }
     }
     # New-OfficeExcelWorkSheet will create Contact2 if it doesn't exists, but if it exists, it will use it for it's work
@@ -26,7 +26,7 @@ New-OfficeExcel -FilePath "C:\Support\GitHub\PSWriteOffice\Examples\Documents\Ex
 
         $Cell = Get-OfficeExcelValue -Row 2 -Column 6
         if ($Cell.DataType -eq 'Boolean') {
-            Write-Color -Color Red -Text "Good Contact 2 exists and we set value"
+            Write-Host "Good Contact 2 exists and we set value" -ForegroundColor Red
         }
 
         $Data1 = Get-Process | Select-Object -First 5
