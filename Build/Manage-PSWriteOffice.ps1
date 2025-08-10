@@ -1,6 +1,4 @@
-﻿Clear-Host
-
-Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
+﻿Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
