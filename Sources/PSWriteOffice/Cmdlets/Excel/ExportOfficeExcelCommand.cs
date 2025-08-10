@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -73,6 +74,15 @@ public class ExportOfficeExcelCommand : PSCmdlet
 
     [Parameter]
     public XLTableTheme Theme { get; set; } = XLTableTheme.None;
+
+    [Parameter]
+    public Hashtable? Formulas { get; set; }
+
+    [Parameter]
+    public PSObject[] PivotTables { get; set; } = Array.Empty<PSObject>();
+
+    [Parameter]
+    public PSObject[] Charts { get; set; } = Array.Empty<PSObject>();
 
     private readonly List<PSObject> _data = new();
 
@@ -235,6 +245,57 @@ public class ExportOfficeExcelCommand : PSCmdlet
                     Transpose);
             }
 
+            if (Formulas != null && Formulas.Count > 0)
+            {
+                var formulas = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                foreach (DictionaryEntry entry in Formulas)
+                {
+                    if (entry.Key is string key && entry.Value != null)
+                    {
+                        formulas[key] = entry.Value.ToString()!;
+                    }
+                }
+                ExcelDocumentService.ApplyFormulas(worksheet, formulas);
+            }
+
+            if (PivotTables != null && PivotTables.Length > 0)
+            {
+                foreach (var item in PivotTables)
+                {
+                    var dict = item.BaseObject as IDictionary<string, object?> ?? item.Properties.ToDictionary(p => p.Name, p => p.Value, StringComparer.OrdinalIgnoreCase);
+                    var name = dict.TryGetValue("Name", out var n) ? n?.ToString() ?? "PivotTable1" : "PivotTable1";
+                    var sourceRange = dict.TryGetValue("SourceRange", out var sr) ? sr?.ToString() ?? string.Empty : string.Empty;
+                    var targetCell = dict.TryGetValue("TargetCell", out var tc) ? tc?.ToString() ?? "A1" : "A1";
+
+                    IEnumerable<string>? rowFields = null;
+                    if (dict.TryGetValue("RowFields", out var rf) && rf is IEnumerable<object?> rfEnum)
+                    {
+                        rowFields = rfEnum.Select(o => o?.ToString() ?? string.Empty).Where(s => !string.IsNullOrEmpty(s)).ToList();
+                    }
+
+                    IEnumerable<string>? columnFields = null;
+                    if (dict.TryGetValue("ColumnFields", out var cf) && cf is IEnumerable<object?> cfEnum)
+                    {
+                        columnFields = cfEnum.Select(o => o?.ToString() ?? string.Empty).Where(s => !string.IsNullOrEmpty(s)).ToList();
+                    }
+
+                    IDictionary<string, XLPivotSummary>? values = null;
+                    if (dict.TryGetValue("Values", out var v) && v is IDictionary vDict)
+                    {
+                        values = new Dictionary<string, XLPivotSummary>(StringComparer.OrdinalIgnoreCase);
+                        foreach (DictionaryEntry entry in vDict)
+                        {
+                            var summary = Enum.TryParse<XLPivotSummary>(entry.Value?.ToString(), true, out var res)
+                                ? res
+                                : XLPivotSummary.Sum;
+                            values[entry.Key.ToString()!] = summary;
+                        }
+                    }
+
+                    ExcelDocumentService.AddPivotTable(worksheet, name, sourceRange, targetCell, rowFields, columnFields, values);
+                }
+            }
+
             if (AutoSize)
             {
                 ExcelDocumentService.AutoSizeColumns(worksheet);
@@ -251,6 +312,16 @@ public class ExportOfficeExcelCommand : PSCmdlet
             }
 
             ExcelDocumentService.SaveWorkbook(workbook, FilePath, Show);
+
+            if (Charts != null && Charts.Length > 0)
+            {
+                foreach (var chart in Charts)
+                {
+                    var dict = chart.BaseObject as IDictionary<string, object?> ?? chart.Properties.ToDictionary(p => p.Name, p => p.Value, StringComparer.OrdinalIgnoreCase);
+                    var title = dict.TryGetValue("Title", out var t) ? t?.ToString() ?? string.Empty : string.Empty;
+                    ExcelDocumentService.AddChart(FilePath, WorksheetName, title);
+                }
+            }
         }
         catch (Exception ex)
         {

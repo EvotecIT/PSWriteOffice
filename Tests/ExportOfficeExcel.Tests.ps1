@@ -53,4 +53,37 @@ Describe 'Export-OfficeExcel cmdlet' {
         $data | Export-OfficeExcel -FilePath $path
         Test-Path $path | Should -BeTrue
     }
+
+    It 'creates a pivot table when definition is provided' {
+        $path = Join-Path $TestDrive 'pivot.xlsx'
+        $data = @(
+            [PSCustomObject]@{ Category = 'A'; Value = 1 }
+            [PSCustomObject]@{ Category = 'A'; Value = 2 }
+            [PSCustomObject]@{ Category = 'B'; Value = 3 }
+        )
+
+        $pivot = @{ Name = 'Pivot1'; SourceRange = 'A1:B4'; TargetCell = 'D2'; RowFields = @('Category'); Values = @{ Value = 'Sum' } }
+        $data | Export-OfficeExcel -FilePath $path -WorksheetName 'Data' -PivotTables $pivot
+
+        $dll = Join-Path $PSScriptRoot '..' 'Sources' 'PSWriteOffice' 'bin' 'Debug' 'net8.0' 'ClosedXML.dll'
+        Add-Type -Path $dll
+        $wb = [ClosedXML.Excel.XLWorkbook]::new($path)
+        $ws = $wb.Worksheet('Data')
+        $ws.PivotTables.Count | Should -BeGreaterThan 0
+    }
+
+    It 'adds a chart when chart specification is provided' {
+        $path = Join-Path $TestDrive 'chart.xlsx'
+        $data = 1..3 | ForEach-Object { [PSCustomObject]@{ Value = $_ } }
+        $chart = @{ Title = 'Chart1'; Range = 'A1:B3' }
+        $data | Export-OfficeExcel -FilePath $path -WorksheetName 'Data' -Charts $chart
+
+        $openXml = Join-Path $PSScriptRoot '..' 'Sources' 'PSWriteOffice' 'bin' 'Debug' 'net8.0' 'DocumentFormat.OpenXml.dll'
+        Add-Type -Path $openXml
+        $doc = [DocumentFormat.OpenXml.Packaging.SpreadsheetDocument]::Open($path, $false)
+        $sheet = $doc.WorkbookPart.Workbook.Sheets.ChildElements | Where-Object { $_.Name -eq 'Data' }
+        $wsPart = $doc.WorkbookPart.GetPartById($sheet.Id)
+        $wsPart.DrawingsPart.ChartParts.Count | Should -BeGreaterThan 0
+        $doc.Close()
+    }
 }
