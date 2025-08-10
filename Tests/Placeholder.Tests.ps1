@@ -1,26 +1,26 @@
 Describe 'Placeholder classes' {
     It 'GetOfficeWordCommand exists' {
-        [Type]::GetType('PSWriteOffice.Cmdlets.Word.GetOfficeWordCommand', $false) | Should -Not -BeNullOrEmpty
+        [PSWriteOffice.Cmdlets.Word.GetOfficeWordCommand] | Should -Not -BeNullOrEmpty
     }
     It 'GetOfficeExcelCommand exists' {
-        [Type]::GetType('PSWriteOffice.Cmdlets.Excel.GetOfficeExcelCommand', $false) | Should -Not -BeNullOrEmpty
+        [PSWriteOffice.Cmdlets.Excel.GetOfficeExcelCommand] | Should -Not -BeNullOrEmpty
     }
     It 'GetOfficePowerPointCommand exists' {
-        [Type]::GetType('PSWriteOffice.Cmdlets.PowerPoint.GetOfficePowerPointCommand', $false) | Should -Not -BeNullOrEmpty
+        [PSWriteOffice.Cmdlets.PowerPoint.GetOfficePowerPointCommand] | Should -Not -BeNullOrEmpty
     }
     It 'WordDocumentService exists' {
-        [Type]::GetType('PSWriteOffice.Services.Word.WordDocumentService', $false) | Should -Not -BeNullOrEmpty
+        [PSWriteOffice.Services.Word.WordDocumentService] | Should -Not -BeNullOrEmpty
     }
     It 'ExcelDocumentService exists' {
-        [Type]::GetType('PSWriteOffice.Services.Excel.ExcelDocumentService', $false) | Should -Not -BeNullOrEmpty
+        [PSWriteOffice.Services.Excel.ExcelDocumentService] | Should -Not -BeNullOrEmpty
     }
     It 'PowerPointDocumentService exists' {
-        [Type]::GetType('PSWriteOffice.Services.PowerPoint.PowerPointDocumentService', $false) | Should -Not -BeNullOrEmpty
+        [PSWriteOffice.Services.PowerPoint.PowerPointDocumentService] | Should -Not -BeNullOrEmpty
     }
     It 'AddOfficePowerPointSlideCommand exists' {
-        [Type]::GetType('PSWriteOffice.Cmdlets.PowerPoint.AddOfficePowerPointSlideCommand', $false) | Should -Not -BeNullOrEmpty
+        [PSWriteOffice.Cmdlets.PowerPoint.AddOfficePowerPointSlideCommand] | Should -Not -BeNullOrEmpty
     }
     It 'MergeOfficePowerPointCommand exists' {
-        [Type]::GetType('PSWriteOffice.Cmdlets.PowerPoint.MergeOfficePowerPointCommand', $false) | Should -Not -BeNullOrEmpty
+        [PSWriteOffice.Cmdlets.PowerPoint.MergeOfficePowerPointCommand] | Should -Not -BeNullOrEmpty
     }
 }

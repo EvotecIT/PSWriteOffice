@@ -23,7 +23,8 @@ Describe 'PowerPoint cmdlets' {
         $path = Join-Path $TestDrive 'addslide.pptx'
         $pres = New-OfficePowerPoint -FilePath $path
         Add-OfficePowerPointSlide -Presentation $pres -Layout 1
-        $pres.Slides.Count | Should -Be 1
+        # ShapeCrawler always maintains at least 1 slide, so we expect 2
+        $pres.Slides.Count | Should -Be 2
     }
 
     It 'merges presentations' {
@@ -34,7 +35,8 @@ Describe 'PowerPoint cmdlets' {
         Add-OfficePowerPointSlide -Presentation $source -Layout 1
         Save-OfficePowerPoint -Presentation $source
         Merge-OfficePowerPoint -Presentation $target -FilePath $sourcePath
-        $target.Slides.Count | Should -Be 1
+        # Target starts with 1, source has 2 (1 default + 1 added), so merged = 3
+        $target.Slides.Count | Should -Be 3
     }
 
     It 'gets slides by index' {

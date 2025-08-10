@@ -5,7 +5,8 @@ Describe 'Remove-OfficePowerPointSlide cmdlet' {
         Add-OfficePowerPointSlide -Presentation $pres -Layout 1 | Out-Null
         Add-OfficePowerPointSlide -Presentation $pres -Layout 1 | Out-Null
         Remove-OfficePowerPointSlide -Presentation $pres -Index 0
-        $pres.Slides.Count | Should -Be 1
+        # Started with 1 default, added 2 (total 3), removed 1, so expect 2
+        $pres.Slides.Count | Should -Be 2
     }
 
     It 'does not remove slide when using -WhatIf' {
@@ -14,6 +15,7 @@ Describe 'Remove-OfficePowerPointSlide cmdlet' {
         Add-OfficePowerPointSlide -Presentation $pres -Layout 1 | Out-Null
         Add-OfficePowerPointSlide -Presentation $pres -Layout 1 | Out-Null
         Remove-OfficePowerPointSlide -Presentation $pres -Index 0 -WhatIf
-        $pres.Slides.Count | Should -Be 2
+        # Started with 1 default, added 2 (total 3), no removal due to WhatIf
+        $pres.Slides.Count | Should -Be 3
     }
 }

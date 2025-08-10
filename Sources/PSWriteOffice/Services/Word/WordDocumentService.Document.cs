@@ -47,7 +47,7 @@ public static partial class WordDocumentService
         {
             document.Save(filePath, show);
         }
-        else if (!document.AutoSave)
+        else
         {
             document.Save(show);
         }

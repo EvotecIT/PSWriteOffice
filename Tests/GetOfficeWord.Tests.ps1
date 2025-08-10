@@ -5,8 +5,10 @@ Describe 'Get-OfficeWord cmdlet' {
 
     It 'loads existing Word document' {
         $path = Join-Path $TestDrive 'test.docx'
-        New-OfficeWord -FilePath $path | Out-Null
+        $newDoc = New-OfficeWord -FilePath $path
+        Save-OfficeWord -Document $newDoc
         $doc = Get-OfficeWord -FilePath $path
         $doc | Should -Not -BeNullOrEmpty
+        Close-OfficeWord -Document $doc
     }
 }

@@ -3,7 +3,6 @@ using System.IO;
 using System.Management.Automation;
 using ClosedXML.Excel;
 using PSWriteOffice.Services.Excel;
-using ValidateScriptAttribute = PSWriteOffice.Validation.ValidateScriptAttribute;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -12,11 +11,18 @@ public class GetOfficeExcelCommand : PSCmdlet
 {
     [Parameter(Mandatory = true)]
     [ValidateNotNullOrEmpty]
-    [ValidateScript("{ Test-Path $_ }")]
     public string FilePath { get; set; } = string.Empty;
 
     protected override void ProcessRecord()
     {
+        // Validate file exists
+        if (!File.Exists(FilePath))
+        {
+            var ex = new FileNotFoundException($"File not found: {FilePath}", FilePath);
+            WriteError(new ErrorRecord(ex, "FileNotFound", ErrorCategory.ObjectNotFound, FilePath));
+            return;
+        }
+
         try
         {
             var workbook = ExcelDocumentService.LoadWorkbook(FilePath);

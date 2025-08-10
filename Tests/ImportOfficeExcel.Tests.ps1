@@ -1,7 +1,6 @@
 Describe 'Import-OfficeExcel cmdlet' {
     It 'imports specified worksheet data' {
         $path = Join-Path $TestDrive 'import.xlsx'
-        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
         New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Name'
@@ -17,7 +16,6 @@ Describe 'Import-OfficeExcel cmdlet' {
 
     It 'imports data using specified culture' {
         $path = Join-Path $TestDrive 'culture.xlsx'
-        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
         New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Number'
@@ -30,7 +28,6 @@ Describe 'Import-OfficeExcel cmdlet' {
 
     It 'imports data within specified range' {
         $path = Join-Path $TestDrive 'range.xlsx'
-        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
         New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Name'
@@ -50,7 +47,6 @@ Describe 'Import-OfficeExcel cmdlet' {
 
     It 'imports data using custom header row' {
         $path = Join-Path $TestDrive 'headerrow.xlsx'
-        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
         New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Skip'
@@ -67,7 +63,6 @@ Describe 'Import-OfficeExcel cmdlet' {
 
     It 'imports data without header row' {
         $path = Join-Path $TestDrive 'noheader.xlsx'
-        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
         New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'John'
@@ -87,7 +82,6 @@ Describe 'Import-OfficeExcel cmdlet' {
         }
 
         $path = Join-Path $TestDrive 'typed.xlsx'
-        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
         New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Name'
@@ -103,7 +97,6 @@ Describe 'Import-OfficeExcel cmdlet' {
 
     It 'imports data as DataTable' {
         $path = Join-Path $TestDrive 'datatable.xlsx'
-        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         $sheet1 = New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Data' -Option Replace
         New-OfficeExcelValue -Worksheet $sheet1 -Row 1 -Column 1 -Value 'Name'
@@ -118,6 +111,6 @@ Describe 'Import-OfficeExcel cmdlet' {
     }
 
     It 'throws for invalid path' {
-        { Import-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
+        { Import-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') -ErrorAction Stop } | Should -Throw
     }
 }

@@ -1,7 +1,6 @@
 Describe 'Excel workbook cmdlets' {
     It 'creates, saves, and loads workbook' {
         $path = Join-Path $TestDrive 'test.xlsx'
-        New-Item -Path $path -ItemType File | Out-Null
         $workbook = New-OfficeExcel
         New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Sheet1' -Option Replace | Out-Null
         Save-OfficeExcel -Workbook $workbook -FilePath $path
@@ -12,16 +11,18 @@ Describe 'Excel workbook cmdlets' {
 
     It 'throws when saving to invalid path' {
         $workbook = New-OfficeExcel
-        { Save-OfficeExcel -Workbook $workbook -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
+        New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Sheet1' | Out-Null
+        { Save-OfficeExcel -Workbook $workbook -FilePath 'C:\InvalidPath<>*|?"\missing.xlsx' -ErrorAction Stop } | Should -Throw
     }
 
     It 'throws when loading from invalid path' {
-        { Get-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') } | Should -Throw
+        { Get-OfficeExcel -FilePath (Join-Path $TestDrive 'missing.xlsx') -ErrorAction Stop } | Should -Throw
     }
         
     It 'supports -WhatIf parameter' {
-        $path = Join-Path $TestDrive 'test.xlsx'
+        $path = Join-Path $TestDrive 'whatif.xlsx'
         $workbook = New-OfficeExcel
+        New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Sheet1' | Out-Null
         Save-OfficeExcel -Workbook $workbook -FilePath $path -WhatIf
         Test-Path $path | Should -BeFalse
         Close-OfficeExcel -Workbook $workbook -WhatIf

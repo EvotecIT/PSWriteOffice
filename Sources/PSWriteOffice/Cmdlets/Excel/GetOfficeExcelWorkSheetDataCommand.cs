@@ -8,7 +8,6 @@ namespace PSWriteOffice.Cmdlets.Excel;
 public class GetOfficeExcelWorkSheetDataCommand : PSCmdlet
 {
     [Parameter(Mandatory = true)]
-    [Alias("WorkSheet")]
     public IXLWorksheet Worksheet { get; set; } = null!;
 
     protected override void ProcessRecord()

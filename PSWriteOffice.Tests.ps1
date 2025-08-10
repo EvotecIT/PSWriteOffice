@@ -9,11 +9,15 @@ if ($PrimaryModule.Count -ne 1) {
 $PSDInformation = Import-PowerShellDataFile -Path $PrimaryModule.FullName
 $RequiredModules = @(
     'Pester'
+    'PSWriteColor'
     if ($PSDInformation.RequiredModules) {
         $PSDInformation.RequiredModules
     }
 )
 foreach ($Module in $RequiredModules) {
+    if ($Module -eq 'PSWriteOffice') {
+        continue
+    }
     if ($Module -is [System.Collections.IDictionary]) {
         $Exists = Get-Module -ListAvailable -Name $Module.ModuleName
         if (-not $Exists) {
@@ -28,22 +32,35 @@ foreach ($Module in $RequiredModules) {
     }
 }
 
-Write-Host "ModuleName: $ModuleName Version: $($PSDInformation.ModuleVersion)" -ForegroundColor Green
-Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)" -ForegroundColor Green
-Write-Host "PowerShell Edition: $($PSVersionTable.PSEdition)" -ForegroundColor Green
-Write-Host 'Required modules:' -ForegroundColor Yellow
+Write-Color 'ModuleName: ', $ModuleName, ' Version: ', $PSDInformation.ModuleVersion -Color Yellow, Green, Yellow, Green -LinesBefore 2
+Write-Color 'PowerShell Version: ', $PSVersionTable.PSVersion -Color Yellow, Green
+Write-Color 'PowerShell Edition: ', $PSVersionTable.PSEdition -Color Yellow, Green
+Write-Color 'Required modules: ' -Color Yellow
 foreach ($Module in $PSDInformation.RequiredModules) {
     if ($Module -is [System.Collections.IDictionary]) {
-        Write-Host "   [>] $($Module.ModuleName) Version: $($Module.ModuleVersion)"
+        Write-Color '   [>] ', $Module.ModuleName, ' Version: ', $Module.ModuleVersion -Color Yellow, Green, Yellow, Green
     } else {
-        Write-Host "   [>] $Module"
+        Write-Color '   [>] ', $Module -Color Yellow, Green
     }
 }
-Write-Host
+Write-Color
 
-Import-Module $PSScriptRoot\*.psd1 -Force
-$result = Invoke-Pester -Script $PSScriptRoot\Tests -Verbose -EnableExit
+try {
+    Import-Module $PSScriptRoot\*.psd1 -Force -ErrorAction Stop
+    Import-Module Pester -Force -ErrorAction Stop
+} catch {
+    throw "Failed to import module $ModuleName"
+}
 
-if ($result.FailedCount -gt 0) {
-    throw "$($result.FailedCount) tests failed."
+$Configuration = [PesterConfiguration]::Default
+$Configuration.Run.Path = "$PSScriptRoot\Tests"
+$Configuration.Run.Exit = $true
+$Configuration.Should.ErrorAction = 'Continue'
+$Configuration.CodeCoverage.Enabled = $false
+$Configuration.Output.Verbosity = 'Detailed'
+$Result = Invoke-Pester -Configuration $Configuration
+#$result = Invoke-Pester -Script $PSScriptRoot\Tests -Verbose -Output Detailed #-EnableExit
+
+if ($Result.FailedCount -gt 0) {
+    throw "$($Result.FailedCount) tests failed."
 }

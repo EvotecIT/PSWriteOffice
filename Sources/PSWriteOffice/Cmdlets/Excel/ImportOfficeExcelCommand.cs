@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using PSWriteOffice.Services.Excel;
-using ValidateScriptAttribute = PSWriteOffice.Validation.ValidateScriptAttribute;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -15,7 +14,6 @@ public class ImportOfficeExcelCommand : PSCmdlet
     [Alias("LiteralPath")]
     [Parameter(Mandatory = true)]
     [ValidateNotNullOrEmpty]
-    [ValidateScript("{ Test-Path $_ }")]
     public string FilePath { get; set; } = string.Empty;
 
     [Parameter]
@@ -50,6 +48,14 @@ public class ImportOfficeExcelCommand : PSCmdlet
 
     protected override void ProcessRecord()
     {
+        // Validate file exists
+        if (!File.Exists(FilePath))
+        {
+            var ex = new FileNotFoundException($"File not found: {FilePath}", FilePath);
+            WriteError(new ErrorRecord(ex, "FileNotFound", ErrorCategory.ObjectNotFound, FilePath));
+            return;
+        }
+
         try
         {
             var raw = ExcelDocumentService.ImportWorkbook(FilePath, WorkSheetName, Culture, StartRow, EndRow, StartColumn, EndColumn, HeaderRow, NoHeader);
@@ -61,11 +67,58 @@ public class ImportOfficeExcelCommand : PSCmdlet
 
             if (WorkSheetName != null && WorkSheetName.Length == 1 && converted.TryGetValue(WorkSheetName[0], out var single))
             {
-                WriteObject(single, !AsDataTable.IsPresent);
+                if (AsDataTable.IsPresent)
+                {
+                    WriteObject(single);
+                }
+                else
+                {
+                    // Convert dictionaries to PSObjects
+                    if (single is IEnumerable<IDictionary<string, object?>> rows)
+                    {
+                        foreach (var row in rows)
+                        {
+                            var psObj = new PSObject();
+                            foreach (var kvp in row)
+                            {
+                                psObj.Properties.Add(new PSNoteProperty(kvp.Key, kvp.Value));
+                            }
+                            WriteObject(psObj);
+                        }
+                    }
+                    else
+                    {
+                        WriteObject(single, true);
+                    }
+                }
             }
             else if ((WorkSheetName == null || WorkSheetName.Length == 0) && converted.Count == 1)
             {
-                WriteObject(converted.Values.First(), !AsDataTable.IsPresent);
+                var singleSheet = converted.Values.First();
+                if (AsDataTable.IsPresent)
+                {
+                    WriteObject(singleSheet);
+                }
+                else
+                {
+                    // Convert dictionaries to PSObjects
+                    if (singleSheet is IEnumerable<IDictionary<string, object?>> rows)
+                    {
+                        foreach (var row in rows)
+                        {
+                            var psObj = new PSObject();
+                            foreach (var kvp in row)
+                            {
+                                psObj.Properties.Add(new PSNoteProperty(kvp.Key, kvp.Value));
+                            }
+                            WriteObject(psObj);
+                        }
+                    }
+                    else
+                    {
+                        WriteObject(singleSheet, true);
+                    }
+                }
             }
             else
             {

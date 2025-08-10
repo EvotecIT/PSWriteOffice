@@ -40,7 +40,7 @@ Describe 'Word cmdlets' {
         $path = Join-Path $TestDrive 'table.docx'
         $doc = New-OfficeWord -FilePath $path
         $data = @([pscustomobject]@{Name='A';Value='1'},[pscustomobject]@{Name='B';Value='2'})
-        $table = New-OfficeWordTable -Document $doc -DataTable $data -Suppress
+        $table = New-OfficeWordTable -Document $doc -DataTable $data
         $table | Should -Not -BeNullOrEmpty
         Close-OfficeWord -Document $doc
     }
@@ -58,7 +58,8 @@ Describe 'Word cmdlets' {
         $doc = New-OfficeWord -FilePath $path
         $list = New-OfficeWordList -Document $doc
         New-OfficeWordListItem -List $list -Level 0 -Text 'item'
-        $list.Items.Count | Should -BeGreaterThan 0
+        # OfficeIMO.Word.WordList uses ListItems not Items
+        $list.ListItems.Count | Should -BeGreaterThan 0
         Close-OfficeWord -Document $doc
     }
 
@@ -74,7 +75,8 @@ Describe 'Word cmdlets' {
         $path = Join-Path $TestDrive 'htmlasis.docx'
         ConvertFrom-HTMLtoWord -OutputFile $path -SourceHTML '<p>Hello</p>' -Mode AsIs
         $doc = [DocumentFormat.OpenXml.Packaging.WordprocessingDocument]::Open($path, $false)
-        $doc.MainDocumentPart.Document.Body.InnerXml | Should -Match 'altChunk'
+        # InnerXml is write-only, use OuterXml instead
+        $doc.MainDocumentPart.Document.Body.OuterXml | Should -Match 'altChunk'
         $doc.Dispose()
     }
 

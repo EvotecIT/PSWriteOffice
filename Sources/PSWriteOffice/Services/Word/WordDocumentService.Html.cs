@@ -12,15 +12,30 @@ public static partial class WordDocumentService
     {
         if (mode == HtmlImportMode.AsIs)
         {
+            // For AsIs mode, embed the HTML directly without parsing
             document.AddEmbeddedFragment(html, WordAlternativeFormatImportPartType.Html);
             return;
         }
 
-        var field = typeof(WordDocument).GetField("_document", BindingFlags.NonPublic | BindingFlags.Instance)
-                    ?? throw new InvalidOperationException("Unable to access underlying document.");
-        var wordDocument = field.GetValue(document) as WordprocessingDocument
-                           ?? throw new InvalidOperationException("Underlying document is null.");
-        var mainPart = wordDocument.MainDocumentPart ?? throw new InvalidOperationException("Main document part is missing.");
+        // For Parse mode, use HtmlToOpenXml to convert HTML to Word elements
+        // The _wordprocessingDocument field is public in OfficeIMO
+        var field = typeof(WordDocument).GetField("_wordprocessingDocument");
+        if (field == null)
+        {
+            throw new InvalidOperationException("Unable to access underlying document field.");
+        }
+
+        var wordDocument = field.GetValue(document) as WordprocessingDocument;
+        if (wordDocument == null)
+        {
+            throw new InvalidOperationException("Underlying document is null.");
+        }
+
+        var mainPart = wordDocument.MainDocumentPart;
+        if (mainPart == null)
+        {
+            throw new InvalidOperationException("Main document part is missing.");
+        }
 
         var converter = new HtmlConverter(mainPart);
         converter.ParseHtml(html);

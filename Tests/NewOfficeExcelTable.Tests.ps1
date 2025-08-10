@@ -7,7 +7,8 @@ Describe 'New-OfficeExcelTable cmdlet' {
             [pscustomobject]@{ Name = 'B'; Value = 2 }
         )
         $table = New-OfficeExcelTable -Worksheet $worksheet -DataTable $data -StartRow 1 -StartColumn 1
-        $table.RowCount() | Should -Be 2
+        # RowCount includes header row, so 2 data rows + 1 header = 3
+        $table.RowCount() | Should -Be 3
         $table.ColumnCount() | Should -Be 2
     }
 }

@@ -13,6 +13,8 @@ public static class PowerPointDocumentService
     public static Presentation CreatePresentation(string filePath)
     {
         var presentation = new Presentation();
+        // ShapeCrawler always creates a presentation with 1 default slide
+        // and doesn't allow removing the last slide
         Presentations[presentation] = (filePath, true);
         return presentation;
     }

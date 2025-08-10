@@ -5,7 +5,6 @@ using System.Linq;
 using System.Management.Automation;
 using ClosedXML.Excel;
 using PSWriteOffice.Services.Excel;
-using ValidateScriptAttribute = PSWriteOffice.Validation.ValidateScriptAttribute;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -14,7 +13,6 @@ public class ExportOfficeExcelCommand : PSCmdlet
 {
     [Parameter(Mandatory = true)]
     [ValidateNotNullOrEmpty]
-    [ValidateScript("{ Test-Path $_ }")]
     public string FilePath { get; set; } = string.Empty;
 
     [Parameter]
@@ -174,12 +172,39 @@ public class ExportOfficeExcelCommand : PSCmdlet
 
             if (Append && worksheet.Tables.Any())
             {
-                var existing = ExcelDocumentService.GetWorksheetData(worksheet).ToList();
-                existing.AddRange(tableData);
-                worksheet.Clear();
+                // For append mode, we need to append to the existing table
+                var existingTable = worksheet.Tables.First();
+                var lastRow = existingTable.DataRange != null 
+                    ? existingTable.DataRange.LastRow().RowNumber() + 1
+                    : existingTable.RangeAddress.LastAddress.RowNumber + 1;
+                
+                // Add data rows below the existing table
+                var rowIndex = 0;
+                foreach (var row in tableData)
+                {
+                    var colIndex = existingTable.RangeAddress.FirstAddress.ColumnNumber;
+                    foreach (var kvp in row)
+                    {
+                        worksheet.Cell(lastRow + rowIndex, colIndex).Value = XLCellValue.FromObject(kvp.Value);
+                        colIndex++;
+                    }
+                    rowIndex++;
+                }
+                
+                // Resize the table to include the new rows
+                if (rowIndex > 0)
+                {
+                    var newLastRow = lastRow + rowIndex - 1;
+                    existingTable.Resize(existingTable.RangeAddress.FirstAddress, 
+                                        worksheet.Cell(newLastRow, existingTable.RangeAddress.LastAddress.ColumnNumber).Address);
+                }
+            }
+            else if (Append && !worksheet.Tables.Any())
+            {
+                // If append mode but no table exists, create one
                 ExcelDocumentService.InsertTable(
                     worksheet,
-                    existing,
+                    tableData,
                     Row,
                     Column,
                     Theme,

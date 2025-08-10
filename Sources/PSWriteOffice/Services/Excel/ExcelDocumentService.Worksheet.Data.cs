@@ -36,7 +36,8 @@ public static partial class ExcelDocumentService
         var headers = new List<string>();
         if (!noHeader)
         {
-            var headerRowNumber = headerRow ?? firstRow;
+            // If headerRow is not specified, use the first row of the range (or row 1 if no startRow)
+            var headerRowNumber = headerRow ?? (startRow.HasValue ? 1 : firstRow);
             for (var col = firstColumn; col <= lastColumn; col++)
             {
                 var cell = worksheet.Cell(headerRowNumber, col);
@@ -57,9 +58,11 @@ public static partial class ExcelDocumentService
             }
         }
 
-        var headerRowActual = headerRow ?? firstRow;
+        // The actual header row to skip when iterating
+        var headerRowActual = headerRow ?? (startRow.HasValue ? 1 : firstRow);
         for (var rowNumber = firstRow; rowNumber <= lastRow; rowNumber++)
         {
+            // Skip the header row if we're not in no-header mode
             if (!noHeader && rowNumber == headerRowActual)
             {
                 continue;
@@ -69,7 +72,38 @@ public static partial class ExcelDocumentService
             for (var i = 0; i < headers.Count; i++)
             {
                 var cell = worksheet.Cell(rowNumber, firstColumn + i);
-                object? value = cell.CachedValue;
+                // Get the actual value based on the cell type
+                object? value = null;
+                var cellValue = cell.Value;
+                
+                if (cellValue.IsBlank)
+                {
+                    value = null;
+                }
+                else if (cellValue.IsBoolean)
+                {
+                    value = cellValue.GetBoolean();
+                }
+                else if (cellValue.IsDateTime)
+                {
+                    value = cellValue.GetDateTime();
+                }
+                else if (cellValue.IsTimeSpan)
+                {
+                    value = cellValue.GetTimeSpan();
+                }
+                else if (cellValue.IsNumber)
+                {
+                    value = cellValue.GetNumber();
+                }
+                else if (cellValue.IsText)
+                {
+                    value = cellValue.GetText();
+                }
+                else if (cellValue.IsError)
+                {
+                    value = cellValue.GetError();
+                }
 
                 if (culture != null && value is string textValue)
                 {
