@@ -32,9 +32,9 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
     }
     New-ConfigurationManifest @Manifest
 
-    New-ConfigurationModule -Type ExternalModule -Name 'Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Management'
-    New-ConfigurationModule -Type RequiredModule -Name 'PSSharedGoods' -Version Latest -Guid Auto
-    New-ConfigurationModule -Type ApprovedModule -Name 'PSSharedGoods', 'PSWriteColor', 'Connectimo', 'PSUnifi', 'PSWebToolbox', 'PSMyPassword', 'PSPublishModule'
+    # New-ConfigurationModule -Type ExternalModule -Name 'Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Management'
+    # New-ConfigurationModule -Type RequiredModule -Name 'PSSharedGoods' -Version Latest -Guid Auto
+    # New-ConfigurationModule -Type ApprovedModule -Name 'PSSharedGoods', 'PSWriteColor', 'Connectimo', 'PSUnifi', 'PSWebToolbox', 'PSMyPassword', 'PSPublishModule'
     New-ConfigurationModuleSkip -IgnoreFunctionName 'Select-Unique'
 
     $ConfigurationFormat = [ordered] @{
@@ -91,10 +91,14 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
         ResolveBinaryConflictsName        = 'PSWriteOffice'
         NETProjectName                    = 'PSWriteOffice'
         NETConfiguration                  = 'Release'
-        NETFramework                      = 'netstandard2.0', 'net472'
-        DotSourceLibraries                = $true
-        DeleteTargetModuleBeforeBuild     = $true
+        NETFramework                      = 'net8.0', 'net472'
         NETHandleAssemblyWithSameName     = $true
+        #NETMergeLibraryDebugging          = $true
+        DotSourceLibraries                = $true
+        DotSourceClasses                  = $true
+        DeleteTargetModuleBeforeBuild     = $true
+        NETBinaryModuleDocumenation       = $true
+        RefreshPSD1Only                   = $true
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat

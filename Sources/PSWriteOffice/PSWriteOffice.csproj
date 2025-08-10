@@ -1,36 +1,63 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Company>Evotec</Company>
-		<Authors>Przemyslaw Klys</Authors>
-		<VersionPrefix>1.0.0</VersionPrefix>
-                <TargetFrameworks>net472;net8.0</TargetFrameworks>
-                <TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals($(NETCoreSdkVersion), '9.0'))">$(TargetFrameworks);net9.0</TargetFrameworks>
-                <AssemblyName>PSWriteOffice</AssemblyName>
+    <PropertyGroup>
+        <Company>Evotec</Company>
+        <Authors>Przemyslaw Klys</Authors>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <TargetFrameworks>net472;net8.0</TargetFrameworks>
+        <AssemblyName>PSWriteOffice</AssemblyName>
 
-		<Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
-                <LangVersion>latest</LangVersion>
-                <Nullable>enable</Nullable>
-        </PropertyGroup>
+        <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-	<ItemGroup>
-                <PackageReference Include="ClosedXML" Version="0.105.0" />
-                <PackageReference Include="HtmlToOpenXml.dll" Version="3.2.5" />
-                <PackageReference Include="OfficeIMO.Word" Version="1.0.6" />
-                <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
-                <PackageReference Include="ShapeCrawler" Version="0.71.1" />
-        </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="ClosedXML" Version="0.105.0" />
+        <PackageReference Include="HtmlToOpenXml.dll" Version="3.2.5" />
+        <PackageReference Include="OfficeIMO.Word" Version="1.0.6" />
+        <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
+        <PackageReference Include="ShapeCrawler" Version="0.71.1" />
+    </ItemGroup>
 
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
+        <DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>
+    </PropertyGroup>
+
+    <!-- Make sure the output DLL's from library are included in the output -->
+    <PropertyGroup>
+        <!-- Make sure the output DLL's from library are included in the output -->
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- This is needed for XmlDoc2CmdletDoc to generate a PowerShell documentation. DLL itself
+        will be removed/hidden -->
+        <PackageReference Include="MatejKafka.XmlDoc2CmdletDoc" Version="0.7.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <!-- This is needed for XmlDoc2CmdletDoc to generate a PowerShell documentation. -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
+        <DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>
+    </PropertyGroup>
+
+    <Target Name="CopyDocumentationToPublishFolder" AfterTargets="GenerateDocumentationFile;Publish">
+        <!-- This is needed for XmlDoc2CmdletDoc to copy a PowerShell documentation file to Publish
+        folder -->
         <ItemGroup>
-                <Compile Update="Cmdlets/**/*.cs" />
-                <Compile Update="Services/**/*.cs" />
+            <DocFiles Include="$(OutputPath)$(AssemblyName).dll-Help.xml" />
         </ItemGroup>
+        <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(PublishDir)" />
+    </Target>
 
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
-		<DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>
-	</PropertyGroup>
-	<!-- Make sure the output DLL's from library are included in the output -->
-	<PropertyGroup>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	</PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
+    </ItemGroup>
 </Project>
