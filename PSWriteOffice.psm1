@@ -7,82 +7,118 @@ $BinaryModules = @(
     "PSWriteOffice.dll"
 )
 
-# Get public and private function definition files.
-$Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
-$Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
-$Classes = @( Get-ChildItem -Path $PSScriptRoot\Classes\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
-$Enums = @( Get-ChildItem -Path $PSScriptRoot\Enums\*.ps1 -ErrorAction SilentlyContinue -Recurse -File)
-# Get all assemblies
-$AssemblyFolders = Get-ChildItem -Path $PSScriptRoot\Lib -Directory -ErrorAction SilentlyContinue -File
-
-# Lets find which libraries we need to load
-if ($Development) {
-    $Framework = 'Core'
-    $FrameworkNet = 'Default'
-} else {
-    $Default = $false
-    $Core = $false
-    $Standard = $false
-    foreach ($A in $AssemblyFolders.Name) {
-        if ($A -eq 'Default') {
-            $Default = $true
-        } elseif ($A -eq 'Core') {
-            $Core = $true
-        } elseif ($A -eq 'Standard') {
-            $Standard = $true
+# Ensure native runtime libraries are discoverable on Windows
+if ($IsWindows) {
+    $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
+    $archFolder = switch ($arch) {
+        'X64' {
+            'win-x64'
+        }
+        'X86' {
+            'win-x86'
+        }
+        'Arm64' {
+            'win-arm64'
+        }
+        'Arm' {
+            'win-arm'
+        }
+        default {
+            'win-x64'
         }
     }
-    if ($Standard -and $Core -and $Default) {
-        $FrameworkNet = 'Default'
-        $Framework = 'Standard'
-    } elseif ($Standard -and $Core) {
-        $Framework = 'Standard'
-        $FrameworkNet = 'Standard'
-    } elseif ($Core -and $Default) {
-        $Framework = 'Core'
-        $FrameworkNet = 'Default'
-    } elseif ($Standard -and $Default) {
-        $Framework = 'Standard'
-        $FrameworkNet = 'Default'
-    } elseif ($Standard) {
-        $Framework = 'Standard'
-        $FrameworkNet = 'Standard'
-    } elseif ($Core) {
-        $Framework = 'Core'
-        $FrameworkNet = ''
-    } elseif ($Default) {
-        $Framework = ''
-        $FrameworkNet = 'Default'
+
+    if ($Development) {
+        $baseDir = if ($PSEdition -eq 'Core') {
+            Join-Path $DevelopmentPath $DevelopmentFolderCore
+        } else {
+            Join-Path $DevelopmentPath $DevelopmentFolderDefault
+        }
+    } else {
+        $baseDir = if ($PSEdition -eq 'Core') {
+            Join-Path $PSScriptRoot "Lib/$Framework"
+        } elseif ($FrameworkNet) {
+            Join-Path $PSScriptRoot "Lib/$FrameworkNet"
+        } else {
+            $null
+        }
+    }
+
+    if ($baseDir) {
+        $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
+        if (Test-Path $runtimePath) {
+            Write-Warning -Message "Adding $runtimePath to PATH"
+            $env:PATH = "$runtimePath;" + $env:PATH
+        }
     }
 }
 
+# Lets find which libraries we need to load
+$Default = $false
+$Core = $false
+$Standard = $false
+foreach ($A in $AssemblyFolders.Name) {
+    if ($A -eq 'Default') {
+        $Default = $true
+    } elseif ($A -eq 'Core') {
+        $Core = $true
+    } elseif ($A -eq 'Standard') {
+        $Standard = $true
+    }
+}
+if ($Standard -and $Core -and $Default) {
+    $FrameworkNet = 'Default'
+    $Framework = 'Standard'
+} elseif ($Standard -and $Core) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Standard'
+} elseif ($Core -and $Default) {
+    $Framework = 'Core'
+    $FrameworkNet = 'Default'
+} elseif ($Standard -and $Default) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Default'
+} elseif ($Standard) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Standard'
+} elseif ($Core) {
+    $Framework = 'Core'
+    $FrameworkNet = ''
+} elseif ($Default) {
+    $Framework = ''
+    $FrameworkNet = 'Default'
+} else {
+    #Write-Error -Message 'No assemblies found'
+}
+
+$Assembly = @(
+    if ($Development) {
+        if ($PSEdition -eq 'Core') {
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+        } else {
+            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+        }
+    } else {
+        if ($Framework -and $PSEdition -eq 'Core') {
+            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' }
+        }
+        if ($FrameworkNet -and $PSEdition -ne 'Core') {
+            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtime(s[\\/]' }
+        }
+    }
+)
 
 $BinaryDev = @(
     foreach ($BinaryModule in $BinaryModules) {
         if ($PSEdition -eq 'Core') {
             $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore\$BinaryModule"
-            $DevelopmentAssemblyFolder = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore"
         } else {
             $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
-            $DevelopmentAssemblyFolder = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault"
         }
         $Variable
         Write-Warning "Development mode: Using binaries from $Variable"
     }
 )
-
-if ($Development) {
-    $Assembly = Get-ChildItem -Path "$($DevelopmentAssemblyFolder.Path)\*.dll" -ErrorAction SilentlyContinue -File
-} else {
-    $Assembly = @(
-        if ($Framework -and $PSEdition -eq 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework\*.dll -ErrorAction SilentlyContinue #-Recurse
-        }
-        if ($FrameworkNet -and $PSEdition -ne 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet\*.dll -ErrorAction SilentlyContinue #-Recurse
-        }
-    )
-}
 
 $FoundErrors = @(
     if ($Development) {
@@ -111,8 +147,9 @@ $FoundErrors = @(
     }
     foreach ($Import in @($Assembly)) {
         try {
-            # Write-Warning -Message $Import.FullName
+            Write-Verbose -Message $Import.FullName
             Add-Type -Path $Import.Fullname -ErrorAction Stop
+            #  }
         } catch [System.Reflection.ReflectionTypeLoadException] {
             Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
             $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
@@ -145,7 +182,8 @@ $FoundErrors = @(
 if ($FoundErrors.Count -gt 0) {
     $ModuleName = (Get-ChildItem $PSScriptRoot\*.psd1).BaseName
     Write-Warning "Importing module $ModuleName failed. Fix errors before continuing."
-    break
+    throw "Importing module $ModuleName failed. Fix errors before continuing."
+    #break
 }
 
 Export-ModuleMember -Function '*' -Alias '*' -Cmdlet '*'
