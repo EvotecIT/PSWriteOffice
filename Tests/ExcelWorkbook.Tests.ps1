@@ -12,7 +12,9 @@ Describe 'Excel workbook cmdlets' {
     It 'throws when saving to invalid path' {
         $workbook = New-OfficeExcel
         New-OfficeExcelWorkSheet -Workbook $workbook -WorksheetName 'Sheet1' | Out-Null
-        { Save-OfficeExcel -Workbook $workbook -FilePath 'C:\InvalidPath<>*|?"\missing.xlsx' -ErrorAction Stop } | Should -Throw
+        $invalidChar = [System.IO.Path]::GetInvalidFileNameChars() | Select-Object -First 1
+        $invalidPath = Join-Path $TestDrive "invalid$invalidChar.xlsx"
+        { Save-OfficeExcel -Workbook $workbook -FilePath $invalidPath -ErrorAction Stop } | Should -Throw
     }
 
     It 'throws when loading from invalid path' {
