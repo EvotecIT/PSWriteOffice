@@ -9,7 +9,6 @@ if ($PrimaryModule.Count -ne 1) {
 $PSDInformation = Import-PowerShellDataFile -Path $PrimaryModule.FullName
 $RequiredModules = @(
     'Pester'
-    'PSParseHTML'
     if ($PSDInformation.RequiredModules) {
         $PSDInformation.RequiredModules
     }
