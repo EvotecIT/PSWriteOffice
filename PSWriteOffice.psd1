@@ -1,10 +1,10 @@
 ﻿@{
     AliasesToExport        = @()
     Author                 = 'Przemyslaw Klys'
-    CmdletsToExport        = @('Get-OfficeWord', 'New-OfficeWord', 'Close-OfficeWord', 'Save-OfficeWord', 'Remove-OfficeWordFooter', 'Remove-OfficeWordHeader', 'New-OfficeWordText', 'New-OfficeWordList', 'New-OfficeWordListItem', 'New-OfficeWordTable', 'ConvertFrom-HTMLtoWord', 'Get-OfficeExcel', 'New-OfficeExcel', 'New-OfficeExcelWorkSheet', 'Get-OfficeExcelWorkSheet', 'Get-OfficeExcelValue', 'New-OfficeExcelValue', 'Get-OfficeExcelWorkSheetData', 'Close-OfficeExcel', 'Save-OfficeExcel', 'Export-OfficeExcel', 'Import-OfficeExcel', 'Get-OfficePowerPoint', 'New-OfficePowerPoint', 'Save-OfficePowerPoint', 'Add-OfficePowerPointSlide', 'Remove-OfficePowerPointSlide', 'Merge-OfficePowerPoint', 'Get-OfficePowerPointSlide', 'Add-OfficePowerPointTextBox', 'Set-OfficePowerPointSlideTitle', 'New-OfficeExcelTable', 'Set-OfficeExcelCellStyle', 'Set-OfficeExcelWorkSheetStyle')
+    CmdletsToExport        = @('Close-OfficeWord', 'ConvertFrom-HTMLtoWord', 'Get-OfficeWord', 'New-OfficeWord', 'New-OfficeWordList', 'New-OfficeWordListItem', 'New-OfficeWordTable', 'New-OfficeWordText', 'Remove-OfficeWordFooter', 'Remove-OfficeWordHeader', 'Save-OfficeWord', 'Add-OfficePowerPointSlide', 'Add-OfficePowerPointTextBox', 'Get-OfficePowerPoint', 'Get-OfficePowerPointSlide', 'Merge-OfficePowerPoint', 'New-OfficePowerPoint', 'Remove-OfficePowerPointSlide', 'Save-OfficePowerPoint', 'Set-OfficePowerPointSlideTitle', 'Close-OfficeExcel', 'Export-OfficeExcel', 'Get-OfficeExcel', 'Get-OfficeExcelValue', 'Get-OfficeExcelWorkSheet', 'Get-OfficeExcelWorkSheetData', 'Import-OfficeExcel', 'New-OfficeExcel', 'New-OfficeExcelTable', 'New-OfficeExcelValue', 'New-OfficeExcelWorkSheet', 'Save-OfficeExcel', 'Set-OfficeExcelCellStyle', 'Set-OfficeExcelWorkSheetStyle')
     CompanyName            = 'Evotec'
     CompatiblePSEditions   = @('Desktop', 'Core')
-    Copyright              = '(c) 2011 - 2024 Przemyslaw Klys @ Evotec. All rights reserved.'
+    Copyright              = '(c) 2011 - 2025 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description            = 'Experimental PowerShell Module to create and edit Microsoft Word, Microsoft Excel, and Microsoft PowerPoint documents without having Microsoft Office installed.'
     DotNetFrameworkVersion = '4.7.2'
     FunctionsToExport      = @()
@@ -13,17 +13,11 @@
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
-            ExternalModuleDependencies = @('Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Management')
-            IconUri                    = 'https://evotec.xyz/wp-content/uploads/2018/10/PSWriteWord.png'
-            LicenseUri                 = 'https://github.com/EvotecIT/PSWriteOffice/blob/master/License'
-            ProjectUri                 = 'https://github.com/EvotecIT/PSWriteOffice'
-            Tags                       = @('word', 'docx', 'write', 'PSWord', 'office', 'windows', 'doc', 'pswriteword', 'linux', 'macos')
+            IconUri    = 'https://evotec.xyz/wp-content/uploads/2018/10/PSWriteWord.png'
+            LicenseUri = 'https://github.com/EvotecIT/PSWriteOffice/blob/master/License'
+            ProjectUri = 'https://github.com/EvotecIT/PSWriteOffice'
+            Tags       = @('word', 'docx', 'write', 'PSWord', 'office', 'windows', 'doc', 'pswriteword', 'linux', 'macos')
         }
     }
-    RequiredModules        = @(@{
-            Guid          = 'ee272aa8-baaa-4edf-9f45-b6d6f7d844fe'
-            ModuleName    = 'PSSharedGoods'
-            ModuleVersion = '0.0.297'
-        }, 'Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Management')
     RootModule             = 'PSWriteOffice.psm1'
 }
