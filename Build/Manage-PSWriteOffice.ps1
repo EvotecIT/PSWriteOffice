@@ -95,7 +95,7 @@
         DotSourceLibraries                = $true
         DotSourceClasses                  = $true
         DeleteTargetModuleBeforeBuild     = $true
-        NETBinaryModuleDocumenation       = $true
+        NETBinaryModuleDocumentation      = $true
         RefreshPSD1Only                   = $true
     }
 
