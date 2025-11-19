@@ -1,15 +1,23 @@
-using System;
 using System.IO;
 using System.Management.Automation;
 using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
+/// <summary>Opens an existing Word document.</summary>
+/// <para>Returns an OfficeIMO <see cref="WordDocument"/> for inspection or advanced operations.</para>
+/// <example>
+///   <summary>Load a document in read-only mode.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$doc = Get-OfficeWord -Path .\Report.docx -ReadOnly</code>
+///   <para>Loads <c>Report.docx</c> and exposes the document object for querying.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWord")]
-public class GetOfficeWordCommand : PSCmdlet
+public sealed class GetOfficeWordCommand : PSCmdlet
 {
-    [Parameter(Mandatory = true)]
-    public string FilePath { get; set; } = string.Empty;
+    [Parameter(Mandatory = true, Position = 0)]
+    [Alias("FilePath", "Path")]
+    public string InputPath { get; set; } = string.Empty;
 
     [Parameter]
     public SwitchParameter ReadOnly { get; set; }
@@ -19,18 +27,16 @@ public class GetOfficeWordCommand : PSCmdlet
 
     protected override void ProcessRecord()
     {
-        try
-        {
-            var document = WordDocumentService.LoadDocument(FilePath, ReadOnly.IsPresent, AutoSave.IsPresent);
-            WriteObject(document);
-        }
-        catch (FileNotFoundException ex)
-        {
-            WriteError(new ErrorRecord(ex, "FileNotFound", ErrorCategory.ObjectNotFound, FilePath));
-        }
-        catch (Exception ex)
-        {
-            WriteError(new ErrorRecord(ex, "WordLoadFailed", ErrorCategory.InvalidOperation, FilePath));
-        }
+        var fullPath = ResolvePath();
+        var document = WordDocumentService.LoadDocument(fullPath, ReadOnly.IsPresent, AutoSave.IsPresent);
+        WriteObject(document);
+    }
+
+    private string ResolvePath()
+    {
+        var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        return Path.IsPathRooted(providerPath)
+            ? providerPath
+            : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 }

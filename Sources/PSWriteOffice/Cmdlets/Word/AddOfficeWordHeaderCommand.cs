@@ -1,0 +1,37 @@
+using System.Management.Automation;
+using DocumentFormat.OpenXml.Wordprocessing;
+using OfficeIMO.Word;
+using PSWriteOffice.Services.Word;
+
+namespace PSWriteOffice.Cmdlets.Word;
+
+/// <summary>Adds content to a section header.</summary>
+/// <para>Ensures the requested header part (default/first/even) exists and executes the DSL scriptblock within it.</para>
+/// <example>
+///   <summary>Create a default header.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Add-OfficeWordSection { Add-OfficeWordHeader { Add-OfficeWordParagraph -Text 'Confidential' -Style Heading3 } }</code>
+///   <para>Creates a section header that prints “Confidential”.</para>
+/// </example>
+[Cmdlet(VerbsCommon.Add, "OfficeWordHeader")]
+[Alias("WordHeader")]
+public sealed class AddOfficeWordHeaderCommand : PSCmdlet
+{
+    [Parameter]
+    public HeaderFooterValues Type { get; set; } = HeaderFooterValues.Default;
+
+    [Parameter]
+    public ScriptBlock? Content { get; set; }
+
+    protected override void ProcessRecord()
+    {
+        var context = WordDslContext.Require(this);
+        var section = context.RequireSection();
+        var header = section.GetOrCreateHeader(Type);
+
+        using (context.Push(header))
+        {
+            Content?.InvokeReturnAsIs();
+        }
+    }
+}
