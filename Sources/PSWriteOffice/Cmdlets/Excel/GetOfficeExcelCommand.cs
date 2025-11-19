@@ -1,40 +1,44 @@
-using System;
 using System.IO;
 using System.Management.Automation;
-using ClosedXML.Excel;
+using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
+/// <summary>Opens an existing Excel workbook.</summary>
+/// <para>Returns the underlying <see cref="ExcelDocument"/> so callers can inspect or reuse it in DSL pipelines.</para>
+/// <example>
+///   <summary>Load a workbook in read-only mode.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$workbook = Get-OfficeExcel -Path .\report.xlsx -ReadOnly</code>
+///   <para>Loads <c>report.xlsx</c> for inspection without enabling writes.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcel")]
-public class GetOfficeExcelCommand : PSCmdlet
+public sealed class GetOfficeExcelCommand : PSCmdlet
 {
-    [Parameter(Mandatory = true)]
-    [ValidateNotNullOrEmpty]
-    public string FilePath { get; set; } = string.Empty;
+    /// <summary>Path to the workbook to load.</summary>
+    [Parameter(Mandatory = true, Position = 0)]
+    [Alias("Path", "FilePath")]
+    public string InputPath { get; set; } = string.Empty;
 
+    /// <summary>Open the file in read-only mode.</summary>
+    [Parameter]
+    public SwitchParameter ReadOnly { get; set; }
+
+    /// <summary>Enable automatic saves on the underlying document.</summary>
+    [Parameter]
+    public SwitchParameter AutoSave { get; set; }
+
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        // Validate file exists
-        if (!File.Exists(FilePath))
+        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        if (!File.Exists(resolvedPath))
         {
-            var ex = new FileNotFoundException($"File not found: {FilePath}", FilePath);
-            WriteError(new ErrorRecord(ex, "FileNotFound", ErrorCategory.ObjectNotFound, FilePath));
-            return;
+            throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
-        try
-        {
-            var workbook = ExcelDocumentService.LoadWorkbook(FilePath);
-            WriteObject(workbook);
-        }
-        catch (FileNotFoundException ex)
-        {
-            WriteError(new ErrorRecord(ex, "FileNotFound", ErrorCategory.ObjectNotFound, FilePath));
-        }
-        catch (Exception ex)
-        {
-            WriteError(new ErrorRecord(ex, "ExcelLoadFailed", ErrorCategory.InvalidOperation, FilePath));
-        }
+        ExcelDocument document = ExcelDocumentService.LoadDocument(resolvedPath, ReadOnly.IsPresent, AutoSave.IsPresent);
+        WriteObject(document);
     }
 }
