@@ -7,6 +7,12 @@ $BinaryModules = @(
     "PSWriteOffice.dll"
 )
 
+# ensure script file collections always exist (legacy folders were removed)
+if (-not (Test-Path variable:Classes)) { $Classes = @() }
+if (-not (Test-Path variable:Enums)) { $Enums = @() }
+if (-not (Test-Path variable:Private)) { $Private = @() }
+if (-not (Test-Path variable:Public)) { $Public = @() }
+
 # Ensure native runtime libraries are discoverable on Windows
 if ($IsWindows) {
     $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
