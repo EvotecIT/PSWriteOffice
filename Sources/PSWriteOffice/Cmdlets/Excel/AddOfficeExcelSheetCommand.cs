@@ -25,7 +25,7 @@ public sealed class AddOfficeExcelSheetCommand : PSCmdlet
     public SheetNameValidationMode ValidationMode { get; set; } = SheetNameValidationMode.Sanitize;
 
     /// <summary>Code to execute inside the worksheet context.</summary>
-    [Parameter(Position = 1, ValueFromRemainingArguments = true)]
+    [Parameter(Position = 1)]
     public ScriptBlock? Content { get; set; }
 
     /// <summary>Emit the <see cref="ExcelSheet"/> object after execution.</summary>
