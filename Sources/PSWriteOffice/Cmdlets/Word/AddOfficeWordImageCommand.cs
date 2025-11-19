@@ -17,24 +17,31 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordImage")]
 public sealed class AddOfficeWordImageCommand : PSCmdlet
 {
+    /// <summary>Path to the image file.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Path { get; set; } = string.Empty;
 
+    /// <summary>Width in points.</summary>
     [Parameter]
     public double? Width { get; set; }
 
+    /// <summary>Height in points.</summary>
     [Parameter]
     public double? Height { get; set; }
 
+    /// <summary>Wrap mode for the image.</summary>
     [Parameter]
     public WrapTextImage Wrap { get; set; } = WrapTextImage.InLineWithText;
 
+    /// <summary>Optional description/alt text.</summary>
     [Parameter]
     public string Description { get; set; } = string.Empty;
 
+    /// <summary>Emit the created <see cref="WordImage"/>.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

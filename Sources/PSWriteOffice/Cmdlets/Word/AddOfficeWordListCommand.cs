@@ -16,13 +16,16 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordList")]
 public sealed class AddOfficeWordListCommand : PSCmdlet
 {
+    /// <summary>Built-in list style or custom numbering scheme.</summary>
     [Parameter(Position = 1)]
     [Alias("Type")]
     public WordListStyle Style { get; set; } = WordListStyle.Bulleted;
 
+    /// <summary>Scriptblock executed within the list scope.</summary>
     [Parameter(Position = 0)]
     public ScriptBlock? Content { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

@@ -17,12 +17,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordHeader")]
 public sealed class AddOfficeWordHeaderCommand : PSCmdlet
 {
+    /// <summary>The header type to modify.</summary>
     [Parameter]
     public HeaderFooterValues Type { get; set; } = HeaderFooterValues.Default;
 
+    /// <summary>DSL scriptblock to execute inside the header.</summary>
     [Parameter]
     public ScriptBlock? Content { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

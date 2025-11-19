@@ -17,15 +17,19 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordListItem")]
 public sealed class AddOfficeWordListItemCommand : PSCmdlet
 {
+    /// <summary>List item text.</summary>
     [Parameter(Position = 0)]
     public string Text { get; set; } = string.Empty;
 
+    /// <summary>Zero-based list level.</summary>
     [Parameter]
     public int Level { get; set; }
 
+    /// <summary>Emit the created <see cref="WordParagraph"/>.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

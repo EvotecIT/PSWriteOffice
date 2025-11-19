@@ -17,15 +17,18 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordSection")]
 public sealed class AddOfficeWordSectionCommand : PSCmdlet
 {
+    /// <summary>DSL scriptblock executed within the section scope.</summary>
     [Parameter(Position = 0)]
     public ScriptBlock? Content { get; set; }
 
+    /// <summary>Optional section break type.</summary>
     [Parameter]
     public SectionMarkValues? BreakType { get; set; }
 
-    [Parameter]
+    /// <summary>Emit the created <see cref="WordSection"/>.</summary>
     public SwitchParameter PassThru { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

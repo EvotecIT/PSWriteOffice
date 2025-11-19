@@ -55,7 +55,7 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
             var run = paragraph.AddFormattedText(entry, Bold.IsPresent, Italic.IsPresent, Underline);
             if (!string.IsNullOrWhiteSpace(Color))
             {
-                run.SetColorHex(Color);
+                run.SetColorHex(Color!);
             }
         }
     }

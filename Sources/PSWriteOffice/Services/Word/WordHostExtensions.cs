@@ -10,11 +10,11 @@ internal static class WordHostExtensions
         switch (host)
         {
             case WordSection section:
-                return string.IsNullOrEmpty(text) ? section.AddParagraph() : section.AddParagraph(text);
+                return string.IsNullOrEmpty(text) ? section.AddParagraph() : section.AddParagraph(text ?? string.Empty);
             case WordHeader header:
-                return string.IsNullOrEmpty(text) ? header.AddParagraph() : header.AddParagraph(text!);
+                return string.IsNullOrEmpty(text) ? header.AddParagraph() : header.AddParagraph(text ?? string.Empty);
             case WordFooter footer:
-                return string.IsNullOrEmpty(text) ? footer.AddParagraph() : footer.AddParagraph(text!);
+                return string.IsNullOrEmpty(text) ? footer.AddParagraph() : footer.AddParagraph(text ?? string.Empty);
             default:
                 throw new InvalidOperationException("Paragraphs can only be added inside sections, headers, or footers.");
         }

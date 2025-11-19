@@ -31,15 +31,18 @@ internal static class ExcelDocumentService
         if (document == null) throw new ArgumentNullException(nameof(document));
 
         var currentPath = document.FilePath ?? string.Empty;
-        if (!string.IsNullOrEmpty(filePath) && !string.Equals(filePath, currentPath, StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrEmpty(filePath))
         {
-            document.Save(filePath!, show);
-        }
-        else
-        {
-            document.Save(show);
+            var target = filePath!;
+            if (!string.Equals(target, currentPath, StringComparison.OrdinalIgnoreCase))
+            {
+                document.Save(target, show);
+                document.Dispose();
+                return;
+            }
         }
 
+        document.Save(show);
         document.Dispose();
     }
 

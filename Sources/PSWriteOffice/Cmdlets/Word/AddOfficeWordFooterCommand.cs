@@ -17,12 +17,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordFooter")]
 public sealed class AddOfficeWordFooterCommand : PSCmdlet
 {
+    /// <summary>The footer kind (Default/First/Even).</summary>
     [Parameter]
     public HeaderFooterValues Type { get; set; } = HeaderFooterValues.Default;
 
+    /// <summary>DSL scriptblock executed within the footer context.</summary>
     [Parameter]
     public ScriptBlock? Content { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

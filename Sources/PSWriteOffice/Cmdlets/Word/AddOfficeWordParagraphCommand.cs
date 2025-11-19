@@ -17,21 +17,26 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordParagraph")]
 public sealed class AddOfficeWordParagraphCommand : PSCmdlet
 {
+    /// <summary>Optional initial paragraph text.</summary>
     [Parameter(Position = 0)]
     public string? Text { get; set; }
 
+    /// <summary>Nested DSL content (runs, lists, images).</summary>
     [Parameter]
     public ScriptBlock? Content { get; set; }
 
+    /// <summary>Paragraph justification.</summary>
     [Parameter]
     public JustificationValues? Alignment { get; set; }
 
+    /// <summary>Paragraph style.</summary>
     [Parameter]
     public WordParagraphStyles? Style { get; set; }
 
-    [Parameter]
+    /// <summary>Emit the <see cref="WordParagraph"/> for further use.</summary>
     public SwitchParameter PassThru { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

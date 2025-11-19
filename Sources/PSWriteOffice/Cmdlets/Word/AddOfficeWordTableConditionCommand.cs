@@ -18,9 +18,11 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordTableCondition")]
 public sealed class AddOfficeWordTableConditionCommand : PSCmdlet
 {
+    /// <summary>Predicate executed per data row (uses <c>$_</c>).</summary>
     [Parameter(Mandatory = true)]
     public ScriptBlock FilterScript { get; set; } = null!;
 
+    /// <summary>Optional table style applied when the predicate matches.</summary>
     [Parameter]
     public WordTableStyle? TableStyle { get; set; }
 
@@ -41,15 +43,18 @@ public sealed class AddOfficeWordTableConditionCommand : PSCmdlet
 
         var context = WordDslContext.Require(this);
         var table = context.CurrentTable ?? throw new InvalidOperationException("WordTableCondition must be used inside WordTable.");
-        var normalizedColor = string.IsNullOrWhiteSpace(BackgroundColor)
-            ? null
-            : NormalizeColor(BackgroundColor);
+        var normalizedColor = NormalizeColor(BackgroundColor);
 
         context.AddTableCondition(table, new WordTableConditionModel(FilterScript, TableStyle, normalizedColor));
     }
 
-    private static string NormalizeColor(string color)
+    private static string? NormalizeColor(string? color)
     {
+        if (string.IsNullOrWhiteSpace(color))
+        {
+            return null;
+        }
+
         var parsed = Color.Parse(color);
         var hex = parsed.ToHex().ToLowerInvariant();
         return hex.Length > 6 ? hex.Substring(0, 6) : hex;

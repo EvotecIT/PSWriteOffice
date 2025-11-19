@@ -22,26 +22,33 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordTable")]
 public sealed class AddOfficeWordTableCommand : PSCmdlet
 {
+    /// <summary>Input data (array, list, DataTable, etc.).</summary>
     [Parameter(Mandatory = true, Position = 0)]
     [Alias("Data")]
     public object? InputObject { get; set; }
 
+    /// <summary>Built-in table style.</summary>
     [Parameter]
     public WordTableStyle Style { get; set; } = WordTableStyle.TableGrid;
 
+    /// <summary>Table layout behavior.</summary>
     [Parameter]
     [ValidateSet("Autofit", "Fixed")]
     public string? Layout { get; set; }
 
+    /// <summary>Skip writing header row.</summary>
     [Parameter]
     public SwitchParameter SkipHeader { get; set; }
 
+    /// <summary>DSL content executed inside the table.</summary>
     [Parameter(Position = 1)]
     public ScriptBlock? Content { get; set; }
 
+    /// <summary>Emit the created <see cref="WordTable"/>.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var rows = NormalizeRows(InputObject);

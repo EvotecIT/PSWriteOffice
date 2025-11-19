@@ -18,15 +18,17 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordPageNumber")]
 public sealed class AddOfficeWordPageNumberCommand : PSCmdlet
 {
+    /// <summary>Include “of N” when true.</summary>
     [Parameter]
     public SwitchParameter IncludeTotalPages { get; set; }
 
-    [Parameter]
+    /// <summary>Optional number format.</summary>
     public WordFieldFormat? Format { get; set; }
 
-    [Parameter]
+    /// <summary>Separator when totals are included.</summary>
     public string Separator { get; set; } = " of ";
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

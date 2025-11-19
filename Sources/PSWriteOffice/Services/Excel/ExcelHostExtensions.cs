@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
@@ -15,9 +16,11 @@ internal static class ExcelHostExtensions
     {
         if (document == null) throw new ArgumentNullException(nameof(document));
 
+        var sheetsCollection = document.Sheets ?? new List<ExcelSheet>();
+
         if (!string.IsNullOrWhiteSpace(name))
         {
-            var existing = document.Sheets.FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+            var existing = sheetsCollection.FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
             if (existing != null)
             {
                 return existing;
@@ -26,20 +29,20 @@ internal static class ExcelHostExtensions
             return document.AddWorkSheet(name ?? string.Empty, validationMode);
         }
 
-        var sheets = document.Sheets;
-        if (sheets == null || sheets.Count == 0)
+        if (sheetsCollection.Count == 0)
         {
             return document.AddWorkSheet(string.Empty, SheetNameValidationMode.None);
         }
 
-        return sheets![sheets.Count - 1];
+        return sheetsCollection[sheetsCollection.Count - 1];
     }
 
     public static (int Row, int Column) ResolveCellAddress(int? row, int? column, string? address)
     {
         if (!string.IsNullOrWhiteSpace(address))
         {
-            var match = AddressRegex.Match(address.Trim());
+            var trimmedAddress = address!.Trim();
+            var match = AddressRegex.Match(trimmedAddress);
             if (!match.Success)
             {
                 throw new ArgumentException($"Address '{address}' is not a valid A1 reference.", nameof(address));
