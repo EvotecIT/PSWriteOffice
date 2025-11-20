@@ -26,9 +26,11 @@ public sealed class AddOfficeWordTableConditionCommand : PSCmdlet
     [Parameter]
     public WordTableStyle? TableStyle { get; set; }
 
+    /// <summary>Row highlight color applied when the predicate matches (ARGB hex).</summary>
     [Parameter]
     public string? BackgroundColor { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         if (!TableStyle.HasValue && string.IsNullOrWhiteSpace(BackgroundColor))

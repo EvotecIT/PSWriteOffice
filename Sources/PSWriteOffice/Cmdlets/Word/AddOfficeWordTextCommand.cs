@@ -17,21 +17,28 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordText", "WordBold", "WordItalic")]
 public sealed class AddOfficeWordTextCommand : PSCmdlet
 {
+    /// <summary>Text segments to append.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string[] Text { get; set; } = Array.Empty<string>();
 
+    /// <summary>Apply bold formatting.</summary>
     [Parameter]
     public SwitchParameter Bold { get; set; }
 
+    /// <summary>Apply italic formatting.</summary>
     [Parameter]
     public SwitchParameter Italic { get; set; }
 
+    /// <summary>Optional underline style.</summary>
     [Parameter]
     public UnderlineValues? Underline { get; set; }
 
+    /// <summary>Run color (#RRGGBB).</summary>
     [Parameter]
     public string? Color { get; set; }
 
+    /// <inheritdoc />
+    /// <inheritdoc />
     protected override void BeginProcessing()
     {
         var name = MyInvocation.InvocationName;
@@ -45,6 +52,7 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
         }
     }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);

@@ -16,6 +16,7 @@
         <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
         <PackageReference Include="ShapeCrawler" Version="0.71.1" />
         <PackageReference Include="HtmlToOpenXml.dll" Version="3.2.5" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.3" />
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">

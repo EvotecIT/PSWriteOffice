@@ -1,5 +1,6 @@
 using System.IO;
 using System.Management.Automation;
+using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
@@ -15,16 +16,20 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Get, "OfficeWord")]
 public sealed class GetOfficeWordCommand : PSCmdlet
 {
+    /// <summary>Path to the .docx. Accepts PS paths.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     [Alias("FilePath", "Path")]
     public string InputPath { get; set; } = string.Empty;
 
+    /// <summary>Open in read-only mode.</summary>
     [Parameter]
     public SwitchParameter ReadOnly { get; set; }
 
+    /// <summary>Enable AutoSave when editing.</summary>
     [Parameter]
     public SwitchParameter AutoSave { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var fullPath = ResolvePath();

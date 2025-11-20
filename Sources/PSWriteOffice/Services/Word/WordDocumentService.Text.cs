@@ -6,6 +6,7 @@ namespace PSWriteOffice.Services.Word;
 
 public static partial class WordDocumentService
 {
+    /// <summary>Adds text runs to the specified paragraph.</summary>
     public static WordParagraph AddText(WordDocument? document, WordParagraph? paragraph, string[] text, bool?[]? bold,
         bool?[]? italic, UnderlineValues?[]? underline, string[]? color, JustificationValues? alignment,
         WordParagraphStyles? style)
@@ -27,19 +28,35 @@ public static partial class WordDocumentService
             throw new ArgumentException("color length must match text length", nameof(color));
         }
 
-        var para = paragraph ?? document!.AddParagraph();
+        WordParagraph para;
+        if (paragraph != null)
+        {
+            para = paragraph;
+        }
+        else
+        {
+            para = document?.AddParagraph() ?? throw new ArgumentNullException(nameof(document));
+        }
+
+        var boldArray = bold;
+        var italicArray = italic;
+        var underlineArray = underline;
 
         for (var t = 0; t < text.Length; t++)
         {
             para = para.AddText(text[t]);
 
-            if (bold != null && t < bold.Length && bold[t].HasValue)
+            if (boldArray != null && t < boldArray.Length && boldArray[t].HasValue)
             {
-                para.Bold = bold[t].Value;
+                para.Bold = boldArray[t]!.Value;
             }
-            if (italic != null && t < italic.Length && italic[t].HasValue)
+            if (italicArray != null && t < italicArray.Length && italicArray[t].HasValue)
             {
-                para.Italic = italic[t].Value;
+                para.Italic = italicArray[t]!.Value;
+            }
+            if (underlineArray != null && t < underlineArray.Length && underlineArray[t].HasValue)
+            {
+                para.Underline = underlineArray[t]!.Value;
             }
         }
 

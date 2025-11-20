@@ -21,18 +21,23 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Close, "OfficeWord")]
 public sealed class CloseOfficeWordCommand : PSCmdlet
 {
+    /// <summary>Word document to close.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     public WordDocument Document { get; set; } = null!;
 
+    /// <summary>Persist changes before closing.</summary>
     [Parameter]
     public SwitchParameter Save { get; set; }
 
+    /// <summary>Optional target path when saving.</summary>
     [Parameter]
     public string? Path { get; set; }
 
+    /// <summary>Open the file after saving.</summary>
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         if (Document == null)

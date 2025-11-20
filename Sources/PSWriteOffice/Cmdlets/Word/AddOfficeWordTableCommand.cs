@@ -49,6 +49,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var rows = NormalizeRows(InputObject);
@@ -127,11 +128,12 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
                     table.Style = condition.TableStyle.Value;
                 }
 
-                if (!string.IsNullOrWhiteSpace(condition.BackgroundColor))
+                if (condition.BackgroundColor is string backgroundColor &&
+                    !string.IsNullOrWhiteSpace(backgroundColor))
                 {
                     foreach (var cell in wordRow.Cells)
                     {
-                        cell.ShadingFillColorHex = condition.BackgroundColor;
+                        cell.ShadingFillColorHex = backgroundColor;
                     }
                 }
             }

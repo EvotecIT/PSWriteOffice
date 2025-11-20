@@ -6,11 +6,13 @@ namespace PSWriteOffice.Services.Word;
 
 public static partial class WordDocumentService
 {
+    /// <summary>Creates a new list using the supplied style.</summary>
     public static WordList AddList(WordDocument document, WordListStyle style)
     {
         return document.AddList(style);
     }
 
+    /// <summary>Adds a list item with optional level.</summary>
     public static object AddListItem(WordList list, int level, string[] text)
     {
         // Use the correct overload of AddItem which requires a WordParagraph

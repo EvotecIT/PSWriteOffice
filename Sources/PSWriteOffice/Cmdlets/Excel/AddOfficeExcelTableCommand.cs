@@ -10,8 +10,8 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <example>
 ///   <summary>Insert a table starting at A1.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })</code>
-///   <code>ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }</code>
+///   <code>$data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })
+///   ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }</code>
 ///   <para>Writes two rows and formats them as a styled Excel table.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelTable")]

@@ -8,6 +8,7 @@ namespace PSWriteOffice.Services.Word;
 
 public static partial class WordDocumentService
 {
+    /// <summary>Creates a table from an array of objects.</summary>
     public static WordTable AddTable(WordDocument document, Array dataTable, WordTableStyle style, string? tableLayout,
         bool skipHeader)
     {
@@ -37,7 +38,8 @@ public static partial class WordDocumentService
             table = document.AddTable(rows + 1, columns, style);
             for (var c = 0; c < columns; c++)
             {
-                table.Rows[0].Cells[c].Paragraphs[0].Text = properties[c];
+                var headerParagraph = GetOrCreateParagraph(table, 0, c);
+                headerParagraph.Text = properties[c];
             }
             rowIndex = 1;
         }
@@ -46,9 +48,9 @@ public static partial class WordDocumentService
             table = document.AddTable(rows, columns, style);
         }
 
-        if (!string.IsNullOrEmpty(tableLayout))
+        if (tableLayout is { Length: > 0 } layout)
         {
-            table.LayoutType = tableLayout.Equals("Autofit", StringComparison.OrdinalIgnoreCase)
+            table.LayoutType = layout.Equals("Autofit", StringComparison.OrdinalIgnoreCase)
                 ? TableLayoutValues.Autofit
                 : TableLayoutValues.Fixed;
         }
@@ -68,12 +70,22 @@ public static partial class WordDocumentService
                     value = rowObj.GetType().GetProperty(properties[c])?.GetValue(rowObj);
                 }
 
-                table.Rows[rowIndex].Cells[c].Paragraphs[0].Text = value?.ToString() ?? string.Empty;
+                var paragraph = GetOrCreateParagraph(table, rowIndex, c);
+                paragraph.Text = value?.ToString() ?? string.Empty;
             }
 
             rowIndex++;
         }
 
         return table;
+    }
+
+    private static WordParagraph GetOrCreateParagraph(WordTable table, int rowIndex, int columnIndex)
+    {
+        var rows = table.Rows ?? throw new InvalidOperationException("Table rows collection is missing.");
+        var row = rows[rowIndex];
+        var cells = row.Cells ?? throw new InvalidOperationException("Table cells collection is missing.");
+        var cell = cells[columnIndex];
+        return cell.Paragraphs.Count > 0 ? cell.Paragraphs[0] : cell.AddParagraph();
     }
 }

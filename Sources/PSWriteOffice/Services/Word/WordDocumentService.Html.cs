@@ -8,6 +8,7 @@ namespace PSWriteOffice.Services.Word;
 
 public static partial class WordDocumentService
 {
+    /// <summary>Adds HTML content to the document.</summary>
     public static void AddHtml(WordDocument document, string html, HtmlImportMode mode = HtmlImportMode.Parse)
     {
         if (mode == HtmlImportMode.AsIs)
@@ -38,6 +39,9 @@ public static partial class WordDocumentService
         }
 
         var converter = new HtmlConverter(mainPart);
+        var body = mainPart.Document?.Body ?? throw new InvalidOperationException("Document body is missing.");
+#pragma warning disable CS0618
         converter.ParseHtml(html);
+#pragma warning restore CS0618
     }
 }

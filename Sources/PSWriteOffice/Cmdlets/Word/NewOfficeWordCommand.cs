@@ -16,25 +16,32 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.New, "OfficeWord")]
 public sealed class NewOfficeWordCommand : PSCmdlet
 {
+    /// <summary>Destination path for the document.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     [Alias("FilePath", "Path")]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>DSL scriptblock describing document content.</summary>
     [Parameter(Position = 1)]
     public ScriptBlock? Content { get; set; }
 
+    /// <summary>Emit a <see cref="FileInfo"/> for chaining.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <summary>Open the document after saving.</summary>
     [Parameter]
     public SwitchParameter Open { get; set; }
 
+    /// <summary>Skip saving after executing the DSL.</summary>
     [Parameter]
     public SwitchParameter NoSave { get; set; }
 
+    /// <summary>Enable OfficeIMO AutoSave mode.</summary>
     [Parameter]
     public SwitchParameter AutoSave { get; set; }
 
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var fullPath = GetResolvedPath();
