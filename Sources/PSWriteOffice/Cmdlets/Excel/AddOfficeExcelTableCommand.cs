@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -46,6 +47,10 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
     [Parameter]
     public SwitchParameter NoAutoFilter { get; set; }
 
+    /// <summary>Auto-fit the table columns after insertion.</summary>
+    [Parameter]
+    public SwitchParameter AutoFit { get; set; }
+
     /// <summary>Return the created range string.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -85,6 +90,12 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             tableName: TableName,
             style: style,
             includeAutoFilter: !NoAutoFilter.IsPresent);
+
+        if (AutoFit.IsPresent)
+        {
+            var columnIndexes = Enumerable.Range(StartColumn, table.Columns.Count);
+            sheet.AutoFitColumnsFor(columnIndexes);
+        }
 
         if (PassThru.IsPresent)
         {
