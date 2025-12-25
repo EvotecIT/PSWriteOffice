@@ -38,7 +38,6 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
     public string? Color { get; set; }
 
     /// <inheritdoc />
-    /// <inheritdoc />
     protected override void BeginProcessing()
     {
         var name = MyInvocation.InvocationName;

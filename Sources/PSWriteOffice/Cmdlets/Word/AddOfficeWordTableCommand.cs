@@ -49,7 +49,6 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var rows = NormalizeRows(InputObject);
