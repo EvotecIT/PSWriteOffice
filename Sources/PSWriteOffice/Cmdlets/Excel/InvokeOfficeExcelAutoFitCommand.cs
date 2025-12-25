@@ -109,7 +109,7 @@ public sealed class InvokeOfficeExcelAutoFitCommand : PSCmdlet
             {
                 if (SheetIndex.Value < 0 || SheetIndex.Value >= Document.Sheets.Count)
                 {
-                    throw new PSArgumentOutOfRangeException(nameof(SheetIndex), "SheetIndex is out of range.");
+                    throw new ArgumentOutOfRangeException(nameof(SheetIndex), "SheetIndex is out of range.");
                 }
                 return Document.Sheets[SheetIndex.Value];
             }

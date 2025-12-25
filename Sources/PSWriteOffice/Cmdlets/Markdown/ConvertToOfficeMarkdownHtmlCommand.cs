@@ -100,7 +100,7 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(Title))
         {
-            options.Title = Title;
+            options.Title = Title!;
         }
 
         if (!string.IsNullOrWhiteSpace(OutputPath))

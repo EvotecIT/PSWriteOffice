@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -106,7 +107,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
         if (!string.IsNullOrEmpty(NewLine))
         {
-            options.NewLine = NewLine;
+            options.NewLine = NewLine!;
         }
 
         if (!string.IsNullOrWhiteSpace(OutputPath))

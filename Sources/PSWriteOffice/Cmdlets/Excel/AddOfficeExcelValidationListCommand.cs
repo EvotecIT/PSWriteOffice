@@ -53,7 +53,7 @@ public sealed class AddOfficeExcelValidationListCommand : PSCmdlet
     {
         if (Values == null || Values.Length == 0)
         {
-            throw new PSArgumentException("Provide at least one validation value.", nameof(Values));
+            throw new PSArgumentException("Provide at least one validation value.");
         }
 
         var sheet = ResolveSheet();
@@ -83,7 +83,7 @@ public sealed class AddOfficeExcelValidationListCommand : PSCmdlet
             {
                 if (SheetIndex.Value < 0 || SheetIndex.Value >= Document.Sheets.Count)
                 {
-                    throw new PSArgumentOutOfRangeException(nameof(SheetIndex), "SheetIndex is out of range.");
+                    throw new ArgumentOutOfRangeException(nameof(SheetIndex), "SheetIndex is out of range.");
                 }
                 return Document.Sheets[SheetIndex.Value];
             }
