@@ -1,6 +1,6 @@
 using System;
 using System.Management.Automation;
-using ShapeCrawler;
+using OfficeIMO.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -17,7 +17,7 @@ public class AddOfficePowerPointTextBoxCommand : PSCmdlet
 {
     /// <summary>Target slide that will receive the text box.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
-    public ISlide Slide { get; set; } = null!;
+    public PowerPointSlide Slide { get; set; } = null!;
 
     /// <summary>Text to render inside the box.</summary>
     [Parameter(Mandatory = true)]
@@ -44,11 +44,8 @@ public class AddOfficePowerPointTextBoxCommand : PSCmdlet
     {
         try
         {
-            var shapes = Slide.Shapes;
-            shapes.AddShape(X, Y, Width, Height);
-            var shape = shapes[shapes.Count - 1];
-            shape.TextBox!.SetText(Text);
-            WriteObject(shape);
+            var textBox = Slide.AddTextBoxPoints(Text, X, Y, Width, Height);
+            WriteObject(textBox);
         }
         catch (Exception ex)
         {

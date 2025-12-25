@@ -1,11 +1,12 @@
 using System;
 using System.Management.Automation;
-using ShapeCrawler;
+using OfficeIMO.PowerPoint;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Sets the text of the title placeholder on a slide.</summary>
-/// <para>Targets the default “Title 1” shape created by most master layouts.</para>
+/// <para>Targets the title placeholder when available; otherwise adds a new title shape.</para>
 /// <example>
 ///   <summary>Rename a slide.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -17,7 +18,7 @@ public class SetOfficePowerPointSlideTitleCommand : PSCmdlet
 {
     /// <summary>Slide whose title should change.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
-    public ISlide Slide { get; set; } = null!;
+    public PowerPointSlide Slide { get; set; } = null!;
 
     /// <summary>New title text.</summary>
     [Parameter(Mandatory = true)]
@@ -28,8 +29,18 @@ public class SetOfficePowerPointSlideTitleCommand : PSCmdlet
     {
         try
         {
-            var titleShape = Slide.Shapes.Shape("Title 1");
-            titleShape.TextBox!.SetText(Title);
+            var titleBox = Slide.GetPlaceholder(PlaceholderValues.Title) ??
+                           Slide.GetPlaceholder(PlaceholderValues.CenteredTitle);
+
+            if (titleBox != null)
+            {
+                titleBox.Text = Title;
+            }
+            else
+            {
+                Slide.AddTitle(Title);
+            }
+
             WriteObject(Slide);
         }
         catch (Exception ex)

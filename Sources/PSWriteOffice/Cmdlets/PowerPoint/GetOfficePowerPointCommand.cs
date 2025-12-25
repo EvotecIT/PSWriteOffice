@@ -1,13 +1,13 @@
 using System;
 using System.IO;
 using System.Management.Automation;
-using ShapeCrawler;
+using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Loads an existing PowerPoint presentation.</summary>
-/// <para>Returns a ShapeCrawler <see cref="Presentation"/> for downstream slide operations.</para>
+/// <para>Returns an OfficeIMO <see cref="PowerPointPresentation"/> for downstream slide operations.</para>
 /// <example>
 ///   <summary>Open a deck for editing.</summary>
 ///   <prefix>PS&gt; </prefix>

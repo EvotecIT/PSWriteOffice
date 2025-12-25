@@ -1,6 +1,6 @@
 using System;
 using System.Management.Automation;
-using ShapeCrawler;
+using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
@@ -19,7 +19,7 @@ public class SaveOfficePowerPointCommand : PSCmdlet
     /// <summary>Presentation instance to save.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     [ValidateNotNull]
-    public Presentation Presentation { get; set; } = null!;
+    public PowerPointPresentation Presentation { get; set; } = null!;
 
     /// <summary>Launch the saved file in the default viewer.</summary>
     [Parameter]

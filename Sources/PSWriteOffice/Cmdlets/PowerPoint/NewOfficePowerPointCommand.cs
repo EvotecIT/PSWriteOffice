@@ -1,12 +1,12 @@
 using System;
 using System.Management.Automation;
-using ShapeCrawler;
+using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Creates a blank PowerPoint presentation.</summary>
-/// <para>Initializes a ShapeCrawler <see cref="Presentation"/> backed by the supplied file path.</para>
+/// <para>Initializes an OfficeIMO <see cref="PowerPointPresentation"/> backed by the supplied file path.</para>
 /// <example>
 ///   <summary>Create and capture the presentation object.</summary>
 ///   <prefix>PS&gt; </prefix>

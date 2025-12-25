@@ -1,7 +1,6 @@
 using System;
 using System.Management.Automation;
-using ShapeCrawler;
-using PSWriteOffice;
+using OfficeIMO.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -18,7 +17,7 @@ public class RemoveOfficePowerPointSlideCommand : PSCmdlet
 {
     /// <summary>Presentation to modify.</summary>
     [Parameter(Mandatory = true)]
-    public Presentation Presentation { get; set; } = null!;
+    public PowerPointPresentation Presentation { get; set; } = null!;
 
     /// <summary>Zero-based slide index.</summary>
     [Parameter(Mandatory = true)]
@@ -31,7 +30,7 @@ public class RemoveOfficePowerPointSlideCommand : PSCmdlet
         {
             if (ShouldProcess($"Slide {Index}", "Remove slide"))
             {
-                Presentation.Slides.RemoveAt(Index);
+                Presentation.RemoveSlide(Index);
             }
         }
         catch (Exception ex)

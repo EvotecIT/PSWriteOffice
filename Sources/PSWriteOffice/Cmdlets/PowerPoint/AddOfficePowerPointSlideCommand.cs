@@ -1,11 +1,11 @@
 using System;
 using System.Management.Automation;
-using ShapeCrawler;
+using OfficeIMO.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Adds a new slide to a PowerPoint presentation.</summary>
-/// <para>Wraps ShapeCrawler to append a slide using a built-in layout index.</para>
+/// <para>Creates a slide using OfficeIMO master and layout indexes.</para>
 /// <example>
 ///   <summary>Append a slide with the default layout.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -17,7 +17,11 @@ public class AddOfficePowerPointSlideCommand : PSCmdlet
 {
     /// <summary>Presentation to update.</summary>
     [Parameter(Mandatory = true)]
-    public Presentation Presentation { get; set; } = null!;
+    public PowerPointPresentation Presentation { get; set; } = null!;
+
+    /// <summary>Slide master index to use.</summary>
+    [Parameter]
+    public int Master { get; set; } = 0;
 
     /// <summary>Layout index to use (matches the template’s built-in layouts).</summary>
     [Parameter]
@@ -28,8 +32,7 @@ public class AddOfficePowerPointSlideCommand : PSCmdlet
     {
         try
         {
-            Presentation.Slides.Add(Layout);
-            var slide = Presentation.Slides[Presentation.Slides.Count - 1];
+            var slide = Presentation.AddSlide(Master, Layout);
             WriteObject(slide);
         }
         catch (Exception ex)
