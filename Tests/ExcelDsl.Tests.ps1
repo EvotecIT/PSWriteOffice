@@ -45,4 +45,22 @@ Describe 'Excel DSL surface' {
 
         Test-Path $path | Should -BeTrue
     }
+
+    It 'supports autofit and validation list helpers' {
+        $path = Join-Path $TestDrive 'DslExcelExtras.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; Status = 'New' }
+            [PSCustomObject]@{ Name = 'Beta'; Status = 'Done' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Items' -AutoFit
+                Add-OfficeExcelValidationList -Range 'C2:C3' -Values 'New','In Progress','Done'
+                Invoke-OfficeExcelAutoFit -Columns
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
+    }
 }
