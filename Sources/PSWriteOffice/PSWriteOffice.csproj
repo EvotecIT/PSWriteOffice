@@ -12,10 +12,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <OfficeIMORoot>..\..\..\OfficeIMO</OfficeIMORoot>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
-        <PackageReference Include="ShapeCrawler" Version="0.71.1" />
-        <PackageReference Include="HtmlToOpenXml.dll" Version="3.2.5" />
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.3" />
     </ItemGroup>
 
@@ -56,8 +58,20 @@
         <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(PublishDir)" />
     </Target>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\OfficeIMO\OfficeIMO.Word\OfficeIMO.Word.csproj" />
-        <ProjectReference Include="..\..\..\OfficeIMO\OfficeIMO.Excel\OfficeIMO.Excel.csproj" />
+    <ItemGroup Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition="!Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
+        <PackageReference Include="OfficeIMO.Word" Version="1.0.20" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.0" />
+        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.7" />
+        <PackageReference Include="OfficeIMO.Markdown" Version="0.5.0" />
+        <PackageReference Include="OfficeIMO.CSV" Version="0.1.0" />
+        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.7" />
     </ItemGroup>
 </Project>
