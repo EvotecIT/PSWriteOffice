@@ -20,7 +20,7 @@
   <a href="https://www.linkedin.com/in/pklys"><img src="https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn&style=flat-square"></a>
 </p>
 
-`PSWriteOffice` is cross-platform PowerShell module for writing Microsoft Office documents (`Word`, `Excel` and later on `PowerPoint`).
+`PSWriteOffice` is cross-platform PowerShell module for writing Microsoft Office documents (`Word`, `Excel`, and `PowerPoint` - experimental).
 This module long term goal is to fully replace:
 
 - [PSWriteWord](https://github.com/EvotecIT/PSWriteWord) - this module works only in Windows PowerShell 5.1, and DLL license has changed making updates to it very hard.
@@ -30,7 +30,10 @@ While at this moment this module doesn't expose all DLL features, and some featu
 
 This module is built using following libraries:
 - [Open XML SDK for .NET](https://github.com/OfficeDev/Open-XML-SDK) licensed MIT - Microsoft's library doing heavy lifting for all other Open XML projects.
-- [ClosedXML](https://github.com/ClosedXML/ClosedXML) licensed MIT - library for reading and writing Excel files.
-- [HtmlToOpenXml](https://github.com/onizet/html2openxml) licensed MIT - library for converting HTML to Word documents.
-- [OfficeIMO](https://github.com/EvotecIT/OfficeIMO) - library for reading and writing Word and Excel files.
+- [OfficeIMO.Word.Html](https://github.com/EvotecIT/OfficeIMO) - OfficeIMO HTML converters for Word.
+- [OfficeIMO](https://github.com/EvotecIT/OfficeIMO) - core engines: Word, Excel, PowerPoint, Markdown, CSV.
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) licensed Apache 2.0 - library for image processing.
+
+HTML converters (OfficeIMO.Word.Html):
+- `ConvertTo-OfficeWordHtml -Path .\report.docx -OutputPath .\report.html`
+- `ConvertFrom-OfficeWordHtml -Path .\snippet.html -OutputPath .\report.docx`
