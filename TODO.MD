@@ -84,11 +84,10 @@
    - Writers: New/Open/Save Word, Section/Header/Footer/Paragraph/Text/List/Table/Image/Field/Watermark/Protection; fluent helper aliases inside DSL.
    - Readers: Get-OfficeWord (sections/paragraphs/tables/runs), Find-Word (text/fields/bookmarks).
    - Basic Pester smoke: create doc, add paragraph, add table, save/open roundtrip.
-   - Back-compat shims for top PSWriteWord verbs (with deprecation warnings).
 
 3) **Excel (P0)**
    - Writers: New/Open/Save Excel, Sheet, Row/Column/Cell, Table, NamedRange, Validation, Formula, Images in header/footer, AutoFit (hook OfficeIMO parallel). Charts postponed until OfficeIMO.Excel exposes them.
-   - Readers: Get-OfficeExcel (-UsedRange/-Range/-AsObjects/-AsRows), Get-ExcelNamedRange/Table helpers; ImportExcel-compatible wrapper.
+   - Readers: Get-OfficeExcel (-UsedRange/-Range/-AsObjects/-AsRows), Get-ExcelNamedRange/Table helpers.
    - Pester smoke: create workbook, write table from objects, autofit, read back.
 
 4) **Markdown (P1)**
