@@ -65,6 +65,21 @@ internal static class ExcelHostExtensions
         return (row.Value, column.Value);
     }
 
+    public static int ResolveColumnIndex(int? columnIndex, string? columnName)
+    {
+        if (!string.IsNullOrWhiteSpace(columnName))
+        {
+            return ColumnLettersToIndex(columnName!.Trim().ToUpperInvariant());
+        }
+
+        if (!columnIndex.HasValue)
+        {
+            throw new ArgumentException("Specify either -Column or -ColumnName.");
+        }
+
+        return columnIndex.Value;
+    }
+
     private static int ColumnLettersToIndex(string letters)
     {
         int result = 0;
