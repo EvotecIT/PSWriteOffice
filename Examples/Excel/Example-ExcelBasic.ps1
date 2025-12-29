@@ -10,14 +10,11 @@ $data = @(
 )
 
 $path = Join-Path $documents 'Excel-Basic.xlsx'
-
 New-OfficeExcel -Path $path {
     Add-OfficeExcelSheet -Name 'Summary' -Content {
-        Set-OfficeExcelCell -Address 'A1' -Value 'Region'
-        Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
-        Set-OfficeExcelCell -Address 'C1' -Value 'YoY'
-
+        Set-OfficeExcelRow -Row 1 -Values 'Region', 'Revenue', 'YoY'
         Add-OfficeExcelTable -Data $data -TableName 'Sales' -TableStyle 'TableStyleMedium9'
+        Set-OfficeExcelColumn -Column 1 -AutoFit
     }
 } -PassThru | Out-Null
 
