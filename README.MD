@@ -37,3 +37,21 @@ This module is built using following libraries:
 HTML converters (OfficeIMO.Word.Html):
 - `ConvertTo-OfficeWordHtml -Path .\report.docx -OutputPath .\report.html`
 - `ConvertFrom-OfficeWordHtml -Path .\snippet.html -OutputPath .\report.docx`
+
+CSV helpers:
+- `Get-OfficeCsv -Path .\data.csv`
+- `Get-OfficeCsvData -Path .\data.csv`
+- `ConvertTo-OfficeCsv -OutputPath .\export.csv`
+
+Markdown helpers:
+- `Get-OfficeMarkdown -Path .\README.md`
+- `ConvertTo-OfficeMarkdown` (from objects)
+- `ConvertTo-OfficeMarkdownHtml -Text $md -DocumentMode`
+
+Word DSL quick start:
+- `New-OfficeWord -Path .\Report.docx { WordSection { WordParagraph 'Hello' } }`
+- `Get-OfficeWordParagraph -Path .\Report.docx | Select-Object -First 3`
+
+Excel DSL quick start:
+- `New-OfficeExcel -Path .\Report.xlsx { ExcelSheet 'Data' { Set-OfficeExcelRow -Row 1 -Values 'Name','Value' } }`
+- `Get-OfficeExcelNamedRange -Path .\Report.xlsx`

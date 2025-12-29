@@ -74,51 +74,51 @@
 | Converters (later/preview) | `Convert-WordToPdf`, `Convert-WordToHtml`, `Convert-HtmlToWord`, `Convert-WordToMarkdown`, `Convert-MarkdownToWord` | n/a; guard behind `-EnablePreviewConverters` |
 | Visio (exp) | `New-OfficeVisio`, `Add-OfficeVisioPage`, `Add-OfficeVisioShape`, `Add-OfficeVisioConnector`, `Save-OfficeVisio` | `VisioPage`, `VisioShape`, `VisioConnector` (experimental) |
 
-## Work packages (ordered)
-1) **Foundation (module stays single)**
-   - Keep PSPublishModule pipeline; only adjust loader to prefer local OfficeIMO sources in dev and packaged binaries for release.
-   - Establish naming + alias rules to avoid conflicts and stay `Get-Verb` compliant; ship aliases for DSL brevity.
-   - Context objects for nested scriptblocks (document/section/sheet/slide) without leaking .NET classes.
+## Work packages (ordered, status)
+1) **Foundation (module stays single)** — **In Progress**
+   - Keep PSPublishModule pipeline; only adjust loader to prefer local OfficeIMO sources in dev and packaged binaries for release. **Done**
+   - Establish naming + alias rules to avoid conflicts and stay `Get-Verb` compliant; ship aliases for DSL brevity. **In Progress**
+   - Context objects for nested scriptblocks (document/section/sheet/slide) without leaking .NET classes. **In Progress**
 
-2) **Word (P0)**
-   - Writers: New/Open/Save Word, Section/Header/Footer/Paragraph/Text/List/Table/Image/Field/Watermark/Protection; fluent helper aliases inside DSL.
-   - Readers: Get-OfficeWord (sections/paragraphs/tables/runs), Find-Word (text/fields/bookmarks).
-   - Basic Pester smoke: create doc, add paragraph, add table, save/open roundtrip.
+2) **Word (P0)** — **In Progress**
+   - Writers: New/Open/Save Word, Section/Header/Footer/Paragraph/Text/List/Table/Image/Field/Watermark/Protection; fluent helper aliases inside DSL. **Done**
+   - Readers: Get-OfficeWord (sections/paragraphs/tables/runs), Find-Word (text/fields/bookmarks). **Done**
+   - Basic Pester smoke: create doc, add paragraph, add table, save/open roundtrip. **Done**
 
-3) **Excel (P0)**
-   - Writers: New/Open/Save Excel, Sheet, Row/Column/Cell, Table, NamedRange, Validation, Formula, Images in header/footer, AutoFit (hook OfficeIMO parallel). Charts postponed until OfficeIMO.Excel exposes them.
-   - Readers: Get-OfficeExcel (-UsedRange/-Range/-AsObjects/-AsRows), Get-ExcelNamedRange/Table helpers.
-   - Pester smoke: create workbook, write table from objects, autofit, read back.
+3) **Excel (P0)** — **In Progress**
+   - Writers: New/Open/Save Excel, Sheet, Row/Column/Cell, Table, NamedRange, Validation, Formula, Images in header/footer, AutoFit (hook OfficeIMO parallel). Charts postponed until OfficeIMO.Excel supports them. **Done**
+   - Readers: Get-OfficeExcel (-UsedRange/-Range/-AsObjects/-AsRows), Get-ExcelNamedRange/Table helpers. **Done**
+   - Pester smoke: create workbook, write table from objects, autofit, read back. **Done**
 
-4) **Markdown (P1)**
-   - Writers/Readers: New-OfficeMarkdown (if needed) or Convert-like commands once stable; start with reading/writing via OfficeIMO.Markdown where stable.
-   - Defer HTML/PDF/Markdown converters until OfficeIMO converters stabilize.
+4) **Markdown (P1)** — **In Progress**
+   - Writers/Readers: New-OfficeMarkdown (if needed) or Convert-like commands once stable; start with reading/writing via OfficeIMO.Markdown where stable. **Done** (Get/ConvertTo/ToHtml)
+   - Defer HTML/PDF/Markdown converters until OfficeIMO converters stabilize. **Pending**
 
-5) **PowerPoint (P2, experimental flag)**
-   - Minimal deck/slide/title/textbox/bullets/image/notes; gated by `-Experimental`.
-   - Reader: Get-OfficePowerPoint to list slides/content (basic).
+5) **PowerPoint (P2, experimental flag)** — **In Progress**
+   - Minimal deck/slide/title/textbox/bullets/image/notes; gated by `-Experimental`. **In Progress** (under active dev)
+   - Reader: Get-OfficePowerPoint to list slides/content (basic). **In Progress**
 
-6) **Converters (P3, later)**
+6) **Converters (P3, later)** — **Pending**
    - Convert-WordTo/From Markdown/Html/Pdf; Convert-MarkdownToWord; wrapped behind stability checks; separate `-EnablePreviewConverters` switch.
 
-7) **Visio (P3, experimental)**
+7) **Visio (P3, experimental)** — **Pending**
    - Thin DSL for diagrams/shapes/connectors with explicit preview flag.
 
-8) **Examples & docs**
-   - Rebuild Examples with new naming (Word/Excel first). Start with “create doc”, “get doc contents”, “create excel table”, “read excel as objects”.
-   - XML-based help for cmdlets; platyPS not needed. Include alias coverage in help.
-   - Migration guide (old cmdlet → new) once Word/Excel stabilized.
+8) **Examples & docs** — **In Progress**
+   - Rebuild Examples with new naming (Word/Excel first). Start with “create doc”, “get doc contents”, “create excel table”, “read excel as objects”. **In Progress** (added Word/Excel/CSV/Markdown examples)
+   - XML-based help for cmdlets; platyPS not needed. Include alias coverage in help. **In Progress**
+   - Migration guide (old cmdlet → new) once Word/Excel stabilized. **Pending**
 
-9) **Tests & validation**
-   - Trust OfficeIMO unit/verify tests for logic; add Pester smoke/integration only for cmdlet wiring and DSL flow.
-   - Cross-platform runnable examples double as tests.
+9) **Tests & validation** — **In Progress**
+   - Trust OfficeIMO unit/verify tests for logic; add Pester smoke/integration only for cmdlet wiring and DSL flow. **In Progress**
+   - Cross-platform runnable examples double as tests. **Pending**
 
-10) **Release & versioning**
+10) **Release & versioning** — **Pending**
     - SemVer: 0.x while DSL incubates; 1.0 when Word/Excel DSL + shims stable.
     - Single module distribution; optional switches to avoid loading heavy deps (PDF/HTML/Markdown) until requested.
 
 ## Immediate next steps (for this reboot)
-- Finalize cmdlet nouns/aliases for Word/Excel to avoid conflicts and ensure `Get-Verb` compliance.
-- Scaffold Word/Excel writer/reader cmdlets with context objects; stub aliases for DSL use.
-- Port 3–5 Word/Excel examples using new names; add minimal Pester smoke (create/open/read).
-- Draft XML help stubs for new cmdlets; ignore platyPS.
+- Finalize cmdlet nouns/aliases for Word/Excel to avoid conflicts and ensure `Get-Verb` compliance. **In Progress**
+- Scaffold Word/Excel writer/reader cmdlets with context objects; stub aliases for DSL use. **In Progress**
+- Port 3–5 Word/Excel examples using new names; add minimal Pester smoke (create/open/read). **In Progress**
+- Draft XML help stubs for new cmdlets; ignore platyPS. **In Progress**
