@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Excel;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
@@ -66,7 +67,8 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             throw new PSArgumentException("Provide at least one data row.", nameof(Data));
         }
 
-        var table = ExcelDataTableBuilder.FromObjects(Data);
+        var normalized = PowerShellObjectNormalizer.NormalizeItems(Data);
+        var table = ObjectDataTableBuilder.FromObjects(normalized);
         if (table.Columns.Count == 0)
         {
             throw new InvalidOperationException("Unable to infer columns from the supplied data.");

@@ -5,7 +5,7 @@ using System.IO;
 using System.Management.Automation;
 using System.Text;
 using OfficeIMO.CSV;
-using PSWriteOffice.Services.Csv;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Csv;
 
@@ -91,7 +91,8 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             return;
         }
 
-        var document = CsvDocumentBuilder.FromObjects(_items, Delimiter, Culture, Encoding);
+        var normalized = PowerShellObjectNormalizer.NormalizeItems(_items);
+        var document = CsvDocument.FromObjects(normalized, Delimiter, Culture, Encoding);
         EmitCsv(document);
     }
 

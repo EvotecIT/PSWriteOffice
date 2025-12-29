@@ -1,16 +1,12 @@
 using System;
-using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
-using System.Management.Automation;
-using System.Text.RegularExpressions;
 using OfficeIMO.Excel;
 
 namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelHostExtensions
 {
-    private static readonly Regex AddressRegex = new(@"^([A-Za-z]+)(\d+)$", RegexOptions.Compiled);
 
     public static ExcelSheet GetOrCreateSheet(this ExcelDocument document, string? name, SheetNameValidationMode validationMode)
     {
@@ -42,19 +38,13 @@ internal static class ExcelHostExtensions
         if (!string.IsNullOrWhiteSpace(address))
         {
             var trimmedAddress = address!.Trim();
-            var match = AddressRegex.Match(trimmedAddress);
-            if (!match.Success)
+            var (rowIndex, columnIndex) = A1.ParseCellRef(trimmedAddress);
+            if (rowIndex <= 0 || columnIndex <= 0)
             {
                 throw new ArgumentException($"Address '{address}' is not a valid A1 reference.", nameof(address));
             }
 
-            string columnPart = match.Groups[1].Value.ToUpperInvariant();
-            if (!int.TryParse(match.Groups[2].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rowIndex))
-            {
-                throw new ArgumentException($"Address '{address}' is not a valid A1 reference.", nameof(address));
-            }
-
-            return (rowIndex, ColumnLettersToIndex(columnPart));
+            return (rowIndex, columnIndex);
         }
 
         if (!row.HasValue || !column.HasValue)
@@ -69,7 +59,12 @@ internal static class ExcelHostExtensions
     {
         if (!string.IsNullOrWhiteSpace(columnName))
         {
-            return ColumnLettersToIndex(columnName!.Trim().ToUpperInvariant());
+            var index = A1.ColumnLettersToIndex(columnName!.Trim());
+            if (index <= 0)
+            {
+                throw new ArgumentException($"ColumnName '{columnName}' is not a valid column reference.", nameof(columnName));
+            }
+            return index;
         }
 
         if (!columnIndex.HasValue)
@@ -80,14 +75,4 @@ internal static class ExcelHostExtensions
         return columnIndex.Value;
     }
 
-    private static int ColumnLettersToIndex(string letters)
-    {
-        int result = 0;
-        foreach (char c in letters)
-        {
-            if (c < 'A' || c > 'Z') throw new ArgumentException($"Invalid column letter '{c}'.", nameof(letters));
-            result = result * 26 + (c - 'A' + 1);
-        }
-        return result;
-    }
 }

@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -74,49 +70,23 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
             }
 
             var sheetFilter = ResolveSheetName(document);
-            var spreadsheet = document._spreadSheetDocument;
-            if (spreadsheet?.WorkbookPart == null)
+            var tables = document.GetTables();
+
+            foreach (var table in tables)
             {
-                return;
-            }
-
-            var workbookPart = spreadsheet.WorkbookPart;
-            var sheetLookup = BuildSheetLookup(workbookPart);
-
-            foreach (var worksheetPart in workbookPart.WorksheetParts)
-            {
-                var relId = workbookPart.GetIdOfPart(worksheetPart);
-                if (string.IsNullOrWhiteSpace(relId))
-                {
-                    continue;
-                }
-                sheetLookup.TryGetValue(relId, out var sheetName);
-                sheetName ??= string.Empty;
-
                 if (!string.IsNullOrWhiteSpace(sheetFilter) &&
-                    !string.Equals(sheetName, sheetFilter, StringComparison.OrdinalIgnoreCase))
+                    !string.Equals(table.SheetName, sheetFilter, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                foreach (var tablePart in worksheetPart.TableDefinitionParts)
+                if (!string.IsNullOrWhiteSpace(Name) &&
+                    !string.Equals(table.Name, Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    var table = tablePart.Table;
-                    if (table == null)
-                    {
-                        continue;
-                    }
-
-                    var tableName = table.Name?.Value ?? table.DisplayName?.Value ?? string.Empty;
-                    if (!string.IsNullOrWhiteSpace(Name) &&
-                        !string.Equals(tableName, Name, StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
-
-                    var range = table.Reference?.Value ?? string.Empty;
-                    WriteObject(CreateRecord(tableName, range, sheetName));
+                    continue;
                 }
+
+                WriteObject(CreateRecord(table.Name, table.Range, table.SheetName));
             }
         }
         finally
@@ -145,27 +115,6 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
         }
 
         return null;
-    }
-
-    private static Dictionary<string, string> BuildSheetLookup(WorkbookPart workbookPart)
-    {
-        var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        var sheets = workbookPart.Workbook.Sheets?.OfType<Sheet>() ?? Enumerable.Empty<Sheet>();
-        foreach (var sheet in sheets)
-        {
-            var id = sheet.Id?.Value;
-            var name = sheet.Name?.Value;
-            if (id == null || name == null)
-            {
-                continue;
-            }
-            if (id.Length == 0 || name.Length == 0)
-            {
-                continue;
-            }
-            lookup[id] = name;
-        }
-        return lookup;
     }
 
     private static PSObject CreateRecord(string name, string range, string sheet)

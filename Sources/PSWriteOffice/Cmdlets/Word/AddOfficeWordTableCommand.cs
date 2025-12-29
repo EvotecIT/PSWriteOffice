@@ -6,6 +6,7 @@ using System.Linq;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
@@ -63,7 +64,9 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         var context = WordDslContext.Require(this);
-        var table = WordDocumentService.AddTable(context.Document, rows, Style, Layout, SkipHeader.IsPresent);
+        var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(rows);
+        var layout = ResolveLayout(Layout);
+        var table = context.Document.AddTableFromObjects(normalizedRows, Style, includeHeader: !SkipHeader.IsPresent, layout: layout);
         context.RegisterTableSource(table, rows);
 
         using (context.Push(table))
@@ -154,5 +157,17 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         return LanguagePrimitives.IsTrue(result[result.Count - 1]);
+    }
+
+    private static TableLayoutValues? ResolveLayout(string? layout)
+    {
+        if (string.IsNullOrWhiteSpace(layout))
+        {
+            return null;
+        }
+
+        return string.Equals(layout, "Autofit", StringComparison.OrdinalIgnoreCase)
+            ? TableLayoutValues.Autofit
+            : TableLayoutValues.Fixed;
     }
 }
