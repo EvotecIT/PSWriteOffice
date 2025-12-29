@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Markdown;
 
@@ -33,7 +36,7 @@ public sealed class ConvertToOfficeMarkdownCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        _items.Add(InputObject);
+        _items.Add(NormalizeItem(InputObject));
     }
 
     /// <inheritdoc />
@@ -62,5 +65,52 @@ public sealed class ConvertToOfficeMarkdownCommand : PSCmdlet
         {
             WriteObject(doc.ToMarkdown());
         }
+    }
+
+    private static object? NormalizeItem(object? item)
+    {
+        if (item == null)
+        {
+            return null;
+        }
+
+        if (IsScalar(item))
+        {
+            return item;
+        }
+
+        var ps = PSObject.AsPSObject(item);
+        if (ps.BaseObject is IDictionary dict)
+        {
+            return dict;
+        }
+
+        var properties = ps.Properties
+            .Where(p => p.MemberType == PSMemberTypes.NoteProperty || p.MemberType == PSMemberTypes.Property)
+            .Select(p => p.Name)
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .ToList();
+        if (properties.Count > 0)
+        {
+            var result = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+            foreach (var name in properties)
+            {
+                result[name] = ps.Properties[name]?.Value;
+            }
+            return result;
+        }
+
+        return item;
+    }
+
+    private static bool IsScalar(object item)
+    {
+        var type = item.GetType();
+        return type.IsPrimitive
+            || item is string
+            || item is decimal
+            || item is DateTime
+            || item is DateTimeOffset
+            || item is Guid;
     }
 }
