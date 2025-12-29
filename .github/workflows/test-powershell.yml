@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - main
     paths-ignore:
       - '*.md'
       - 'Docs/**'
@@ -12,6 +13,8 @@ on:
   pull_request:
     branches:
       - master
+      - main
+  workflow_dispatch:
 
 env:
   DOTNET_VERSION: '8.x'

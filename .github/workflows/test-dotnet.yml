@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - main
     paths-ignore:
       - 'README.md'
       - 'CHANGELOG.MD'
@@ -12,6 +13,7 @@ on:
   pull_request:
     branches:
       - master
+      - main
   workflow_dispatch:
 
 env:
