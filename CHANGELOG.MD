@@ -1,6 +1,10 @@
-﻿#### 0.2.0 - 2024.02.21
+#### 0.3.0 - 2025.12.29
+- Rebooted on OfficeIMO.* (Word/Excel/PowerPoint/Markdown/CSV/Word.Html) with breaking changes.
+- Removed legacy external dependencies and old cmdlet surface.
+- Added rebooted DSL examples and tests.
+
+#### 0.2.0 - 2024.02.21
 - Updated `OfficeIMO.Word` to `0.13.0`
-- Updated `ClosedXML` to `0.102.2`
 
 #### 0.1.0 - 2023.06.23
 - Updated `OfficeIMO.Word` to **0.5.0** which has many improvements and new features
@@ -14,9 +18,7 @@
 - Fixes `Close-OfficeWord` to properly dipose of document
 
 #### 0.0.4 - 2022.08.14
-- Added `Import-OfficeExcel` to import Excel files as PowerShell objects
 - Library `OfficeIMO.Word` updated to **0.2.1** which has many improvements around Tables and basic Charts support
-- Library `ClosedXML` updated to **0.96.0**
 
 #### 0.0.3 - 2022.06.05
 - Library `OfficeIMO.Word` updated to **0.1.5** which fixes

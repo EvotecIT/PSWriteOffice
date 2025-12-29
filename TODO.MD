@@ -1,7 +1,7 @@
 # PSWriteOffice reboot — delivery plan
 
 ## Vision
-- Single PSWriteOffice module (no split packages) that replaces PSWriteWord, PSWriteExcel, ImportExcel, and legacy PSWriteOffice using OfficeIMO as the core engine.
+- Single PSWriteOffice module (no split packages) built on OfficeIMO.* as the core engine (Word/Excel/Markdown/CSV/PowerPoint).
 - Scriptblock‑first DSL (pswritehtml style) but cmdlet names stay verb‑noun and non‑conflicting: e.g., `New-OfficeWord`, `New-OfficeWordSection`; nested aliases like `WordSection`/`WordParagraph` for brevity inside scriptblocks.
 - Respect `Get-Verb` guidance; when verbs are awkward, keep the compliant name and add short aliases for DSL ergonomics.
 - Focus order: Writer/Reader for Word → Excel → Markdown first; PowerPoint next; converters (HTML/Markdown/PDF) and Visio last/experimental because APIs are unstable.
@@ -69,33 +69,33 @@
 | ---- | ---------------------------- | -------------------------------------- |
 | Word | `New-OfficeWord`, `Get-OfficeWord`, `Save-OfficeWord`; `Add-OfficeWordSection`, `Add-OfficeWordHeader`, `Add-OfficeWordFooter`, `Add-OfficeWordParagraph`, `Add-OfficeWordText`, `Add-OfficeWordList`, `Add-OfficeWordListItem`, `Add-OfficeWordTable`, `Add-OfficeWordImage`, `Add-OfficeWordField`, `Protect-OfficeWordDocument`, `Find-OfficeWord` | `WordSection`, `WordHeader`, `WordFooter`, `WordParagraph`, `WordText`, `WordBold` (alias to `Add-OfficeWordText -Bold`), `WordList`, `WordListItem`, `WordTable`, `WordTableCondition`, `WordImage`, `WordField`, `WordPageNumber`, `WordWatermark` |
 | Excel | `New-OfficeExcel`, `Get-OfficeExcel`, `Save-OfficeExcel`; `Add-OfficeExcelSheet`, `Set-OfficeExcelCell`, `Add-OfficeExcelTable`, `Set-OfficeExcelNamedRange`, `Add-OfficeExcelValidationList`, `Set-OfficeExcelFormula`, `Set-OfficeExcelHeaderFooter`, `Invoke-OfficeExcelAutofit` | `ExcelSheet`, `ExcelCell`, `ExcelTable`, `ExcelNamedRange`, `ExcelValidationList`, `ExcelFormula`, `ExcelHeaderFooter`, `ExcelAutoFit` |
-| PowerPoint (exp) | `New-OfficePowerPoint`, `Get-OfficePowerPoint`, `Save-OfficePowerPoint`; `Add-OfficePowerPointSlide`, `Set-OfficePowerPointTitle`, `Add-OfficePowerPointTextBox`, `Add-OfficePowerPointImage`, `Set-OfficePowerPointNotes`, `Add-OfficePowerPointBullet` | `PptSlide`, `PptTitle`, `PptTextBox`, `PptImage`, `PptNotes`, `PptBullets`, `PptBullet` |
+| PowerPoint (exp) | `New-OfficePowerPoint`, `Get-OfficePowerPoint`, `Save-OfficePowerPoint`; `Add-OfficePowerPointSlide`, `Set-OfficePowerPointSlideTitle`, `Add-OfficePowerPointTextBox`, `Add-OfficePowerPointShape`, `Add-OfficePowerPointTable`, `Remove-OfficePowerPointSlide` | `PptSlide`, `PptTitle`, `PptTextBox`, `PptShape`, `PptTable` (planned) |
 | Markdown (later) | `Convert-MarkdownToWord`, `Convert-WordToMarkdown`, `Convert-MarkdownToPdf` (preview), `New-OfficeMarkdown` (if needed) | n/a for now |
 | Converters (later/preview) | `Convert-WordToPdf`, `Convert-WordToHtml`, `Convert-HtmlToWord`, `Convert-WordToMarkdown`, `Convert-MarkdownToWord` | n/a; guard behind `-EnablePreviewConverters` |
 | Visio (exp) | `New-OfficeVisio`, `Add-OfficeVisioPage`, `Add-OfficeVisioShape`, `Add-OfficeVisioConnector`, `Save-OfficeVisio` | `VisioPage`, `VisioShape`, `VisioConnector` (experimental) |
 
 ## Work packages (ordered, status)
-1) **Foundation (module stays single)** — **In Progress**
+1) **Foundation (module stays single)** — **In Progress (PowerPoint pending)**
    - Keep PSPublishModule pipeline; only adjust loader to prefer local OfficeIMO sources in dev and packaged binaries for release. **Done**
-   - Establish naming + alias rules to avoid conflicts and stay `Get-Verb` compliant; ship aliases for DSL brevity. **In Progress**
-   - Context objects for nested scriptblocks (document/section/sheet/slide) without leaking .NET classes. **In Progress**
+   - Establish naming + alias rules to avoid conflicts and stay `Get-Verb` compliant; ship aliases for DSL brevity. **In Progress** (Word/Excel/Markdown/CSV done; PowerPoint pending)
+   - Context objects for nested scriptblocks (document/section/sheet/slide) without leaking .NET classes. **In Progress** (Word/Excel/Markdown/CSV done; PowerPoint pending)
 
-2) **Word (P0)** — **In Progress**
+2) **Word (P0)** — **Done**
    - Writers: New/Open/Save Word, Section/Header/Footer/Paragraph/Text/List/Table/Image/Field/Watermark/Protection; fluent helper aliases inside DSL. **Done**
    - Readers: Get-OfficeWord (sections/paragraphs/tables/runs), Find-Word (text/fields/bookmarks). **Done**
    - Basic Pester smoke: create doc, add paragraph, add table, save/open roundtrip. **Done**
 
-3) **Excel (P0)** — **In Progress**
+3) **Excel (P0)** — **Done**
    - Writers: New/Open/Save Excel, Sheet, Row/Column/Cell, Table, NamedRange, Validation, Formula, Images in header/footer, AutoFit (hook OfficeIMO parallel). Charts postponed until OfficeIMO.Excel supports them. **Done**
    - Readers: Get-OfficeExcel (-UsedRange/-Range/-AsObjects/-AsRows), Get-ExcelNamedRange/Table helpers. **Done**
    - Pester smoke: create workbook, write table from objects, autofit, read back. **Done**
 
-4) **Markdown (P1)** — **In Progress**
+4) **Markdown (P1)** — **In Progress (core done; converters pending)**
    - Writers/Readers: New-OfficeMarkdown (if needed) or Convert-like commands once stable; start with reading/writing via OfficeIMO.Markdown where stable. **Done** (Get/ConvertTo/ToHtml)
    - Defer HTML/PDF/Markdown converters until OfficeIMO converters stabilize. **Pending**
 
 5) **PowerPoint (P2, experimental flag)** — **In Progress**
-   - Minimal deck/slide/title/textbox/bullets/image/notes; gated by `-Experimental`. **In Progress** (under active dev)
+   - Minimal deck/slide/title/textbox/shape/table; images/notes/bullets pending; gated by `-Experimental`. **In Progress** (tables/shapes added; more coming)
    - Reader: Get-OfficePowerPoint to list slides/content (basic). **In Progress**
 
 6) **Converters (P3, later)** — **Pending**
@@ -105,12 +105,12 @@
    - Thin DSL for diagrams/shapes/connectors with explicit preview flag.
 
 8) **Examples & docs** — **In Progress**
-   - Rebuild Examples with new naming (Word/Excel first). Start with “create doc”, “get doc contents”, “create excel table”, “read excel as objects”. **In Progress** (added Word/Excel/CSV/Markdown examples)
+   - Rebuild Examples with new naming (Word/Excel first). Start with “create doc”, “get doc contents”, “create excel table”, “read excel as objects”. **Done** (Word/Excel/CSV/Markdown examples refreshed; legacy scratch examples removed; new table/range samples added; PowerPoint tables/shapes examples added)
    - XML-based help for cmdlets; platyPS not needed. Include alias coverage in help. **In Progress**
    - Migration guide (old cmdlet → new) once Word/Excel stabilized. **Pending**
 
 9) **Tests & validation** — **In Progress**
-   - Trust OfficeIMO unit/verify tests for logic; add Pester smoke/integration only for cmdlet wiring and DSL flow. **In Progress**
+   - Trust OfficeIMO unit/verify tests for logic; add Pester smoke/integration only for cmdlet wiring and DSL flow. **In Progress** (Word/Excel/Markdown/CSV smoke done; OfficeIMO tests added for moved logic; PowerPoint smoke added)
    - Cross-platform runnable examples double as tests. **Pending**
 
 10) **Release & versioning** — **Pending**
@@ -118,7 +118,9 @@
     - Single module distribution; optional switches to avoid loading heavy deps (PDF/HTML/Markdown) until requested.
 
 ## Immediate next steps (for this reboot)
-- Finalize cmdlet nouns/aliases for Word/Excel to avoid conflicts and ensure `Get-Verb` compliance. **In Progress**
-- Scaffold Word/Excel writer/reader cmdlets with context objects; stub aliases for DSL use. **In Progress**
-- Port 3–5 Word/Excel examples using new names; add minimal Pester smoke (create/open/read). **In Progress**
+- Finalize cmdlet nouns/aliases for Word/Excel to avoid conflicts and ensure `Get-Verb` compliance. **Done**
+- Scaffold Word/Excel writer/reader cmdlets with context objects; stub aliases for DSL use. **Done**
+- Port 3–5 Word/Excel examples using new names; add minimal Pester smoke (create/open/read). **Done**
 - Draft XML help stubs for new cmdlets; ignore platyPS. **In Progress**
+
+

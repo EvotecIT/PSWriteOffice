@@ -20,13 +20,8 @@
   <a href="https://www.linkedin.com/in/pklys"><img src="https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn&style=flat-square"></a>
 </p>
 
-`PSWriteOffice` is cross-platform PowerShell module for writing Microsoft Office documents (`Word`, `Excel`, and `PowerPoint` - experimental).
-This module long term goal is to fully replace:
-
-- [PSWriteWord](https://github.com/EvotecIT/PSWriteWord) - this module works only in Windows PowerShell 5.1, and DLL license has changed making updates to it very hard.
-- [PSWriteExcel](https://github.com/EvotecIT/PSWriteExcel) - this module worked cross-platform but DLL maintainer moved to pay project leaving the old DLL unmaintained.
-
-While at this moment this module doesn't expose all DLL features, and some features are strictly available in by using their net methods, the goal is to expose it fully using PowerShell.
+`PSWriteOffice` is a cross-platform PowerShell module for creating and reading Microsoft Office documents (`Word`, `Excel`, `PowerPoint` - experimental), plus `Markdown` and `CSV`, powered by OfficeIMO.*.
+It provides verb-noun cmdlets and a scriptblock-first DSL while OfficeIMO owns the core engine and tests.
 
 This module is built using following libraries:
 - [Open XML SDK for .NET](https://github.com/OfficeDev/Open-XML-SDK) licensed MIT - Microsoft's library doing heavy lifting for all other Open XML projects.
