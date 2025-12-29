@@ -49,4 +49,45 @@ Describe 'Word DSL surface' {
 
         Test-Path $path | Should -BeTrue
     }
+
+    It 'supports reader helpers and save' {
+        $path = Join-Path $TestDrive 'DslReaders.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'One'; Value = 1 }
+        )
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordSection {
+                Add-OfficeWordParagraph -Text 'Reader smoke.'
+                Add-OfficeWordTable -InputObject $rows -Style 'TableGrid'
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path
+        try {
+            ($document | Get-OfficeWordSection).Count | Should -BeGreaterThan 0
+            ($document | Get-OfficeWordParagraph).Count | Should -BeGreaterThan 0
+            ($document | Get-OfficeWordTable).Count | Should -BeGreaterThan 0
+            ($document | Get-OfficeWordParagraph | Select-Object -First 1 | Get-OfficeWordRun).Count | Should -BeGreaterThan 0
+
+            $document | Save-OfficeWord | Out-Null
+        } finally {
+            Close-OfficeWord -Document $document
+        }
+    }
+
+    It 'adds fields, watermarks, and protection' {
+        $path = Join-Path $TestDrive 'DslProtected.docx'
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordParagraph {
+                Add-OfficeWordText -Text 'Page '
+                Add-OfficeWordField -Type Page
+            }
+            Add-OfficeWordWatermark -Text 'CONFIDENTIAL'
+            Protect-OfficeWordDocument -Password 'secret'
+        } | Out-Null
+
+        Test-Path $path | Should -BeTrue
+    }
 }

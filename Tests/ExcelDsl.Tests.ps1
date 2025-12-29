@@ -63,4 +63,51 @@ Describe 'Excel DSL surface' {
 
         Test-Path $path | Should -BeTrue
     }
+
+    It 'supports row/column helpers and reader metadata' {
+        $path = Join-Path $TestDrive 'DslExcelReaders.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; Value = 10 }
+            [PSCustomObject]@{ Name = 'Beta'; Value = 20 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelRow -Row 1 -Values 'Name', 'Value'
+                Set-OfficeExcelColumn -Column 1 -StartRow 2 -Values 'Alpha', 'Beta'
+                Set-OfficeExcelColumn -Column 2 -StartRow 2 -Values 10, 20
+                Set-OfficeExcelNamedRange -Name 'ManualRange' -Range 'A1:B3'
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -StartRow 5
+            }
+        } | Out-Null
+
+        $named = Get-OfficeExcelNamedRange -Path $path -Sheet 'Data' | Where-Object Name -eq 'ManualRange'
+        $named | Should -Not -BeNullOrEmpty
+
+        $tables = Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales'
+        $tables | Should -Not -BeNullOrEmpty
+
+        $doc = Get-OfficeExcel -Path $path
+        try {
+            $doc | Save-OfficeExcel | Out-Null
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
+
+    It 'sets named ranges, formulas, and header/footer' {
+        $path = Join-Path $TestDrive 'DslExcelMeta.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 10
+                Set-OfficeExcelCell -Address 'B1' -Value 20
+                Set-OfficeExcelFormula -Address 'C1' -Formula 'SUM(A1:B1)'
+                Set-OfficeExcelNamedRange -Name 'Totals' -Range 'A1:C1'
+                Set-OfficeExcelHeaderFooter -HeaderCenter 'Demo' -FooterRight 'Page &P of &N'
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
+    }
 }
