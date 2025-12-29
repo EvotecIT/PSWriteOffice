@@ -22,7 +22,7 @@ public sealed class AddOfficeWordHeaderCommand : PSCmdlet
     public HeaderFooterValues Type { get; set; } = HeaderFooterValues.Default;
 
     /// <summary>DSL scriptblock to execute inside the header.</summary>
-    [Parameter]
+    [Parameter(Position = 0)]
     public ScriptBlock? Content { get; set; }
 
     /// <inheritdoc />

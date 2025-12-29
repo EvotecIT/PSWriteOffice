@@ -22,7 +22,7 @@ public sealed class AddOfficeWordFooterCommand : PSCmdlet
     public HeaderFooterValues Type { get; set; } = HeaderFooterValues.Default;
 
     /// <summary>DSL scriptblock executed within the footer context.</summary>
-    [Parameter]
+    [Parameter(Position = 0)]
     public ScriptBlock? Content { get; set; }
 
     /// <inheritdoc />
