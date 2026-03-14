@@ -54,7 +54,7 @@ internal static class PowerPointNotesReader
             throw new ArgumentNullException(nameof(slide));
         }
 
-        var slidePart = GetSlidePart(slide);
+        var slidePart = ResolveSlidePart(slide);
         var presentationPart = slidePart?.GetParentParts().OfType<PresentationPart>().FirstOrDefault();
         var slideIds = presentationPart?.Presentation?.SlideIdList?.Elements<SlideId>();
         if (slidePart == null || slideIds == null)
@@ -89,7 +89,7 @@ internal static class PowerPointNotesReader
 
         try
         {
-            var slidePart = GetSlidePart(slide);
+            var slidePart = ResolveSlidePart(slide);
             var notesSlide = slidePart?.NotesSlidePart?.NotesSlide;
             if (notesSlide == null)
             {
@@ -144,7 +144,7 @@ internal static class PowerPointNotesReader
         return (builder.ToString() ?? string.Empty).Trim();
     }
 
-    private static SlidePart? GetSlidePart(PowerPointSlide slide)
+    internal static SlidePart? ResolveSlidePart(PowerPointSlide slide)
     {
         return SlidePartProperty?.GetValue(slide) as SlidePart;
     }
