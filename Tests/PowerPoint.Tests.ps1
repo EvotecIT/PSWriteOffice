@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
         $env:PSWRITEOFFICE_MODULE_MANIFEST
     } else {
@@ -53,7 +53,9 @@ Describe 'PowerPoint cmdlets' {
         $image | Should -Not -BeNullOrEmpty
         $bullets.Paragraphs.Count | Should -Be 3
         $bullets.Paragraphs[0].Text | Should -Be 'Wins'
-        $slide.Notes.Text | Should -Be 'Keep this under five minutes.'
+        $notes = Get-OfficePowerPointNotes -Slide $slide
+        $notes.Text | Should -Be 'Keep this under five minutes.'
+        $notes.HasNotes | Should -BeTrue
         $placeholder = Get-OfficePowerPointPlaceholder -Slide $slide -PlaceholderType Title
         $placeholder.Text | Should -Be 'Status Update'
         $placeholderUpdate = Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Status Update v2' -PassThru
@@ -79,7 +81,9 @@ Describe 'PowerPoint cmdlets' {
                 $reloadedPlaceholder = Get-OfficePowerPointPlaceholder -Slide $reloadedSlide -PlaceholderType CenteredTitle
             }
             $reloadedPlaceholder.Text | Should -Be 'Status Update v2'
-            $reloadedSlide.Notes.Text | Should -Be 'Keep this under five minutes.'
+            $reloadedNotes = Get-OfficePowerPointNotes -Slide $reloadedSlide
+            $reloadedNotes.Text | Should -Be 'Keep this under five minutes.'
+            $reloadedNotes.SlideIndex | Should -Be 1
             @($reloadedSlide.Tables).Count | Should -BeGreaterThan 0
             $reloadedSlide.Pictures.Count | Should -BeGreaterThan 0
         } finally {
@@ -87,6 +91,28 @@ Describe 'PowerPoint cmdlets' {
                 $reloaded.Dispose()
             }
         }
+    }
+
+    It 'reads notes without creating empty notes parts' {
+        $path = Join-Path $TestDrive 'PowerPointNotesRead.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+
+        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        Set-OfficePowerPointSlideTitle -Slide $slide -Title 'No notes yet'
+
+        $notes = Get-OfficePowerPointNotes -Slide $slide -IncludeEmpty
+        $notes.HasNotes | Should -BeFalse
+        $notes.Text | Should -BeNullOrEmpty
+        $notes.SlideIndex | Should -Be 0
+
+        $presentationNotes = Get-OfficePowerPointNotes -Presentation $presentation -IncludeEmpty
+        $presentationNotes.Count | Should -Be 1
+        $presentationNotes[0].HasNotes | Should -BeFalse
+
+        Save-OfficePowerPoint -Presentation $presentation
+
+        $entries = Get-ZipEntriesLocal -Path $path
+        ($entries | Where-Object { $_ -like 'ppt/notesSlides/*' }).Count | Should -Be 0
     }
 
     It 'persists layout placeholder edits across save and reopen' {
