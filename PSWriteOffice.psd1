@@ -4,7 +4,7 @@
     CmdletsToExport        = @('Add-OfficeWordFooter', 'Add-OfficeWordHeader', 'Add-OfficeWordImage', 'Add-OfficeWordList', 'Add-OfficeWordListItem', 'Add-OfficeWordPageNumber', 'Add-OfficeWordParagraph', 'Add-OfficeWordSection', 'Add-OfficeWordTable', 'Add-OfficeWordTableCondition', 'Add-OfficeWordText', 'Add-OfficeWordField', 'Add-OfficeWordWatermark', 'Protect-OfficeWordDocument', 'Close-OfficeWord', 'Save-OfficeWord', 'Get-OfficeWord', 'Get-OfficeWordSection', 'Get-OfficeWordParagraph', 'Get-OfficeWordTable', 'Get-OfficeWordRun', 'New-OfficeWord', 'Find-OfficeWord', 'Get-OfficeWordBookmark', 'Get-OfficeWordField', 'ConvertTo-OfficeWordHtml', 'ConvertFrom-OfficeWordHtml', 'Add-OfficePowerPointSlide', 'Add-OfficePowerPointTextBox', 'Add-OfficePowerPointShape', 'Add-OfficePowerPointTable', 'Get-OfficePowerPoint', 'Get-OfficePowerPointSlide', 'New-OfficePowerPoint', 'Remove-OfficePowerPointSlide', 'Save-OfficePowerPoint', 'Set-OfficePowerPointSlideTitle', 'Add-OfficeExcelSheet', 'Add-OfficeExcelTable', 'Add-OfficeExcelValidationList', 'Close-OfficeExcel', 'Save-OfficeExcel', 'Get-OfficeExcel', 'Get-OfficeExcelData', 'Get-OfficeExcelNamedRange', 'Get-OfficeExcelTable', 'Invoke-OfficeExcelAutoFit', 'New-OfficeExcel', 'Set-OfficeExcelCell', 'Set-OfficeExcelRow', 'Set-OfficeExcelColumn', 'Set-OfficeExcelNamedRange', 'Set-OfficeExcelFormula', 'Set-OfficeExcelHeaderFooter', 'Get-OfficeMarkdown', 'ConvertTo-OfficeMarkdown', 'ConvertTo-OfficeMarkdownHtml', 'Get-OfficeCsv', 'Get-OfficeCsvData', 'ConvertTo-OfficeCsv')
     CompanyName            = 'Evotec'
     CompatiblePSEditions   = @('Desktop', 'Core')
-    Copyright              = '(c) 2011 - 2025 Przemyslaw Klys @ Evotec. All rights reserved.'
+    Copyright              = '(c) 2011 - 2026 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description            = 'PowerShell module to create and read Microsoft Word, Excel, PowerPoint (experimental), Markdown, and CSV documents without Microsoft Office installed. Powered by OfficeIMO.*.'
     DotNetFrameworkVersion = '4.7.2'
     FunctionsToExport      = @()
@@ -16,7 +16,11 @@
             LicenseUri = 'https://github.com/EvotecIT/PSWriteOffice/blob/master/License'
             ProjectUri = 'https://github.com/EvotecIT/PSWriteOffice'
             Tags       = @('officeimo', 'word', 'excel', 'powerpoint', 'markdown', 'csv', 'docx', 'xlsx', 'pptx', 'openxml', 'windows', 'linux', 'macos')
-        }
+            RequireLicenseAcceptance = $false
+            ExternalModuleDependencies = @()
+}
     }
     RootModule             = 'PSWriteOffice.psm1'
+    RequiredModules        = @()
+    ScriptsToProcess       = @()
 }
