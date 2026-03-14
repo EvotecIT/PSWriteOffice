@@ -13,7 +13,7 @@ internal static class ExcelDocumentService
             throw new ArgumentException("File path cannot be empty.", nameof(filePath));
         }
 
-        return ExcelDocument.Create(filePath);
+        return ExcelDocument.Create(filePath, autoSave);
     }
 
     public static ExcelDocument LoadDocument(string filePath, bool readOnly, bool autoSave)

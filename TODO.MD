@@ -6,6 +6,12 @@
 - Respect `Get-Verb` guidance; when verbs are awkward, keep the compliant name and add short aliases for DSL ergonomics.
 - Focus order: Writer/Reader for Word → Excel → Markdown first; PowerPoint next; converters (HTML/Markdown/PDF) and Visio last/experimental because APIs are unstable.
 - OfficeIMO owns feature logic and tests; PSWriteOffice adds a thin DSL/cmdlet layer. Pester only for stabilized cmdlets to confirm wiring.
+- Ignore `ImportExcel-master` in OfficeIMO; we are not copying its API.
+
+## Principles (2026)
+- OfficeIMO is the reusable C# core; add feature logic there first.
+- PSWriteOffice is a thin binary cmdlet layer only (no PowerShell functions).
+- Prefer OfficeIMO APIs that are clean and consistent, even if they diverge from ImportExcel naming.
 
 ## Guiding DSL shape (prototypes, not final)
 - Word
@@ -51,9 +57,9 @@
   ```
 - Markdown / HTML / PDF
   ```powershell
-  Convert-MarkdownToWord -Path report.md -Out report.docx -Theme 'Light'   # later
-  Convert-WordToMarkdown report.docx | Set-Content report.md               # later
-  Convert-WordToPdf report.docx -Out report.pdf                            # later
+  ConvertFrom-OfficeMarkdown -Path report.md -Out report.docx -Theme 'Light'   # later
+  ConvertTo-OfficeMarkdown report.docx | Set-Content report.md                 # later
+  ConvertTo-OfficeWordPdf report.docx -Out report.pdf                          # later
   ```
 - Reading (object‑first)
   ```powershell
@@ -68,54 +74,59 @@
 | Area | Canonical cmdlets (examples) | DSL aliases (used inside scriptblocks) |
 | ---- | ---------------------------- | -------------------------------------- |
 | Word | `New-OfficeWord`, `Get-OfficeWord`, `Save-OfficeWord`; `Add-OfficeWordSection`, `Add-OfficeWordHeader`, `Add-OfficeWordFooter`, `Add-OfficeWordParagraph`, `Add-OfficeWordText`, `Add-OfficeWordList`, `Add-OfficeWordListItem`, `Add-OfficeWordTable`, `Add-OfficeWordImage`, `Add-OfficeWordField`, `Protect-OfficeWordDocument`, `Find-OfficeWord` | `WordSection`, `WordHeader`, `WordFooter`, `WordParagraph`, `WordText`, `WordBold` (alias to `Add-OfficeWordText -Bold`), `WordList`, `WordListItem`, `WordTable`, `WordTableCondition`, `WordImage`, `WordField`, `WordPageNumber`, `WordWatermark` |
-| Excel | `New-OfficeExcel`, `Get-OfficeExcel`, `Save-OfficeExcel`; `Add-OfficeExcelSheet`, `Set-OfficeExcelCell`, `Add-OfficeExcelTable`, `Set-OfficeExcelNamedRange`, `Add-OfficeExcelValidationList`, `Set-OfficeExcelFormula`, `Set-OfficeExcelHeaderFooter`, `Invoke-OfficeExcelAutofit` | `ExcelSheet`, `ExcelCell`, `ExcelTable`, `ExcelNamedRange`, `ExcelValidationList`, `ExcelFormula`, `ExcelHeaderFooter`, `ExcelAutoFit` |
+| Excel | `New-OfficeExcel`, `Get-OfficeExcel`, `Save-OfficeExcel`; `Add-OfficeExcelSheet`, `Set-OfficeExcelCell`, `Add-OfficeExcelTable`, `Set-OfficeExcelNamedRange`, `Add-OfficeExcelValidationList`, `Set-OfficeExcelFormula`, `Set-OfficeExcelHeaderFooter`, `Invoke-OfficeExcelAutofit`, `Add-OfficeExcelImage`, `Set-OfficeExcelHyperlink`, `Add-OfficeExcelPivotTable` | `ExcelSheet`, `ExcelCell`, `ExcelTable`, `ExcelNamedRange`, `ExcelValidationList`, `ExcelFormula`, `ExcelHeaderFooter`, `ExcelAutoFit`, `ExcelImage`, `ExcelHyperlink`, `ExcelPivotTable` |
 | PowerPoint (exp) | `New-OfficePowerPoint`, `Get-OfficePowerPoint`, `Save-OfficePowerPoint`; `Add-OfficePowerPointSlide`, `Set-OfficePowerPointSlideTitle`, `Add-OfficePowerPointTextBox`, `Add-OfficePowerPointShape`, `Add-OfficePowerPointTable`, `Remove-OfficePowerPointSlide` | `PptSlide`, `PptTitle`, `PptTextBox`, `PptShape`, `PptTable` (planned) |
 | Markdown (later) | `Convert-MarkdownToWord`, `Convert-WordToMarkdown`, `Convert-MarkdownToPdf` (preview), `New-OfficeMarkdown` (if needed) | n/a for now |
-| Converters (later/preview) | `Convert-WordToPdf`, `Convert-WordToHtml`, `Convert-HtmlToWord`, `Convert-WordToMarkdown`, `Convert-MarkdownToWord` | n/a; guard behind `-EnablePreviewConverters` |
+| Converters (later/preview) | `ConvertTo-OfficeWordPdf`, `ConvertTo-OfficeWordHtml`, `ConvertFrom-OfficeWordHtml`, `ConvertTo-OfficeWordMarkdown`, `ConvertFrom-OfficeMarkdown` | n/a; guard behind `-EnablePreviewConverters` |
 | Visio (exp) | `New-OfficeVisio`, `Add-OfficeVisioPage`, `Add-OfficeVisioShape`, `Add-OfficeVisioConnector`, `Save-OfficeVisio` | `VisioPage`, `VisioShape`, `VisioConnector` (experimental) |
 
 ## Work packages (ordered, status)
-1) **Foundation (module stays single)** — **In Progress (PowerPoint pending)**
-   - Keep PSPublishModule pipeline; only adjust loader to prefer local OfficeIMO sources in dev and packaged binaries for release. **Done**
-   - Establish naming + alias rules to avoid conflicts and stay `Get-Verb` compliant; ship aliases for DSL brevity. **In Progress** (Word/Excel/Markdown/CSV done; PowerPoint pending)
-   - Context objects for nested scriptblocks (document/section/sheet/slide) without leaking .NET classes. **In Progress** (Word/Excel/Markdown/CSV done; PowerPoint pending)
+1) **Foundation (thin layer only)** — **In Progress**
+   - Keep single module; no PowerShell functions (cmdlets only). **Done**
+   - Naming + alias rules remain `Get-Verb` compliant; short aliases only for DSL. **Done**
+   - Context objects for nested scriptblocks (document/section/sheet/slide). **Done**
 
-2) **Word (P0)** — **Done**
-   - Writers: New/Open/Save Word, Section/Header/Footer/Paragraph/Text/List/Table/Image/Field/Watermark/Protection; fluent helper aliases inside DSL. **Done**
-   - Readers: Get-OfficeWord (sections/paragraphs/tables/runs), Find-Word (text/fields/bookmarks). **Done**
-   - Basic Pester smoke: create doc, add paragraph, add table, save/open roundtrip. **Done**
+2) **Quality fixes (P0)** — **Done**
+   - Fix `-PassThru` binding on Word Section/Paragraph cmdlets. **Done**
+   - Wire `New-OfficeExcel -AutoSave` to OfficeIMO. **Done**
+   - Align CSV `AllowEmptyLines` docs with parser behavior. **Done**
 
-3) **Excel (P0)** — **Done**
-   - Writers: New/Open/Save Excel, Sheet, Row/Column/Cell, Table, NamedRange, Validation, Formula, Images in header/footer, AutoFit (hook OfficeIMO parallel). Charts postponed until OfficeIMO.Excel supports them. **Done**
-   - Readers: Get-OfficeExcel (-UsedRange/-Range/-AsObjects/-AsRows), Get-ExcelNamedRange/Table helpers. **Done**
-   - Pester smoke: create workbook, write table from objects, autofit, read back. **Done**
+3) **Excel parity via OfficeIMO (P0/P1)** — **In Progress**
+   - Expose existing OfficeIMO Excel features via cmdlets (AutoFilter, Sort, Freeze, ConditionalFormatting, Charts, Images, Hyperlinks). **In Progress** (AutoFilter/Sort/Freeze/ConditionalFormatting/Charts/Images/Hyperlinks cmdlets added; page setup/margins/gridlines/visibility cmdlets added; validation rule cmdlets added)
+   - Add missing OfficeIMO Excel features only where needed (comments/notes, protection, sparklines, pivot). **In Progress** (worksheet protection API + cmdlets, comments/notes API + cmdlets, sparklines API + cmdlet, basic pivot tables API + cmdlet + page fields/styles/layout toggles + read cmdlet)
+   - Add pivot table read metadata cmdlet for inspection. **Done** (`Get-OfficeExcelPivotTable` + `ExcelPivotTables`)
+   - Ensure cmdlets stay thin wrappers and reuse OfficeIMO types. **Pending**
 
-4) **Markdown (P1)** — **In Progress (core done; converters pending)**
-   - Writers/Readers: New-OfficeMarkdown (if needed) or Convert-like commands once stable; start with reading/writing via OfficeIMO.Markdown where stable. **Done** (Get/ConvertTo/ToHtml)
-   - Defer HTML/PDF/Markdown converters until OfficeIMO converters stabilize. **Pending**
+4) **Word polish (P1)** — **In Progress**
+   - Surface missing OfficeIMO Word features in cmdlets (bookmarks, content controls, fields, TOC update knobs). **In Progress** (bookmark cmdlet + content control read/write cmdlets + TOC get/set/update cmdlets added)
 
-5) **PowerPoint (P2, experimental flag)** — **In Progress**
-   - Minimal deck/slide/title/textbox/shape/table; images/notes/bullets pending; gated by `-Experimental`. **In Progress** (tables/shapes added; more coming)
-   - Reader: Get-OfficePowerPoint to list slides/content (basic). **In Progress**
+5) **PowerPoint (P2, experimental)** — **In Progress**
+   - Minimal deck/slide/title/textbox/shape/table done; add notes/bullets/images/layout helpers. **In Progress** (notes/bullets/images cmdlets added; layout list + slide by name/type + placeholder queries added; placeholder text + layout bounds/margins/style helpers added)
+   - Keep `-Experimental` gate for advanced functionality. **In Progress**
 
-6) **Converters (P3, later)** — **Pending**
-   - Convert-WordTo/From Markdown/Html/Pdf; Convert-MarkdownToWord; wrapped behind stability checks; separate `-EnablePreviewConverters` switch.
+6) **Markdown/CSV (P2)** — **In Progress**
+   - Keep OfficeIMO.Markdown/CSV as core; add thin cmdlets for remaining operations if needed. **In Progress** (Markdown DSL cmdlets + example added)
 
-7) **Visio (P3, experimental)** — **Pending**
-   - Thin DSL for diagrams/shapes/connectors with explicit preview flag.
+7) **Converters & Visio (P3)** — **Pending**
+   - Converters behind preview flags; Visio remains experimental.
 
-8) **Examples & docs** — **In Progress**
-   - Rebuild Examples with new naming (Word/Excel first). Start with “create doc”, “get doc contents”, “create excel table”, “read excel as objects”. **Done** (Word/Excel/CSV/Markdown examples refreshed; legacy scratch examples removed; new table/range samples added; PowerPoint tables/shapes examples added)
-   - XML-based help for cmdlets; platyPS not needed. Include alias coverage in help. **In Progress**
-   - Migration guide (old cmdlet → new) once Word/Excel stabilized. **Pending**
+8) **Docs & examples (continuous)** — **In Progress**
+- Keep examples aligned with new cmdlets and aliases. **In Progress**
+- XML help coverage for new cmdlets. **Pending**
+- Usage guide for Word/Excel/PowerPoint/Markdown/CSV. **Done**
+- Area guides + cmdlet map. **Done**
 
-9) **Tests & validation** — **In Progress**
-   - Trust OfficeIMO unit/verify tests for logic; add Pester smoke/integration only for cmdlet wiring and DSL flow. **In Progress** (Word/Excel/Markdown/CSV smoke done; OfficeIMO tests added for moved logic; PowerPoint smoke added)
-   - Cross-platform runnable examples double as tests. **Pending**
-
-10) **Release & versioning** — **Pending**
-    - SemVer: 0.x while DSL incubates; 1.0 when Word/Excel DSL + shims stable.
-    - Single module distribution; optional switches to avoid loading heavy deps (PDF/HTML/Markdown) until requested.
+### Recent updates
+- Added PowerPoint placeholder example (`ExamplePowerPoint09-Placeholders.ps1`) and README quick start entries for layout placeholder helpers.
+- Added Markdown DSL cmdlets, tests, and example (`Example-MarkdownDsl.ps1`).
+- Added a usage guide covering Word/Excel/PowerPoint/Markdown/CSV (`Docs/Usage.md`).
+- Added area docs and cmdlet map (`Docs/Word.md`, `Docs/Excel.md`, `Docs/PowerPoint.md`, `Docs/Markdown.md`, `Docs/Csv.md`, `Docs/CmdletMap.md`).
+- Added advanced Excel example (`Examples/Excel/Example-ExcelAdvanced.ps1`).
+- Added PowerPoint DSL context + docs/test updates and a new DSL example (`ExamplePowerPoint10-Dsl.ps1`).
+- Enabled PowerPoint getters inside DSL contexts and added inspection example (`ExamplePowerPoint11-InspectionDsl.ps1`).
+- Enabled layout placeholder setters inside the DSL and added a layout editing example (`ExamplePowerPoint12-LayoutDsl.ps1`).
+- Added layout placeholder getter alias (`PptLayoutPlaceholders`) with docs/test/example updates (`ExamplePowerPoint13-LayoutPlaceholderAliases.ps1`).
+- Expanded Markdown/CSV XML help with multi-table Markdown and schema-focused CSV examples.
 
 ## Immediate next steps (for this reboot)
 - Finalize cmdlet nouns/aliases for Word/Excel to avoid conflicts and ensure `Get-Verb` compliance. **Done**

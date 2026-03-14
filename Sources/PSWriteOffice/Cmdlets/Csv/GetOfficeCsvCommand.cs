@@ -14,6 +14,18 @@ namespace PSWriteOffice.Cmdlets.Csv;
 ///   <code>$csv = Get-OfficeCsv -Path .\data.csv</code>
 ///   <para>Loads the CSV file into an OfficeIMO CsvDocument.</para>
 /// </example>
+/// <example>
+///   <summary>Parse CSV text with a custom delimiter.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$csv = Get-OfficeCsv -Text \"Name;Total`nAlpha;10\" -Delimiter ';'</code>
+///   <para>Parses a semicolon-delimited CSV string into a document.</para>
+/// </example>
+/// <example>
+///   <summary>Inspect headers as a schema hint.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$csv = Get-OfficeCsv -Path .\data.csv; $csv.Header</code>
+///   <para>Returns the header list so you can verify the expected column names.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeCsv", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(CsvDocument))]
 public sealed class GetOfficeCsvCommand : PSCmdlet

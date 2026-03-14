@@ -2,6 +2,7 @@ using System;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
 using DocumentFormat.OpenXml.Presentation;
+using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -14,11 +15,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <para>Updates the first slide’s title.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointSlideTitle")]
+[Alias("PptTitle")]
 public class SetOfficePowerPointSlideTitleCommand : PSCmdlet
 {
-    /// <summary>Slide whose title should change.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true)]
-    public PowerPointSlide Slide { get; set; } = null!;
+    /// <summary>Slide whose title should change (optional inside DSL).</summary>
+    [Parameter(ValueFromPipeline = true)]
+    public PowerPointSlide? Slide { get; set; }
 
     /// <summary>New title text.</summary>
     [Parameter(Mandatory = true)]
@@ -29,8 +31,9 @@ public class SetOfficePowerPointSlideTitleCommand : PSCmdlet
     {
         try
         {
-            var titleBox = Slide.GetPlaceholder(PlaceholderValues.Title) ??
-                           Slide.GetPlaceholder(PlaceholderValues.CenteredTitle);
+            var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
+            var titleBox = slide.GetPlaceholder(PlaceholderValues.Title) ??
+                           slide.GetPlaceholder(PlaceholderValues.CenteredTitle);
 
             if (titleBox != null)
             {
@@ -38,10 +41,10 @@ public class SetOfficePowerPointSlideTitleCommand : PSCmdlet
             }
             else
             {
-                Slide.AddTitle(Title);
+                slide.AddTitle(Title);
             }
 
-            WriteObject(Slide);
+            WriteObject(slide);
         }
         catch (Exception ex)
         {

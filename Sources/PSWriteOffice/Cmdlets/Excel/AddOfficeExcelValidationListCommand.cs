@@ -74,26 +74,7 @@ public sealed class AddOfficeExcelValidationListCommand : PSCmdlet
                 throw new PSArgumentException("Provide an Excel document.");
             }
 
-            if (!string.IsNullOrWhiteSpace(Sheet))
-            {
-                return Document[Sheet!];
-            }
-
-            if (SheetIndex.HasValue)
-            {
-                if (SheetIndex.Value < 0 || SheetIndex.Value >= Document.Sheets.Count)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(SheetIndex), "SheetIndex is out of range.");
-                }
-                return Document.Sheets[SheetIndex.Value];
-            }
-
-            if (Document.Sheets.Count == 0)
-            {
-                throw new InvalidOperationException("Workbook contains no worksheets.");
-            }
-
-            return Document.Sheets[0];
+            return ExcelSheetResolver.Resolve(Document, Sheet, SheetIndex);
         }
 
         var context = ExcelDslContext.Require(this);

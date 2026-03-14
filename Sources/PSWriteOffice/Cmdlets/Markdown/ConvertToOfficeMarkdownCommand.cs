@@ -15,6 +15,19 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   <code>$markdown = $data | ConvertTo-OfficeMarkdown</code>
 ///   <para>Generates Markdown table text from the input objects.</para>
 /// </example>
+/// <example>
+///   <summary>Emit a Markdown document for further editing.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$doc = $data | ConvertTo-OfficeMarkdown -PassThru
+///   $doc.P('Totals above'); $doc.ToMarkdown()</code>
+///   <para>Builds a table and appends more content using the MarkdownDoc API.</para>
+/// </example>
+/// <example>
+///   <summary>Disable auto alignment.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$markdown = $data | ConvertTo-OfficeMarkdown -DisableAutoAlign</code>
+///   <para>Forces left-aligned columns instead of auto-aligned output.</para>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficeMarkdown")]
 [OutputType(typeof(string), typeof(MarkdownDoc))]
 public sealed class ConvertToOfficeMarkdownCommand : PSCmdlet
