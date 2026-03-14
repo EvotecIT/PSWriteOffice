@@ -26,6 +26,7 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
     public SectionMarkValues? BreakType { get; set; }
 
     /// <summary>Emit the created <see cref="WordSection"/>.</summary>
+    [Parameter]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />

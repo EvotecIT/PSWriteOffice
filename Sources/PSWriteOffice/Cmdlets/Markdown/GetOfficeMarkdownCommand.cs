@@ -12,6 +12,12 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   <code>$md = Get-OfficeMarkdown -Path .\README.md</code>
 ///   <para>Loads the file into a Markdown document object.</para>
 /// </example>
+/// <example>
+///   <summary>Parse Markdown text in-memory.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$md = Get-OfficeMarkdown -Text '# Title`n`nBody text'</code>
+///   <para>Parses Markdown text directly into a document model.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdown", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(MarkdownDoc))]
 public sealed class GetOfficeMarkdownCommand : PSCmdlet

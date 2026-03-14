@@ -21,7 +21,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <para>Returns a Word document instance for further edits.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertFrom, "OfficeWordHtml", DefaultParameterSetName = ParameterSetHtml)]
-[Alias("Convert-HtmlToWord")]
+[Alias("ConvertFrom-WordHtml")]
 [OutputType(typeof(WordDocument), typeof(FileInfo))]
 public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
 {

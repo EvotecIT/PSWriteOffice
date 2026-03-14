@@ -4,6 +4,7 @@ using System.Reflection;
 using DocumentFormat.OpenXml.Drawing;
 using OfficeIMO.PowerPoint;
 using SixLabors.ImageSharp;
+using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -16,11 +17,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <para>Creates a rectangle with a custom fill color.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointShape")]
+[Alias("PptShape")]
 public sealed class AddOfficePowerPointShapeCommand : PSCmdlet
 {
-    /// <summary>Target slide that will receive the shape.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true)]
-    public PowerPointSlide Slide { get; set; } = null!;
+    /// <summary>Target slide that will receive the shape (optional inside DSL).</summary>
+    [Parameter(ValueFromPipeline = true)]
+    public PowerPointSlide? Slide { get; set; }
 
     /// <summary>Shape geometry preset name (e.g., Rectangle, Ellipse, Line).</summary>
     [Parameter]
@@ -78,8 +80,9 @@ public sealed class AddOfficePowerPointShapeCommand : PSCmdlet
                 throw new ArgumentOutOfRangeException(nameof(OutlineWidth), "OutlineWidth cannot be negative.");
             }
 
+            var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
             var shapeType = ResolveShapeType(ShapeType);
-            var shape = Slide.AddShapePoints(shapeType, X, Y, Width, Height, Name);
+            var shape = slide.AddShapePoints(shapeType, X, Y, Width, Height, Name);
 
             var fill = NormalizeColor(FillColor);
             if (fill != null)

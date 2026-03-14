@@ -6,6 +6,7 @@ using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services;
+using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -19,14 +20,15 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <para>Creates a table with headers and two data rows.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointTable", DefaultParameterSetName = ParameterSetData)]
+[Alias("PptTable")]
 public sealed class AddOfficePowerPointTableCommand : PSCmdlet
 {
     private const string ParameterSetData = "Data";
     private const string ParameterSetSize = "Size";
 
-    /// <summary>Target slide that will receive the table.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
-    public PowerPointSlide Slide { get; set; } = null!;
+    /// <summary>Target slide that will receive the table (optional inside DSL).</summary>
+    [Parameter(ValueFromPipeline = true, Position = 0)]
+    public PowerPointSlide? Slide { get; set; }
 
     /// <summary>Source objects to convert into table rows.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetData)]
@@ -71,13 +73,15 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        PowerPointSlide? slide = null;
         try
         {
             ValidateDimensions();
+            slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
 
             PowerPointTable table = ParameterSetName == ParameterSetSize
-                ? CreateSizedTable()
-                : CreateDataTable();
+                ? CreateSizedTable(slide)
+                : CreateDataTable(slide);
 
             if (!string.IsNullOrWhiteSpace(StyleId))
             {
@@ -88,11 +92,11 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         }
         catch (Exception ex)
         {
-            WriteError(new ErrorRecord(ex, "PowerPointAddTableFailed", ErrorCategory.InvalidOperation, Slide));
+            WriteError(new ErrorRecord(ex, "PowerPointAddTableFailed", ErrorCategory.InvalidOperation, slide ?? Slide));
         }
     }
 
-    private PowerPointTable CreateSizedTable()
+    private PowerPointTable CreateSizedTable(PowerPointSlide slide)
     {
         if (Rows <= 0)
         {
@@ -104,10 +108,10 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
             throw new ArgumentOutOfRangeException(nameof(Columns), "Columns must be greater than 0.");
         }
 
-        return Slide.AddTablePoints(Rows, Columns, X, Y, Width, Height);
+        return slide.AddTablePoints(Rows, Columns, X, Y, Width, Height);
     }
 
-    private PowerPointTable CreateDataTable()
+    private PowerPointTable CreateDataTable(PowerPointSlide slide)
     {
         if (Data == null || Data.Length == 0)
         {
@@ -129,7 +133,7 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
                 row => row.TryGetValue(header, out var value) ? value : null))
             .ToList();
 
-        return Slide.AddTablePoints(rows, columns, includeHeaders: !NoHeader.IsPresent, X, Y, Width, Height);
+        return slide.AddTablePoints(rows, columns, includeHeaders: !NoHeader.IsPresent, X, Y, Width, Height);
     }
 
     private void ValidateDimensions()

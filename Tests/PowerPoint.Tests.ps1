@@ -5,17 +5,17 @@
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
     Import-Module $ModuleManifest -Force -Global
+
+    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 }
 
 Describe 'PowerPoint cmdlets' {
     It 'creates a presentation with shapes, tables, and media' {
         $path = Join-Path $TestDrive 'PowerPointBasics.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path
-        $officeimoRoot = Join-Path $PSScriptRoot '..\..\OfficeIMO'
-        $imagePath = Join-Path (Join-Path $officeimoRoot 'Assets') 'OfficeIMO.png'
-        if (-not (Test-Path $imagePath)) {
-            throw "OfficeIMO image asset not found at $imagePath"
-        }
+        $reloaded = $null
+        $afterRemoval = $null
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
 
         $layouts = Get-OfficePowerPointLayout -Presentation $presentation
         $layouts.Count | Should -BeGreaterThan 0
@@ -70,16 +70,78 @@ Describe 'PowerPoint cmdlets' {
             $layoutPlaceholderType = $layoutPlaceholder.PlaceholderType.Value
             $boundsBox = Set-OfficePowerPointLayoutPlaceholderBounds -Presentation $presentation -Master $layoutMaster -Layout $layoutIndex -PlaceholderType $layoutPlaceholderType -Index $layoutPlaceholder.PlaceholderIndex -Left 48 -Top 36 -Width 620 -Height 180 -PassThru
             $boundsBox | Should -Not -BeNullOrEmpty
+            $boundsBox.LeftPoints | Should -Be 48
+            $boundsBox.TopPoints | Should -Be 36
+            $boundsBox.WidthPoints | Should -Be 620
+            $boundsBox.HeightPoints | Should -Be 180
             $marginsBox = Set-OfficePowerPointLayoutPlaceholderTextMargins -Presentation $presentation -Master $layoutMaster -Layout $layoutIndex -PlaceholderType $layoutPlaceholderType -Index $layoutPlaceholder.PlaceholderIndex -Left 12 -Top 8 -Right 12 -Bottom 8 -PassThru
             $marginsBox | Should -Not -BeNullOrEmpty
+            $marginsBox.TextMarginLeftPoints | Should -Be 12
+            $marginsBox.TextMarginTopPoints | Should -Be 8
+            $marginsBox.TextMarginRightPoints | Should -Be 12
+            $marginsBox.TextMarginBottomPoints | Should -Be 8
             $styleBox = Set-OfficePowerPointLayoutPlaceholderTextStyle -Presentation $presentation -Master $layoutMaster -Layout $layoutIndex -PlaceholderType $layoutPlaceholderType -Index $layoutPlaceholder.PlaceholderIndex -Style Body -FontSize 18 -Bold $true -PassThru
             $styleBox | Should -Not -BeNullOrEmpty
+            $styleBox.FontSize | Should -Be 18
+            $styleBox.Bold | Should -BeTrue
         }
         $slide2 | Should -Not -BeNullOrEmpty
 
         Save-OfficePowerPoint -Presentation $presentation
 
         Test-Path $path | Should -BeTrue
+        $presentation.Dispose()
+        $presentation = $null
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloaded.Slides.Count | Should -Be 2
+
+            $reloadedSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 1
+            $reloadedPlaceholder = Get-OfficePowerPointPlaceholder -Slide $reloadedSlide -PlaceholderType Title
+            if (-not $reloadedPlaceholder) {
+                $reloadedPlaceholder = Get-OfficePowerPointPlaceholder -Slide $reloadedSlide -PlaceholderType CenteredTitle
+            }
+            $reloadedPlaceholder.Text | Should -Be 'Status Update v2'
+            $reloadedSlide.Notes.Text | Should -Be 'Keep this under five minutes.'
+            @($reloadedSlide.Tables).Count | Should -BeGreaterThan 0
+            $reloadedSlide.Pictures.Count | Should -BeGreaterThan 0
+
+            $reloadedLayoutSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
+            $reloadedLayoutPlaceholders = Get-OfficePowerPointLayoutPlaceholder -Slide $reloadedLayoutSlide
+            if ($layoutPlaceholder) {
+                $reloadedLayoutPlaceholders.Count | Should -BeGreaterThan 0
+                $reloadedLayoutPlaceholder = Get-OfficePowerPointLayoutPlaceholder -Slide $reloadedLayoutSlide -PlaceholderType $layoutPlaceholderType -Index $layoutPlaceholder.PlaceholderIndex
+                $reloadedLayoutPlaceholder | Should -Not -BeNullOrEmpty
+                $reloadedLayoutPlaceholder.Bounds | Should -Not -BeNullOrEmpty
+                [math]::Abs($reloadedLayoutPlaceholder.Bounds.LeftPoints - 48) | Should -BeLessThan 0.1
+                [math]::Abs($reloadedLayoutPlaceholder.Bounds.TopPoints - 36) | Should -BeLessThan 0.1
+                [math]::Abs($reloadedLayoutPlaceholder.Bounds.WidthPoints - 620) | Should -BeLessThan 0.1
+                [math]::Abs($reloadedLayoutPlaceholder.Bounds.HeightPoints - 180) | Should -BeLessThan 0.1
+            }
+
+            Remove-OfficePowerPointSlide -Presentation $reloaded -Index 0 -Confirm:$false
+            Save-OfficePowerPoint -Presentation $reloaded
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
+
+        $afterRemoval = Get-OfficePowerPoint -FilePath $path
+        try {
+            $afterRemoval.Slides.Count | Should -Be 1
+            $remainingSlide = Get-OfficePowerPointSlide -Presentation $afterRemoval -Index 0
+            $remainingPlaceholder = Get-OfficePowerPointPlaceholder -Slide $remainingSlide -PlaceholderType Title
+            if (-not $remainingPlaceholder) {
+                $remainingPlaceholder = Get-OfficePowerPointPlaceholder -Slide $remainingSlide -PlaceholderType CenteredTitle
+            }
+            $remainingPlaceholder.Text | Should -Be 'Status Update v2'
+        } finally {
+            if ($afterRemoval) {
+                $afterRemoval.Dispose()
+            }
+        }
     }
 
     It 'creates a presentation via the DSL context' {

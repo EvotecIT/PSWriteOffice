@@ -16,6 +16,18 @@ namespace PSWriteOffice.Cmdlets.Csv;
 ///   <code>Get-OfficeCsvData -Path .\data.csv | Format-Table</code>
 ///   <para>Returns each row as a PSCustomObject.</para>
 /// </example>
+/// <example>
+///   <summary>Read rows as dictionaries.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Get-OfficeCsvData -Path .\data.csv -AsHashtable | ForEach-Object { $_['Name'] }</code>
+///   <para>Uses hashtables for dynamic schemas or key-based access.</para>
+/// </example>
+/// <example>
+///   <summary>Read semicolon-delimited data without headers.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Get-OfficeCsvData -Path .\data.csv -Delimiter ';' -HasHeaderRow:$false</code>
+///   <para>Reads CSV files that lack a header row and use a custom delimiter.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeCsvData")]
 public sealed class GetOfficeCsvDataCommand : PSCmdlet
 {

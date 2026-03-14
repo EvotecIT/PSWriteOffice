@@ -17,6 +17,22 @@ namespace PSWriteOffice.Cmdlets.Csv;
 ///   <code>$csv = $data | ConvertTo-OfficeCsv</code>
 ///   <para>Generates CSV text from the input objects.</para>
 /// </example>
+/// <example>
+///   <summary>Export with a stable schema order.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$rows = @(
+///     [ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
+///     [ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
+///   )
+///   $rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'</code>
+///   <para>Uses ordered dictionaries to enforce column order and a custom delimiter.</para>
+/// </example>
+/// <example>
+///   <summary>Write CSV without headers.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$data | ConvertTo-OfficeCsv -IncludeHeader:$false -OutputPath .\noheader.csv</code>
+///   <para>Writes rows only when a downstream system expects headerless CSV.</para>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficeCsv", DefaultParameterSetName = ParameterSetInputObject)]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficeCsvCommand : PSCmdlet

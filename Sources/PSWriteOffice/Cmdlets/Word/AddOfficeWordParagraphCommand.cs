@@ -13,16 +13,20 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Hello '; Add-OfficeWordText -Text 'World' -Bold }</code>
 ///   <para>Outputs “Hello World” with the second word bolded.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeWordParagraph")]
+[Cmdlet(VerbsCommon.Add, "OfficeWordParagraph", DefaultParameterSetName = ParameterSetText)]
 [Alias("WordParagraph")]
 public sealed class AddOfficeWordParagraphCommand : PSCmdlet
 {
+    private const string ParameterSetText = "Text";
+    private const string ParameterSetContent = "Content";
+
     /// <summary>Optional initial paragraph text.</summary>
-    [Parameter(Position = 0)]
+    [Parameter(Position = 0, ParameterSetName = ParameterSetText)]
+    [Parameter(ParameterSetName = ParameterSetContent)]
     public string? Text { get; set; }
 
     /// <summary>Nested DSL content (runs, lists, images).</summary>
-    [Parameter]
+    [Parameter(Position = 0, ParameterSetName = ParameterSetContent)]
     public ScriptBlock? Content { get; set; }
 
     /// <summary>Paragraph justification.</summary>
@@ -34,6 +38,7 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
     public WordParagraphStyles? Style { get; set; }
 
     /// <summary>Emit the <see cref="WordParagraph"/> for further use.</summary>
+    [Parameter]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />

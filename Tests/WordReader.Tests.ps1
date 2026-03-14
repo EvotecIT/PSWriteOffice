@@ -5,6 +5,8 @@
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
     Import-Module $ModuleManifest -Force -Global
+
+    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 }
 
 Describe 'Word reader helpers' {
@@ -36,11 +38,7 @@ Describe 'Word reader helpers' {
 
     It 'reads content controls and table of contents' {
         $path = Join-Path $TestDrive 'WordReaderControls.docx'
-        $officeimoRoot = Join-Path $PSScriptRoot '..\..\OfficeIMO'
-        $imagePath = Join-Path (Join-Path $officeimoRoot 'Assets') 'OfficeIMO.png'
-        if (-not (Test-Path $imagePath)) {
-            throw "OfficeIMO image asset not found at $imagePath"
-        }
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
 
         New-OfficeWord -Path $path {
             Add-OfficeWordParagraph { Add-OfficeWordContentControl -Text 'Client' -Alias 'ClientName' -Tag 'ClientTag' }

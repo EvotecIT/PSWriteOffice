@@ -13,8 +13,14 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   <code>$html = ConvertTo-OfficeMarkdownHtml -Path .\README.md</code>
 ///   <para>Returns the rendered HTML.</para>
 /// </example>
+/// <example>
+///   <summary>Save a styled HTML document.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>ConvertTo-OfficeMarkdownHtml -Path .\Report.md -DocumentMode -Title 'Weekly Report' -Style Clean -OutputPath .\Report.html -PassThru</code>
+///   <para>Generates a full HTML file with title and CSS styling.</para>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficeMarkdownHtml", DefaultParameterSetName = ParameterSetPath)]
-[Alias("Convert-MarkdownToHtml")]
+[Alias("ConvertTo-MarkdownHtml")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
 {

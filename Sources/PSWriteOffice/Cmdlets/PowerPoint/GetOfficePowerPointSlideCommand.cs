@@ -1,6 +1,7 @@
 using System;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
+using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -12,12 +13,18 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <code>Get-OfficePowerPointSlide -Presentation $ppt | ForEach-Object { $_.GetPlaceholder([DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title).Text }</code>
 ///   <para>Streams each slide so you can read the title placeholder text.</para>
 /// </example>
+/// <example>
+///   <summary>Enumerate slides inside the DSL.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointSlide | Select-Object -First 1 }</code>
+///   <para>Uses the current DSL presentation context.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePowerPointSlide")]
 public class GetOfficePowerPointSlideCommand : PSCmdlet
 {
-    /// <summary>Presentation to inspect.</summary>
-    [Parameter(Mandatory = true)]
-    public PowerPointPresentation Presentation { get; set; } = null!;
+    /// <summary>Presentation to inspect (optional inside DSL).</summary>
+    [Parameter(ValueFromPipeline = true)]
+    public PowerPointPresentation? Presentation { get; set; }
 
     /// <summary>Optional zero-based index; omit to enumerate all slides.</summary>
     [Parameter]
@@ -26,19 +33,22 @@ public class GetOfficePowerPointSlideCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        var presentation = Presentation ?? PowerPointDslContext.Current?.Presentation
+            ?? throw new InvalidOperationException("Presentation was not provided. Use -Presentation or run inside New-OfficePowerPoint.");
+
         if (Index.HasValue)
         {
-            if (Index.Value < 0 || Index.Value >= Presentation.Slides.Count)
+            if (Index.Value < 0 || Index.Value >= presentation.Slides.Count)
             {
                 WriteError(new ErrorRecord(new ArgumentOutOfRangeException(nameof(Index)), "PowerPointSlideIndexOutOfRange", ErrorCategory.InvalidArgument, Index));
                 return;
             }
 
-            WriteObject(Presentation.Slides[Index.Value]);
+            WriteObject(presentation.Slides[Index.Value]);
         }
         else
         {
-            foreach (var slide in Presentation.Slides)
+            foreach (var slide in presentation.Slides)
             {
                 WriteObject(slide);
             }

@@ -5,6 +5,8 @@
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
     Import-Module $ModuleManifest -Force -Global
+
+    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 }
 
 Describe 'Excel DSL surface' {
@@ -117,6 +119,38 @@ Describe 'Excel DSL surface' {
     }
 
     It 'supports advanced Excel helpers' {
+        function Get-ZipXmlDocumentLocal {
+            param(
+                [Parameter(Mandatory)]
+                [string] $Path,
+
+                [Parameter(Mandatory)]
+                [string] $Entry
+            )
+
+            $archive = [System.IO.Compression.ZipFile]::OpenRead($Path)
+            try {
+                $zipEntry = $archive.GetEntry($Entry)
+                if (-not $zipEntry) {
+                    throw "Zip entry '$Entry' not found in '$Path'."
+                }
+
+                $stream = $zipEntry.Open()
+                try {
+                    $reader = [System.IO.StreamReader]::new($stream)
+                    try {
+                        return [xml] $reader.ReadToEnd()
+                    } finally {
+                        $reader.Dispose()
+                    }
+                } finally {
+                    $stream.Dispose()
+                }
+            } finally {
+                $archive.Dispose()
+            }
+        }
+
         $path = Join-Path $TestDrive 'DslExcelAdvanced.xlsx'
         $rows = @(
             [PSCustomObject]@{
@@ -145,11 +179,7 @@ Describe 'Excel DSL surface' {
             }
         )
 
-        $officeimoRoot = Join-Path $PSScriptRoot '..\..\OfficeIMO'
-        $imagePath = Join-Path (Join-Path $officeimoRoot 'Assets') 'OfficeIMO.png'
-        if (-not (Test-Path $imagePath)) {
-            throw "OfficeIMO image asset not found at $imagePath"
-        }
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
@@ -180,9 +210,53 @@ Describe 'Excel DSL surface' {
                 Set-OfficeExcelOrientation -Orientation Landscape
                 Set-OfficeExcelGridlines -Hide
                 Set-OfficeExcelSheetVisibility -Hide
+                Protect-OfficeExcelSheet
             }
         }
 
         Test-Path $path | Should -BeTrue
+
+        $pivotTables = @(Get-OfficeExcelPivotTable -Path $path -Name 'PivotTable')
+        $pivotTables.Count | Should -Be 1
+
+        $pivot = $pivotTables[0]
+        $pivot.SourceRange | Should -Be 'A1:F4'
+        $pivot.Location | Should -Match '^J1:[A-Z]+\d+$'
+        $pivot.RowFields | Should -Contain 'Region'
+        @($pivot.DataFields).Count | Should -BeGreaterThan 0
+        $pivot.DataFields[0].FieldName | Should -Be 'Sales'
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $doc.Sheets.Count | Should -Be 1
+            $sheet = $doc.Sheets[0]
+            $sheet.Name | Should -Be 'Data'
+            $sheet.IsProtected | Should -BeTrue
+            $sheet.HasComment(2, 2) | Should -BeTrue
+
+            $cellText = $null
+            $sheet.TryGetCellText(2, 1, [ref] $cellText) | Should -BeTrue
+            $cellText | Should -Be 'Example'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $workbookXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/workbook.xml'
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+
+        $workbookSheet = $workbookXml.SelectSingleNode("/*[local-name()='workbook']/*[local-name()='sheets']/*[local-name()='sheet']")
+        $workbookSheet.GetAttribute('name') | Should -Be 'Data'
+        $workbookSheet.GetAttribute('state') | Should -Be 'hidden'
+
+        $pageSetup = $sheetXml.SelectSingleNode("/*[local-name()='worksheet']/*[local-name()='pageSetup']")
+        $pageSetup.GetAttribute('fitToWidth') | Should -Be '1'
+        $pageSetup.GetAttribute('fitToHeight') | Should -Be '0'
+        $pageSetup.GetAttribute('orientation') | Should -Be 'landscape'
+
+        $pageMargins = $sheetXml.SelectSingleNode("/*[local-name()='worksheet']/*[local-name()='pageMargins']")
+        $pageMargins.GetAttribute('left') | Should -Be '0.25'
+        $pageMargins.GetAttribute('right') | Should -Be '0.25'
+        $pageMargins.GetAttribute('top') | Should -Be '0.5'
+        $pageMargins.GetAttribute('bottom') | Should -Be '0.5'
     }
 }

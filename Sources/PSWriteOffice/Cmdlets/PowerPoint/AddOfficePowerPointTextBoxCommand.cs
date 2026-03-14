@@ -1,6 +1,7 @@
 using System;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
+using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -13,11 +14,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <para>Places a text box mid-slide with the provided caption.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointTextBox")]
+[Alias("PptTextBox")]
 public class AddOfficePowerPointTextBoxCommand : PSCmdlet
 {
-    /// <summary>Target slide that will receive the text box.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true)]
-    public PowerPointSlide Slide { get; set; } = null!;
+    /// <summary>Target slide that will receive the text box (optional inside DSL).</summary>
+    [Parameter(ValueFromPipeline = true)]
+    public PowerPointSlide? Slide { get; set; }
 
     /// <summary>Text to render inside the box.</summary>
     [Parameter(Mandatory = true)]
@@ -44,7 +46,8 @@ public class AddOfficePowerPointTextBoxCommand : PSCmdlet
     {
         try
         {
-            var textBox = Slide.AddTextBoxPoints(Text, X, Y, Width, Height);
+            var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
+            var textBox = slide.AddTextBoxPoints(Text, X, Y, Width, Height);
             WriteObject(textBox);
         }
         catch (Exception ex)

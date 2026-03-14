@@ -22,7 +22,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <para>Writes <c>report.html</c> and returns the file info.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficeWordHtml", DefaultParameterSetName = ParameterSetPath)]
-[Alias("Convert-WordToHtml")]
+[Alias("ConvertTo-WordHtml")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficeWordHtmlCommand : PSCmdlet
 {
