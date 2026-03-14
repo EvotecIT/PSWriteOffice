@@ -11,10 +11,34 @@ if ($ResolvedArtefactModulePath) {
     $ArtefactModulePath = $ResolvedArtefactModulePath.Path
 }
 $ArtefactManifest = Join-Path $ArtefactModulePath 'PSWriteOffice.psd1'
-$PSPublishModuleManifest = 'C:\Support\GitHub\PSPublishModule\Module\Artefacts\Unpacked\v3.0.1\Modules\PSPublishModule\PSPublishModule.psd1'
+
+function Import-PSPublishModule {
+    $candidatePaths = @(
+        $env:PSPUBLISHMODULE_MANIFEST,
+        'C:\Support\GitHub\PSPublishModule\Module\Artefacts\Unpacked\v3.0.1\Modules\PSPublishModule\PSPublishModule.psd1',
+        'C:\Support\GitHub\PSPublishModule\Module\Artefacts\Unpacked\Modules\PSPublishModule\PSPublishModule.psd1'
+    ) | Where-Object { $_ }
+
+    foreach ($candidate in $candidatePaths) {
+        if (Test-Path -LiteralPath $candidate) {
+            Import-Module -Name $candidate -Force
+            return
+        }
+    }
+
+    $availableModule = Get-Module -ListAvailable -Name PSPublishModule |
+        Sort-Object Version -Descending |
+        Select-Object -First 1
+
+    if (-not $availableModule) {
+        throw 'PSPublishModule was not found. Install it from PSGallery or set $env:PSPUBLISHMODULE_MANIFEST to the module manifest path.'
+    }
+
+    Import-Module -Name $availableModule.Path -Force
+}
 
 if (-not $SkipBuild -or -not (Test-Path -LiteralPath $ArtefactManifest)) {
-    Import-Module -Name $PSPublishModuleManifest -Force
+    Import-PSPublishModule
     & "$RepoRoot\Build\Manage-PSWriteOffice.ps1"
 }
 
