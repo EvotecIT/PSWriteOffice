@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <Company>Evotec</Company>
@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <OfficeIMORoot>..\..\..\OfficeIMO</OfficeIMORoot>
+        <OfficeIMORoot Condition=" '$(OfficeIMORoot)' == '' ">..\..\..\OfficeIMO</OfficeIMORoot>
     </PropertyGroup>
 
     <ItemGroup>

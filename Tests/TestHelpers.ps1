@@ -55,3 +55,19 @@ function Get-ZipXmlDocumentLocal {
         $archive.Dispose()
     }
 }
+
+function Get-ZipEntriesLocal {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Path
+    )
+
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($Path)
+    try {
+        foreach ($entry in $archive.Entries) {
+            $entry.FullName
+        }
+    } finally {
+        $archive.Dispose()
+    }
+}

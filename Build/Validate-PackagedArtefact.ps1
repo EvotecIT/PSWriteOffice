@@ -1,4 +1,4 @@
-﻿param(
+param(
     [string] $ArtefactModulePath = "$PSScriptRoot\..\Artefacts\Unpacked\Modules\PSWriteOffice",
     [switch] $SkipBuild
 )
@@ -39,7 +39,17 @@ function Import-PSPublishModule {
 
 if (-not $SkipBuild -or -not (Test-Path -LiteralPath $ArtefactManifest)) {
     Import-PSPublishModule
-    & "$RepoRoot\Build\Manage-PSWriteOffice.ps1"
+    $previousOfficeIMORoot = $env:OfficeIMORoot
+    try {
+        $env:OfficeIMORoot = Join-Path $RepoRoot '.missing-officeimo'
+        & "$RepoRoot\Build\Manage-PSWriteOffice.ps1"
+    } finally {
+        if ($null -eq $previousOfficeIMORoot) {
+            Remove-Item env:OfficeIMORoot -ErrorAction SilentlyContinue
+        } else {
+            $env:OfficeIMORoot = $previousOfficeIMORoot
+        }
+    }
 }
 
 if (-not (Test-Path -LiteralPath $ArtefactManifest)) {

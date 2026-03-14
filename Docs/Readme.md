@@ -238,6 +238,9 @@ Lists slide layouts available in a presentation.
 ### [Get-OfficePowerPointLayoutPlaceholder](Get-OfficePowerPointLayoutPlaceholder.md)
 Gets layout placeholder metadata for a slide.
 
+### [Get-OfficePowerPointNotes](Get-OfficePowerPointNotes.md)
+Reads speaker notes from a slide or presentation.
+
 ### [Get-OfficePowerPointPlaceholder](Get-OfficePowerPointPlaceholder.md)
 Gets placeholder text boxes from a slide.
 
