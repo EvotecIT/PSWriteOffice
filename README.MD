@@ -1,52 +1,188 @@
-﻿# PSWriteOffice - PowerShell Module
+# PSWriteOffice
 
-<p align="center">
-  <a href="https://dev.azure.com/evotecpl/PSWriteOffice/_build/results?buildId=latest"><img src="https://img.shields.io/azure-devops/build/evotecpl/39c74615-8f34-4af0-a835-68dc33f9214f/14?label=Azure%20Pipelines&style=flat-square"></a>
-  <a href="https://www.powershellgallery.com/packages/PSWriteOffice"><img src="https://img.shields.io/powershellgallery/v/PSWriteOffice.svg?style=flat-square"></a>
-  <a href="https://www.powershellgallery.com/packages/PSWriteOffice"><img src="https://img.shields.io/powershellgallery/v/PSWriteOffice.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square&include_prereleases"></a>
-  <a href="https://github.com/EvotecIT/PSWriteOffice"><img src="https://img.shields.io/github/license/EvotecIT/PSWriteOffice.svg?style=flat-square"></a>
-</p>
+Create and read Word, Excel, PowerPoint, Markdown, and CSV files from PowerShell.  
+Powered by OfficeIMO, designed as a thin DSL and cmdlet layer.
 
-<p align="center">
-  <a href="https://www.powershellgallery.com/packages/PSWriteOffice"><img src="https://img.shields.io/powershellgallery/p/PSWriteOffice.svg?style=flat-square"></a>
-  <a href="https://github.com/EvotecIT/PSWriteOffice"><img src="https://img.shields.io/github/languages/top/evotecit/PSWriteOffice.svg?style=flat-square"></a>
-  <a href="https://github.com/EvotecIT/PSWriteOffice"><img src="https://img.shields.io/github/languages/code-size/evotecit/PSWriteOffice.svg?style=flat-square"></a>
-  <a href="https://www.powershellgallery.com/packages/PSWriteOffice"><img src="https://img.shields.io/powershellgallery/dt/PSWriteOffice.svg?style=flat-square"></a>
-</p>
+[![powershell gallery version](https://img.shields.io/powershellgallery/v/PSWriteOffice.svg)](https://www.powershellgallery.com/packages/PSWriteOffice)
+[![powershell gallery preview](https://img.shields.io/powershellgallery/vpre/PSWriteOffice.svg?label=powershell%20gallery%20preview&colorB=yellow)](https://www.powershellgallery.com/packages/PSWriteOffice)
+[![powershell gallery platforms](https://img.shields.io/powershellgallery/p/PSWriteOffice.svg)](https://www.powershellgallery.com/packages/PSWriteOffice)
+[![powershell gallery downloads](https://img.shields.io/powershellgallery/dt/PSWriteOffice.svg)](https://www.powershellgallery.com/packages/PSWriteOffice)
+[![license](https://img.shields.io/github/license/EvotecIT/PSWriteOffice.svg)](https://github.com/EvotecIT/PSWriteOffice)
+[![top language](https://img.shields.io/github/languages/top/evotecit/PSWriteOffice.svg)](https://github.com/EvotecIT/PSWriteOffice)
 
-<p align="center">
-  <a href="https://twitter.com/PrzemyslawKlys"><img src="https://img.shields.io/twitter/follow/PrzemyslawKlys.svg?label=Twitter%20%40PrzemyslawKlys&style=flat-square&logo=twitter"></a>
-  <a href="https://evotec.xyz/hub"><img src="https://img.shields.io/badge/Blog-evotec.xyz-2A6496.svg?style=flat-square"></a>
-  <a href="https://www.linkedin.com/in/pklys"><img src="https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn&style=flat-square"></a>
-</p>
+## What It Is
 
-`PSWriteOffice` is a cross-platform PowerShell module for creating and reading Microsoft Office documents (`Word`, `Excel`, `PowerPoint` - experimental), plus `Markdown` and `CSV`, powered by OfficeIMO.*.
-It provides verb-noun cmdlets and a scriptblock-first DSL while OfficeIMO owns the core engine and tests.
+`PSWriteOffice` is a cross-platform PowerShell module for:
 
-This module is built using following libraries:
-- [Open XML SDK for .NET](https://github.com/OfficeDev/Open-XML-SDK) licensed MIT - Microsoft's library doing heavy lifting for all other Open XML projects.
-- [OfficeIMO.Word.Html](https://github.com/EvotecIT/OfficeIMO) - OfficeIMO HTML converters for Word.
-- [OfficeIMO](https://github.com/EvotecIT/OfficeIMO) - core engines: Word, Excel, PowerPoint, Markdown, CSV.
-- [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) licensed Apache 2.0 - library for image processing.
+- Word documents (`.docx`)
+- Excel workbooks (`.xlsx`)
+- PowerPoint presentations (`.pptx`, experimental)
+- Markdown documents (`.md`)
+- CSV files (`.csv`)
 
-HTML converters (OfficeIMO.Word.Html):
-- `ConvertTo-OfficeWordHtml -Path .\report.docx -OutputPath .\report.html`
-- `ConvertFrom-OfficeWordHtml -Path .\snippet.html -OutputPath .\report.docx`
+The long-term direction is simple:
 
-CSV helpers:
-- `Get-OfficeCsv -Path .\data.csv`
-- `Get-OfficeCsvData -Path .\data.csv`
-- `ConvertTo-OfficeCsv -OutputPath .\export.csv`
+- `OfficeIMO.*` owns the file-format logic and deep feature implementation
+- `PSWriteOffice` stays a thin PowerShell-first wrapper
+- tests in `PSWriteOffice` validate cmdlet wiring, DSL flow, and basic end-to-end behavior
 
-Markdown helpers:
-- `Get-OfficeMarkdown -Path .\README.md`
-- `ConvertTo-OfficeMarkdown` (from objects)
-- `ConvertTo-OfficeMarkdownHtml -Text $md -DocumentMode`
+## Module Areas
 
-Word DSL quick start:
-- `New-OfficeWord -Path .\Report.docx { WordSection { WordParagraph 'Hello' } }`
-- `Get-OfficeWordParagraph -Path .\Report.docx | Select-Object -First 3`
+| Area | Status | What you can do |
+| --- | --- | --- |
+| Word | Mature | Create documents, sections, headers, footers, paragraphs, lists, tables, images, bookmarks, fields, content controls, TOC, watermark, protection, readers |
+| Excel | Advanced | Create sheets, cells, rows, columns, tables, named ranges, formulas, filters, sorts, charts, images, comments, pivots, validations, formatting, page setup |
+| PowerPoint | Experimental | Create decks, slides, title/text/image/table/shape content, bullets, notes, placeholder edits, layout placeholder helpers |
+| Markdown | Solid | Parse Markdown, build Markdown with DSL, render Markdown to HTML |
+| CSV | Solid | Read CSV as document/data and export objects to CSV |
 
-Excel DSL quick start:
-- `New-OfficeExcel -Path .\Report.xlsx { ExcelSheet 'Data' { Set-OfficeExcelRow -Row 1 -Values 'Name','Value' } }`
-- `Get-OfficeExcelNamedRange -Path .\Report.xlsx`
+## Quick Start
+
+Install from PowerShell Gallery:
+
+```powershell
+Install-Module PSWriteOffice -Scope CurrentUser
+Import-Module PSWriteOffice
+```
+
+### Word
+
+```powershell
+New-OfficeWord -Path .\Report.docx {
+    WordSection {
+        WordHeader { WordParagraph -Text 'Quarterly Report' -Style Heading2 }
+        WordFooter { WordPageNumber }
+        WordParagraph -Text 'Hello from PSWriteOffice.'
+        WordList -Style Bulleted {
+            WordListItem -Text 'Alpha'
+            WordListItem -Text 'Beta'
+        }
+    }
+} -Open
+```
+
+### Excel
+
+```powershell
+New-OfficeExcel -Path .\Report.xlsx {
+    ExcelSheet 'Data' {
+        ExcelCell -Address 'A1' -Value 'Name'
+        ExcelCell -Address 'B1' -Value 'Value'
+        ExcelTable -Data $data -TableName 'ReportData' -AutoFit
+        ExcelValidationList -Range 'C2:C20' -Values 'New','In Progress','Done'
+    }
+}
+```
+
+### PowerPoint
+
+```powershell
+New-OfficePowerPoint -Path .\Deck.pptx {
+    PptSlide {
+        PptTitle -Title 'Status Update'
+        PptTextBox -Text 'Generated with PSWriteOffice' -X 80 -Y 150 -Width 360 -Height 60
+        PptBullets -Bullets 'Wins','Risks','Next Steps' -X 430 -Y 150 -Width 260 -Height 200
+        PptNotes -Text 'Keep this under five minutes.'
+    }
+}
+```
+
+### Markdown
+
+```powershell
+New-OfficeMarkdown -Path .\README.md {
+    MarkdownHeading -Level 1 -Text 'Report'
+    MarkdownParagraph -Text 'Generated by PSWriteOffice.'
+    MarkdownList -Items 'Alpha','Beta'
+    MarkdownCode -Language 'powershell' -Content 'Get-Process'
+}
+```
+
+### CSV
+
+```powershell
+$data | ConvertTo-OfficeCsv -OutputPath .\export.csv
+Get-OfficeCsvData -Path .\export.csv
+```
+
+## Reading and Inspection
+
+`PSWriteOffice` is not only about writing files. You can also inspect documents and use OfficeIMO-backed object models for follow-up work.
+
+```powershell
+Get-OfficeWordParagraph -Path .\Report.docx | Select-Object -First 5
+Get-OfficeExcelNamedRange -Path .\Report.xlsx
+Get-OfficeExcelPivotTable -Path .\Report.xlsx
+Get-OfficePowerPointSlide -Presentation (Get-OfficePowerPoint -FilePath .\Deck.pptx)
+Get-OfficeMarkdown -Path .\README.md
+Get-OfficeCsv -Path .\export.csv
+```
+
+## Documentation
+
+Start here:
+
+- [Docs/README.md](Docs/README.md)
+- [Docs/Usage.md](Docs/Usage.md)
+
+Area guides:
+
+- [Docs/Word.md](Docs/Word.md)
+- [Docs/Excel.md](Docs/Excel.md)
+- [Docs/PowerPoint.md](Docs/PowerPoint.md)
+- [Docs/Markdown.md](Docs/Markdown.md)
+- [Docs/Csv.md](Docs/Csv.md)
+- [Docs/CmdletMap.md](Docs/CmdletMap.md)
+
+Examples:
+
+- `Examples/Word/`
+- `Examples/Excel/`
+- `Examples/Markdown/`
+- `Examples/ExamplePowerPoint*`
+- `Examples/Csv/`
+
+## Dependency Model
+
+`PSWriteOffice` is intentionally centered on `OfficeIMO.*`.
+
+- `OfficeIMO.Word`
+- `OfficeIMO.Excel`
+- `OfficeIMO.PowerPoint`
+- `OfficeIMO.Markdown`
+- `OfficeIMO.CSV`
+- `OfficeIMO.Word.Html`
+
+Lower-level libraries such as Open XML SDK, AngleSharp, or ImageSharp should come through OfficeIMO unless `PSWriteOffice` has a real direct need for them. The goal is to keep dependency ownership in one place and avoid version drift between the module and the core engine.
+
+## Build and Test
+
+Local build:
+
+```powershell
+dotnet build .\Sources\PSWriteOffice.sln -c Debug
+```
+
+Run PowerShell tests:
+
+```powershell
+pwsh -NoLogo -NoProfile -File .\PSWriteOffice.Tests.ps1
+```
+
+Build and packaging are handled through:
+
+- `Build/Manage-PSWriteOffice.ps1`
+- `PSPublishModule`
+
+The source repository keeps a development-focused module layout for local work. Final packed module artifacts are produced by the module build pipeline.
+
+## Current Priorities
+
+- finish the OfficeIMO migration cleanly across all module areas
+- keep PSWriteOffice thin instead of re-implementing file logic here
+- improve verification for newer Excel and PowerPoint functionality
+- refresh docs and examples so they match the current DSL and cmdlet surface
+
+## License
+
+MIT

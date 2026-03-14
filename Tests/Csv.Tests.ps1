@@ -1,5 +1,10 @@
-BeforeAll {
-    Import-Module (Join-Path $PSScriptRoot '..\PSWriteOffice.psd1') -Force
+﻿BeforeAll {
+    $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
+        $env:PSWRITEOFFICE_MODULE_MANIFEST
+    } else {
+        Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
+    }
+    Import-Module $ModuleManifest -Force -Global
 }
 
 Describe 'CSV cmdlets' {

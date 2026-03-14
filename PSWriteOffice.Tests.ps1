@@ -1,11 +1,18 @@
-$ModuleName = (Get-ChildItem $PSScriptRoot\*.psd1).BaseName
-$PrimaryModule = Get-ChildItem -Path $PSScriptRoot -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
+﻿param(
+    [string] $ModulePath = $PSScriptRoot,
+    [string] $TestsPath = "$PSScriptRoot\Tests",
+    [switch] $SkipDependencyInstall
+)
+
+$ResolvedModulePath = (Resolve-Path -Path $ModulePath).Path
+$PrimaryModule = Get-ChildItem -Path $ResolvedModulePath -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
 if (-not $PrimaryModule) {
-    throw "Path $PSScriptRoot doesn't contain PSD1 files. Failing tests."
+    throw "Path $ResolvedModulePath doesn't contain PSD1 files. Failing tests."
 }
 if ($PrimaryModule.Count -ne 1) {
     throw 'More than one PSD1 files detected. Failing tests.'
 }
+$ModuleName = $PrimaryModule.BaseName
 $PSDInformation = Import-PowerShellDataFile -Path $PrimaryModule.FullName
 $RequiredModules = @(
     'Pester'
@@ -14,20 +21,22 @@ $RequiredModules = @(
         $PSDInformation.RequiredModules
     }
 )
-foreach ($Module in $RequiredModules) {
-    if ($Module -eq 'PSWriteOffice') {
-        continue
-    }
-    if ($Module -is [System.Collections.IDictionary]) {
-        $Exists = Get-Module -ListAvailable -Name $Module.ModuleName
-        if (-not $Exists) {
-            Write-Warning "$ModuleName - Downloading $($Module.ModuleName) from PSGallery"
-            Install-Module -Name $Module.ModuleName -Force -SkipPublisherCheck
+if (-not $SkipDependencyInstall) {
+    foreach ($Module in $RequiredModules) {
+        if ($Module -eq 'PSWriteOffice') {
+            continue
         }
-    } else {
-        $Exists = Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue
-        if (-not $Exists) {
-            Install-Module -Name $Module -Force -SkipPublisherCheck
+        if ($Module -is [System.Collections.IDictionary]) {
+            $Exists = Get-Module -ListAvailable -Name $Module.ModuleName
+            if (-not $Exists) {
+                Write-Warning "$ModuleName - Downloading $($Module.ModuleName) from PSGallery"
+                Install-Module -Name $Module.ModuleName -Force -SkipPublisherCheck
+            }
+        } else {
+            $Exists = Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue
+            if (-not $Exists) {
+                Install-Module -Name $Module -Force -SkipPublisherCheck
+            }
         }
     }
 }
@@ -46,14 +55,16 @@ foreach ($Module in $PSDInformation.RequiredModules) {
 Write-Color
 
 try {
-    Import-Module $PSScriptRoot\*.psd1 -Force -ErrorAction Stop
+    Import-Module $PrimaryModule.FullName -Force -Global -ErrorAction Stop
     Import-Module Pester -Force -ErrorAction Stop
 } catch {
     throw "Failed to import module $ModuleName"
 }
 
+$env:PSWRITEOFFICE_MODULE_MANIFEST = $PrimaryModule.FullName
+
 $Configuration = [PesterConfiguration]::Default
-$Configuration.Run.Path = "$PSScriptRoot\Tests"
+$Configuration.Run.Path = $TestsPath
 $Configuration.Run.Exit = $true
 $Configuration.Should.ErrorAction = 'Continue'
 $Configuration.CodeCoverage.Enabled = $false

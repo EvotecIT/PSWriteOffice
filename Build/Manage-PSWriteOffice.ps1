@@ -16,13 +16,11 @@
         # Copyright statement for this module
         Copyright              = "(c) 2011 - $((Get-Date).Year) Przemyslaw Klys @ Evotec. All rights reserved."
         # Description of the functionality provided by this module
-        Description            = 'Experimental PowerShell Module to create and edit Microsoft Word, Microsoft Excel, and Microsoft PowerPoint documents without having Microsoft Office installed.'
+        Description            = 'PowerShell module to create and read Microsoft Word, Excel, PowerPoint (experimental), Markdown, and CSV documents without Microsoft Office installed. Powered by OfficeIMO.*.'
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags                   = @('word', 'docx', 'write', 'PSWord', 'office', 'windows', 'doc', 'pswriteword', 'linux', 'macos')
+        Tags                   = @('officeimo', 'word', 'excel', 'powerpoint', 'markdown', 'csv', 'docx', 'xlsx', 'pptx', 'openxml', 'windows', 'linux', 'macos')
         # A URL to the main website for this project.
         ProjectUri             = 'https://github.com/EvotecIT/PSWriteOffice'
-
-        IconUri                = 'https://evotec.xyz/wp-content/uploads/2018/10/PSWriteWord.png'
 
         LicenseUri             = 'https://github.com/EvotecIT/PSWriteOffice/blob/master/License'
 
@@ -87,6 +85,7 @@
         CertificateThumbprint             = '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
         ResolveBinaryConflicts            = $true
         ResolveBinaryConflictsName        = 'PSWriteOffice'
+        NETProjectPath                    = 'Sources\PSWriteOffice'
         NETProjectName                    = 'PSWriteOffice'
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
@@ -96,7 +95,7 @@
         DotSourceClasses                  = $true
         DeleteTargetModuleBeforeBuild     = $true
         NETBinaryModuleDocumentation      = $true
-        RefreshPSD1Only                   = $true
+        RefreshPSD1Only                   = $false
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat

@@ -1,11 +1,12 @@
 ﻿# to speed up development adding direct path to binaries, instead of the the Lib folder
-$Development = $true
-$DevelopmentPath = "$PSScriptRoot\Sources\PSWriteOffice\bin\Debug"
+$DevelopmentPath = Join-Path $PSScriptRoot 'Sources\PSWriteOffice\bin\Debug'
+$Development = Test-Path $DevelopmentPath
 $DevelopmentFolderCore = "net8.0"
 $DevelopmentFolderDefault = "net472"
 $BinaryModules = @(
     "PSWriteOffice.dll"
 )
+$AssemblyFolders = Get-ChildItem -Path (Join-Path $PSScriptRoot 'Lib') -Directory -ErrorAction SilentlyContinue
 
 # ensure script file collections always exist (legacy folders were removed)
 if (-not (Test-Path variable:Classes)) { $Classes = @() }
@@ -53,7 +54,7 @@ if ($IsWindows) {
     if ($baseDir) {
         $runtimePath = Join-Path $baseDir "runtimes/$archFolder/native"
         if (Test-Path $runtimePath) {
-            Write-Warning -Message "Adding $runtimePath to PATH"
+            Write-Verbose -Message "Adding $runtimePath to PATH"
             $env:PATH = "$runtimePath;" + $env:PATH
         }
     }
@@ -97,23 +98,6 @@ if ($Standard -and $Core -and $Default) {
     #Write-Error -Message 'No assemblies found'
 }
 
-$Assembly = @(
-    if ($Development) {
-        if ($PSEdition -eq 'Core') {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderCore -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' -and $_.Name -ne 'Microsoft.Bcl.AsyncInterfaces.dll' }
-        } else {
-            Get-ChildItem -Path $DevelopmentPath\$DevelopmentFolderDefault -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' -and $_.Name -ne 'Microsoft.Bcl.AsyncInterfaces.dll' }
-        }
-    } else {
-        if ($Framework -and $PSEdition -eq 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$Framework -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtimes[\\/]' -and $_.Name -ne 'Microsoft.Bcl.AsyncInterfaces.dll' }
-        }
-        if ($FrameworkNet -and $PSEdition -ne 'Core') {
-            Get-ChildItem -Path $PSScriptRoot\Lib\$FrameworkNet -Filter '*.dll' -Recurse | Where-Object { $_.FullName -notmatch '[\\/]runtime(s[\\/]' -and $_.Name -ne 'Microsoft.Bcl.AsyncInterfaces.dll' }
-        }
-    }
-)
-
 $BinaryDev = @(
     foreach ($BinaryModule in $BinaryModules) {
         if ($PSEdition -eq 'Core') {
@@ -122,7 +106,7 @@ $BinaryDev = @(
             $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
         }
         $Variable
-        Write-Warning "Development mode: Using binaries from $Variable"
+        Write-Verbose "Development mode: Using binaries from $Variable"
     }
 )
 
@@ -149,29 +133,6 @@ $FoundErrors = @(
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
                 $true
             }
-        }
-    }
-    foreach ($Import in @($Assembly)) {
-        try {
-            Write-Verbose -Message $Import.FullName
-            Add-Type -Path $Import.Fullname -ErrorAction Stop
-            #  }
-        } catch [System.Reflection.ReflectionTypeLoadException] {
-            Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
-            $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
-            foreach ($E in $LoaderExceptions) {
-                Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
-            }
-            $true
-            #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
-        } catch {
-            Write-Warning "Processing $($Import.Name) Exception: $($_.Exception.Message)"
-            $LoaderExceptions = $($_.Exception.LoaderExceptions) | Sort-Object -Unique
-            foreach ($E in $LoaderExceptions) {
-                Write-Warning "Processing $($Import.Name) LoaderExceptions: $($E.Message)"
-            }
-            $true
-            #Write-Error -Message "StackTrace: $($_.Exception.StackTrace)"
         }
     }
     #Dot source the files
