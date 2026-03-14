@@ -17,7 +17,7 @@ Import-Module PSWriteOffice
 | --- | --- | --- |
 | Word | Mature | [New-OfficeWord](Docs/New-OfficeWord.md), [Get-OfficeWord](Docs/Get-OfficeWord.md), [ConvertTo-OfficeWordHtml](Docs/ConvertTo-OfficeWordHtml.md) |
 | Excel | Advanced | [New-OfficeExcel](Docs/New-OfficeExcel.md), [Get-OfficeExcel](Docs/Get-OfficeExcel.md), [Add-OfficeExcelTable](Docs/Add-OfficeExcelTable.md) |
-| PowerPoint | Improving fast | [New-OfficePowerPoint](Docs/New-OfficePowerPoint.md), [Get-OfficePowerPointSlide](Docs/Get-OfficePowerPointSlide.md), [Get-OfficePowerPointNotes](Docs/Get-OfficePowerPointNotes.md) |
+| PowerPoint | Improving fast | [New-OfficePowerPoint](Docs/New-OfficePowerPoint.md), [Get-OfficePowerPointSlide](Docs/Get-OfficePowerPointSlide.md), [Get-OfficePowerPointShape](Docs/Get-OfficePowerPointShape.md) |
 | Markdown | Solid | [New-OfficeMarkdown](Docs/New-OfficeMarkdown.md), [Get-OfficeMarkdown](Docs/Get-OfficeMarkdown.md), [ConvertTo-OfficeMarkdownHtml](Docs/ConvertTo-OfficeMarkdownHtml.md) |
 | CSV | Solid | [Get-OfficeCsv](Docs/Get-OfficeCsv.md), [Get-OfficeCsvData](Docs/Get-OfficeCsvData.md), [ConvertTo-OfficeCsv](Docs/ConvertTo-OfficeCsv.md) |
 
@@ -35,7 +35,7 @@ If you want to inspect existing files:
 
 - Word: [Get-OfficeWordParagraph](Docs/Get-OfficeWordParagraph.md), [Find-OfficeWord](Docs/Find-OfficeWord.md)
 - Excel: [Get-OfficeExcelData](Docs/Get-OfficeExcelData.md), [Get-OfficeExcelNamedRange](Docs/Get-OfficeExcelNamedRange.md), [Get-OfficeExcelPivotTable](Docs/Get-OfficeExcelPivotTable.md)
-- PowerPoint: [Get-OfficePowerPoint](Docs/Get-OfficePowerPoint.md), [Get-OfficePowerPointSlide](Docs/Get-OfficePowerPointSlide.md), [Get-OfficePowerPointPlaceholder](Docs/Get-OfficePowerPointPlaceholder.md), [Get-OfficePowerPointNotes](Docs/Get-OfficePowerPointNotes.md)
+- PowerPoint: [Get-OfficePowerPoint](Docs/Get-OfficePowerPoint.md), [Get-OfficePowerPointSlide](Docs/Get-OfficePowerPointSlide.md), [Get-OfficePowerPointPlaceholder](Docs/Get-OfficePowerPointPlaceholder.md), [Get-OfficePowerPointNotes](Docs/Get-OfficePowerPointNotes.md), [Get-OfficePowerPointShape](Docs/Get-OfficePowerPointShape.md)
 - Markdown: [Get-OfficeMarkdown](Docs/Get-OfficeMarkdown.md)
 - CSV: [Get-OfficeCsv](Docs/Get-OfficeCsv.md), [Get-OfficeCsvData](Docs/Get-OfficeCsvData.md)
 

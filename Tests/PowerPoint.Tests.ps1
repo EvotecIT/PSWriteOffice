@@ -56,6 +56,14 @@ Describe 'PowerPoint cmdlets' {
         $notes = Get-OfficePowerPointNotes -Slide $slide
         $notes.Text | Should -Be 'Keep this under five minutes.'
         $notes.HasNotes | Should -BeTrue
+        $shapeInfo = Get-OfficePowerPointShape -Slide $slide
+        $shapeInfo.Count | Should -BeGreaterThan 0
+        $shapeInfo | Where-Object Kind -eq 'Picture' | Should -HaveCount 1
+        $shapeInfo | Where-Object Kind -eq 'Table' | Should -HaveCount 1
+        $shapeInfo | Where-Object Kind -eq 'AutoShape' | Should -HaveCount 1
+        ($shapeInfo | Where-Object Kind -eq 'Picture' | Select-Object -First 1).MimeType | Should -Be 'image/bmp'
+        ($shapeInfo | Where-Object Kind -eq 'Table' | Select-Object -First 1).RowCount | Should -Be 3
+        ($shapeInfo | Where-Object Kind -eq 'Table' | Select-Object -First 1).ColumnCount | Should -Be 2
         $placeholder = Get-OfficePowerPointPlaceholder -Slide $slide -PlaceholderType Title
         $placeholder.Text | Should -Be 'Status Update'
         $placeholderUpdate = Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Status Update v2' -PassThru
@@ -84,6 +92,11 @@ Describe 'PowerPoint cmdlets' {
             $reloadedNotes = Get-OfficePowerPointNotes -Slide $reloadedSlide
             $reloadedNotes.Text | Should -Be 'Keep this under five minutes.'
             $reloadedNotes.SlideIndex | Should -Be 1
+            $reloadedShapeInfo = Get-OfficePowerPointShape -Presentation $reloaded -Index 1
+            $reloadedShapeInfo.Count | Should -BeGreaterThan 0
+            ($reloadedShapeInfo | Where-Object Kind -eq 'Picture').Count | Should -Be 1
+            ($reloadedShapeInfo | Where-Object Kind -eq 'Table').Count | Should -Be 1
+            ($reloadedShapeInfo | Where-Object Kind -eq 'Picture' | Select-Object -First 1).SlideIndex | Should -Be 1
             @($reloadedSlide.Tables).Count | Should -BeGreaterThan 0
             $reloadedSlide.Pictures.Count | Should -BeGreaterThan 0
         } finally {
@@ -108,6 +121,13 @@ Describe 'PowerPoint cmdlets' {
         $presentationNotes = Get-OfficePowerPointNotes -Presentation $presentation -IncludeEmpty
         $presentationNotes.Count | Should -Be 1
         $presentationNotes[0].HasNotes | Should -BeFalse
+
+        $shapeInfo = Get-OfficePowerPointShape -Presentation $presentation -Index 0 -Kind TextBox
+        $shapeInfo.Count | Should -BeGreaterThan 0
+        $shapeInfo[0].SlideIndex | Should -Be 0
+        $shapeByIndex = Get-OfficePowerPointShape -Slide $slide -ShapeIndex $shapeInfo[0].ShapeIndex
+        $shapeByIndex.ShapeIndex | Should -Be $shapeInfo[0].ShapeIndex
+        $shapeByIndex.Kind | Should -Be 'TextBox'
 
         Save-OfficePowerPoint -Presentation $presentation
 
