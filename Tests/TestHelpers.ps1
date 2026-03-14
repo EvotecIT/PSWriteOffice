@@ -23,3 +23,35 @@ function New-TestOfficeImageFile {
 
     $path
 }
+
+function Get-ZipXmlDocumentLocal {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Path,
+
+        [Parameter(Mandatory)]
+        [string] $Entry
+    )
+
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($Path)
+    try {
+        $zipEntry = $archive.GetEntry($Entry)
+        if (-not $zipEntry) {
+            throw "Zip entry '$Entry' not found in '$Path'."
+        }
+
+        $stream = $zipEntry.Open()
+        try {
+            $reader = [System.IO.StreamReader]::new($stream)
+            try {
+                return [xml] $reader.ReadToEnd()
+            } finally {
+                $reader.Dispose()
+            }
+        } finally {
+            $stream.Dispose()
+        }
+    } finally {
+        $archive.Dispose()
+    }
+}
