@@ -250,6 +250,9 @@ Reads shape summaries from a slide or presentation.
 ### [Get-OfficePowerPointSlide](Get-OfficePowerPointSlide.md)
 Enumerates slides or retrieves a specific slide.
 
+### [Get-OfficePowerPointSlideSummary](Get-OfficePowerPointSlideSummary.md)
+Reads high-level slide summaries from a presentation.
+
 ### [Get-OfficeWord](Get-OfficeWord.md)
 Opens an existing Word document.
 

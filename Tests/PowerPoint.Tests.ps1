@@ -56,6 +56,15 @@ Describe 'PowerPoint cmdlets' {
         $notes = Get-OfficePowerPointNotes -Slide $slide
         $notes.Text | Should -Be 'Keep this under five minutes.'
         $notes.HasNotes | Should -BeTrue
+        $slideSummary = Get-OfficePowerPointSlideSummary -Slide $slide
+        $slideSummary.Title | Should -Be 'Status Update'
+        $slideSummary.HasNotes | Should -BeTrue
+        $slideSummary.NotesText | Should -Be 'Keep this under five minutes.'
+        $slideSummary.ShapeCount | Should -BeGreaterThan 0
+        $slideSummary.PictureCount | Should -Be 1
+        $slideSummary.TableCount | Should -Be 1
+        $slideSummary.PlaceholderCount | Should -BeGreaterThan 0
+        $slideSummary.LayoutPlaceholderCount | Should -BeGreaterThan 0
         $shapeInfo = Get-OfficePowerPointShape -Slide $slide
         $shapeInfo.Count | Should -BeGreaterThan 0
         $shapeInfo | Where-Object Kind -eq 'Picture' | Should -HaveCount 1
@@ -92,6 +101,11 @@ Describe 'PowerPoint cmdlets' {
             $reloadedNotes = Get-OfficePowerPointNotes -Slide $reloadedSlide
             $reloadedNotes.Text | Should -Be 'Keep this under five minutes.'
             $reloadedNotes.SlideIndex | Should -Be 1
+            $reloadedSummary = Get-OfficePowerPointSlideSummary -Presentation $reloaded -Index 1
+            $reloadedSummary.Title | Should -Be 'Status Update v2'
+            $reloadedSummary.SlideIndex | Should -Be 1
+            $reloadedSummary.PictureCount | Should -Be 1
+            $reloadedSummary.TableCount | Should -Be 1
             $reloadedShapeInfo = Get-OfficePowerPointShape -Presentation $reloaded -Index 1
             $reloadedShapeInfo.Count | Should -BeGreaterThan 0
             ($reloadedShapeInfo | Where-Object Kind -eq 'Picture').Count | Should -Be 1
@@ -121,6 +135,10 @@ Describe 'PowerPoint cmdlets' {
         $presentationNotes = Get-OfficePowerPointNotes -Presentation $presentation -IncludeEmpty
         $presentationNotes.Count | Should -Be 1
         $presentationNotes[0].HasNotes | Should -BeFalse
+        $slideSummary = Get-OfficePowerPointSlideSummary -Presentation $presentation
+        $slideSummary.Count | Should -Be 1
+        $slideSummary[0].HasNotes | Should -BeFalse
+        $slideSummary[0].Title | Should -Be 'No notes yet'
 
         $shapeInfo = Get-OfficePowerPointShape -Presentation $presentation -Index 0 -Kind TextBox
         $shapeInfo.Count | Should -BeGreaterThan 0
@@ -283,6 +301,11 @@ Describe 'PowerPoint cmdlets' {
 
         $presentation = Get-OfficePowerPoint -FilePath $path
         $slide = Get-OfficePowerPointSlide -Presentation $presentation -Index 0
+        $summary = Get-OfficePowerPointSlideSummary -Slide $slide
+        $summary.LayoutPlaceholderCount | Should -BeGreaterThan 0
+        if ($summary.Title) {
+            $summary.Title | Should -Be 'DSL Slide'
+        }
         $placeholder = Get-OfficePowerPointPlaceholder -Slide $slide -PlaceholderType Title
         if (-not $placeholder) {
             $placeholder = Get-OfficePowerPointPlaceholder -Slide $slide -PlaceholderType CenteredTitle

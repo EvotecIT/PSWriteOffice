@@ -4,39 +4,39 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Get-OfficePowerPointShape
+# Get-OfficePowerPointSlideSummary
 ## SYNOPSIS
-Reads shape summaries from a slide or presentation.
+Reads high-level slide summaries from a presentation.
 
 ## SYNTAX
 ### Slide (Default)
 ```powershell
-Get-OfficePowerPointShape [-Slide <PowerPointSlide>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Get-OfficePowerPointSlideSummary [-Slide <PowerPointSlide>] [<CommonParameters>]
 ```
 
 ### Presentation
 ```powershell
-Get-OfficePowerPointShape [-Presentation <PowerPointPresentation>] [-Index <int>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Get-OfficePowerPointSlideSummary [-Presentation <PowerPointPresentation>] [-Index <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Reads shape summaries from a slide or presentation.
+Reads high-level slide summaries from a presentation.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointShape
+PS>Get-OfficePowerPointSlideSummary -Presentation $ppt
 ```
 
-Returns shape summaries for the selected slide.
+Returns one summary object per slide.
 
 ### EXAMPLE 2
 ```powershell
-PS>Get-OfficePowerPointShape -Presentation $ppt -Index 0 -Kind Picture
+PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointSlideSummary
 ```
 
-Filters the slide output to picture shapes only.
+Returns the summary for the selected slide.
 
 ## PARAMETERS
 
@@ -56,40 +56,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Kind
-Optional shape kind filter.
-
-```yaml
-Type: String[]
-Parameter Sets: Slide, Presentation
-Aliases: None
-Possible values: TextBox, Picture, Table, Chart, AutoShape, GroupShape
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Name
-Optional wildcard filter for shape names.
-
-```yaml
-Type: String[]
-Parameter Sets: Slide, Presentation
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -Presentation
-Presentation whose slides should be inspected.
+Presentation whose slides should be summarized.
 
 ```yaml
 Type: PowerPointPresentation
@@ -101,22 +69,6 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
-
-### -ShapeIndex
-Optional zero-based shape index filter.
-
-```yaml
-Type: Int32[]
-Parameter Sets: Slide, Presentation
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -146,7 +98,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.PowerPoint.PowerPointShapeInfo`
+- `PSWriteOffice.Services.PowerPoint.PowerPointSlideSummaryInfo`
 
 ## RELATED LINKS
 

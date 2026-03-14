@@ -107,6 +107,7 @@ Get-OfficeExcelNamedRange -Path .\Report.xlsx
 Get-OfficeExcelPivotTable -Path .\Report.xlsx
 $ppt = Get-OfficePowerPoint -FilePath .\Deck.pptx
 Get-OfficePowerPointSlide -Presentation $ppt
+Get-OfficePowerPointSlideSummary -Presentation $ppt
 Get-OfficePowerPointNotes -Presentation $ppt
 Get-OfficePowerPointShape -Presentation $ppt -Index 0
 Get-OfficeMarkdown -Path .\README.md
