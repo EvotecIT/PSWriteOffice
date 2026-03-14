@@ -121,6 +121,7 @@ jobs:
           Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
       - name: Build .NET solution
         run: |
@@ -130,6 +131,20 @@ jobs:
       - name: Run PowerShell tests
         shell: pwsh
         run: .\PSWriteOffice.Tests.ps1
+
+      - name: Validate packaged artefact
+        shell: pwsh
+        run: .\Build\Validate-PackagedArtefact.ps1 -SkipBuild
+
+      - name: Upload packaged artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packaged-artefacts-windows-ps7
+          path: |
+            Artefacts/Packed/**
+            Artefacts/Reports/**
+            Artefacts/Unpacked/**
 
   test-ubuntu:
     needs: refresh-psd1
