@@ -165,13 +165,6 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install PowerShell
-        run: |
-          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
-          sudo apt-get update
-          sudo apt-get install -y powershell
-
       - name: Install PowerShell modules
         shell: pwsh
         run: |
@@ -206,9 +199,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Install PowerShell
-        run: brew install --cask powershell
 
       - name: Install PowerShell modules
         shell: pwsh
