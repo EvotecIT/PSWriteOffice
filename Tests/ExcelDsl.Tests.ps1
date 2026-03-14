@@ -118,40 +118,8 @@ Describe 'Excel DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
-    It 'supports advanced Excel helpers' {
-        function Get-ZipXmlDocumentLocal {
-            param(
-                [Parameter(Mandatory)]
-                [string] $Path,
-
-                [Parameter(Mandatory)]
-                [string] $Entry
-            )
-
-            $archive = [System.IO.Compression.ZipFile]::OpenRead($Path)
-            try {
-                $zipEntry = $archive.GetEntry($Entry)
-                if (-not $zipEntry) {
-                    throw "Zip entry '$Entry' not found in '$Path'."
-                }
-
-                $stream = $zipEntry.Open()
-                try {
-                    $reader = [System.IO.StreamReader]::new($stream)
-                    try {
-                        return [xml] $reader.ReadToEnd()
-                    } finally {
-                        $reader.Dispose()
-                    }
-                } finally {
-                    $stream.Dispose()
-                }
-            } finally {
-                $archive.Dispose()
-            }
-        }
-
-        $path = Join-Path $TestDrive 'DslExcelAdvanced.xlsx'
+    It 'supports advanced Excel data helpers' {
+        $path = Join-Path $TestDrive 'DslExcelAdvancedData.xlsx'
         $rows = @(
             [PSCustomObject]@{
                 Region = 'NA'
@@ -196,20 +164,67 @@ Describe 'Excel DSL surface' {
                 Set-OfficeExcelHyperlink -Address 'A2' -Url 'https://example.org' -Display 'Example'
                 Add-OfficeExcelComment -Address 'B2' -Text 'Check sales'
                 Add-OfficeExcelSparkline -DataRange 'B2:B4' -LocationRange 'H2:H4' -Type Column
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $doc.Sheets.Count | Should -Be 1
+            $sheet = $doc.Sheets[0]
+            $sheet.Name | Should -Be 'Data'
+            $sheet.HasComment(2, 2) | Should -BeTrue
+
+            $cellText = $null
+            $sheet.TryGetCellText(2, 1, [ref] $cellText) | Should -BeTrue
+            $cellText | Should -Be 'Example'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
+
+    It 'supports advanced Excel pivot, validation, and protection helpers' {
+        $path = Join-Path $TestDrive 'DslExcelAdvancedPivot.xlsx'
+        $rows = @(
+            [PSCustomObject]@{
+                Region = 'NA'
+                Sales = 100
+                Rate = 0.2
+                CloseDate = [datetime]'2024-01-15'
+                StartTime = [TimeSpan]'08:30:00'
+                Note = 'OK'
+            }
+            [PSCustomObject]@{
+                Region = 'EMEA'
+                Sales = 200
+                Rate = 0.45
+                CloseDate = [datetime]'2024-02-20'
+                StartTime = [TimeSpan]'09:15:00'
+                Note = 'Check'
+            }
+            [PSCustomObject]@{
+                Region = 'APAC'
+                Sales = 150
+                Rate = 0.33
+                CloseDate = [datetime]'2024-03-10'
+                StartTime = [TimeSpan]'10:05:00'
+                Note = 'Review'
+            }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
                 Add-OfficeExcelPivotTable -SourceRange 'A1:F4' -DestinationCell 'J1' -RowField 'Region' -DataField 'Sales'
-                Protect-OfficeExcelSheet
-                Unprotect-OfficeExcelSheet
                 Add-OfficeExcelValidationWholeNumber -Range 'B2:B4' -Operator Between -Formula1 1 -Formula2 1000 -AllowBlank:$false
                 Add-OfficeExcelValidationDecimal -Range 'C2:C4' -Operator Between -Formula1 0.0 -Formula2 1.0
                 Add-OfficeExcelValidationDate -Range 'D2:D4' -Operator GreaterThan -Formula1 ([datetime]'2024-01-01')
                 Add-OfficeExcelValidationTime -Range 'E2:E4' -Operator GreaterThan -Formula1 ([TimeSpan]'08:00:00')
                 Add-OfficeExcelValidationTextLength -Range 'F2:F4' -Operator Between -Formula1 1 -Formula2 20
                 Add-OfficeExcelValidationCustomFormula -Range 'G2:G4' -Formula 'LEN(A2)>0'
-                Set-OfficeExcelPageSetup -FitToWidth 1 -FitToHeight 0
-                Set-OfficeExcelMargins -Preset Narrow
-                Set-OfficeExcelOrientation -Orientation Landscape
-                Set-OfficeExcelGridlines -Hide
-                Set-OfficeExcelSheetVisibility -Hide
+                Protect-OfficeExcelSheet
+                Unprotect-OfficeExcelSheet
                 Protect-OfficeExcelSheet
             }
         }
@@ -229,17 +244,32 @@ Describe 'Excel DSL surface' {
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {
             $doc.Sheets.Count | Should -Be 1
-            $sheet = $doc.Sheets[0]
-            $sheet.Name | Should -Be 'Data'
-            $sheet.IsProtected | Should -BeTrue
-            $sheet.HasComment(2, 2) | Should -BeTrue
-
-            $cellText = $null
-            $sheet.TryGetCellText(2, 1, [ref] $cellText) | Should -BeTrue
-            $cellText | Should -Be 'Example'
+            $doc.Sheets[0].IsProtected | Should -BeTrue
         } finally {
             Close-OfficeExcel -Document $doc
         }
+    }
+
+    It 'supports advanced Excel page setup and visibility helpers' {
+        $path = Join-Path $TestDrive 'DslExcelAdvancedLayout.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Sales = 200 }
+            [PSCustomObject]@{ Region = 'APAC'; Sales = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Set-OfficeExcelPageSetup -FitToWidth 1 -FitToHeight 0
+                Set-OfficeExcelMargins -Preset Narrow
+                Set-OfficeExcelOrientation -Orientation Landscape
+                Set-OfficeExcelGridlines -Hide
+                Set-OfficeExcelSheetVisibility -Hide
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
 
         $workbookXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/workbook.xml'
         $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
