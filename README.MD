@@ -108,6 +108,7 @@ Get-OfficeExcelPivotTable -Path .\Report.xlsx
 $ppt = Get-OfficePowerPoint -FilePath .\Deck.pptx
 Get-OfficePowerPointSlide -Presentation $ppt
 Get-OfficePowerPointNotes -Presentation $ppt
+Get-OfficePowerPointShape -Presentation $ppt -Index 0
 Get-OfficeMarkdown -Path .\README.md
 Get-OfficeCsv -Path .\export.csv
 ```

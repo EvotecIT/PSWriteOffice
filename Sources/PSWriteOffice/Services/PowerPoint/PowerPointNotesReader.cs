@@ -72,7 +72,7 @@ internal static class PowerPointNotesReader
                 continue;
             }
 
-            if (ReferenceEquals(presentationPart!.GetPartById(relationshipId), slidePart))
+            if (ReferenceEquals(presentationPart!.GetPartById(relationshipId!), slidePart))
             {
                 return index;
             }

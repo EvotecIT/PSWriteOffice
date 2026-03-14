@@ -244,6 +244,9 @@ Reads speaker notes from a slide or presentation.
 ### [Get-OfficePowerPointPlaceholder](Get-OfficePowerPointPlaceholder.md)
 Gets placeholder text boxes from a slide.
 
+### [Get-OfficePowerPointShape](Get-OfficePowerPointShape.md)
+Reads shape summaries from a slide or presentation.
+
 ### [Get-OfficePowerPointSlide](Get-OfficePowerPointSlide.md)
 Enumerates slides or retrieves a specific slide.
 
