@@ -1,5 +1,10 @@
-BeforeAll {
-    Import-Module (Join-Path $PSScriptRoot '..\PSWriteOffice.psd1') -Force
+﻿BeforeAll {
+    $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
+        $env:PSWRITEOFFICE_MODULE_MANIFEST
+    } else {
+        Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
+    }
+    Import-Module $ModuleManifest -Force -Global
 }
 
 Describe 'Word DSL surface' {
@@ -89,5 +94,35 @@ Describe 'Word DSL surface' {
         } | Out-Null
 
         Test-Path $path | Should -BeTrue
+    }
+
+    It 'adds content controls and table of contents' {
+        $path = Join-Path $TestDrive 'DslContentControls.docx'
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordParagraph { Add-OfficeWordContentControl -Text 'Client' -Alias 'ClientName' }
+            Add-OfficeWordParagraph { Add-OfficeWordCheckBox -Checked -Alias 'Approved' }
+            Add-OfficeWordParagraph { Add-OfficeWordDatePicker -Date (Get-Date) -Alias 'DueDate' }
+            Add-OfficeWordParagraph { Add-OfficeWordDropDownList -Items 'Low','Medium','High' -Alias 'Priority' }
+            Add-OfficeWordParagraph { Add-OfficeWordComboBox -Items 'Red','Blue' -DefaultValue 'Blue' -Alias 'Color' }
+            Add-OfficeWordParagraph { Add-OfficeWordRepeatingSection -SectionTitle 'Items' -Alias 'LineItems' }
+            Add-OfficeWordTableOfContent -Style Template1
+            Update-OfficeWordFields
+        } | Out-Null
+
+        Test-Path $path | Should -BeTrue
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.StructuredDocumentTags.Count | Should -BeGreaterThan 0
+            $document.CheckBoxes.Count | Should -BeGreaterThan 0
+            $document.DatePickers.Count | Should -BeGreaterThan 0
+            $document.DropDownLists.Count | Should -BeGreaterThan 0
+            $document.ComboBoxes.Count | Should -BeGreaterThan 0
+            $document.RepeatingSections.Count | Should -BeGreaterThan 0
+            $document.TableOfContent | Should -Not -BeNullOrEmpty
+        } finally {
+            $document.Dispose()
+        }
     }
 }

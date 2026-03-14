@@ -1,5 +1,10 @@
-BeforeAll {
-    Import-Module (Join-Path $PSScriptRoot '..\PSWriteOffice.psd1') -Force
+﻿BeforeAll {
+    $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
+        $env:PSWRITEOFFICE_MODULE_MANIFEST
+    } else {
+        Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
+    }
+    Import-Module $ModuleManifest -Force -Global
 }
 
 Describe 'Excel DSL surface' {
@@ -105,6 +110,76 @@ Describe 'Excel DSL surface' {
                 Set-OfficeExcelFormula -Address 'C1' -Formula 'SUM(A1:B1)'
                 Set-OfficeExcelNamedRange -Name 'Totals' -Range 'A1:C1'
                 Set-OfficeExcelHeaderFooter -HeaderCenter 'Demo' -FooterRight 'Page &P of &N'
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
+    }
+
+    It 'supports advanced Excel helpers' {
+        $path = Join-Path $TestDrive 'DslExcelAdvanced.xlsx'
+        $rows = @(
+            [PSCustomObject]@{
+                Region = 'NA'
+                Sales = 100
+                Rate = 0.2
+                CloseDate = [datetime]'2024-01-15'
+                StartTime = [TimeSpan]'08:30:00'
+                Note = 'OK'
+            }
+            [PSCustomObject]@{
+                Region = 'EMEA'
+                Sales = 200
+                Rate = 0.45
+                CloseDate = [datetime]'2024-02-20'
+                StartTime = [TimeSpan]'09:15:00'
+                Note = 'Check'
+            }
+            [PSCustomObject]@{
+                Region = 'APAC'
+                Sales = 150
+                Rate = 0.33
+                CloseDate = [datetime]'2024-03-10'
+                StartTime = [TimeSpan]'10:05:00'
+                Note = 'Review'
+            }
+        )
+
+        $officeimoRoot = Join-Path $PSScriptRoot '..\..\OfficeIMO'
+        $imagePath = Join-Path (Join-Path $officeimoRoot 'Assets') 'OfficeIMO.png'
+        if (-not (Test-Path $imagePath)) {
+            throw "OfficeIMO image asset not found at $imagePath"
+        }
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Add-OfficeExcelAutoFilter -Range 'A1:F4'
+                Invoke-OfficeExcelSort -Header 'Region'
+                Set-OfficeExcelFreeze -TopRows 1
+                Add-OfficeExcelConditionalRule -Range 'B2:B4' -Operator GreaterThan -Formula1 '150'
+                Add-OfficeExcelConditionalDataBar -Range 'B2:B4' -Color '#92D050'
+                Add-OfficeExcelConditionalColorScale -Range 'C2:C4' -StartColor '#FEE599' -EndColor '#6AA84F'
+                Add-OfficeExcelConditionalIconSet -Range 'C2:C4'
+                Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type ColumnClustered -Title 'Sales'
+                Add-OfficeExcelImage -Address 'I1' -Path $imagePath -WidthPixels 64 -HeightPixels 64
+                Set-OfficeExcelHyperlink -Address 'A2' -Url 'https://example.org' -Display 'Example'
+                Add-OfficeExcelComment -Address 'B2' -Text 'Check sales'
+                Add-OfficeExcelSparkline -DataRange 'B2:B4' -LocationRange 'H2:H4' -Type Column
+                Add-OfficeExcelPivotTable -SourceRange 'A1:F4' -DestinationCell 'J1' -RowField 'Region' -DataField 'Sales'
+                Protect-OfficeExcelSheet
+                Unprotect-OfficeExcelSheet
+                Add-OfficeExcelValidationWholeNumber -Range 'B2:B4' -Operator Between -Formula1 1 -Formula2 1000 -AllowBlank:$false
+                Add-OfficeExcelValidationDecimal -Range 'C2:C4' -Operator Between -Formula1 0.0 -Formula2 1.0
+                Add-OfficeExcelValidationDate -Range 'D2:D4' -Operator GreaterThan -Formula1 ([datetime]'2024-01-01')
+                Add-OfficeExcelValidationTime -Range 'E2:E4' -Operator GreaterThan -Formula1 ([TimeSpan]'08:00:00')
+                Add-OfficeExcelValidationTextLength -Range 'F2:F4' -Operator Between -Formula1 1 -Formula2 20
+                Add-OfficeExcelValidationCustomFormula -Range 'G2:G4' -Formula 'LEN(A2)>0'
+                Set-OfficeExcelPageSetup -FitToWidth 1 -FitToHeight 0
+                Set-OfficeExcelMargins -Preset Narrow
+                Set-OfficeExcelOrientation -Orientation Landscape
+                Set-OfficeExcelGridlines -Hide
+                Set-OfficeExcelSheetVisibility -Hide
             }
         }
 
