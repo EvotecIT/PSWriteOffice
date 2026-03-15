@@ -6,51 +6,34 @@ using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
-/// <summary>Adds an image anchored to a worksheet cell.</summary>
+/// <summary>Adds an image from a URL anchored to a worksheet cell.</summary>
 /// <example>
-///   <summary>Insert an image from disk at B2.</summary>
+///   <summary>Insert an image from a URL at B2.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>ExcelSheet 'Data' { Add-OfficeExcelImage -Address 'B2' -Path .\logo.png -WidthPixels 120 -HeightPixels 40 }</code>
-///   <para>Anchors the image to cell B2.</para>
+///   <code>ExcelSheet 'Data' { Add-OfficeExcelImageFromUrl -Address 'B2' -Url 'https://example.org/logo.png' -WidthPixels 120 -HeightPixels 40 }</code>
+///   <para>Downloads the remote image and anchors it to cell B2.</para>
 /// </example>
-/// <example>
-///   <summary>Insert an image from a URL.</summary>
-///   <prefix>PS&gt; </prefix>
-///   <code>ExcelSheet 'Data' { Add-OfficeExcelImage -Row 1 -Column 1 -Url 'https://example.org/logo.png' }</code>
-///   <para>Downloads and anchors the image to cell A1.</para>
-/// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelImage", DefaultParameterSetName = ParameterSetContextPath)]
-[Alias("ExcelImage")]
-public sealed class AddOfficeExcelImageCommand : PSCmdlet
+[Cmdlet(VerbsCommon.Add, "OfficeExcelImageFromUrl", DefaultParameterSetName = ParameterSetContext)]
+[Alias("ExcelImageFromUrl")]
+public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
 {
-    private const string ParameterSetContextPath = "ContextPath";
-    private const string ParameterSetContextUrl = "ContextUrl";
-    private const string ParameterSetDocumentPath = "DocumentPath";
-    private const string ParameterSetDocumentUrl = "DocumentUrl";
+    private const string ParameterSetContext = "Context";
+    private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook to operate on outside the DSL context.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentPath)]
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentUrl)]
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public ExcelDocument Document { get; set; } = null!;
 
     /// <summary>Worksheet name when using <see cref="Document"/>.</summary>
-    [Parameter(ParameterSetName = ParameterSetDocumentPath)]
-    [Parameter(ParameterSetName = ParameterSetDocumentUrl)]
+    [Parameter(ParameterSetName = ParameterSetDocument)]
     public string? Sheet { get; set; }
 
     /// <summary>Worksheet index (0-based) when using <see cref="Document"/>.</summary>
-    [Parameter(ParameterSetName = ParameterSetDocumentPath)]
-    [Parameter(ParameterSetName = ParameterSetDocumentUrl)]
+    [Parameter(ParameterSetName = ParameterSetDocument)]
     public int? SheetIndex { get; set; }
 
-    /// <summary>Image file path.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetContextPath)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetDocumentPath)]
-    public string Path { get; set; } = string.Empty;
-
     /// <summary>Image URL to download.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetContextUrl)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetDocumentUrl)]
+    [Parameter(Mandatory = true, Position = 0)]
     public string Url { get; set; } = string.Empty;
 
     /// <summary>1-based row index.</summary>
@@ -96,21 +79,19 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
         var sheet = ResolveSheet();
         var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
 
-        if (ParameterSetName == ParameterSetContextPath || ParameterSetName == ParameterSetDocumentPath)
+        if (TryGetLocalFilePath(Url, out var localPath))
         {
-            var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-            AddLocalImage(sheet, row, column, resolved);
+            if (!File.Exists(localPath))
+            {
+                throw new FileNotFoundException($"Image file '{localPath}' was not found.", localPath);
+            }
+
+            var bytes = File.ReadAllBytes(localPath);
+            sheet.AddImageAt(row, column, bytes, GetContentType(localPath), WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
         }
         else
         {
-            if (TryGetLocalFilePath(Url, out var localPath))
-            {
-                AddLocalImage(sheet, row, column, localPath);
-            }
-            else
-            {
-                sheet.AddImageFromUrlAt(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
-            }
+            sheet.AddImageFromUrlAt(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
         }
 
         if (PassThru.IsPresent)
@@ -121,7 +102,7 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
 
     private ExcelSheet ResolveSheet()
     {
-        if (ParameterSetName == ParameterSetDocumentPath || ParameterSetName == ParameterSetDocumentUrl)
+        if (ParameterSetName == ParameterSetDocument)
         {
             if (Document == null)
             {
@@ -133,17 +114,6 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
 
         var context = ExcelDslContext.Require(this);
         return context.RequireSheet();
-    }
-
-    private void AddLocalImage(ExcelSheet sheet, int row, int column, string path)
-    {
-        if (!File.Exists(path))
-        {
-            throw new FileNotFoundException($"Image file '{path}' was not found.", path);
-        }
-
-        var bytes = File.ReadAllBytes(path);
-        sheet.AddImageAt(row, column, bytes, GetContentType(path), WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
     }
 
     private static bool TryGetLocalFilePath(string url, out string path)

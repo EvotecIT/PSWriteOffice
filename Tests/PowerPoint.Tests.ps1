@@ -263,6 +263,113 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'copies a slide and preserves its content' {
+        $path = Join-Path $TestDrive 'PowerPointCopy.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+
+        $slide1 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        Set-OfficePowerPointSlideTitle -Slide $slide1 -Title 'Quarterly Overview'
+        Add-OfficePowerPointTextBox -Slide $slide1 -Text 'Revenue and margin summary' -X 80 -Y 150 -Width 320 -Height 60 | Out-Null
+        Set-OfficePowerPointNotes -Slide $slide1 -Text 'Reuse this for the board deck.'
+
+        $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        Set-OfficePowerPointSlideTitle -Slide $slide2 -Title 'Closing Slide'
+
+        $copiedSlide = Copy-OfficePowerPointSlide -Presentation $presentation -Index 0 -InsertAt 1
+        $copiedSlide | Should -Not -BeNullOrEmpty
+
+        Save-OfficePowerPoint -Presentation $presentation
+        $presentation.Dispose()
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloaded.Slides.Count | Should -Be 3
+
+            $copied = Get-OfficePowerPointSlide -Presentation $reloaded -Index 1
+            $copiedTitle = Get-OfficePowerPointPlaceholder -Slide $copied -PlaceholderType Title
+            if (-not $copiedTitle) {
+                $copiedTitle = Get-OfficePowerPointPlaceholder -Slide $copied -PlaceholderType CenteredTitle
+            }
+
+            $copiedTitle.Text | Should -Be 'Quarterly Overview'
+            (Get-OfficePowerPointNotes -Slide $copied).Text | Should -Be 'Reuse this for the board deck.'
+            ($copied.Shapes.Count -gt 0) | Should -BeTrue
+
+            $lastSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 2
+            $lastTitle = Get-OfficePowerPointPlaceholder -Slide $lastSlide -PlaceholderType Title
+            if (-not $lastTitle) {
+                $lastTitle = Get-OfficePowerPointPlaceholder -Slide $lastSlide -PlaceholderType CenteredTitle
+            }
+
+            $lastTitle.Text | Should -Be 'Closing Slide'
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
+    }
+
+    It 'sets slide transitions and custom slide sizes' {
+        $path = Join-Path $TestDrive 'PowerPointTransitionsAndSize.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+
+        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Transition Demo' | Out-Null
+
+        $updatedSlide = $slide | Set-OfficePowerPointSlideTransition -Transition Fade
+        $updatedSlide.Transition | Should -Be ([OfficeIMO.PowerPoint.SlideTransition]::Fade)
+
+        $slideSize = Set-OfficePowerPointSlideSize -Presentation $presentation -WidthCm 25.4 -HeightCm 14.0
+        [math]::Round($slideSize.WidthCm, 1) | Should -Be 25.4
+        [math]::Round($slideSize.HeightCm, 1) | Should -Be 14.0
+
+        Save-OfficePowerPoint -Presentation $presentation
+        $presentation.Dispose()
+
+        $slideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide1.xml'
+        $transitionNode = $slideXml.SelectSingleNode("/*[local-name()='sld']/*[local-name()='transition']")
+        $transitionNode | Should -Not -BeNullOrEmpty
+        $transitionNode.SelectSingleNode("*[local-name()='fade']") | Should -Not -BeNullOrEmpty
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloadedSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
+            $reloadedSlide.Transition | Should -Be ([OfficeIMO.PowerPoint.SlideTransition]::Fade)
+            [math]::Round($reloaded.SlideSize.WidthCm, 1) | Should -Be 25.4
+            [math]::Round($reloaded.SlideSize.HeightCm, 1) | Should -Be 14.0
+            $reloaded.SlideSize.IsLandscape | Should -BeTrue
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
+    }
+
+    It 'applies preset slide sizes including portrait orientation' {
+        $path = Join-Path $TestDrive 'PowerPointPresetSize.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+        Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 | Out-Null
+
+        $presetSize = Set-OfficePowerPointSlideSize -Presentation $presentation -Preset Screen4x3 -Portrait
+        $presetSize.IsPortrait | Should -BeTrue
+        [math]::Round($presetSize.WidthInches, 1) | Should -Be 7.5
+        [math]::Round($presetSize.HeightInches, 1) | Should -Be 10.0
+
+        Save-OfficePowerPoint -Presentation $presentation
+        $presentation.Dispose()
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloaded.SlideSize.IsPortrait | Should -BeTrue
+            [math]::Round($reloaded.SlideSize.WidthInches, 1) | Should -Be 7.5
+            [math]::Round($reloaded.SlideSize.HeightInches, 1) | Should -Be 10.0
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
+    }
+
     It 'creates a presentation via the DSL context' {
         $path = Join-Path $TestDrive 'PowerPointDsl.pptx'
 
@@ -315,5 +422,143 @@ Describe 'PowerPoint cmdlets' {
         }
 
         Save-OfficePowerPoint -Presentation $presentation
+    }
+
+    It 'supports sections, text replacement, and slide import' {
+        $sourcePath = Join-Path $TestDrive 'PowerPointSourceDeck.pptx'
+        $targetPath = Join-Path $TestDrive 'PowerPointTargetDeck.pptx'
+
+        $source = New-OfficePowerPoint -FilePath $sourcePath
+        $sourceSlide = Add-OfficePowerPointSlide -Presentation $source -Layout 1
+        Set-OfficePowerPointSlideTitle -Slide $sourceSlide -Title 'FY24 Imported'
+        Add-OfficePowerPointTextBox -Slide $sourceSlide -Text 'FY24 details from source' -X 80 -Y 150 -Width 320 -Height 60 | Out-Null
+        Set-OfficePowerPointNotes -Slide $sourceSlide -Text 'FY24 source notes'
+        Save-OfficePowerPoint -Presentation $source
+
+        $target = New-OfficePowerPoint -FilePath $targetPath
+        $introSlide = Add-OfficePowerPointSlide -Presentation $target -Layout 1
+        Set-OfficePowerPointSlideTitle -Slide $introSlide -Title 'FY24 Overview'
+        Add-OfficePowerPointTextBox -Slide $introSlide -Text 'FY24 summary for leadership' -X 80 -Y 150 -Width 320 -Height 60 | Out-Null
+        Set-OfficePowerPointNotes -Slide $introSlide -Text 'FY24 note for intro'
+
+        $resultsSlide = Add-OfficePowerPointSlide -Presentation $target -Layout 1
+        Set-OfficePowerPointSlideTitle -Slide $resultsSlide -Title 'FY24 Results'
+        Add-OfficePowerPointTextBox -Slide $resultsSlide -Text 'FY24 results body' -X 80 -Y 150 -Width 320 -Height 60 | Out-Null
+
+        $introSection = Add-OfficePowerPointSection -Presentation $target -Name 'Intro' -StartSlideIndex 0
+        $introSection.Name | Should -Be 'Intro'
+        $resultsSection = Add-OfficePowerPointSection -Presentation $target -Name 'Results' -StartSlideIndex 1
+        $resultsSection.Name | Should -Be 'Results'
+
+        $renamedSection = Rename-OfficePowerPointSection -Presentation $target -Name 'Results' -NewName 'Deep Dive' -PassThru
+        $renamedSection.Name | Should -Be 'Deep Dive'
+
+        $sections = @(Get-OfficePowerPointSection -Presentation $target)
+        $sections.Count | Should -Be 2
+        ($sections | Where-Object Name -eq 'Intro').SlideIndices | Should -Contain 0
+        ($sections | Where-Object Name -eq 'Deep Dive').SlideIndices | Should -Contain 1
+
+        $replacements = Update-OfficePowerPointText -Presentation $target -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
+        $replacements | Should -BeGreaterThan 0
+
+        $importedSlide = Import-OfficePowerPointSlide -Presentation $target -SourcePath $sourcePath -SourceIndex 0 -InsertAt 1
+        $importedSlide | Should -Not -BeNullOrEmpty
+
+        Save-OfficePowerPoint -Presentation $target
+
+        $reloaded = Get-OfficePowerPoint -FilePath $targetPath
+        try {
+            $reloaded.Slides.Count | Should -Be 3
+
+            $slide0 = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
+            $title0 = Get-OfficePowerPointPlaceholder -Slide $slide0 -PlaceholderType Title
+            if (-not $title0) {
+                $title0 = Get-OfficePowerPointPlaceholder -Slide $slide0 -PlaceholderType CenteredTitle
+            }
+            $title0.Text | Should -Be 'FY25 Overview'
+            (Get-OfficePowerPointNotes -Slide $slide0).Text | Should -Be 'FY25 note for intro'
+
+            $slide1 = Get-OfficePowerPointSlide -Presentation $reloaded -Index 1
+            $title1 = Get-OfficePowerPointPlaceholder -Slide $slide1 -PlaceholderType Title
+            if (-not $title1) {
+                $title1 = Get-OfficePowerPointPlaceholder -Slide $slide1 -PlaceholderType CenteredTitle
+            }
+            $title1.Text | Should -Be 'FY24 Imported'
+            (Get-OfficePowerPointNotes -Slide $slide1).Text | Should -Be 'FY24 source notes'
+
+            $sectionInfo = @(Get-OfficePowerPointSection -Presentation $reloaded)
+            $sectionInfo.Count | Should -Be 2
+            ($sectionInfo | Where-Object Name -eq 'Intro').SlideIndices | Should -Contain 0
+            ($sectionInfo | Where-Object Name -eq 'Intro').SlideIndices | Should -Contain 1
+            ($sectionInfo | Where-Object Name -eq 'Deep Dive').SlideIndices | Should -Contain 2
+
+            $aliasReplacements = Replace-OfficePowerPointText -Presentation $reloaded -OldValue 'FY24' -NewValue 'FY26'
+            $aliasReplacements | Should -BeGreaterThan 0
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
+    }
+
+    It 'supports theme inspection, theme updates, and slide layout switching' {
+        $path = Join-Path $TestDrive 'PowerPointThemeAndLayout.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+
+        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Theme Demo' | Out-Null
+
+        $layouts = Get-OfficePowerPointLayout -Presentation $presentation
+        $layouts.Count | Should -BeGreaterThan 1
+        $currentLayoutIndex = $slide.LayoutIndex
+        $alternativeLayout = $layouts | Where-Object { $_.LayoutIndex -ne $currentLayoutIndex } | Select-Object -First 1
+        $alternativeLayout | Should -Not -BeNullOrEmpty
+
+        $themeBefore = Get-OfficePowerPointTheme -Presentation $presentation
+        $themeBefore.MasterIndex | Should -Be 0
+        $themeBefore.Colors.Count | Should -BeGreaterThan 0
+
+        Set-OfficePowerPointThemeColor -Presentation $presentation -Colors @{
+            Accent1 = '#C00000'
+            Accent2 = '00B0F0'
+        } -AllMasters
+        Set-OfficePowerPointThemeFonts -Presentation $presentation -MajorLatin 'Aptos' -MinorLatin 'Calibri' -AllMasters
+        Set-OfficePowerPointThemeName -Presentation $presentation -Name 'Contoso Theme' -AllMasters
+
+        if ($alternativeLayout.Type) {
+            $slide | Set-OfficePowerPointSlideLayout -LayoutType $alternativeLayout.Type -Master $alternativeLayout.MasterIndex | Out-Null
+        } elseif ($alternativeLayout.Name) {
+            $slide | Set-OfficePowerPointSlideLayout -LayoutName $alternativeLayout.Name -Master $alternativeLayout.MasterIndex | Out-Null
+        } else {
+            $slide | Set-OfficePowerPointSlideLayout -Layout $alternativeLayout.LayoutIndex -Master $alternativeLayout.MasterIndex | Out-Null
+        }
+
+        $themeAfter = Get-OfficePowerPointTheme -Presentation $presentation
+        $themeAfter.ThemeName | Should -Be 'Contoso Theme'
+        $themeAfter.Colors[[OfficeIMO.PowerPoint.PowerPointThemeColor]::Accent1] | Should -Be 'C00000'
+        $themeAfter.Colors[[OfficeIMO.PowerPoint.PowerPointThemeColor]::Accent2] | Should -Be '00B0F0'
+        $themeAfter.MajorLatin | Should -Be 'Aptos'
+        $themeAfter.MinorLatin | Should -Be 'Calibri'
+        $slide.LayoutIndex | Should -Be $alternativeLayout.LayoutIndex
+
+        Save-OfficePowerPoint -Presentation $presentation
+        $presentation.Dispose()
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloadedTheme = Get-OfficePowerPointTheme -Presentation $reloaded
+            $reloadedTheme.ThemeName | Should -Be 'Contoso Theme'
+            $reloadedTheme.Colors[[OfficeIMO.PowerPoint.PowerPointThemeColor]::Accent1] | Should -Be 'C00000'
+            $reloadedTheme.Colors[[OfficeIMO.PowerPoint.PowerPointThemeColor]::Accent2] | Should -Be '00B0F0'
+            $reloadedTheme.MajorLatin | Should -Be 'Aptos'
+            $reloadedTheme.MinorLatin | Should -Be 'Calibri'
+
+            $reloadedSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
+            $reloadedSlide.LayoutIndex | Should -Be $alternativeLayout.LayoutIndex
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
     }
 }

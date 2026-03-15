@@ -289,4 +289,224 @@ Describe 'Excel DSL surface' {
         $pageMargins.GetAttribute('top') | Should -Be '0.5'
         $pageMargins.GetAttribute('bottom') | Should -Be '0.5'
     }
+
+    It 'adds a table of contents and reads ranges with the new Excel readers' {
+        $path = Join-Path $TestDrive 'DslExcelNavigation.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Set-OfficeExcelNamedRange -Name 'SalesData' -Range 'A1:B3'
+            }
+            Add-OfficeExcelSheet -Name 'Notes' -Content {
+                Set-OfficeExcelRow -Row 1 -Values 'Label', 'Value'
+                Set-OfficeExcelRow -Row 2 -Values 'Generated', 'Yes'
+            }
+        } | Out-Null
+
+        $usedRange = Get-OfficeExcelUsedRange -Path $path -Sheet 'Data' -AsDataTable
+        $usedRange.Rows.Count | Should -Be 2
+        $usedRange.Columns[0].ColumnName | Should -Be 'Region'
+        $usedRange.Rows[0]['Region'] | Should -Be 'NA'
+
+        Add-OfficeExcelTableOfContents -Path $path -IncludeNamedRanges -AddBackLinks
+
+        $tocRows = @(Get-OfficeExcelRange -Path $path -Sheet 'TOC' -Range 'A3:C5' -AsHashtable)
+        $tocRows.Count | Should -Be 2
+        $tocRows[0]['Sheet'] | Should -Be 'Data'
+        $tocRows[0]['Named Ranges'] | Should -Match 'SalesData'
+        $tocRows[1]['Sheet'] | Should -Be 'Notes'
+
+        $noteRows = @(Get-OfficeExcelRange -Path $path -Sheet 'Notes' -Range 'A1:B2')
+        $noteRows.Count | Should -Be 1
+        $noteRows[0].Label | Should -Be 'Generated'
+        $noteRows[0].Value | Should -Be 'Yes'
+
+        $dataRows = @(Get-OfficeExcelRange -Path $path -Sheet 'Data' -Range 'A1:B3')
+        $dataRows.Count | Should -Be 2
+        $dataRows[0].Region | Should -Be 'NA'
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $doc.Sheets[0].Name | Should -Be 'TOC'
+
+            $backLink = $null
+            $doc['Data'].TryGetCellText(5, 1, [ref] $backLink) | Should -BeTrue
+            $backLink | Should -Be '← TOC'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
+
+    It 'formats Excel charts with legend, labels, and style presets' {
+        $path = Join-Path $TestDrive 'DslExcelChartFormatting.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+            [PSCustomObject]@{ Region = 'APAC'; Revenue = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Pie -Title 'Revenue Mix' -PassThru
+                $formattedChart = $chart |
+                    Set-OfficeExcelChartLegend -Position Right |
+                    Set-OfficeExcelChartDataLabels -ShowValue $true -ShowPercent $true -Position OutsideEnd -NumberFormat '0.0%' -SourceLinked:$false |
+                    Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
+
+                $formattedChart | Should -Not -BeNullOrEmpty
+            }
+        } | Out-Null
+
+        $entries = Get-ZipEntriesLocal -Path $path
+        ($entries | Where-Object { $_ -like 'xl/drawings/charts/style*.xml' }).Count | Should -BeGreaterThan 0
+        ($entries | Where-Object { $_ -like 'xl/drawings/charts/colors*.xml' }).Count | Should -BeGreaterThan 0
+
+        $chartXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/drawings/charts/chart1.xml'
+        $legendPosition = $chartXml.SelectSingleNode("/*[local-name()='chartSpace']/*[local-name()='chart']/*[local-name()='legend']/*[local-name()='legendPos']")
+        $legendPosition | Should -Not -BeNullOrEmpty
+        $legendPosition.GetAttribute('val') | Should -Be 'r'
+
+        $dataLabels = $chartXml.SelectSingleNode("//*[local-name()='dLbls']")
+        $dataLabels | Should -Not -BeNullOrEmpty
+        $dataLabels.SelectSingleNode("*[local-name()='showVal']").GetAttribute('val') | Should -Be '1'
+        $dataLabels.SelectSingleNode("*[local-name()='showPercent']").GetAttribute('val') | Should -Be '1'
+        $dataLabels.SelectSingleNode("*[local-name()='dLblPos']").GetAttribute('val') | Should -Be 'outEnd'
+
+        $numberFormat = $dataLabels.SelectSingleNode("*[local-name()='numFmt']")
+        $numberFormat | Should -Not -BeNullOrEmpty
+        $numberFormat.GetAttribute('formatCode') | Should -Be '0.0%'
+    }
+
+    It 'supports url images and smart hyperlink helpers' {
+        $path = Join-Path $TestDrive 'DslExcelLinksAndImages.xlsx'
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
+        $imageUrl = [System.Uri]::new($imagePath).AbsoluteUri
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Reference'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Host'
+                Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208'
+                Set-OfficeExcelHostHyperlink -Address 'B2' -Url 'https://learn.microsoft.com/office/open-xml/'
+                Add-OfficeExcelImageFromUrl -Address 'D2' -Url $imageUrl -WidthPixels 32 -HeightPixels 32
+                Add-OfficeExcelImage -Address 'E2' -Url $imageUrl -WidthPixels 24 -HeightPixels 24
+            }
+        } | Out-Null
+
+        $entries = Get-ZipEntriesLocal -Path $path
+        ($entries | Where-Object { $_ -like 'xl/media/*' }).Count | Should -BeGreaterThan 0
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $smartText = $null
+            $hostText = $null
+            $doc['Data'].TryGetCellText(2, 1, [ref] $smartText) | Should -BeTrue
+            $doc['Data'].TryGetCellText(2, 2, [ref] $hostText) | Should -BeTrue
+            $smartText | Should -Be 'RFC 7208'
+            $hostText | Should -Be 'learn.microsoft.com'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $hyperlinks = $sheetXml.SelectNodes("/*[local-name()='worksheet']/*[local-name()='hyperlinks']/*[local-name()='hyperlink']")
+        $hyperlinks.Count | Should -Be 2
+    }
+
+    It 'supports internal link helpers for summary sheets' {
+        $path = Join-Path $TestDrive 'DslExcelInternalLinks.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Sheet = 'Alpha'; Target = 'Alpha' }
+            [PSCustomObject]@{ Sheet = 'Beta'; Target = 'Beta' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Summary' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'SummaryTable' -AutoFit
+                Set-OfficeExcelCell -Address 'D1' -Value 'Sheet'
+                Set-OfficeExcelCell -Address 'D2' -Value 'Alpha'
+                Set-OfficeExcelCell -Address 'D3' -Value 'Beta'
+                Set-OfficeExcelInternalLinks -Range 'D2:D3'
+                Set-OfficeExcelInternalLinksByHeader -Header 'Sheet' -TableName 'SummaryTable' -DisplayScript { param($text) "Open $text" }
+            }
+            Add-OfficeExcelSheet -Name 'Alpha' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Alpha Home'
+            }
+            Add-OfficeExcelSheet -Name 'Beta' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Beta Home'
+            }
+        } | Out-Null
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $summarySheet = $doc['Summary']
+            $tableLink1 = $null
+            $tableLink2 = $null
+            $rangeLink1 = $null
+            $rangeLink2 = $null
+            $summarySheet.TryGetCellText(2, 1, [ref] $tableLink1) | Should -BeTrue
+            $summarySheet.TryGetCellText(3, 1, [ref] $tableLink2) | Should -BeTrue
+            $summarySheet.TryGetCellText(2, 4, [ref] $rangeLink1) | Should -BeTrue
+            $summarySheet.TryGetCellText(3, 4, [ref] $rangeLink2) | Should -BeTrue
+            $tableLink1 | Should -Be 'Open Alpha'
+            $tableLink2 | Should -Be 'Open Beta'
+            $rangeLink1 | Should -Be 'Alpha'
+            $rangeLink2 | Should -Be 'Beta'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $hyperlinks = $sheetXml.SelectNodes("/*[local-name()='worksheet']/*[local-name()='hyperlinks']/*[local-name()='hyperlink']")
+        $hyperlinks.Count | Should -Be 4
+    }
+
+    It 'supports external URL link helpers for summary sheets' {
+        $path = Join-Path $TestDrive 'DslExcelUrlLinks.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ RFC = 'rfc7208'; Spec = 'rfc5321' }
+            [PSCustomObject]@{ RFC = 'rfc7489'; Spec = 'rfc1035' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Summary' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'LinksTable' -AutoFit
+                Set-OfficeExcelCell -Address 'D1' -Value 'Spec'
+                Set-OfficeExcelCell -Address 'D2' -Value 'rfc5321'
+                Set-OfficeExcelCell -Address 'D3' -Value 'rfc1035'
+
+                Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -TableName 'LinksTable' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } -TitleScript { param($text) "Open $text" }
+                Set-OfficeExcelUrlLinks -Range 'D2:D3' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" }
+            }
+        } | Out-Null
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $summarySheet = $doc['Summary']
+            $tableLink1 = $null
+            $tableLink2 = $null
+            $rangeLink1 = $null
+            $rangeLink2 = $null
+            $summarySheet.TryGetCellText(2, 1, [ref] $tableLink1) | Should -BeTrue
+            $summarySheet.TryGetCellText(3, 1, [ref] $tableLink2) | Should -BeTrue
+            $summarySheet.TryGetCellText(2, 4, [ref] $rangeLink1) | Should -BeTrue
+            $summarySheet.TryGetCellText(3, 4, [ref] $rangeLink2) | Should -BeTrue
+            $tableLink1 | Should -Be 'Open rfc7208'
+            $tableLink2 | Should -Be 'Open rfc7489'
+            $rangeLink1 | Should -Be 'RFC 5321'
+            $rangeLink2 | Should -Be 'RFC 1035'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $hyperlinks = $sheetXml.SelectNodes("/*[local-name()='worksheet']/*[local-name()='hyperlinks']/*[local-name()='hyperlink']")
+        $hyperlinks.Count | Should -Be 4
+    }
 }

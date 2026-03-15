@@ -1,65 +1,103 @@
 # PSWriteOffice Overview
 
-`PSWriteOffice` is the PowerShell layer for `OfficeIMO.*`.
+Use this page as the curated starting point for the repo. The generated command reference lives in [Docs/Readme.md](Docs/Readme.md), while this overview focuses on what to use first, where the module is strongest, and which examples match the tested surface.
 
-Use this page as the stable starting point for the repo. The generated command help lives in [Docs/Readme.md](Docs/Readme.md), while this page focuses on what the module does today, where to start, and which examples match the tested surface.
-
-## Install
-
-```powershell
-Install-Module PSWriteOffice -Scope CurrentUser
-Import-Module PSWriteOffice
-```
-
-## Module Areas
-
-| Area | Status | Start here |
-| --- | --- | --- |
-| Word | Mature | [New-OfficeWord](Docs/New-OfficeWord.md), [Get-OfficeWord](Docs/Get-OfficeWord.md), [ConvertTo-OfficeWordHtml](Docs/ConvertTo-OfficeWordHtml.md) |
-| Excel | Advanced | [New-OfficeExcel](Docs/New-OfficeExcel.md), [Get-OfficeExcel](Docs/Get-OfficeExcel.md), [Add-OfficeExcelTable](Docs/Add-OfficeExcelTable.md) |
-| PowerPoint | Improving fast | [New-OfficePowerPoint](Docs/New-OfficePowerPoint.md), [Get-OfficePowerPointSlideSummary](Docs/Get-OfficePowerPointSlideSummary.md), [Get-OfficePowerPointShape](Docs/Get-OfficePowerPointShape.md) |
-| Markdown | Solid | [New-OfficeMarkdown](Docs/New-OfficeMarkdown.md), [Get-OfficeMarkdown](Docs/Get-OfficeMarkdown.md), [ConvertTo-OfficeMarkdownHtml](Docs/ConvertTo-OfficeMarkdownHtml.md) |
-| CSV | Solid | [Get-OfficeCsv](Docs/Get-OfficeCsv.md), [Get-OfficeCsvData](Docs/Get-OfficeCsvData.md), [ConvertTo-OfficeCsv](Docs/ConvertTo-OfficeCsv.md) |
-
-## Suggested Entry Points
+## Start Here 🚀
 
 If you want to create documents:
 
-- Word: [New-OfficeWord](Docs/New-OfficeWord.md)
-- Excel: [New-OfficeExcel](Docs/New-OfficeExcel.md)
-- PowerPoint: [New-OfficePowerPoint](Docs/New-OfficePowerPoint.md)
-- Markdown: [New-OfficeMarkdown](Docs/New-OfficeMarkdown.md)
-- CSV: [ConvertTo-OfficeCsv](Docs/ConvertTo-OfficeCsv.md)
+- Word: [Docs/New-OfficeWord.md](Docs/New-OfficeWord.md)
+- Excel: [Docs/New-OfficeExcel.md](Docs/New-OfficeExcel.md)
+- PowerPoint: [Docs/New-OfficePowerPoint.md](Docs/New-OfficePowerPoint.md)
+- Markdown: [Docs/New-OfficeMarkdown.md](Docs/New-OfficeMarkdown.md)
+- CSV: [Docs/ConvertTo-OfficeCsv.md](Docs/ConvertTo-OfficeCsv.md)
 
 If you want to inspect existing files:
 
-- Word: [Get-OfficeWordParagraph](Docs/Get-OfficeWordParagraph.md), [Find-OfficeWord](Docs/Find-OfficeWord.md)
-- Excel: [Get-OfficeExcelData](Docs/Get-OfficeExcelData.md), [Get-OfficeExcelNamedRange](Docs/Get-OfficeExcelNamedRange.md), [Get-OfficeExcelPivotTable](Docs/Get-OfficeExcelPivotTable.md)
-- PowerPoint: [Get-OfficePowerPoint](Docs/Get-OfficePowerPoint.md), [Get-OfficePowerPointSlide](Docs/Get-OfficePowerPointSlide.md), [Get-OfficePowerPointSlideSummary](Docs/Get-OfficePowerPointSlideSummary.md), [Get-OfficePowerPointPlaceholder](Docs/Get-OfficePowerPointPlaceholder.md), [Get-OfficePowerPointNotes](Docs/Get-OfficePowerPointNotes.md), [Get-OfficePowerPointShape](Docs/Get-OfficePowerPointShape.md)
-- Markdown: [Get-OfficeMarkdown](Docs/Get-OfficeMarkdown.md)
-- CSV: [Get-OfficeCsv](Docs/Get-OfficeCsv.md), [Get-OfficeCsvData](Docs/Get-OfficeCsvData.md)
+- Word: [Docs/Get-OfficeWordParagraph.md](Docs/Get-OfficeWordParagraph.md), [Docs/Find-OfficeWord.md](Docs/Find-OfficeWord.md)
+- Excel: [Docs/Get-OfficeExcelData.md](Docs/Get-OfficeExcelData.md), [Docs/Get-OfficeExcelRange.md](Docs/Get-OfficeExcelRange.md), [Docs/Get-OfficeExcelUsedRange.md](Docs/Get-OfficeExcelUsedRange.md), [Docs/Get-OfficeExcelNamedRange.md](Docs/Get-OfficeExcelNamedRange.md)
+- PowerPoint: [Docs/Get-OfficePowerPoint.md](Docs/Get-OfficePowerPoint.md), [Docs/Get-OfficePowerPointSlideSummary.md](Docs/Get-OfficePowerPointSlideSummary.md), [Docs/Get-OfficePowerPointShape.md](Docs/Get-OfficePowerPointShape.md), [Docs/Get-OfficePowerPointSection.md](Docs/Get-OfficePowerPointSection.md), [Docs/Get-OfficePowerPointTheme.md](Docs/Get-OfficePowerPointTheme.md)
+- Markdown: [Docs/Get-OfficeMarkdown.md](Docs/Get-OfficeMarkdown.md)
+- CSV: [Docs/Get-OfficeCsv.md](Docs/Get-OfficeCsv.md), [Docs/Get-OfficeCsvData.md](Docs/Get-OfficeCsvData.md)
 
-## Example Scripts
+If you want conversion and bridge workflows:
 
-- Word
-  - [Examples/Word/Example-WordBasic.ps1](Examples/Word/Example-WordBasic.ps1)
-  - [Examples/Word/Example-WordAdvanced.ps1](Examples/Word/Example-WordAdvanced.ps1)
-  - [Examples/Word/Example-WordReadDocument.ps1](Examples/Word/Example-WordReadDocument.ps1)
-- Excel
-  - [Examples/Excel/Example-ExcelBasic.ps1](Examples/Excel/Example-ExcelBasic.ps1)
-  - [Examples/Excel/Example-ExcelAdvanced.ps1](Examples/Excel/Example-ExcelAdvanced.ps1)
-  - [Examples/Excel/Example-ExcelReadObjects.ps1](Examples/Excel/Example-ExcelReadObjects.ps1)
-- PowerPoint
-  - [Examples/ExamplePowerPoint08-TablesAndShapes.ps1](Examples/ExamplePowerPoint08-TablesAndShapes.ps1)
-  - [Examples/ExamplePowerPoint10-Dsl.ps1](Examples/ExamplePowerPoint10-Dsl.ps1)
-  - [Examples/ExamplePowerPoint12-LayoutDsl.ps1](Examples/ExamplePowerPoint12-LayoutDsl.ps1)
-- Markdown
-  - [Examples/Markdown/Example-MarkdownBasic.ps1](Examples/Markdown/Example-MarkdownBasic.ps1)
-  - [Examples/Markdown/Example-MarkdownAdvanced.ps1](Examples/Markdown/Example-MarkdownAdvanced.ps1)
-- CSV
-  - [Examples/Csv/Example-CsvBasic.ps1](Examples/Csv/Example-CsvBasic.ps1)
-  - [Examples/Csv/Example-CsvAdvanced.ps1](Examples/Csv/Example-CsvAdvanced.ps1)
+- Word to HTML: [Docs/ConvertTo-OfficeWordHtml.md](Docs/ConvertTo-OfficeWordHtml.md)
+- HTML to Word: [Docs/ConvertFrom-OfficeWordHtml.md](Docs/ConvertFrom-OfficeWordHtml.md)
+- Word to Markdown: [Docs/ConvertTo-OfficeWordMarkdown.md](Docs/ConvertTo-OfficeWordMarkdown.md)
+- Markdown to Word: [Docs/ConvertFrom-OfficeWordMarkdown.md](Docs/ConvertFrom-OfficeWordMarkdown.md)
+- Excel navigation sheet: [Docs/Add-OfficeExcelTableOfContents.md](Docs/Add-OfficeExcelTableOfContents.md)
+- Excel chart finishing: [Docs/Set-OfficeExcelChartLegend.md](Docs/Set-OfficeExcelChartLegend.md), [Docs/Set-OfficeExcelChartDataLabels.md](Docs/Set-OfficeExcelChartDataLabels.md), [Docs/Set-OfficeExcelChartStyle.md](Docs/Set-OfficeExcelChartStyle.md)
+- Excel links and media: [Docs/Add-OfficeExcelImageFromUrl.md](Docs/Add-OfficeExcelImageFromUrl.md), [Docs/Set-OfficeExcelSmartHyperlink.md](Docs/Set-OfficeExcelSmartHyperlink.md), [Docs/Set-OfficeExcelHostHyperlink.md](Docs/Set-OfficeExcelHostHyperlink.md)
+- Excel internal navigation: [Docs/Set-OfficeExcelInternalLinks.md](Docs/Set-OfficeExcelInternalLinks.md), [Docs/Set-OfficeExcelInternalLinksByHeader.md](Docs/Set-OfficeExcelInternalLinksByHeader.md)
+- Excel external reporting links: [Docs/Set-OfficeExcelUrlLinks.md](Docs/Set-OfficeExcelUrlLinks.md), [Docs/Set-OfficeExcelUrlLinksByHeader.md](Docs/Set-OfficeExcelUrlLinksByHeader.md)
+- PowerPoint text replacement: [Docs/Update-OfficePowerPointText.md](Docs/Update-OfficePowerPointText.md)
+- PowerPoint transitions and sizing: [Docs/Set-OfficePowerPointSlideTransition.md](Docs/Set-OfficePowerPointSlideTransition.md), [Docs/Set-OfficePowerPointSlideSize.md](Docs/Set-OfficePowerPointSlideSize.md)
+- PowerPoint themes and layouts: [Docs/Get-OfficePowerPointTheme.md](Docs/Get-OfficePowerPointTheme.md), [Docs/Set-OfficePowerPointThemeColor.md](Docs/Set-OfficePowerPointThemeColor.md), [Docs/Set-OfficePowerPointThemeFonts.md](Docs/Set-OfficePowerPointThemeFonts.md), [Docs/Set-OfficePowerPointThemeName.md](Docs/Set-OfficePowerPointThemeName.md), [Docs/Set-OfficePowerPointSlideLayout.md](Docs/Set-OfficePowerPointSlideLayout.md)
+- PowerPoint slide copy: [Docs/Copy-OfficePowerPointSlide.md](Docs/Copy-OfficePowerPointSlide.md)
+- PowerPoint slide import: [Docs/Import-OfficePowerPointSlide.md](Docs/Import-OfficePowerPointSlide.md)
 
-## Generated Command Help
+## Module Areas 🧭
 
-The full generated command reference is in [Docs/Readme.md](Docs/Readme.md). That folder is builder-generated, so keep long-lived hand-written guidance outside `Docs/` and let the generated help pages cover the full cmdlet list.
+| Area | Status | Start here |
+| --- | --- | --- |
+| Word | Mature | [Docs/New-OfficeWord.md](Docs/New-OfficeWord.md), [Docs/Get-OfficeWord.md](Docs/Get-OfficeWord.md), [Docs/ConvertTo-OfficeWordMarkdown.md](Docs/ConvertTo-OfficeWordMarkdown.md) |
+| Excel | Advanced | [Docs/New-OfficeExcel.md](Docs/New-OfficeExcel.md), [Docs/Get-OfficeExcel.md](Docs/Get-OfficeExcel.md), [Docs/Get-OfficeExcelRange.md](Docs/Get-OfficeExcelRange.md), [Docs/Add-OfficeExcelTableOfContents.md](Docs/Add-OfficeExcelTableOfContents.md), [Docs/Set-OfficeExcelChartLegend.md](Docs/Set-OfficeExcelChartLegend.md), [Docs/Set-OfficeExcelSmartHyperlink.md](Docs/Set-OfficeExcelSmartHyperlink.md), [Docs/Set-OfficeExcelInternalLinks.md](Docs/Set-OfficeExcelInternalLinks.md), [Docs/Set-OfficeExcelUrlLinks.md](Docs/Set-OfficeExcelUrlLinks.md) |
+| PowerPoint | Improving fast | [Docs/New-OfficePowerPoint.md](Docs/New-OfficePowerPoint.md), [Docs/Get-OfficePowerPointSlideSummary.md](Docs/Get-OfficePowerPointSlideSummary.md), [Docs/Get-OfficePowerPointShape.md](Docs/Get-OfficePowerPointShape.md), [Docs/Get-OfficePowerPointSection.md](Docs/Get-OfficePowerPointSection.md), [Docs/Get-OfficePowerPointTheme.md](Docs/Get-OfficePowerPointTheme.md), [Docs/Copy-OfficePowerPointSlide.md](Docs/Copy-OfficePowerPointSlide.md), [Docs/Set-OfficePowerPointSlideTransition.md](Docs/Set-OfficePowerPointSlideTransition.md), [Docs/Set-OfficePowerPointSlideLayout.md](Docs/Set-OfficePowerPointSlideLayout.md) |
+| Markdown | Solid | [Docs/New-OfficeMarkdown.md](Docs/New-OfficeMarkdown.md), [Docs/Get-OfficeMarkdown.md](Docs/Get-OfficeMarkdown.md), [Docs/ConvertTo-OfficeMarkdownHtml.md](Docs/ConvertTo-OfficeMarkdownHtml.md) |
+| CSV | Solid | [Docs/Get-OfficeCsv.md](Docs/Get-OfficeCsv.md), [Docs/Get-OfficeCsvData.md](Docs/Get-OfficeCsvData.md), [Docs/ConvertTo-OfficeCsv.md](Docs/ConvertTo-OfficeCsv.md) |
+
+## Recommended Examples 🧪
+
+Word:
+
+- [Examples/Word/Example-WordBasic.ps1](Examples/Word/Example-WordBasic.ps1)
+- [Examples/Word/Example-WordAdvanced.ps1](Examples/Word/Example-WordAdvanced.ps1)
+- [Examples/Word/Example-WordMarkdownConvert.ps1](Examples/Word/Example-WordMarkdownConvert.ps1)
+
+Excel:
+
+- [Examples/Excel/Example-ExcelBasic.ps1](Examples/Excel/Example-ExcelBasic.ps1)
+- [Examples/Excel/Example-ExcelAdvanced.ps1](Examples/Excel/Example-ExcelAdvanced.ps1)
+- [Examples/Excel/Example-ExcelReadObjects.ps1](Examples/Excel/Example-ExcelReadObjects.ps1)
+- [Examples/Excel/Example-ExcelNavigationAndRanges.ps1](Examples/Excel/Example-ExcelNavigationAndRanges.ps1)
+- [Examples/Excel/Example-ExcelChartFormatting.ps1](Examples/Excel/Example-ExcelChartFormatting.ps1)
+- [Examples/Excel/Example-ExcelLinksAndImages.ps1](Examples/Excel/Example-ExcelLinksAndImages.ps1)
+- [Examples/Excel/Example-ExcelInternalLinks.ps1](Examples/Excel/Example-ExcelInternalLinks.ps1)
+- [Examples/Excel/Example-ExcelUrlLinks.ps1](Examples/Excel/Example-ExcelUrlLinks.ps1)
+
+PowerPoint:
+
+- [Examples/ExamplePowerPoint08-TablesAndShapes.ps1](Examples/ExamplePowerPoint08-TablesAndShapes.ps1)
+- [Examples/ExamplePowerPoint10-Dsl.ps1](Examples/ExamplePowerPoint10-Dsl.ps1)
+- [Examples/ExamplePowerPoint12-LayoutDsl.ps1](Examples/ExamplePowerPoint12-LayoutDsl.ps1)
+- [Examples/PowerPoint/Example-PowerPointTransitionsAndSizing.ps1](Examples/PowerPoint/Example-PowerPointTransitionsAndSizing.ps1)
+- [Examples/PowerPoint/Example-PowerPointSectionsAndImport.ps1](Examples/PowerPoint/Example-PowerPointSectionsAndImport.ps1)
+- [Examples/PowerPoint/Example-PowerPointCopySlides.ps1](Examples/PowerPoint/Example-PowerPointCopySlides.ps1)
+- [Examples/PowerPoint/Example-PowerPointThemeAndLayout.ps1](Examples/PowerPoint/Example-PowerPointThemeAndLayout.ps1)
+
+Markdown and CSV:
+
+- [Examples/Markdown/Example-MarkdownBasic.ps1](Examples/Markdown/Example-MarkdownBasic.ps1)
+- [Examples/Markdown/Example-MarkdownAdvanced.ps1](Examples/Markdown/Example-MarkdownAdvanced.ps1)
+- [Examples/Csv/Example-CsvBasic.ps1](Examples/Csv/Example-CsvBasic.ps1)
+- [Examples/Csv/Example-CsvAdvanced.ps1](Examples/Csv/Example-CsvAdvanced.ps1)
+
+## Current Direction 🧱
+
+- Keep PSWriteOffice as a thin PowerShell wrapper over `OfficeIMO.*`
+- Expand the strongest Excel and PowerPoint capabilities already proven in the C# libraries
+- Prefer object-first read and inspection helpers over overly clever abstractions
+- Keep docs and examples aligned with the actually tested cmdlet surface
+
+## High-Value Next Additions 🛣️
+
+- PowerPoint background/design helpers on top of the new theme/layout surface
+- Additional object-first inspection helpers in Excel and Word
+- More Excel dashboard/reporting helpers on top of the link, URL, and TOC surface
+
+PDF and Visio are intentionally deferred for now.
+
+## Generated Command Help 📚
+
+The full generated command reference is in [Docs/Readme.md](Docs/Readme.md). Keep long-lived hand-written guidance outside `Docs/Readme.md`, and let the generated help pages continue to cover the full cmdlet inventory.

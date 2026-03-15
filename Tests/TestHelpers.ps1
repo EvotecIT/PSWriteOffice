@@ -71,3 +71,117 @@ function Get-ZipEntriesLocal {
         $archive.Dispose()
     }
 }
+
+function Start-TestHttpFileServer {
+    param(
+        [Parameter(Mandatory)]
+        [string] $FilePath,
+
+        [string] $ContentType = 'application/octet-stream'
+    )
+
+    $probe = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
+    $probe.Start()
+    try {
+        $port = ([System.Net.IPEndPoint] $probe.LocalEndpoint).Port
+    } finally {
+        $probe.Stop()
+    }
+
+    $fileName = [System.IO.Path]::GetFileName($FilePath)
+    if ([string]::IsNullOrWhiteSpace($fileName)) {
+        $fileName = 'file.bin'
+    }
+
+    $url = "http://127.0.0.1:$port/$fileName"
+    $job = Start-Job -ScriptBlock {
+        param(
+            [int] $JobPort,
+            [string] $JobFilePath,
+            [string] $JobContentType
+        )
+
+        $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $JobPort)
+        $listener.Start()
+
+        try {
+            try {
+                $client = $listener.AcceptTcpClient()
+            } catch {
+                return
+            }
+
+            try {
+                $bytes = [System.IO.File]::ReadAllBytes($JobFilePath)
+                $stream = $client.GetStream()
+                try {
+                    $stream.ReadTimeout = 5000
+                    $stream.WriteTimeout = 5000
+
+                    $requestBuffer = New-Object byte[] 4096
+                    $requestBytes = 0
+                    do {
+                        $read = $stream.Read($requestBuffer, $requestBytes, $requestBuffer.Length - $requestBytes)
+                        if ($read -le 0) {
+                            break
+                        }
+
+                        $requestBytes += $read
+                        if ($requestBytes -ge 4) {
+                            $requestText = [System.Text.Encoding]::ASCII.GetString($requestBuffer, 0, $requestBytes)
+                            if ($requestText.Contains("`r`n`r`n")) {
+                                break
+                            }
+                        }
+                    } while ($requestBytes -lt $requestBuffer.Length)
+
+                    $header = "HTTP/1.1 200 OK`r`nContent-Type: $JobContentType`r`nContent-Length: $($bytes.Length)`r`nConnection: close`r`n`r`n"
+                    $headerBytes = [System.Text.Encoding]::ASCII.GetBytes($header)
+                    $stream.Write($headerBytes, 0, $headerBytes.Length)
+                    $stream.Write($bytes, 0, $bytes.Length)
+                    $stream.Flush()
+                } finally {
+                    $stream.Dispose()
+                }
+            } finally {
+                $client.Dispose()
+            }
+        } finally {
+            try {
+                $listener.Stop()
+            } catch {
+            }
+        }
+    } -ArgumentList $port, $FilePath, $ContentType
+
+    Start-Sleep -Milliseconds 300
+
+    [PSCustomObject]@{
+        Url = $url
+        Job = $job
+    }
+}
+
+function Stop-TestHttpFileServer {
+    param(
+        [Parameter(Mandatory)]
+        $Server
+    )
+
+    if ($Server.Job) {
+        try {
+            Wait-Job -Job $Server.Job -Timeout 2 | Out-Null
+        } catch {
+        }
+
+        try {
+            Stop-Job -Job $Server.Job -ErrorAction SilentlyContinue | Out-Null
+        } catch {
+        }
+
+        try {
+            Remove-Job -Job $Server.Job -Force -ErrorAction SilentlyContinue | Out-Null
+        } catch {
+        }
+    }
+}
