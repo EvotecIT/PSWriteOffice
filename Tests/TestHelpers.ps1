@@ -80,51 +80,84 @@ function Start-TestHttpFileServer {
         [string] $ContentType = 'application/octet-stream'
     )
 
-    $port = Get-Random -Minimum 20000 -Maximum 40000
-    $prefix = "http://127.0.0.1:$port/"
+    $probe = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
+    $probe.Start()
+    try {
+        $port = ([System.Net.IPEndPoint] $probe.LocalEndpoint).Port
+    } finally {
+        $probe.Stop()
+    }
+
+    $fileName = [System.IO.Path]::GetFileName($FilePath)
+    if ([string]::IsNullOrWhiteSpace($fileName)) {
+        $fileName = 'file.bin'
+    }
+
+    $url = "http://127.0.0.1:$port/$fileName"
     $job = Start-Job -ScriptBlock {
         param(
-            [string] $JobPrefix,
+            [int] $JobPort,
             [string] $JobFilePath,
             [string] $JobContentType
         )
 
-        $listener = [System.Net.HttpListener]::new()
-        $listener.Prefixes.Add($JobPrefix)
+        $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $JobPort)
         $listener.Start()
 
         try {
             try {
-                $context = $listener.GetContext()
-            } catch [System.Net.HttpListenerException] {
-                return
-            } catch [System.ObjectDisposedException] {
+                $client = $listener.AcceptTcpClient()
+            } catch {
                 return
             }
 
             try {
                 $bytes = [System.IO.File]::ReadAllBytes($JobFilePath)
-                $context.Response.StatusCode = 200
-                $context.Response.ContentType = $JobContentType
-                $context.Response.ContentLength64 = $bytes.Length
-                $context.Response.OutputStream.Write($bytes, 0, $bytes.Length)
+                $stream = $client.GetStream()
+                try {
+                    $stream.ReadTimeout = 5000
+                    $stream.WriteTimeout = 5000
+
+                    $requestBuffer = New-Object byte[] 4096
+                    $requestBytes = 0
+                    do {
+                        $read = $stream.Read($requestBuffer, $requestBytes, $requestBuffer.Length - $requestBytes)
+                        if ($read -le 0) {
+                            break
+                        }
+
+                        $requestBytes += $read
+                        if ($requestBytes -ge 4) {
+                            $requestText = [System.Text.Encoding]::ASCII.GetString($requestBuffer, 0, $requestBytes)
+                            if ($requestText.Contains("`r`n`r`n")) {
+                                break
+                            }
+                        }
+                    } while ($requestBytes -lt $requestBuffer.Length)
+
+                    $header = "HTTP/1.1 200 OK`r`nContent-Type: $JobContentType`r`nContent-Length: $($bytes.Length)`r`nConnection: close`r`n`r`n"
+                    $headerBytes = [System.Text.Encoding]::ASCII.GetBytes($header)
+                    $stream.Write($headerBytes, 0, $headerBytes.Length)
+                    $stream.Write($bytes, 0, $bytes.Length)
+                    $stream.Flush()
+                } finally {
+                    $stream.Dispose()
+                }
             } finally {
-                $context.Response.OutputStream.Close()
-                $context.Response.Close()
+                $client.Dispose()
             }
         } finally {
             try {
                 $listener.Stop()
             } catch {
             }
-            $listener.Close()
         }
-    } -ArgumentList $prefix, $FilePath, $ContentType
+    } -ArgumentList $port, $FilePath, $ContentType
 
     Start-Sleep -Milliseconds 300
 
     [PSCustomObject]@{
-        Url = "${prefix}file"
+        Url = $url
         Job = $job
     }
 }
