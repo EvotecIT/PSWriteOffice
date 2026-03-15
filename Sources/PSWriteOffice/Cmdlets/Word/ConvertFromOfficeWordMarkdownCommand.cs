@@ -1,6 +1,8 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Management.Automation;
+using System.Reflection;
 using OfficeIMO.Markdown;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Markdown;
@@ -134,7 +136,7 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
                     break;
                 }
                 case ParameterSetDocument:
-                    document = Document.ToWordDocument(options);
+                    document = WordMarkdownConverterExtensions.LoadFromMarkdown(Document.ToMarkdown(), options);
                     break;
                 default:
                     if (string.IsNullOrWhiteSpace(Markdown))
@@ -209,35 +211,12 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
             options.BaseUri = ResolveBaseUri(BaseUri!);
         }
 
-        if (ReaderOptions != null)
-        {
-            options.ReaderOptions = ReaderOptions;
-        }
-
-        if (FitImagesToPageContentWidth.IsPresent)
-        {
-            options.FitImagesToPageContentWidth = true;
-        }
-
-        if (FitImagesToContextWidth.IsPresent)
-        {
-            options.FitImagesToContextWidth = true;
-        }
-
-        if (MaxImageWidthPixels.HasValue)
-        {
-            options.MaxImageWidthPixels = MaxImageWidthPixels.Value;
-        }
-
-        if (MaxImageHeightPixels.HasValue)
-        {
-            options.MaxImageHeightPixels = MaxImageHeightPixels.Value;
-        }
-
-        if (MaxImageWidthPercentOfContent.HasValue)
-        {
-            options.MaxImageWidthPercentOfContent = MaxImageWidthPercentOfContent.Value;
-        }
+        TrySetOptionProperty(options, "ReaderOptions", ReaderOptions);
+        TrySetOptionProperty(options, "FitImagesToPageContentWidth", FitImagesToPageContentWidth.IsPresent ? true : null);
+        TrySetOptionProperty(options, "FitImagesToContextWidth", FitImagesToContextWidth.IsPresent ? true : null);
+        TrySetOptionProperty(options, "MaxImageWidthPixels", MaxImageWidthPixels);
+        TrySetOptionProperty(options, "MaxImageHeightPixels", MaxImageHeightPixels);
+        TrySetOptionProperty(options, "MaxImageWidthPercentOfContent", MaxImageWidthPercentOfContent);
 
         if (AllowedImageDirectory != null)
         {
@@ -253,6 +232,39 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
         }
 
         return options;
+    }
+
+    private static void TrySetOptionProperty(object target, string propertyName, object? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        var property = target.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
+        if (property == null || !property.CanWrite)
+        {
+            return;
+        }
+
+        var convertedValue = ConvertOptionValue(value, property.PropertyType);
+        property.SetValue(target, convertedValue);
+    }
+
+    private static object? ConvertOptionValue(object value, Type propertyType)
+    {
+        var targetType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+        if (targetType.IsInstanceOfType(value))
+        {
+            return value;
+        }
+
+        if (targetType.IsEnum && value is string text)
+        {
+            return Enum.Parse(targetType, text, ignoreCase: true);
+        }
+
+        return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
     }
 
     private string ResolveBaseUri(string value)
