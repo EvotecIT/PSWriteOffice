@@ -71,3 +71,84 @@ function Get-ZipEntriesLocal {
         $archive.Dispose()
     }
 }
+
+function Start-TestHttpFileServer {
+    param(
+        [Parameter(Mandatory)]
+        [string] $FilePath,
+
+        [string] $ContentType = 'application/octet-stream'
+    )
+
+    $port = Get-Random -Minimum 20000 -Maximum 40000
+    $prefix = "http://127.0.0.1:$port/"
+    $job = Start-Job -ScriptBlock {
+        param(
+            [string] $JobPrefix,
+            [string] $JobFilePath,
+            [string] $JobContentType
+        )
+
+        $listener = [System.Net.HttpListener]::new()
+        $listener.Prefixes.Add($JobPrefix)
+        $listener.Start()
+
+        try {
+            try {
+                $context = $listener.GetContext()
+            } catch [System.Net.HttpListenerException] {
+                return
+            } catch [System.ObjectDisposedException] {
+                return
+            }
+
+            try {
+                $bytes = [System.IO.File]::ReadAllBytes($JobFilePath)
+                $context.Response.StatusCode = 200
+                $context.Response.ContentType = $JobContentType
+                $context.Response.ContentLength64 = $bytes.Length
+                $context.Response.OutputStream.Write($bytes, 0, $bytes.Length)
+            } finally {
+                $context.Response.OutputStream.Close()
+                $context.Response.Close()
+            }
+        } finally {
+            try {
+                $listener.Stop()
+            } catch {
+            }
+            $listener.Close()
+        }
+    } -ArgumentList $prefix, $FilePath, $ContentType
+
+    Start-Sleep -Milliseconds 300
+
+    [PSCustomObject]@{
+        Url = "${prefix}file"
+        Job = $job
+    }
+}
+
+function Stop-TestHttpFileServer {
+    param(
+        [Parameter(Mandatory)]
+        $Server
+    )
+
+    if ($Server.Job) {
+        try {
+            Wait-Job -Job $Server.Job -Timeout 2 | Out-Null
+        } catch {
+        }
+
+        try {
+            Stop-Job -Job $Server.Job -ErrorAction SilentlyContinue | Out-Null
+        } catch {
+        }
+
+        try {
+            Remove-Job -Job $Server.Job -Force -ErrorAction SilentlyContinue | Out-Null
+        } catch {
+        }
+    }
+}

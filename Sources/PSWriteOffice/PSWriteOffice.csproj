@@ -59,6 +59,7 @@
 
     <ItemGroup Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj" />
@@ -67,6 +68,7 @@
     </ItemGroup>
     <ItemGroup Condition="!Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
         <PackageReference Include="OfficeIMO.Word" Version="1.0.33" />
+        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.0" />
         <PackageReference Include="OfficeIMO.Excel" Version="0.6.13" />
         <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.8" />
         <PackageReference Include="OfficeIMO.Markdown" Version="0.6.0" />
