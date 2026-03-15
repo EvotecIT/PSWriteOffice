@@ -386,40 +386,37 @@ Describe 'Excel DSL surface' {
     It 'supports url images and smart hyperlink helpers' {
         $path = Join-Path $TestDrive 'DslExcelLinksAndImages.xlsx'
         $imagePath = New-TestOfficeImageFile -Directory $TestDrive
-        $server = Start-TestHttpFileServer -FilePath $imagePath -ContentType 'image/bmp'
+        $imageUrl = [System.Uri]::new($imagePath).AbsoluteUri
 
-        try {
-            New-OfficeExcel -Path $path {
-                Add-OfficeExcelSheet -Name 'Data' -Content {
-                    Set-OfficeExcelCell -Address 'A1' -Value 'Reference'
-                    Set-OfficeExcelCell -Address 'B1' -Value 'Host'
-                    Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208'
-                    Set-OfficeExcelHostHyperlink -Address 'B2' -Url 'https://learn.microsoft.com/office/open-xml/'
-                    Add-OfficeExcelImageFromUrl -Address 'D2' -Url $server.Url -WidthPixels 32 -HeightPixels 32
-                }
-            } | Out-Null
-
-            $entries = Get-ZipEntriesLocal -Path $path
-            ($entries | Where-Object { $_ -like 'xl/media/*' }).Count | Should -BeGreaterThan 0
-
-            $doc = Get-OfficeExcel -Path $path -ReadOnly
-            try {
-                $smartText = $null
-                $hostText = $null
-                $doc['Data'].TryGetCellText(2, 1, [ref] $smartText) | Should -BeTrue
-                $doc['Data'].TryGetCellText(2, 2, [ref] $hostText) | Should -BeTrue
-                $smartText | Should -Be 'RFC 7208'
-                $hostText | Should -Be 'learn.microsoft.com'
-            } finally {
-                Close-OfficeExcel -Document $doc
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Reference'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Host'
+                Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208'
+                Set-OfficeExcelHostHyperlink -Address 'B2' -Url 'https://learn.microsoft.com/office/open-xml/'
+                Add-OfficeExcelImageFromUrl -Address 'D2' -Url $imageUrl -WidthPixels 32 -HeightPixels 32
+                Add-OfficeExcelImage -Address 'E2' -Url $imageUrl -WidthPixels 24 -HeightPixels 24
             }
+        } | Out-Null
 
-            $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
-            $hyperlinks = $sheetXml.SelectNodes("/*[local-name()='worksheet']/*[local-name()='hyperlinks']/*[local-name()='hyperlink']")
-            $hyperlinks.Count | Should -Be 2
+        $entries = Get-ZipEntriesLocal -Path $path
+        ($entries | Where-Object { $_ -like 'xl/media/*' }).Count | Should -BeGreaterThan 0
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $smartText = $null
+            $hostText = $null
+            $doc['Data'].TryGetCellText(2, 1, [ref] $smartText) | Should -BeTrue
+            $doc['Data'].TryGetCellText(2, 2, [ref] $hostText) | Should -BeTrue
+            $smartText | Should -Be 'RFC 7208'
+            $hostText | Should -Be 'learn.microsoft.com'
         } finally {
-            Stop-TestHttpFileServer -Server $server
+            Close-OfficeExcel -Document $doc
         }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $hyperlinks = $sheetXml.SelectNodes("/*[local-name()='worksheet']/*[local-name()='hyperlinks']/*[local-name()='hyperlink']")
+        $hyperlinks.Count | Should -Be 2
     }
 
     It 'supports internal link helpers for summary sheets' {

@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -76,7 +78,21 @@ public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
 
         var sheet = ResolveSheet();
         var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
-        sheet.AddImageFromUrlAt(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+
+        if (TryGetLocalFilePath(Url, out var localPath))
+        {
+            if (!File.Exists(localPath))
+            {
+                throw new FileNotFoundException($"Image file '{localPath}' was not found.", localPath);
+            }
+
+            var bytes = File.ReadAllBytes(localPath);
+            sheet.AddImageAt(row, column, bytes, GetContentType(localPath), WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+        }
+        else
+        {
+            sheet.AddImageFromUrlAt(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+        }
 
         if (PassThru.IsPresent)
         {
@@ -98,5 +114,30 @@ public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
 
         var context = ExcelDslContext.Require(this);
         return context.RequireSheet();
+    }
+
+    private static bool TryGetLocalFilePath(string url, out string path)
+    {
+        path = string.Empty;
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !uri.IsFile)
+        {
+            return false;
+        }
+
+        path = uri.LocalPath;
+        return !string.IsNullOrWhiteSpace(path);
+    }
+
+    private static string GetContentType(string path)
+    {
+        var ext = System.IO.Path.GetExtension(path)?.ToLowerInvariant();
+        return ext switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".gif" => "image/gif",
+            ".bmp" => "image/bmp",
+            ".tif" or ".tiff" => "image/tiff",
+            _ => "image/png"
+        };
     }
 }

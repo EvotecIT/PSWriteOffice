@@ -99,17 +99,18 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
         if (ParameterSetName == ParameterSetContextPath || ParameterSetName == ParameterSetDocumentPath)
         {
             var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-            if (!File.Exists(resolved))
-            {
-                throw new FileNotFoundException($"Image file '{resolved}' was not found.", resolved);
-            }
-
-            var bytes = File.ReadAllBytes(resolved);
-            sheet.AddImageAt(row, column, bytes, GetContentType(resolved), WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+            AddLocalImage(sheet, row, column, resolved);
         }
         else
         {
-            sheet.AddImageFromUrlAt(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+            if (TryGetLocalFilePath(Url, out var localPath))
+            {
+                AddLocalImage(sheet, row, column, localPath);
+            }
+            else
+            {
+                sheet.AddImageFromUrlAt(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+            }
         }
 
         if (PassThru.IsPresent)
@@ -132,6 +133,29 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
 
         var context = ExcelDslContext.Require(this);
         return context.RequireSheet();
+    }
+
+    private void AddLocalImage(ExcelSheet sheet, int row, int column, string path)
+    {
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException($"Image file '{path}' was not found.", path);
+        }
+
+        var bytes = File.ReadAllBytes(path);
+        sheet.AddImageAt(row, column, bytes, GetContentType(path), WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+    }
+
+    private static bool TryGetLocalFilePath(string url, out string path)
+    {
+        path = string.Empty;
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !uri.IsFile)
+        {
+            return false;
+        }
+
+        path = uri.LocalPath;
+        return !string.IsNullOrWhiteSpace(path);
     }
 
     private static string GetContentType(string path)
