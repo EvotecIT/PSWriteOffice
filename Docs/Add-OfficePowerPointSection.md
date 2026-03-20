@@ -9,12 +9,13 @@ schema: 2.0.0
 Adds a section to a PowerPoint presentation.
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-Add-OfficePowerPointSection [[-Presentation] <PowerPointPresentation>] -Name <string> [-StartSlideIndex <int>] [<CommonParameters>]
+Add-OfficePowerPointSection -Name <string> [-Presentation <PowerPointPresentation>] [-StartSlideIndex <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Creates a section in a presentation starting at the requested zero-based slide index. Inside `New-OfficePowerPoint`, the current slide can provide the starting point automatically.
+Adds a section to a PowerPoint presentation.
 
 ## EXAMPLES
 
@@ -23,7 +24,7 @@ Creates a section in a presentation starting at the requested zero-based slide i
 PS>Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2
 ```
 
-Creates a Results section starting at slide index 2.
+Creates a section named Results starting at the third slide.
 
 ## PARAMETERS
 
@@ -32,8 +33,10 @@ Name of the section to add.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -42,14 +45,16 @@ Accept wildcard characters: True
 ```
 
 ### -Presentation
-Presentation to update.
+Presentation to update (optional inside DSL).
 
 ```yaml
 Type: PowerPointPresentation
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -60,8 +65,10 @@ Zero-based slide index where the section should start.
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -83,3 +90,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
+

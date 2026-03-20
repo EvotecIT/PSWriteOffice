@@ -6,15 +6,16 @@ schema: 2.0.0
 ---
 # Get-OfficePowerPointSection
 ## SYNOPSIS
-Gets sections from a PowerPoint presentation.
+Gets PowerPoint sections from a presentation.
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-Get-OfficePowerPointSection [[-Presentation] <PowerPointPresentation>] [-Name <string>] [-CaseSensitive] [<CommonParameters>]
+Get-OfficePowerPointSection [-Presentation <PowerPointPresentation>] [-Name <string>] [-CaseSensitive] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Returns section metadata from an OfficeIMO PowerPoint presentation, including the section name, id, and zero-based slide indexes contained in the section.
+Gets PowerPoint sections from a presentation.
 
 ## EXAMPLES
 
@@ -23,24 +24,19 @@ Returns section metadata from an OfficeIMO PowerPoint presentation, including th
 PS>Get-OfficePowerPointSection -Presentation $ppt
 ```
 
-Lists all sections in the deck.
-
-### EXAMPLE 2
-```powershell
-PS>Get-OfficePowerPointSection -Presentation $ppt -Name 'Intro'
-```
-
-Returns the section named Intro.
+Returns section information including section names and slide indexes.
 
 ## PARAMETERS
 
 ### -CaseSensitive
-Use case-sensitive matching for `-Name`.
+Use case-sensitive matching for section names.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -53,8 +49,10 @@ Optional section name filter.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -63,14 +61,16 @@ Accept wildcard characters: True
 ```
 
 ### -Presentation
-Presentation to inspect.
+Presentation to inspect (optional inside DSL).
 
 ```yaml
 Type: PowerPointPresentation
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -90,3 +90,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
+

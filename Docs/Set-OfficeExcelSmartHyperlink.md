@@ -20,7 +20,7 @@ Set-OfficeExcelSmartHyperlink [-Url] <string> -Document <ExcelDocument> [-Sheet 
 ```
 
 ## DESCRIPTION
-Creates an external hyperlink using OfficeIMO's smart display logic. If you omit `-Title`, the display text is inferred from the URL, for example `RFC 7208` for RFC links or the host name for normal URLs.
+Sets an external hyperlink using a smart display strategy.
 
 ## EXAMPLES
 
@@ -29,73 +29,19 @@ Creates an external hyperlink using OfficeIMO's smart display logic. If you omit
 PS>ExcelSheet 'Data' { Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208' }
 ```
 
-Creates a hyperlink that displays RFC 7208.
+Creates a hyperlink that displays RFC 7208 instead of the full URL.
 
 ## PARAMETERS
 
-### -Url
-External URL to link to.
+### -Address
+A1-style cell address (e.g., A1, C5).
 
 ```yaml
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
+Possible values: 
 
-### -Document
-Workbook to operate on outside the DSL context.
-
-```yaml
-Type: ExcelDocument
-Parameter Sets: Document
-Aliases: None
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
-
-### -Sheet
-Worksheet name when using Document.
-
-```yaml
-Type: String
-Parameter Sets: Document
-Aliases: None
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -SheetIndex
-Worksheet index (0-based) when using Document.
-
-```yaml
-Type: Nullable`1
-Parameter Sets: Document
-Aliases: None
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Row
-1-based row index.
-
-```yaml
-Type: Nullable`1
-Parameter Sets: Context, Document
-Aliases: None
 Required: False
 Position: named
 Default value: None
@@ -110,6 +56,8 @@ Accept wildcard characters: True
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -117,31 +65,19 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Address
-A1-style cell address.
+### -Document
+Workbook to operate on outside the DSL context.
 
 ```yaml
-Type: String
-Parameter Sets: Context, Document
+Type: ExcelDocument
+Parameter Sets: Document
 Aliases: None
-Required: False
+Possible values: 
+
+Required: True
 Position: named
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Title
-Optional preferred display text.
-
-```yaml
-Type: String
-Parameter Sets: Context, Document
-Aliases: None
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -152,6 +88,8 @@ Skip hyperlink styling (blue + underline).
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -166,6 +104,8 @@ Emit the worksheet after setting the link.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -173,15 +113,98 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -Row
+1-based row index.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Sheet
+Worksheet name when using Document.
+
+```yaml
+Type: String
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SheetIndex
+Worksheet index (0-based) when using Document.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Title
+Optional preferred display text.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Url
+External URL to link to.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 - `OfficeIMO.Excel.ExcelDocument`
 
 ## OUTPUTS
 
-- `OfficeIMO.Excel.ExcelSheet`
+- `System.Object`
 
 ## RELATED LINKS
 
-- [Set-OfficeExcelHyperlink](Set-OfficeExcelHyperlink.md)
-- [Set-OfficeExcelHostHyperlink](Set-OfficeExcelHostHyperlink.md)
+- None
+

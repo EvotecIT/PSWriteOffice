@@ -125,4 +125,72 @@ Describe 'Word DSL surface' {
             $document.Dispose()
         }
     }
+
+    It 'supports hyperlinks and document properties in the DSL' {
+        $path = Join-Path $TestDrive 'DslLinksAndProperties.docx'
+
+        New-OfficeWord -Path $path {
+            Set-OfficeWordDocumentProperty -Name Title -Value 'DSL document'
+            Set-OfficeWordDocumentProperty -Name Creator -Value 'PSWriteOffice'
+            Set-OfficeWordDocumentProperty -Name BuildNumber -Value 21 -Custom
+
+            WordParagraph {
+                WordText 'Open '
+                WordHyperlink -Text 'Example' -Url 'https://example.org' -Styled -Tooltip 'External link'
+                WordText ' or jump to '
+                WordHyperlink -Text 'Summary' -Anchor 'Summary'
+            }
+
+            WordParagraph {
+                WordText 'Summary'
+                WordBookmark -Name 'Summary'
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.HyperLinks.Count | Should -Be 2
+            $document.BuiltinDocumentProperties.Title | Should -Be 'DSL document'
+            $document.BuiltinDocumentProperties.Creator | Should -Be 'PSWriteOffice'
+            $document.CustomDocumentProperties['BuildNumber'].Value | Should -Be 21
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'supports background colors and mail merge in the DSL' {
+        $path = Join-Path $TestDrive 'DslBackgroundMailMerge.docx'
+
+        New-OfficeWord -Path $path {
+            Set-OfficeWordBackground -Color '#ddeeff'
+
+            Add-OfficeWordParagraph {
+                Add-OfficeWordText -Text 'Dear '
+                Add-OfficeWordField -Type MergeField -Parameters '"FirstName"'
+                Add-OfficeWordText -Text ','
+            }
+
+            Add-OfficeWordParagraph {
+                Add-OfficeWordText -Text 'Order '
+                Add-OfficeWordField -Type MergeField -Parameters '"OrderId"'
+                Add-OfficeWordText -Text ' is ready.'
+            }
+
+            Invoke-OfficeWordMailMerge -Data @{
+                FirstName = 'Jane'
+                OrderId   = 77
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.Background.Color | Should -Be 'ddeeff'
+            $document.Fields.Where({ $_.FieldType -eq [OfficeIMO.Word.WordFieldType]::MergeField }).Count | Should -Be 0
+        } finally {
+            $document.Dispose()
+        }
+
+        (Find-OfficeWord -Path $path -Text 'Jane').Count | Should -BeGreaterThan 0
+        (Find-OfficeWord -Path $path -Text '77').Count | Should -BeGreaterThan 0
+    }
 }

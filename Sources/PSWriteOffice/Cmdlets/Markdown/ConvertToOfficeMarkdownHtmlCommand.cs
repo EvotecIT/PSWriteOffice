@@ -70,6 +70,10 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
     [Parameter]
     public MarkdownReaderOptions? ReaderOptions { get; set; }
 
+    /// <summary>Named reader profile used when <see cref="ReaderOptions"/> is not supplied.</summary>
+    [Parameter]
+    public MarkdownReaderOptions.MarkdownDialectProfile? Profile { get; set; }
+
     /// <summary>Emit a <see cref="FileInfo"/> when saving to disk.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -77,6 +81,15 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (ReaderOptions != null && Profile.HasValue)
+        {
+            throw new PSArgumentException("Specify either -ReaderOptions or -Profile, not both.");
+        }
+
+        var readerOptions = ReaderOptions ?? (Profile.HasValue
+            ? MarkdownReaderOptions.CreateProfile(Profile.Value)
+            : null);
+
         MarkdownDoc document;
         if (ParameterSetName == ParameterSetDocument)
         {
@@ -89,11 +102,11 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
             {
                 throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
             }
-            document = MarkdownReader.ParseFile(resolved, ReaderOptions);
+            document = MarkdownReader.ParseFile(resolved, readerOptions);
         }
         else
         {
-            document = MarkdownReader.Parse(Text ?? string.Empty, ReaderOptions);
+            document = MarkdownReader.Parse(Text ?? string.Empty, readerOptions);
         }
 
         var options = new HtmlOptions

@@ -11,16 +11,16 @@ Imports a slide from another PowerPoint presentation.
 ## SYNTAX
 ### SourcePresentation (Default)
 ```powershell
-Import-OfficePowerPointSlide [[-Presentation] <PowerPointPresentation>] -SourcePresentation <PowerPointPresentation> -SourceIndex <int> [-InsertAt <int>] [<CommonParameters>]
+Import-OfficePowerPointSlide -SourcePresentation <PowerPointPresentation> -SourceIndex <int> [-Presentation <PowerPointPresentation>] [-InsertAt <int>] [<CommonParameters>]
 ```
 
 ### SourcePath
 ```powershell
-Import-OfficePowerPointSlide [[-Presentation] <PowerPointPresentation>] -SourcePath <string> -SourceIndex <int> [-InsertAt <int>] [<CommonParameters>]
+Import-OfficePowerPointSlide -SourcePath <string> -SourceIndex <int> [-Presentation <PowerPointPresentation>] [-InsertAt <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Imports a slide from another presentation into the target presentation. If the source and target are the same presentation, OfficeIMO duplicates the slide.
+Imports a slide from another PowerPoint presentation.
 
 ## EXAMPLES
 
@@ -29,14 +29,7 @@ Imports a slide from another presentation into the target presentation. If the s
 PS>Import-OfficePowerPointSlide -Presentation $target -SourcePath .\source.pptx -SourceIndex 0
 ```
 
-Imports the first slide from source.pptx into the target presentation.
-
-### EXAMPLE 2
-```powershell
-PS>Import-OfficePowerPointSlide -Presentation $target -SourcePresentation $source -SourceIndex 1 -InsertAt 0
-```
-
-Imports the second slide from an already open presentation and inserts it at the start of the target deck.
+Copies the first slide from source.pptx into the target presentation.
 
 ## PARAMETERS
 
@@ -47,6 +40,8 @@ Optional target insertion index; omit to append.
 Type: Nullable`1
 Parameter Sets: SourcePresentation, SourcePath
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -55,14 +50,16 @@ Accept wildcard characters: True
 ```
 
 ### -Presentation
-Target presentation to update.
+Target presentation to update (optional inside DSL).
 
 ```yaml
 Type: PowerPointPresentation
 Parameter Sets: SourcePresentation, SourcePath
 Aliases: None
+Possible values: 
+
 Required: False
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -75,6 +72,8 @@ Zero-based slide index in the source presentation.
 Type: Int32
 Parameter Sets: SourcePresentation, SourcePath
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -89,6 +88,8 @@ Path to the source presentation.
 Type: String
 Parameter Sets: SourcePath
 Aliases: Path
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -97,12 +98,14 @@ Accept wildcard characters: True
 ```
 
 ### -SourcePresentation
-Open source presentation to import from.
+Source presentation to import from.
 
 ```yaml
 Type: PowerPointPresentation
 Parameter Sets: SourcePresentation
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -124,3 +127,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
+

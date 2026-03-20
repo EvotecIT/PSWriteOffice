@@ -11,12 +11,12 @@ Parses Markdown text or files into a Markdown document model.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeMarkdown [-InputPath] <string> [-Options <MarkdownReaderOptions>] [<CommonParameters>]
+Get-OfficeMarkdown [-InputPath] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [<CommonParameters>]
 ```
 
 ### Text
 ```powershell
-Get-OfficeMarkdown -Text <string> [-Options <MarkdownReaderOptions>] [<CommonParameters>]
+Get-OfficeMarkdown -Text <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -61,6 +61,22 @@ Optional reader options.
 
 ```yaml
 Type: MarkdownReaderOptions
+Parameter Sets: Path, Text
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Profile
+Named reader profile used when Options is not supplied.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: Path, Text
 Aliases: None
 Possible values: 

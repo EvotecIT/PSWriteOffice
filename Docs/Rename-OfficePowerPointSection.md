@@ -9,12 +9,13 @@ schema: 2.0.0
 Renames a PowerPoint section.
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-Rename-OfficePowerPointSection [[-Presentation] <PowerPointPresentation>] -Name <string> -NewName <string> [-CaseSensitive] [-PassThru] [<CommonParameters>]
+Rename-OfficePowerPointSection -Name <string> -NewName <string> [-Presentation <PowerPointPresentation>] [-CaseSensitive] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Renames the first matching section in the presentation.
+Renames a PowerPoint section.
 
 ## EXAMPLES
 
@@ -23,7 +24,7 @@ Renames the first matching section in the presentation.
 PS>Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'
 ```
 
-Renames the Results section to Deep Dive.
+Renames the first matching section from Results to Deep Dive.
 
 ## PARAMETERS
 
@@ -32,8 +33,10 @@ Use case-sensitive matching for the existing section name.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -46,8 +49,10 @@ Existing section name.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -60,8 +65,10 @@ New section name.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -70,12 +77,14 @@ Accept wildcard characters: True
 ```
 
 ### -PassThru
-Emit the renamed section.
+Emit the renamed section instead of no output.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -84,14 +93,16 @@ Accept wildcard characters: True
 ```
 
 ### -Presentation
-Presentation to update.
+Presentation to update (optional inside DSL).
 
 ```yaml
 Type: PowerPointPresentation
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -106,9 +117,10 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSectionInfo`
-- `System.Boolean`
+- `OfficeIMO.PowerPoint.PowerPointSectionInfo
+System.Boolean`
 
 ## RELATED LINKS
 
 - None
+

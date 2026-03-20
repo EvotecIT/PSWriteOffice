@@ -9,12 +9,13 @@ schema: 2.0.0
 Copies an existing slide within a PowerPoint presentation.
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-Copy-OfficePowerPointSlide [[-Presentation] <PowerPointPresentation>] -Index <int> [-InsertAt <int>] [<CommonParameters>]
+Copy-OfficePowerPointSlide -Index <int> [-Presentation <PowerPointPresentation>] [-InsertAt <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Duplicates a slide inside the current presentation while preserving shapes, notes, and chart content.
+Copies an existing slide within a PowerPoint presentation.
 
 ## EXAMPLES
 
@@ -23,38 +24,19 @@ Duplicates a slide inside the current presentation while preserving shapes, note
 PS>Copy-OfficePowerPointSlide -Presentation $ppt -Index 0
 ```
 
-Duplicates the first slide and inserts the copy immediately after it.
-
-### EXAMPLE 2
-```powershell
-PS>Copy-OfficePowerPointSlide -Presentation $ppt -Index 2 -InsertAt 0
-```
-
-Duplicates the third slide and inserts the copy at the start of the deck.
+Creates a duplicate of slide 1 and inserts it at position 2.
 
 ## PARAMETERS
-
-### -Presentation
-Presentation to update.
-
-```yaml
-Type: PowerPointPresentation
-Parameter Sets: (All)
-Aliases: None
-Required: False
-Position: 0
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
 
 ### -Index
 Zero-based slide index to duplicate.
 
 ```yaml
 Type: Int32
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -67,12 +49,30 @@ Optional target index for the duplicate; omit to insert after the source slide.
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Presentation
+Presentation to update (optional inside DSL).
+
+```yaml
+Type: PowerPointPresentation
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -89,4 +89,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## RELATED LINKS
 
-- [Import-OfficePowerPointSlide](Import-OfficePowerPointSlide.md)
+- None
+

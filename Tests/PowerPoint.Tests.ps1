@@ -561,4 +561,142 @@ Describe 'PowerPoint cmdlets' {
             }
         }
     }
+
+    It 'supports slide backgrounds and layout box helpers' {
+        $path = Join-Path $TestDrive 'PowerPointBackgroundsAndLayout.pptx'
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
+        $presentation = $null
+
+        try {
+            $presentation = New-OfficePowerPoint -FilePath $path
+
+            Set-OfficePowerPointSlideSize -Presentation $presentation -WidthCm 30 -HeightCm 20 | Out-Null
+
+            $colorSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            Set-OfficePowerPointSlideTitle -Slide $colorSlide -Title 'Layout Demo' | Out-Null
+            $updatedSlide = Set-OfficePowerPointBackground -Slide $colorSlide -Color '#F4F7FB'
+            $updatedSlide | Should -Be $colorSlide
+            $colorSlide.BackgroundColor | Should -Be 'f4f7fb'
+
+            $contentBox = Get-OfficePowerPointLayoutBox -Presentation $presentation -MarginCm 1.5
+            [math]::Round($contentBox.LeftCm, 2) | Should -Be 1.5
+            [math]::Round($contentBox.TopCm, 2) | Should -Be 1.5
+            [math]::Round($contentBox.WidthCm, 2) | Should -Be 27
+            [math]::Round($contentBox.HeightCm, 2) | Should -Be 17
+
+            $columns = @(Get-OfficePowerPointLayoutBox -Presentation $presentation -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0)
+            $columns.Count | Should -Be 2
+            [math]::Round($columns[0].WidthCm, 2) | Should -Be 13
+            [math]::Round($columns[1].LeftCm, 2) | Should -Be 15.5
+
+            $rows = @(Get-OfficePowerPointLayoutBox -Presentation $presentation -RowCount 2 -MarginCm 1.5 -GutterCm 0.5)
+            $rows.Count | Should -Be 2
+            [math]::Round($rows[0].HeightCm, 2) | Should -Be 8.25
+            [math]::Round($rows[1].TopCm, 2) | Should -Be 10.25
+
+            Add-OfficePowerPointTextBox -Slide $colorSlide -Text 'Left column' -X $columns[0].LeftPoints -Y $columns[0].TopPoints -Width $columns[0].WidthPoints -Height 40 | Out-Null
+            Add-OfficePowerPointTextBox -Slide $colorSlide -Text 'Right column' -X $columns[1].LeftPoints -Y $columns[1].TopPoints -Width $columns[1].WidthPoints -Height 40 | Out-Null
+
+            $imageSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            Set-OfficePowerPointSlideTitle -Slide $imageSlide -Title 'Image Background' | Out-Null
+            Set-OfficePowerPointBackground -Slide $imageSlide -ImagePath $imagePath | Out-Null
+            $imageSlide.BackgroundColor | Should -BeNullOrEmpty
+
+            Save-OfficePowerPoint -Presentation $presentation
+        } finally {
+            if ($presentation) {
+                $presentation.Dispose()
+            }
+        }
+
+        $colorSlideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide1.xml'
+        $colorSlideXml.OuterXml | Should -Match 'rgbClr val="f4f7fb"'
+
+        $imageSlideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide2.xml'
+        $imageSlideXml.OuterXml | Should -Match '<a:blip '
+        $imageSlideXml.OuterXml | Should -Match 'r:embed='
+
+        $entries = @(Get-ZipEntriesLocal -Path $path)
+        ($entries | Where-Object { $_ -like 'ppt/media/*' }).Count | Should -BeGreaterThan 0
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloadedColorSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
+            $reloadedColorSlide.BackgroundColor | Should -Be 'f4f7fb'
+
+            $reloadedImageSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 1
+            $reloadedImageSlide.BackgroundColor | Should -BeNullOrEmpty
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
+    }
+
+    It 'supports PowerPoint charts from object data' {
+        $path = Join-Path $TestDrive 'PowerPointCharts.pptx'
+        $presentation = $null
+        $rows = @(
+            [PSCustomObject]@{ Month = 'Jan'; MonthNumber = 1; Sales = 10; Profit = 4 }
+            [PSCustomObject]@{ Month = 'Feb'; MonthNumber = 2; Sales = 14; Profit = 6 }
+            [PSCustomObject]@{ Month = 'Mar'; MonthNumber = 3; Sales = 18; Profit = 8 }
+        )
+
+        try {
+            $presentation = New-OfficePowerPoint -FilePath $path
+
+            $slide1 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            Set-OfficePowerPointSlideTitle -Slide $slide1 -Title 'Column Chart' | Out-Null
+            $columnChart = Add-OfficePowerPointChart -Slide $slide1 -Data $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Title 'Sales vs Profit' -X 40 -Y 120 -Width 360 -Height 220
+            $columnChart | Should -Not -BeNullOrEmpty
+            @($slide1.Charts).Count | Should -Be 1
+
+            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            Set-OfficePowerPointSlideTitle -Slide $slide2 -Title 'Pie Chart' | Out-Null
+            $pieChart = Add-OfficePowerPointChart -Slide $slide2 -Type Pie -Data $rows -CategoryProperty Month -SeriesProperty Sales -Title 'Sales Mix' -X 40 -Y 120 -Width 320 -Height 220
+            $pieChart | Should -Not -BeNullOrEmpty
+            @($slide2.Charts).Count | Should -Be 1
+
+            $slide3 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            Set-OfficePowerPointSlideTitle -Slide $slide3 -Title 'Scatter Chart' | Out-Null
+            $scatterChart = Add-OfficePowerPointChart -Slide $slide3 -Type Scatter -Data $rows -XProperty MonthNumber -YProperty Sales, Profit -Title 'Trend Scatter' -X 40 -Y 120 -Width 360 -Height 220
+            $scatterChart | Should -Not -BeNullOrEmpty
+            @($slide3.Charts).Count | Should -Be 1
+
+            (Get-OfficePowerPointShape -Slide $slide1 | Where-Object Kind -eq 'Chart') | Should -HaveCount 1
+            (Get-OfficePowerPointShape -Slide $slide2 | Where-Object Kind -eq 'Chart') | Should -HaveCount 1
+            (Get-OfficePowerPointShape -Slide $slide3 | Where-Object Kind -eq 'Chart') | Should -HaveCount 1
+
+            Save-OfficePowerPoint -Presentation $presentation
+        } finally {
+            if ($presentation) {
+                $presentation.Dispose()
+            }
+        }
+
+        $chartEntries = @(Get-ZipEntriesLocal -Path $path | Where-Object { $_ -match '^ppt/charts/chart\d+\.xml$' } | Sort-Object)
+        $chartEntries.Count | Should -Be 3
+
+        $chart1Xml = Get-ZipXmlDocumentLocal -Path $path -Entry $chartEntries[0]
+        $chart1Xml.OuterXml | Should -Match '<c:barChart'
+        $chart1Xml.OuterXml | Should -Match 'Sales vs Profit'
+
+        $chart2Xml = Get-ZipXmlDocumentLocal -Path $path -Entry $chartEntries[1]
+        $chart2Xml.OuterXml | Should -Match '<c:pieChart'
+        $chart2Xml.OuterXml | Should -Match 'Sales Mix'
+
+        $chart3Xml = Get-ZipXmlDocumentLocal -Path $path -Entry $chartEntries[2]
+        $chart3Xml.OuterXml | Should -Match '<c:scatterChart'
+        $chart3Xml.OuterXml | Should -Match 'Trend Scatter'
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloaded.Slides.Count | Should -Be 3
+            (Get-OfficePowerPointShape -Presentation $reloaded | Where-Object Kind -eq 'Chart') | Should -HaveCount 3
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
+    }
 }

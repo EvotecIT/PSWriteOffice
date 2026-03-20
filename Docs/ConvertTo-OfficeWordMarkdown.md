@@ -47,7 +47,7 @@ Word document instance to convert.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: True
 Position: named
@@ -63,7 +63,7 @@ Wrap highlighted text with Markdown highlight markers.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -79,7 +79,7 @@ Wrap underlined text with HTML underline tags.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -95,7 +95,7 @@ Path to a .docx file.
 Type: String
 Parameter Sets: Path
 Aliases: Path
-Possible values:
+Possible values: 
 
 Required: True
 Position: 0
@@ -111,7 +111,7 @@ Optional font family that should be treated as inline code.
 Type: String
 Parameter Sets: Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -127,7 +127,7 @@ Directory used when exporting images as files.
 Type: String
 Parameter Sets: Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -143,11 +143,11 @@ Controls how images are emitted during Markdown conversion.
 Type: ImageExportMode
 Parameter Sets: Path, Document
 Aliases: None
-Possible values:
+Possible values: Base64, File
 
 Required: False
 Position: named
-Default value: Base64
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -159,7 +159,7 @@ Optional output path for the Markdown file.
 Type: String
 Parameter Sets: Path, Document
 Aliases: OutPath
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -175,7 +175,7 @@ Emit a FileInfo when saving to disk.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -199,3 +199,4 @@ System.IO.FileInfo`
 ## RELATED LINKS
 
 - None
+

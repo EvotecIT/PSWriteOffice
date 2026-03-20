@@ -38,9 +38,22 @@ public sealed class GetOfficeMarkdownCommand : PSCmdlet
     [Parameter]
     public MarkdownReaderOptions? Options { get; set; }
 
+    /// <summary>Named reader profile used when <see cref="Options"/> is not supplied.</summary>
+    [Parameter]
+    public MarkdownReaderOptions.MarkdownDialectProfile? Profile { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (Options != null && Profile.HasValue)
+        {
+            throw new PSArgumentException("Specify either -Options or -Profile, not both.");
+        }
+
+        var options = Options ?? (Profile.HasValue
+            ? MarkdownReaderOptions.CreateProfile(Profile.Value)
+            : null);
+
         MarkdownDoc document;
         if (ParameterSetName == ParameterSetPath)
         {
@@ -50,11 +63,11 @@ public sealed class GetOfficeMarkdownCommand : PSCmdlet
                 throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
-            document = MarkdownReader.ParseFile(resolvedPath, Options);
+            document = MarkdownReader.ParseFile(resolvedPath, options);
         }
         else
         {
-            document = MarkdownReader.Parse(Text ?? string.Empty, Options);
+            document = MarkdownReader.Parse(Text ?? string.Empty, options);
         }
 
         WriteObject(document);
