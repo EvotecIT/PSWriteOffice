@@ -71,7 +71,7 @@
         <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.0" />
         <PackageReference Include="OfficeIMO.Excel" Version="0.6.13" />
         <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.8" />
-        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.0" />
+        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.4" />
         <PackageReference Include="OfficeIMO.CSV" Version="0.1.13" />
         <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.7" />
     </ItemGroup>

@@ -4,62 +4,53 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Set-OfficePowerPointSlideLayout
+# Set-OfficePowerPointBackground
 ## SYNOPSIS
-Changes the layout used by a slide.
+Sets the slide background color or image.
 
 ## SYNTAX
-### Index (Default)
+### Color (Default)
 ```powershell
-Set-OfficePowerPointSlideLayout -Layout <int> [-Slide <PowerPointSlide>] [-Master <int>] [<CommonParameters>]
+Set-OfficePowerPointBackground [-Color] <string> [-Slide <PowerPointSlide>] [<CommonParameters>]
 ```
 
-### Name
+### Image
 ```powershell
-Set-OfficePowerPointSlideLayout -LayoutName <string> [-Slide <PowerPointSlide>] [-Master <int>] [-CaseSensitive] [<CommonParameters>]
+Set-OfficePowerPointBackground [-ImagePath] <string> [-Slide <PowerPointSlide>] [<CommonParameters>]
 ```
 
-### Type
+### Clear
 ```powershell
-Set-OfficePowerPointSlideLayout -LayoutType <SlideLayoutValues> [-Slide <PowerPointSlide>] [-Master <int>] [<CommonParameters>]
+Set-OfficePowerPointBackground -Clear [-Slide <PowerPointSlide>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Changes the layout used by a slide.
+Sets the slide background color or image.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideLayout -LayoutName 'Title and Content'
+PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointBackground -Color '#F4F7FB'
 ```
 
-Updates the slide to use the requested layout.
+Applies a solid color fill to the slide background.
+
+### EXAMPLE 2
+```powershell
+PS>Set-OfficePowerPointBackground -Slide $slide -ImagePath '.\hero.png'
+```
+
+Uses the provided image as the slide background.
 
 ## PARAMETERS
 
-### -CaseSensitive
-Use case-sensitive matching for layout names.
+### -Clear
+Clears any explicit background color or image.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Name
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Layout
-Layout index to use.
-
-```yaml
-Type: Int32
-Parameter Sets: Index
+Parameter Sets: Clear
 Aliases: None
 Possible values: 
 
@@ -70,49 +61,33 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -LayoutName
-Layout name to use.
+### -Color
+Background color (hex or named color).
 
 ```yaml
 Type: String
-Parameter Sets: Name
+Parameter Sets: Color
 Aliases: None
 Possible values: 
 
 Required: True
-Position: named
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -LayoutType
-Layout type to use.
+### -ImagePath
+Path to a background image file.
 
 ```yaml
-Type: SlideLayoutValues
-Parameter Sets: Type
+Type: String
+Parameter Sets: Image
 Aliases: None
 Possible values: 
 
 Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Master
-Slide master index to use.
-
-```yaml
-Type: Int32
-Parameter Sets: Index, Name, Type
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -123,7 +98,7 @@ Slide to update (optional inside a slide DSL scope).
 
 ```yaml
 Type: PowerPointSlide
-Parameter Sets: Index, Name, Type
+Parameter Sets: Color, Image, Clear
 Aliases: None
 Possible values: 
 

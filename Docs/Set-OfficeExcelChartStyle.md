@@ -9,12 +9,13 @@ schema: 2.0.0
 Applies a built-in style and color preset to an Excel chart.
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-Set-OfficeExcelChartStyle [-Chart] <ExcelChart> [-StyleId <int>] [-ColorStyleId <int>] [<CommonParameters>]
+Set-OfficeExcelChartStyle -Chart <ExcelChart> [-StyleId <int>] [-ColorStyleId <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Applies one of the built-in OfficeIMO chart style and color presets to an existing chart.
+Applies a built-in style and color preset to an Excel chart.
 
 ## EXAMPLES
 
@@ -23,14 +24,7 @@ Applies one of the built-in OfficeIMO chart style and color presets to an existi
 PS>$chart | Set-OfficeExcelChartStyle
 ```
 
-Applies the default OfficeIMO chart style preset.
-
-### EXAMPLE 2
-```powershell
-PS>$chart | Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
-```
-
-Applies an explicit style and color preset combination.
+Applies the default chart style and returns the chart for chaining.
 
 ## PARAMETERS
 
@@ -39,26 +33,14 @@ Chart to update.
 
 ```yaml
 Type: ExcelChart
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: True
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
-
-### -StyleId
-Chart style identifier.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases: None
-Required: False
-Position: named
-Default value: 251
-Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -67,11 +49,29 @@ Chart color style identifier.
 
 ```yaml
 Type: Int32
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
-Default value: 10
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -StyleId
+Chart style identifier.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -89,5 +89,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## RELATED LINKS
 
-- [Set-OfficeExcelChartLegend](Set-OfficeExcelChartLegend.md)
-- [Set-OfficeExcelChartDataLabels](Set-OfficeExcelChartDataLabels.md)
+- None
+

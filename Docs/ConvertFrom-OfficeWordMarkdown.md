@@ -52,7 +52,7 @@ Restrict local images to one or more directories.
 Type: String[]
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -68,7 +68,7 @@ Allow local Markdown images to be inserted into the document.
 Type: SwitchParameter
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -84,7 +84,7 @@ Allow remote HTTP(S) images to be downloaded and inserted.
 Type: SwitchParameter
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -100,7 +100,7 @@ Base URI used to resolve relative links and images.
 Type: String
 Parameter Sets: Markdown, Path, Document
 Aliases: BasePath
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -116,7 +116,7 @@ Markdown document instance to convert.
 Type: MarkdownDoc
 Parameter Sets: Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: True
 Position: named
@@ -132,7 +132,7 @@ Path to a Markdown file.
 Type: String
 Parameter Sets: Path
 Aliases: Path
-Possible values:
+Possible values: 
 
 Required: True
 Position: 0
@@ -148,7 +148,7 @@ Fit Markdown images to the current content context width.
 Type: SwitchParameter
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -164,7 +164,7 @@ Fit Markdown images to the page content width.
 Type: SwitchParameter
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -180,7 +180,7 @@ Optional font family applied during conversion.
 Type: String
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -196,7 +196,7 @@ Markdown text to convert.
 Type: String
 Parameter Sets: Markdown
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: True
 Position: 0
@@ -212,7 +212,7 @@ Optional hard cap for Markdown image height in pixels.
 Type: Nullable`1
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -228,7 +228,7 @@ Optional hard cap for Markdown image width as a percentage of available content 
 Type: Nullable`1
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -244,7 +244,7 @@ Optional hard cap for Markdown image width in pixels.
 Type: Nullable`1
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -260,7 +260,7 @@ Open the document after saving.
 Type: SwitchParameter
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -276,7 +276,7 @@ Optional output path for the .docx file.
 Type: String
 Parameter Sets: Markdown, Path, Document
 Aliases: OutPath
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -292,7 +292,7 @@ Emit a FileInfo when saving to disk.
 Type: SwitchParameter
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -308,7 +308,7 @@ Optional Markdown reader options used before Word conversion.
 Type: MarkdownReaderOptions
 Parameter Sets: Markdown, Path, Document
 Aliases: None
-Possible values:
+Possible values: 
 
 Required: False
 Position: named
@@ -333,3 +333,4 @@ System.IO.FileInfo`
 ## RELATED LINKS
 
 - None
+

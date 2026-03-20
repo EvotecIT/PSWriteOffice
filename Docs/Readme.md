@@ -34,6 +34,9 @@ Adds a conditional formatting rule to the current worksheet.
 ### [Add-OfficeExcelImage](Add-OfficeExcelImage.md)
 Adds an image anchored to a worksheet cell.
 
+### [Add-OfficeExcelImageFromUrl](Add-OfficeExcelImageFromUrl.md)
+Adds an image from a URL anchored to a worksheet cell.
+
 ### [Add-OfficeExcelPivotTable](Add-OfficeExcelPivotTable.md)
 Adds a pivot table to a worksheet.
 
@@ -45,6 +48,9 @@ Adds sparklines to a worksheet.
 
 ### [Add-OfficeExcelTable](Add-OfficeExcelTable.md)
 Writes tabular data to the current worksheet and formats it as an Excel table.
+
+### [Add-OfficeExcelTableOfContents](Add-OfficeExcelTableOfContents.md)
+Adds or refreshes a workbook table of contents sheet.
 
 ### [Add-OfficeExcelValidationCustomFormula](Add-OfficeExcelValidationCustomFormula.md)
 Adds a custom-formula data validation rule to a worksheet range.
@@ -73,6 +79,15 @@ Adds a Markdown callout block.
 ### [Add-OfficeMarkdownCode](Add-OfficeMarkdownCode.md)
 Adds a Markdown code block.
 
+### [Add-OfficeMarkdownDefinitionList](Add-OfficeMarkdownDefinitionList.md)
+Adds a Markdown definition list.
+
+### [Add-OfficeMarkdownDetails](Add-OfficeMarkdownDetails.md)
+Adds a collapsible Markdown details block.
+
+### [Add-OfficeMarkdownFrontMatter](Add-OfficeMarkdownFrontMatter.md)
+Adds YAML front matter to a Markdown document.
+
 ### [Add-OfficeMarkdownHeading](Add-OfficeMarkdownHeading.md)
 Adds a Markdown heading.
 
@@ -94,11 +109,23 @@ Adds a Markdown block quote.
 ### [Add-OfficeMarkdownTable](Add-OfficeMarkdownTable.md)
 Adds a Markdown table from objects.
 
+### [Add-OfficeMarkdownTableOfContents](Add-OfficeMarkdownTableOfContents.md)
+Adds a Markdown table of contents placeholder.
+
+### [Add-OfficeMarkdownTaskList](Add-OfficeMarkdownTaskList.md)
+Adds a Markdown task list.
+
 ### [Add-OfficePowerPointBullets](Add-OfficePowerPointBullets.md)
 Adds a bulleted list to a PowerPoint slide.
 
+### [Add-OfficePowerPointChart](Add-OfficePowerPointChart.md)
+Adds a chart to a PowerPoint slide.
+
 ### [Add-OfficePowerPointImage](Add-OfficePowerPointImage.md)
 Adds an image to a PowerPoint slide.
+
+### [Add-OfficePowerPointSection](Add-OfficePowerPointSection.md)
+Adds a section to a PowerPoint presentation.
 
 ### [Add-OfficePowerPointShape](Add-OfficePowerPointShape.md)
 Adds a basic shape to a slide.
@@ -138,6 +165,9 @@ Adds content to a section footer.
 
 ### [Add-OfficeWordHeader](Add-OfficeWordHeader.md)
 Adds content to a section header.
+
+### [Add-OfficeWordHyperlink](Add-OfficeWordHyperlink.md)
+Adds a hyperlink to the current Word paragraph.
 
 ### [Add-OfficeWordImage](Add-OfficeWordImage.md)
 Inserts an image into the current paragraph.
@@ -190,6 +220,9 @@ Closes a Word document, optionally saving it.
 ### [ConvertFrom-OfficeWordHtml](ConvertFrom-OfficeWordHtml.md)
 Creates a Word document from HTML.
 
+### [ConvertFrom-OfficeWordMarkdown](ConvertFrom-OfficeWordMarkdown.md)
+Creates a Word document from Markdown.
+
 ### [ConvertTo-OfficeCsv](ConvertTo-OfficeCsv.md)
 Converts objects or a CSV document into CSV text or a file.
 
@@ -201,6 +234,12 @@ Converts Markdown content to HTML.
 
 ### [ConvertTo-OfficeWordHtml](ConvertTo-OfficeWordHtml.md)
 Converts a Word document to HTML.
+
+### [ConvertTo-OfficeWordMarkdown](ConvertTo-OfficeWordMarkdown.md)
+Converts a Word document to Markdown.
+
+### [Copy-OfficePowerPointSlide](Copy-OfficePowerPointSlide.md)
+Copies an existing slide within a PowerPoint presentation.
 
 ### [Find-OfficeWord](Find-OfficeWord.md)
 Finds text matches inside a Word document.
@@ -223,8 +262,14 @@ Gets defined names (named ranges) from an Excel workbook.
 ### [Get-OfficeExcelPivotTable](Get-OfficeExcelPivotTable.md)
 Gets pivot tables defined in a workbook.
 
+### [Get-OfficeExcelRange](Get-OfficeExcelRange.md)
+Reads an explicit A1 range from an Excel workbook.
+
 ### [Get-OfficeExcelTable](Get-OfficeExcelTable.md)
 Gets Excel tables defined in a workbook.
+
+### [Get-OfficeExcelUsedRange](Get-OfficeExcelUsedRange.md)
+Reads the used range from an Excel workbook.
 
 ### [Get-OfficeMarkdown](Get-OfficeMarkdown.md)
 Parses Markdown text or files into a Markdown document model.
@@ -235,6 +280,9 @@ Loads an existing PowerPoint presentation.
 ### [Get-OfficePowerPointLayout](Get-OfficePowerPointLayout.md)
 Lists slide layouts available in a presentation.
 
+### [Get-OfficePowerPointLayoutBox](Get-OfficePowerPointLayoutBox.md)
+Computes reusable layout boxes for a presentation.
+
 ### [Get-OfficePowerPointLayoutPlaceholder](Get-OfficePowerPointLayoutPlaceholder.md)
 Gets layout placeholder metadata for a slide.
 
@@ -244,6 +292,9 @@ Reads speaker notes from a slide or presentation.
 ### [Get-OfficePowerPointPlaceholder](Get-OfficePowerPointPlaceholder.md)
 Gets placeholder text boxes from a slide.
 
+### [Get-OfficePowerPointSection](Get-OfficePowerPointSection.md)
+Gets PowerPoint sections from a presentation.
+
 ### [Get-OfficePowerPointShape](Get-OfficePowerPointShape.md)
 Reads shape summaries from a slide or presentation.
 
@@ -252,6 +303,9 @@ Enumerates slides or retrieves a specific slide.
 
 ### [Get-OfficePowerPointSlideSummary](Get-OfficePowerPointSlideSummary.md)
 Reads high-level slide summaries from a presentation.
+
+### [Get-OfficePowerPointTheme](Get-OfficePowerPointTheme.md)
+Gets theme information for a PowerPoint presentation master.
 
 ### [Get-OfficeWord](Get-OfficeWord.md)
 Opens an existing Word document.
@@ -271,11 +325,17 @@ Gets structured content controls from a Word document.
 ### [Get-OfficeWordDatePicker](Get-OfficeWordDatePicker.md)
 Gets date picker content controls from a Word document.
 
+### [Get-OfficeWordDocumentProperty](Get-OfficeWordDocumentProperty.md)
+Gets built-in and custom document properties from a Word document.
+
 ### [Get-OfficeWordDropDownList](Get-OfficeWordDropDownList.md)
 Gets dropdown list content controls from a Word document.
 
 ### [Get-OfficeWordField](Get-OfficeWordField.md)
 Gets fields from a Word document.
+
+### [Get-OfficeWordHyperlink](Get-OfficeWordHyperlink.md)
+Gets hyperlinks from a Word document.
 
 ### [Get-OfficeWordParagraph](Get-OfficeWordParagraph.md)
 Gets paragraphs from a Word document or section.
@@ -298,11 +358,17 @@ Gets tables from a Word document or section.
 ### [Get-OfficeWordTableOfContent](Get-OfficeWordTableOfContent.md)
 Gets the table of contents from a Word document.
 
+### [Import-OfficePowerPointSlide](Import-OfficePowerPointSlide.md)
+Imports a slide from another PowerPoint presentation.
+
 ### [Invoke-OfficeExcelAutoFit](Invoke-OfficeExcelAutoFit.md)
 Automatically fits Excel row heights and/or column widths.
 
 ### [Invoke-OfficeExcelSort](Invoke-OfficeExcelSort.md)
 Sorts the used range on the current worksheet.
+
+### [Invoke-OfficeWordMailMerge](Invoke-OfficeWordMailMerge.md)
+Executes a simple mail merge against MERGEFIELD values in a Word document.
 
 ### [New-OfficeExcel](New-OfficeExcel.md)
 Creates a new Excel workbook using the DSL.
@@ -331,6 +397,9 @@ Removes a slide by index.
 ### [Remove-OfficeWordTableOfContent](Remove-OfficeWordTableOfContent.md)
 Removes the table of contents from a Word document.
 
+### [Rename-OfficePowerPointSection](Rename-OfficePowerPointSection.md)
+Renames a PowerPoint section.
+
 ### [Save-OfficeExcel](Save-OfficeExcel.md)
 Saves an Excel workbook without disposing it.
 
@@ -342,6 +411,15 @@ Saves a Word document without disposing it.
 
 ### [Set-OfficeExcelCell](Set-OfficeExcelCell.md)
 Sets a cell value, formula, or number format within the current worksheet.
+
+### [Set-OfficeExcelChartDataLabels](Set-OfficeExcelChartDataLabels.md)
+Configures data labels and optional styling for an Excel chart.
+
+### [Set-OfficeExcelChartLegend](Set-OfficeExcelChartLegend.md)
+Configures legend visibility and styling for an Excel chart.
+
+### [Set-OfficeExcelChartStyle](Set-OfficeExcelChartStyle.md)
+Applies a built-in style and color preset to an Excel chart.
 
 ### [Set-OfficeExcelColumn](Set-OfficeExcelColumn.md)
 Writes values or formatting to a column in the current worksheet.
@@ -358,8 +436,17 @@ Shows or hides worksheet gridlines.
 ### [Set-OfficeExcelHeaderFooter](Set-OfficeExcelHeaderFooter.md)
 Sets worksheet header and footer text and optional images.
 
+### [Set-OfficeExcelHostHyperlink](Set-OfficeExcelHostHyperlink.md)
+Sets an external hyperlink that displays only the URL host.
+
 ### [Set-OfficeExcelHyperlink](Set-OfficeExcelHyperlink.md)
 Sets a hyperlink on a worksheet cell.
+
+### [Set-OfficeExcelInternalLinks](Set-OfficeExcelInternalLinks.md)
+Converts cells in a range into internal workbook links.
+
+### [Set-OfficeExcelInternalLinksByHeader](Set-OfficeExcelInternalLinksByHeader.md)
+Converts cells under a header into internal workbook links.
 
 ### [Set-OfficeExcelMargins](Set-OfficeExcelMargins.md)
 Sets page margins on a worksheet.
@@ -379,6 +466,18 @@ Writes a row of values to the current worksheet.
 ### [Set-OfficeExcelSheetVisibility](Set-OfficeExcelSheetVisibility.md)
 Shows or hides a worksheet.
 
+### [Set-OfficeExcelSmartHyperlink](Set-OfficeExcelSmartHyperlink.md)
+Sets an external hyperlink using a smart display strategy.
+
+### [Set-OfficeExcelUrlLinks](Set-OfficeExcelUrlLinks.md)
+Converts cells in a range into external URL hyperlinks.
+
+### [Set-OfficeExcelUrlLinksByHeader](Set-OfficeExcelUrlLinksByHeader.md)
+Converts cells under a header into external URL hyperlinks.
+
+### [Set-OfficePowerPointBackground](Set-OfficePowerPointBackground.md)
+Sets the slide background color or image.
+
 ### [Set-OfficePowerPointLayoutPlaceholderBounds](Set-OfficePowerPointLayoutPlaceholderBounds.md)
 Sets layout placeholder bounds for a slide layout.
 
@@ -394,14 +493,41 @@ Sets speaker notes for a PowerPoint slide.
 ### [Set-OfficePowerPointPlaceholderText](Set-OfficePowerPointPlaceholderText.md)
 Sets text in a slide placeholder.
 
+### [Set-OfficePowerPointSlideLayout](Set-OfficePowerPointSlideLayout.md)
+Changes the layout used by a slide.
+
+### [Set-OfficePowerPointSlideSize](Set-OfficePowerPointSlideSize.md)
+Sets the slide size for a PowerPoint presentation.
+
 ### [Set-OfficePowerPointSlideTitle](Set-OfficePowerPointSlideTitle.md)
 Sets the text of the title placeholder on a slide.
+
+### [Set-OfficePowerPointSlideTransition](Set-OfficePowerPointSlideTransition.md)
+Sets the transition used when advancing to a slide.
+
+### [Set-OfficePowerPointThemeColor](Set-OfficePowerPointThemeColor.md)
+Sets one or more PowerPoint theme colors.
+
+### [Set-OfficePowerPointThemeFonts](Set-OfficePowerPointThemeFonts.md)
+Sets PowerPoint theme fonts.
+
+### [Set-OfficePowerPointThemeName](Set-OfficePowerPointThemeName.md)
+Sets the PowerPoint theme name.
+
+### [Set-OfficeWordBackground](Set-OfficeWordBackground.md)
+Sets the background for a Word document.
+
+### [Set-OfficeWordDocumentProperty](Set-OfficeWordDocumentProperty.md)
+Sets a built-in or custom document property on a Word document.
 
 ### [Set-OfficeWordTableOfContent](Set-OfficeWordTableOfContent.md)
 Sets properties on a table of contents in a Word document.
 
 ### [Unprotect-OfficeExcelSheet](Unprotect-OfficeExcelSheet.md)
 Removes worksheet protection.
+
+### [Update-OfficePowerPointText](Update-OfficePowerPointText.md)
+Replaces text in a PowerPoint slide or presentation.
 
 ### [Update-OfficeWordFields](Update-OfficeWordFields.md)
 Updates fields in a Word document.

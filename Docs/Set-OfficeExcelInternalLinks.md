@@ -20,7 +20,7 @@ Set-OfficeExcelInternalLinks [-Range] <string> -Document <ExcelDocument> [-Sheet
 ```
 
 ## DESCRIPTION
-Turns each non-empty cell in the specified range into an internal hyperlink. By default, the cell text is used as both the destination sheet name and the display text.
+Converts cells in a range into internal workbook links.
 
 ## EXAMPLES
 
@@ -29,11 +29,166 @@ Turns each non-empty cell in the specified range into an internal hyperlink. By 
 PS>ExcelSheet 'Summary' { Set-OfficeExcelInternalLinks -Range 'A2:A10' }
 ```
 
-Links each value in A2:A10 to the sheet with the same name.
+Turns each non-empty cell in A2:A10 into an internal link to the sheet with the same name.
 
-### EXAMPLE 2
-```powershell
-PS>ExcelSheet 'Summary' { Set-OfficeExcelInternalLinks -Range 'A2:A10' -DisplayScript { param($text) \"Open $text\" } }
+## PARAMETERS
+
+### -DestinationSheetScript
+Optional mapping from cell text to destination sheet name.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
-Links each value in A2:A10 and changes the displayed text.
+### -DisplayScript
+Optional mapping from cell text to display text.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Document
+Workbook to operate on outside the DSL context.
+
+```yaml
+Type: ExcelDocument
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -NoStyle
+Skip hyperlink styling (blue + underline).
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThru
+Emit the worksheet after creating links.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Range
+A1 range containing values to convert into internal links.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Sheet
+Worksheet name when using Document.
+
+```yaml
+Type: String
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SheetIndex
+Worksheet index (0-based) when using Document.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TargetAddress
+Destination cell on the target sheet.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `OfficeIMO.Excel.ExcelDocument`
+
+## OUTPUTS
+
+- `OfficeIMO.Excel.ExcelSheet`
+
+## RELATED LINKS
+
+- None
+

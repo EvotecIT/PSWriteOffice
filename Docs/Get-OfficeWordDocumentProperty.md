@@ -4,84 +4,105 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Rename-OfficePowerPointSection
+# Get-OfficeWordDocumentProperty
 ## SYNOPSIS
-Renames a PowerPoint section.
+Gets built-in and custom document properties from a Word document.
 
 ## SYNTAX
-### __AllParameterSets
+### Path (Default)
 ```powershell
-Rename-OfficePowerPointSection -Name <string> -NewName <string> [-Presentation <PowerPointPresentation>] [-CaseSensitive] [-PassThru] [<CommonParameters>]
+Get-OfficeWordDocumentProperty [-InputPath] <string> [-Name <string[]>] [-BuiltIn] [-Custom] [<CommonParameters>]
+```
+
+### Document
+```powershell
+Get-OfficeWordDocumentProperty -Document <WordDocument> [-Name <string[]>] [-BuiltIn] [-Custom] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Renames a PowerPoint section.
+Gets built-in and custom document properties from a Word document.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'
+PS>Get-OfficeWordDocumentProperty -Path .\Report.docx
 ```
 
-Renames the first matching section from Results to Deep Dive.
+Returns built-in and custom Word document properties.
 
 ## PARAMETERS
 
-### -CaseSensitive
-Use case-sensitive matching for the existing section name.
+### -BuiltIn
+Only return built-in document properties.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Path, Document
 Aliases: None
 Possible values: 
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Custom
+Only return custom document properties.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Document
+Document to inspect.
+
+```yaml
+Type: WordDocument
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -InputPath
+Path to the document.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: FilePath, Path
+Possible values: 
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -Name
-Existing section name.
+Property name filter (wildcards supported).
 
 ```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NewName
-New section name.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -PassThru
-Emit the renamed section instead of no output.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Type: String[]
+Parameter Sets: Path, Document
 Aliases: None
 Possible values: 
 
@@ -89,22 +110,6 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Presentation
-Presentation to update (optional inside DSL).
-
-```yaml
-Type: PowerPointPresentation
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -113,12 +118,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.Word.WordDocument`
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSectionInfo
-System.Boolean`
+- `PSWriteOffice.Models.Word.WordDocumentPropertyInfo`
 
 ## RELATED LINKS
 

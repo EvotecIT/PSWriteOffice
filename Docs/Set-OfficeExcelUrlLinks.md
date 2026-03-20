@@ -16,11 +16,11 @@ Set-OfficeExcelUrlLinks [-Range] <string> -UrlScript <scriptblock> [-TitleScript
 
 ### Document
 ```powershell
-Set-OfficeExcelUrlLinks [-Range] <string> -UrlScript <scriptblock> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-TitleScript <scriptblock>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelUrlLinks [-Range] <string> -Document <ExcelDocument> -UrlScript <scriptblock> [-Sheet <string>] [-SheetIndex <int>] [-TitleScript <scriptblock>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Turns each non-empty cell in the specified range into an external hyperlink. Use `-UrlScript` to map the existing cell text to a target URL, and optionally use `-TitleScript` to control the display text. When `-TitleScript` is omitted, PSWriteOffice uses OfficeIMO's smart display behavior.
+Converts cells in a range into external URL hyperlinks.
 
 ## EXAMPLES
 
@@ -29,11 +29,150 @@ Turns each non-empty cell in the specified range into an external hyperlink. Use
 PS>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinks -Range 'D2:D10' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }
 ```
 
-Links each RFC value in D2:D10 to its datatracker page and uses smart display text such as `RFC 7208`.
+Turns each non-empty cell in D2:D10 into an external hyperlink.
 
-### EXAMPLE 2
-```powershell
-PS>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinks -Range 'D2:D10' -UrlScript { param($text) "https://example.org/docs/$text" } -TitleScript { param($text) "Open $text" } }
+## PARAMETERS
+
+### -Document
+Workbook to operate on outside the DSL context.
+
+```yaml
+Type: ExcelDocument
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
-Links each value in D2:D10 and replaces the displayed text.
+### -NoStyle
+Skip hyperlink styling (blue + underline).
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThru
+Emit the worksheet after creating links.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Range
+A1 range containing values to convert into external links.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Sheet
+Worksheet name when using Document.
+
+```yaml
+Type: String
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SheetIndex
+Worksheet index (0-based) when using Document.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TitleScript
+Optional mapping from cell text to display text.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UrlScript
+Maps the cell text to a URL.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `OfficeIMO.Excel.ExcelDocument`
+
+## OUTPUTS
+
+- `OfficeIMO.Excel.ExcelSheet`
+
+## RELATED LINKS
+
+- None
+

@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Add-OfficeExcelTableOfContents
 ## SYNOPSIS
-Adds or refreshes an Excel workbook table of contents sheet.
+Adds or refreshes a workbook table of contents sheet.
 
 ## SYNTAX
 ### Context (Default)
@@ -14,47 +14,39 @@ Adds or refreshes an Excel workbook table of contents sheet.
 Add-OfficeExcelTableOfContents [-SheetName <string>] [-DoNotPlaceFirst] [-NoHyperlinks] [-IncludeNamedRanges] [-IncludeHiddenNamedRanges] [-NoStyle] [-AddBackLinks] [-BackLinkRow <int>] [-BackLinkColumn <int>] [-BackLinkText <string>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
-### Document
-```powershell
-Add-OfficeExcelTableOfContents -Document <ExcelDocument> [-SheetName <string>] [-DoNotPlaceFirst] [-NoHyperlinks] [-IncludeNamedRanges] [-IncludeHiddenNamedRanges] [-NoStyle] [-AddBackLinks] [-BackLinkRow <int>] [-BackLinkColumn <int>] [-BackLinkText <string>] [-Open] [-PassThru] [<CommonParameters>]
-```
-
 ### Path
 ```powershell
 Add-OfficeExcelTableOfContents [-InputPath] <string> [-SheetName <string>] [-DoNotPlaceFirst] [-NoHyperlinks] [-IncludeNamedRanges] [-IncludeHiddenNamedRanges] [-NoStyle] [-AddBackLinks] [-BackLinkRow <int>] [-BackLinkColumn <int>] [-BackLinkText <string>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
+### Document
+```powershell
+Add-OfficeExcelTableOfContents -Document <ExcelDocument> [-SheetName <string>] [-DoNotPlaceFirst] [-NoHyperlinks] [-IncludeNamedRanges] [-IncludeHiddenNamedRanges] [-NoStyle] [-AddBackLinks] [-BackLinkRow <int>] [-BackLinkColumn <int>] [-BackLinkText <string>] [-Open] [-PassThru] [<CommonParameters>]
+```
+
 ## DESCRIPTION
-Adds or refreshes a workbook navigation sheet based on the OfficeIMO Excel TOC helpers. It can be used inside `New-OfficeExcel`, with an open `ExcelDocument`, or directly against a workbook path.
+Adds or refreshes a workbook table of contents sheet.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeExcelTableOfContents -Path .\Report.xlsx -IncludeNamedRanges -AddBackLinks
+PS>Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks
 ```
 
-Updates `Report.xlsx` in place with a TOC sheet and back links on other worksheets.
-
-### EXAMPLE 2
-```powershell
-PS>New-OfficeExcel -Path .\Report.xlsx {
-    ExcelSheet 'Data' { ExcelCell -Address 'A1' -Value 'Name' }
-    ExcelTableOfContents
-}
-```
-
-Creates a workbook and adds the TOC within the DSL using the `ExcelTableOfContents` alias.
+Creates or refreshes a TOC sheet, lists named ranges, and adds back links on other sheets.
 
 ## PARAMETERS
 
 ### -AddBackLinks
-Add a link back to the TOC on each non-TOC sheet.
+Add a quick link back to the TOC on each worksheet.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -63,43 +55,49 @@ Accept wildcard characters: True
 ```
 
 ### -BackLinkColumn
-Column used for backlinks when you want an explicit placement.
+Column for the back link when AddBackLinks is used.
 
 ```yaml
 Type: Int32
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
-Default value: 1
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -BackLinkRow
-Row used for backlinks when you want an explicit placement.
+Row for the back link when AddBackLinks is used.
 
 ```yaml
 Type: Int32
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
-Default value: 2
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -BackLinkText
-Text shown for the backlink.
+Text used for back links.
 
 ```yaml
 Type: String
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
-Default value: ← TOC
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -111,6 +109,8 @@ Workbook to update.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -119,12 +119,14 @@ Accept wildcard characters: True
 ```
 
 ### -DoNotPlaceFirst
-Keep the TOC sheet in its current position instead of moving it to the front.
+Keep the TOC sheet in its current position instead of moving it first.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -133,12 +135,14 @@ Accept wildcard characters: True
 ```
 
 ### -IncludeHiddenNamedRanges
-Include hidden named ranges when `-IncludeNamedRanges` is used.
+Include hidden named ranges when listing named ranges.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -151,8 +155,10 @@ Include named ranges in the TOC.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -167,6 +173,8 @@ Path to the workbook to update in place.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
+Possible values: 
+
 Required: True
 Position: 0
 Default value: None
@@ -179,8 +187,10 @@ Disable internal hyperlinks in the TOC sheet.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -189,12 +199,14 @@ Accept wildcard characters: True
 ```
 
 ### -NoStyle
-Disable the styled TOC layout.
+Disable formatted TOC styling.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -203,12 +215,14 @@ Accept wildcard characters: True
 ```
 
 ### -Open
-Open the workbook after saving when `-Path` is used.
+Open the workbook after saving when InputPath is used.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -217,12 +231,14 @@ Accept wildcard characters: True
 ```
 
 ### -PassThru
-Emit the updated workbook or file info.
+Emit the updated document or file info.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -235,11 +251,13 @@ Name of the TOC sheet.
 
 ```yaml
 Type: String
-Parameter Sets: Context, Document, Path
+Parameter Sets: Context, Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
-Default value: TOC
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -253,9 +271,10 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Excel.ExcelDocument`
-- `System.IO.FileInfo`
+- `OfficeIMO.Excel.ExcelDocument
+System.IO.FileInfo`
 
 ## RELATED LINKS
 
 - None
+

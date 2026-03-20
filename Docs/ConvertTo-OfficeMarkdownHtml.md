@@ -11,17 +11,17 @@ Converts Markdown content to HTML.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-DocumentMode] [-Style <HtmlStyle>] [-CssDelivery <CssDelivery>] [-AssetMode <AssetMode>] [-Title <string>] [-ReaderOptions <MarkdownReaderOptions>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-DocumentMode] [-Style <HtmlStyle>] [-CssDelivery <CssDelivery>] [-AssetMode <AssetMode>] [-Title <string>] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Text
 ```powershell
-ConvertTo-OfficeMarkdownHtml -Text <string> [-OutputPath <string>] [-DocumentMode] [-Style <HtmlStyle>] [-CssDelivery <CssDelivery>] [-AssetMode <AssetMode>] [-Title <string>] [-ReaderOptions <MarkdownReaderOptions>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeMarkdownHtml -Text <string> [-OutputPath <string>] [-DocumentMode] [-Style <HtmlStyle>] [-CssDelivery <CssDelivery>] [-AssetMode <AssetMode>] [-Title <string>] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertTo-OfficeMarkdownHtml -Document <MarkdownDoc> [-OutputPath <string>] [-DocumentMode] [-Style <HtmlStyle>] [-CssDelivery <CssDelivery>] [-AssetMode <AssetMode>] [-Title <string>] [-ReaderOptions <MarkdownReaderOptions>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeMarkdownHtml -Document <MarkdownDoc> [-OutputPath <string>] [-DocumentMode] [-Style <HtmlStyle>] [-CssDelivery <CssDelivery>] [-AssetMode <AssetMode>] [-Title <string>] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -146,6 +146,22 @@ Emit a FileInfo when saving to disk.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Path, Text, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Profile
+Named reader profile used when ReaderOptions is not supplied.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: Path, Text, Document
 Aliases: None
 Possible values: 

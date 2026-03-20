@@ -16,16 +16,16 @@ Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-IncludeTable
 
 ### Presentation
 ```powershell
-Update-OfficePowerPointText [-Presentation] <PowerPointPresentation> -OldValue <string> -NewValue <string> [-IncludeTables <bool>] [-IncludeNotes] [<CommonParameters>]
+Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-Presentation <PowerPointPresentation>] [-IncludeTables <bool>] [-IncludeNotes] [<CommonParameters>]
 ```
 
 ### Slide
 ```powershell
-Update-OfficePowerPointText [-Slide] <PowerPointSlide> -OldValue <string> -NewValue <string> [-IncludeTables <bool>] [-IncludeNotes] [<CommonParameters>]
+Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-Slide <PowerPointSlide>] [-IncludeTables <bool>] [-IncludeNotes] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Replaces matching text in a slide or across the whole presentation. The alias `Replace-OfficePowerPointText` is also exported for convenience.
+Replaces text in a PowerPoint slide or presentation.
 
 ## EXAMPLES
 
@@ -34,14 +34,7 @@ Replaces matching text in a slide or across the whole presentation. The alias `R
 PS>Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
 ```
 
-Replaces FY24 with FY25 across the deck, including notes.
-
-### EXAMPLE 2
-```powershell
-PS>Replace-OfficePowerPointText -Slide $slide -OldValue 'Draft' -NewValue 'Final'
-```
-
-Replaces Draft with Final in a single slide.
+Replaces matching text throughout the presentation and notes.
 
 ## PARAMETERS
 
@@ -52,6 +45,8 @@ Include notes text in the replacement operation.
 Type: SwitchParameter
 Parameter Sets: Auto, Presentation, Slide
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -66,9 +61,11 @@ Include table cells in the replacement operation.
 Type: Boolean
 Parameter Sets: Auto, Presentation, Slide
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
-Default value: True
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -80,6 +77,8 @@ Replacement text.
 Type: String
 Parameter Sets: Auto, Presentation, Slide
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -94,6 +93,8 @@ Text to find.
 Type: String
 Parameter Sets: Auto, Presentation, Slide
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -108,8 +109,10 @@ Presentation to update.
 Type: PowerPointPresentation
 Parameter Sets: Presentation
 Aliases: None
+Possible values: 
+
 Required: False
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -122,8 +125,10 @@ Slide to update.
 Type: PowerPointSlide
 Parameter Sets: Slide
 Aliases: None
+Possible values: 
+
 Required: False
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -134,8 +139,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointPresentation`
-- `OfficeIMO.PowerPoint.PowerPointSlide`
+- `OfficeIMO.PowerPoint.PowerPointPresentation
+OfficeIMO.PowerPoint.PowerPointSlide`
 
 ## OUTPUTS
 
@@ -144,3 +149,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
+

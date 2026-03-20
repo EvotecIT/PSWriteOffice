@@ -4,51 +4,51 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Add-OfficePowerPointSection
+# Set-OfficeWordDocumentProperty
 ## SYNOPSIS
-Adds a section to a PowerPoint presentation.
+Sets a built-in or custom document property on a Word document.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointSection -Name <string> [-Presentation <PowerPointPresentation>] [-StartSlideIndex <int>] [<CommonParameters>]
+Set-OfficeWordDocumentProperty [-Name] <string> [[-Value] <Object>] [-Document <WordDocument>] [-Custom] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Adds a section to a PowerPoint presentation.
+Sets a built-in or custom document property on a Word document.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2
+PS>Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'
 ```
 
-Creates a section named Results starting at the third slide.
+Updates the built-in Title property on the active Word document.
 
 ## PARAMETERS
 
-### -Name
-Name of the section to add.
+### -Custom
+Treat the property as a custom document property.
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 
 
-Required: True
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Presentation
-Presentation to update (optional inside DSL).
+### -Document
+Document to update when provided explicitly.
 
 ```yaml
-Type: PowerPointPresentation
+Type: WordDocument
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 
@@ -60,11 +60,27 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -StartSlideIndex
-Zero-based slide index where the section should start.
+### -Name
+Property name to update.
 
 ```yaml
-Type: Nullable`1
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThru
+Emit the updated document.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 
@@ -76,16 +92,32 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -Value
+Property value.
+
+```yaml
+Type: Object
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.Word.WordDocument`
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSectionInfo`
+- `OfficeIMO.Word.WordDocument`
 
 ## RELATED LINKS
 

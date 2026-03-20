@@ -20,33 +20,28 @@ Get-OfficeExcelUsedRange -Document <ExcelDocument> [-Sheet <string>] [-SheetInde
 ```
 
 ## DESCRIPTION
-Reads the current used range detected by Excel for a worksheet. By default it uses the first row as headers and returns each remaining row as a PSCustomObject.
+Reads the used range from an Excel workbook.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeExcelUsedRange -Path .\Report.xlsx -Sheet 'Data'
+PS>Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet 'Data'
 ```
 
-Returns the used range from the `Data` worksheet as PSCustomObjects.
-
-### EXAMPLE 2
-```powershell
-PS>Get-OfficeExcelUsedRange -Path .\Report.xlsx -SheetIndex 0 -AsDataTable
-```
-
-Returns the used range from the first worksheet as a raw `DataTable`.
+Reads the sheet's used range, treating the first row as headers.
 
 ## PARAMETERS
 
 ### -AsDataTable
-Emit the raw `DataTable`.
+Emit the raw DataTable instead of row objects.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -55,12 +50,14 @@ Accept wildcard characters: True
 ```
 
 ### -AsHashtable
-Emit each row as a hashtable instead of a PSCustomObject.
+Emit rows as hashtables instead of PSCustomObjects.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -75,6 +72,8 @@ Workbook to inspect.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
+Possible values: 
+
 Required: True
 Position: named
 Default value: None
@@ -83,15 +82,17 @@ Accept wildcard characters: True
 ```
 
 ### -HeadersInFirstRow
-Use the first row in the used range as column headers.
+Use the first row as column headers.
 
 ```yaml
 Type: Boolean
 Parameter Sets: Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
-Default value: True
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -103,6 +104,8 @@ Path to the workbook.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
+Possible values: 
+
 Required: True
 Position: 0
 Default value: None
@@ -117,6 +120,8 @@ Prefer decimals instead of doubles for numeric values.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -125,12 +130,14 @@ Accept wildcard characters: True
 ```
 
 ### -Sheet
-Worksheet name to read.
+Worksheet name to read; defaults to the first sheet.
 
 ```yaml
 Type: String
 Parameter Sets: Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -139,12 +146,14 @@ Accept wildcard characters: True
 ```
 
 ### -SheetIndex
-Zero-based worksheet index to read.
+Zero-based worksheet index to read; defaults to the first sheet.
 
 ```yaml
 Type: Nullable`1
 Parameter Sets: Path, Document
 Aliases: None
+Possible values: 
+
 Required: False
 Position: named
 Default value: None
@@ -161,10 +170,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Management.Automation.PSObject`
-- `System.Collections.Hashtable`
-- `System.Data.DataTable`
+- `System.Management.Automation.PSObject
+System.Collections.Hashtable
+System.Data.DataTable`
 
 ## RELATED LINKS
 
 - None
+

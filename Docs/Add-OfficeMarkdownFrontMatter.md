@@ -4,68 +4,73 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Add-OfficePowerPointSection
+# Add-OfficeMarkdownFrontMatter
 ## SYNOPSIS
-Adds a section to a PowerPoint presentation.
+Adds YAML front matter to a Markdown document.
 
 ## SYNTAX
-### __AllParameterSets
+### Context (Default)
 ```powershell
-Add-OfficePowerPointSection -Name <string> [-Presentation <PowerPointPresentation>] [-StartSlideIndex <int>] [<CommonParameters>]
+Add-OfficeMarkdownFrontMatter [-Data] <Object> [-PassThru] [<CommonParameters>]
+```
+
+### Document
+```powershell
+Add-OfficeMarkdownFrontMatter [-Data] <Object> -Document <MarkdownDoc> [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Adds a section to a PowerPoint presentation.
+Adds YAML front matter to a Markdown document.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2
+PS>MarkdownFrontMatter -Data @{ title = 'Weekly Report'; tags = @('ops','summary') }
 ```
 
-Creates a section named Results starting at the third slide.
+Sets the document header using the supplied key/value pairs.
 
 ## PARAMETERS
 
-### -Name
-Name of the section to add.
+### -Data
+Front matter data expressed as a hashtable or object.
 
 ```yaml
-Type: String
-Parameter Sets: __AllParameterSets
+Type: Object
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Document
+Markdown document to update outside the DSL context.
+
+```yaml
+Type: MarkdownDoc
+Parameter Sets: Document
 Aliases: None
 Possible values: 
 
 Required: True
 Position: named
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Presentation
-Presentation to update (optional inside DSL).
-
-```yaml
-Type: PowerPointPresentation
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -StartSlideIndex
-Zero-based slide index where the section should start.
+### -PassThru
+Emit the updated Markdown document.
 
 ```yaml
-Type: Nullable`1
-Parameter Sets: __AllParameterSets
+Type: SwitchParameter
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
@@ -81,11 +86,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSectionInfo`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## RELATED LINKS
 

@@ -4,126 +4,57 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Set-OfficePowerPointSlideLayout
+# Set-OfficeWordBackground
 ## SYNOPSIS
-Changes the layout used by a slide.
+Sets the background for a Word document.
 
 ## SYNTAX
-### Index (Default)
+### Color (Default)
 ```powershell
-Set-OfficePowerPointSlideLayout -Layout <int> [-Slide <PowerPointSlide>] [-Master <int>] [<CommonParameters>]
+Set-OfficeWordBackground [-Color] <string> [-Document <WordDocument>] [-PassThru] [<CommonParameters>]
 ```
 
-### Name
+### Image
 ```powershell
-Set-OfficePowerPointSlideLayout -LayoutName <string> [-Slide <PowerPointSlide>] [-Master <int>] [-CaseSensitive] [<CommonParameters>]
-```
-
-### Type
-```powershell
-Set-OfficePowerPointSlideLayout -LayoutType <SlideLayoutValues> [-Slide <PowerPointSlide>] [-Master <int>] [<CommonParameters>]
+Set-OfficeWordBackground [-ImagePath] <string> [-Document <WordDocument>] [-Width <double>] [-Height <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Changes the layout used by a slide.
+Sets the background for a Word document.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideLayout -LayoutName 'Title and Content'
+PS>Set-OfficeWordBackground -Color '#f4f7fb'
 ```
 
-Updates the slide to use the requested layout.
+Sets the document background to the provided hex color.
 
 ## PARAMETERS
 
-### -CaseSensitive
-Use case-sensitive matching for layout names.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Name
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Layout
-Layout index to use.
-
-```yaml
-Type: Int32
-Parameter Sets: Index
-Aliases: None
-Possible values: 
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -LayoutName
-Layout name to use.
+### -Color
+Background color in hex format (#RRGGBB or RRGGBB).
 
 ```yaml
 Type: String
-Parameter Sets: Name
+Parameter Sets: Color
 Aliases: None
 Possible values: 
 
 Required: True
-Position: named
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -LayoutType
-Layout type to use.
+### -Document
+Document to update when provided explicitly.
 
 ```yaml
-Type: SlideLayoutValues
-Parameter Sets: Type
-Aliases: None
-Possible values: 
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Master
-Slide master index to use.
-
-```yaml
-Type: Int32
-Parameter Sets: Index, Name, Type
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Slide
-Slide to update (optional inside a slide DSL scope).
-
-```yaml
-Type: PowerPointSlide
-Parameter Sets: Index, Name, Type
+Type: WordDocument
+Parameter Sets: Color, Image
 Aliases: None
 Possible values: 
 
@@ -134,16 +65,80 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -Height
+Optional background image height in pixels.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Image
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ImagePath
+Path to the background image.
+
+```yaml
+Type: String
+Parameter Sets: Image
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThru
+Emit the updated document.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Color, Image
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Width
+Optional background image width in pixels.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Image
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSlide`
+- `OfficeIMO.Word.WordDocument`
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSlide`
+- `OfficeIMO.Word.WordDocument`
 
 ## RELATED LINKS
 

@@ -14,6 +14,21 @@ Converts cells under a header into external URL hyperlinks.
 Set-OfficeExcelUrlLinksByHeader [-Header] <string> -UrlScript <scriptblock> [-TitleScript <scriptblock>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
+### DocumentUsedRange
+```powershell
+Set-OfficeExcelUrlLinksByHeader [-Header] <string> -Document <ExcelDocument> -UrlScript <scriptblock> [-Sheet <string>] [-SheetIndex <int>] [-TitleScript <scriptblock>] [-NoStyle] [-PassThru] [<CommonParameters>]
+```
+
+### DocumentTable
+```powershell
+Set-OfficeExcelUrlLinksByHeader [-Header] <string> -Document <ExcelDocument> -TableName <string> -UrlScript <scriptblock> [-Sheet <string>] [-SheetIndex <int>] [-TitleScript <scriptblock>] [-NoStyle] [-PassThru] [<CommonParameters>]
+```
+
+### DocumentRange
+```powershell
+Set-OfficeExcelUrlLinksByHeader [-Header] <string> -Document <ExcelDocument> -Range <string> -UrlScript <scriptblock> [-Sheet <string>] [-SheetIndex <int>] [-TitleScript <scriptblock>] [-NoStyle] [-PassThru] [<CommonParameters>]
+```
+
 ### ContextTable
 ```powershell
 Set-OfficeExcelUrlLinksByHeader [-Header] <string> -TableName <string> -UrlScript <scriptblock> [-TitleScript <scriptblock>] [-NoStyle] [-PassThru] [<CommonParameters>]
@@ -25,20 +40,191 @@ Set-OfficeExcelUrlLinksByHeader [-Header] <string> -Range <string> -UrlScript <s
 ```
 
 ## DESCRIPTION
-Finds a column by header text and turns its non-empty values into external hyperlinks. You can target the worksheet used range, a named table, or a specific A1 range whose first row contains headers.
+Converts cells under a header into external URL hyperlinks.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }
+PS>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -TableName 'Links' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }
 ```
 
-Uses the used-range header row to find the `RFC` column and convert its values into links.
+Uses the RFC column values to create external hyperlinks.
 
-### EXAMPLE 2
-```powershell
-PS>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -TableName 'LinksTable' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } -TitleScript { param($text) "Open $text" } }
+## PARAMETERS
+
+### -Document
+Workbook to operate on outside the DSL context.
+
+```yaml
+Type: ExcelDocument
+Parameter Sets: DocumentUsedRange, DocumentTable, DocumentRange
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
-Uses the `RFC` column inside `LinksTable` and controls the displayed link text.
+### -Header
+Header text to locate.
+
+```yaml
+Type: String
+Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoStyle
+Skip hyperlink styling (blue + underline).
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThru
+Emit the worksheet after creating links.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Range
+Restrict linking to a specific A1 range whose first row contains headers.
+
+```yaml
+Type: String
+Parameter Sets: DocumentRange, ContextRange
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Sheet
+Worksheet name when using Document.
+
+```yaml
+Type: String
+Parameter Sets: DocumentUsedRange, DocumentTable, DocumentRange
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SheetIndex
+Worksheet index (0-based) when using Document.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: DocumentUsedRange, DocumentTable, DocumentRange
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TableName
+Restrict linking to a named table.
+
+```yaml
+Type: String
+Parameter Sets: DocumentTable, ContextTable
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TitleScript
+Optional mapping from cell text to display text.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UrlScript
+Maps the cell text to a URL.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `OfficeIMO.Excel.ExcelDocument`
+
+## OUTPUTS
+
+- `OfficeIMO.Excel.ExcelSheet`
+
+## RELATED LINKS
+
+- None
+

@@ -4,37 +4,69 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Set-OfficeExcelSmartHyperlink
+# Add-OfficeMarkdownTableOfContents
 ## SYNOPSIS
-Sets an external hyperlink using a smart display strategy.
+Adds a Markdown table of contents placeholder.
 
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelSmartHyperlink [-Url] <string> [-Row <int>] [-Column <int>] [-Address <string>] [-Title <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownTableOfContents [-Title <string>] [-MinLevel <int>] [-MaxLevel <int>] [-Ordered] [-TitleLevel <int>] [-PlaceAtTop] [-ForPreviousHeading] [-ForSection <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelSmartHyperlink [-Url] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-Title <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownTableOfContents -Document <MarkdownDoc> [-Title <string>] [-MinLevel <int>] [-MaxLevel <int>] [-Ordered] [-TitleLevel <int>] [-PlaceAtTop] [-ForPreviousHeading] [-ForSection <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Sets an external hyperlink using a smart display strategy.
+Adds a Markdown table of contents placeholder.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208' }
+PS>MarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop
 ```
 
-Creates a hyperlink that displays RFC 7208 instead of the full URL.
+Inserts a generated table of contents for headings in the document.
 
 ## PARAMETERS
 
-### -Address
-A1-style cell address (e.g., A1, C5).
+### -Document
+Markdown document to update outside the DSL context.
+
+```yaml
+Type: MarkdownDoc
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -ForPreviousHeading
+Scope the TOC to the previous heading.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ForSection
+Scope the TOC to the named section heading.
 
 ```yaml
 Type: String
@@ -49,11 +81,11 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Column
-1-based column index.
+### -MaxLevel
+Maximum heading depth included in the table of contents.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
@@ -65,24 +97,24 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Document
-Workbook to operate on outside the DSL context.
+### -MinLevel
+Minimum heading depth included in the table of contents.
 
 ```yaml
-Type: ExcelDocument
-Parameter Sets: Document
+Type: Int32
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
-Required: True
+Required: False
 Position: named
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -NoStyle
-Skip hyperlink styling (blue + underline).
+### -Ordered
+Generate an ordered table of contents list.
 
 ```yaml
 Type: SwitchParameter
@@ -98,7 +130,7 @@ Accept wildcard characters: True
 ```
 
 ### -PassThru
-Emit the worksheet after setting the link.
+Emit the updated Markdown document.
 
 ```yaml
 Type: SwitchParameter
@@ -113,44 +145,12 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Row
-1-based row index.
+### -PlaceAtTop
+Insert the TOC at the start of the document.
 
 ```yaml
-Type: Nullable`1
+Type: SwitchParameter
 Parameter Sets: Context, Document
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Sheet
-Worksheet name when using Document.
-
-```yaml
-Type: String
-Parameter Sets: Document
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -SheetIndex
-Worksheet index (0-based) when using Document.
-
-```yaml
-Type: Nullable`1
-Parameter Sets: Document
 Aliases: None
 Possible values: 
 
@@ -162,7 +162,7 @@ Accept wildcard characters: True
 ```
 
 ### -Title
-Optional preferred display text.
+Heading text displayed above the generated table of contents.
 
 ```yaml
 Type: String
@@ -177,17 +177,17 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Url
-External URL to link to.
+### -TitleLevel
+Heading level used for the TOC title.
 
 ```yaml
-Type: String
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
-Required: True
-Position: 0
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -198,11 +198,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.Excel.ExcelDocument`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## OUTPUTS
 
-- `System.Object`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## RELATED LINKS
 

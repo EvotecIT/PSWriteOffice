@@ -4,36 +4,41 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Rename-OfficePowerPointSection
+# Add-OfficeMarkdownTaskList
 ## SYNOPSIS
-Renames a PowerPoint section.
+Adds a Markdown task list.
 
 ## SYNTAX
-### __AllParameterSets
+### Context (Default)
 ```powershell
-Rename-OfficePowerPointSection -Name <string> -NewName <string> [-Presentation <PowerPointPresentation>] [-CaseSensitive] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownTaskList [-Items] <string[]> [-Completed <int[]>] [-AllCompleted] [-PassThru] [<CommonParameters>]
+```
+
+### Document
+```powershell
+Add-OfficeMarkdownTaskList [-Items] <string[]> -Document <MarkdownDoc> [-Completed <int[]>] [-AllCompleted] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Renames a PowerPoint section.
+Adds a Markdown task list.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'
+PS>MarkdownTaskList -Items 'Draft','Review','Ship' -Completed 1
 ```
 
-Renames the first matching section from Results to Deep Dive.
+Appends an unordered task list and marks the selected items as completed.
 
 ## PARAMETERS
 
-### -CaseSensitive
-Use case-sensitive matching for the existing section name.
+### -AllCompleted
+Mark every task as completed.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
@@ -44,44 +49,60 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Name
-Existing section name.
+### -Completed
+Zero-based item indexes that should be marked complete.
 
 ```yaml
-Type: String
-Parameter Sets: __AllParameterSets
+Type: Int32[]
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
-Required: True
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -NewName
-New section name.
+### -Document
+Markdown document to update outside the DSL context.
 
 ```yaml
-Type: String
-Parameter Sets: __AllParameterSets
+Type: MarkdownDoc
+Parameter Sets: Document
 Aliases: None
 Possible values: 
 
 Required: True
 Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Items
+Task text entries to include in the checklist.
+
+```yaml
+Type: String[]
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
 ### -PassThru
-Emit the renamed section instead of no output.
+Emit the updated Markdown document.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
@@ -89,22 +110,6 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Presentation
-Presentation to update (optional inside DSL).
-
-```yaml
-Type: PowerPointPresentation
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -113,12 +118,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSectionInfo
-System.Boolean`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## RELATED LINKS
 

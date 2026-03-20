@@ -9,12 +9,13 @@ schema: 2.0.0
 Sets the transition used when advancing to a slide.
 
 ## SYNTAX
+### __AllParameterSets
 ```powershell
-Set-OfficePowerPointSlideTransition [[-Slide] <PowerPointSlide>] -Transition <SlideTransition> [<CommonParameters>]
+Set-OfficePowerPointSlideTransition -Transition <SlideTransition> [-Slide <PowerPointSlide>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Applies one of the `OfficeIMO.PowerPoint` slide transition values to a slide object or to the current slide inside the PowerPoint DSL.
+Sets the transition used when advancing to a slide.
 
 ## EXAMPLES
 
@@ -23,26 +24,21 @@ Applies one of the `OfficeIMO.PowerPoint` slide transition values to a slide obj
 PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTransition -Transition Fade
 ```
 
-Applies a fade transition to the first slide.
-
-### EXAMPLE 2
-```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status'; PptTransition -Transition Morph } }
-```
-
-Applies a morph transition inside the PowerPoint DSL.
+Updates the first slide so it uses the Fade transition.
 
 ## PARAMETERS
 
 ### -Slide
-Slide to update.
+Slide to update (optional inside a slide DSL scope).
 
 ```yaml
 Type: PowerPointSlide
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: 
+
 Required: False
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -53,8 +49,10 @@ Transition to apply.
 
 ```yaml
 Type: SlideTransition
-Parameter Sets: (All)
+Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values: None, Fade, Wipe, BlindsVertical, BlindsHorizontal, CombHorizontal, CombVertical, PushUp, PushDown, PushLeft, PushRight, Cut, Flash, WarpIn, WarpOut, Prism, FerrisLeft, FerrisRight, Morph
+
 Required: True
 Position: named
 Default value: None
@@ -75,4 +73,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## RELATED LINKS
 
-- [Set-OfficePowerPointSlideSize](Set-OfficePowerPointSlideSize.md)
+- None
+

@@ -4,51 +4,51 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Add-OfficePowerPointSection
+# Invoke-OfficeWordMailMerge
 ## SYNOPSIS
-Adds a section to a PowerPoint presentation.
+Executes a simple mail merge against MERGEFIELD values in a Word document.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointSection -Name <string> [-Presentation <PowerPointPresentation>] [-StartSlideIndex <int>] [<CommonParameters>]
+Invoke-OfficeWordMailMerge [-Data] <Object> [-Document <WordDocument>] [-PreserveFields] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Adds a section to a PowerPoint presentation.
+Executes a simple mail merge against MERGEFIELD values in a Word document.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2
+PS>Invoke-OfficeWordMailMerge -Data @{ FirstName = 'John'; OrderId = 12345 }
 ```
 
-Creates a section named Results starting at the third slide.
+Updates MERGEFIELD values in the active Word document.
 
 ## PARAMETERS
 
-### -Name
-Name of the section to add.
+### -Data
+Hashtable or object whose properties map to MERGEFIELD names.
 
 ```yaml
-Type: String
+Type: Object
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Values
 Possible values: 
 
 Required: True
-Position: named
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Presentation
-Presentation to update (optional inside DSL).
+### -Document
+Document to update when provided explicitly.
 
 ```yaml
-Type: PowerPointPresentation
+Type: WordDocument
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 
@@ -60,11 +60,27 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -StartSlideIndex
-Zero-based slide index where the section should start.
+### -PassThru
+Emit the updated document.
 
 ```yaml
-Type: Nullable`1
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PreserveFields
+Preserve field codes and only update displayed field text.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 
@@ -81,11 +97,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.Word.WordDocument`
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSectionInfo`
+- `OfficeIMO.Word.WordDocument`
 
 ## RELATED LINKS
 

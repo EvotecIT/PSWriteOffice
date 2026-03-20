@@ -4,72 +4,77 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Rename-OfficePowerPointSection
+# Add-OfficeMarkdownDetails
 ## SYNOPSIS
-Renames a PowerPoint section.
+Adds a collapsible Markdown details block.
 
 ## SYNTAX
-### __AllParameterSets
+### Context (Default)
 ```powershell
-Rename-OfficePowerPointSection -Name <string> -NewName <string> [-Presentation <PowerPointPresentation>] [-CaseSensitive] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownDetails [-Summary] <string> [-Content] <scriptblock> [-Open] [-PassThru] [<CommonParameters>]
+```
+
+### Document
+```powershell
+Add-OfficeMarkdownDetails [-Summary] <string> [-Content] <scriptblock> -Document <MarkdownDoc> [-Open] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Renames a PowerPoint section.
+Adds a collapsible Markdown details block.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'
+PS>MarkdownDetails -Summary 'Implementation notes' { MarkdownParagraph -Text 'Hidden by default.' }
 ```
 
-Renames the first matching section from Results to Deep Dive.
+Appends a details/summary block with nested Markdown content.
 
 ## PARAMETERS
 
-### -CaseSensitive
-Use case-sensitive matching for the existing section name.
+### -Content
+Nested Markdown content rendered inside the details block.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Document
+Markdown document to update outside the DSL context.
+
+```yaml
+Type: MarkdownDoc
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Open
+Render the details block as open by default.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
 Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Name
-Existing section name.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NewName
-New section name.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: 
-
-Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -77,11 +82,11 @@ Accept wildcard characters: True
 ```
 
 ### -PassThru
-Emit the renamed section instead of no output.
+Emit the updated Markdown document.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
@@ -92,19 +97,19 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Presentation
-Presentation to update (optional inside DSL).
+### -Summary
+Summary text displayed by the details block.
 
 ```yaml
-Type: PowerPointPresentation
-Parameter Sets: __AllParameterSets
+Type: String
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: 
 
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -113,12 +118,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSectionInfo
-System.Boolean`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## RELATED LINKS
 
