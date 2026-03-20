@@ -8,10 +8,12 @@ namespace PSWriteOffice.Services.Markdown;
 internal sealed class MarkdownDslContext : IDisposable
 {
     private static readonly AsyncLocal<MarkdownDslContext?> CurrentScope = new();
+    private readonly MarkdownDslContext? _previousScope;
 
-    private MarkdownDslContext(MarkdownDoc document)
+    private MarkdownDslContext(MarkdownDoc document, MarkdownDslContext? previousScope)
     {
         Document = document ?? throw new ArgumentNullException(nameof(document));
+        _previousScope = previousScope;
     }
 
     public MarkdownDoc Document { get; }
@@ -23,12 +25,7 @@ internal sealed class MarkdownDslContext : IDisposable
             throw new ArgumentNullException(nameof(document));
         }
 
-        if (CurrentScope.Value != null)
-        {
-            throw new InvalidOperationException("A Markdown DSL scope is already active on this runspace.");
-        }
-
-        var scope = new MarkdownDslContext(document);
+        var scope = new MarkdownDslContext(document, CurrentScope.Value);
         CurrentScope.Value = scope;
         return scope;
     }
@@ -49,7 +46,7 @@ internal sealed class MarkdownDslContext : IDisposable
     {
         if (CurrentScope.Value == this)
         {
-            CurrentScope.Value = null;
+            CurrentScope.Value = _previousScope;
         }
     }
 }

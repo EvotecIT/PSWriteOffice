@@ -117,6 +117,7 @@
 - Area guides + cmdlet map. **Done**
 
 ### Recent updates
+- Added a repo-backed OfficeIMO gap backlog grouped by area and scope (`Docs/OfficeIMO-GapBacklog.md`).
 - Added PowerPoint placeholder example (`ExamplePowerPoint09-Placeholders.ps1`) and README quick start entries for layout placeholder helpers.
 - Added Markdown DSL cmdlets, tests, and example (`Example-MarkdownDsl.ps1`).
 - Added a usage guide covering Word/Excel/PowerPoint/Markdown/CSV (`Docs/Usage.md`).
@@ -133,5 +134,4 @@
 - Scaffold Word/Excel writer/reader cmdlets with context objects; stub aliases for DSL use. **Done**
 - Port 3–5 Word/Excel examples using new names; add minimal Pester smoke (create/open/read). **Done**
 - Draft XML help stubs for new cmdlets; ignore platyPS. **In Progress**
-
 

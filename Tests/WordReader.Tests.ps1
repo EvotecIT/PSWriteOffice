@@ -87,4 +87,78 @@ Describe 'Word reader helpers' {
         $toc.Text | Should -Be 'Contents'
         $toc.TextNoContent | Should -Be 'No entries'
     }
+
+    It 'reads hyperlinks and document properties' {
+        $path = Join-Path $TestDrive 'WordReaderLinksAndProperties.docx'
+
+        New-OfficeWord -Path $path {
+            Set-OfficeWordDocumentProperty -Name Title -Value 'Reader document'
+            Set-OfficeWordDocumentProperty -Name Subject -Value 'Reader smoke test'
+            Set-OfficeWordDocumentProperty -Name Ticket -Value 42 -Custom
+
+            Add-OfficeWordParagraph {
+                Add-OfficeWordText -Text 'See '
+                Add-OfficeWordHyperlink -Text 'Example' -Url 'https://example.org/docs' -Styled
+                Add-OfficeWordText -Text ' and '
+                Add-OfficeWordHyperlink -Text 'Summary' -Anchor 'Summary'
+            }
+
+            Add-OfficeWordParagraph {
+                Add-OfficeWordText -Text 'Summary destination'
+                Add-OfficeWordBookmark -Name 'Summary'
+            }
+        } | Out-Null
+
+        $links = Get-OfficeWordHyperlink -Path $path
+        $links.Count | Should -Be 2
+
+        $external = Get-OfficeWordHyperlink -Path $path -Url 'https://example.org/*'
+        $external.Count | Should -Be 1
+        $external[0].Text | Should -Be 'Example'
+
+        $anchor = Get-OfficeWordHyperlink -Path $path -Anchor 'Summary'
+        $anchor.Count | Should -Be 1
+        $anchor[0].Anchor | Should -Be 'Summary'
+
+        $properties = Get-OfficeWordDocumentProperty -Path $path
+        ($properties | Where-Object { $_.Scope -eq 'BuiltIn' -and $_.Name -eq 'Title' } | Select-Object -First 1).Value | Should -Be 'Reader document'
+        ($properties | Where-Object { $_.Scope -eq 'BuiltIn' -and $_.Name -eq 'Subject' } | Select-Object -First 1).Value | Should -Be 'Reader smoke test'
+        ($properties | Where-Object { $_.Scope -eq 'Custom' -and $_.Name -eq 'Ticket' } | Select-Object -First 1).Value | Should -Be 42
+
+        $customOnly = Get-OfficeWordDocumentProperty -Path $path -Custom
+        $customOnly.Count | Should -Be 1
+        $customOnly[0].CustomPropertyType | Should -Be 'NumberInteger'
+    }
+
+    It 'supports background images and preserved mail merge fields' {
+        $path = Join-Path $TestDrive 'WordReaderBackgroundMerge.docx'
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
+
+        New-OfficeWord -Path $path {
+            Set-OfficeWordBackground -ImagePath $imagePath
+
+            Add-OfficeWordParagraph {
+                Add-OfficeWordText -Text 'Hello '
+                Add-OfficeWordField -Type MergeField -Parameters '"FirstName"'
+            }
+
+            Invoke-OfficeWordMailMerge -Data ([pscustomobject]@{
+                FirstName = 'Morgan'
+            }) -PreserveFields
+        } | Out-Null
+
+        $doc = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $doc.Fields.Where({ $_.FieldType -eq [OfficeIMO.Word.WordFieldType]::MergeField }).Count | Should -Be 1
+            $doc.Fields.Where({ $_.FieldType -eq [OfficeIMO.Word.WordFieldType]::MergeField })[0].Text | Should -Be 'Morgan'
+        } finally {
+            $doc.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+        $documentXml.SelectSingleNode('//w:background', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:background/w:drawing', $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
 }
