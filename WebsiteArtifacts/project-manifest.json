@@ -1,0 +1,25 @@
+{
+  "slug": "pswriteoffice",
+  "name": "PSWriteOffice",
+  "description": "PSWriteOffice website artifacts for the Evotec multi-project hub.",
+  "mode": "hub-full",
+  "contentMode": "hybrid",
+  "status": "active",
+  "listed": false,
+  "version": "0.3.0",
+  "generatedAt": "2026-04-01T20:27:39.2825786+00:00",
+  "commit": "26d7a5a4cb52bfdb57b0ab0b1c125e1a09e1663c",
+  "links": {
+    "source": "https://github.com/EvotecIT/PSWriteOffice"
+  },
+  "surfaces": {
+    "docs": false,
+    "apiPowerShell": true,
+    "apiDotNet": false,
+    "examples": false
+  },
+  "artifacts": {
+    "api": "WebsiteArtifacts/apidocs",
+    "examples": "Examples"
+  }
+}

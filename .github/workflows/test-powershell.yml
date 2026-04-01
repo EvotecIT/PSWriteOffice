@@ -42,6 +42,10 @@ jobs:
         run: ./Build/Manage-PSWriteOffice.ps1
         shell: pwsh
 
+      - name: Refresh API snapshot
+        run: ./Build/Export-ApiDocsSnapshot.ps1
+        shell: pwsh
+
       - name: Commit refreshed PSD1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,6 +54,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add PSWriteOffice.psd1
+          git add Docs/Generated/PSWriteOffice-help.xml
+          git add WebsiteArtifacts
           git commit -m "chore: regenerate psd1" || echo "No changes to commit"
           git push origin HEAD:$Env:HEAD_BRANCH
         shell: pwsh
@@ -59,6 +65,18 @@ jobs:
         with:
           name: psd1
           path: PSWriteOffice.psd1
+
+      - name: Upload API snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: pswriteoffice-api-snapshot
+          path: Docs/Generated/PSWriteOffice-help.xml
+
+      - name: Upload website artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pswriteoffice-website-artifacts
+          path: WebsiteArtifacts/**
 
   test-windows-ps5:
     if: false # Temporarily disabled
