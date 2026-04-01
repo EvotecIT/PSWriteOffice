@@ -1,0 +1,893 @@
+{
+  "moduleName": "PSWriteOffice",
+  "generatedAt": "2026-04-01T20:29:56.9220602+02:00",
+  "commands": [
+    {
+      "name": "Add-OfficeExcelAutoFilter",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelChart",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelComment",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelConditionalColorScale",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelConditionalDataBar",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelConditionalIconSet",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelConditionalRule",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelImage",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelImageFromUrl",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelPivotTable",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelSheet",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelSparkline",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelTable",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelTableOfContents",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelValidationCustomFormula",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelValidationDate",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelValidationDecimal",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelValidationList",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelValidationTextLength",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelValidationTime",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeExcelValidationWholeNumber",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownCallout",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownCode",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownDefinitionList",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownDetails",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownFrontMatter",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownHeading",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownHorizontalRule",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownImage",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownList",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownParagraph",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownQuote",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownTable",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownTableOfContents",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeMarkdownTaskList",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficePowerPointBullets",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficePowerPointChart",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficePowerPointImage",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficePowerPointSection",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficePowerPointShape",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficePowerPointSlide",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficePowerPointTable",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficePowerPointTextBox",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordBookmark",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordCheckBox",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordComboBox",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordContentControl",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordDatePicker",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordDropDownList",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordField",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordFooter",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordHeader",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordHyperlink",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordImage",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordList",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordListItem",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordPageNumber",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordParagraph",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordPictureControl",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordRepeatingSection",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordSection",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordTable",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordTableCondition",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordTableOfContent",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordText",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Add-OfficeWordWatermark",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Clear-OfficeExcelAutoFilter",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Close-OfficeExcel",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Close-OfficeWord",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "ConvertFrom-OfficeWordHtml",
+      "kind": "Cmdlet",
+      "aliases": [
+        "ConvertFrom-WordHtml"
+      ]
+    },
+    {
+      "name": "ConvertFrom-OfficeWordMarkdown",
+      "kind": "Cmdlet",
+      "aliases": [
+        "ConvertFrom-WordMarkdown"
+      ]
+    },
+    {
+      "name": "ConvertTo-OfficeCsv",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "ConvertTo-OfficeMarkdown",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "ConvertTo-OfficeMarkdownHtml",
+      "kind": "Cmdlet",
+      "aliases": [
+        "ConvertTo-MarkdownHtml"
+      ]
+    },
+    {
+      "name": "ConvertTo-OfficeWordHtml",
+      "kind": "Cmdlet",
+      "aliases": [
+        "ConvertTo-WordHtml"
+      ]
+    },
+    {
+      "name": "ConvertTo-OfficeWordMarkdown",
+      "kind": "Cmdlet",
+      "aliases": [
+        "ConvertTo-WordMarkdown"
+      ]
+    },
+    {
+      "name": "Copy-OfficePowerPointSlide",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Find-OfficeWord",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeCsv",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeCsvData",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeExcel",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeExcelData",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeExcelNamedRange",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeExcelPivotTable",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeExcelRange",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeExcelTable",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeExcelUsedRange",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeMarkdown",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPoint",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointLayout",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointLayoutBox",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointLayoutPlaceholder",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointNotes",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointPlaceholder",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointSection",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointShape",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointSlide",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointSlideSummary",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficePowerPointTheme",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWord",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordBookmark",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordCheckBox",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordComboBox",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordContentControl",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordDatePicker",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordDocumentProperty",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordDropDownList",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordField",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordHyperlink",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordParagraph",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordPictureControl",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordRepeatingSection",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordRun",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordSection",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordTable",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Get-OfficeWordTableOfContent",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Import-OfficePowerPointSlide",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Invoke-OfficeExcelAutoFit",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Invoke-OfficeExcelSort",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Invoke-OfficeWordMailMerge",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "New-OfficeExcel",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "New-OfficeMarkdown",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "New-OfficePowerPoint",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "New-OfficeWord",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Protect-OfficeExcelSheet",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Protect-OfficeWordDocument",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Remove-OfficeExcelComment",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Remove-OfficePowerPointSlide",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Remove-OfficeWordTableOfContent",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Rename-OfficePowerPointSection",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Save-OfficeExcel",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Save-OfficePowerPoint",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Save-OfficeWord",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelCell",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelChartDataLabels",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelChartLegend",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelChartStyle",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelColumn",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelFormula",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelFreeze",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelGridlines",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelHeaderFooter",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelHostHyperlink",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelHyperlink",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelInternalLinks",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelInternalLinksByHeader",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelMargins",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelNamedRange",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelOrientation",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelPageSetup",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelRow",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelSheetVisibility",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelSmartHyperlink",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelUrlLinks",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeExcelUrlLinksByHeader",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointBackground",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointLayoutPlaceholderBounds",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointLayoutPlaceholderTextMargins",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointLayoutPlaceholderTextStyle",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointNotes",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointPlaceholderText",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointSlideLayout",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointSlideSize",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointSlideTitle",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointSlideTransition",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointThemeColor",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointThemeFonts",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficePowerPointThemeName",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeWordBackground",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeWordDocumentProperty",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Set-OfficeWordTableOfContent",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Unprotect-OfficeExcelSheet",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Update-OfficePowerPointText",
+      "kind": "Cmdlet",
+      "aliases": [
+        "Replace-OfficePowerPointText"
+      ]
+    },
+    {
+      "name": "Update-OfficeWordFields",
+      "kind": "Cmdlet",
+      "aliases": []
+    },
+    {
+      "name": "Update-OfficeWordTableOfContent",
+      "kind": "Cmdlet",
+      "aliases": []
+    }
+  ]
+}
