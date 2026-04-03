@@ -37,6 +37,16 @@ function New-CheckResult {
     }
 }
 
+function Get-NativeCommandErrorMessage {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Command
+    )
+
+    $exitCode = if ($null -ne $global:LASTEXITCODE) { $global:LASTEXITCODE } else { -1 }
+    return "'$Command' exited with code $exitCode."
+}
+
 function Invoke-ExampleCheck {
     param(
         [Parameter(Mandatory)]
@@ -115,7 +125,11 @@ try {
         Write-Step 'Building PSWriteOffice solution'
         try {
             dotnet build 'Sources/PSWriteOffice.sln'
-            $results.Add((New-CheckResult -Name 'dotnet build Sources/PSWriteOffice.sln' -Status Passed))
+            if ($LASTEXITCODE -ne 0) {
+                $results.Add((New-CheckResult -Name 'dotnet build Sources/PSWriteOffice.sln' -Status Failed -Details (Get-NativeCommandErrorMessage -Command 'dotnet build Sources/PSWriteOffice.sln')))
+            } else {
+                $results.Add((New-CheckResult -Name 'dotnet build Sources/PSWriteOffice.sln' -Status Passed))
+            }
         } catch {
             $results.Add((New-CheckResult -Name 'dotnet build Sources/PSWriteOffice.sln' -Status Failed -Details $_.Exception.Message))
         }
@@ -142,8 +156,14 @@ try {
                 }
 
                 try {
-                    Invoke-Pester $testFile -Output Detailed | Out-Null
-                    $results.Add((New-CheckResult -Name $testFile -Status Passed))
+                    $pesterResult = Invoke-Pester $testFile -Output Detailed -PassThru
+                    if ($null -eq $pesterResult) {
+                        $results.Add((New-CheckResult -Name $testFile -Status Failed -Details 'Invoke-Pester returned no result object.'))
+                    } elseif ($pesterResult.FailedCount -gt 0) {
+                        $results.Add((New-CheckResult -Name $testFile -Status Failed -Details ("Failed tests: " + $pesterResult.FailedCount)))
+                    } else {
+                        $results.Add((New-CheckResult -Name $testFile -Status Passed))
+                    }
                 } catch {
                     $results.Add((New-CheckResult -Name $testFile -Status Failed -Details $_.Exception.Message))
                 }
