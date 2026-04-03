@@ -55,6 +55,77 @@ Describe 'Word DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'supports paragraphs, lists, images, and nested tables inside table cells' {
+        $path = Join-Path $TestDrive 'DslTableCells.docx'
+        $imagePath = Join-Path $TestDrive 'CellImage.png'
+        $rows = @(
+            [PSCustomObject]@{
+                Topic   = 'Release readiness'
+                Details = 'Pending'
+            }
+        )
+
+        $nestedRows = @(
+            [PSCustomObject]@{ Step = 'Validate'; State = 'Ready' }
+        )
+
+        Add-Type -AssemblyName System.Drawing
+        $bitmap = [System.Drawing.Bitmap]::new(8, 8)
+        try {
+            for ($x = 0; $x -lt $bitmap.Width; $x++) {
+                for ($y = 0; $y -lt $bitmap.Height; $y++) {
+                    $bitmap.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, 33, 150, 243))
+                }
+            }
+
+            $bitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
+        } finally {
+            $bitmap.Dispose()
+        }
+
+        New-OfficeWord -Path $path {
+            WordTable -Data $rows -Style 'GridTable1LightAccent1' {
+                WordTableCell -Row 1 -Column 0 {
+                    WordParagraph { WordText 'Checklist' }
+                    WordImage -Path $imagePath -Width 24 -Height 24
+                    WordList {
+                        WordListItem 'Confirm issue coverage'
+                        WordListItem 'Stage release notes'
+                    }
+                }
+
+                WordTableCell -Row 1 -Column 1 {
+                    WordTable -Data $nestedRows -SkipHeader -Style 'TableGrid'
+                }
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $cellTexts = $table.Rows[1].Cells[0].Paragraphs |
+                ForEach-Object Text |
+                Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+            $listTexts = $document.Lists |
+                ForEach-Object ListItems |
+                ForEach-Object Text |
+                Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+            $cellTexts | Should -Contain 'Checklist'
+            $cellTexts | Should -Contain 'Confirm issue coverage'
+            $listTexts | Should -Contain 'Confirm issue coverage'
+            $listTexts | Should -Contain 'Stage release notes'
+            ($table.Rows[1].Cells[0].Paragraphs | Where-Object IsImage).Count | Should -Be 1
+
+            $table.HasNestedTables | Should -BeTrue
+            $table.NestedTables.Count | Should -Be 1
+            $table.NestedTables[0].Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Validate'
+            $table.NestedTables[0].Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'Ready'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'supports reader helpers and save' {
         $path = Join-Path $TestDrive 'DslReaders.docx'
         $rows = @(

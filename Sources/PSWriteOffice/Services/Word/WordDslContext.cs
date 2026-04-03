@@ -109,6 +109,7 @@ internal sealed class WordDslContext : IDisposable
     public WordFooter? CurrentFooter => _scopes.OfType<WordFooter>().LastOrDefault();
     public WordParagraph? CurrentParagraph => _scopes.OfType<WordParagraph>().LastOrDefault();
     public WordTable? CurrentTable => _scopes.OfType<WordTable>().LastOrDefault();
+    public WordTableCell? CurrentTableCell => _scopes.OfType<WordTableCell>().LastOrDefault();
     public WordList? CurrentList => _scopes.OfType<WordList>().LastOrDefault();
 
     public WordSection AcquireSection(SectionMarkValues? breakType = null)
@@ -137,6 +138,10 @@ internal sealed class WordDslContext : IDisposable
         if (CurrentFooter != null)
         {
             return CurrentFooter;
+        }
+        if (CurrentTableCell != null)
+        {
+            return CurrentTableCell;
         }
 
         return RequireSection();

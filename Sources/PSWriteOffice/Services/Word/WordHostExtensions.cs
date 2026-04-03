@@ -15,8 +15,10 @@ internal static class WordHostExtensions
                 return string.IsNullOrEmpty(text) ? header.AddParagraph() : header.AddParagraph(text ?? string.Empty);
             case WordFooter footer:
                 return string.IsNullOrEmpty(text) ? footer.AddParagraph() : footer.AddParagraph(text ?? string.Empty);
+            case WordTableCell cell:
+                return string.IsNullOrEmpty(text) ? cell.AddParagraph() : cell.AddParagraph(text ?? string.Empty);
             default:
-                throw new InvalidOperationException("Paragraphs can only be added inside sections, headers, or footers.");
+                throw new InvalidOperationException("Paragraphs can only be added inside sections, headers, footers, or table cells.");
         }
     }
 
