@@ -131,6 +131,10 @@ internal sealed class WordDslContext : IDisposable
 
     public object RequireParagraphHost()
     {
+        if (CurrentTableCell != null)
+        {
+            return CurrentTableCell;
+        }
         if (CurrentHeader != null)
         {
             return CurrentHeader;
@@ -138,10 +142,6 @@ internal sealed class WordDslContext : IDisposable
         if (CurrentFooter != null)
         {
             return CurrentFooter;
-        }
-        if (CurrentTableCell != null)
-        {
-            return CurrentTableCell;
         }
 
         return RequireSection();

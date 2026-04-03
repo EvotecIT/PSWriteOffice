@@ -58,6 +58,7 @@ Describe 'Word DSL surface' {
     It 'supports paragraphs, lists, images, and nested tables inside table cells' {
         $path = Join-Path $TestDrive 'DslTableCells.docx'
         $imagePath = Join-Path $TestDrive 'CellImage.png'
+        $fixturePath = Join-Path $PSScriptRoot 'Assets/CellImage.png'
         $rows = @(
             [PSCustomObject]@{
                 Topic   = 'Release readiness'
@@ -69,19 +70,7 @@ Describe 'Word DSL surface' {
             [PSCustomObject]@{ Step = 'Validate'; State = 'Ready' }
         )
 
-        Add-Type -AssemblyName System.Drawing
-        $bitmap = [System.Drawing.Bitmap]::new(8, 8)
-        try {
-            for ($x = 0; $x -lt $bitmap.Width; $x++) {
-                for ($y = 0; $y -lt $bitmap.Height; $y++) {
-                    $bitmap.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, 33, 150, 243))
-                }
-            }
-
-            $bitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
-        } finally {
-            $bitmap.Dispose()
-        }
+        Copy-Item -LiteralPath $fixturePath -Destination $imagePath -Force
 
         New-OfficeWord -Path $path {
             WordTable -Data $rows -Style 'GridTable1LightAccent1' {
