@@ -147,6 +147,11 @@ internal sealed class WordDslContext : IDisposable
         return RequireSection();
     }
 
+    public WordTable? ResolveCurrentTable()
+    {
+        return CurrentTable;
+    }
+
     public void RegisterListAnchor(WordList list, WordParagraph? anchor)
     {
         if (list == null)

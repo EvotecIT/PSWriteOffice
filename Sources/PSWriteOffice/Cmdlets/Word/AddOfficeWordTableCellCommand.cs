@@ -47,7 +47,7 @@ public sealed class AddOfficeWordTableCellCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);
-        var table = Table ?? context.CurrentTable;
+        var table = Table ?? context.ResolveCurrentTable();
         if (table == null)
         {
             throw new InvalidOperationException("WordTableCell must be used inside WordTable or with -Table.");
