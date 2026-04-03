@@ -84,7 +84,11 @@ Describe 'Word DSL surface' {
                 }
 
                 WordTableCell -Row 1 -Column 1 {
-                    WordTable -Data $nestedRows -SkipHeader -Style 'TableGrid'
+                    WordTable -Data $nestedRows -SkipHeader -Style 'TableGrid' {
+                        WordTableCell -Row 0 -Column 0 {
+                            WordParagraph { WordText 'Nested detail' }
+                        }
+                    }
                 }
             }
         } | Out-Null
@@ -99,6 +103,12 @@ Describe 'Word DSL surface' {
                 ForEach-Object ListItems |
                 ForEach-Object Text |
                 Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+            $nestedCellTexts = $table.NestedTables[0].Rows[0].Cells[0].Paragraphs |
+                ForEach-Object Text |
+                Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+            $outerDetailTexts = $table.Rows[1].Cells[1].Paragraphs |
+                ForEach-Object Text |
+                Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 
             $cellTexts | Should -Contain 'Checklist'
             $cellTexts | Should -Contain 'Confirm issue coverage'
@@ -108,7 +118,8 @@ Describe 'Word DSL surface' {
 
             $table.HasNestedTables | Should -BeTrue
             $table.NestedTables.Count | Should -Be 1
-            $table.NestedTables[0].Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Validate'
+            $nestedCellTexts | Should -Contain 'Nested detail'
+            $outerDetailTexts | Should -Not -Contain 'Nested detail'
             $table.NestedTables[0].Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'Ready'
         } finally {
             $document.Dispose()

@@ -104,13 +104,13 @@ internal sealed class WordDslContext : IDisposable
         }
     }
 
-    public WordSection? CurrentSection => _scopes.OfType<WordSection>().LastOrDefault();
-    public WordHeader? CurrentHeader => _scopes.OfType<WordHeader>().LastOrDefault();
-    public WordFooter? CurrentFooter => _scopes.OfType<WordFooter>().LastOrDefault();
-    public WordParagraph? CurrentParagraph => _scopes.OfType<WordParagraph>().LastOrDefault();
-    public WordTable? CurrentTable => _scopes.OfType<WordTable>().LastOrDefault();
-    public WordTableCell? CurrentTableCell => _scopes.OfType<WordTableCell>().LastOrDefault();
-    public WordList? CurrentList => _scopes.OfType<WordList>().LastOrDefault();
+    public WordSection? CurrentSection => _scopes.OfType<WordSection>().FirstOrDefault();
+    public WordHeader? CurrentHeader => _scopes.OfType<WordHeader>().FirstOrDefault();
+    public WordFooter? CurrentFooter => _scopes.OfType<WordFooter>().FirstOrDefault();
+    public WordParagraph? CurrentParagraph => _scopes.OfType<WordParagraph>().FirstOrDefault();
+    public WordTable? CurrentTable => _scopes.OfType<WordTable>().FirstOrDefault();
+    public WordTableCell? CurrentTableCell => _scopes.OfType<WordTableCell>().FirstOrDefault();
+    public WordList? CurrentList => _scopes.OfType<WordList>().FirstOrDefault();
 
     public WordSection AcquireSection(SectionMarkValues? breakType = null)
     {
