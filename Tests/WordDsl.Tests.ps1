@@ -375,6 +375,8 @@ Describe 'Word DSL surface' {
             $document.HyperLinks[1].Text | Should -Be 'Jump FY25'
             $document.HyperLinks[1].Anchor | Should -Be 'FY25Summary'
             $document.HyperLinks[1].Tooltip | Should -Be 'FY25 anchor'
+            $document.Bookmarks.Name | Should -Contain 'FY25Summary'
+            $document.Bookmarks.Name | Should -Not -Contain 'FY24Summary'
         } finally {
             $document.Dispose()
         }

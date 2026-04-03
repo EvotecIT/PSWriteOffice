@@ -184,6 +184,19 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
             }
         }
 
+        if (IncludeHyperlinkAnchor.IsPresent)
+        {
+            foreach (var bookmark in document.Bookmarks)
+            {
+                replacements += ReplaceNullableValue(
+                    bookmark.Name,
+                    updatedValue => bookmark.Name = updatedValue,
+                    oldValue,
+                    newValue,
+                    comparison);
+            }
+        }
+
         return replacements;
     }
 
