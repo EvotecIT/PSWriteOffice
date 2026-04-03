@@ -380,6 +380,34 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'updates relative hyperlink targets when requested' {
+        $path = Join-Path $TestDrive 'DslReplaceRelativeLink.docx'
+
+        New-OfficeWord -Path $path {
+            WordParagraph {
+                WordHyperlink -Text 'Relative FY24' -Url 'https://placeholder.invalid/FY24'
+            }
+        } | Out-Null
+
+        $editable = Get-OfficeWord -Path $path
+        try {
+            $editable.HyperLinks[0].Uri = [Uri]::new('../reports/FY24.docx', [UriKind]::RelativeOrAbsolute)
+            Save-OfficeWord -Document $editable | Out-Null
+        } finally {
+            $editable.Dispose()
+        }
+
+        $replacements = Update-OfficeWordText -Path $path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkUri
+        $replacements | Should -Be 1
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.HyperLinks[0].Uri.OriginalString | Should -Be '../reports/FY25.docx'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'tracks current Word documents for update and close operations' {
         $pathOne = Join-Path $TestDrive 'TrackedOne.docx'
         $pathTwo = Join-Path $TestDrive 'TrackedTwo.docx'

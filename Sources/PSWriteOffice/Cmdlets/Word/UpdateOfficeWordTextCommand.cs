@@ -171,7 +171,7 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                 var updatedUri = ReplaceString(originalUri, oldValue, newValue, comparison, out var uriReplacements);
                 if (uriReplacements > 0)
                 {
-                    if (!Uri.TryCreate(updatedUri, UriKind.Absolute, out var uri))
+                    if (!Uri.TryCreate(updatedUri, UriKind.RelativeOrAbsolute, out var uri))
                     {
                         WriteWarning($"Skipping hyperlink URI '{originalUri}' because replacement produced invalid URI '{updatedUri}'.");
                     }
