@@ -447,4 +447,31 @@ Describe 'Word DSL surface' {
             $savedTwo.Dispose()
         }
     }
+
+    It 'does not fall back to the tracked document when -Document is null' {
+        $path = Join-Path $TestDrive 'NullDocumentGuard.docx'
+        $doc = New-OfficeWord -Path $path
+
+        try {
+            $nullDocument = $null
+            { Close-OfficeWord -Document $nullDocument } | Should -Throw
+
+            { $doc.AddParagraph('Still tracked after null guard') | Out-Null } | Should -Not -Throw
+            Close-OfficeWord -Document $doc -Save
+        } finally {
+            if ($null -ne $doc) {
+                try {
+                    $doc.Dispose()
+                } catch {
+                }
+            }
+        }
+
+        $saved = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            (Find-OfficeWord -Document $saved -Text 'Still tracked after null guard').Count | Should -Be 1
+        } finally {
+            $saved.Dispose()
+        }
+    }
 }

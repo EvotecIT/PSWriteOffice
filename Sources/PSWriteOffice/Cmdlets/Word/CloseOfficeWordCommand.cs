@@ -69,7 +69,20 @@ public sealed class CloseOfficeWordCommand : PSCmdlet
             return;
         }
 
-        var document = Document ?? WordDocumentService.GetCurrentTrackedDocument();
+        WordDocument? document;
+        if (ParameterSetName == ParameterSetDocument)
+        {
+            document = Document;
+            if (document == null)
+            {
+                throw new PSArgumentNullException(nameof(Document), "Provide a WordDocument instance when using -Document.");
+            }
+        }
+        else
+        {
+            document = WordDocumentService.GetCurrentTrackedDocument();
+        }
+
         if (document == null)
         {
             throw new PSInvalidOperationException("No tracked Word document was found. Pass -Document or open a document with Get-OfficeWord/New-OfficeWord first.");
