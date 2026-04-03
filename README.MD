@@ -180,6 +180,28 @@ Update-OfficeWordText -Document $doc -OldValue 'FY24' -NewValue 'FY25'
 Close-OfficeWord -Document $doc -Save
 ```
 
+### Word charts with the current API
+
+```powershell
+$doc = New-OfficeWord -Path .\Report.docx
+$chart = $doc.AddChart('Revenue Mix')
+$chart.AddPie('North America', 125000).
+    AddPie('EMEA', 98000).
+    AddPie('APAC', 143000) | Out-Null
+Close-OfficeWord -Document $doc -Save
+```
+
+### Word tables with extra columns
+
+```powershell
+$tableData = $data | Select-Object Region, Revenue,
+@{ Name = 'RevenueBand'; Expression = { if ($_.Revenue -gt 100000) { 'High' } else { 'Standard' } } }
+
+New-OfficeWord -Path .\Report.docx {
+    Add-OfficeWordTable -InputObject $tableData -Style 'GridTable1LightAccent1'
+}
+```
+
 ### PowerPoint inspection
 
 ```powershell
@@ -244,6 +266,9 @@ Recommended examples:
 
 - [Examples/Word/Example-WordBasic.ps1](Examples/Word/Example-WordBasic.ps1)
 - [Examples/Word/Example-WordReplaceText.ps1](Examples/Word/Example-WordReplaceText.ps1)
+- [Examples/Word/Example-WordCharts.ps1](Examples/Word/Example-WordCharts.ps1)
+- [Examples/Word/Example-WordLineBreaks.ps1](Examples/Word/Example-WordLineBreaks.ps1)
+- [Examples/Word/Example-WordTableCalculatedColumns.ps1](Examples/Word/Example-WordTableCalculatedColumns.ps1)
 - [Examples/Word/Example-WordMarkdownConvert.ps1](Examples/Word/Example-WordMarkdownConvert.ps1)
 - [Examples/Excel/Example-ExcelBasic.ps1](Examples/Excel/Example-ExcelBasic.ps1)
 - [Examples/Excel/Example-ExcelAdvanced.ps1](Examples/Excel/Example-ExcelAdvanced.ps1)
