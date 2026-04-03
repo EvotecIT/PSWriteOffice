@@ -2,6 +2,7 @@ Import-Module (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1') -Force
 
 $path = Join-Path $PSScriptRoot 'Example-WordTableCells.docx'
 $imagePath = Join-Path $PSScriptRoot 'Example-WordTableCells.png'
+$fixturePath = Join-Path $PSScriptRoot 'Example-WordTableCells.fixture.png'
 $rows = @(
     [pscustomobject]@{
         Topic   = 'Release readiness'
@@ -14,19 +15,7 @@ $nestedRows = @(
     [pscustomobject]@{ Step = 'Release'; State = 'Queued' }
 )
 
-Add-Type -AssemblyName System.Drawing
-$bitmap = [System.Drawing.Bitmap]::new(48, 48)
-try {
-    for ($x = 0; $x -lt $bitmap.Width; $x++) {
-        for ($y = 0; $y -lt $bitmap.Height; $y++) {
-            $bitmap.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, 33, 150, 243))
-        }
-    }
-
-    $bitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
-} finally {
-    $bitmap.Dispose()
-}
+Copy-Item -LiteralPath $fixturePath -Destination $imagePath -Force
 
 New-OfficeWord -Path $path {
     WordTable -Data $rows -Style GridTable1LightAccent1 {
