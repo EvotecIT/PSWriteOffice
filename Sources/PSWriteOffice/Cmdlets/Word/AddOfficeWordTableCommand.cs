@@ -66,7 +66,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var context = WordDslContext.Require(this);
         var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(rows);
         var layout = ResolveLayout(Layout);
-        var table = context.Document.AddTableFromObjects(normalizedRows, Style, includeHeader: !SkipHeader.IsPresent, layout: layout);
+        var table = CreateTable(context, normalizedRows, Style, includeHeader: !SkipHeader.IsPresent, layout: layout);
         context.RegisterTableSource(table, rows);
 
         using (context.Push(table))
@@ -169,5 +169,126 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         return string.Equals(layout, "Autofit", StringComparison.OrdinalIgnoreCase)
             ? TableLayoutValues.Autofit
             : TableLayoutValues.Fixed;
+    }
+
+    private static WordTable CreateTable(
+        WordDslContext context,
+        IReadOnlyList<object?> normalizedRows,
+        WordTableStyle style,
+        bool includeHeader,
+        TableLayoutValues? layout)
+    {
+        if (context.CurrentTableCell == null)
+        {
+            return context.Document.AddTableFromObjects(normalizedRows, style, includeHeader, layout);
+        }
+
+        return AddTableToCell(context.CurrentTableCell, normalizedRows, style, includeHeader, layout);
+    }
+
+    private static WordTable AddTableToCell(
+        WordTableCell cell,
+        IReadOnlyList<object?> items,
+        WordTableStyle style,
+        bool includeHeader,
+        TableLayoutValues? layout)
+    {
+        if (items.Count == 0)
+        {
+            throw new ArgumentException("Provide at least one data row.", nameof(items));
+        }
+
+        var first = items[0];
+        if (first == null)
+        {
+            throw new ArgumentException("Data rows cannot be null.", nameof(items));
+        }
+
+        var columns = GetColumnNames(first);
+        if (columns.Count == 0)
+        {
+            throw new InvalidOperationException("Unable to infer column names. Use objects with properties or dictionaries.");
+        }
+
+        var rowCount = items.Count + (includeHeader ? 1 : 0);
+        var table = cell.AddTable(rowCount, columns.Count, style);
+        if (layout.HasValue)
+        {
+            table.LayoutType = layout.Value;
+        }
+
+        var rowIndex = 0;
+        if (includeHeader)
+        {
+            for (var columnIndex = 0; columnIndex < columns.Count; columnIndex++)
+            {
+                SetCellText(table, 0, columnIndex, columns[columnIndex]);
+            }
+
+            rowIndex = 1;
+        }
+
+        for (var sourceIndex = 0; sourceIndex < items.Count; sourceIndex++)
+        {
+            var row = items[sourceIndex];
+            if (row == null)
+            {
+                throw new InvalidOperationException("Data rows cannot contain null entries.");
+            }
+
+            for (var columnIndex = 0; columnIndex < columns.Count; columnIndex++)
+            {
+                var value = GetValue(row, columns[columnIndex]);
+                SetCellText(table, rowIndex, columnIndex, value?.ToString() ?? string.Empty);
+            }
+
+            rowIndex++;
+        }
+
+        return table;
+    }
+
+    private static IReadOnlyList<string> GetColumnNames(object item)
+    {
+        if (item is IDictionary dictionary)
+        {
+            return dictionary.Keys
+                .Cast<object?>()
+                .Select(key => key?.ToString())
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Select(name => name!)
+                .ToList();
+        }
+
+        return PSObject.AsPSObject(item).Properties
+            .Where(property => property.MemberType == PSMemberTypes.NoteProperty || property.MemberType == PSMemberTypes.Property)
+            .Select(property => property.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToList();
+    }
+
+    private static object? GetValue(object item, string columnName)
+    {
+        if (item is IDictionary dictionary)
+        {
+            foreach (DictionaryEntry entry in dictionary)
+            {
+                if (string.Equals(entry.Key?.ToString(), columnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return entry.Value;
+                }
+            }
+
+            return null;
+        }
+
+        return PSObject.AsPSObject(item).Properties[columnName]?.Value;
+    }
+
+    private static void SetCellText(WordTable table, int rowIndex, int columnIndex, string value)
+    {
+        var cell = table.Rows[rowIndex].Cells[columnIndex];
+        var paragraph = cell.Paragraphs.Count > 0 ? cell.Paragraphs[0] : cell.AddParagraph();
+        paragraph.Text = value;
     }
 }

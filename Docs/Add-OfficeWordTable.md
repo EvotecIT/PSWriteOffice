@@ -16,6 +16,7 @@ Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <
 
 ## DESCRIPTION
 Creates a table from PowerShell objects.
+When used inside `Add-OfficeWordTableCell`, the table is created as a nested table inside that cell.
 
 ## EXAMPLES
 
@@ -25,6 +26,18 @@ PS>Add-OfficeWordTable -InputObject $Data -Style 'GridTable1LightAccent1' { Word
 ```
 
 Writes a grid table and highlights rows exceeding $1,000.
+
+### EXAMPLE 2
+```powershell
+PS>WordTable -Data $Rows {
+    WordTableCell -Row 1 -Column 1 {
+        WordTable -Data $NestedRows -SkipHeader
+    }
+}
+```
+
+Creates a nested table inside the selected cell.
+The same cell scope can also host paragraphs, images, and lists before or after the nested table.
 
 ## PARAMETERS
 
@@ -138,4 +151,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-
