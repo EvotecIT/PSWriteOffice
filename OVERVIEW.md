@@ -7,6 +7,7 @@ Use this page as the curated starting point for the repo. The generated command 
 If you want to create documents:
 
 - Word: [Docs/New-OfficeWord.md](Docs/New-OfficeWord.md)
+- Word charts: [Docs/Add-OfficeWordChart.md](Docs/Add-OfficeWordChart.md)
 - Excel: [Docs/New-OfficeExcel.md](Docs/New-OfficeExcel.md)
 - PowerPoint: [Docs/New-OfficePowerPoint.md](Docs/New-OfficePowerPoint.md)
 - Markdown: [Docs/New-OfficeMarkdown.md](Docs/New-OfficeMarkdown.md)

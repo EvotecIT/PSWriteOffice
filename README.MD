@@ -51,6 +51,17 @@ New-OfficeWord -Path .\Report.docx {
 }
 ```
 
+```powershell
+$chartData = @(
+    [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+    [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+)
+
+New-OfficeWord -Path .\Charts.docx {
+    Add-OfficeWordChart -Type Pie -Data $chartData -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue Mix'
+}
+```
+
 ### Excel
 
 ```powershell
@@ -233,6 +244,7 @@ Recommended docs:
 
 - [Docs/New-OfficeWord.md](Docs/New-OfficeWord.md)
 - [Docs/Update-OfficeWordText.md](Docs/Update-OfficeWordText.md)
+- [Docs/Add-OfficeWordChart.md](Docs/Add-OfficeWordChart.md)
 - [Docs/New-OfficeExcel.md](Docs/New-OfficeExcel.md)
 - [Docs/New-OfficePowerPoint.md](Docs/New-OfficePowerPoint.md)
 - [Docs/ConvertTo-OfficeWordMarkdown.md](Docs/ConvertTo-OfficeWordMarkdown.md)

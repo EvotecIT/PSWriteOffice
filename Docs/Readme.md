@@ -142,6 +142,9 @@ Adds a text box to a slide.
 ### [Add-OfficeWordBookmark](Add-OfficeWordBookmark.md)
 Adds a bookmark to the current paragraph.
 
+### [Add-OfficeWordChart](Add-OfficeWordChart.md)
+Adds a chart to a Word document.
+
 ### [Add-OfficeWordCheckBox](Add-OfficeWordCheckBox.md)
 Adds a checkbox content control to the current paragraph.
 
