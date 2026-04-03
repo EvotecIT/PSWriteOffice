@@ -33,11 +33,7 @@ New-OfficeWord -Path $path {
         }
 
         WordTableCell -Row 1 -Column 1 {
-            WordTable -Data $nestedRows -Style TableGrid {
-                WordTableCell -Row 0 -Column 0 {
-                    WordParagraph { WordText 'Nested detail' }
-                }
-            }
+            WordTable -Data $nestedRows -Style TableGrid
         }
     }
 } | Out-Null
