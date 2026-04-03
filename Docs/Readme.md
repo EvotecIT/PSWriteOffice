@@ -532,6 +532,8 @@ Replaces text in a PowerPoint slide or presentation.
 ### [Update-OfficeWordFields](Update-OfficeWordFields.md)
 Updates fields in a Word document.
 
+### [Update-OfficeWordText](Update-OfficeWordText.md)
+Replaces text in a Word document.
+
 ### [Update-OfficeWordTableOfContent](Update-OfficeWordTableOfContent.md)
 Updates the table of contents in a Word document.
-

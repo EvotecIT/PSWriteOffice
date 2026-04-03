@@ -175,6 +175,9 @@ Get-OfficeExcelPivotTable -Path .\Report.xlsx
 ```powershell
 $markdown = ConvertTo-OfficeWordMarkdown -Path .\Report.docx
 ConvertFrom-OfficeWordMarkdown -Markdown $markdown -OutputPath .\Report-Roundtrip.docx
+$doc = Get-OfficeWord -Path .\Report.docx
+Update-OfficeWordText -Document $doc -OldValue 'FY24' -NewValue 'FY25'
+Close-OfficeWord -Document $doc -Save
 ```
 
 ### PowerPoint inspection
@@ -207,6 +210,7 @@ Start here:
 Recommended docs:
 
 - [Docs/New-OfficeWord.md](Docs/New-OfficeWord.md)
+- [Docs/Update-OfficeWordText.md](Docs/Update-OfficeWordText.md)
 - [Docs/New-OfficeExcel.md](Docs/New-OfficeExcel.md)
 - [Docs/New-OfficePowerPoint.md](Docs/New-OfficePowerPoint.md)
 - [Docs/ConvertTo-OfficeWordMarkdown.md](Docs/ConvertTo-OfficeWordMarkdown.md)
@@ -239,6 +243,7 @@ Recommended docs:
 Recommended examples:
 
 - [Examples/Word/Example-WordBasic.ps1](Examples/Word/Example-WordBasic.ps1)
+- [Examples/Word/Example-WordReplaceText.ps1](Examples/Word/Example-WordReplaceText.ps1)
 - [Examples/Word/Example-WordMarkdownConvert.ps1](Examples/Word/Example-WordMarkdownConvert.ps1)
 - [Examples/Excel/Example-ExcelBasic.ps1](Examples/Excel/Example-ExcelBasic.ps1)
 - [Examples/Excel/Example-ExcelAdvanced.ps1](Examples/Excel/Example-ExcelAdvanced.ps1)

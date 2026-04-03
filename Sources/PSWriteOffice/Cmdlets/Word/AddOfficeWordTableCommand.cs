@@ -34,12 +34,16 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
     /// <summary>Table layout behavior.</summary>
     [Parameter]
-    [ValidateSet("Autofit", "Fixed")]
+    [ValidateSet("Autofit", "Fixed", "AutoFitToContents", "AutoFitToWindow")]
     public string? Layout { get; set; }
 
     /// <summary>Skip writing header row.</summary>
     [Parameter]
     public SwitchParameter SkipHeader { get; set; }
+
+    /// <summary>Transpose rows into property-oriented output.</summary>
+    [Parameter]
+    public SwitchParameter Transpose { get; set; }
 
     /// <summary>DSL content executed inside the table.</summary>
     [Parameter(Position = 1)]
@@ -64,10 +68,12 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         var context = WordDslContext.Require(this);
-        var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(rows);
-        var layout = ResolveLayout(Layout);
-        var table = CreateTable(context, normalizedRows, Style, includeHeader: !SkipHeader.IsPresent, layout: layout);
-        context.RegisterTableSource(table, rows);
+        var tableRows = Transpose.IsPresent ? TransposeRows(rows) : rows;
+        var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(tableRows);
+        var legacyLayout = ResolveLegacyLayout(Layout);
+        var table = CreateTable(context, normalizedRows, Style, includeHeader: !SkipHeader.IsPresent, layout: legacyLayout);
+        ApplyLayout(table, Layout);
+        context.RegisterTableSource(table, tableRows);
 
         using (context.Push(table))
         {
@@ -77,7 +83,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var conditions = context.ConsumeTableConditions(table);
         if (conditions.Count > 0)
         {
-            ApplyConditions(table, rows, conditions, SkipHeader.IsPresent);
+            ApplyConditions(table, tableRows, conditions, SkipHeader.IsPresent);
         }
 
         context.ClearTableSource(table);
@@ -109,6 +115,86 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
             default:
                 return new[] { data };
         }
+    }
+
+    private static object[] TransposeRows(IReadOnlyList<object> rows)
+    {
+        var maps = rows.Select(BuildPropertyMap).ToList();
+        var columnNames = new List<string>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var map in maps)
+        {
+            foreach (var key in map.Keys)
+            {
+                if (seen.Add(key))
+                {
+                    columnNames.Add(key);
+                }
+            }
+        }
+
+        if (columnNames.Count == 0)
+        {
+            return Array.Empty<object>();
+        }
+
+        var transposed = new object[columnNames.Count];
+        for (var columnIndex = 0; columnIndex < columnNames.Count; columnIndex++)
+        {
+            var propertyName = columnNames[columnIndex];
+            var transposedRow = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Property"] = propertyName
+            };
+
+            for (var rowIndex = 0; rowIndex < maps.Count; rowIndex++)
+            {
+                var header = $"Row{rowIndex + 1}";
+                transposedRow[header] = maps[rowIndex].TryGetValue(propertyName, out var value)
+                    ? value
+                    : null;
+            }
+
+            transposed[columnIndex] = transposedRow;
+        }
+
+        return transposed;
+    }
+
+    private static Dictionary<string, object?> BuildPropertyMap(object row)
+    {
+        var normalized = PowerShellObjectNormalizer.NormalizeItem(row);
+        if (normalized is IDictionary dictionary)
+        {
+            var mapped = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+            foreach (DictionaryEntry entry in dictionary)
+            {
+                var key = entry.Key?.ToString();
+                if (string.IsNullOrWhiteSpace(key))
+                {
+                    continue;
+                }
+
+                var propertyName = key!;
+                if (mapped.ContainsKey(propertyName))
+                {
+                    continue;
+                }
+
+                mapped[propertyName] = entry.Value;
+            }
+
+            if (mapped.Count > 0)
+            {
+                return mapped;
+            }
+        }
+
+        return new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Value"] = normalized
+        };
     }
 
     private void ApplyConditions(WordTable table, IReadOnlyList<object> rows, IReadOnlyList<WordTableConditionModel> conditions, bool skipHeader)
@@ -159,9 +245,19 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         return LanguagePrimitives.IsTrue(result[result.Count - 1]);
     }
 
-    private static TableLayoutValues? ResolveLayout(string? layout)
+    private static TableLayoutValues? ResolveLegacyLayout(string? layout)
     {
         if (string.IsNullOrWhiteSpace(layout))
+        {
+            return null;
+        }
+
+        if (string.Equals(layout, "AutoFitToContents", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        if (string.Equals(layout, "AutoFitToWindow", StringComparison.OrdinalIgnoreCase))
         {
             return null;
         }
@@ -169,6 +265,25 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         return string.Equals(layout, "Autofit", StringComparison.OrdinalIgnoreCase)
             ? TableLayoutValues.Autofit
             : TableLayoutValues.Fixed;
+    }
+
+    private static void ApplyLayout(WordTable table, string? layout)
+    {
+        if (string.IsNullOrWhiteSpace(layout))
+        {
+            return;
+        }
+
+        if (string.Equals(layout, "AutoFitToContents", StringComparison.OrdinalIgnoreCase))
+        {
+            table.LayoutMode = WordTableLayoutType.AutoFitToContents;
+            return;
+        }
+
+        if (string.Equals(layout, "AutoFitToWindow", StringComparison.OrdinalIgnoreCase))
+        {
+            table.LayoutMode = WordTableLayoutType.AutoFitToWindow;
+        }
     }
 
     private static WordTable CreateTable(

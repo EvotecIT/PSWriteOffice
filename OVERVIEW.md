@@ -26,6 +26,7 @@ If you want conversion and bridge workflows:
 - HTML to Word: [Docs/ConvertFrom-OfficeWordHtml.md](Docs/ConvertFrom-OfficeWordHtml.md)
 - Word to Markdown: [Docs/ConvertTo-OfficeWordMarkdown.md](Docs/ConvertTo-OfficeWordMarkdown.md)
 - Markdown to Word: [Docs/ConvertFrom-OfficeWordMarkdown.md](Docs/ConvertFrom-OfficeWordMarkdown.md)
+- Word text replacement: [Docs/Update-OfficeWordText.md](Docs/Update-OfficeWordText.md)
 - Excel navigation sheet: [Docs/Add-OfficeExcelTableOfContents.md](Docs/Add-OfficeExcelTableOfContents.md)
 - Excel chart finishing: [Docs/Set-OfficeExcelChartLegend.md](Docs/Set-OfficeExcelChartLegend.md), [Docs/Set-OfficeExcelChartDataLabels.md](Docs/Set-OfficeExcelChartDataLabels.md), [Docs/Set-OfficeExcelChartStyle.md](Docs/Set-OfficeExcelChartStyle.md)
 - Excel links and media: [Docs/Add-OfficeExcelImageFromUrl.md](Docs/Add-OfficeExcelImageFromUrl.md), [Docs/Set-OfficeExcelSmartHyperlink.md](Docs/Set-OfficeExcelSmartHyperlink.md), [Docs/Set-OfficeExcelHostHyperlink.md](Docs/Set-OfficeExcelHostHyperlink.md)
@@ -53,6 +54,7 @@ Word:
 
 - [Examples/Word/Example-WordBasic.ps1](Examples/Word/Example-WordBasic.ps1)
 - [Examples/Word/Example-WordAdvanced.ps1](Examples/Word/Example-WordAdvanced.ps1)
+- [Examples/Word/Example-WordReplaceText.ps1](Examples/Word/Example-WordReplaceText.ps1)
 - [Examples/Word/Example-WordMarkdownConvert.ps1](Examples/Word/Example-WordMarkdownConvert.ps1)
 
 Excel:
