@@ -17,6 +17,6 @@ $null = $paragraph.AddText('Line 3 still in the same paragraph')
 $null = $document.AddParagraph()
 $null = $document.AddParagraph('This text comes after an empty paragraph break.')
 
-Save-OfficeWord -Document $document
+Close-OfficeWord -Document $document -Save
 
 Write-Host "Document saved to $path"

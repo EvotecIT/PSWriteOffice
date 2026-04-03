@@ -140,6 +140,8 @@ try {
     if (-not $SkipPester) {
         if ($missingReleaseArtifacts.Count -gt 0 -and -not $FailOnMissingArtifacts) {
             $results.Add((New-CheckResult -Name 'Word release-candidate Pester tests' -Status Skipped -Details ("Run on the merged release branch. Missing artifacts: " + ($missingReleaseArtifacts -join ', '))))
+        } elseif ($missingReleaseArtifacts.Count -gt 0) {
+            $results.Add((New-CheckResult -Name 'Release artifacts' -Status Failed -Details ("Missing required release artifacts: " + ($missingReleaseArtifacts -join ', '))))
         } else {
             Write-Step 'Running Word release-candidate Pester tests'
             $testFiles = @(
