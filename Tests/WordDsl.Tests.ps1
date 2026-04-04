@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
         $env:PSWRITEOFFICE_MODULE_MANIFEST
     } else {
@@ -176,6 +176,28 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'adds Word pie charts inside the DSL' {
+        $path = Join-Path $TestDrive 'DslWordPieChart.docx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'North America'; Revenue = 125000 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 98000 }
+            [PSCustomObject]@{ Region = 'APAC'; Revenue = 143000 }
+        )
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordParagraph -Text 'Revenue mix'
+            Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix'
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.Charts.Count | Should -Be 1
+            $document.Paragraphs.Where({ $_.IsChart }).Count | Should -Be 1
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'supports transposed Word tables' {
         $path = Join-Path $TestDrive 'DslTableTranspose.docx'
         $rows = @(
@@ -200,6 +222,62 @@ Describe 'Word DSL surface' {
             $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Value'
             $table.Rows[2].Cells[1].Paragraphs[0].Text | Should -Be '1'
             $table.Rows[2].Cells[2].Paragraphs[0].Text | Should -Be '2'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'adds Word line charts to an open document' {
+        $path = Join-Path $TestDrive 'DslWordLineChart.docx'
+        $rows = @(
+            [PSCustomObject]@{ Month = 'Jan'; Sales = 10; Profit = 4 }
+            [PSCustomObject]@{ Month = 'Feb'; Sales = 12; Profit = 5 }
+            [PSCustomObject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }
+        )
+
+        $document = New-OfficeWord -Path $path
+        try {
+            $chart = Add-OfficeWordChart -Document $document -Type Line -Data $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -XAxisTitle 'Month' -YAxisTitle 'Value' -Title 'Monthly Trend' -PassThru
+            $chart.Title | Should -Be 'Monthly Trend'
+            Save-OfficeWord -Document $document | Out-Null
+        } finally {
+            Close-OfficeWord -Document $document
+        }
+
+        $saved = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $saved.Charts.Count | Should -Be 1
+            $saved.Paragraphs.Where({ $_.IsChart }).Count | Should -Be 1
+        } finally {
+            $saved.Dispose()
+        }
+    }
+
+    It 'adds Word charts to paragraphs created inside table cells' {
+        $path = Join-Path $TestDrive 'DslWordChartInCell.docx'
+        $tableRows = @(
+            [PSCustomObject]@{ Topic = 'Regional revenue'; Details = 'Pending' }
+        )
+        $chartRows = @(
+            [PSCustomObject]@{ Region = 'North America'; Revenue = 125000 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 98000 }
+            [PSCustomObject]@{ Region = 'APAC'; Revenue = 143000 }
+        )
+
+        New-OfficeWord -Path $path {
+            $table = Add-OfficeWordTable -InputObject $tableRows -Style 'GridTable1LightAccent1' -PassThru
+            $paragraph = $table.Rows[1].Cells[1].AddParagraph()
+
+            Add-OfficeWordChart -Paragraph $paragraph -Type Pie -Data $chartRows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix'
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $cellCharts = $table.Rows[1].Cells[1].Paragraphs.Where({ $_.IsChart })
+
+            $cellCharts.Count | Should -Be 1
+            $cellCharts[0].Chart | Should -Not -BeNullOrEmpty
         } finally {
             $document.Dispose()
         }

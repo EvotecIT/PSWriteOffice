@@ -3,25 +3,35 @@ Import-Module (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1') -Force
 $documents = Join-Path $PSScriptRoot '..\Documents'
 New-Item -Path $documents -ItemType Directory -Force | Out-Null
 
+$rows = @(
+    [PSCustomObject]@{ Region = 'North America'; Revenue = 125000 }
+    [PSCustomObject]@{ Region = 'EMEA'; Revenue = 98000 }
+    [PSCustomObject]@{ Region = 'APAC'; Revenue = 143000 }
+)
+
+$trend = @(
+    [PSCustomObject]@{ Month = 'Jan'; Sales = 10; Profit = 4 }
+    [PSCustomObject]@{ Month = 'Feb'; Sales = 12; Profit = 5 }
+    [PSCustomObject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }
+)
+
+$tableRows = @(
+    [PSCustomObject]@{ Topic = 'Regional revenue'; Details = 'See chart' }
+)
+
 $docPath = Join-Path $documents 'Word-Charts.docx'
-$doc = New-OfficeWord -Path $docPath
 
-try {
-    $doc.AddParagraph('Word charts are currently available through the underlying OfficeIMO document object.') | Out-Null
-    $doc.AddParagraph('Older samples that used PieChart() should now use AddChart().AddPie().') | Out-Null
+New-OfficeWord -Path $docPath {
+    Add-OfficeWordParagraph -Text 'Pie chart from PowerShell objects'
+    Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix' -FitToPageWidth -WidthFraction 0.70
 
-    $chart = $doc.AddChart('Regional Revenue Mix')
-    $chart.AddPie('North America', 125000).
-        AddPie('EMEA', 98000).
-        AddPie('APAC', 143000) | Out-Null
-    $chart.SetWidthToPageContent(0.70, 320) | Out-Null
+    Add-OfficeWordParagraph -Text 'Line chart with two series'
+    Add-OfficeWordChart -Type Line -Data $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -XAxisTitle 'Month' -YAxisTitle 'Value' -SeriesColor '#1f77b4', '#ff7f0e'
 
-    Close-OfficeWord -Document $doc -Save
-    $doc = $null
-} finally {
-    if ($null -ne $doc) {
-        $doc.Dispose()
-    }
-}
+    Add-OfficeWordParagraph -Text 'Pie chart anchored inside a table cell'
+    $table = Add-OfficeWordTable -InputObject $tableRows -Style 'GridTable1LightAccent1' -PassThru
+    $cellParagraph = $table.Rows[1].Cells[1].AddParagraph()
+    Add-OfficeWordChart -Paragraph $cellParagraph -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Cell Revenue Mix' -WidthPixels 420 -HeightPixels 280
+} | Out-Null
 
 Write-Host "Document saved to $docPath"
