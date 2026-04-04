@@ -57,7 +57,7 @@ jobs:
           name: coverage-reports-windows
           path: '**/coverage.cobertura.xml'
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           files: '**/coverage.cobertura.xml'
           fail_ci_if_error: false
@@ -102,7 +102,7 @@ jobs:
           name: coverage-reports-ubuntu
           path: '**/coverage.cobertura.xml'
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           files: '**/coverage.cobertura.xml'
           fail_ci_if_error: false
@@ -142,7 +142,7 @@ jobs:
           name: coverage-reports-macos
           path: '**/coverage.cobertura.xml'
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           files: '**/coverage.cobertura.xml'
           fail_ci_if_error: false
