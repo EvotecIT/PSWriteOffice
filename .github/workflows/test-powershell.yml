@@ -47,6 +47,7 @@ jobs:
         shell: pwsh
 
       - name: Commit refreshed PSD1
+        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HEAD_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
