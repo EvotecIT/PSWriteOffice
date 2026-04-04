@@ -6,16 +6,26 @@ schema: 2.0.0
 ---
 # Close-OfficeWord
 ## SYNOPSIS
-Closes a Word document, optionally saving it.
+Closes one or more tracked Word documents, optionally saving them.
 
 ## SYNTAX
-### __AllParameterSets
+### Current
+```powershell
+Close-OfficeWord [-Current] [-Save] [-Path <string>] [-Show] [<CommonParameters>]
+```
+
+### Document
 ```powershell
 Close-OfficeWord [-Document] <WordDocument> [-Save] [-Path <string>] [-Show] [<CommonParameters>]
 ```
 
+### All
+```powershell
+Close-OfficeWord -All [-Save] [-Show] [<CommonParameters>]
+```
+
 ## DESCRIPTION
-Closes a Word document, optionally saving it.
+Closes one or more tracked Word documents, optionally saving them.
 
 ## EXAMPLES
 
@@ -27,6 +37,13 @@ PS>$doc = Get-OfficeWord -Path .\Report.docx; Close-OfficeWord -Document $doc
 Disposes the loaded document instance without saving changes.
 
 ### EXAMPLE 2
+```powershell
+PS>Close-OfficeWord
+```
+
+Closes the most recently tracked document when a document handle is not passed explicitly.
+
+### EXAMPLE 3
 ```powershell
 PS>Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Show
 ```
@@ -40,7 +57,7 @@ Word document to close.
 
 ```yaml
 Type: WordDocument
-Parameter Sets: __AllParameterSets
+Parameter Sets: Document
 Aliases: None
 Possible values: 
 
@@ -51,12 +68,44 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -All
+Close all tracked documents for the current runspace.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: All
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Current
+Close the most recently tracked document.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Current
+Aliases: None
+Possible values: 
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Path
 Optional target path when saving.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Current, Document
 Aliases: None
 Possible values: 
 
@@ -72,7 +121,7 @@ Persist changes before closing.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Current, Document, All
 Aliases: None
 Possible values: 
 
@@ -88,7 +137,7 @@ Open the file after saving.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Current, Document, All
 Aliases: None
 Possible values: 
 
@@ -113,4 +162,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

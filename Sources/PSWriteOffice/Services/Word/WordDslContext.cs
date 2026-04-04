@@ -24,6 +24,8 @@ internal sealed class WordDslContext : IDisposable
 
     public WordDocument Document { get; }
 
+    public static WordDslContext? Current => CurrentScope.Value;
+
     public static WordDslContext Enter(WordDocument document)
     {
         if (document == null)

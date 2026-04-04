@@ -152,6 +152,85 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'supports explicit Word table layout modes' {
+        $path = Join-Path $TestDrive 'DslTableLayouts.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'One'; Value = 1 }
+            [PSCustomObject]@{ Name = 'Two'; Value = 2 }
+        )
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordTable -InputObject $rows -Style TableGrid -Layout AutoFitToContents
+            Add-OfficeWordTable -InputObject $rows -Style TableGrid -Layout AutoFitToWindow
+            Add-OfficeWordTable -InputObject $rows -Style TableGrid -Layout Fixed
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.Tables.Count | Should -Be 3
+            $document.Tables[0].LayoutMode | Should -Be ([OfficeIMO.Word.WordTableLayoutType]::AutoFitToContents)
+            $document.Tables[1].LayoutMode | Should -Be ([OfficeIMO.Word.WordTableLayoutType]::AutoFitToWindow)
+            $document.Tables[2].LayoutType | Should -Be ([DocumentFormat.OpenXml.Wordprocessing.TableLayoutValues]::Fixed)
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'supports transposed Word tables' {
+        $path = Join-Path $TestDrive 'DslTableTranspose.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'One'; Value = 1 }
+            [PSCustomObject]@{ Name = 'Two'; Value = 2 }
+        )
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordTable -InputObject $rows -Transpose -Style TableGrid
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Property'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'Row1'
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Row2'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'One'
+            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be 'Two'
+            $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Value'
+            $table.Rows[2].Cells[1].Paragraphs[0].Text | Should -Be '1'
+            $table.Rows[2].Cells[2].Paragraphs[0].Text | Should -Be '2'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'ignores null rows when exporting Word tables' {
+        $path = Join-Path $TestDrive 'DslTableNullRows.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'One'; Value = 1 }
+            $null
+            [PSCustomObject]@{ Name = 'Two'; Value = 2 }
+        )
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordTable -InputObject $rows -Style TableGrid
+        } | Out-Null
+
+        Test-Path $path | Should -BeTrue
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.Tables.Count | Should -Be 1
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'One'
+            $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Two'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'adds fields, watermarks, and protection' {
         $path = Join-Path $TestDrive 'DslProtected.docx'
 
@@ -263,5 +342,138 @@ Describe 'Word DSL surface' {
 
         (Find-OfficeWord -Path $path -Text 'Jane').Count | Should -BeGreaterThan 0
         (Find-OfficeWord -Path $path -Text '77').Count | Should -BeGreaterThan 0
+    }
+
+    It 'updates Word text and hyperlink metadata from a path' {
+        $path = Join-Path $TestDrive 'DslReplaceText.docx'
+
+        New-OfficeWord -Path $path {
+            WordParagraph {
+                WordText 'FY24 status'
+                WordHyperlink -Text 'Portal FY24' -Url 'https://old.example.com/FY24' -Tooltip 'FY24 link'
+            }
+
+            WordParagraph {
+                WordHyperlink -Text 'Jump FY24' -Anchor 'FY24Summary' -Tooltip 'FY24 anchor'
+            }
+
+            WordParagraph {
+                WordText 'Summary'
+                WordBookmark -Name 'FY24Summary'
+            }
+        } | Out-Null
+
+        $replacements = Update-OfficeWordText -Path $path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkText -IncludeHyperlinkUri -IncludeHyperlinkAnchor -IncludeHyperlinkTooltip
+        $replacements | Should -BeGreaterThan 0
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            (Find-OfficeWord -Document $document -Text 'FY25').Count | Should -BeGreaterThan 0
+            $document.HyperLinks[0].Text | Should -Be 'Portal FY25'
+            $document.HyperLinks[0].Uri.OriginalString | Should -Be 'https://old.example.com/FY25'
+            $document.HyperLinks[0].Tooltip | Should -Be 'FY25 link'
+            $document.HyperLinks[1].Text | Should -Be 'Jump FY25'
+            $document.HyperLinks[1].Anchor | Should -Be 'FY25Summary'
+            $document.HyperLinks[1].Tooltip | Should -Be 'FY25 anchor'
+            $document.Bookmarks.Name | Should -Contain 'FY25Summary'
+            $document.Bookmarks.Name | Should -Not -Contain 'FY24Summary'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'updates relative hyperlink targets when requested' {
+        $path = Join-Path $TestDrive 'DslReplaceRelativeLink.docx'
+
+        New-OfficeWord -Path $path {
+            WordParagraph {
+                WordHyperlink -Text 'Relative FY24' -Url 'https://placeholder.invalid/FY24'
+            }
+        } | Out-Null
+
+        $editable = Get-OfficeWord -Path $path
+        try {
+            $editable.HyperLinks[0].Uri = [Uri]::new('../reports/FY24.docx', [UriKind]::RelativeOrAbsolute)
+            Save-OfficeWord -Document $editable | Out-Null
+        } finally {
+            $editable.Dispose()
+        }
+
+        $replacements = Update-OfficeWordText -Path $path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkUri
+        $replacements | Should -Be 1
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.HyperLinks[0].Uri.OriginalString | Should -Be '../reports/FY25.docx'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'tracks current Word documents for update and close operations' {
+        $pathOne = Join-Path $TestDrive 'TrackedOne.docx'
+        $pathTwo = Join-Path $TestDrive 'TrackedTwo.docx'
+
+        $docOne = New-OfficeWord -Path $pathOne
+        $docTwo = New-OfficeWord -Path $pathTwo
+
+        try {
+            $docOne.AddParagraph('First tracked document') | Out-Null
+            $docTwo.AddParagraph('Second tracked FY24 document') | Out-Null
+
+            Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' | Should -Be 1
+
+            Close-OfficeWord -Save
+            Close-OfficeWord -All -Save
+        } finally {
+            foreach ($doc in @($docOne, $docTwo)) {
+                if ($null -ne $doc) {
+                    try {
+                        $doc.Dispose()
+                    } catch {
+                    }
+                }
+            }
+        }
+
+        Test-Path $pathOne | Should -BeTrue
+        Test-Path $pathTwo | Should -BeTrue
+
+        $savedOne = Get-OfficeWord -Path $pathOne -ReadOnly
+        $savedTwo = Get-OfficeWord -Path $pathTwo -ReadOnly
+        try {
+            (Find-OfficeWord -Document $savedOne -Text 'First tracked document').Count | Should -Be 1
+            (Find-OfficeWord -Document $savedTwo -Text 'FY25').Count | Should -Be 1
+        } finally {
+            $savedOne.Dispose()
+            $savedTwo.Dispose()
+        }
+    }
+
+    It 'does not fall back to the tracked document when -Document is null' {
+        $path = Join-Path $TestDrive 'NullDocumentGuard.docx'
+        $doc = New-OfficeWord -Path $path
+
+        try {
+            $nullDocument = $null
+            { Close-OfficeWord -Document $nullDocument } | Should -Throw
+
+            { $doc.AddParagraph('Still tracked after null guard') | Out-Null } | Should -Not -Throw
+            Close-OfficeWord -Document $doc -Save
+        } finally {
+            if ($null -ne $doc) {
+                try {
+                    $doc.Dispose()
+                } catch {
+                }
+            }
+        }
+
+        $saved = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            (Find-OfficeWord -Document $saved -Text 'Still tracked after null guard').Count | Should -Be 1
+        } finally {
+            $saved.Dispose()
+        }
     }
 }
