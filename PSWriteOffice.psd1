@@ -13,7 +13,7 @@
     PowerShellVersion      = '5.1'
     PrivateData            = @{
         PSData = @{
-            LicenseUri                 = 'https://github.com/EvotecIT/PSWriteOffice/blob/main/LICENSE'
+            LicenseUri                 = 'https://github.com/EvotecIT/PSWriteOffice/blob/master/License'
             ProjectUri                 = 'https://github.com/EvotecIT/PSWriteOffice'
             Tags                       = @('officeimo', 'word', 'excel', 'powerpoint', 'markdown', 'csv', 'docx', 'xlsx', 'pptx', 'openxml', 'windows', 'linux', 'macos')
             RequireLicenseAcceptance   = $false
