@@ -10,7 +10,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds an AutoFilter to the current worksheet.</maml:para>
+      <maml:para>Optional filter criteria can be supplied per column index (0-based within the range).</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Context">
@@ -188,14 +188,20 @@
     <command:examples>
       <command:example>
         <maml:title>Add AutoFilter to a range.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelAutoFilter -Range 'A1:D200' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelAutoFilter -Range 'A1:D200' }</dev:code>
         <dev:remarks>
           <maml:para>Enables filter dropdowns on the range.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Add AutoFilter with criteria.</maml:title>
-        <dev:code>PS&gt;Add-OfficeExcelAutoFilter -Range 'A1:D200' -Criteria @{ 2 = 'Open','Hold' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeExcelAutoFilter -Range 'A1:D200' -Criteria @{ 2 = 'Open','Hold' }</dev:code>
         <dev:remarks>
           <maml:para>Filters the third column (0-based within the range) to Open/Hold.</maml:para>
         </dev:remarks>
@@ -1009,14 +1015,20 @@
     <command:examples>
       <command:example>
         <maml:title>Add a chart from a range.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelChart -Range 'A1:D10' -Row 2 -Column 6 -Type Line -Title 'Trend' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelChart -Range 'A1:D10' -Row 2 -Column 6 -Type Line -Title 'Trend' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a line chart from A1:D10 and places it at F2.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Add a chart from a table.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelChart -TableName 'Sales' -Row 2 -Column 6 -Type ColumnClustered }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelChart -TableName 'Sales' -Row 2 -Column 6 -Type ColumnClustered }</dev:code>
         <dev:remarks>
           <maml:para>Creates a chart from the Sales table.</maml:para>
         </dev:remarks>
@@ -1392,7 +1404,10 @@
     <command:examples>
       <command:example>
         <maml:title>Add a comment to A1.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelComment -Address 'A1' -Text 'Review this cell' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelComment -Address 'A1' -Text 'Review this cell' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a cell comment at A1.</maml:para>
         </dev:remarks>
@@ -1660,7 +1675,10 @@
     <command:examples>
       <command:example>
         <maml:title>Apply a red-to-green color scale.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelConditionalColorScale -Range 'B2:B50' -StartColor '#FF0000' -EndColor '#00FF00' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelConditionalColorScale -Range 'B2:B50' -StartColor '#FF0000' -EndColor '#00FF00' }</dev:code>
         <dev:remarks>
           <maml:para>Applies a red-to-green scale to column B.</maml:para>
         </dev:remarks>
@@ -1892,7 +1910,10 @@
     <command:examples>
       <command:example>
         <maml:title>Add blue data bars.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelConditionalDataBar -Range 'D2:D50' -Color '#4F81BD' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelConditionalDataBar -Range 'D2:D50' -Color '#4F81BD' }</dev:code>
         <dev:remarks>
           <maml:para>Applies data bars to column D.</maml:para>
         </dev:remarks>
@@ -2268,7 +2289,10 @@
     <command:examples>
       <command:example>
         <maml:title>Add traffic light icons.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelConditionalIconSet -Range 'E2:E50' -IconSet ThreeTrafficLights1 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelConditionalIconSet -Range 'E2:E50' -IconSet ThreeTrafficLights1 }</dev:code>
         <dev:remarks>
           <maml:para>Applies a traffic-light icon set.</maml:para>
         </dev:remarks>
@@ -2572,7 +2596,10 @@
     <command:examples>
       <command:example>
         <maml:title>Highlight values greater than 100.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelConditionalRule -Range 'C2:C100' -Operator GreaterThan -Formula1 '100' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelConditionalRule -Range 'C2:C100' -Operator GreaterThan -Formula1 '100' }</dev:code>
         <dev:remarks>
           <maml:para>Applies a conditional rule to column C.</maml:para>
         </dev:remarks>
@@ -3290,14 +3317,20 @@
     <command:examples>
       <command:example>
         <maml:title>Insert an image from disk at B2.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelImage -Address 'B2' -Path .\logo.png -WidthPixels 120 -HeightPixels 40 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelImage -Address 'B2' -Path .\logo.png -WidthPixels 120 -HeightPixels 40 }</dev:code>
         <dev:remarks>
           <maml:para>Anchors the image to cell B2.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Insert an image from a URL.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelImage -Row 1 -Column 1 -Url 'https://example.org/logo.png' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelImage -Row 1 -Column 1 -Url 'https://example.org/logo.png' }</dev:code>
         <dev:remarks>
           <maml:para>Downloads and anchors the image to cell A1.</maml:para>
         </dev:remarks>
@@ -3745,7 +3778,10 @@
     <command:examples>
       <command:example>
         <maml:title>Insert an image from a URL at B2.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelImageFromUrl -Address 'B2' -Url 'https://example.org/logo.png' -WidthPixels 120 -HeightPixels 40 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelImageFromUrl -Address 'B2' -Url 'https://example.org/logo.png' -WidthPixels 120 -HeightPixels 40 }</dev:code>
         <dev:remarks>
           <maml:para>Downloads the remote image and anchors it to cell B2.</maml:para>
         </dev:remarks>
@@ -4697,7 +4733,10 @@
     <command:examples>
       <command:example>
         <maml:title>Create a basic pivot table.</maml:title>
-        <dev:code>PS&gt;Add-OfficeExcelPivotTable -SourceRange 'A1:D200' -DestinationCell 'F2' -RowField 'Region' -DataField 'Sales'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeExcelPivotTable -SourceRange 'A1:D200' -DestinationCell 'F2' -RowField 'Region' -DataField 'Sales'</dev:code>
         <dev:remarks>
           <maml:para>Creates a pivot table in F2 using Region as rows and Sales as the data field.</maml:para>
         </dev:remarks>
@@ -4715,7 +4754,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds or reuses a worksheet within the current Excel DSL scope.</maml:para>
+      <maml:para>Creates the sheet when missing, pushes it onto the DSL stack, and executes the nested script block.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -4852,7 +4891,10 @@
     <command:examples>
       <command:example>
         <maml:title>Create a sheet named Data.</maml:title>
-        <dev:code>PS&gt;New-OfficeExcel -Path .\report.xlsx { Add-OfficeExcelSheet -Name 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\report.xlsx { Add-OfficeExcelSheet -Name 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }</dev:code>
         <dev:remarks>
           <maml:para>Creates a workbook with a worksheet named Data and writes the header “Region”.</maml:para>
         </dev:remarks>
@@ -5588,7 +5630,10 @@
     <command:examples>
       <command:example>
         <maml:title>Add a line sparkline.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelSparkline -DataRange 'B2:M2' -LocationRange 'N2' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelSparkline -DataRange 'B2:M2' -LocationRange 'N2' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a line sparkline in N2 using B2:M2.</maml:para>
         </dev:remarks>
@@ -5606,7 +5651,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Writes tabular data to the current worksheet and formats it as an Excel table.</maml:para>
+      <maml:para>Accepts objects (PSCustomObject, hashtables, POCOs) and converts them into an Excel table with optional styling.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -5853,8 +5898,11 @@
     <command:examples>
       <command:example>
         <maml:title>Insert a table starting at A1.</maml:title>
-        <dev:code>PS&gt;$data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })
-ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })&#xD;
+              ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }</dev:code>
         <dev:remarks>
           <maml:para>Writes two rows and formats them as a styled Excel table.</maml:para>
         </dev:remarks>
@@ -5872,7 +5920,7 @@ ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }</dev:c
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds or refreshes a workbook table of contents sheet.</maml:para>
+      <maml:para>Can run inside the Excel DSL, against an open workbook, or directly against a file path.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Context">
@@ -6534,7 +6582,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a TOC sheet to an existing workbook.</maml:title>
-        <dev:code>PS&gt;Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks</dev:code>
         <dev:remarks>
           <maml:para>Creates or refreshes a TOC sheet, lists named ranges, and adds back links on other sheets.</maml:para>
         </dev:remarks>
@@ -6874,7 +6925,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Restrict cells based on a formula.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelValidationCustomFormula -Range 'F2:F20' -Formula 'LEN(F2)&gt;0' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelValidationCustomFormula -Range 'F2:F20' -Formula 'LEN(F2)&gt;0' }</dev:code>
         <dev:remarks>
           <maml:para>Ensures the validation formula evaluates to true.</maml:para>
         </dev:remarks>
@@ -7286,7 +7340,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Restrict values after a date.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelValidationDate -Range 'C2:C20' -Operator GreaterThan -Formula1 (Get-Date '2024-01-01') }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelValidationDate -Range 'C2:C20' -Operator GreaterThan -Formula1 (Get-Date '2024-01-01') }</dev:code>
         <dev:remarks>
           <maml:para>Ensures dates in C2:C20 are after 2024-01-01.</maml:para>
         </dev:remarks>
@@ -7698,7 +7755,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Restrict values between 0 and 1.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelValidationDecimal -Range 'B2:B20' -Operator Between -Formula1 0 -Formula2 1 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelValidationDecimal -Range 'B2:B20' -Operator Between -Formula1 0 -Formula2 1 }</dev:code>
         <dev:remarks>
           <maml:para>Ensures values in B2:B20 are decimals between 0 and 1.</maml:para>
         </dev:remarks>
@@ -7716,7 +7776,7 @@ System.IO.FileInfo</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a list-based data validation to a worksheet range.</maml:para>
+      <maml:para>When invoked inside the Excel DSL, applies to the current worksheet.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Context">
@@ -7966,7 +8026,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a validation list to a range.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelValidationList -Range 'C2:C50' -Values 'New','In Progress','Done' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelValidationList -Range 'C2:C50' -Values 'New','In Progress','Done' }</dev:code>
         <dev:remarks>
           <maml:para>Restricts column C to the provided values.</maml:para>
         </dev:remarks>
@@ -8378,7 +8441,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Restrict values to 1-50 characters.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelValidationTextLength -Range 'E2:E20' -Operator Between -Formula1 1 -Formula2 50 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelValidationTextLength -Range 'E2:E20' -Operator Between -Formula1 1 -Formula2 50 }</dev:code>
         <dev:remarks>
           <maml:para>Ensures text length in E2:E20 is between 1 and 50 characters.</maml:para>
         </dev:remarks>
@@ -8790,7 +8856,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Restrict values to before 5PM.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelValidationTime -Range 'D2:D20' -Operator LessThan -Formula1 ([TimeSpan]::FromHours(17)) }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelValidationTime -Range 'D2:D20' -Operator LessThan -Formula1 ([TimeSpan]::FromHours(17)) }</dev:code>
         <dev:remarks>
           <maml:para>Ensures times in D2:D20 are before 17:00.</maml:para>
         </dev:remarks>
@@ -9202,7 +9271,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Restrict values between 1 and 10.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Add-OfficeExcelValidationWholeNumber -Range 'B2:B20' -Operator Between -Formula1 1 -Formula2 10 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Add-OfficeExcelValidationWholeNumber -Range 'B2:B20' -Operator Between -Formula1 1 -Formula2 10 }</dev:code>
         <dev:remarks>
           <maml:para>Ensures values in B2:B20 are between 1 and 10.</maml:para>
         </dev:remarks>
@@ -9422,7 +9494,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a note callout.</maml:title>
-        <dev:code>PS&gt;MarkdownCallout -Kind 'note' -Title 'Remember' -Body 'Update the metrics.'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownCallout -Kind 'note' -Title 'Remember' -Body 'Update the metrics.'</dev:code>
         <dev:remarks>
           <maml:para>Appends a callout block to the document.</maml:para>
         </dev:remarks>
@@ -9606,7 +9681,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a PowerShell code block.</maml:title>
-        <dev:code>PS&gt;MarkdownCode -Language 'powershell' -Content 'Get-Process'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownCode -Language 'powershell' -Content 'Get-Process'</dev:code>
         <dev:remarks>
           <maml:para>Appends a fenced code block to the document.</maml:para>
         </dev:remarks>
@@ -9754,7 +9832,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add term/definition pairs.</maml:title>
-        <dev:code>PS&gt;MarkdownDefinitionList -Definition @{ SLA = 'Service level agreement'; SLO = 'Service level objective' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownDefinitionList -Definition @{ SLA = 'Service level agreement'; SLO = 'Service level objective' }</dev:code>
         <dev:remarks>
           <maml:para>Appends a definition list built from the provided pairs.</maml:para>
         </dev:remarks>
@@ -9974,7 +10055,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a details section.</maml:title>
-        <dev:code>PS&gt;MarkdownDetails -Summary 'Implementation notes' { MarkdownParagraph -Text 'Hidden by default.' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownDetails -Summary 'Implementation notes' { MarkdownParagraph -Text 'Hidden by default.' }</dev:code>
         <dev:remarks>
           <maml:para>Appends a details/summary block with nested Markdown content.</maml:para>
         </dev:remarks>
@@ -10122,7 +10206,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add front matter from a hashtable.</maml:title>
-        <dev:code>PS&gt;MarkdownFrontMatter -Data @{ title = 'Weekly Report'; tags = @('ops','summary') }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownFrontMatter -Data @{ title = 'Weekly Report'; tags = @('ops','summary') }</dev:code>
         <dev:remarks>
           <maml:para>Sets the document header using the supplied key/value pairs.</maml:para>
         </dev:remarks>
@@ -10306,7 +10393,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a second-level heading.</maml:title>
-        <dev:code>PS&gt;MarkdownHeading -Level 2 -Text 'Overview'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownHeading -Level 2 -Text 'Overview'</dev:code>
         <dev:remarks>
           <maml:para>Appends a level-2 heading to the current Markdown document.</maml:para>
         </dev:remarks>
@@ -10418,7 +10508,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a horizontal rule.</maml:title>
-        <dev:code>PS&gt;MarkdownHorizontalRule</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownHorizontalRule</dev:code>
         <dev:remarks>
           <maml:para>Appends a horizontal rule to the document.</maml:para>
         </dev:remarks>
@@ -10710,7 +10803,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add an image with alt text.</maml:title>
-        <dev:code>PS&gt;MarkdownImage -Path '.\logo.png' -Alt 'Logo'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownImage -Path '.\logo.png' -Alt 'Logo'</dev:code>
         <dev:remarks>
           <maml:para>Appends an image block to the document.</maml:para>
         </dev:remarks>
@@ -10930,7 +11026,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a bullet list.</maml:title>
-        <dev:code>PS&gt;MarkdownList -Items 'Alpha','Beta','Gamma'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownList -Items 'Alpha','Beta','Gamma'</dev:code>
         <dev:remarks>
           <maml:para>Appends an unordered list to the document.</maml:para>
         </dev:remarks>
@@ -11078,7 +11177,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a paragraph.</maml:title>
-        <dev:code>PS&gt;MarkdownParagraph -Text 'This report is generated automatically.'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownParagraph -Text 'This report is generated automatically.'</dev:code>
         <dev:remarks>
           <maml:para>Appends a paragraph to the current Markdown document.</maml:para>
         </dev:remarks>
@@ -11226,7 +11328,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a quote block.</maml:title>
-        <dev:code>PS&gt;MarkdownQuote -Text 'Key takeaway goes here.'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownQuote -Text 'Key takeaway goes here.'</dev:code>
         <dev:remarks>
           <maml:para>Appends a quote block to the document.</maml:para>
         </dev:remarks>
@@ -11411,15 +11516,21 @@ System.Object</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add a table from input objects.</maml:title>
-        <dev:code>PS&gt;MarkdownTable -InputObject $rows</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownTable -InputObject $rows</dev:code>
         <dev:remarks>
           <maml:para>Appends a Markdown table using the supplied objects.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Append multiple tables to the same document.</maml:title>
-        <dev:code>PS&gt;$doc = New-OfficeMarkdown -Path .\Report.md -NoSave -PassThru
-$doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObject $details</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = New-OfficeMarkdown -Path .\Report.md -NoSave -PassThru&#xD;
+              $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObject $details</dev:code>
         <dev:remarks>
           <maml:para>Creates two tables in sequence within the same Markdown document.</maml:para>
         </dev:remarks>
@@ -11819,7 +11930,10 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Add a TOC at the top of the document.</maml:title>
-        <dev:code>PS&gt;MarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop</dev:code>
         <dev:remarks>
           <maml:para>Inserts a generated table of contents for headings in the document.</maml:para>
         </dev:remarks>
@@ -12039,7 +12153,10 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Add a checklist.</maml:title>
-        <dev:code>PS&gt;MarkdownTaskList -Items 'Draft','Review','Ship' -Completed 1</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>MarkdownTaskList -Items 'Draft','Review','Ship' -Completed 1</dev:code>
         <dev:remarks>
           <maml:para>Appends an unordered task list and marks the selected items as completed.</maml:para>
         </dev:remarks>
@@ -12057,7 +12174,7 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a bulleted list to a PowerPoint slide.</maml:para>
+      <maml:para>Creates a textbox and populates it with bullet paragraphs.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -12280,7 +12397,10 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Add a bullet list.</maml:title>
-        <dev:code>PS&gt;Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 60 -Y 120 -Width 400 -Height 200</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 60 -Y 120 -Width 400 -Height 200</dev:code>
         <dev:remarks>
           <maml:para>Creates a bullet list textbox.</maml:para>
         </dev:remarks>
@@ -12298,7 +12418,7 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a chart to a PowerPoint slide.</maml:para>
+      <maml:para>Supports default chart data or object-based category/series mappings for standard and scatter charts.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Default">
@@ -12831,14 +12951,20 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Add a clustered column chart from objects.</maml:title>
-        <dev:code>PS&gt;Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'</dev:code>
         <dev:remarks>
           <maml:para>Creates a clustered column chart using Month for categories and Sales/Profit as series.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Add a scatter chart from numeric properties.</maml:title>
-        <dev:code>PS&gt;Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'</dev:code>
         <dev:remarks>
           <maml:para>Creates a scatter chart using Quarter on the X axis and Revenue on the Y axis.</maml:para>
         </dev:remarks>
@@ -12856,7 +12982,7 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds an image to a PowerPoint slide.</maml:para>
+      <maml:para>Places the picture at the requested coordinates using point measurements.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -13031,7 +13157,10 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Insert an image.</maml:title>
-        <dev:code>PS&gt;Add-OfficePowerPointImage -Slide $slide -Path .\logo.png -X 40 -Y 60 -Width 200 -Height 120</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficePowerPointImage -Slide $slide -Path .\logo.png -X 40 -Y 60 -Width 200 -Height 120</dev:code>
         <dev:remarks>
           <maml:para>Adds a picture to the slide.</maml:para>
         </dev:remarks>
@@ -13049,7 +13178,7 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a section to a PowerPoint presentation.</maml:para>
+      <maml:para>Creates a new section starting at the requested slide index or at the current slide inside the DSL.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -13152,7 +13281,10 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Create a section that starts at slide 3.</maml:title>
-        <dev:code>PS&gt;Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2</dev:code>
         <dev:remarks>
           <maml:para>Creates a section named Results starting at the third slide.</maml:para>
         </dev:remarks>
@@ -13170,7 +13302,7 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a basic shape to a slide.</maml:para>
+      <maml:para>Creates an auto shape at the requested coordinates and applies optional fill and outline styling.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -13441,7 +13573,10 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Create a rectangle highlight.</maml:title>
-        <dev:code>PS&gt;Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 80 -Width 220 -Height 120 -FillColor '#DDEEFF'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 80 -Width 220 -Height 120 -FillColor '#DDEEFF'</dev:code>
         <dev:remarks>
           <maml:para>Creates a rectangle with a custom fill color.</maml:para>
         </dev:remarks>
@@ -13459,7 +13594,7 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a new slide to a PowerPoint presentation.</maml:para>
+      <maml:para>Creates a slide using OfficeIMO master/layout indexes and can execute nested DSL content.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Index">
@@ -13736,14 +13871,20 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Append a slide with the default layout.</maml:title>
-        <dev:code>PS&gt;$ppt = New-OfficePowerPoint -FilePath .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt</dev:code>
         <dev:remarks>
           <maml:para>Creates a deck and appends a new slide at the end.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Create a slide using the DSL.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } }</dev:code>
         <dev:remarks>
           <maml:para>Creates a slide and sets the title using DSL aliases.</maml:para>
         </dev:remarks>
@@ -13761,7 +13902,7 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a table to a PowerPoint slide.</maml:para>
+      <maml:para>Builds a table from data rows or creates a blank grid with a fixed size.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Data">
@@ -14131,8 +14272,11 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
     <command:examples>
       <command:example>
         <maml:title>Create a table from objects.</maml:title>
-        <dev:code>PS&gt;$rows = @([pscustomobject]@{ Item='Alpha'; Qty=2 }, [pscustomobject]@{ Item='Beta'; Qty=4 })
-Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Height 200</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$rows = @([pscustomobject]@{ Item='Alpha'; Qty=2 }, [pscustomobject]@{ Item='Beta'; Qty=4 })&#xD;
+              Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Height 200</dev:code>
         <dev:remarks>
           <maml:para>Creates a table with headers and two data rows.</maml:para>
         </dev:remarks>
@@ -14150,7 +14294,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a text box to a slide.</maml:para>
+      <maml:para>Creates a rectangle at the requested coordinates and assigns the supplied text.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -14325,7 +14469,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Insert a caption.</maml:title>
-        <dev:code>PS&gt;Add-OfficePowerPointTextBox -Slide $slide -Text 'Quarterly Overview' -X 80 -Y 150</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficePowerPointTextBox -Slide $slide -Text 'Quarterly Overview' -X 80 -Y 150</dev:code>
         <dev:remarks>
           <maml:para>Places a text box mid-slide with the provided caption.</maml:para>
         </dev:remarks>
@@ -14446,7 +14593,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a bookmark in a paragraph.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Intro'; Add-OfficeWordBookmark -Name 'Intro' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Intro'; Add-OfficeWordBookmark -Name 'Intro' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a bookmark named Intro on the paragraph.</maml:para>
         </dev:remarks>
@@ -14615,7 +14765,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a checked checkbox.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordCheckBox -Checked -Alias 'Approved' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordCheckBox -Checked -Alias 'Approved' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a checked checkbox content control.</maml:para>
         </dev:remarks>
@@ -14808,7 +14961,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a combo box with a default value.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordComboBox -Items 'Red','Blue' -DefaultValue 'Blue' -Alias 'Color' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordComboBox -Items 'Red','Blue' -DefaultValue 'Blue' -Alias 'Color' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a combo box control with the selected default value.</maml:para>
         </dev:remarks>
@@ -14977,7 +15133,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a content control with text.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordContentControl -Text 'Client' -Alias 'ClientName' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordContentControl -Text 'Client' -Alias 'ClientName' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a content control with the specified text.</maml:para>
         </dev:remarks>
@@ -15146,7 +15305,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a date picker with today's date.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordDatePicker -Date (Get-Date) -Alias 'DueDate' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordDatePicker -Date (Get-Date) -Alias 'DueDate' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a date picker control with an initial value.</maml:para>
         </dev:remarks>
@@ -15315,7 +15477,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a dropdown list.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordDropDownList -Items 'Low','Medium','High' -Alias 'Priority' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordDropDownList -Items 'Low','Medium','High' -Alias 'Priority' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a dropdown list control with the supplied items.</maml:para>
         </dev:remarks>
@@ -15333,7 +15498,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a field to the current paragraph.</maml:para>
+      <maml:para>Supports standard Word field codes such as Page, Date, or NumPages.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -15678,7 +15843,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a page number field.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordField -Type Page }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordField -Type Page }</dev:code>
         <dev:remarks>
           <maml:para>Inserts a PAGE field into the paragraph.</maml:para>
         </dev:remarks>
@@ -15696,7 +15864,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds content to a section footer.</maml:para>
+      <maml:para>Creates or reuses the requested footer part (default/first/even) and runs the DSL script block inside it.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -15775,7 +15943,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Append page numbers to the default footer.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordSection { Add-OfficeWordFooter { Add-OfficeWordPageNumber -IncludeTotalPages } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordSection { Add-OfficeWordFooter { Add-OfficeWordPageNumber -IncludeTotalPages } }</dev:code>
         <dev:remarks>
           <maml:para>Inserts a footer displaying “Page X of Y”.</maml:para>
         </dev:remarks>
@@ -15793,7 +15964,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds content to a section header.</maml:para>
+      <maml:para>Ensures the requested header part (default/first/even) exists and executes the DSL scriptblock within it.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -15872,7 +16043,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Create a default header.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordSection { Add-OfficeWordHeader { Add-OfficeWordParagraph -Text 'Confidential' -Style Heading3 } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordSection { Add-OfficeWordHeader { Add-OfficeWordParagraph -Text 'Confidential' -Style Heading3 } }</dev:code>
         <dev:remarks>
           <maml:para>Creates a section header that prints “Confidential”.</maml:para>
         </dev:remarks>
@@ -16338,7 +16512,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add an external hyperlink.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordHyperlink -Text 'Example' -Url 'https://example.org' -Styled }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordHyperlink -Text 'Example' -Url 'https://example.org' -Styled }</dev:code>
         <dev:remarks>
           <maml:para>Creates a styled external hyperlink in the active paragraph.</maml:para>
         </dev:remarks>
@@ -16356,7 +16533,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Inserts an image into the current paragraph.</maml:para>
+      <maml:para>Supports width/height overrides and wrapping options using the alias-friendly DSL.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -16549,7 +16726,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a logo.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordImage -Path .\logo.png -Width 96 -Height 32 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordImage -Path .\logo.png -Width 96 -Height 32 }</dev:code>
         <dev:remarks>
           <maml:para>Embeds logo.png at the specified size.</maml:para>
         </dev:remarks>
@@ -16567,7 +16747,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Starts a list inside the current section or paragraph anchor.</maml:para>
+      <maml:para>Creates a temporary anchor paragraph, spawns an OfficeIMO list, and runs child WordListItem commands.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -16678,7 +16858,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Numbered checklist.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordList -Style 'Numbered' { Add-OfficeWordListItem -Text 'Plan'; Add-OfficeWordListItem -Text 'Execute' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordList -Style 'Numbered' { Add-OfficeWordListItem -Text 'Plan'; Add-OfficeWordListItem -Text 'Execute' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a numbered list with two steps.</maml:para>
         </dev:remarks>
@@ -16696,7 +16879,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a single list item.</maml:para>
+      <maml:para>Must be called within Add-OfficeWordList/WordList; supports nesting via -Level.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -16799,7 +16982,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add bullet text.</maml:title>
-        <dev:code>PS&gt;WordList { Add-OfficeWordListItem -Text 'First task' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>WordList { Add-OfficeWordListItem -Text 'First task' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a bullet with the text “First task”.</maml:para>
         </dev:remarks>
@@ -16817,7 +17003,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a PAGE field to the current header/footer.</maml:para>
+      <maml:para>Typically used inside WordFooter to render “Page X of Y”.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -16872,7 +17058,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Footer page numbering.</maml:title>
-        <dev:code>PS&gt;WordFooter { Add-OfficeWordPageNumber -IncludeTotalPages }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>WordFooter { Add-OfficeWordPageNumber -IncludeTotalPages }</dev:code>
         <dev:remarks>
           <maml:para>Outputs “Page # of #” in the footer.</maml:para>
         </dev:remarks>
@@ -16890,7 +17079,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a paragraph to the current section/header/footer context.</maml:para>
+      <maml:para>Acts as the primary DSL container for inline content such as text runs, bold segments, and images.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Text">
@@ -17092,7 +17281,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Write a formatted sentence.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Hello '; Add-OfficeWordText -Text 'World' -Bold }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Hello '; Add-OfficeWordText -Text 'World' -Bold }</dev:code>
         <dev:remarks>
           <maml:para>Outputs “Hello World” with the second word bolded.</maml:para>
         </dev:remarks>
@@ -17309,7 +17501,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a picture control.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordPictureControl -Path .\logo.png -Width 96 -Height 32 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordPictureControl -Path .\logo.png -Width 96 -Height 32 }</dev:code>
         <dev:remarks>
           <maml:para>Embeds an image inside a picture content control.</maml:para>
         </dev:remarks>
@@ -17478,7 +17673,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a repeating section.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordRepeatingSection -SectionTitle 'Items' -Alias 'LineItems' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordRepeatingSection -SectionTitle 'Items' -Alias 'LineItems' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a repeating section control.</maml:para>
         </dev:remarks>
@@ -17496,7 +17694,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds or reuses a section inside the current Word document.</maml:para>
+      <maml:para>Provides the DSL entry point for section-level operations inside New-OfficeWord.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -17599,7 +17797,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Create a section with a paragraph.</maml:title>
-        <dev:code>PS&gt;New-OfficeWord -Path .\doc.docx { Add-OfficeWordSection { Add-OfficeWordParagraph -Text 'Hello' } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeWord -Path .\doc.docx { Add-OfficeWordSection { Add-OfficeWordParagraph -Text 'Hello' } }</dev:code>
         <dev:remarks>
           <maml:para>Creates a document and inserts a section that contains a single paragraph.</maml:para>
         </dev:remarks>
@@ -17617,7 +17818,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a table from PowerShell objects.</maml:para>
+      <maml:para>Transforms objects into an OfficeIMO table, applies styles/layout, and runs nested DSL customizations.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -18042,7 +18243,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Create a styled grid.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordTable -InputObject $Data -Style 'GridTable1LightAccent1' { WordTableCondition -FilterScript { $_.Total -gt 1000 } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordTable -InputObject $Data -Style 'GridTable1LightAccent1' { WordTableCondition -FilterScript { $_.Total -gt 1000 } }</dev:code>
         <dev:remarks>
           <maml:para>Writes a grid table and highlights rows exceeding $1,000.</maml:para>
         </dev:remarks>
@@ -18060,7 +18264,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Enters a specific table cell and executes nested DSL content inside it.</maml:para>
+      <maml:para>Use this to add paragraphs, lists, images, or nested tables inside a cell selected by row and column.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Context">
@@ -18262,7 +18466,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add nested content to a table cell.</maml:title>
-        <dev:code>PS&gt;WordTable -Data $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>WordTable -Data $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }</dev:code>
         <dev:remarks>
           <maml:para>Targets the data cell at row 1, column 0 and writes text inside it.</maml:para>
         </dev:remarks>
@@ -18280,7 +18487,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Attaches conditional formatting logic to the current table.</maml:para>
+      <maml:para>Evaluates each data row via -FilterScript ($_ holds the original object) and optionally changes the table style or row shading.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -18383,7 +18590,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Shade rows above threshold.</maml:title>
-        <dev:code>PS&gt;WordTableCondition -FilterScript { $_.Qty -gt 10 } -BackgroundColor '#fff4d6'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>WordTableCondition -FilterScript { $_.Qty -gt 10 } -BackgroundColor '#fff4d6'</dev:code>
         <dev:remarks>
           <maml:para>Applies a light highlight when the quantity column exceeds 10.</maml:para>
         </dev:remarks>
@@ -18512,7 +18722,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a default table of contents.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordTableOfContent</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordTableOfContent</dev:code>
         <dev:remarks>
           <maml:para>Inserts a table of contents using the default template.</maml:para>
         </dev:remarks>
@@ -18530,7 +18743,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds inline text to the current paragraph.</maml:para>
+      <maml:para>Supports bold/italic/underline and color tweaks for quick DSL composition.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -18681,7 +18894,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Append bold text.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Important: ' -Bold }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Important: ' -Bold }</dev:code>
         <dev:remarks>
           <maml:para>Writes “Important:” with bold formatting.</maml:para>
         </dev:remarks>
@@ -18699,7 +18915,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Adds a watermark to the current section or header.</maml:para>
+      <maml:para>Supports text or image watermarks using OfficeIMO.Word.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Text">
@@ -18925,7 +19141,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Add a text watermark.</maml:title>
-        <dev:code>PS&gt;Add-OfficeWordWatermark -Text 'CONFIDENTIAL'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Add-OfficeWordWatermark -Text 'CONFIDENTIAL'</dev:code>
         <dev:remarks>
           <maml:para>Inserts a text watermark into the current section.</maml:para>
         </dev:remarks>
@@ -19049,7 +19268,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Remove AutoFilter from the active sheet.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Clear-OfficeExcelAutoFilter }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Clear-OfficeExcelAutoFilter }</dev:code>
         <dev:remarks>
           <maml:para>Removes filter dropdowns and criteria.</maml:para>
         </dev:remarks>
@@ -19067,7 +19289,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Closes an Excel workbook and optionally saves it.</maml:para>
+      <maml:para>Convenience wrapper so scripts do not need to call Save or Dispose directly.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -19194,7 +19416,10 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Save to a new path and open the file.</maml:title>
-        <dev:code>PS&gt;Close-OfficeExcel -Document $workbook -Save -Path .\report-final.xlsx -Show</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Close-OfficeExcel -Document $workbook -Save -Path .\report-final.xlsx -Show</dev:code>
         <dev:remarks>
           <maml:para>Saves pending changes to a new file, launches Excel, and releases the workbook.</maml:para>
         </dev:remarks>
@@ -19212,7 +19437,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Closes one or more tracked Word documents, optionally saving them.</maml:para>
+      <maml:para>Provides a cmdlet wrapper for WordDocument.Dispose/Save so scripts need not call .NET methods directly.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Current">
@@ -19453,21 +19678,30 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
     <command:examples>
       <command:example>
         <maml:title>Close without saving.</maml:title>
-        <dev:code>PS&gt;$doc = Get-OfficeWord -Path .\Report.docx; Close-OfficeWord -Document $doc</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx; Close-OfficeWord -Document $doc</dev:code>
         <dev:remarks>
           <maml:para>Disposes the loaded document instance without saving changes.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Close the most recently tracked document.</maml:title>
-        <dev:code>PS&gt;Close-OfficeWord</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Close-OfficeWord</dev:code>
         <dev:remarks>
           <maml:para>Closes the current tracked document when a document handle is not passed explicitly.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Save to a new path and open the file.</maml:title>
-        <dev:code>PS&gt;Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Show</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Show</dev:code>
         <dev:remarks>
           <maml:para>Saves updates to Report-final.docx, opens it, and disposes the document.</maml:para>
         </dev:remarks>
@@ -19485,7 +19719,7 @@ Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Hei
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a Word document from HTML.</maml:para>
+      <maml:para>Returns a WordDocument or saves it to disk when -OutputPath is provided.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Html">
@@ -20036,14 +20270,20 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Create a .docx from HTML markup.</maml:title>
-        <dev:code>PS&gt;ConvertFrom-OfficeWordHtml -Html '&lt;h1&gt;Hello&lt;/h1&gt;' -OutputPath .\hello.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertFrom-OfficeWordHtml -Html '&lt;h1&gt;Hello&lt;/h1&gt;' -OutputPath .\hello.docx</dev:code>
         <dev:remarks>
           <maml:para>Writes a Word document containing the supplied HTML.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Load HTML from disk and get the document object.</maml:title>
-        <dev:code>PS&gt;$doc = ConvertFrom-OfficeWordHtml -Path .\snippet.html</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = ConvertFrom-OfficeWordHtml -Path .\snippet.html</dev:code>
         <dev:remarks>
           <maml:para>Returns a Word document instance for further edits.</maml:para>
         </dev:remarks>
@@ -20061,7 +20301,7 @@ System.IO.FileInfo</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a Word document from Markdown.</maml:para>
+      <maml:para>Returns a WordDocument or saves it to disk when -OutputPath is provided.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Markdown">
@@ -20844,14 +21084,20 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Create a .docx from Markdown text.</maml:title>
-        <dev:code>PS&gt;ConvertFrom-OfficeWordMarkdown -Markdown '# Hello' -OutputPath .\hello.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertFrom-OfficeWordMarkdown -Markdown '# Hello' -OutputPath .\hello.docx</dev:code>
         <dev:remarks>
           <maml:para>Writes a Word document containing the supplied Markdown.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Pipe a Markdown document into Word conversion.</maml:title>
-        <dev:code>PS&gt;Get-OfficeMarkdown -Path .\README.md | ConvertFrom-OfficeWordMarkdown</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeMarkdown -Path .\README.md | ConvertFrom-OfficeWordMarkdown</dev:code>
         <dev:remarks>
           <maml:para>Returns a Word document instance for further edits.</maml:para>
         </dev:remarks>
@@ -20869,7 +21115,7 @@ System.IO.FileInfo</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Converts objects or a CSV document into CSV text or a file.</maml:para>
+      <maml:para>By default returns CSV text; use -OutputPath to save to disk.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="InputObject">
@@ -21205,25 +21451,34 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Convert objects to CSV text.</maml:title>
-        <dev:code>PS&gt;$csv = $data | ConvertTo-OfficeCsv</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$csv = $data | ConvertTo-OfficeCsv</dev:code>
         <dev:remarks>
           <maml:para>Generates CSV text from the input objects.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Export with a stable schema order.</maml:title>
-        <dev:code>PS&gt;$rows = @(
-[ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
-[ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
-)
-$rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$rows = @(&#xD;
+                [ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },&#xD;
+                [ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }&#xD;
+              )&#xD;
+              $rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'</dev:code>
         <dev:remarks>
           <maml:para>Uses ordered dictionaries to enforce column order and a custom delimiter.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Write CSV without headers.</maml:title>
-        <dev:code>PS&gt;$data | ConvertTo-OfficeCsv -IncludeHeader:$false -OutputPath .\noheader.csv</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$data | ConvertTo-OfficeCsv -IncludeHeader:$false -OutputPath .\noheader.csv</dev:code>
         <dev:remarks>
           <maml:para>Writes rows only when a downstream system expects headerless CSV.</maml:para>
         </dev:remarks>
@@ -21241,7 +21496,7 @@ $rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'</dev:code>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Converts objects into a Markdown table.</maml:para>
+      <maml:para>Returns Markdown text by default; use -PassThru to emit a MarkdownDoc.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -21345,22 +21600,31 @@ OfficeIMO.Markdown.MarkdownDoc</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Convert objects to Markdown table.</maml:title>
-        <dev:code>PS&gt;$markdown = $data | ConvertTo-OfficeMarkdown</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$markdown = $data | ConvertTo-OfficeMarkdown</dev:code>
         <dev:remarks>
           <maml:para>Generates Markdown table text from the input objects.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Emit a Markdown document for further editing.</maml:title>
-        <dev:code>PS&gt;$doc = $data | ConvertTo-OfficeMarkdown -PassThru
-$doc.P('Totals above'); $doc.ToMarkdown()</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = $data | ConvertTo-OfficeMarkdown -PassThru&#xD;
+              $doc.P('Totals above'); $doc.ToMarkdown()</dev:code>
         <dev:remarks>
           <maml:para>Builds a table and appends more content using the MarkdownDoc API.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Disable auto alignment.</maml:title>
-        <dev:code>PS&gt;$markdown = $data | ConvertTo-OfficeMarkdown -DisableAutoAlign</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$markdown = $data | ConvertTo-OfficeMarkdown -DisableAutoAlign</dev:code>
         <dev:remarks>
           <maml:para>Forces left-aligned columns instead of auto-aligned output.</maml:para>
         </dev:remarks>
@@ -21378,7 +21642,7 @@ $doc.P('Totals above'); $doc.ToMarkdown()</dev:code>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Converts Markdown content to HTML.</maml:para>
+      <maml:para>Returns HTML text or saves it to a file when -OutputPath is specified.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -22004,14 +22268,20 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Convert a Markdown file to HTML.</maml:title>
-        <dev:code>PS&gt;$html = ConvertTo-OfficeMarkdownHtml -Path .\README.md</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$html = ConvertTo-OfficeMarkdownHtml -Path .\README.md</dev:code>
         <dev:remarks>
           <maml:para>Returns the rendered HTML.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Save a styled HTML document.</maml:title>
-        <dev:code>PS&gt;ConvertTo-OfficeMarkdownHtml -Path .\Report.md -DocumentMode -Title 'Weekly Report' -Style Clean -OutputPath .\Report.html -PassThru</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertTo-OfficeMarkdownHtml -Path .\Report.md -DocumentMode -Title 'Weekly Report' -Style Clean -OutputPath .\Report.html -PassThru</dev:code>
         <dev:remarks>
           <maml:para>Generates a full HTML file with title and CSS styling.</maml:para>
         </dev:remarks>
@@ -22029,7 +22299,7 @@ System.IO.FileInfo</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Converts a Word document to HTML.</maml:para>
+      <maml:para>Returns the HTML string or saves it to a file when -OutputPath is specified.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -22472,14 +22742,20 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Convert a .docx file to HTML text.</maml:title>
-        <dev:code>PS&gt;$html = ConvertTo-OfficeWordHtml -Path .\report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$html = ConvertTo-OfficeWordHtml -Path .\report.docx</dev:code>
         <dev:remarks>
           <maml:para>Loads the document and returns HTML markup.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Save HTML to disk.</maml:title>
-        <dev:code>PS&gt;ConvertTo-OfficeWordHtml -Path .\report.docx -OutputPath .\report.html -PassThru</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertTo-OfficeWordHtml -Path .\report.docx -OutputPath .\report.html -PassThru</dev:code>
         <dev:remarks>
           <maml:para>Writes report.html and returns the file info.</maml:para>
         </dev:remarks>
@@ -22497,7 +22773,7 @@ System.IO.FileInfo</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Converts a Word document to Markdown.</maml:para>
+      <maml:para>Returns Markdown text or saves it to a file when -OutputPath is specified.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -22844,14 +23120,20 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Convert a .docx file to Markdown text.</maml:title>
-        <dev:code>PS&gt;$markdown = ConvertTo-OfficeWordMarkdown -Path .\report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$markdown = ConvertTo-OfficeWordMarkdown -Path .\report.docx</dev:code>
         <dev:remarks>
           <maml:para>Loads the document and returns Markdown markup.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Save Markdown to disk.</maml:title>
-        <dev:code>PS&gt;ConvertTo-OfficeWordMarkdown -Path .\report.docx -OutputPath .\report.md -PassThru</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertTo-OfficeWordMarkdown -Path .\report.docx -OutputPath .\report.md -PassThru</dev:code>
         <dev:remarks>
           <maml:para>Writes report.md and returns the file info.</maml:para>
         </dev:remarks>
@@ -22869,7 +23151,7 @@ System.IO.FileInfo</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Copies an existing slide within a PowerPoint presentation.</maml:para>
+      <maml:para>Uses OfficeIMO slide duplication so charts, notes, and shapes are preserved.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -22972,7 +23254,10 @@ System.IO.FileInfo</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Duplicate the first slide and insert the copy after it.</maml:title>
-        <dev:code>PS&gt;Copy-OfficePowerPointSlide -Presentation $ppt -Index 0</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Copy-OfficePowerPointSlide -Presentation $ppt -Index 0</dev:code>
         <dev:remarks>
           <maml:para>Creates a duplicate of slide 1 and inserts it at position 2.</maml:para>
         </dev:remarks>
@@ -22990,7 +23275,7 @@ System.IO.FileInfo</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Finds text matches inside a Word document.</maml:para>
+      <maml:para>Returns matching paragraphs or a WordFind result when using regex with -AsResult.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="PathText">
@@ -23271,7 +23556,10 @@ OfficeIMO.Word.WordFind</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Find text in a document.</maml:title>
-        <dev:code>PS&gt;Find-OfficeWord -Path .\Report.docx -Text 'Quarter'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Find-OfficeWord -Path .\Report.docx -Text 'Quarter'</dev:code>
         <dev:remarks>
           <maml:para>Returns paragraphs that contain the search text.</maml:para>
         </dev:remarks>
@@ -23289,7 +23577,7 @@ OfficeIMO.Word.WordFind</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Loads a CSV document from disk or parses CSV text.</maml:para>
+      <maml:para>Returns an CsvDocument for inspection or further transformations.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -23635,21 +23923,30 @@ OfficeIMO.Word.WordFind</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Load a CSV file.</maml:title>
-        <dev:code>PS&gt;$csv = Get-OfficeCsv -Path .\data.csv</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$csv = Get-OfficeCsv -Path .\data.csv</dev:code>
         <dev:remarks>
           <maml:para>Loads the CSV file into an OfficeIMO CsvDocument.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Parse CSV text with a custom delimiter.</maml:title>
-        <dev:code>PS&gt;$csv = Get-OfficeCsv -Text \"Name;Total`nAlpha;10\" -Delimiter ';'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$csv = Get-OfficeCsv -Text \"Name;Total`nAlpha;10\" -Delimiter ';'</dev:code>
         <dev:remarks>
           <maml:para>Parses a semicolon-delimited CSV string into a document.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Inspect headers as a schema hint.</maml:title>
-        <dev:code>PS&gt;$csv = Get-OfficeCsv -Path .\data.csv; $csv.Header</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$csv = Get-OfficeCsv -Path .\data.csv; $csv.Header</dev:code>
         <dev:remarks>
           <maml:para>Returns the header list so you can verify the expected column names.</maml:para>
         </dev:remarks>
@@ -23667,7 +23964,7 @@ OfficeIMO.Word.WordFind</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads CSV rows as PSCustomObjects or dictionaries.</maml:para>
+      <maml:para>Uses the CSV header to map fields to property names.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -23946,21 +24243,30 @@ OfficeIMO.Word.WordFind</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Read rows as PSCustomObjects.</maml:title>
-        <dev:code>PS&gt;Get-OfficeCsvData -Path .\data.csv | Format-Table</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeCsvData -Path .\data.csv | Format-Table</dev:code>
         <dev:remarks>
           <maml:para>Returns each row as a PSCustomObject.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Read rows as dictionaries.</maml:title>
-        <dev:code>PS&gt;Get-OfficeCsvData -Path .\data.csv -AsHashtable | ForEach-Object { $_['Name'] }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeCsvData -Path .\data.csv -AsHashtable | ForEach-Object { $_['Name'] }</dev:code>
         <dev:remarks>
           <maml:para>Uses hashtables for dynamic schemas or key-based access.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Read semicolon-delimited data without headers.</maml:title>
-        <dev:code>PS&gt;Get-OfficeCsvData -Path .\data.csv -Delimiter ';' -HasHeaderRow:$false</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeCsvData -Path .\data.csv -Delimiter ';' -HasHeaderRow:$false</dev:code>
         <dev:remarks>
           <maml:para>Reads CSV files that lack a header row and use a custom delimiter.</maml:para>
         </dev:remarks>
@@ -23978,7 +24284,7 @@ OfficeIMO.Word.WordFind</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Opens an existing Excel workbook.</maml:para>
+      <maml:para>Returns the underlying ExcelDocument so callers can inspect or reuse it in DSL pipelines.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -24081,7 +24387,10 @@ OfficeIMO.Word.WordFind</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Load a workbook in read-only mode.</maml:title>
-        <dev:code>PS&gt;$workbook = Get-OfficeExcel -Path .\report.xlsx -ReadOnly</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$workbook = Get-OfficeExcel -Path .\report.xlsx -ReadOnly</dev:code>
         <dev:remarks>
           <maml:para>Loads report.xlsx for inspection without enabling writes.</maml:para>
         </dev:remarks>
@@ -24099,7 +24408,7 @@ OfficeIMO.Word.WordFind</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads worksheet data as dictionaries or PSCustomObjects.</maml:para>
+      <maml:para>Uses the first row as headers and materializes rows via the OfficeIMO Excel fluent reader.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -24274,7 +24583,10 @@ OfficeIMO.Word.WordFind</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Read the used range as PSCustomObjects.</maml:title>
-        <dev:code>PS&gt;Get-OfficeExcelData -Path .\report.xlsx -Sheet 'Summary' | Format-Table</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeExcelData -Path .\report.xlsx -Sheet 'Summary' | Format-Table</dev:code>
         <dev:remarks>
           <maml:para>Returns each row as a PSCustomObject with properties mapped from the header row.</maml:para>
         </dev:remarks>
@@ -24482,7 +24794,10 @@ OfficeIMO.Word.WordFind</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List named ranges.</maml:title>
-        <dev:code>PS&gt;Get-OfficeExcelNamedRange -Path .\report.xlsx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeExcelNamedRange -Path .\report.xlsx</dev:code>
         <dev:remarks>
           <maml:para>Returns workbook-level named ranges.</maml:para>
         </dev:remarks>
@@ -24690,7 +25005,10 @@ OfficeIMO.Word.WordFind</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List pivot tables in a workbook.</maml:title>
-        <dev:code>PS&gt;Get-OfficeExcelPivotTable -Path .\report.xlsx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeExcelPivotTable -Path .\report.xlsx</dev:code>
         <dev:remarks>
           <maml:para>Returns pivot table metadata (name, sheet, source range).</maml:para>
         </dev:remarks>
@@ -24708,7 +25026,7 @@ OfficeIMO.Word.WordFind</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads an explicit A1 range from an Excel workbook.</maml:para>
+      <maml:para>Returns rows as PSCustomObjects by default, with optional hashtable or DataTable output for scripting and interoperability.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -25044,7 +25362,10 @@ System.Data.DataTable</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Read a rectangular range as objects.</maml:title>
-        <dev:code>PS&gt;Get-OfficeExcelRange -Path .\report.xlsx -Sheet 'Data' -Range 'A1:C10'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeExcelRange -Path .\report.xlsx -Sheet 'Data' -Range 'A1:C10'</dev:code>
         <dev:remarks>
           <maml:para>Uses the first row as headers and returns each remaining row as a PSCustomObject.</maml:para>
         </dev:remarks>
@@ -25252,7 +25573,10 @@ System.Data.DataTable</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List tables in a workbook.</maml:title>
-        <dev:code>PS&gt;Get-OfficeExcelTable -Path .\report.xlsx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeExcelTable -Path .\report.xlsx</dev:code>
         <dev:remarks>
           <maml:para>Returns table metadata (name, range, sheet).</maml:para>
         </dev:remarks>
@@ -25270,7 +25594,7 @@ System.Data.DataTable</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads the used range from an Excel workbook.</maml:para>
+      <maml:para>Returns rows as PSCustomObjects by default, with optional hashtable or DataTable output for scripting and interoperability.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -25570,7 +25894,10 @@ System.Data.DataTable</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Read the used range from a sheet.</maml:title>
-        <dev:code>PS&gt;Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet 'Data'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet 'Data'</dev:code>
         <dev:remarks>
           <maml:para>Reads the sheet's used range, treating the first row as headers.</maml:para>
         </dev:remarks>
@@ -25588,7 +25915,7 @@ System.Data.DataTable</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Parses Markdown text or files into a Markdown document model.</maml:para>
+      <maml:para>Returns an MarkdownDoc for inspection or further rendering.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -25742,14 +26069,20 @@ System.Data.DataTable</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Parse a Markdown file.</maml:title>
-        <dev:code>PS&gt;$md = Get-OfficeMarkdown -Path .\README.md</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$md = Get-OfficeMarkdown -Path .\README.md</dev:code>
         <dev:remarks>
           <maml:para>Loads the file into a Markdown document object.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Parse Markdown text in-memory.</maml:title>
-        <dev:code>PS&gt;$md = Get-OfficeMarkdown -Text '# Title`n`nBody text'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$md = Get-OfficeMarkdown -Text '# Title`n`nBody text'</dev:code>
         <dev:remarks>
           <maml:para>Parses Markdown text directly into a document model.</maml:para>
         </dev:remarks>
@@ -25767,7 +26100,7 @@ System.Data.DataTable</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Loads an existing PowerPoint presentation.</maml:para>
+      <maml:para>Returns an OfficeIMO PowerPointPresentation for downstream slide operations.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -25822,7 +26155,10 @@ System.Data.DataTable</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Open a deck for editing.</maml:title>
-        <dev:code>PS&gt;$ppt = Get-OfficePowerPoint -FilePath .\Quarterly.pptx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$ppt = Get-OfficePowerPoint -FilePath .\Quarterly.pptx</dev:code>
         <dev:remarks>
           <maml:para>Reads Quarterly.pptx and exposes the presentation object.</maml:para>
         </dev:remarks>
@@ -25919,14 +26255,20 @@ System.Data.DataTable</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Enumerate layouts for the first master.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointLayout -Presentation $ppt</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointLayout -Presentation $ppt</dev:code>
         <dev:remarks>
           <maml:para>Returns layout metadata including name, type, and index.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>List layouts inside the DSL.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointLayout | Select-Object -First 3 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointLayout | Select-Object -First 3 }</dev:code>
         <dev:remarks>
           <maml:para>Uses the current DSL presentation context.</maml:para>
         </dev:remarks>
@@ -25944,7 +26286,7 @@ System.Data.DataTable</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Computes reusable layout boxes for a presentation.</maml:para>
+      <maml:para>Returns the content box for a slide or equal column/row boxes derived from the current slide size.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Content">
@@ -26161,14 +26503,20 @@ System.Data.DataTable</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Get the content area for a deck.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointLayoutBox -Presentation $ppt -MarginCm 1.5</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointLayoutBox -Presentation $ppt -MarginCm 1.5</dev:code>
         <dev:remarks>
           <maml:para>Returns a single layout box representing the usable slide area.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Split the slide into two columns.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointLayoutBox -Presentation $ppt -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointLayoutBox -Presentation $ppt -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0</dev:code>
         <dev:remarks>
           <maml:para>Returns one layout box per column.</maml:para>
         </dev:remarks>
@@ -26289,14 +26637,20 @@ System.Data.DataTable</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List layout placeholders.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointLayoutPlaceholder -Slide $slide</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointLayoutPlaceholder -Slide $slide</dev:code>
         <dev:remarks>
           <maml:para>Returns the layout placeholder definitions for the slide.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Inspect layout placeholders inside the DSL.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx { PptSlide { Get-OfficePowerPointLayoutPlaceholder } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { Get-OfficePowerPointLayoutPlaceholder } }</dev:code>
         <dev:remarks>
           <maml:para>Uses the current slide context.</maml:para>
         </dev:remarks>
@@ -26314,7 +26668,7 @@ System.Data.DataTable</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads speaker notes from a slide or presentation.</maml:para>
+      <maml:para>Returns note metadata without creating empty notes parts on slides that do not already have them.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Slide">
@@ -26447,6 +26801,9 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
         <dev:type>
           <maml:name>PSWriteOffice.Services.PowerPoint.PowerPointNotesInfo</maml:name>
         </dev:type>
+        <maml:description>
+          <maml:para>PowerShell-friendly description of slide speaker notes.</maml:para>
+        </maml:description>
       </command:returnValue>
     </command:returnValues>
     <maml:alertSet>
@@ -26457,14 +26814,20 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Read notes from one slide.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointNotes</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointNotes</dev:code>
         <dev:remarks>
           <maml:para>Returns the notes text and metadata for the selected slide.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Enumerate notes across a deck.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointNotes -Presentation $ppt -IncludeEmpty</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointNotes -Presentation $ppt -IncludeEmpty</dev:code>
         <dev:remarks>
           <maml:para>Lists slide indexes together with note text, including slides that have no notes yet.</maml:para>
         </dev:remarks>
@@ -26585,14 +26948,20 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Get the title placeholder.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointPlaceholder -Slide $slide -PlaceholderType Title</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointPlaceholder -Slide $slide -PlaceholderType Title</dev:code>
         <dev:remarks>
           <maml:para>Returns the title placeholder textbox if present.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Get placeholders inside a slide DSL block.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx { PptSlide { Get-OfficePowerPointPlaceholder -PlaceholderType Title } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { Get-OfficePowerPointPlaceholder -PlaceholderType Title } }</dev:code>
         <dev:remarks>
           <maml:para>Uses the current slide context.</maml:para>
         </dev:remarks>
@@ -26610,7 +26979,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Gets PowerPoint sections from a presentation.</maml:para>
+      <maml:para>Returns OfficeIMO section metadata so scripts can inspect section names and slide ranges.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -26713,7 +27082,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List all sections in a deck.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSection -Presentation $ppt</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSection -Presentation $ppt</dev:code>
         <dev:remarks>
           <maml:para>Returns section information including section names and slide indexes.</maml:para>
         </dev:remarks>
@@ -26731,7 +27103,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads shape summaries from a slide or presentation.</maml:para>
+      <maml:para>Returns PowerShell-friendly metadata for text boxes, pictures, tables, charts, and auto shapes.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Slide">
@@ -26960,6 +27332,9 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
         <dev:type>
           <maml:name>PSWriteOffice.Services.PowerPoint.PowerPointShapeInfo</maml:name>
         </dev:type>
+        <maml:description>
+          <maml:para>PowerShell-friendly description of a PowerPoint shape.</maml:para>
+        </maml:description>
       </command:returnValue>
     </command:returnValues>
     <maml:alertSet>
@@ -26970,14 +27345,20 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Inspect one slide.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointShape</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointShape</dev:code>
         <dev:remarks>
           <maml:para>Returns shape summaries for the selected slide.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Find pictures on a slide.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointShape -Presentation $ppt -Index 0 -Kind Picture</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointShape -Presentation $ppt -Index 0 -Kind Picture</dev:code>
         <dev:remarks>
           <maml:para>Filters the slide output to picture shapes only.</maml:para>
         </dev:remarks>
@@ -26995,7 +27376,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Enumerates slides or retrieves a specific slide.</maml:para>
+      <maml:para>Supports pipeline-friendly iteration over Slides or direct index selection.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -27074,14 +27455,20 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List slide titles.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlide -Presentation $ppt | ForEach-Object { $_.GetPlaceholder([DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title).Text }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlide -Presentation $ppt | ForEach-Object { $_.GetPlaceholder([DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title).Text }</dev:code>
         <dev:remarks>
           <maml:para>Streams each slide so you can read the title placeholder text.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Enumerate slides inside the DSL.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointSlide | Select-Object -First 1 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointSlide | Select-Object -First 1 }</dev:code>
         <dev:remarks>
           <maml:para>Uses the current DSL presentation context.</maml:para>
         </dev:remarks>
@@ -27099,7 +27486,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads high-level slide summaries from a presentation.</maml:para>
+      <maml:para>Returns title, notes metadata, layout metadata, and content counts for each slide.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Slide">
@@ -27196,6 +27583,9 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
         <dev:type>
           <maml:name>PSWriteOffice.Services.PowerPoint.PowerPointSlideSummaryInfo</maml:name>
         </dev:type>
+        <maml:description>
+          <maml:para>PowerShell-friendly summary of a PowerPoint slide.</maml:para>
+        </maml:description>
       </command:returnValue>
     </command:returnValues>
     <maml:alertSet>
@@ -27206,14 +27596,20 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Summarize a deck.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlideSummary -Presentation $ppt</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlideSummary -Presentation $ppt</dev:code>
         <dev:remarks>
           <maml:para>Returns one summary object per slide.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Summarize one slide.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointSlideSummary</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointSlideSummary</dev:code>
         <dev:remarks>
           <maml:para>Returns the summary for the selected slide.</maml:para>
         </dev:remarks>
@@ -27300,6 +27696,9 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
         <dev:type>
           <maml:name>PSWriteOffice.Services.PowerPoint.PowerPointThemeInfo</maml:name>
         </dev:type>
+        <maml:description>
+          <maml:para>Describes a PowerPoint theme for a single slide master.</maml:para>
+        </maml:description>
       </command:returnValue>
     </command:returnValues>
     <maml:alertSet>
@@ -27310,7 +27709,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Inspect the default master theme.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointTheme -Presentation $ppt</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointTheme -Presentation $ppt</dev:code>
         <dev:remarks>
           <maml:para>Returns the theme name, theme colors, and configured fonts for master 0.</maml:para>
         </dev:remarks>
@@ -27328,7 +27730,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Opens an existing Word document.</maml:para>
+      <maml:para>Returns an OfficeIMO WordDocument for inspection or advanced operations.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -27431,7 +27833,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Load a document in read-only mode.</maml:title>
-        <dev:code>PS&gt;$doc = Get-OfficeWord -Path .\Report.docx -ReadOnly</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx -ReadOnly</dev:code>
         <dev:remarks>
           <maml:para>Loads Report.docx and exposes the document object for querying.</maml:para>
         </dev:remarks>
@@ -27449,7 +27854,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Gets bookmarks from a Word document.</maml:para>
+      <maml:para>Returns WordBookmark objects, optionally filtered by name.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -27567,7 +27972,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List all bookmarks.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordBookmark -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordBookmark -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all bookmarks in the document.</maml:para>
         </dev:remarks>
@@ -27811,7 +28219,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List all checkboxes.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordCheckBox -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordCheckBox -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all checkbox content controls in the document.</maml:para>
         </dev:remarks>
@@ -27983,7 +28394,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List combo box controls.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordComboBox -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordComboBox -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all combo box controls in the document.</maml:para>
         </dev:remarks>
@@ -28191,7 +28605,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List all content controls.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordContentControl -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordContentControl -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all structured document tags in the document.</maml:para>
         </dev:remarks>
@@ -28363,7 +28780,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List date picker controls.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordDatePicker -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordDatePicker -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all date picker controls in the document.</maml:para>
         </dev:remarks>
@@ -28561,6 +28981,9 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
         <dev:type>
           <maml:name>PSWriteOffice.Models.Word.WordDocumentPropertyInfo</maml:name>
         </dev:type>
+        <maml:description>
+          <maml:para>Represents a Word document property exposed to PowerShell.</maml:para>
+        </maml:description>
       </command:returnValue>
     </command:returnValues>
     <maml:alertSet>
@@ -28571,7 +28994,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List document properties.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordDocumentProperty -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordDocumentProperty -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns built-in and custom Word document properties.</maml:para>
         </dev:remarks>
@@ -28743,7 +29169,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List dropdown list controls.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordDropDownList -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordDropDownList -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all dropdown list controls in the document.</maml:para>
         </dev:remarks>
@@ -28761,7 +29190,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Gets fields from a Word document.</maml:para>
+      <maml:para>Returns WordField objects, optionally filtered by type or field code.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Path">
@@ -29170,7 +29599,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List all fields.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordField -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordField -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all fields in the document.</maml:para>
         </dev:remarks>
@@ -29506,7 +29938,10 @@ OfficeIMO.Word.WordParagraph</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List hyperlinks from a document.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordHyperlink -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordHyperlink -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns hyperlinks found in the document.</maml:para>
         </dev:remarks>
@@ -29634,7 +30069,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Enumerate paragraphs from a document.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordParagraph -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordParagraph -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all paragraphs in the document.</maml:para>
         </dev:remarks>
@@ -29806,7 +30244,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List picture controls.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordPictureControl -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordPictureControl -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all picture content controls in the document.</maml:para>
         </dev:remarks>
@@ -29978,7 +30419,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List repeating section controls.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordRepeatingSection -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordRepeatingSection -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns all repeating section controls in the document.</maml:para>
         </dev:remarks>
@@ -30134,7 +30578,10 @@ OfficeIMO.Word.WordDocument</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Enumerate runs for all paragraphs.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun</dev:code>
         <dev:remarks>
           <maml:para>Returns each run as a WordParagraph instance.</maml:para>
         </dev:remarks>
@@ -30270,7 +30717,10 @@ OfficeIMO.Word.WordDocument</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List sections from a file.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordSection -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordSection -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns the sections contained in the document.</maml:para>
         </dev:remarks>
@@ -30446,7 +30896,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>List tables in a document.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordTable -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordTable -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns the tables found in the document.</maml:para>
         </dev:remarks>
@@ -30546,7 +30999,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Retrieve the table of contents if present.</maml:title>
-        <dev:code>PS&gt;Get-OfficeWordTableOfContent -Path .\Report.docx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeWordTableOfContent -Path .\Report.docx</dev:code>
         <dev:remarks>
           <maml:para>Returns the table of contents when one exists.</maml:para>
         </dev:remarks>
@@ -30564,7 +31020,7 @@ OfficeIMO.Word.WordSection</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Imports a slide from another PowerPoint presentation.</maml:para>
+      <maml:para>Can import from an open presentation or directly from a source file path.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="SourcePresentation">
@@ -30754,7 +31210,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Import the first slide from another deck.</maml:title>
-        <dev:code>PS&gt;Import-OfficePowerPointSlide -Presentation $target -SourcePath .\source.pptx -SourceIndex 0</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Import-OfficePowerPointSlide -Presentation $target -SourcePath .\source.pptx -SourceIndex 0</dev:code>
         <dev:remarks>
           <maml:para>Copies the first slide from source.pptx into the target presentation.</maml:para>
         </dev:remarks>
@@ -30772,7 +31231,7 @@ OfficeIMO.Word.WordSection</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Automatically fits Excel row heights and/or column widths.</maml:para>
+      <maml:para>Targets the current worksheet context or a worksheet on a supplied document.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Context">
@@ -31058,7 +31517,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Auto-fit columns in the current DSL sheet.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Invoke-OfficeExcelAutoFit -Columns }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Invoke-OfficeExcelAutoFit -Columns }</dev:code>
         <dev:remarks>
           <maml:para>Adjusts column widths for the active sheet.</maml:para>
         </dev:remarks>
@@ -31392,14 +31854,20 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Sort by a single header.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Invoke-OfficeExcelSort -Header 'Name' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Invoke-OfficeExcelSort -Header 'Name' }</dev:code>
         <dev:remarks>
           <maml:para>Sorts by the Name column in ascending order.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Sort by multiple headers in order.</maml:title>
-        <dev:code>PS&gt;$order = [ordered]@{ Status = $true; Total = $false }\nExcelSheet 'Data' { Invoke-OfficeExcelSort -Order $order }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$order = [ordered]@{ Status = $true; Total = $false }\nExcelSheet 'Data' { Invoke-OfficeExcelSort -Order $order }</dev:code>
         <dev:remarks>
           <maml:para>Sorts by Status ascending, then Total descending.</maml:para>
         </dev:remarks>
@@ -31544,7 +32012,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Replace merge fields from a hashtable.</maml:title>
-        <dev:code>PS&gt;Invoke-OfficeWordMailMerge -Data @{ FirstName = 'John'; OrderId = 12345 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Invoke-OfficeWordMailMerge -Data @{ FirstName = 'John'; OrderId = 12345 }</dev:code>
         <dev:remarks>
           <maml:para>Updates MERGEFIELD values in the active Word document.</maml:para>
         </dev:remarks>
@@ -31562,7 +32033,7 @@ OfficeIMO.Word.WordSection</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a new Excel workbook using the DSL.</maml:para>
+      <maml:para>Runs the provided script block inside an ExcelSheet/ExcelCell DSL context and saves the file.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -31737,7 +32208,10 @@ OfficeIMO.Word.WordSection</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Create a workbook with a sheet and a few cells.</maml:title>
-        <dev:code>PS&gt;New-OfficeExcel -Path .\report.xlsx { ExcelSheet 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\report.xlsx { ExcelSheet 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }</dev:code>
         <dev:remarks>
           <maml:para>Creates report.xlsx and writes “Region” into cell A1 on the Data worksheet.</maml:para>
         </dev:remarks>
@@ -31755,7 +32229,7 @@ OfficeIMO.Word.WordSection</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a Markdown document using a DSL scriptblock.</maml:para>
+      <maml:para>Runs the scriptblock against a Markdown document and saves it to disk unless -NoSave is specified.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -31883,19 +32357,25 @@ OfficeIMO.Markdown.MarkdownDoc</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Create a Markdown document with headings and a table.</maml:title>
-        <dev:code>PS&gt;New-OfficeMarkdown -Path .\README.md { MarkdownHeading -Level 1 -Text 'Report'; MarkdownTable -InputObject $data }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeMarkdown -Path .\README.md { MarkdownHeading -Level 1 -Text 'Report'; MarkdownTable -InputObject $data }</dev:code>
         <dev:remarks>
           <maml:para>Creates a README file with a heading and table content.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Create a report with multiple tables.</maml:title>
-        <dev:code>PS&gt;New-OfficeMarkdown -Path .\Report.md {
-MarkdownHeading -Level 1 -Text 'Summary'
-MarkdownTable -InputObject $summary
-MarkdownHeading -Level 2 -Text 'Details'
-MarkdownTable -InputObject $details
-}</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeMarkdown -Path .\Report.md {&#xD;
+                MarkdownHeading -Level 1 -Text 'Summary'&#xD;
+                MarkdownTable -InputObject $summary&#xD;
+                MarkdownHeading -Level 2 -Text 'Details'&#xD;
+                MarkdownTable -InputObject $details&#xD;
+              }</dev:code>
         <dev:remarks>
           <maml:para>Creates a report with two tables separated by headings.</maml:para>
         </dev:remarks>
@@ -31913,7 +32393,7 @@ MarkdownTable -InputObject $details
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a PowerPoint presentation using the DSL.</maml:para>
+      <maml:para>Initializes a presentation, runs the DSL script block, and optionally saves the deck.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -32064,14 +32544,20 @@ MarkdownTable -InputObject $details
     <command:examples>
       <command:example>
         <maml:title>Create and capture the presentation object.</maml:title>
-        <dev:code>PS&gt;$ppt = New-OfficePowerPoint -FilePath .\deck.pptx</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\deck.pptx</dev:code>
         <dev:remarks>
           <maml:para>Creates deck.pptx and returns the live presentation object for further editing.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Create a deck with a title slide.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } } -Open</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } } -Open</dev:code>
         <dev:remarks>
           <maml:para>Creates, saves, and opens a deck with one titled slide.</maml:para>
         </dev:remarks>
@@ -32089,7 +32575,7 @@ MarkdownTable -InputObject $details
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a Word document using the DSL.</maml:para>
+      <maml:para>Handles file creation, scriptblock execution, optional autosave, and emits the document path when -PassThru is used.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -32264,7 +32750,10 @@ MarkdownTable -InputObject $details
     <command:examples>
       <command:example>
         <maml:title>Create a document inline.</maml:title>
-        <dev:code>PS&gt;New-OfficeWord -Path .\Report.docx { WordSection { WordParagraph 'Hello DSL' } } -Open</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeWord -Path .\Report.docx { WordSection { WordParagraph 'Hello DSL' } } -Open</dev:code>
         <dev:remarks>
           <maml:para>Builds a document, adds one paragraph, saves it to disk, and opens it.</maml:para>
         </dev:remarks>
@@ -32892,7 +33381,10 @@ MarkdownTable -InputObject $details
     <command:examples>
       <command:example>
         <maml:title>Protect the active sheet with default options.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Protect-OfficeExcelSheet }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Protect-OfficeExcelSheet }</dev:code>
         <dev:remarks>
           <maml:para>Enables worksheet protection.</maml:para>
         </dev:remarks>
@@ -32910,7 +33402,7 @@ MarkdownTable -InputObject $details
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Protects a Word document with a password.</maml:para>
+      <maml:para>Sets the protection password and the protection type (default: ReadOnly).</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -33037,7 +33529,10 @@ MarkdownTable -InputObject $details
     <command:examples>
       <command:example>
         <maml:title>Protect a document as read-only.</maml:title>
-        <dev:code>PS&gt;Protect-OfficeWordDocument -Password 'secret'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Protect-OfficeWordDocument -Password 'secret'</dev:code>
         <dev:remarks>
           <maml:para>Applies read-only protection to the current document.</maml:para>
         </dev:remarks>
@@ -33305,7 +33800,10 @@ MarkdownTable -InputObject $details
     <command:examples>
       <command:example>
         <maml:title>Remove a comment from B2.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Remove-OfficeExcelComment -Address 'B2' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Remove-OfficeExcelComment -Address 'B2' }</dev:code>
         <dev:remarks>
           <maml:para>Clears the comment from cell B2.</maml:para>
         </dev:remarks>
@@ -33323,7 +33821,7 @@ MarkdownTable -InputObject $details
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Removes a slide by index.</maml:para>
+      <maml:para>Supports -WhatIf/-Confirm thanks to SupportsShouldProcess.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -33402,7 +33900,10 @@ MarkdownTable -InputObject $details
     <command:examples>
       <command:example>
         <maml:title>Delete the first slide.</maml:title>
-        <dev:code>PS&gt;Remove-OfficePowerPointSlide -Presentation $ppt -Index 0</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Remove-OfficePowerPointSlide -Presentation $ppt -Index 0</dev:code>
         <dev:remarks>
           <maml:para>Removes slide 1 from the deck.</maml:para>
         </dev:remarks>
@@ -33499,7 +34000,10 @@ MarkdownTable -InputObject $details
     <command:examples>
       <command:example>
         <maml:title>Remove the table of contents.</maml:title>
-        <dev:code>PS&gt;Remove-OfficeWordTableOfContent</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Remove-OfficeWordTableOfContent</dev:code>
         <dev:remarks>
           <maml:para>Deletes the table of contents if one exists.</maml:para>
         </dev:remarks>
@@ -33669,7 +34173,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Rename a section in a presentation.</maml:title>
-        <dev:code>PS&gt;Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'</dev:code>
         <dev:remarks>
           <maml:para>Renames the first matching section from Results to Deep Dive.</maml:para>
         </dev:remarks>
@@ -33814,7 +34321,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Save a workbook in-place.</maml:title>
-        <dev:code>PS&gt;$workbook | Save-OfficeExcel</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$workbook | Save-OfficeExcel</dev:code>
         <dev:remarks>
           <maml:para>Writes pending changes to disk and keeps the workbook open.</maml:para>
         </dev:remarks>
@@ -33832,7 +34342,7 @@ System.Boolean</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Saves a presentation to disk.</maml:para>
+      <maml:para>Invokes the PowerPoint service to persist the document and optionally launch it.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -33911,7 +34421,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Save and open the deck.</maml:title>
-        <dev:code>PS&gt;Save-OfficePowerPoint -Presentation $ppt -Show</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Save-OfficePowerPoint -Presentation $ppt -Show</dev:code>
         <dev:remarks>
           <maml:para>Saves the current presentation and opens it in PowerPoint.</maml:para>
         </dev:remarks>
@@ -33929,7 +34442,7 @@ System.Boolean</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Saves a Word document without disposing it.</maml:para>
+      <maml:para>Use Close-OfficeWord -Save when you want to save and dispose the document.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -34056,7 +34569,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Save the open document.</maml:title>
-        <dev:code>PS&gt;$doc | Save-OfficeWord</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc | Save-OfficeWord</dev:code>
         <dev:remarks>
           <maml:para>Persists pending changes and keeps the document open.</maml:para>
         </dev:remarks>
@@ -34074,7 +34590,7 @@ System.Boolean</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Sets a cell value, formula, or number format within the current worksheet.</maml:para>
+      <maml:para>Supports A1 addresses or row/column coordinates for DSL-style composition.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Coordinates">
@@ -34288,7 +34804,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Write values to A1 and B1.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelCell -Address 'A1' -Value 'Region'; Set-OfficeExcelCell -Row 1 -Column 2 -Value 'Revenue' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelCell -Address 'A1' -Value 'Region'; Set-OfficeExcelCell -Row 1 -Column 2 -Value 'Revenue' }</dev:code>
         <dev:remarks>
           <maml:para>Writes two headers in the first row.</maml:para>
         </dev:remarks>
@@ -34815,7 +35334,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Add outside-end value labels.</maml:title>
-        <dev:code>PS&gt;$chart | Set-OfficeExcelChartDataLabels -ShowValue $true -Position OutsideEnd</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$chart | Set-OfficeExcelChartDataLabels -ShowValue $true -Position OutsideEnd</dev:code>
         <dev:remarks>
           <maml:para>Adds value labels to the chart and returns the chart for further formatting.</maml:para>
         </dev:remarks>
@@ -35094,7 +35616,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Move the legend to the right.</maml:title>
-        <dev:code>PS&gt;$chart | Set-OfficeExcelChartLegend -Position Right</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$chart | Set-OfficeExcelChartLegend -Position Right</dev:code>
         <dev:remarks>
           <maml:para>Shows the legend on the right side of the chart and returns the chart for chaining.</maml:para>
         </dev:remarks>
@@ -35215,7 +35740,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Apply the default OfficeIMO preset.</maml:title>
-        <dev:code>PS&gt;$chart | Set-OfficeExcelChartStyle</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$chart | Set-OfficeExcelChartStyle</dev:code>
         <dev:remarks>
           <maml:para>Applies the default chart style and returns the chart for chaining.</maml:para>
         </dev:remarks>
@@ -35432,7 +35960,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Populate a column and auto-fit it.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelColumn -Column 1 -Values 'North','South' -AutoFit }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelColumn -Column 1 -Values 'North','South' -AutoFit }</dev:code>
         <dev:remarks>
           <maml:para>Writes values into column A and adjusts the width.</maml:para>
         </dev:remarks>
@@ -35450,7 +35981,7 @@ System.Boolean</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Sets a formula in a worksheet cell.</maml:para>
+      <maml:para>Supports A1 addresses or row/column coordinates in the Excel DSL.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Coordinates">
@@ -35592,7 +36123,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Write a SUM formula.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelFormula -Address 'C2' -Formula 'SUM(A2:B2)' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelFormula -Address 'C2' -Formula 'SUM(A2:B2)' }</dev:code>
         <dev:remarks>
           <maml:para>Stores the formula in cell C2.</maml:para>
         </dev:remarks>
@@ -35788,14 +36322,20 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Freeze the top row.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelFreeze -TopRows 1 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelFreeze -TopRows 1 }</dev:code>
         <dev:remarks>
           <maml:para>Freezes the first row.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Freeze the top row and first column.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelFreeze -TopRows 1 -LeftColumns 1 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelFreeze -TopRows 1 -LeftColumns 1 }</dev:code>
         <dev:remarks>
           <maml:para>Freezes row 1 and column A.</maml:para>
         </dev:remarks>
@@ -36027,7 +36567,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Hide gridlines.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelGridlines -Hide }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelGridlines -Hide }</dev:code>
         <dev:remarks>
           <maml:para>Turns off gridlines for the sheet.</maml:para>
         </dev:remarks>
@@ -36045,7 +36588,7 @@ System.Boolean</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Sets worksheet header and footer text and optional images.</maml:para>
+      <maml:para>Uses OfficeIMO.Excel header/footer APIs and supports DSL or document usage.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Context">
@@ -36865,7 +37408,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Set a centered header with a page footer.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelHeaderFooter -HeaderCenter 'Demo' -FooterRight 'Page &amp;P of &amp;N' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelHeaderFooter -HeaderCenter 'Demo' -FooterRight 'Page &amp;P of &amp;N' }</dev:code>
         <dev:remarks>
           <maml:para>Applies header and footer text to the worksheet.</maml:para>
         </dev:remarks>
@@ -37205,7 +37751,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Link to Microsoft Docs using host-only display text.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelHostHyperlink -Address 'B2' -Url 'https://learn.microsoft.com/office/open-xml/' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelHostHyperlink -Address 'B2' -Url 'https://learn.microsoft.com/office/open-xml/' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a hyperlink that displays learn.microsoft.com.</maml:para>
         </dev:remarks>
@@ -37875,14 +38424,20 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Set an external hyperlink.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelHyperlink -Address 'A1' -Url 'https://example.org' -Display 'Example' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelHyperlink -Address 'A1' -Url 'https://example.org' -Display 'Example' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a styled hyperlink in A1.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Set an internal hyperlink.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelHyperlink -Row 2 -Column 1 -TargetSheet 'Summary' -TargetAddress 'A1' -Display 'Go to Summary' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelHyperlink -Row 2 -Column 1 -TargetSheet 'Summary' -TargetAddress 'A1' -Display 'Go to Summary' }</dev:code>
         <dev:remarks>
           <maml:para>Links A2 to Summary!A1.</maml:para>
         </dev:remarks>
@@ -38222,7 +38777,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Link a summary range to same-named sheets.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Summary' { Set-OfficeExcelInternalLinks -Range 'A2:A10' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Summary' { Set-OfficeExcelInternalLinks -Range 'A2:A10' }</dev:code>
         <dev:remarks>
           <maml:para>Turns each non-empty cell in A2:A10 into an internal link to the sheet with the same name.</maml:para>
         </dev:remarks>
@@ -39006,7 +39564,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Link the Sheet column in the used range.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Summary' { Set-OfficeExcelInternalLinksByHeader -Header 'Sheet' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Summary' { Set-OfficeExcelInternalLinksByHeader -Header 'Sheet' }</dev:code>
         <dev:remarks>
           <maml:para>Uses the used range header row to find the Sheet column and converts its values into internal links.</maml:para>
         </dev:remarks>
@@ -39418,14 +39979,20 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Apply a preset margin set.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelMargins -Preset Narrow }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelMargins -Preset Narrow }</dev:code>
         <dev:remarks>
           <maml:para>Applies the Narrow margin preset.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Apply custom margins.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelMargins -Left 0.5 -Right 0.5 -Top 0.75 -Bottom 0.75 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelMargins -Left 0.5 -Right 0.5 -Top 0.75 -Bottom 0.75 }</dev:code>
         <dev:remarks>
           <maml:para>Sets custom margins in inches.</maml:para>
         </dev:remarks>
@@ -39443,7 +40010,7 @@ System.Boolean</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates or updates a named range.</maml:para>
+      <maml:para>Defaults to the current sheet scope when used inside the Excel DSL.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Context">
@@ -39801,7 +40368,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Define a named range inside a sheet.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelNamedRange -Name 'Totals' -Range 'B2:B50' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelNamedRange -Name 'Totals' -Range 'B2:B50' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a sheet-scoped name for the range.</maml:para>
         </dev:remarks>
@@ -40009,7 +40579,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Switch to landscape orientation.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelOrientation -Orientation Landscape }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelOrientation -Orientation Landscape }</dev:code>
         <dev:remarks>
           <maml:para>Configures the sheet to print in landscape.</maml:para>
         </dev:remarks>
@@ -40277,7 +40850,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Fit to one page wide.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelPageSetup -FitToWidth 1 -FitToHeight 0 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelPageSetup -FitToWidth 1 -FitToHeight 0 }</dev:code>
         <dev:remarks>
           <maml:para>Fits the sheet to one page wide and unlimited height.</maml:para>
         </dev:remarks>
@@ -40398,7 +40974,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Write a row starting at column A.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelRow -Row 2 -Values 'North', 1200 }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelRow -Row 2 -Values 'North', 1200 }</dev:code>
         <dev:remarks>
           <maml:para>Writes two values into row 2, columns A and B.</maml:para>
         </dev:remarks>
@@ -40630,7 +41209,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Hide the current worksheet.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelSheetVisibility -Hide }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelSheetVisibility -Hide }</dev:code>
         <dev:remarks>
           <maml:para>Marks the sheet as hidden.</maml:para>
         </dev:remarks>
@@ -41006,7 +41588,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Link to an RFC with generated display text.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208' }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208' }</dev:code>
         <dev:remarks>
           <maml:para>Creates a hyperlink that displays RFC 7208 instead of the full URL.</maml:para>
         </dev:remarks>
@@ -41310,7 +41895,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Link a summary range to RFC pages.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Summary' { Set-OfficeExcelUrlLinks -Range 'D2:D10' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinks -Range 'D2:D10' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }</dev:code>
         <dev:remarks>
           <maml:para>Turns each non-empty cell in D2:D10 into an external hyperlink.</maml:para>
         </dev:remarks>
@@ -42010,7 +42598,10 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Link the RFC column in a table.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Summary' { Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -TableName 'Links' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -TableName 'Links' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }</dev:code>
         <dev:remarks>
           <maml:para>Uses the RFC column values to create external hyperlinks.</maml:para>
         </dev:remarks>
@@ -42185,14 +42776,20 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Apply a solid background color.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointBackground -Color '#F4F7FB'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointBackground -Color '#F4F7FB'</dev:code>
         <dev:remarks>
           <maml:para>Applies a solid color fill to the slide background.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Apply a background image.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointBackground -Slide $slide -ImagePath '.\hero.png'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointBackground -Slide $slide -ImagePath '.\hero.png'</dev:code>
         <dev:remarks>
           <maml:para>Uses the provided image as the slide background.</maml:para>
         </dev:remarks>
@@ -42505,17 +43102,23 @@ System.Boolean</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Update title placeholder bounds.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointLayoutPlaceholderBounds -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Left 40 -Top 20 -Width 500 -Height 120</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointLayoutPlaceholderBounds -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Left 40 -Top 20 -Width 500 -Height 120</dev:code>
         <dev:remarks>
           <maml:para>Moves/resizes the Title placeholder on the layout.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Update placeholder bounds inside the DSL.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx {
-$layout = Get-OfficePowerPointLayout | Select-Object -First 1
-Set-OfficePowerPointLayoutPlaceholderBounds -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Left 40 -Top 20 -Width 500 -Height 120
-}</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx {&#xD;
+                $layout = Get-OfficePowerPointLayout | Select-Object -First 1&#xD;
+                Set-OfficePowerPointLayoutPlaceholderBounds -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Left 40 -Top 20 -Width 500 -Height 120&#xD;
+              }</dev:code>
         <dev:remarks>
           <maml:para>Uses the DSL context to resolve the presentation.</maml:para>
         </dev:remarks>
@@ -42828,17 +43431,23 @@ Set-OfficePowerPointLayoutPlaceholderBounds -Master $layout.MasterIndex -Layout 
     <command:examples>
       <command:example>
         <maml:title>Update layout placeholder text margins.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointLayoutPlaceholderTextMargins -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Left 12 -Top 8 -Right 12 -Bottom 8</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointLayoutPlaceholderTextMargins -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Left 12 -Top 8 -Right 12 -Bottom 8</dev:code>
         <dev:remarks>
           <maml:para>Updates the text margins on the layout placeholder.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Update margins inside the DSL.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx {
-$layout = Get-OfficePowerPointLayout | Select-Object -First 1
-Set-OfficePowerPointLayoutPlaceholderTextMargins -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Left 12 -Top 8 -Right 12 -Bottom 8
-}</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx {&#xD;
+                $layout = Get-OfficePowerPointLayout | Select-Object -First 1&#xD;
+                Set-OfficePowerPointLayoutPlaceholderTextMargins -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Left 12 -Top 8 -Right 12 -Bottom 8&#xD;
+              }</dev:code>
         <dev:remarks>
           <maml:para>Uses the DSL context to resolve the presentation.</maml:para>
         </dev:remarks>
@@ -43319,17 +43928,23 @@ Set-OfficePowerPointLayoutPlaceholderTextMargins -Master $layout.MasterIndex -La
     <command:examples>
       <command:example>
         <maml:title>Apply a title preset style.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointLayoutPlaceholderTextStyle -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Style Title</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointLayoutPlaceholderTextStyle -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Style Title</dev:code>
         <dev:remarks>
           <maml:para>Applies the Title preset to the layout placeholder.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Apply a style inside the DSL.</maml:title>
-        <dev:code>PS&gt;New-OfficePowerPoint -Path .\deck.pptx {
-$layout = Get-OfficePowerPointLayout | Select-Object -First 1
-Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Style Title -FontSize 36 -Bold $true
-}</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePowerPoint -Path .\deck.pptx {&#xD;
+                $layout = Get-OfficePowerPointLayout | Select-Object -First 1&#xD;
+                Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Style Title -FontSize 36 -Bold $true&#xD;
+              }</dev:code>
         <dev:remarks>
           <maml:para>Uses the DSL context to resolve the presentation.</maml:para>
         </dev:remarks>
@@ -43426,7 +44041,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Attach speaker notes.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this under five minutes.'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this under five minutes.'</dev:code>
         <dev:remarks>
           <maml:para>Writes notes to the slide.</maml:para>
         </dev:remarks>
@@ -43619,7 +44237,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Set the title placeholder text.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'</dev:code>
         <dev:remarks>
           <maml:para>Updates the Title placeholder on the slide.</maml:para>
         </dev:remarks>
@@ -43866,7 +44487,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Switch a slide to a layout by name.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideLayout -LayoutName 'Title and Content'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideLayout -LayoutName 'Title and Content'</dev:code>
         <dev:remarks>
           <maml:para>Updates the slide to use the requested layout.</maml:para>
         </dev:remarks>
@@ -43884,7 +44508,7 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Sets the slide size for a PowerPoint presentation.</maml:para>
+      <maml:para>Supports common presets as well as explicit width and height in centimeters, inches, points, or EMUs.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Preset">
@@ -44249,14 +44873,20 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Set a standard widescreen presentation size.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointSlideSize -Presentation $ppt -Preset Screen16x9</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointSlideSize -Presentation $ppt -Preset Screen16x9</dev:code>
         <dev:remarks>
           <maml:para>Applies the 16:9 widescreen preset to the presentation.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Set a custom size in centimeters.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0</dev:code>
         <dev:remarks>
           <maml:para>Sets the presentation slide size to a custom 25.4 x 14.0 cm layout.</maml:para>
         </dev:remarks>
@@ -44274,7 +44904,7 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Sets the text of the title placeholder on a slide.</maml:para>
+      <maml:para>Targets the title placeholder when available; otherwise adds a new title shape.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -44353,7 +44983,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Rename a slide.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTitle -Title 'Executive Summary'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTitle -Title 'Executive Summary'</dev:code>
         <dev:remarks>
           <maml:para>Updates the first slide’s title.</maml:para>
         </dev:remarks>
@@ -44371,7 +45004,7 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Sets the transition used when advancing to a slide.</maml:para>
+      <maml:para>Works on an explicit slide object or on the current slide inside the PowerPoint DSL.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -44492,7 +45125,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Apply a fade transition to a slide.</maml:title>
-        <dev:code>PS&gt;Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTransition -Transition Fade</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTransition -Transition Fade</dev:code>
         <dev:remarks>
           <maml:para>Updates the first slide so it uses the Fade transition.</maml:para>
         </dev:remarks>
@@ -44788,14 +45424,20 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Set a single accent color.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointThemeColor -Presentation $ppt -Color Accent1 -Value '#C00000'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointThemeColor -Presentation $ppt -Color Accent1 -Value '#C00000'</dev:code>
         <dev:remarks>
           <maml:para>Updates Accent1 on the default master.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Set multiple theme colors across all masters.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointThemeColor -Presentation $ppt -Colors @{ Accent1 = '#C00000'; Accent2 = '#00B0F0' } -AllMasters</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointThemeColor -Presentation $ppt -Colors @{ Accent1 = '#C00000'; Accent2 = '#00B0F0' } -AllMasters</dev:code>
         <dev:remarks>
           <maml:para>Applies multiple theme colors to every master in the presentation.</maml:para>
         </dev:remarks>
@@ -45108,7 +45750,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Set theme Latin fonts.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLatin 'Calibri'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLatin 'Calibri'</dev:code>
         <dev:remarks>
           <maml:para>Updates the default master theme fonts.</maml:para>
         </dev:remarks>
@@ -45253,7 +45898,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Rename the theme across the presentation.</maml:title>
-        <dev:code>PS&gt;Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Contoso Theme' -AllMasters</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Contoso Theme' -AllMasters</dev:code>
         <dev:remarks>
           <maml:para>Applies a friendly theme name across every master.</maml:para>
         </dev:remarks>
@@ -45473,7 +46121,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Apply a solid background color.</maml:title>
-        <dev:code>PS&gt;Set-OfficeWordBackground -Color '#f4f7fb'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficeWordBackground -Color '#f4f7fb'</dev:code>
         <dev:remarks>
           <maml:para>Sets the document background to the provided hex color.</maml:para>
         </dev:remarks>
@@ -45642,7 +46293,10 @@ Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layo
     <command:examples>
       <command:example>
         <maml:title>Set the document title.</maml:title>
-        <dev:code>PS&gt;Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'</dev:code>
         <dev:remarks>
           <maml:para>Updates the built-in Title property on the active Word document.</maml:para>
         </dev:remarks>
@@ -45851,7 +46505,10 @@ OfficeIMO.Word.WordDocument</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Update the table of contents headings.</maml:title>
-        <dev:code>PS&gt;Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries'</dev:code>
         <dev:remarks>
           <maml:para>Updates the table of contents display text.</maml:para>
         </dev:remarks>
@@ -46011,7 +46668,10 @@ OfficeIMO.Word.WordDocument</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Unprotect the active sheet.</maml:title>
-        <dev:code>PS&gt;ExcelSheet 'Data' { Unprotect-OfficeExcelSheet }</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ExcelSheet 'Data' { Unprotect-OfficeExcelSheet }</dev:code>
         <dev:remarks>
           <maml:para>Removes worksheet protection.</maml:para>
         </dev:remarks>
@@ -46029,7 +46689,7 @@ OfficeIMO.Word.WordDocument</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Replaces text in a PowerPoint slide or presentation.</maml:para>
+      <maml:para>Can replace text in text boxes, tables, and optionally notes using the OfficeIMO text replacement helpers.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Auto">
@@ -46307,7 +46967,10 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Replace fiscal year text across the whole deck.</maml:title>
-        <dev:code>PS&gt;Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes</dev:code>
         <dev:remarks>
           <maml:para>Replaces matching text throughout the presentation and notes.</maml:para>
         </dev:remarks>
@@ -46325,7 +46988,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Updates fields in a Word document.</maml:para>
+      <maml:para>Refreshes page number fields and queues table-of-contents updates.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -46404,7 +47067,10 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Update fields.</maml:title>
-        <dev:code>PS&gt;Update-OfficeWordFields</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Update-OfficeWordFields</dev:code>
         <dev:remarks>
           <maml:para>Updates PAGE/NUMPAGES fields and marks TOC fields as dirty.</maml:para>
         </dev:remarks>
@@ -46577,7 +47243,10 @@ OfficeIMO.Word.WordDocument</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Mark table of contents for refresh on open.</maml:title>
-        <dev:code>PS&gt;Update-OfficeWordTableOfContent</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Update-OfficeWordTableOfContent</dev:code>
         <dev:remarks>
           <maml:para>Marks TOC fields as dirty and updates the document settings.</maml:para>
         </dev:remarks>
@@ -46595,7 +47264,7 @@ OfficeIMO.Word.WordDocument</maml:name>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Replaces text in a Word document.</maml:para>
+      <maml:para>Supports direct document objects, file paths, and the active DSL document. Hyperlink labels and metadata can be updated when requested.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Auto">
@@ -47040,14 +47709,20 @@ OfficeIMO.Word.WordDocument</maml:name>
     <command:examples>
       <command:example>
         <maml:title>Replace text in an open document.</maml:title>
-        <dev:code>PS&gt;$doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25'</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25'</dev:code>
         <dev:remarks>
           <maml:para>Updates matching text in the loaded document and returns the number of replacements.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>Replace hyperlink targets in a file.</maml:title>
-        <dev:code>PS&gt;Update-OfficeWordText -Path .\Report.docx -OldValue 'old.example.com' -NewValue 'new.example.com' -IncludeHyperlinkUri</dev:code>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Update-OfficeWordText -Path .\Report.docx -OldValue 'old.example.com' -NewValue 'new.example.com' -IncludeHyperlinkUri</dev:code>
         <dev:remarks>
           <maml:para>Loads the document, updates matching hyperlink URLs, saves the file, and closes it.</maml:para>
         </dev:remarks>
