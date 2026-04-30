@@ -22,6 +22,7 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
 
     /// <summary>Optional save-as path.</summary>
     [Parameter]
+    [Alias("FilePath")]
     public string? Path { get; set; }
 
     /// <summary>Open the document after saving.</summary>
