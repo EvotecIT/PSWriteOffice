@@ -1,5 +1,9 @@
-Import-Module (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1') -Force
-
+$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
+    $env:PSWRITEOFFICE_MODULE_MANIFEST
+} else {
+    (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1')
+}
+if (-not (Get-Module -Name PSWriteOffice)) { Import-Module $modulePath -ErrorAction Stop }
 $documents = Join-Path $PSScriptRoot '..\Documents'
 $docPath = Join-Path $documents 'Word-AliasDsl.docx'
 if (-not (Test-Path $docPath)) {
