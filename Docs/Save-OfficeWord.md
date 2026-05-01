@@ -66,7 +66,7 @@ Optional save-as path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: FilePath
 Possible values: 
 
 Required: False
