@@ -35360,7 +35360,7 @@ System.Boolean</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="FilePath">
           <maml:name>Path</maml:name>
           <maml:description>
             <maml:para>Optional save-as path.</maml:para>
@@ -35411,7 +35411,7 @@ System.Boolean</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="FilePath">
         <maml:name>Path</maml:name>
         <maml:description>
           <maml:para>Optional save-as path.</maml:para>
