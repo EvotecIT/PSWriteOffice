@@ -54,11 +54,23 @@ foreach ($Module in $PSDInformation.RequiredModules) {
 }
 Write-Color
 
+$previousDevelopmentFlag = $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES
+$developmentOutputPath = Join-Path $ResolvedModulePath 'Sources/PSWriteOffice/bin/Debug'
+if (-not $previousDevelopmentFlag -and (Test-Path -LiteralPath $developmentOutputPath)) {
+    $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
+}
+
 try {
     Import-Module $PrimaryModule.FullName -Force -Global -ErrorAction Stop
     Import-Module Pester -Force -ErrorAction Stop
 } catch {
     throw "Failed to import module $ModuleName"
+} finally {
+    if ($null -eq $previousDevelopmentFlag) {
+        Remove-Item env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES -ErrorAction SilentlyContinue
+    } else {
+        $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = $previousDevelopmentFlag
+    }
 }
 
 $env:PSWRITEOFFICE_MODULE_MANIFEST = $PrimaryModule.FullName

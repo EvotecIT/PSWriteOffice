@@ -1,6 +1,6 @@
 ﻿# to speed up development adding direct path to binaries, instead of the the Lib folder
 $DevelopmentPath = Join-Path $PSScriptRoot 'Sources\PSWriteOffice\bin\Debug'
-$Development = Test-Path $DevelopmentPath
+$Development = $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES -eq 'true' -and (Test-Path $DevelopmentPath)
 $DevelopmentFolderCore = "net8.0"
 $DevelopmentFolderDefault = "net472"
 $BinaryModules = @(

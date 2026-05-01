@@ -4,7 +4,7 @@ BeforeAll {
     } else {
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
-    Import-Module $ModuleManifest -Force -Global
+    Import-Module $ModuleManifest -Global -ErrorAction Stop
 }
 
 Describe 'Word DSL surface' {

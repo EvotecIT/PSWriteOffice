@@ -1,5 +1,9 @@
-Import-Module (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1') -Force
-
+$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
+    $env:PSWRITEOFFICE_MODULE_MANIFEST
+} else {
+    (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1')
+}
+if (-not (Get-Module -Name PSWriteOffice)) { Import-Module $modulePath -ErrorAction Stop }
 $path = Join-Path $PSScriptRoot 'Example-WordTableCells.docx'
 $imagePath = Join-Path $PSScriptRoot 'Example-WordTableCells.png'
 $fixturePath = Join-Path $PSScriptRoot 'Example-WordTableCells.fixture.png'

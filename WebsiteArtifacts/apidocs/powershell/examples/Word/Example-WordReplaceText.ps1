@@ -1,5 +1,9 @@
-Import-Module "$PSScriptRoot\..\..\PSWriteOffice.psd1" -Force
-
+$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
+    $env:PSWRITEOFFICE_MODULE_MANIFEST
+} else {
+    "$PSScriptRoot\..\..\PSWriteOffice.psd1"
+}
+if (-not (Get-Module -Name PSWriteOffice)) { Import-Module $modulePath -ErrorAction Stop }
 $Path = Join-Path $PSScriptRoot 'Example-WordReplaceText.docx'
 
 New-OfficeWord -Path $Path {
