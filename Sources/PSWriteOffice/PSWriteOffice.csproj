@@ -57,7 +57,8 @@
         <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(PublishDir)" />
     </Target>
 
-    <ItemGroup Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
+    <ItemGroup Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj" />
@@ -66,13 +67,14 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj" />
     </ItemGroup>
-    <ItemGroup Condition="!Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
-        <PackageReference Include="OfficeIMO.Word" Version="1.0.45" />
-        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.19" />
-        <PackageReference Include="OfficeIMO.Excel" Version="0.6.25" />
-        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.20" />
-        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.12" />
-        <PackageReference Include="OfficeIMO.CSV" Version="0.1.25" />
-        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.19" />
+    <ItemGroup Condition="!Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') Or !Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
+        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.0" />
+        <PackageReference Include="OfficeIMO.Word" Version="1.0.46" />
+        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.20" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.26" />
+        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.21" />
+        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.13" />
+        <PackageReference Include="OfficeIMO.CSV" Version="0.1.26" />
+        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.20" />
     </ItemGroup>
 </Project>

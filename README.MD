@@ -235,67 +235,12 @@ Get-OfficePowerPointShape -Presentation $ppt -Index 0
 
 ## Documentation 📚
 
-Start here:
+Use the examples in this README for the first pass, then move to the generated command reference when you need exact parameters and pipeline behavior.
 
-- [OVERVIEW.md](OVERVIEW.md)
-- [Docs/Readme.md](Docs/Readme.md)
-
-Recommended docs:
-
-- [Docs/New-OfficeWord.md](Docs/New-OfficeWord.md)
-- [Docs/Update-OfficeWordText.md](Docs/Update-OfficeWordText.md)
-- [Docs/Add-OfficeWordChart.md](Docs/Add-OfficeWordChart.md)
-- [Docs/New-OfficeExcel.md](Docs/New-OfficeExcel.md)
-- [Docs/New-OfficePowerPoint.md](Docs/New-OfficePowerPoint.md)
-- [Docs/ConvertTo-OfficeWordMarkdown.md](Docs/ConvertTo-OfficeWordMarkdown.md)
-- [Docs/ConvertFrom-OfficeWordMarkdown.md](Docs/ConvertFrom-OfficeWordMarkdown.md)
-- [Docs/Add-OfficeExcelTableOfContents.md](Docs/Add-OfficeExcelTableOfContents.md)
-- [Docs/Get-OfficeExcelRange.md](Docs/Get-OfficeExcelRange.md)
-- [Docs/Get-OfficeExcelUsedRange.md](Docs/Get-OfficeExcelUsedRange.md)
-- [Docs/Set-OfficeExcelChartLegend.md](Docs/Set-OfficeExcelChartLegend.md)
-- [Docs/Set-OfficeExcelChartDataLabels.md](Docs/Set-OfficeExcelChartDataLabels.md)
-- [Docs/Set-OfficeExcelChartStyle.md](Docs/Set-OfficeExcelChartStyle.md)
-- [Docs/Add-OfficeExcelImageFromUrl.md](Docs/Add-OfficeExcelImageFromUrl.md)
-- [Docs/Set-OfficeExcelSmartHyperlink.md](Docs/Set-OfficeExcelSmartHyperlink.md)
-- [Docs/Set-OfficeExcelHostHyperlink.md](Docs/Set-OfficeExcelHostHyperlink.md)
-- [Docs/Set-OfficeExcelInternalLinks.md](Docs/Set-OfficeExcelInternalLinks.md)
-- [Docs/Set-OfficeExcelInternalLinksByHeader.md](Docs/Set-OfficeExcelInternalLinksByHeader.md)
-- [Docs/Set-OfficeExcelUrlLinks.md](Docs/Set-OfficeExcelUrlLinks.md)
-- [Docs/Set-OfficeExcelUrlLinksByHeader.md](Docs/Set-OfficeExcelUrlLinksByHeader.md)
-- [Docs/Get-OfficePowerPointSection.md](Docs/Get-OfficePowerPointSection.md)
-- [Docs/Get-OfficePowerPointTheme.md](Docs/Get-OfficePowerPointTheme.md)
-- [Docs/Set-OfficePowerPointSlideTransition.md](Docs/Set-OfficePowerPointSlideTransition.md)
-- [Docs/Set-OfficePowerPointSlideSize.md](Docs/Set-OfficePowerPointSlideSize.md)
-- [Docs/Set-OfficePowerPointSlideLayout.md](Docs/Set-OfficePowerPointSlideLayout.md)
-- [Docs/Set-OfficePowerPointThemeColor.md](Docs/Set-OfficePowerPointThemeColor.md)
-- [Docs/Set-OfficePowerPointThemeFonts.md](Docs/Set-OfficePowerPointThemeFonts.md)
-- [Docs/Set-OfficePowerPointThemeName.md](Docs/Set-OfficePowerPointThemeName.md)
-- [Docs/Update-OfficePowerPointText.md](Docs/Update-OfficePowerPointText.md)
-- [Docs/Copy-OfficePowerPointSlide.md](Docs/Copy-OfficePowerPointSlide.md)
-- [Docs/Import-OfficePowerPointSlide.md](Docs/Import-OfficePowerPointSlide.md)
-
-Recommended examples:
-
-- [Examples/Word/Example-WordBasic.ps1](Examples/Word/Example-WordBasic.ps1)
-- [Examples/Word/Example-WordReplaceText.ps1](Examples/Word/Example-WordReplaceText.ps1)
-- [Examples/Word/Example-WordCharts.ps1](Examples/Word/Example-WordCharts.ps1)
-- [Examples/Word/Example-WordLineBreaks.ps1](Examples/Word/Example-WordLineBreaks.ps1)
-- [Examples/Word/Example-WordTableCalculatedColumns.ps1](Examples/Word/Example-WordTableCalculatedColumns.ps1)
-- [Examples/Word/Example-WordMarkdownConvert.ps1](Examples/Word/Example-WordMarkdownConvert.ps1)
-- [Examples/Excel/Example-ExcelBasic.ps1](Examples/Excel/Example-ExcelBasic.ps1)
-- [Examples/Excel/Example-ExcelAdvanced.ps1](Examples/Excel/Example-ExcelAdvanced.ps1)
-- [Examples/Excel/Example-ExcelNavigationAndRanges.ps1](Examples/Excel/Example-ExcelNavigationAndRanges.ps1)
-- [Examples/Excel/Example-ExcelChartFormatting.ps1](Examples/Excel/Example-ExcelChartFormatting.ps1)
-- [Examples/Excel/Example-ExcelLinksAndImages.ps1](Examples/Excel/Example-ExcelLinksAndImages.ps1)
-- [Examples/Excel/Example-ExcelInternalLinks.ps1](Examples/Excel/Example-ExcelInternalLinks.ps1)
-- [Examples/Excel/Example-ExcelUrlLinks.ps1](Examples/Excel/Example-ExcelUrlLinks.ps1)
-- [Examples/Markdown/Example-MarkdownDsl.ps1](Examples/Markdown/Example-MarkdownDsl.ps1)
-- [Examples/ExamplePowerPoint10-Dsl.ps1](Examples/ExamplePowerPoint10-Dsl.ps1)
-- [Examples/ExamplePowerPoint12-LayoutDsl.ps1](Examples/ExamplePowerPoint12-LayoutDsl.ps1)
-- [Examples/PowerPoint/Example-PowerPointTransitionsAndSizing.ps1](Examples/PowerPoint/Example-PowerPointTransitionsAndSizing.ps1)
-- [Examples/PowerPoint/Example-PowerPointSectionsAndImport.ps1](Examples/PowerPoint/Example-PowerPointSectionsAndImport.ps1)
-- [Examples/PowerPoint/Example-PowerPointCopySlides.ps1](Examples/PowerPoint/Example-PowerPointCopySlides.ps1)
-- [Examples/PowerPoint/Example-PowerPointThemeAndLayout.ps1](Examples/PowerPoint/Example-PowerPointThemeAndLayout.ps1)
+- [OVERVIEW.md](OVERVIEW.md) explains the project scope and design direction.
+- [Docs/Readme.md](Docs/Readme.md) is the generated cmdlet index.
+- [Docs](Docs) contains one generated page per command.
+- [Examples](Examples) contains runnable scripts grouped by Word, Excel, PowerPoint, Markdown, CSV, and shared samples.
 
 ## Build and Test 🧪
 
@@ -306,32 +251,6 @@ pwsh -NoLogo -NoProfile -File .\Build\Validate-PackagedArtefact.ps1
 ```
 
 Development loading is handled through [PSWriteOffice.psm1](PSWriteOffice.psm1), which prefers the local debug build in `Sources\PSWriteOffice\bin\Debug\`.
-
-## Roadmap and Next High-Value Additions 🛣️
-
-Near-term focus stays on Word, Excel, PowerPoint, Markdown, and CSV. PDF and Visio remain intentionally out of scope for now because the risk/rework ratio is much higher.
-
-Highest-value next additions from `OfficeIMO` are:
-
-- Higher-level PowerPoint background/design helpers that build on the newer theme, layout, and slide reuse workflows
-- Additional Word and Excel inspection helpers where the underlying C# APIs are already stable
-- More Excel dashboard/reporting helpers on top of the newer link, URL, and TOC primitives
-
-The general direction is clear: keep PSWriteOffice thin, predictable, and PowerShell-native while steadily exposing the strongest `OfficeIMO` capabilities.
-
-## Dependency Model 🔗
-
-`PSWriteOffice` should stay aligned with `OfficeIMO.*` rather than re-owning lower-level behavior or duplicating file-format logic.
-
-- `OfficeIMO.Word`
-- `OfficeIMO.Word.Markdown`
-- `OfficeIMO.Excel`
-- `OfficeIMO.PowerPoint`
-- `OfficeIMO.Markdown`
-- `OfficeIMO.CSV`
-- `OfficeIMO.Word.Html`
-
-That keeps feature ownership centralized and reduces drift between the PowerShell layer and the underlying document engine.
 
 ## License
 

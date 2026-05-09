@@ -1,5 +1,6 @@
 using System;
 using System.Management.Automation;
+using OfficeIMO.Drawing;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
@@ -86,8 +87,6 @@ public sealed class SetOfficePowerPointBackgroundCommand : PSCmdlet
             throw new PSArgumentException("Color cannot be empty.", nameof(Color));
         }
 
-        var parsed = SixLabors.ImageSharp.Color.Parse(color);
-        var hex = parsed.ToHex().ToLowerInvariant();
-        return hex.Length > 6 ? hex.Substring(0, 6) : hex;
+        return OfficeColor.Parse(color).ToRgbHex().ToLowerInvariant();
     }
 }

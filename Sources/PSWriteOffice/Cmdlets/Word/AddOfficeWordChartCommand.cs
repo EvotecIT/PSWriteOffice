@@ -5,9 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using OfficeIMO.Drawing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
-using SixLabors.ImageSharp;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
@@ -264,13 +264,13 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
         }
     }
 
-    private Color ResolveSeriesColor(int index)
+    private OfficeColor ResolveSeriesColor(int index)
     {
         var colorValue = index < SeriesColor.Length && !string.IsNullOrWhiteSpace(SeriesColor[index])
             ? SeriesColor[index]
             : DefaultSeriesPalette[index % DefaultSeriesPalette.Length];
 
-        return Color.Parse(colorValue);
+        return OfficeColor.Parse(colorValue);
     }
 
     private static LegendPositionValues ResolveLegendPosition(string position)
