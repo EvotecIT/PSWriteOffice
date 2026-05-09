@@ -2,8 +2,8 @@ using System;
 using System.Management.Automation;
 using System.Reflection;
 using DocumentFormat.OpenXml.Drawing;
+using OfficeIMO.Drawing;
 using OfficeIMO.PowerPoint;
-using SixLabors.ImageSharp;
 using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
@@ -116,9 +116,7 @@ public sealed class AddOfficePowerPointShapeCommand : PSCmdlet
             return null;
         }
 
-        var parsed = Color.Parse(color);
-        var hex = parsed.ToHex().ToLowerInvariant();
-        return hex.Length > 6 ? hex.Substring(0, 6) : hex;
+        return OfficeColor.Parse(color!).ToRgbHex().ToLowerInvariant();
     }
 
     private static ShapeTypeValues ResolveShapeType(string? shapeType)

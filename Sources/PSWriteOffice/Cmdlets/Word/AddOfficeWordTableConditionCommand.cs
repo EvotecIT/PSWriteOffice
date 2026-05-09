@@ -1,8 +1,8 @@
 using System;
 using System.Management.Automation;
+using OfficeIMO.Drawing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
-using SixLabors.ImageSharp;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
@@ -57,8 +57,6 @@ public sealed class AddOfficeWordTableConditionCommand : PSCmdlet
             return null;
         }
 
-        var parsed = Color.Parse(color);
-        var hex = parsed.ToHex().ToLowerInvariant();
-        return hex.Length > 6 ? hex.Substring(0, 6) : hex;
+        return OfficeColor.Parse(color!).ToRgbHex().ToLowerInvariant();
     }
 }

@@ -16,7 +16,7 @@
         # ID used to uniquely identify this module
         GUID                   = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
         # Version number of this module.
-        ModuleVersion          = '0.X.0'
+        ModuleVersion          = '1.0.0'
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
