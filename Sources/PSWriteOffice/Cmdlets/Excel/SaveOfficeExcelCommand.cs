@@ -1,5 +1,6 @@
 using System.Management.Automation;
 using OfficeIMO.Excel;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -45,11 +46,20 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(Path))
         {
-            Document.Save(Path!, Show.IsPresent);
+            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+            Document.Save(resolvedPath, false);
+            if (Show.IsPresent)
+            {
+                FileOpenService.Open(resolvedPath);
+            }
         }
         else
         {
-            Document.Save(Show.IsPresent);
+            Document.Save(false);
+            if (Show.IsPresent)
+            {
+                FileOpenService.Open(Document.FilePath);
+            }
         }
 
         if (PassThru.IsPresent)

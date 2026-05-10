@@ -17,18 +17,19 @@ public static partial class WordDocumentService
     /// <summary>Loads an existing Word document.</summary>
     public static WordDocument LoadDocument(string filePath, bool readOnly, bool autoSave)
     {
-        if (!File.Exists(filePath))
+        var resolvedPath = Path.GetFullPath(filePath);
+        if (!File.Exists(resolvedPath))
         {
-            throw new FileNotFoundException($"File {filePath} doesn't exist.", filePath);
+            throw new FileNotFoundException($"File {resolvedPath} doesn't exist.", resolvedPath);
         }
 
-        return RegisterDocument(WordDocument.Load(filePath, readOnly, autoSave));
+        return RegisterDocument(WordDocument.Load(resolvedPath, readOnly, autoSave));
     }
 
     /// <summary>Creates a new Word document at the specified path.</summary>
     public static WordDocument CreateDocument(string filePath, bool autoSave)
     {
-        return RegisterDocument(WordDocument.Create(filePath, autoSave));
+        return RegisterDocument(WordDocument.Create(Path.GetFullPath(filePath), autoSave));
     }
 
     /// <summary>Disposes the Word document.</summary>
@@ -66,14 +67,20 @@ public static partial class WordDocumentService
 
         if (filePath != null)
         {
-            document.Save(filePath, show);
+            document.Save(Path.GetFullPath(filePath), false);
         }
         else
         {
-            document.Save(show);
+            document.Save(false);
         }
 
+        var savedPath = document.FilePath ?? filePath ?? throw new InvalidOperationException("No saved file path was available.");
         CloseDocument(document);
+
+        if (show)
+        {
+            FileOpenService.Open(savedPath);
+        }
     }
 
     /// <summary>Returns the most recently tracked Word document for the current runspace.</summary>

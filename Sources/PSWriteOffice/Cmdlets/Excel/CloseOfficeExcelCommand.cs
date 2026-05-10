@@ -41,7 +41,10 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet
 
         if (Save.IsPresent || !string.IsNullOrEmpty(Path))
         {
-            ExcelDocumentService.SaveDocument(Document, Show.IsPresent, Path ?? Document.FilePath);
+            var resolvedPath = !string.IsNullOrWhiteSpace(Path)
+                ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
+                : Document.FilePath;
+            ExcelDocumentService.SaveDocument(Document, Show.IsPresent, resolvedPath);
         }
         else
         {

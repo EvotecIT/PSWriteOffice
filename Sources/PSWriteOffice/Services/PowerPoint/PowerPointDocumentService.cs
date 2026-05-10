@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.IO;
 using OfficeIMO.PowerPoint;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Services.PowerPoint;
 
@@ -19,21 +19,23 @@ public static class PowerPointDocumentService
             throw new ArgumentException("File path cannot be empty.", nameof(filePath));
         }
 
-        var presentation = PowerPointPresentation.Create(filePath);
-        Presentations[presentation] = filePath;
+        var resolvedPath = Path.GetFullPath(filePath);
+        var presentation = PowerPointPresentation.Create(resolvedPath);
+        Presentations[presentation] = resolvedPath;
         return presentation;
     }
 
     /// <summary>Loads an existing presentation.</summary>
     public static PowerPointPresentation LoadPresentation(string filePath)
     {
-        if (!File.Exists(filePath))
+        var resolvedPath = Path.GetFullPath(filePath);
+        if (!File.Exists(resolvedPath))
         {
-            throw new FileNotFoundException($"File {filePath} doesn't exist.", filePath);
+            throw new FileNotFoundException($"File {resolvedPath} doesn't exist.", resolvedPath);
         }
 
-        var presentation = PowerPointPresentation.Open(filePath);
-        Presentations[presentation] = filePath;
+        var presentation = PowerPointPresentation.Open(resolvedPath);
+        Presentations[presentation] = resolvedPath;
         return presentation;
     }
 
@@ -45,19 +47,14 @@ public static class PowerPointDocumentService
             throw new ArgumentException("Presentation was not created or loaded via this service.", nameof(presentation));
         }
 
+        var resolvedPath = Path.GetFullPath(filePath);
         presentation.Save();
+        presentation.Dispose();
+        Presentations.TryRemove(presentation, out _);
 
         if (show)
         {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = filePath,
-                UseShellExecute = true
-            };
-            Process.Start(startInfo);
+            FileOpenService.Open(resolvedPath);
         }
-
-        presentation.Dispose();
-        Presentations.TryRemove(presentation, out _);
     }
 }

@@ -95,7 +95,10 @@ public sealed class CloseOfficeWordCommand : PSCmdlet
     {
         if (Save.IsPresent || !string.IsNullOrEmpty(Path))
         {
-            WordDocumentService.SaveDocument(document, Show.IsPresent, Path);
+            var resolvedPath = !string.IsNullOrWhiteSpace(Path)
+                ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
+                : null;
+            WordDocumentService.SaveDocument(document, Show.IsPresent, resolvedPath);
             return;
         }
 

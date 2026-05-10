@@ -3,6 +3,7 @@ using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Html;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
@@ -183,11 +184,16 @@ public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
 
                 try
                 {
-                    document.Save(resolvedOutput, Open.IsPresent);
+                    document.Save(resolvedOutput, false);
                 }
                 finally
                 {
                     document.Dispose();
+                }
+
+                if (Open.IsPresent)
+                {
+                    FileOpenService.Open(resolvedOutput);
                 }
 
                 if (PassThru.IsPresent)

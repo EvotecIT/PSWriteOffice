@@ -13,17 +13,18 @@ internal static class ExcelDocumentService
             throw new ArgumentException("File path cannot be empty.", nameof(filePath));
         }
 
-        return ExcelDocument.Create(filePath, autoSave);
+        return ExcelDocument.Create(Path.GetFullPath(filePath), autoSave);
     }
 
     public static ExcelDocument LoadDocument(string filePath, bool readOnly, bool autoSave)
     {
-        if (!File.Exists(filePath))
+        var resolvedPath = Path.GetFullPath(filePath);
+        if (!File.Exists(resolvedPath))
         {
-            throw new FileNotFoundException($"File '{filePath}' was not found.", filePath);
+            throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
-        return ExcelDocument.Load(filePath, readOnly, autoSave);
+        return ExcelDocument.Load(resolvedPath, readOnly, autoSave);
     }
 
     public static void SaveDocument(ExcelDocument document, bool show, string? filePath)
@@ -36,14 +37,24 @@ internal static class ExcelDocumentService
             var target = filePath!;
             if (!string.Equals(target, currentPath, StringComparison.OrdinalIgnoreCase))
             {
-                document.Save(target, show);
+                document.Save(Path.GetFullPath(target), false);
+                var savedAsPath = document.FilePath ?? target;
                 document.Dispose();
+                if (show)
+                {
+                    FileOpenService.Open(savedAsPath);
+                }
                 return;
             }
         }
 
-        document.Save(show);
+        document.Save(false);
+        var savedPath = document.FilePath ?? filePath ?? throw new InvalidOperationException("No saved file path was available.");
         document.Dispose();
+        if (show)
+        {
+            FileOpenService.Open(savedPath);
+        }
     }
 
     public static void CloseDocument(ExcelDocument document)
