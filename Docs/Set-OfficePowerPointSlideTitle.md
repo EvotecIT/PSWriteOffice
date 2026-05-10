@@ -15,13 +15,13 @@ Set-OfficePowerPointSlideTitle -Title <string> [-Slide <PowerPointSlide>] [<Comm
 ```
 
 ## DESCRIPTION
-Sets the text of the title placeholder on a slide.
+Targets the title placeholder when available; otherwise adds a new title shape.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTitle -Title 'Executive Summary'
+PS> Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTitle -Title 'Executive Summary'
 ```
 
 Updates the first slide’s title.

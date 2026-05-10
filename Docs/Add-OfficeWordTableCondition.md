@@ -15,13 +15,13 @@ Add-OfficeWordTableCondition -FilterScript <scriptblock> [-TableStyle <WordTable
 ```
 
 ## DESCRIPTION
-Attaches conditional formatting logic to the current table.
+Evaluates each data row via -FilterScript ($_ holds the original object) and optionally changes the table style or row shading.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>WordTableCondition -FilterScript { $_.Qty -gt 10 } -BackgroundColor '#fff4d6'
+PS> WordTableCondition -FilterScript { $_.Qty -gt 10 } -BackgroundColor '#fff4d6'
 ```
 
 Applies a light highlight when the quantity column exceeds 10.

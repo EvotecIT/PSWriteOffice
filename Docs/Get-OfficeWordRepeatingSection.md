@@ -26,7 +26,7 @@ Gets repeating section content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordRepeatingSection -Path .\Report.docx
+PS> Get-OfficeWordRepeatingSection -Path .\Report.docx
 ```
 
 Returns all repeating section controls in the document.

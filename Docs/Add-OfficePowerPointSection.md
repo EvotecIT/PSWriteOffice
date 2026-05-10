@@ -15,13 +15,13 @@ Add-OfficePowerPointSection -Name <string> [-Presentation <PowerPointPresentatio
 ```
 
 ## DESCRIPTION
-Adds a section to a PowerPoint presentation.
+Creates a new section starting at the requested slide index or at the current slide inside the DSL.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2
+PS> Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2
 ```
 
 Creates a section named Results starting at the third slide.

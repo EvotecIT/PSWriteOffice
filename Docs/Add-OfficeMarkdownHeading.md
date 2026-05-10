@@ -26,7 +26,7 @@ Adds a Markdown heading.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownHeading -Level 2 -Text 'Overview'
+PS> MarkdownHeading -Level 2 -Text 'Overview'
 ```
 
 Appends a level-2 heading to the current Markdown document.

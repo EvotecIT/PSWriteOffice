@@ -21,17 +21,17 @@ Sets layout placeholder text style and bullet/numbering settings.
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficePowerPointLayoutPlaceholderTextStyle -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Style Title
+PS> Set-OfficePowerPointLayoutPlaceholderTextStyle -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Style Title
 ```
 
 Applies the Title preset to the layout placeholder.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx {
-$layout = Get-OfficePowerPointLayout | Select-Object -First 1
-Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Style Title -FontSize 36 -Bold $true
-}
+PS> New-OfficePowerPoint -Path .\deck.pptx {
+                $layout = Get-OfficePowerPointLayout | Select-Object -First 1
+                Set-OfficePowerPointLayoutPlaceholderTextStyle -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Style Title -FontSize 36 -Bold $true
+              }
 ```
 
 Uses the DSL context to resolve the presentation.

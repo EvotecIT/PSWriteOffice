@@ -26,7 +26,7 @@ Shows or hides a worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelSheetVisibility -Hide }
+PS> ExcelSheet 'Data' { Set-OfficeExcelSheetVisibility -Hide }
 ```
 
 Marks the sheet as hidden.

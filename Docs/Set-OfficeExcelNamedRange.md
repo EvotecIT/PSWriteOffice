@@ -20,13 +20,13 @@ Set-OfficeExcelNamedRange [-Name] <string> [-Range] <string> -Document <ExcelDoc
 ```
 
 ## DESCRIPTION
-Creates or updates a named range.
+Defaults to the current sheet scope when used inside the Excel DSL.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelNamedRange -Name 'Totals' -Range 'B2:B50' }
+PS> ExcelSheet 'Data' { Set-OfficeExcelNamedRange -Name 'Totals' -Range 'B2:B50' }
 ```
 
 Creates a sheet-scoped name for the range.

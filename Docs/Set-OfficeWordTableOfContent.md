@@ -26,7 +26,7 @@ Sets properties on a table of contents in a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries'
+PS> Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries'
 ```
 
 Updates the table of contents display text.

@@ -15,13 +15,13 @@ Add-OfficeWordList [[-Content] <scriptblock>] [[-Style] <WordListStyle>] [<Commo
 ```
 
 ## DESCRIPTION
-Starts a list inside the current section or paragraph anchor.
+Creates a temporary anchor paragraph, spawns an OfficeIMO list, and runs child WordListItem commands.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordList -Style 'Numbered' { Add-OfficeWordListItem -Text 'Plan'; Add-OfficeWordListItem -Text 'Execute' }
+PS> Add-OfficeWordList -Style 'Numbered' { Add-OfficeWordListItem -Text 'Plan'; Add-OfficeWordListItem -Text 'Execute' }
 ```
 
 Creates a numbered list with two steps.

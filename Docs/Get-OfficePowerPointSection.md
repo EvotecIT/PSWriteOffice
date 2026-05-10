@@ -15,13 +15,13 @@ Get-OfficePowerPointSection [-Presentation <PowerPointPresentation>] [-Name <str
 ```
 
 ## DESCRIPTION
-Gets PowerPoint sections from a presentation.
+Returns OfficeIMO section metadata so scripts can inspect section names and slide ranges.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSection -Presentation $ppt
+PS> Get-OfficePowerPointSection -Presentation $ppt
 ```
 
 Returns section information including section names and slide indexes.

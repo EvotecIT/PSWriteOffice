@@ -36,7 +36,7 @@ Gets runs from Word paragraphs.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun
+PS> Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun
 ```
 
 Returns each run as a WordParagraph instance.

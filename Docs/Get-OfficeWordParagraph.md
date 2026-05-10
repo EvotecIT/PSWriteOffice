@@ -31,7 +31,7 @@ Gets paragraphs from a Word document or section.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordParagraph -Path .\Report.docx
+PS> Get-OfficeWordParagraph -Path .\Report.docx
 ```
 
 Returns all paragraphs in the document.

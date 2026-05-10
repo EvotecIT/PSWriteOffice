@@ -26,7 +26,7 @@ Adds a text-length data validation rule to a worksheet range.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelValidationTextLength -Range 'E2:E20' -Operator Between -Formula1 1 -Formula2 50 }
+PS> ExcelSheet 'Data' { Add-OfficeExcelValidationTextLength -Range 'E2:E20' -Operator Between -Formula1 1 -Formula2 50 }
 ```
 
 Ensures text length in E2:E20 is between 1 and 50 characters.

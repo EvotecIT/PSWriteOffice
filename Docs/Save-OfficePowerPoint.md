@@ -15,13 +15,13 @@ Save-OfficePowerPoint -Presentation <PowerPointPresentation> [-Show] [-WhatIf] [
 ```
 
 ## DESCRIPTION
-Saves a presentation to disk.
+Invokes the PowerPoint service to persist the document and optionally launch it.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Save-OfficePowerPoint -Presentation $ppt -Show
+PS> Save-OfficePowerPoint -Presentation $ppt -Show
 ```
 
 Saves the current presentation and opens it in PowerPoint.

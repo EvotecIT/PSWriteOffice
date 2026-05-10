@@ -31,7 +31,7 @@ Gets tables from a Word document or section.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordTable -Path .\Report.docx
+PS> Get-OfficeWordTable -Path .\Report.docx
 ```
 
 Returns the tables found in the document.

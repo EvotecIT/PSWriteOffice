@@ -21,7 +21,7 @@ Sets speaker notes for a PowerPoint slide.
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this under five minutes.'
+PS> Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this under five minutes.'
 ```
 
 Writes notes to the slide.

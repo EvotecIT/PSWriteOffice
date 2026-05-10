@@ -25,13 +25,13 @@ Add-OfficeExcelTableOfContents -Document <ExcelDocument> [-SheetName <string>] [
 ```
 
 ## DESCRIPTION
-Adds or refreshes a workbook table of contents sheet.
+Can run inside the Excel DSL, against an open workbook, or directly against a file path.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks
+PS> Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks
 ```
 
 Creates or refreshes a TOC sheet, lists named ranges, and adds back links on other sheets.

@@ -20,20 +20,20 @@ Get-OfficePowerPointNotes [-Presentation <PowerPointPresentation>] [-Index <int>
 ```
 
 ## DESCRIPTION
-Reads speaker notes from a slide or presentation.
+Returns note metadata without creating empty notes parts on slides that do not already have them.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointNotes
+PS> Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointNotes
 ```
 
 Returns the notes text and metadata for the selected slide.
 
 ### EXAMPLE 2
 ```powershell
-PS>Get-OfficePowerPointNotes -Presentation $ppt -IncludeEmpty
+PS> Get-OfficePowerPointNotes -Presentation $ppt -IncludeEmpty
 ```
 
 Lists slide indexes together with note text, including slides that have no notes yet.
@@ -114,7 +114,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.PowerPoint.PowerPointNotesInfo`
+- `PSWriteOffice.Services.PowerPoint.PowerPointNotesInfo` — PowerShell-friendly description of slide speaker notes.
 
 ## RELATED LINKS
 

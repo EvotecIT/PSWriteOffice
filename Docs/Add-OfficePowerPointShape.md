@@ -15,13 +15,13 @@ Add-OfficePowerPointShape [-Slide <PowerPointSlide>] [-ShapeType <string>] [-X <
 ```
 
 ## DESCRIPTION
-Adds a basic shape to a slide.
+Creates an auto shape at the requested coordinates and applies optional fill and outline styling.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 80 -Width 220 -Height 120 -FillColor '#DDEEFF'
+PS> Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 80 -Width 220 -Height 120 -FillColor '#DDEEFF'
 ```
 
 Creates a rectangle with a custom fill color.

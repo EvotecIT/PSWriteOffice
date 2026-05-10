@@ -26,7 +26,7 @@ Adds a Markdown block quote.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownQuote -Text 'Key takeaway goes here.'
+PS> MarkdownQuote -Text 'Key takeaway goes here.'
 ```
 
 Appends a quote block to the document.

@@ -15,27 +15,27 @@ Get-OfficeCsvData [[-InputPath] <string>] [-Document <CsvDocument>] [-HasHeaderR
 ```
 
 ## DESCRIPTION
-Reads CSV rows as PSCustomObjects or dictionaries.
+Uses the CSV header to map fields to property names.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeCsvData -Path .\data.csv | Format-Table
+PS> Get-OfficeCsvData -Path .\data.csv | Format-Table
 ```
 
 Returns each row as a PSCustomObject.
 
 ### EXAMPLE 2
 ```powershell
-PS>Get-OfficeCsvData -Path .\data.csv -AsHashtable | ForEach-Object { $_['Name'] }
+PS> Get-OfficeCsvData -Path .\data.csv -AsHashtable | ForEach-Object { $_['Name'] }
 ```
 
 Uses hashtables for dynamic schemas or key-based access.
 
 ### EXAMPLE 3
 ```powershell
-PS>Get-OfficeCsvData -Path .\data.csv -Delimiter ';' -HasHeaderRow:$false
+PS> Get-OfficeCsvData -Path .\data.csv -Delimiter ';' -HasHeaderRow:$false
 ```
 
 Reads CSV files that lack a header row and use a custom delimiter.

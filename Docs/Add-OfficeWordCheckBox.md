@@ -21,7 +21,7 @@ Adds a checkbox content control to the current paragraph.
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordCheckBox -Checked -Alias 'Approved' }
+PS> Add-OfficeWordParagraph { Add-OfficeWordCheckBox -Checked -Alias 'Approved' }
 ```
 
 Creates a checked checkbox content control.

@@ -15,13 +15,13 @@ Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Show] [<C
 ```
 
 ## DESCRIPTION
-Closes an Excel workbook and optionally saves it.
+Convenience wrapper so scripts do not need to call Save or Dispose directly.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Close-OfficeExcel -Document $workbook -Save -Path .\report-final.xlsx -Show
+PS> Close-OfficeExcel -Document $workbook -Save -Path .\report-final.xlsx -Show
 ```
 
 Saves pending changes to a new file, launches Excel, and releases the workbook.

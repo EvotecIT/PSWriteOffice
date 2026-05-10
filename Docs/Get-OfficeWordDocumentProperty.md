@@ -26,7 +26,7 @@ Gets built-in and custom document properties from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordDocumentProperty -Path .\Report.docx
+PS> Get-OfficeWordDocumentProperty -Path .\Report.docx
 ```
 
 Returns built-in and custom Word document properties.
@@ -122,7 +122,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `PSWriteOffice.Models.Word.WordDocumentPropertyInfo`
+- `PSWriteOffice.Models.Word.WordDocumentPropertyInfo` — Represents a Word document property exposed to PowerShell.
 
 ## RELATED LINKS
 

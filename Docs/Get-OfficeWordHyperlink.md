@@ -36,7 +36,7 @@ Gets hyperlinks from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordHyperlink -Path .\Report.docx
+PS> Get-OfficeWordHyperlink -Path .\Report.docx
 ```
 
 Returns hyperlinks found in the document.

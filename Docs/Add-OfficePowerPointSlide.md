@@ -25,20 +25,20 @@ Add-OfficePowerPointSlide [[-Content] <scriptblock>] -LayoutType <SlideLayoutVal
 ```
 
 ## DESCRIPTION
-Adds a new slide to a PowerPoint presentation.
+Creates a slide using OfficeIMO master/layout indexes and can execute nested DSL content.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$ppt = New-OfficePowerPoint -FilePath .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt
+PS> $ppt = New-OfficePowerPoint -FilePath .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt
 ```
 
 Creates a deck and appends a new slide at the end.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } }
+PS> New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } }
 ```
 
 Creates a slide and sets the title using DSL aliases.

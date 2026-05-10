@@ -26,7 +26,7 @@ Sets the page orientation on a worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelOrientation -Orientation Landscape }
+PS> ExcelSheet 'Data' { Set-OfficeExcelOrientation -Orientation Landscape }
 ```
 
 Configures the sheet to print in landscape.

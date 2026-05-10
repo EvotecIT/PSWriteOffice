@@ -26,7 +26,7 @@ Gets defined names (named ranges) from an Excel workbook.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeExcelNamedRange -Path .\report.xlsx
+PS> Get-OfficeExcelNamedRange -Path .\report.xlsx
 ```
 
 Returns workbook-level named ranges.

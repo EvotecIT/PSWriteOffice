@@ -36,14 +36,14 @@ Sets a hyperlink on a worksheet cell.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelHyperlink -Address 'A1' -Url 'https://example.org' -Display 'Example' }
+PS> ExcelSheet 'Data' { Set-OfficeExcelHyperlink -Address 'A1' -Url 'https://example.org' -Display 'Example' }
 ```
 
 Creates a styled hyperlink in A1.
 
 ### EXAMPLE 2
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelHyperlink -Row 2 -Column 1 -TargetSheet 'Summary' -TargetAddress 'A1' -Display 'Go to Summary' }
+PS> ExcelSheet 'Data' { Set-OfficeExcelHyperlink -Row 2 -Column 1 -TargetSheet 'Summary' -TargetAddress 'A1' -Display 'Go to Summary' }
 ```
 
 Links A2 to Summary!A1.

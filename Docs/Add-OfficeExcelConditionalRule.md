@@ -26,7 +26,7 @@ Adds a conditional formatting rule to the current worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelConditionalRule -Range 'C2:C100' -Operator GreaterThan -Formula1 '100' }
+PS> ExcelSheet 'Data' { Add-OfficeExcelConditionalRule -Range 'C2:C100' -Operator GreaterThan -Formula1 '100' }
 ```
 
 Applies a conditional rule to column C.

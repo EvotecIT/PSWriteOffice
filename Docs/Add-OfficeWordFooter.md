@@ -15,13 +15,13 @@ Add-OfficeWordFooter [[-Content] <scriptblock>] [-Type <HeaderFooterValues>] [<C
 ```
 
 ## DESCRIPTION
-Adds content to a section footer.
+Creates or reuses the requested footer part (default/first/even) and runs the DSL script block inside it.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordSection { Add-OfficeWordFooter { Add-OfficeWordPageNumber -IncludeTotalPages } }
+PS> Add-OfficeWordSection { Add-OfficeWordFooter { Add-OfficeWordPageNumber -IncludeTotalPages } }
 ```
 
 Inserts a footer displaying “Page X of Y”.

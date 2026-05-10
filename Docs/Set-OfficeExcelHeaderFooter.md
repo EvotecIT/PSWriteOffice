@@ -20,13 +20,13 @@ Set-OfficeExcelHeaderFooter -Document <ExcelDocument> [-Sheet <string>] [-SheetI
 ```
 
 ## DESCRIPTION
-Sets worksheet header and footer text and optional images.
+Uses OfficeIMO.Excel header/footer APIs and supports DSL or document usage.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelHeaderFooter -HeaderCenter 'Demo' -FooterRight 'Page &P of &N' }
+PS> ExcelSheet 'Data' { Set-OfficeExcelHeaderFooter -HeaderCenter 'Demo' -FooterRight 'Page &P of &N' }
 ```
 
 Applies header and footer text to the worksheet.

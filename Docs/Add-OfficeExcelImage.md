@@ -36,14 +36,14 @@ Adds an image anchored to a worksheet cell.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelImage -Address 'B2' -Path .\logo.png -WidthPixels 120 -HeightPixels 40 }
+PS> ExcelSheet 'Data' { Add-OfficeExcelImage -Address 'B2' -Path .\logo.png -WidthPixels 120 -HeightPixels 40 }
 ```
 
 Anchors the image to cell B2.
 
 ### EXAMPLE 2
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelImage -Row 1 -Column 1 -Url 'https://example.org/logo.png' }
+PS> ExcelSheet 'Data' { Add-OfficeExcelImage -Row 1 -Column 1 -Url 'https://example.org/logo.png' }
 ```
 
 Downloads and anchors the image to cell A1.

@@ -20,20 +20,20 @@ Get-OfficePowerPointSlideSummary [-Presentation <PowerPointPresentation>] [-Inde
 ```
 
 ## DESCRIPTION
-Reads high-level slide summaries from a presentation.
+Returns title, notes metadata, layout metadata, and content counts for each slide.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlideSummary -Presentation $ppt
+PS> Get-OfficePowerPointSlideSummary -Presentation $ppt
 ```
 
 Returns one summary object per slide.
 
 ### EXAMPLE 2
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointSlideSummary
+PS> Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointSlideSummary
 ```
 
 Returns the summary for the selected slide.
@@ -98,7 +98,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.PowerPoint.PowerPointSlideSummaryInfo`
+- `PSWriteOffice.Services.PowerPoint.PowerPointSlideSummaryInfo` — PowerShell-friendly summary of a PowerPoint slide.
 
 ## RELATED LINKS
 

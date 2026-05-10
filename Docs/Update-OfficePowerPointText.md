@@ -25,13 +25,13 @@ Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-Slide <Power
 ```
 
 ## DESCRIPTION
-Replaces text in a PowerPoint slide or presentation.
+Can replace text in text boxes, tables, and optionally notes using the OfficeIMO text replacement helpers.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
+PS> Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
 ```
 
 Replaces matching text throughout the presentation and notes.

@@ -26,7 +26,7 @@ Converts cells in a range into internal workbook links.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Summary' { Set-OfficeExcelInternalLinks -Range 'A2:A10' }
+PS> ExcelSheet 'Summary' { Set-OfficeExcelInternalLinks -Range 'A2:A10' }
 ```
 
 Turns each non-empty cell in A2:A10 into an internal link to the sheet with the same name.

@@ -15,14 +15,14 @@ Add-OfficeExcelTable -Data <Object[]> [-StartRow <int>] [-StartColumn <int>] [-N
 ```
 
 ## DESCRIPTION
-Writes tabular data to the current worksheet and formats it as an Excel table.
+Accepts objects (PSCustomObject, hashtables, POCOs) and converts them into an Excel table with optional styling.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })
-ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }
+PS> $data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })
+              ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }
 ```
 
 Writes two rows and formats them as a styled Excel table.

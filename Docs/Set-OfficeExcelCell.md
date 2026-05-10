@@ -20,13 +20,13 @@ Set-OfficeExcelCell [-Address <string>] [-Value <Object>] [-Formula <string>] [-
 ```
 
 ## DESCRIPTION
-Sets a cell value, formula, or number format within the current worksheet.
+Supports A1 addresses or row/column coordinates for DSL-style composition.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelCell -Address 'A1' -Value 'Region'; Set-OfficeExcelCell -Row 1 -Column 2 -Value 'Revenue' }
+PS> ExcelSheet 'Data' { Set-OfficeExcelCell -Address 'A1' -Value 'Region'; Set-OfficeExcelCell -Row 1 -Column 2 -Value 'Revenue' }
 ```
 
 Writes two headers in the first row.

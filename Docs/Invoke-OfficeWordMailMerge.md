@@ -21,7 +21,7 @@ Executes a simple mail merge against MERGEFIELD values in a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Invoke-OfficeWordMailMerge -Data @{ FirstName = 'John'; OrderId = 12345 }
+PS> Invoke-OfficeWordMailMerge -Data @{ FirstName = 'John'; OrderId = 12345 }
 ```
 
 Updates MERGEFIELD values in the active Word document.

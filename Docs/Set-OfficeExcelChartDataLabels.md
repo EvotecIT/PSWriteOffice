@@ -21,7 +21,7 @@ Configures data labels and optional styling for an Excel chart.
 
 ### EXAMPLE 1
 ```powershell
-PS>$chart | Set-OfficeExcelChartDataLabels -ShowValue $true -Position OutsideEnd
+PS> $chart | Set-OfficeExcelChartDataLabels -ShowValue $true -Position OutsideEnd
 ```
 
 Adds value labels to the chart and returns the chart for further formatting.

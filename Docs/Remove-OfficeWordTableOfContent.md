@@ -21,7 +21,7 @@ Removes the table of contents from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Remove-OfficeWordTableOfContent
+PS> Remove-OfficeWordTableOfContent
 ```
 
 Deletes the table of contents if one exists.

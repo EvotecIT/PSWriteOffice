@@ -21,7 +21,7 @@ Configures legend visibility and styling for an Excel chart.
 
 ### EXAMPLE 1
 ```powershell
-PS>$chart | Set-OfficeExcelChartLegend -Position Right
+PS> $chart | Set-OfficeExcelChartLegend -Position Right
 ```
 
 Shows the legend on the right side of the chart and returns the chart for chaining.

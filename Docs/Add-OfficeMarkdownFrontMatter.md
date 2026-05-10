@@ -26,7 +26,7 @@ Adds YAML front matter to a Markdown document.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownFrontMatter -Data @{ title = 'Weekly Report'; tags = @('ops','summary') }
+PS> MarkdownFrontMatter -Data @{ title = 'Weekly Report'; tags = @('ops','summary') }
 ```
 
 Sets the document header using the supplied key/value pairs.

@@ -21,7 +21,7 @@ Adds a date picker content control to the current paragraph.
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordDatePicker -Date (Get-Date) -Alias 'DueDate' }
+PS> Add-OfficeWordParagraph { Add-OfficeWordDatePicker -Date (Get-Date) -Alias 'DueDate' }
 ```
 
 Creates a date picker control with an initial value.

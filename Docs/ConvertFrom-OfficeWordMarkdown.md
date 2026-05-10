@@ -25,20 +25,20 @@ ConvertFrom-OfficeWordMarkdown -Document <MarkdownDoc> [-OutputPath <string>] [-
 ```
 
 ## DESCRIPTION
-Creates a Word document from Markdown.
+Returns a WordDocument or saves it to disk when -OutputPath is provided.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ConvertFrom-OfficeWordMarkdown -Markdown '# Hello' -OutputPath .\hello.docx
+PS> ConvertFrom-OfficeWordMarkdown -Markdown '# Hello' -OutputPath .\hello.docx
 ```
 
 Writes a Word document containing the supplied Markdown.
 
 ### EXAMPLE 2
 ```powershell
-PS>Get-OfficeMarkdown -Path .\README.md | ConvertFrom-OfficeWordMarkdown
+PS> Get-OfficeMarkdown -Path .\README.md | ConvertFrom-OfficeWordMarkdown
 ```
 
 Returns a Word document instance for further edits.

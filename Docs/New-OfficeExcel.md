@@ -15,13 +15,13 @@ New-OfficeExcel [-FilePath] <string> [[-Content] <scriptblock>] [-AutoSave] [-No
 ```
 
 ## DESCRIPTION
-Creates a new Excel workbook using the DSL.
+Runs the provided script block inside an ExcelSheet/ExcelCell DSL context and saves the file.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>New-OfficeExcel -Path .\report.xlsx { ExcelSheet 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }
+PS> New-OfficeExcel -Path .\report.xlsx { ExcelSheet 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }
 ```
 
 Creates report.xlsx and writes “Region” into cell A1 on the Data worksheet.

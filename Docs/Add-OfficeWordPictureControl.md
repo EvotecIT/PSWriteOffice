@@ -21,7 +21,7 @@ Adds a picture content control to the current paragraph.
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordPictureControl -Path .\logo.png -Width 96 -Height 32 }
+PS> Add-OfficeWordParagraph { Add-OfficeWordPictureControl -Path .\logo.png -Width 96 -Height 32 }
 ```
 
 Embeds an image inside a picture content control.

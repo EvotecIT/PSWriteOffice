@@ -26,7 +26,7 @@ Adds an icon set conditional format to a range.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelConditionalIconSet -Range 'E2:E50' -IconSet ThreeTrafficLights1 }
+PS> ExcelSheet 'Data' { Add-OfficeExcelConditionalIconSet -Range 'E2:E50' -IconSet ThreeTrafficLights1 }
 ```
 
 Applies a traffic-light icon set.

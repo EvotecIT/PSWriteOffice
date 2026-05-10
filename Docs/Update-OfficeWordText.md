@@ -9,36 +9,36 @@ schema: 2.0.0
 Replaces text in a Word document.
 
 ## SYNTAX
-### Auto
+### Auto (Default)
 ```powershell
-Update-OfficeWordText [-OldValue] <string> [-NewValue] <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [<CommonParameters>]
+Update-OfficeWordText -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Update-OfficeWordText [-Document] <WordDocument> [-OldValue] <string> [-NewValue] <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [<CommonParameters>]
+Update-OfficeWordText -OldValue <string> -NewValue <string> [-Document <WordDocument>] [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Update-OfficeWordText [-InputPath] <string> [-OldValue] <string> [-NewValue] <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-Show] [<CommonParameters>]
+Update-OfficeWordText [-InputPath] <string> -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Replaces text in a Word document.
+Supports direct document objects, file paths, and the active DSL document. Hyperlink labels and metadata can be updated when requested.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25'
+PS> $doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25'
 ```
 
 Updates matching text in the loaded document and returns the number of replacements.
 
 ### EXAMPLE 2
 ```powershell
-PS>Update-OfficeWordText -Path .\Report.docx -OldValue 'old.example.com' -NewValue 'new.example.com' -IncludeHyperlinkUri
+PS> Update-OfficeWordText -Path .\Report.docx -OldValue 'old.example.com' -NewValue 'new.example.com' -IncludeHyperlinkUri
 ```
 
 Loads the document, updates matching hyperlink URLs, saves the file, and closes it.
@@ -50,14 +50,15 @@ Use case-sensitive matching.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: Auto, Document, Path
 Aliases: None
+Possible values: 
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Document
@@ -67,12 +68,13 @@ Document to update.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
+Possible values: 
 
-Required: True
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -IncludeHyperlinkAnchor
@@ -80,14 +82,15 @@ Also replace hyperlink anchors.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: Auto, Document, Path
 Aliases: None
+Possible values: 
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -IncludeHyperlinkText
@@ -95,14 +98,15 @@ Also replace hyperlink display text.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: Auto, Document, Path
 Aliases: None
+Possible values: 
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -IncludeHyperlinkTooltip
@@ -110,14 +114,15 @@ Also replace hyperlink tooltips.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: Auto, Document, Path
 Aliases: None
+Possible values: 
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -IncludeHyperlinkUri
@@ -125,14 +130,15 @@ Also replace hyperlink URIs.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: Auto, Document, Path
 Aliases: None
+Possible values: 
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -InputPath
@@ -142,6 +148,7 @@ Path to the .docx file to update in place.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
+Possible values: 
 
 Required: True
 Position: 0
@@ -155,14 +162,15 @@ Replacement text.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Auto, Document, Path
 Aliases: None
+Possible values: 
 
 Required: True
-Position: 1
+Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -OldValue
@@ -170,14 +178,15 @@ Text to find.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Auto, Document, Path
 Aliases: None
+Possible values: 
 
 Required: True
-Position: 0
+Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Show
@@ -187,12 +196,13 @@ Open the file after saving when using -Path.
 Type: SwitchParameter
 Parameter Sets: Path
 Aliases: None
+Possible values: 
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -208,5 +218,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## RELATED LINKS
 
-- [Find-OfficeWord](Find-OfficeWord.md)
+- None
 

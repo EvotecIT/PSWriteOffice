@@ -26,7 +26,7 @@ Shows or hides worksheet gridlines.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelGridlines -Hide }
+PS> ExcelSheet 'Data' { Set-OfficeExcelGridlines -Hide }
 ```
 
 Turns off gridlines for the sheet.

@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 0.3.0
+Help Version: 1.0.0
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -199,6 +199,9 @@ Adds or reuses a section inside the current Word document.
 ### [Add-OfficeWordTable](Add-OfficeWordTable.md)
 Creates a table from PowerShell objects.
 
+### [Add-OfficeWordTableCell](Add-OfficeWordTableCell.md)
+Enters a specific table cell and executes nested DSL content inside it.
+
 ### [Add-OfficeWordTableCondition](Add-OfficeWordTableCondition.md)
 Attaches conditional formatting logic to the current table.
 
@@ -218,7 +221,7 @@ Clears any AutoFilter on the current worksheet.
 Closes an Excel workbook and optionally saves it.
 
 ### [Close-OfficeWord](Close-OfficeWord.md)
-Closes a Word document, optionally saving it.
+Closes one or more tracked Word documents, optionally saving them.
 
 ### [ConvertFrom-OfficeWordHtml](ConvertFrom-OfficeWordHtml.md)
 Creates a Word document from HTML.
@@ -535,8 +538,9 @@ Replaces text in a PowerPoint slide or presentation.
 ### [Update-OfficeWordFields](Update-OfficeWordFields.md)
 Updates fields in a Word document.
 
+### [Update-OfficeWordTableOfContent](Update-OfficeWordTableOfContent.md)
+Updates the table of contents in a Word document.
+
 ### [Update-OfficeWordText](Update-OfficeWordText.md)
 Replaces text in a Word document.
 
-### [Update-OfficeWordTableOfContent](Update-OfficeWordTableOfContent.md)
-Updates the table of contents in a Word document.

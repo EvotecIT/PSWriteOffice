@@ -21,17 +21,17 @@ Sets layout placeholder text margins for a slide layout (points).
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficePowerPointLayoutPlaceholderTextMargins -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Left 12 -Top 8 -Right 12 -Bottom 8
+PS> Set-OfficePowerPointLayoutPlaceholderTextMargins -Presentation $ppt -Master 0 -Layout 1 -PlaceholderType Title -Left 12 -Top 8 -Right 12 -Bottom 8
 ```
 
 Updates the text margins on the layout placeholder.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx {
-$layout = Get-OfficePowerPointLayout | Select-Object -First 1
-Set-OfficePowerPointLayoutPlaceholderTextMargins -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Left 12 -Top 8 -Right 12 -Bottom 8
-}
+PS> New-OfficePowerPoint -Path .\deck.pptx {
+                $layout = Get-OfficePowerPointLayout | Select-Object -First 1
+                Set-OfficePowerPointLayoutPlaceholderTextMargins -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Left 12 -Top 8 -Right 12 -Bottom 8
+              }
 ```
 
 Uses the DSL context to resolve the presentation.

@@ -20,20 +20,20 @@ ConvertTo-OfficeWordHtml -Document <WordDocument> [-OutputPath <string>] [-FontF
 ```
 
 ## DESCRIPTION
-Converts a Word document to HTML.
+Returns the HTML string or saves it to a file when -OutputPath is specified.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$html = ConvertTo-OfficeWordHtml -Path .\report.docx
+PS> $html = ConvertTo-OfficeWordHtml -Path .\report.docx
 ```
 
 Loads the document and returns HTML markup.
 
 ### EXAMPLE 2
 ```powershell
-PS>ConvertTo-OfficeWordHtml -Path .\report.docx -OutputPath .\report.html -PassThru
+PS> ConvertTo-OfficeWordHtml -Path .\report.docx -OutputPath .\report.html -PassThru
 ```
 
 Writes report.html and returns the file info.

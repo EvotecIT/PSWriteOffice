@@ -26,7 +26,7 @@ Adds a whole-number data validation rule to a worksheet range.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelValidationWholeNumber -Range 'B2:B20' -Operator Between -Formula1 1 -Formula2 10 }
+PS> ExcelSheet 'Data' { Add-OfficeExcelValidationWholeNumber -Range 'B2:B20' -Operator Between -Formula1 1 -Formula2 10 }
 ```
 
 Ensures values in B2:B20 are between 1 and 10.

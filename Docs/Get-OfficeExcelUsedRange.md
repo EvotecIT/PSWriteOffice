@@ -20,13 +20,13 @@ Get-OfficeExcelUsedRange -Document <ExcelDocument> [-Sheet <string>] [-SheetInde
 ```
 
 ## DESCRIPTION
-Reads the used range from an Excel workbook.
+Returns rows as PSCustomObjects by default, with optional hashtable or DataTable output for scripting and interoperability.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet 'Data'
+PS> Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet 'Data'
 ```
 
 Reads the sheet's used range, treating the first row as headers.

@@ -25,20 +25,20 @@ ConvertTo-OfficeMarkdownHtml -Document <MarkdownDoc> [-OutputPath <string>] [-Do
 ```
 
 ## DESCRIPTION
-Converts Markdown content to HTML.
+Returns HTML text or saves it to a file when -OutputPath is specified.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$html = ConvertTo-OfficeMarkdownHtml -Path .\README.md
+PS> $html = ConvertTo-OfficeMarkdownHtml -Path .\README.md
 ```
 
 Returns the rendered HTML.
 
 ### EXAMPLE 2
 ```powershell
-PS>ConvertTo-OfficeMarkdownHtml -Path .\Report.md -DocumentMode -Title 'Weekly Report' -Style Clean -OutputPath .\Report.html -PassThru
+PS> ConvertTo-OfficeMarkdownHtml -Path .\Report.md -DocumentMode -Title 'Weekly Report' -Style Clean -OutputPath .\Report.html -PassThru
 ```
 
 Generates a full HTML file with title and CSS styling.

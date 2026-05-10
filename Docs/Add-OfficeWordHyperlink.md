@@ -36,7 +36,7 @@ Adds a hyperlink to the current Word paragraph.
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordHyperlink -Text 'Example' -Url 'https://example.org' -Styled }
+PS> Add-OfficeWordParagraph { Add-OfficeWordHyperlink -Text 'Example' -Url 'https://example.org' -Styled }
 ```
 
 Creates a styled external hyperlink in the active paragraph.

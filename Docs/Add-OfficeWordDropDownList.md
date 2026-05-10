@@ -21,7 +21,7 @@ Adds a dropdown list content control to the current paragraph.
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordDropDownList -Items 'Low','Medium','High' -Alias 'Priority' }
+PS> Add-OfficeWordParagraph { Add-OfficeWordDropDownList -Items 'Low','Medium','High' -Alias 'Priority' }
 ```
 
 Creates a dropdown list control with the supplied items.

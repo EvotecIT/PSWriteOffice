@@ -20,13 +20,13 @@ Add-OfficeWordWatermark [-ImagePath] <string> [-HorizontalOffset <double>] [-Ver
 ```
 
 ## DESCRIPTION
-Adds a watermark to the current section or header.
+Supports text or image watermarks using OfficeIMO.Word.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordWatermark -Text 'CONFIDENTIAL'
+PS> Add-OfficeWordWatermark -Text 'CONFIDENTIAL'
 ```
 
 Inserts a text watermark into the current section.

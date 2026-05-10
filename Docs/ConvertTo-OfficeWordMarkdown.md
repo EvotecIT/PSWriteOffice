@@ -20,20 +20,20 @@ ConvertTo-OfficeWordMarkdown -Document <WordDocument> [-OutputPath <string>] [-F
 ```
 
 ## DESCRIPTION
-Converts a Word document to Markdown.
+Returns Markdown text or saves it to a file when -OutputPath is specified.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$markdown = ConvertTo-OfficeWordMarkdown -Path .\report.docx
+PS> $markdown = ConvertTo-OfficeWordMarkdown -Path .\report.docx
 ```
 
 Loads the document and returns Markdown markup.
 
 ### EXAMPLE 2
 ```powershell
-PS>ConvertTo-OfficeWordMarkdown -Path .\report.docx -OutputPath .\report.md -PassThru
+PS> ConvertTo-OfficeWordMarkdown -Path .\report.docx -OutputPath .\report.md -PassThru
 ```
 
 Writes report.md and returns the file info.

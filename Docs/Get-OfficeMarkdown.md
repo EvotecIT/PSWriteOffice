@@ -20,20 +20,20 @@ Get-OfficeMarkdown -Text <string> [-Options <MarkdownReaderOptions>] [-Profile <
 ```
 
 ## DESCRIPTION
-Parses Markdown text or files into a Markdown document model.
+Returns an MarkdownDoc for inspection or further rendering.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$md = Get-OfficeMarkdown -Path .\README.md
+PS> $md = Get-OfficeMarkdown -Path .\README.md
 ```
 
 Loads the file into a Markdown document object.
 
 ### EXAMPLE 2
 ```powershell
-PS>$md = Get-OfficeMarkdown -Text '# Title`n`nBody text'
+PS> $md = Get-OfficeMarkdown -Text '# Title`n`nBody text'
 ```
 
 Parses Markdown text directly into a document model.

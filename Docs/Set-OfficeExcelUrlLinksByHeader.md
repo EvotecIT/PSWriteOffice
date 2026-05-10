@@ -46,7 +46,7 @@ Converts cells under a header into external URL hyperlinks.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -TableName 'Links' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }
+PS> ExcelSheet 'Summary' { Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -TableName 'Links' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }
 ```
 
 Uses the RFC column values to create external hyperlinks.

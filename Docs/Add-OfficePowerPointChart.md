@@ -25,20 +25,20 @@ Add-OfficePowerPointChart -Data <Object[]> -XProperty <string> -YProperty <strin
 ```
 
 ## DESCRIPTION
-Adds a chart to a PowerPoint slide.
+Supports default chart data or object-based category/series mappings for standard and scatter charts.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
+PS> Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
 ```
 
 Creates a clustered column chart using Month for categories and Sales/Profit as series.
 
 ### EXAMPLE 2
 ```powershell
-PS>Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
+PS> Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
 ```
 
 Creates a scatter chart using Quarter on the X axis and Revenue on the Y axis.

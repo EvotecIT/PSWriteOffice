@@ -15,13 +15,13 @@ Add-OfficePowerPointImage [-Path] <string> [-Slide <PowerPointSlide>] [-X <doubl
 ```
 
 ## DESCRIPTION
-Adds an image to a PowerPoint slide.
+Places the picture at the requested coordinates using point measurements.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointImage -Slide $slide -Path .\logo.png -X 40 -Y 60 -Width 200 -Height 120
+PS> Add-OfficePowerPointImage -Slide $slide -Path .\logo.png -X 40 -Y 60 -Width 200 -Height 120
 ```
 
 Adds a picture to the slide.

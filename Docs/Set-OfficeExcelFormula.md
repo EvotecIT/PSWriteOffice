@@ -20,13 +20,13 @@ Set-OfficeExcelFormula -Formula <string> [-Address <string>] [<CommonParameters>
 ```
 
 ## DESCRIPTION
-Sets a formula in a worksheet cell.
+Supports A1 addresses or row/column coordinates in the Excel DSL.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelFormula -Address 'C2' -Formula 'SUM(A2:B2)' }
+PS> ExcelSheet 'Data' { Set-OfficeExcelFormula -Address 'C2' -Formula 'SUM(A2:B2)' }
 ```
 
 Stores the formula in cell C2.

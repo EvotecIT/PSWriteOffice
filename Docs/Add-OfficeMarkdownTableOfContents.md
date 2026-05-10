@@ -26,7 +26,7 @@ Adds a Markdown table of contents placeholder.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop
+PS> MarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop
 ```
 
 Inserts a generated table of contents for headings in the document.

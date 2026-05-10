@@ -26,7 +26,7 @@ Gets date picker content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordDatePicker -Path .\Report.docx
+PS> Get-OfficeWordDatePicker -Path .\Report.docx
 ```
 
 Returns all date picker controls in the document.

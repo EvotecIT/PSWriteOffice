@@ -26,7 +26,7 @@ Adds a Markdown callout block.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownCallout -Kind 'note' -Title 'Remember' -Body 'Update the metrics.'
+PS> MarkdownCallout -Kind 'note' -Title 'Remember' -Body 'Update the metrics.'
 ```
 
 Appends a callout block to the document.

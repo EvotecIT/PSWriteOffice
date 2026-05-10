@@ -11,34 +11,25 @@ Enters a specific table cell and executes nested DSL content inside it.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeWordTableCell [-Row] <int> [-Column] <int> [[-Content] <scriptblock>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTableCell [[-Content] <scriptblock>] -Row <int> -Column <int> [-PassThru] [<CommonParameters>]
 ```
 
 ### Table
 ```powershell
-Add-OfficeWordTableCell [-Table] <WordTable> [-Row] <int> [-Column] <int> [[-Content] <scriptblock>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTableCell [[-Content] <scriptblock>] -Table <WordTable> -Row <int> -Column <int> [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Enters a specific table cell and executes nested DSL content inside it.
+Use this to add paragraphs, lists, images, or nested tables inside a cell selected by row and column.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>WordTable -Data $Rows {
-    WordTableCell -Row 1 -Column 0 {
-        WordParagraph { WordText 'Details' }
-        WordList {
-            WordListItem 'One'
-            WordListItem 'Two'
-        }
-    }
-}
+PS> WordTable -Data $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }
 ```
 
-Targets the data cell at row 1, column 0 and writes nested content inside it.
-You can mix paragraphs, images, lists, and nested tables inside the same cell.
+Targets the data cell at row 1, column 0 and writes text inside it.
 
 ## PARAMETERS
 
@@ -53,9 +44,9 @@ Possible values:
 
 Required: True
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Content
@@ -87,7 +78,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Row
@@ -101,9 +92,9 @@ Possible values:
 
 Required: True
 Position: named
-Default value: 0
+Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Table
@@ -119,7 +110,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### CommonParameters
@@ -136,3 +127,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
+

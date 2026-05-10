@@ -20,13 +20,13 @@ Add-OfficeWordParagraph [[-Content] <scriptblock>] [-Text <string>] [-Alignment 
 ```
 
 ## DESCRIPTION
-Adds a paragraph to the current section/header/footer context.
+Acts as the primary DSL container for inline content such as text runs, bold segments, and images.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Hello '; Add-OfficeWordText -Text 'World' -Bold }
+PS> Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Hello '; Add-OfficeWordText -Text 'World' -Bold }
 ```
 
 Outputs “Hello World” with the second word bolded.

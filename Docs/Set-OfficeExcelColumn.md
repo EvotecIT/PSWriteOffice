@@ -21,7 +21,7 @@ Writes values or formatting to a column in the current worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelColumn -Column 1 -Values 'North','South' -AutoFit }
+PS> ExcelSheet 'Data' { Set-OfficeExcelColumn -Column 1 -Values 'North','South' -AutoFit }
 ```
 
 Writes values into column A and adjusts the width.

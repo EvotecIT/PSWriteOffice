@@ -25,20 +25,20 @@ Get-OfficePowerPointLayoutBox -RowCount <int> [-Presentation <PowerPointPresenta
 ```
 
 ## DESCRIPTION
-Computes reusable layout boxes for a presentation.
+Returns the content box for a slide or equal column/row boxes derived from the current slide size.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointLayoutBox -Presentation $ppt -MarginCm 1.5
+PS> Get-OfficePowerPointLayoutBox -Presentation $ppt -MarginCm 1.5
 ```
 
 Returns a single layout box representing the usable slide area.
 
 ### EXAMPLE 2
 ```powershell
-PS>Get-OfficePowerPointLayoutBox -Presentation $ppt -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0
+PS> Get-OfficePowerPointLayoutBox -Presentation $ppt -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0
 ```
 
 Returns one layout box per column.

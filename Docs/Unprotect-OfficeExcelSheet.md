@@ -26,7 +26,7 @@ Removes worksheet protection.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Unprotect-OfficeExcelSheet }
+PS> ExcelSheet 'Data' { Unprotect-OfficeExcelSheet }
 ```
 
 Removes worksheet protection.

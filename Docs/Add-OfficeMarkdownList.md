@@ -26,7 +26,7 @@ Adds a Markdown list.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownList -Items 'Alpha','Beta','Gamma'
+PS> MarkdownList -Items 'Alpha','Beta','Gamma'
 ```
 
 Appends an unordered list to the document.

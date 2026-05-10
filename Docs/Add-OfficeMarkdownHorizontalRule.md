@@ -26,7 +26,7 @@ Adds a Markdown horizontal rule.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownHorizontalRule
+PS> MarkdownHorizontalRule
 ```
 
 Appends a horizontal rule to the document.

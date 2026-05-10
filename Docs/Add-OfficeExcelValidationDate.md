@@ -26,7 +26,7 @@ Adds a date data validation rule to a worksheet range.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelValidationDate -Range 'C2:C20' -Operator GreaterThan -Formula1 (Get-Date '2024-01-01') }
+PS> ExcelSheet 'Data' { Add-OfficeExcelValidationDate -Range 'C2:C20' -Operator GreaterThan -Formula1 (Get-Date '2024-01-01') }
 ```
 
 Ensures dates in C2:C20 are after 2024-01-01.

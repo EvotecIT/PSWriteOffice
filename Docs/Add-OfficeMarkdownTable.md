@@ -26,15 +26,15 @@ Adds a Markdown table from objects.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownTable -InputObject $rows
+PS> MarkdownTable -InputObject $rows
 ```
 
 Appends a Markdown table using the supplied objects.
 
 ### EXAMPLE 2
 ```powershell
-PS>$doc = New-OfficeMarkdown -Path .\Report.md -NoSave -PassThru
-$doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObject $details
+PS> $doc = New-OfficeMarkdown -Path .\Report.md -NoSave -PassThru
+              $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObject $details
 ```
 
 Creates two tables in sequence within the same Markdown document.

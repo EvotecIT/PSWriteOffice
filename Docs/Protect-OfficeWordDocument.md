@@ -15,13 +15,13 @@ Protect-OfficeWordDocument [-Password] <string> [-Document <WordDocument>] [-Pro
 ```
 
 ## DESCRIPTION
-Protects a Word document with a password.
+Sets the protection password and the protection type (default: ReadOnly).
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Protect-OfficeWordDocument -Password 'secret'
+PS> Protect-OfficeWordDocument -Password 'secret'
 ```
 
 Applies read-only protection to the current document.

@@ -15,13 +15,13 @@ Add-OfficeWordText [-Text] <string[]> [-Bold] [-Italic] [-Underline <UnderlineVa
 ```
 
 ## DESCRIPTION
-Adds inline text to the current paragraph.
+Supports bold/italic/underline and color tweaks for quick DSL composition.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Important: ' -Bold }
+PS> Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Important: ' -Bold }
 ```
 
 Writes “Important:” with bold formatting.

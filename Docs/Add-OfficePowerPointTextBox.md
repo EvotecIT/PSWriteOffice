@@ -15,13 +15,13 @@ Add-OfficePowerPointTextBox -Text <string> [-Slide <PowerPointSlide>] [-X <int>]
 ```
 
 ## DESCRIPTION
-Adds a text box to a slide.
+Creates a rectangle at the requested coordinates and assigns the supplied text.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointTextBox -Slide $slide -Text 'Quarterly Overview' -X 80 -Y 150
+PS> Add-OfficePowerPointTextBox -Slide $slide -Text 'Quarterly Overview' -X 80 -Y 150
 ```
 
 Places a text box mid-slide with the provided caption.

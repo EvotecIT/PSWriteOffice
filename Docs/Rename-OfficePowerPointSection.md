@@ -21,7 +21,7 @@ Renames a PowerPoint section.
 
 ### EXAMPLE 1
 ```powershell
-PS>Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'
+PS> Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'
 ```
 
 Renames the first matching section from Results to Deep Dive.

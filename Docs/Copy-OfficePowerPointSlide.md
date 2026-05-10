@@ -15,13 +15,13 @@ Copy-OfficePowerPointSlide -Index <int> [-Presentation <PowerPointPresentation>]
 ```
 
 ## DESCRIPTION
-Copies an existing slide within a PowerPoint presentation.
+Uses OfficeIMO slide duplication so charts, notes, and shapes are preserved.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Copy-OfficePowerPointSlide -Presentation $ppt -Index 0
+PS> Copy-OfficePowerPointSlide -Presentation $ppt -Index 0
 ```
 
 Creates a duplicate of slide 1 and inserts it at position 2.

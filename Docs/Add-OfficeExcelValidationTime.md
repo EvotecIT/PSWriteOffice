@@ -26,7 +26,7 @@ Adds a time data validation rule to a worksheet range.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelValidationTime -Range 'D2:D20' -Operator LessThan -Formula1 ([TimeSpan]::FromHours(17)) }
+PS> ExcelSheet 'Data' { Add-OfficeExcelValidationTime -Range 'D2:D20' -Operator LessThan -Formula1 ([TimeSpan]::FromHours(17)) }
 ```
 
 Ensures times in D2:D20 are before 17:00.

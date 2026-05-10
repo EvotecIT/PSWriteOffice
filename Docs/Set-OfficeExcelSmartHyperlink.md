@@ -26,7 +26,7 @@ Sets an external hyperlink using a smart display strategy.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208' }
+PS> ExcelSheet 'Data' { Set-OfficeExcelSmartHyperlink -Address 'A2' -Url 'https://datatracker.ietf.org/doc/html/rfc7208' }
 ```
 
 Creates a hyperlink that displays RFC 7208 instead of the full URL.

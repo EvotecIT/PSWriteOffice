@@ -26,7 +26,7 @@ Adds sparklines to a worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelSparkline -DataRange 'B2:M2' -LocationRange 'N2' }
+PS> ExcelSheet 'Data' { Add-OfficeExcelSparkline -DataRange 'B2:M2' -LocationRange 'N2' }
 ```
 
 Creates a line sparkline in N2 using B2:M2.

@@ -21,14 +21,14 @@ Lists slide layouts available in a presentation.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointLayout -Presentation $ppt
+PS> Get-OfficePowerPointLayout -Presentation $ppt
 ```
 
 Returns layout metadata including name, type, and index.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointLayout | Select-Object -First 3 }
+PS> New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointLayout | Select-Object -First 3 }
 ```
 
 Uses the current DSL presentation context.

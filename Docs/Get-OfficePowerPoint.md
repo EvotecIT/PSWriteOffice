@@ -15,13 +15,13 @@ Get-OfficePowerPoint -FilePath <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Loads an existing PowerPoint presentation.
+Returns an OfficeIMO PowerPointPresentation for downstream slide operations.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$ppt = Get-OfficePowerPoint -FilePath .\Quarterly.pptx
+PS> $ppt = Get-OfficePowerPoint -FilePath .\Quarterly.pptx
 ```
 
 Reads Quarterly.pptx and exposes the presentation object.

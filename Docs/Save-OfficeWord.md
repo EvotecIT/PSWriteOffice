@@ -15,13 +15,13 @@ Save-OfficeWord [-Document] <WordDocument> [-Path <string>] [-Show] [-PassThru] 
 ```
 
 ## DESCRIPTION
-Saves a Word document without disposing it.
+Use Close-OfficeWord -Save when you want to save and dispose the document.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$doc | Save-OfficeWord
+PS> $doc | Save-OfficeWord
 ```
 
 Persists pending changes and keeps the document open.

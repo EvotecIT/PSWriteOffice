@@ -15,13 +15,13 @@ Get-OfficeExcelData [[-Path] <string>] [-Document <ExcelDocument>] [-Sheet <stri
 ```
 
 ## DESCRIPTION
-Reads worksheet data as dictionaries or PSCustomObjects.
+Uses the first row as headers and materializes rows via the OfficeIMO Excel fluent reader.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeExcelData -Path .\report.xlsx -Sheet 'Summary' | Format-Table
+PS> Get-OfficeExcelData -Path .\report.xlsx -Sheet 'Summary' | Format-Table
 ```
 
 Returns each row as a PSCustomObject with properties mapped from the header row.

@@ -15,13 +15,13 @@ Update-OfficeWordFields [-Document <WordDocument>] [-PassThru] [<CommonParameter
 ```
 
 ## DESCRIPTION
-Updates fields in a Word document.
+Refreshes page number fields and queues table-of-contents updates.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Update-OfficeWordFields
+PS> Update-OfficeWordFields
 ```
 
 Updates PAGE/NUMPAGES fields and marks TOC fields as dirty.

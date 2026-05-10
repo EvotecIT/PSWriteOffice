@@ -15,25 +15,25 @@ New-OfficeMarkdown [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru]
 ```
 
 ## DESCRIPTION
-Creates a Markdown document using a DSL scriptblock.
+Runs the scriptblock against a Markdown document and saves it to disk unless -NoSave is specified.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>New-OfficeMarkdown -Path .\README.md { MarkdownHeading -Level 1 -Text 'Report'; MarkdownTable -InputObject $data }
+PS> New-OfficeMarkdown -Path .\README.md { MarkdownHeading -Level 1 -Text 'Report'; MarkdownTable -InputObject $data }
 ```
 
 Creates a README file with a heading and table content.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficeMarkdown -Path .\Report.md {
-MarkdownHeading -Level 1 -Text 'Summary'
-MarkdownTable -InputObject $summary
-MarkdownHeading -Level 2 -Text 'Details'
-MarkdownTable -InputObject $details
-}
+PS> New-OfficeMarkdown -Path .\Report.md {
+                MarkdownHeading -Level 1 -Text 'Summary'
+                MarkdownTable -InputObject $summary
+                MarkdownHeading -Level 2 -Text 'Details'
+                MarkdownTable -InputObject $details
+              }
 ```
 
 Creates a report with two tables separated by headings.

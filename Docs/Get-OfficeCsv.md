@@ -20,27 +20,27 @@ Get-OfficeCsv -Text <string> [-HasHeaderRow <bool>] [-Delimiter <char>] [-TrimWh
 ```
 
 ## DESCRIPTION
-Loads a CSV document from disk or parses CSV text.
+Returns an CsvDocument for inspection or further transformations.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$csv = Get-OfficeCsv -Path .\data.csv
+PS> $csv = Get-OfficeCsv -Path .\data.csv
 ```
 
 Loads the CSV file into an OfficeIMO CsvDocument.
 
 ### EXAMPLE 2
 ```powershell
-PS>$csv = Get-OfficeCsv -Text \"Name;Total`nAlpha;10\" -Delimiter ';'
+PS> $csv = Get-OfficeCsv -Text \"Name;Total`nAlpha;10\" -Delimiter ';'
 ```
 
 Parses a semicolon-delimited CSV string into a document.
 
 ### EXAMPLE 3
 ```powershell
-PS>$csv = Get-OfficeCsv -Path .\data.csv; $csv.Header
+PS> $csv = Get-OfficeCsv -Path .\data.csv; $csv.Header
 ```
 
 Returns the header list so you can verify the expected column names.

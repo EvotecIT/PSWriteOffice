@@ -26,7 +26,7 @@ Gets structured content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordContentControl -Path .\Report.docx
+PS> Get-OfficeWordContentControl -Path .\Report.docx
 ```
 
 Returns all structured document tags in the document.

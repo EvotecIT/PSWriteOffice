@@ -26,14 +26,14 @@ Sets one or more PowerPoint theme colors.
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficePowerPointThemeColor -Presentation $ppt -Color Accent1 -Value '#C00000'
+PS> Set-OfficePowerPointThemeColor -Presentation $ppt -Color Accent1 -Value '#C00000'
 ```
 
 Updates Accent1 on the default master.
 
 ### EXAMPLE 2
 ```powershell
-PS>Set-OfficePowerPointThemeColor -Presentation $ppt -Colors @{ Accent1 = '#C00000'; Accent2 = '#00B0F0' } -AllMasters
+PS> Set-OfficePowerPointThemeColor -Presentation $ppt -Colors @{ Accent1 = '#C00000'; Accent2 = '#00B0F0' } -AllMasters
 ```
 
 Applies multiple theme colors to every master in the presentation.

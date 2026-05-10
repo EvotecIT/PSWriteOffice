@@ -15,13 +15,13 @@ Add-OfficeExcelSheet [[-Name] <string>] [[-Content] <scriptblock>] [-ValidationM
 ```
 
 ## DESCRIPTION
-Adds or reuses a worksheet within the current Excel DSL scope.
+Creates the sheet when missing, pushes it onto the DSL stack, and executes the nested script block.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>New-OfficeExcel -Path .\report.xlsx { Add-OfficeExcelSheet -Name 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }
+PS> New-OfficeExcel -Path .\report.xlsx { Add-OfficeExcelSheet -Name 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }
 ```
 
 Creates a workbook with a worksheet named Data and writes the header “Region”.

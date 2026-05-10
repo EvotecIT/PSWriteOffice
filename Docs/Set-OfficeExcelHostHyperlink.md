@@ -26,7 +26,7 @@ Sets an external hyperlink that displays only the URL host.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelHostHyperlink -Address 'B2' -Url 'https://learn.microsoft.com/office/open-xml/' }
+PS> ExcelSheet 'Data' { Set-OfficeExcelHostHyperlink -Address 'B2' -Url 'https://learn.microsoft.com/office/open-xml/' }
 ```
 
 Creates a hyperlink that displays learn.microsoft.com.

@@ -15,13 +15,13 @@ Remove-OfficePowerPointSlide -Presentation <PowerPointPresentation> -Index <int>
 ```
 
 ## DESCRIPTION
-Removes a slide by index.
+Supports -WhatIf/-Confirm thanks to SupportsShouldProcess.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Remove-OfficePowerPointSlide -Presentation $ppt -Index 0
+PS> Remove-OfficePowerPointSlide -Presentation $ppt -Index 0
 ```
 
 Removes slide 1 from the deck.

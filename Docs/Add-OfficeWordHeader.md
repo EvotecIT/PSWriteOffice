@@ -15,13 +15,13 @@ Add-OfficeWordHeader [[-Content] <scriptblock>] [-Type <HeaderFooterValues>] [<C
 ```
 
 ## DESCRIPTION
-Adds content to a section header.
+Ensures the requested header part (default/first/even) exists and executes the DSL scriptblock within it.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordSection { Add-OfficeWordHeader { Add-OfficeWordParagraph -Text 'Confidential' -Style Heading3 } }
+PS> Add-OfficeWordSection { Add-OfficeWordHeader { Add-OfficeWordParagraph -Text 'Confidential' -Style Heading3 } }
 ```
 
 Creates a section header that prints “Confidential”.

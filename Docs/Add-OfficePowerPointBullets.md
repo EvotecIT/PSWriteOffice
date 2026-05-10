@@ -15,13 +15,13 @@ Add-OfficePowerPointBullets [-Bullets] <string[]> [-Slide <PowerPointSlide>] [-X
 ```
 
 ## DESCRIPTION
-Adds a bulleted list to a PowerPoint slide.
+Creates a textbox and populates it with bullet paragraphs.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 60 -Y 120 -Width 400 -Height 200
+PS> Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 60 -Y 120 -Width 400 -Height 200
 ```
 
 Creates a bullet list textbox.

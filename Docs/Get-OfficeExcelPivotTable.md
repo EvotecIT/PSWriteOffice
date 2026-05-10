@@ -26,7 +26,7 @@ Gets pivot tables defined in a workbook.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeExcelPivotTable -Path .\report.xlsx
+PS> Get-OfficeExcelPivotTable -Path .\report.xlsx
 ```
 
 Returns pivot table metadata (name, sheet, source range).

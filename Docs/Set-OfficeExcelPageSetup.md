@@ -26,7 +26,7 @@ Configures page setup options on a worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelPageSetup -FitToWidth 1 -FitToHeight 0 }
+PS> ExcelSheet 'Data' { Set-OfficeExcelPageSetup -FitToWidth 1 -FitToHeight 0 }
 ```
 
 Fits the sheet to one page wide and unlimited height.

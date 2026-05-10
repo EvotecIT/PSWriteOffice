@@ -20,31 +20,31 @@ ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-IncludeHeader 
 ```
 
 ## DESCRIPTION
-Converts objects or a CSV document into CSV text or a file.
+By default returns CSV text; use -OutputPath to save to disk.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$csv = $data | ConvertTo-OfficeCsv
+PS> $csv = $data | ConvertTo-OfficeCsv
 ```
 
 Generates CSV text from the input objects.
 
 ### EXAMPLE 2
 ```powershell
-PS>$rows = @(
-[ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
-[ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
-)
-$rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'
+PS> $rows = @(
+                [ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
+                [ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
+              )
+              $rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'
 ```
 
 Uses ordered dictionaries to enforce column order and a custom delimiter.
 
 ### EXAMPLE 3
 ```powershell
-PS>$data | ConvertTo-OfficeCsv -IncludeHeader:$false -OutputPath .\noheader.csv
+PS> $data | ConvertTo-OfficeCsv -IncludeHeader:$false -OutputPath .\noheader.csv
 ```
 
 Writes rows only when a downstream system expects headerless CSV.

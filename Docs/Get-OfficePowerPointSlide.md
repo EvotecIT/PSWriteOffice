@@ -15,20 +15,20 @@ Get-OfficePowerPointSlide [-Presentation <PowerPointPresentation>] [-Index <int>
 ```
 
 ## DESCRIPTION
-Enumerates slides or retrieves a specific slide.
+Supports pipeline-friendly iteration over Slides or direct index selection.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt | ForEach-Object { $_.GetPlaceholder([DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title).Text }
+PS> Get-OfficePowerPointSlide -Presentation $ppt | ForEach-Object { $_.GetPlaceholder([DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title).Text }
 ```
 
 Streams each slide so you can read the title placeholder text.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointSlide | Select-Object -First 1 }
+PS> New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointSlide | Select-Object -First 1 }
 ```
 
 Uses the current DSL presentation context.

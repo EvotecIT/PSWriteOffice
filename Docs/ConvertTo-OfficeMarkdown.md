@@ -15,28 +15,28 @@ ConvertTo-OfficeMarkdown [-InputObject <Object>] [-DisableAutoAlign] [-PassThru]
 ```
 
 ## DESCRIPTION
-Converts objects into a Markdown table.
+Returns Markdown text by default; use -PassThru to emit a MarkdownDoc.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$markdown = $data | ConvertTo-OfficeMarkdown
+PS> $markdown = $data | ConvertTo-OfficeMarkdown
 ```
 
 Generates Markdown table text from the input objects.
 
 ### EXAMPLE 2
 ```powershell
-PS>$doc = $data | ConvertTo-OfficeMarkdown -PassThru
-$doc.P('Totals above'); $doc.ToMarkdown()
+PS> $doc = $data | ConvertTo-OfficeMarkdown -PassThru
+              $doc.P('Totals above'); $doc.ToMarkdown()
 ```
 
 Builds a table and appends more content using the MarkdownDoc API.
 
 ### EXAMPLE 3
 ```powershell
-PS>$markdown = $data | ConvertTo-OfficeMarkdown -DisableAutoAlign
+PS> $markdown = $data | ConvertTo-OfficeMarkdown -DisableAutoAlign
 ```
 
 Forces left-aligned columns instead of auto-aligned output.

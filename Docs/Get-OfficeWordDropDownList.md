@@ -26,7 +26,7 @@ Gets dropdown list content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordDropDownList -Path .\Report.docx
+PS> Get-OfficeWordDropDownList -Path .\Report.docx
 ```
 
 Returns all dropdown list controls in the document.

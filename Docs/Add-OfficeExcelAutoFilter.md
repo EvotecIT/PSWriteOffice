@@ -20,20 +20,20 @@ Add-OfficeExcelAutoFilter [-Range] <string> -Document <ExcelDocument> [-Sheet <s
 ```
 
 ## DESCRIPTION
-Adds an AutoFilter to the current worksheet.
+Optional filter criteria can be supplied per column index (0-based within the range).
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelAutoFilter -Range 'A1:D200' }
+PS> ExcelSheet 'Data' { Add-OfficeExcelAutoFilter -Range 'A1:D200' }
 ```
 
 Enables filter dropdowns on the range.
 
 ### EXAMPLE 2
 ```powershell
-PS>Add-OfficeExcelAutoFilter -Range 'A1:D200' -Criteria @{ 2 = 'Open','Hold' }
+PS> Add-OfficeExcelAutoFilter -Range 'A1:D200' -Criteria @{ 2 = 'Open','Hold' }
 ```
 
 Filters the third column (0-based within the range) to Open/Hold.

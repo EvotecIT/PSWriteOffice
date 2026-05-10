@@ -21,7 +21,7 @@ Writes a row of values to the current worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelRow -Row 2 -Values 'North', 1200 }
+PS> ExcelSheet 'Data' { Set-OfficeExcelRow -Row 2 -Values 'North', 1200 }
 ```
 
 Writes two values into row 2, columns A and B.

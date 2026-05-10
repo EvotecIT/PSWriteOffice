@@ -15,13 +15,13 @@ Add-OfficeWordSection [[-Content] <scriptblock>] [-BreakType <SectionMarkValues>
 ```
 
 ## DESCRIPTION
-Adds or reuses a section inside the current Word document.
+Provides the DSL entry point for section-level operations inside New-OfficeWord.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>New-OfficeWord -Path .\doc.docx { Add-OfficeWordSection { Add-OfficeWordParagraph -Text 'Hello' } }
+PS> New-OfficeWord -Path .\doc.docx { Add-OfficeWordSection { Add-OfficeWordParagraph -Text 'Hello' } }
 ```
 
 Creates a document and inserts a section that contains a single paragraph.

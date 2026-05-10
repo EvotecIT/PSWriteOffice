@@ -21,7 +21,7 @@ Saves an Excel workbook without disposing it.
 
 ### EXAMPLE 1
 ```powershell
-PS>$workbook | Save-OfficeExcel
+PS> $workbook | Save-OfficeExcel
 ```
 
 Writes pending changes to disk and keeps the workbook open.

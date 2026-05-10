@@ -26,7 +26,7 @@ Gets Excel tables defined in a workbook.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeExcelTable -Path .\report.xlsx
+PS> Get-OfficeExcelTable -Path .\report.xlsx
 ```
 
 Returns table metadata (name, range, sheet).

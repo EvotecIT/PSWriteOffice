@@ -26,7 +26,7 @@ Adds a decimal-number data validation rule to a worksheet range.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelValidationDecimal -Range 'B2:B20' -Operator Between -Formula1 0 -Formula2 1 }
+PS> ExcelSheet 'Data' { Add-OfficeExcelValidationDecimal -Range 'B2:B20' -Operator Between -Formula1 0 -Formula2 1 }
 ```
 
 Ensures values in B2:B20 are decimals between 0 and 1.

@@ -20,13 +20,13 @@ Invoke-OfficeExcelAutoFit -Document <ExcelDocument> [-Sheet <string>] [-SheetInd
 ```
 
 ## DESCRIPTION
-Automatically fits Excel row heights and/or column widths.
+Targets the current worksheet context or a worksheet on a supplied document.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Invoke-OfficeExcelAutoFit -Columns }
+PS> ExcelSheet 'Data' { Invoke-OfficeExcelAutoFit -Columns }
 ```
 
 Adjusts column widths for the active sheet.

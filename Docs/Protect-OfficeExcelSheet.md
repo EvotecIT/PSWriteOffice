@@ -26,7 +26,7 @@ Protects the current worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Protect-OfficeExcelSheet }
+PS> ExcelSheet 'Data' { Protect-OfficeExcelSheet }
 ```
 
 Enables worksheet protection.

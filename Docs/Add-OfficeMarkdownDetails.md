@@ -26,7 +26,7 @@ Adds a collapsible Markdown details block.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownDetails -Summary 'Implementation notes' { MarkdownParagraph -Text 'Hidden by default.' }
+PS> MarkdownDetails -Summary 'Implementation notes' { MarkdownParagraph -Text 'Hidden by default.' }
 ```
 
 Appends a details/summary block with nested Markdown content.

@@ -21,7 +21,7 @@ Sets text in a slide placeholder.
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'
+PS> Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'
 ```
 
 Updates the Title placeholder on the slide.

@@ -26,7 +26,7 @@ Gets picture content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordPictureControl -Path .\Report.docx
+PS> Get-OfficeWordPictureControl -Path .\Report.docx
 ```
 
 Returns all picture content controls in the document.

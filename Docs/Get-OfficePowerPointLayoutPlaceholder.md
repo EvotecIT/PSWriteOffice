@@ -21,14 +21,14 @@ Gets layout placeholder metadata for a slide.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointLayoutPlaceholder -Slide $slide
+PS> Get-OfficePowerPointLayoutPlaceholder -Slide $slide
 ```
 
 Returns the layout placeholder definitions for the slide.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { Get-OfficePowerPointLayoutPlaceholder } }
+PS> New-OfficePowerPoint -Path .\deck.pptx { PptSlide { Get-OfficePowerPointLayoutPlaceholder } }
 ```
 
 Uses the current slide context.

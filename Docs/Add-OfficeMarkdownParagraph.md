@@ -26,7 +26,7 @@ Adds a Markdown paragraph.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownParagraph -Text 'This report is generated automatically.'
+PS> MarkdownParagraph -Text 'This report is generated automatically.'
 ```
 
 Appends a paragraph to the current Markdown document.

@@ -26,7 +26,7 @@ Gets checkbox content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordCheckBox -Path .\Report.docx
+PS> Get-OfficeWordCheckBox -Path .\Report.docx
 ```
 
 Returns all checkbox content controls in the document.

@@ -21,7 +21,7 @@ Applies a built-in style and color preset to an Excel chart.
 
 ### EXAMPLE 1
 ```powershell
-PS>$chart | Set-OfficeExcelChartStyle
+PS> $chart | Set-OfficeExcelChartStyle
 ```
 
 Applies the default chart style and returns the chart for chaining.

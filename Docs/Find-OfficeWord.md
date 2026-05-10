@@ -30,13 +30,13 @@ Find-OfficeWord [-Pattern] <string> -Document <WordDocument> [-CaseSensitive] [-
 ```
 
 ## DESCRIPTION
-Finds text matches inside a Word document.
+Returns matching paragraphs or a WordFind result when using regex with -AsResult.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Find-OfficeWord -Path .\Report.docx -Text 'Quarter'
+PS> Find-OfficeWord -Path .\Report.docx -Text 'Quarter'
 ```
 
 Returns paragraphs that contain the search text.

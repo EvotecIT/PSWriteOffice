@@ -9,7 +9,7 @@ schema: 2.0.0
 Closes one or more tracked Word documents, optionally saving them.
 
 ## SYNTAX
-### Current
+### Current (Default)
 ```powershell
 Close-OfficeWord [-Current] [-Save] [-Path <string>] [-Show] [<CommonParameters>]
 ```
@@ -25,48 +25,32 @@ Close-OfficeWord -All [-Save] [-Show] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Closes one or more tracked Word documents, optionally saving them.
+Provides a cmdlet wrapper for WordDocument.Dispose/Save so scripts need not call .NET methods directly.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$doc = Get-OfficeWord -Path .\Report.docx; Close-OfficeWord -Document $doc
+PS> $doc = Get-OfficeWord -Path .\Report.docx; Close-OfficeWord -Document $doc
 ```
 
 Disposes the loaded document instance without saving changes.
 
 ### EXAMPLE 2
 ```powershell
-PS>Close-OfficeWord
+PS> Close-OfficeWord
 ```
 
-Closes the most recently tracked document when a document handle is not passed explicitly.
+Closes the current tracked document when a document handle is not passed explicitly.
 
 ### EXAMPLE 3
 ```powershell
-PS>Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Show
+PS> Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Show
 ```
 
 Saves updates to Report-final.docx, opens it, and disposes the document.
 
 ## PARAMETERS
-
-### -Document
-Word document to close.
-
-```yaml
-Type: WordDocument
-Parameter Sets: Document
-Aliases: None
-Possible values: 
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
-```
 
 ### -All
 Close all tracked documents for the current runspace.
@@ -77,7 +61,7 @@ Parameter Sets: All
 Aliases: None
 Possible values: 
 
-Required: False
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -97,6 +81,22 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Document
+Word document to close.
+
+```yaml
+Type: WordDocument
+Parameter Sets: Document
+Aliases: None
+Possible values: 
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -162,3 +162,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
+

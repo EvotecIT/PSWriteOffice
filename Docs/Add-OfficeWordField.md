@@ -15,13 +15,13 @@ Add-OfficeWordField [-Type] <WordFieldType> [-Format <WordFieldFormat>] [-Custom
 ```
 
 ## DESCRIPTION
-Adds a field to the current paragraph.
+Supports standard Word field codes such as Page, Date, or NumPages.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordField -Type Page }
+PS> Add-OfficeWordParagraph { Add-OfficeWordField -Type Page }
 ```
 
 Inserts a PAGE field into the paragraph.

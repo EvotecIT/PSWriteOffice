@@ -21,7 +21,7 @@ Adds a bookmark to the current paragraph.
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Intro'; Add-OfficeWordBookmark -Name 'Intro' }
+PS> Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Intro'; Add-OfficeWordBookmark -Name 'Intro' }
 ```
 
 Creates a bookmark named Intro on the paragraph.

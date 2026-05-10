@@ -20,20 +20,20 @@ ConvertFrom-OfficeWordHtml [-FilePath] <string> [-OutputPath <string>] [-FontFam
 ```
 
 ## DESCRIPTION
-Creates a Word document from HTML.
+Returns a WordDocument or saves it to disk when -OutputPath is provided.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ConvertFrom-OfficeWordHtml -Html '<h1>Hello</h1>' -OutputPath .\hello.docx
+PS> ConvertFrom-OfficeWordHtml -Html '<h1>Hello</h1>' -OutputPath .\hello.docx
 ```
 
 Writes a Word document containing the supplied HTML.
 
 ### EXAMPLE 2
 ```powershell
-PS>$doc = ConvertFrom-OfficeWordHtml -Path .\snippet.html
+PS> $doc = ConvertFrom-OfficeWordHtml -Path .\snippet.html
 ```
 
 Returns a Word document instance for further edits.

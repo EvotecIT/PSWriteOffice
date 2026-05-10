@@ -15,13 +15,13 @@ Add-OfficeWordImage [-Path] <string> [-Width <double>] [-Height <double>] [-Wrap
 ```
 
 ## DESCRIPTION
-Inserts an image into the current paragraph.
+Supports width/height overrides and wrapping options using the alias-friendly DSL.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordParagraph { Add-OfficeWordImage -Path .\logo.png -Width 96 -Height 32 }
+PS> Add-OfficeWordParagraph { Add-OfficeWordImage -Path .\logo.png -Width 96 -Height 32 }
 ```
 
 Embeds logo.png at the specified size.

@@ -20,13 +20,13 @@ Import-OfficePowerPointSlide -SourcePath <string> -SourceIndex <int> [-Presentat
 ```
 
 ## DESCRIPTION
-Imports a slide from another PowerPoint presentation.
+Can import from an open presentation or directly from a source file path.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Import-OfficePowerPointSlide -Presentation $target -SourcePath .\source.pptx -SourceIndex 0
+PS> Import-OfficePowerPointSlide -Presentation $target -SourcePath .\source.pptx -SourceIndex 0
 ```
 
 Copies the first slide from source.pptx into the target presentation.

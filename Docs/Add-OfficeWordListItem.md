@@ -15,13 +15,13 @@ Add-OfficeWordListItem [[-Text] <string>] [-Level <int>] [-PassThru] [<CommonPar
 ```
 
 ## DESCRIPTION
-Adds a single list item.
+Must be called within Add-OfficeWordList/WordList; supports nesting via -Level.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>WordList { Add-OfficeWordListItem -Text 'First task' }
+PS> WordList { Add-OfficeWordListItem -Text 'First task' }
 ```
 
 Creates a bullet with the text “First task”.

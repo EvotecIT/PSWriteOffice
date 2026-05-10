@@ -26,7 +26,7 @@ Updates the table of contents in a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Update-OfficeWordTableOfContent
+PS> Update-OfficeWordTableOfContent
 ```
 
 Marks TOC fields as dirty and updates the document settings.

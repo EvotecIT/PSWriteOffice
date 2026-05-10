@@ -26,14 +26,14 @@ Freezes panes on the current worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelFreeze -TopRows 1 }
+PS> ExcelSheet 'Data' { Set-OfficeExcelFreeze -TopRows 1 }
 ```
 
 Freezes the first row.
 
 ### EXAMPLE 2
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelFreeze -TopRows 1 -LeftColumns 1 }
+PS> ExcelSheet 'Data' { Set-OfficeExcelFreeze -TopRows 1 -LeftColumns 1 }
 ```
 
 Freezes row 1 and column A.

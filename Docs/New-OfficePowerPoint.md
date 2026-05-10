@@ -15,20 +15,20 @@ New-OfficePowerPoint [-FilePath] <string> [[-Content] <scriptblock>] [-Open] [-N
 ```
 
 ## DESCRIPTION
-Creates a PowerPoint presentation using the DSL.
+Initializes a presentation, runs the DSL script block, and optionally saves the deck.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$ppt = New-OfficePowerPoint -FilePath .\deck.pptx
+PS> $ppt = New-OfficePowerPoint -FilePath .\deck.pptx
 ```
 
 Creates deck.pptx and returns the live presentation object for further editing.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } } -Open
+PS> New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } } -Open
 ```
 
 Creates, saves, and opens a deck with one titled slide.

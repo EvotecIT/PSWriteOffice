@@ -26,7 +26,7 @@ Adds a two-color scale conditional format to a range.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelConditionalColorScale -Range 'B2:B50' -StartColor '#FF0000' -EndColor '#00FF00' }
+PS> ExcelSheet 'Data' { Add-OfficeExcelConditionalColorScale -Range 'B2:B50' -StartColor '#FF0000' -EndColor '#00FF00' }
 ```
 
 Applies a red-to-green scale to column B.

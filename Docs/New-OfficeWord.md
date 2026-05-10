@@ -15,13 +15,13 @@ New-OfficeWord [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru] [-O
 ```
 
 ## DESCRIPTION
-Creates a Word document using the DSL.
+Handles file creation, scriptblock execution, optional autosave, and emits the document path when -PassThru is used.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>New-OfficeWord -Path .\Report.docx { WordSection { WordParagraph 'Hello DSL' } } -Open
+PS> New-OfficeWord -Path .\Report.docx { WordSection { WordParagraph 'Hello DSL' } } -Open
 ```
 
 Builds a document, adds one paragraph, saves it to disk, and opens it.

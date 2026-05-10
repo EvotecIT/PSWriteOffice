@@ -21,7 +21,7 @@ Adds a table of contents to a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeWordTableOfContent
+PS> Add-OfficeWordTableOfContent
 ```
 
 Inserts a table of contents using the default template.

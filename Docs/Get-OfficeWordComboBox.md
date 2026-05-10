@@ -26,7 +26,7 @@ Gets combo box content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordComboBox -Path .\Report.docx
+PS> Get-OfficeWordComboBox -Path .\Report.docx
 ```
 
 Returns all combo box controls in the document.

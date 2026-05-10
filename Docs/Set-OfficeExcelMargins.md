@@ -26,14 +26,14 @@ Sets page margins on a worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelMargins -Preset Narrow }
+PS> ExcelSheet 'Data' { Set-OfficeExcelMargins -Preset Narrow }
 ```
 
 Applies the Narrow margin preset.
 
 ### EXAMPLE 2
 ```powershell
-PS>ExcelSheet 'Data' { Set-OfficeExcelMargins -Left 0.5 -Right 0.5 -Top 0.75 -Bottom 0.75 }
+PS> ExcelSheet 'Data' { Set-OfficeExcelMargins -Left 0.5 -Right 0.5 -Top 0.75 -Bottom 0.75 }
 ```
 
 Sets custom margins in inches.

@@ -26,7 +26,7 @@ Sets the background for a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficeWordBackground -Color '#f4f7fb'
+PS> Set-OfficeWordBackground -Color '#f4f7fb'
 ```
 
 Sets the document background to the provided hex color.

@@ -26,7 +26,7 @@ Adds a Markdown code block.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownCode -Language 'powershell' -Content 'Get-Process'
+PS> MarkdownCode -Language 'powershell' -Content 'Get-Process'
 ```
 
 Appends a fenced code block to the document.

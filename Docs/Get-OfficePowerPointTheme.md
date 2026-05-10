@@ -21,7 +21,7 @@ Gets theme information for a PowerPoint presentation master.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointTheme -Presentation $ppt
+PS> Get-OfficePowerPointTheme -Presentation $ppt
 ```
 
 Returns the theme name, theme colors, and configured fonts for master 0.
@@ -69,7 +69,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.PowerPoint.PowerPointThemeInfo`
+- `PSWriteOffice.Services.PowerPoint.PowerPointThemeInfo` — Describes a PowerPoint theme for a single slide master.
 
 ## RELATED LINKS
 

@@ -26,7 +26,7 @@ Adds a pivot table to a worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>Add-OfficeExcelPivotTable -SourceRange 'A1:D200' -DestinationCell 'F2' -RowField 'Region' -DataField 'Sales'
+PS> Add-OfficeExcelPivotTable -SourceRange 'A1:D200' -DestinationCell 'F2' -RowField 'Region' -DataField 'Sales'
 ```
 
 Creates a pivot table in F2 using Region as rows and Sales as the data field.

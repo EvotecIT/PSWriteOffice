@@ -26,7 +26,7 @@ Adds a Markdown task list.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownTaskList -Items 'Draft','Review','Ship' -Completed 1
+PS> MarkdownTaskList -Items 'Draft','Review','Ship' -Completed 1
 ```
 
 Appends an unordered task list and marks the selected items as completed.

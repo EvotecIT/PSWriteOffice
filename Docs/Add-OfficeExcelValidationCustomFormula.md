@@ -26,7 +26,7 @@ Adds a custom-formula data validation rule to a worksheet range.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelValidationCustomFormula -Range 'F2:F20' -Formula 'LEN(F2)>0' }
+PS> ExcelSheet 'Data' { Add-OfficeExcelValidationCustomFormula -Range 'F2:F20' -Formula 'LEN(F2)>0' }
 ```
 
 Ensures the validation formula evaluates to true.

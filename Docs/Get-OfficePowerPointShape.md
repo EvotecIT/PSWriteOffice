@@ -20,20 +20,20 @@ Get-OfficePowerPointShape [-Presentation <PowerPointPresentation>] [-Index <int>
 ```
 
 ## DESCRIPTION
-Reads shape summaries from a slide or presentation.
+Returns PowerShell-friendly metadata for text boxes, pictures, tables, charts, and auto shapes.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointShape
+PS> Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Get-OfficePowerPointShape
 ```
 
 Returns shape summaries for the selected slide.
 
 ### EXAMPLE 2
 ```powershell
-PS>Get-OfficePowerPointShape -Presentation $ppt -Index 0 -Kind Picture
+PS> Get-OfficePowerPointShape -Presentation $ppt -Index 0 -Kind Picture
 ```
 
 Filters the slide output to picture shapes only.
@@ -146,7 +146,7 @@ OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.PowerPoint.PowerPointShapeInfo`
+- `PSWriteOffice.Services.PowerPoint.PowerPointShapeInfo` — PowerShell-friendly description of a PowerPoint shape.
 
 ## RELATED LINKS
 

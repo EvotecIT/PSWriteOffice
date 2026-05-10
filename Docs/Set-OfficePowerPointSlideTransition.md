@@ -15,13 +15,13 @@ Set-OfficePowerPointSlideTransition -Transition <SlideTransition> [-Slide <Power
 ```
 
 ## DESCRIPTION
-Sets the transition used when advancing to a slide.
+Works on an explicit slide object or on the current slide inside the PowerPoint DSL.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTransition -Transition Fade
+PS> Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTransition -Transition Fade
 ```
 
 Updates the first slide so it uses the Fade transition.

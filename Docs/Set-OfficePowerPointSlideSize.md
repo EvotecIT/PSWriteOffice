@@ -35,20 +35,20 @@ Set-OfficePowerPointSlideSize -WidthEmus <long> -HeightEmus <long> [-Presentatio
 ```
 
 ## DESCRIPTION
-Sets the slide size for a PowerPoint presentation.
+Supports common presets as well as explicit width and height in centimeters, inches, points, or EMUs.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficePowerPointSlideSize -Presentation $ppt -Preset Screen16x9
+PS> Set-OfficePowerPointSlideSize -Presentation $ppt -Preset Screen16x9
 ```
 
 Applies the 16:9 widescreen preset to the presentation.
 
 ### EXAMPLE 2
 ```powershell
-PS>Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0
+PS> Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0
 ```
 
 Sets the presentation slide size to a custom 25.4 x 14.0 cm layout.

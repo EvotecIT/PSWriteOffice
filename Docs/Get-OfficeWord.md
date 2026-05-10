@@ -15,13 +15,13 @@ Get-OfficeWord [-InputPath] <string> [-ReadOnly] [-AutoSave] [<CommonParameters>
 ```
 
 ## DESCRIPTION
-Opens an existing Word document.
+Returns an OfficeIMO WordDocument for inspection or advanced operations.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$doc = Get-OfficeWord -Path .\Report.docx -ReadOnly
+PS> $doc = Get-OfficeWord -Path .\Report.docx -ReadOnly
 ```
 
 Loads Report.docx and exposes the document object for querying.

@@ -31,14 +31,14 @@ Sets the slide background color or image.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointBackground -Color '#F4F7FB'
+PS> Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointBackground -Color '#F4F7FB'
 ```
 
 Applies a solid color fill to the slide background.
 
 ### EXAMPLE 2
 ```powershell
-PS>Set-OfficePowerPointBackground -Slide $slide -ImagePath '.\hero.png'
+PS> Set-OfficePowerPointBackground -Slide $slide -ImagePath '.\hero.png'
 ```
 
 Uses the provided image as the slide background.

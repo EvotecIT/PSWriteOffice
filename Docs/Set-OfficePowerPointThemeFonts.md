@@ -21,7 +21,7 @@ Sets PowerPoint theme fonts.
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLatin 'Calibri'
+PS> Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLatin 'Calibri'
 ```
 
 Updates the default master theme fonts.

@@ -15,13 +15,13 @@ Get-OfficeExcel [-InputPath] <string> [-ReadOnly] [-AutoSave] [<CommonParameters
 ```
 
 ## DESCRIPTION
-Opens an existing Excel workbook.
+Returns the underlying ExcelDocument so callers can inspect or reuse it in DSL pipelines.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>$workbook = Get-OfficeExcel -Path .\report.xlsx -ReadOnly
+PS> $workbook = Get-OfficeExcel -Path .\report.xlsx -ReadOnly
 ```
 
 Loads report.xlsx for inspection without enabling writes.

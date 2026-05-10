@@ -26,7 +26,7 @@ Clears any AutoFilter on the current worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Clear-OfficeExcelAutoFilter }
+PS> ExcelSheet 'Data' { Clear-OfficeExcelAutoFilter }
 ```
 
 Removes filter dropdowns and criteria.

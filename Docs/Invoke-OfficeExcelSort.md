@@ -36,14 +36,14 @@ Sorts the used range on the current worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Invoke-OfficeExcelSort -Header 'Name' }
+PS> ExcelSheet 'Data' { Invoke-OfficeExcelSort -Header 'Name' }
 ```
 
 Sorts by the Name column in ascending order.
 
 ### EXAMPLE 2
 ```powershell
-PS>$order = [ordered]@{ Status = $true; Total = $false }\nExcelSheet 'Data' { Invoke-OfficeExcelSort -Order $order }
+PS> $order = [ordered]@{ Status = $true; Total = $false }\nExcelSheet 'Data' { Invoke-OfficeExcelSort -Order $order }
 ```
 
 Sorts by Status ascending, then Total descending.

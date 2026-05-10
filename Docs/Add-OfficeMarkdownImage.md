@@ -26,7 +26,7 @@ Adds a Markdown image.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownImage -Path '.\logo.png' -Alt 'Logo'
+PS> MarkdownImage -Path '.\logo.png' -Alt 'Logo'
 ```
 
 Appends an image block to the document.

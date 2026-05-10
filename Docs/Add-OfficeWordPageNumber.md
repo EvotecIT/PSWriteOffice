@@ -15,13 +15,13 @@ Add-OfficeWordPageNumber [-IncludeTotalPages] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Adds a PAGE field to the current header/footer.
+Typically used inside WordFooter to render “Page X of Y”.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>WordFooter { Add-OfficeWordPageNumber -IncludeTotalPages }
+PS> WordFooter { Add-OfficeWordPageNumber -IncludeTotalPages }
 ```
 
 Outputs “Page # of #” in the footer.

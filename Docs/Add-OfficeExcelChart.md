@@ -36,14 +36,14 @@ Adds a chart to the current worksheet using a range or table.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelChart -Range 'A1:D10' -Row 2 -Column 6 -Type Line -Title 'Trend' }
+PS> ExcelSheet 'Data' { Add-OfficeExcelChart -Range 'A1:D10' -Row 2 -Column 6 -Type Line -Title 'Trend' }
 ```
 
 Creates a line chart from A1:D10 and places it at F2.
 
 ### EXAMPLE 2
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelChart -TableName 'Sales' -Row 2 -Column 6 -Type ColumnClustered }
+PS> ExcelSheet 'Data' { Add-OfficeExcelChart -TableName 'Sales' -Row 2 -Column 6 -Type ColumnClustered }
 ```
 
 Creates a chart from the Sales table.

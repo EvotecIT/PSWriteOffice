@@ -26,7 +26,7 @@ Gets sections from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordSection -Path .\Report.docx
+PS> Get-OfficeWordSection -Path .\Report.docx
 ```
 
 Returns the sections contained in the document.

@@ -20,13 +20,13 @@ Get-OfficeWordField -Document <WordDocument> [-FieldType <WordFieldType[]>] [-Co
 ```
 
 ## DESCRIPTION
-Gets fields from a Word document.
+Returns WordField objects, optionally filtered by type or field code.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordField -Path .\Report.docx
+PS> Get-OfficeWordField -Path .\Report.docx
 ```
 
 Returns all fields in the document.

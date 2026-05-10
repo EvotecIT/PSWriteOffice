@@ -21,7 +21,7 @@ Sets a built-in or custom document property on a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS>Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'
+PS> Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'
 ```
 
 Updates the built-in Title property on the active Word document.

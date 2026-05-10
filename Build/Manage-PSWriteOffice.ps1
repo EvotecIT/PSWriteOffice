@@ -10,7 +10,7 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
         # ID used to uniquely identify this module
         GUID                   = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
         # Version number of this module.
-        ModuleVersion          = '1.0.1'
+        ModuleVersion          = '1.0.X'
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
@@ -33,7 +33,7 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
     # New-ConfigurationModule -Type ExternalModule -Name 'Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Management'
     # New-ConfigurationModule -Type RequiredModule -Name 'PSSharedGoods' -Version Latest -Guid Auto
     # New-ConfigurationModule -Type ApprovedModule -Name 'PSSharedGoods', 'PSWriteColor', 'Connectimo', 'PSUnifi', 'PSWebToolbox', 'PSMyPassword', 'PSPublishModule'
-    New-ConfigurationModuleSkip -IgnoreFunctionName 'Select-Unique'
+    # New-ConfigurationModuleSkip -IgnoreFunctionName 'Select-Unique'
 
     $ConfigurationFormat = [ordered] @{
         RemoveComments                              = $false
@@ -116,7 +116,7 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
         DotSourceClasses                  = $true
         DeleteTargetModuleBeforeBuild     = $true
         NETBinaryModuleDocumentation      = $true
-        RefreshPSD1Only                   = $refreshPSD1Only
+        RefreshPSD1Only                   = $false
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat

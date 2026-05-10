@@ -26,7 +26,7 @@ Converts cells in a range into external URL hyperlinks.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Summary' { Set-OfficeExcelUrlLinks -Range 'D2:D10' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }
+PS> ExcelSheet 'Summary' { Set-OfficeExcelUrlLinks -Range 'D2:D10' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } }
 ```
 
 Turns each non-empty cell in D2:D10 into an external hyperlink.

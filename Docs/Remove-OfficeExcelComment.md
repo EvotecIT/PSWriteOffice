@@ -26,7 +26,7 @@ Removes a comment (note) from a worksheet cell.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Remove-OfficeExcelComment -Address 'B2' }
+PS> ExcelSheet 'Data' { Remove-OfficeExcelComment -Address 'B2' }
 ```
 
 Clears the comment from cell B2.

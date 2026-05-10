@@ -20,13 +20,13 @@ Get-OfficeWordBookmark -Document <WordDocument> [-Name <string[]>] [<CommonParam
 ```
 
 ## DESCRIPTION
-Gets bookmarks from a Word document.
+Returns WordBookmark objects, optionally filtered by name.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeWordBookmark -Path .\Report.docx
+PS> Get-OfficeWordBookmark -Path .\Report.docx
 ```
 
 Returns all bookmarks in the document.

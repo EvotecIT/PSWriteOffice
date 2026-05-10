@@ -20,13 +20,13 @@ Get-OfficeExcelRange -Document <ExcelDocument> -Range <string> [-Sheet <string>]
 ```
 
 ## DESCRIPTION
-Reads an explicit A1 range from an Excel workbook.
+Returns rows as PSCustomObjects by default, with optional hashtable or DataTable output for scripting and interoperability.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficeExcelRange -Path .\report.xlsx -Sheet 'Data' -Range 'A1:C10'
+PS> Get-OfficeExcelRange -Path .\report.xlsx -Sheet 'Data' -Range 'A1:C10'
 ```
 
 Uses the first row as headers and returns each remaining row as a PSCustomObject.

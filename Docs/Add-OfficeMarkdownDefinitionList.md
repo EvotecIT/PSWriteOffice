@@ -26,7 +26,7 @@ Adds a Markdown definition list.
 
 ### EXAMPLE 1
 ```powershell
-PS>MarkdownDefinitionList -Definition @{ SLA = 'Service level agreement'; SLO = 'Service level objective' }
+PS> MarkdownDefinitionList -Definition @{ SLA = 'Service level agreement'; SLO = 'Service level objective' }
 ```
 
 Appends a definition list built from the provided pairs.

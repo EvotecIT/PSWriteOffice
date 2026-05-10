@@ -21,14 +21,14 @@ Gets placeholder text boxes from a slide.
 
 ### EXAMPLE 1
 ```powershell
-PS>Get-OfficePowerPointPlaceholder -Slide $slide -PlaceholderType Title
+PS> Get-OfficePowerPointPlaceholder -Slide $slide -PlaceholderType Title
 ```
 
 Returns the title placeholder textbox if present.
 
 ### EXAMPLE 2
 ```powershell
-PS>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { Get-OfficePowerPointPlaceholder -PlaceholderType Title } }
+PS> New-OfficePowerPoint -Path .\deck.pptx { PptSlide { Get-OfficePowerPointPlaceholder -PlaceholderType Title } }
 ```
 
 Uses the current slide context.

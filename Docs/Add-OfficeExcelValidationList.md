@@ -20,13 +20,13 @@ Add-OfficeExcelValidationList [-Range] <string> [-Values] <string[]> -Document <
 ```
 
 ## DESCRIPTION
-Adds a list-based data validation to a worksheet range.
+When invoked inside the Excel DSL, applies to the current worksheet.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Data' { Add-OfficeExcelValidationList -Range 'C2:C50' -Values 'New','In Progress','Done' }
+PS> ExcelSheet 'Data' { Add-OfficeExcelValidationList -Range 'C2:C50' -Values 'New','In Progress','Done' }
 ```
 
 Restricts column C to the provided values.

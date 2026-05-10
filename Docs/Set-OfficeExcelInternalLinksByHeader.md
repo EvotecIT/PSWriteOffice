@@ -46,7 +46,7 @@ Converts cells under a header into internal workbook links.
 
 ### EXAMPLE 1
 ```powershell
-PS>ExcelSheet 'Summary' { Set-OfficeExcelInternalLinksByHeader -Header 'Sheet' }
+PS> ExcelSheet 'Summary' { Set-OfficeExcelInternalLinksByHeader -Header 'Sheet' }
 ```
 
 Uses the used range header row to find the Sheet column and converts its values into internal links.
