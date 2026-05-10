@@ -1,4 +1,33 @@
-﻿Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
+﻿function Import-PSWriteOfficePSPublishModule {
+    $candidatePaths = @(
+        $env:PSPUBLISHMODULE_MANIFEST
+    ) | Where-Object { $_ }
+
+    $candidateModules = @(
+        foreach ($candidate in $candidatePaths) {
+            if (Test-Path -LiteralPath $candidate) {
+                Get-Item -LiteralPath $candidate
+            }
+        }
+        Get-Module -ListAvailable -Name PSPublishModule | Sort-Object Version -Descending
+    )
+
+    foreach ($candidate in $candidateModules) {
+        Remove-Module -Name PSPublishModule -Force -ErrorAction SilentlyContinue
+        $candidateModulePath = if ($candidate.FullName) { $candidate.FullName } elseif ($candidate.Path) { $candidate.Path } else { [string] $candidate }
+        Import-Module -Name $candidateModulePath -Force -ErrorAction Stop
+        $newConfigurationBuild = Get-Command -Name New-ConfigurationBuild -ErrorAction SilentlyContinue
+        if ($newConfigurationBuild -and $newConfigurationBuild.Parameters.ContainsKey('NETAssemblyLoadContext')) {
+            return
+        }
+    }
+
+    throw 'PSPublishModule with New-ConfigurationBuild -NETAssemblyLoadContext support was not found. Install the current PSPublishModule or set $env:PSPUBLISHMODULE_MANIFEST.'
+}
+
+Import-PSWriteOfficePSPublishModule
+
+Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
     $signModule = if ($env:PSWRITEOFFICE_SIGN_MODULE) {
         [System.Convert]::ToBoolean($env:PSWRITEOFFICE_SIGN_MODULE)
     } elseif ($env:GITHUB_ACTIONS -eq 'true' -or $env:CI -eq 'true') {
@@ -16,7 +45,7 @@
         # ID used to uniquely identify this module
         GUID                   = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
         # Version number of this module.
-        ModuleVersion          = '1.0.0'
+        ModuleVersion          = '1.0.1'
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
@@ -85,6 +114,23 @@
 
     New-ConfigurationImportModule -ImportSelf
 
+    $refreshPSD1Only = $false
+    if (-not [string]::IsNullOrWhiteSpace($env:RefreshPSD1Only)) {
+        switch -Regex ($env:RefreshPSD1Only.Trim()) {
+            '^(1|true|yes|on)$' {
+                $refreshPSD1Only = $true
+                break
+            }
+            '^(0|false|no|off)$' {
+                $refreshPSD1Only = $false
+                break
+            }
+            default {
+                throw "RefreshPSD1Only must be a boolean value or numeric flag, but received '$env:RefreshPSD1Only'."
+            }
+        }
+    }
+
     $newConfigurationBuildSplat = @{
         Enable                            = $true
         SignModule                        = $signModule
@@ -93,17 +139,18 @@
         CertificateThumbprint             = if ($signModule) { '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703' } else { $null }
         ResolveBinaryConflicts            = $true
         ResolveBinaryConflictsName        = 'PSWriteOffice'
-        NETProjectPath                    = 'Sources\PSWriteOffice'
         NETProjectName                    = 'PSWriteOffice'
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
         NETHandleAssemblyWithSameName     = $true
+        NETProjectPath                    = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\Sources\PSWriteOffice\PSWriteOffice.csproj')).Path
+        NETAssemblyLoadContext            = $true
         #NETMergeLibraryDebugging          = $true
         DotSourceLibraries                = $true
         DotSourceClasses                  = $true
         DeleteTargetModuleBeforeBuild     = $true
         NETBinaryModuleDocumentation      = $true
-        RefreshPSD1Only                   = $false
+        RefreshPSD1Only                   = $refreshPSD1Only
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat

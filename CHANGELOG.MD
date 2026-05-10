@@ -1,3 +1,7 @@
+#### 1.0.1 - 2026.05.10
+- Added packaged module-scoped AssemblyLoadContext loading for the binary module on PowerShell 7.
+- Added a packaged ALC conflict smoke test that verifies PSWriteOffice and OfficeIMO/Open XML dependencies stay isolated from the default load context.
+
 #### 0.3.0 - 2025.12.29
 - Rebooted on OfficeIMO.* (Word/Excel/PowerPoint/Markdown/CSV/Word.Html) with breaking changes.
 - Removed legacy external dependencies and old cmdlet surface.

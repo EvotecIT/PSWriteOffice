@@ -14,27 +14,29 @@ $ArtefactManifest = Join-Path $ArtefactModulePath 'PSWriteOffice.psd1'
 
 function Import-PSPublishModule {
     $candidatePaths = @(
-        $env:PSPUBLISHMODULE_MANIFEST,
-        'C:\Support\GitHub\PSPublishModule\Module\Artefacts\Unpacked\v3.0.1\Modules\PSPublishModule\PSPublishModule.psd1',
-        'C:\Support\GitHub\PSPublishModule\Module\Artefacts\Unpacked\Modules\PSPublishModule\PSPublishModule.psd1'
+        $env:PSPUBLISHMODULE_MANIFEST
     ) | Where-Object { $_ }
 
-    foreach ($candidate in $candidatePaths) {
-        if (Test-Path -LiteralPath $candidate) {
-            Import-Module -Name $candidate -Force
+    $candidateModules = @(
+        foreach ($candidate in $candidatePaths) {
+            if (Test-Path -LiteralPath $candidate) {
+                Get-Item -LiteralPath $candidate
+            }
+        }
+        Get-Module -ListAvailable -Name PSPublishModule | Sort-Object Version -Descending
+    )
+
+    foreach ($candidate in $candidateModules) {
+        Remove-Module -Name PSPublishModule -Force -ErrorAction SilentlyContinue
+        $candidateModulePath = if ($candidate.FullName) { $candidate.FullName } elseif ($candidate.Path) { $candidate.Path } else { [string] $candidate }
+        Import-Module -Name $candidateModulePath -Force -ErrorAction Stop
+        $newConfigurationBuild = Get-Command -Name New-ConfigurationBuild -ErrorAction SilentlyContinue
+        if ($newConfigurationBuild -and $newConfigurationBuild.Parameters.ContainsKey('NETAssemblyLoadContext')) {
             return
         }
     }
 
-    $availableModule = Get-Module -ListAvailable -Name PSPublishModule |
-        Sort-Object Version -Descending |
-        Select-Object -First 1
-
-    if (-not $availableModule) {
-        throw 'PSPublishModule was not found. Install it from PSGallery or set $env:PSPUBLISHMODULE_MANIFEST to the module manifest path.'
-    }
-
-    Import-Module -Name $availableModule.Path -Force
+    throw 'PSPublishModule with New-ConfigurationBuild -NETAssemblyLoadContext support was not found. Install the current PSPublishModule or set $env:PSPUBLISHMODULE_MANIFEST.'
 }
 
 if (-not $SkipBuild -or -not (Test-Path -LiteralPath $ArtefactManifest)) {
