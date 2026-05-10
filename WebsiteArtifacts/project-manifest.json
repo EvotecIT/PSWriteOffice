@@ -6,9 +6,9 @@
   "contentMode": "hybrid",
   "status": "active",
   "listed": false,
-  "version": "1.0.0",
-  "generatedAt": "2026-05-10T21:25:46.9486211+00:00",
-  "commit": "bc09915253ba0098e9cbeff4f294881c29e82f4f",
+  "version": "1.0.2",
+  "generatedAt": "2026-05-10T21:45:37.2270836+00:00",
+  "commit": "ab10d08cfee550bb926258d1cce7740c7cad8d84",
   "links": {
     "source": "https://github.com/EvotecIT/PSWriteOffice"
   },
