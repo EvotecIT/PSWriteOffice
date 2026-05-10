@@ -4,14 +4,26 @@ Describe 'Packaged AssemblyLoadContext conflict isolation' {
         $packagedModule = Join-Path $packagedModuleRoot 'PSWriteOffice'
         $packagedLoader = Join-Path $packagedModule 'Lib\Core\PSWriteOffice.ModuleLoadContext.dll'
         $conflictOpenXmlPath = $env:PSWRITEOFFICE_CONFLICT_OPENXML_PATH
+        $requirePackagedSmoke = $env:PSWRITEOFFICE_REQUIRE_ALC_SMOKE -eq 'true'
 
-        if ($PSVersionTable.PSEdition -ne 'Core' -or
-            -not (Test-Path -LiteralPath $packagedLoader) -or
-            [string]::IsNullOrWhiteSpace($conflictOpenXmlPath) -or
-            -not (Test-Path -LiteralPath $conflictOpenXmlPath)) {
-            Set-ItResult -Skipped -Because 'packaged Core artifact and conflict Open XML assembly are required'
+        if ($PSVersionTable.PSEdition -ne 'Core') {
+            Set-ItResult -Skipped -Because 'AssemblyLoadContext isolation is only available in PowerShell Core'
             return
         }
+
+        if (-not $requirePackagedSmoke -and (
+                -not (Test-Path -LiteralPath $packagedModule) -or
+                -not (Test-Path -LiteralPath $packagedLoader) -or
+                [string]::IsNullOrWhiteSpace($conflictOpenXmlPath) -or
+                -not (Test-Path -LiteralPath $conflictOpenXmlPath))) {
+            Set-ItResult -Skipped -Because 'packaged ALC smoke prerequisites are supplied by the dedicated packaged-alc-conflict workflow'
+            return
+        }
+
+        Test-Path -LiteralPath $packagedModule | Should -BeTrue -Because 'the packaged module must exist before the ALC smoke test runs'
+        Test-Path -LiteralPath $packagedLoader | Should -BeTrue -Because 'the packaged module must include the module-scoped ALC loader'
+        [string]::IsNullOrWhiteSpace($conflictOpenXmlPath) | Should -BeFalse -Because 'the conflict Open XML assembly path must be provided by the workflow'
+        Test-Path -LiteralPath $conflictOpenXmlPath | Should -BeTrue -Because 'the conflict Open XML assembly must exist before the smoke test runs'
 
         $moduleRootLiteral = $packagedModuleRoot.Replace("'", "''")
         $conflictOpenXmlLiteral = $conflictOpenXmlPath.Replace("'", "''")
