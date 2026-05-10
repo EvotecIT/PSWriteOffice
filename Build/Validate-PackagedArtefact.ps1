@@ -12,18 +12,8 @@ if ($ResolvedArtefactModulePath) {
 }
 $ArtefactManifest = Join-Path $ArtefactModulePath 'PSWriteOffice.psd1'
 
-function Import-PSPublishModule {
-    $minimumVersion = [version] '3.0.5'
-    Import-Module -Name PSPublishModule -MinimumVersion $minimumVersion -Force -ErrorAction Stop
-
-    $newConfigurationBuild = Get-Command -Name New-ConfigurationBuild -ErrorAction SilentlyContinue
-    if (-not $newConfigurationBuild -or -not $newConfigurationBuild.Parameters.ContainsKey('NETAssemblyLoadContext')) {
-        throw "PSPublishModule $minimumVersion or newer with New-ConfigurationBuild -NETAssemblyLoadContext support is required."
-    }
-}
-
 if (-not $SkipBuild -or -not (Test-Path -LiteralPath $ArtefactManifest)) {
-    Import-PSPublishModule
+    Import-Module PSPublishModule -Force -ErrorAction Stop
     $previousOfficeIMORoot = $env:OfficeIMORoot
     try {
         $env:OfficeIMORoot = Join-Path $RepoRoot '.missing-officeimo'

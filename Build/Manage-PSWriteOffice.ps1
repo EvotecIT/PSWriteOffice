@@ -1,24 +1,6 @@
-﻿function Import-PSWriteOfficePSPublishModule {
-    $minimumVersion = [version] '3.0.5'
-    Import-Module -Name PSPublishModule -MinimumVersion $minimumVersion -Force -ErrorAction Stop
-
-    $newConfigurationBuild = Get-Command -Name New-ConfigurationBuild -ErrorAction SilentlyContinue
-    if (-not $newConfigurationBuild -or -not $newConfigurationBuild.Parameters.ContainsKey('NETAssemblyLoadContext')) {
-        throw "PSPublishModule $minimumVersion or newer with New-ConfigurationBuild -NETAssemblyLoadContext support is required."
-    }
-}
-
-Import-PSWriteOfficePSPublishModule
+Import-Module PSPublishModule -Force -ErrorAction Stop
 
 Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
-    $signModule = if ($env:PSWRITEOFFICE_SIGN_MODULE) {
-        [System.Convert]::ToBoolean($env:PSWRITEOFFICE_SIGN_MODULE)
-    } elseif ($env:GITHUB_ACTIONS -eq 'true' -or $env:CI -eq 'true') {
-        $false
-    } else {
-        $true
-    }
-
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
@@ -116,10 +98,11 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
 
     $newConfigurationBuildSplat = @{
         Enable                            = $true
-        SignModule                        = $signModule
+        # lets sign module only on my machine for now
+        SignModule                        = if ($Env:COMPUTERNAME -eq 'EVOMONSTER') { $true } else { $false }
         MergeModuleOnBuild                = $true
         MergeFunctionsFromApprovedModules = $true
-        CertificateThumbprint             = if ($signModule) { '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703' } else { $null }
+        CertificateThumbprint             = '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
         ResolveBinaryConflicts            = $true
         ResolveBinaryConflictsName        = 'PSWriteOffice'
         NETProjectName                    = 'PSWriteOffice'
