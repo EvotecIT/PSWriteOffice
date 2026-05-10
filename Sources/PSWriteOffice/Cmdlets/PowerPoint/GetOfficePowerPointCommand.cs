@@ -27,7 +27,8 @@ public class GetOfficePowerPointCommand : PSCmdlet
     {
         try
         {
-            var presentation = PowerPointDocumentService.LoadPresentation(FilePath);
+            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
+            var presentation = PowerPointDocumentService.LoadPresentation(resolvedPath);
             WriteObject(presentation);
         }
         catch (FileNotFoundException ex)

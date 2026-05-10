@@ -6,6 +6,7 @@ using System.Reflection;
 using OfficeIMO.Markdown;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Markdown;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
@@ -164,11 +165,16 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
 
                 try
                 {
-                    document.Save(resolvedOutput, Open.IsPresent);
+                    document.Save(resolvedOutput, false);
                 }
                 finally
                 {
                     document.Dispose();
+                }
+
+                if (Open.IsPresent)
+                {
+                    FileOpenService.Open(resolvedOutput);
                 }
 
                 if (PassThru.IsPresent)
