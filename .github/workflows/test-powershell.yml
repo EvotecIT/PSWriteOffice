@@ -165,6 +165,58 @@ jobs:
             Artefacts/Reports/**
             Artefacts/Unpacked/**
 
+  packaged-alc-conflict:
+    name: 'Windows Packaged ALC conflict'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install PowerShell modules
+        shell: pwsh
+        run: |
+          Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+          Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
+          Install-Module -Name PSPublishModule -Repository PSGallery -MinimumVersion 3.0.5 -Force -SkipPublisherCheck -AllowClobber
+
+      - name: Prepare default-context Open XML conflict
+        shell: pwsh
+        run: |
+          $conflictRoot = Join-Path $env:RUNNER_TEMP 'pswriteoffice-conflict'
+          $packagePath = Join-Path $conflictRoot 'DocumentFormat.OpenXml.2.20.0.nupkg'
+          $extractPath = Join-Path $conflictRoot 'DocumentFormat.OpenXml.2.20.0'
+          New-Item -Path $conflictRoot -ItemType Directory -Force | Out-Null
+          Invoke-WebRequest -Uri 'https://www.nuget.org/api/v2/package/DocumentFormat.OpenXml/2.20.0' -OutFile $packagePath
+          Expand-Archive -LiteralPath $packagePath -DestinationPath $extractPath -Force
+          $openXmlPath = Join-Path $extractPath 'lib\netstandard2.0\DocumentFormat.OpenXml.dll'
+          if (-not (Test-Path -LiteralPath $openXmlPath)) {
+            throw "Conflict Open XML assembly not found: $openXmlPath"
+          }
+          "PSWRITEOFFICE_CONFLICT_OPENXML_PATH=$openXmlPath" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Build packaged module with ALC
+        env:
+          RefreshPSD1Only: 'false'
+        shell: pwsh
+        run: |
+          $env:OfficeIMORoot = Join-Path (Get-Location) '.missing-officeimo'
+          ./Build/Manage-PSWriteOffice.ps1
+
+      - name: Run packaged ALC conflict test
+        shell: pwsh
+        run: |
+          Import-Module Pester -Force
+          $config = [PesterConfiguration]::Default
+          $config.Run.Path = 'Tests/AssemblyLoadContext.Conflict.Tests.ps1'
+          $config.Run.Exit = $true
+          $config.Output.Verbosity = 'Detailed'
+          Invoke-Pester -Configuration $config
+
   test-ubuntu:
     needs: refresh-psd1
     name: 'Ubuntu PowerShell 7'
