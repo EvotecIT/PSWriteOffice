@@ -13,30 +13,13 @@ if ($ResolvedArtefactModulePath) {
 $ArtefactManifest = Join-Path $ArtefactModulePath 'PSWriteOffice.psd1'
 
 function Import-PSPublishModule {
-    $candidatePaths = @(
-        $env:PSPUBLISHMODULE_MANIFEST
-    ) | Where-Object { $_ }
+    $minimumVersion = [version] '3.0.5'
+    Import-Module -Name PSPublishModule -MinimumVersion $minimumVersion -Force -ErrorAction Stop
 
-    $candidateModules = @(
-        foreach ($candidate in $candidatePaths) {
-            if (Test-Path -LiteralPath $candidate) {
-                Get-Item -LiteralPath $candidate
-            }
-        }
-        Get-Module -ListAvailable -Name PSPublishModule | Sort-Object Version -Descending
-    )
-
-    foreach ($candidate in $candidateModules) {
-        Remove-Module -Name PSPublishModule -Force -ErrorAction SilentlyContinue
-        $candidateModulePath = if ($candidate.FullName) { $candidate.FullName } elseif ($candidate.Path) { $candidate.Path } else { [string] $candidate }
-        Import-Module -Name $candidateModulePath -Force -ErrorAction Stop
-        $newConfigurationBuild = Get-Command -Name New-ConfigurationBuild -ErrorAction SilentlyContinue
-        if ($newConfigurationBuild -and $newConfigurationBuild.Parameters.ContainsKey('NETAssemblyLoadContext')) {
-            return
-        }
+    $newConfigurationBuild = Get-Command -Name New-ConfigurationBuild -ErrorAction SilentlyContinue
+    if (-not $newConfigurationBuild -or -not $newConfigurationBuild.Parameters.ContainsKey('NETAssemblyLoadContext')) {
+        throw "PSPublishModule $minimumVersion or newer with New-ConfigurationBuild -NETAssemblyLoadContext support is required."
     }
-
-    throw 'PSPublishModule with New-ConfigurationBuild -NETAssemblyLoadContext support was not found. Install the current PSPublishModule or set $env:PSPUBLISHMODULE_MANIFEST.'
 }
 
 if (-not $SkipBuild -or -not (Test-Path -LiteralPath $ArtefactManifest)) {

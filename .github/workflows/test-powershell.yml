@@ -191,7 +191,7 @@ jobs:
           $packagePath = Join-Path $conflictRoot 'DocumentFormat.OpenXml.2.20.0.nupkg'
           $extractPath = Join-Path $conflictRoot 'DocumentFormat.OpenXml.2.20.0'
           New-Item -Path $conflictRoot -ItemType Directory -Force | Out-Null
-          Invoke-WebRequest -Uri 'https://www.nuget.org/api/v2/package/DocumentFormat.OpenXml/2.20.0' -OutFile $packagePath
+          Invoke-WebRequest -Uri 'https://www.nuget.org/api/v2/package/DocumentFormat.OpenXml/2.20.0' -OutFile $packagePath -ConnectionTimeoutSeconds 30 -OperationTimeoutSeconds 120
           Expand-Archive -LiteralPath $packagePath -DestinationPath $extractPath -Force
           $openXmlPath = Join-Path $extractPath 'lib\netstandard2.0\DocumentFormat.OpenXml.dll'
           if (-not (Test-Path -LiteralPath $openXmlPath)) {
@@ -208,6 +208,8 @@ jobs:
           ./Build/Manage-PSWriteOffice.ps1
 
       - name: Run packaged ALC conflict test
+        env:
+          PSWRITEOFFICE_REQUIRE_ALC_SMOKE: 'true'
         shell: pwsh
         run: |
           Import-Module Pester -Force
