@@ -278,6 +278,10 @@ Describe 'Excel DSL surface' {
         $workbookSheet.GetAttribute('name') | Should -Be 'Data'
         $workbookSheet.GetAttribute('state') | Should -Be 'hidden'
 
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.HiddenSheetCount | Should -Be 1
+        $summary.Sheets[0].State | Should -Be 'Hidden'
+
         $pageSetup = $sheetXml.SelectSingleNode("/*[local-name()='worksheet']/*[local-name()='pageSetup']")
         $pageSetup.GetAttribute('fitToWidth') | Should -Be '1'
         $pageSetup.GetAttribute('fitToHeight') | Should -Be '0'
@@ -329,6 +333,16 @@ Describe 'Excel DSL surface' {
         $dataRows = @(Get-OfficeExcelRange -Path $path -Sheet 'Data' -Range 'A1:B3')
         $dataRows.Count | Should -Be 2
         $dataRows[0].Region | Should -Be 'NA'
+
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.SheetCount | Should -Be 3
+        $summary.VisibleSheetCount | Should -Be 3
+        $summary.TableCount | Should -Be 2
+        $summary.NamedRangeCount | Should -Be 1
+        $summary.HyperlinkCount | Should -BeGreaterThan 0
+        $summary.Sheets.Name | Should -Contain 'Data'
+        ($summary.Sheets | Where-Object Name -eq 'Data').UsedRange | Should -Be 'A1:B5'
+        ($summary.Sheets | Where-Object Name -eq 'Data').Tables.Name | Should -Contain 'Sales'
 
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {

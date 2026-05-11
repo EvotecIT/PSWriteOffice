@@ -633,6 +633,51 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'renders OfficeIMO designer deck plans through the PowerPoint DSL' {
+        $path = Join-Path $TestDrive 'PowerPointDesignerDeck.pptx'
+        $plan = PptDeckPlan {
+            PptPlanSection -Title 'Reliability Showcase' -Subtitle 'From script to polished deck'
+            PptPlanProcess -Title 'Delivery Flow' -Steps @(
+                [PSCustomObject]@{ Number = '01'; Title = 'Author'; Body = 'Describe the story once.' }
+                [PSCustomObject]@{ Number = '02'; Title = 'Render'; Body = 'Let OfficeIMO compose the layout.' }
+                [PSCustomObject]@{ Number = '03'; Title = 'Validate'; Body = 'Inspect and test the package.' }
+            )
+            PptPlanCardGrid -Title 'Proof Points' -Cards @(
+                [PSCustomObject]@{ Title = 'Useful'; Items = @('Semantic input', 'Readable output') }
+                [PSCustomObject]@{ Title = 'Fast'; Items = @('One cmdlet bridge', 'Deterministic seed') }
+            )
+        }
+
+        $previewPresentation = New-OfficePowerPoint -FilePath (Join-Path $TestDrive 'PowerPointDesignerDeckPreview.pptx')
+        try {
+            $preview = @(PptDesignerDeck -Presentation $previewPresentation -Plan $plan -AccentColor '#008C95' -Seed 'designer-test' -Purpose 'technical service brief' -Preview)
+            $preview.Count | Should -BeGreaterThan 0
+        } finally {
+            if ($previewPresentation) {
+                $previewPresentation.Dispose()
+            }
+        }
+
+        New-OfficePowerPoint -Path $path {
+            PptDesignerDeck -Plan $plan -AccentColor '#008C95' -Seed 'designer-test' -Purpose 'technical service brief' -Name 'Designer Test' -LayoutStrategy ContentFirst
+        }
+
+        $entries = @(Get-ZipEntriesLocal -Path $path)
+        ($entries | Where-Object { $_ -match '^ppt/slides/slide\d+\.xml$' }).Count | Should -BeGreaterThan 2
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloaded.Slides.Count | Should -BeGreaterThan 2
+            $summary = @(Get-OfficePowerPointSlideSummary -Presentation $reloaded)
+            $summary.Count | Should -BeGreaterThan 2
+            ($summary | Where-Object { $_.ShapeCount -gt 0 }).Count | Should -BeGreaterThan 2
+        } finally {
+            if ($reloaded) {
+                $reloaded.Dispose()
+            }
+        }
+    }
+
     It 'supports PowerPoint charts from object data' {
         $path = Join-Path $TestDrive 'PowerPointCharts.pptx'
         $presentation = $null

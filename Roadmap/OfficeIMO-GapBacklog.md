@@ -2,6 +2,8 @@
 
 This backlog captures the main feature gaps between `PSWriteOffice` and the broader sibling `OfficeIMO.*` ecosystem as of 2026-03-20.
 
+> Status note, 2026-05-11: several items below have since shipped, especially Word hyperlinks/properties/background/mail merge, PowerPoint charts/background/layout boxes, and Markdown advanced blocks. Use [OfficeIMO-SupportMatrix.md](OfficeIMO-SupportMatrix.md) and [OfficeIMO-Showcase-PolishPlan.md](OfficeIMO-Showcase-PolishPlan.md) for the current comparison and next showcase/polish sequence.
+
 It is intentionally opinionated:
 
 - Keep `PSWriteOffice` thin and PowerShell-native.
