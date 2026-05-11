@@ -88,12 +88,13 @@ internal static class PowerPointDesignerDataMapper
 
     private static IEnumerable<object> EnsureData(object[]? data, string name)
     {
-        if (data == null || data.Length == 0)
+        var items = data?.Where(item => item != null).ToArray();
+        if (items == null || items.Length == 0)
         {
             throw new PSArgumentException($"{name} require at least one item.");
         }
 
-        return data.Where(item => item != null);
+        return items;
     }
 
     private static string GetRequiredString(object item, params string[] names)

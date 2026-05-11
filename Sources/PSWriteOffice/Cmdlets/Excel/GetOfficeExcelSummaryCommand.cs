@@ -130,7 +130,14 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
             return record;
         }
 
-        if (workbookPart.GetPartById(sheet.Id.Value) is not WorksheetPart worksheetPart)
+        var sheetPart = workbookPart.GetPartById(sheet.Id.Value);
+        if (sheetPart is ChartsheetPart chartsheetPart)
+        {
+            AddChartSheetCounts(record, chartsheetPart);
+            return record;
+        }
+
+        if (sheetPart is not WorksheetPart worksheetPart)
         {
             AddEmptySheetCounts(record);
             return record;
@@ -138,7 +145,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
 
         var worksheet = worksheetPart.Worksheet ?? new Worksheet();
         var tableRecords = GetTableRecords(worksheetPart).ToArray();
-        var chartCount = worksheetPart.DrawingsPart?.ChartParts.Count() ?? 0;
+        var chartCount = CountChartParts(worksheetPart);
         var pivotCount = worksheetPart.PivotTableParts.Count();
         var sparklineGroupCount = worksheet.Descendants<SparklineGroups>().Sum(groups => groups.Elements<SparklineGroup>().Count());
         var hyperlinkCount = worksheet.Elements<Hyperlinks>().FirstOrDefault()?.Elements<Hyperlink>().Count() ?? 0;
@@ -153,6 +160,24 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         record.Properties.Add(new PSNoteProperty("CommentCount", commentCount));
         record.Properties.Add(new PSNoteProperty("Tables", tableRecords));
         return record;
+    }
+
+    private static void AddChartSheetCounts(PSObject record, ChartsheetPart chartsheetPart)
+    {
+        record.Properties.Add(new PSNoteProperty("UsedRange", null));
+        record.Properties.Add(new PSNoteProperty("TableCount", 0));
+        record.Properties.Add(new PSNoteProperty("ChartCount", CountChartParts(chartsheetPart)));
+        record.Properties.Add(new PSNoteProperty("PivotTableCount", 0));
+        record.Properties.Add(new PSNoteProperty("SparklineGroupCount", 0));
+        record.Properties.Add(new PSNoteProperty("HyperlinkCount", 0));
+        record.Properties.Add(new PSNoteProperty("CommentCount", 0));
+        record.Properties.Add(new PSNoteProperty("Tables", Array.Empty<PSObject>()));
+    }
+
+    private static int CountChartParts(OpenXmlPartContainer container)
+    {
+        return container.Parts.Sum(part =>
+            (part.OpenXmlPart is ChartPart ? 1 : 0) + CountChartParts(part.OpenXmlPart));
     }
 
     private static IEnumerable<PSObject> GetTableRecords(WorksheetPart worksheetPart)

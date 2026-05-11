@@ -678,6 +678,18 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'rejects designer plan data arrays that contain only null values' {
+        $mapper = [PSWriteOffice.Cmdlets.PowerPoint.AddOfficePowerPointPlanProcessCommand].Assembly.GetType('PSWriteOffice.Services.PowerPoint.PowerPointDesignerDataMapper')
+        $method = $mapper.GetMethod('ToProcessSteps', [System.Reflection.BindingFlags] 'Public,Static')
+
+        try {
+            $method.Invoke($null, (, [object[]] @($null)))
+            throw 'Expected mapper to reject all-null process data.'
+        } catch {
+            $_.Exception.InnerException.Message | Should -Be 'Process steps require at least one item.'
+        }
+    }
+
     It 'supports PowerPoint charts from object data' {
         $path = Join-Path $TestDrive 'PowerPointCharts.pptx'
         $presentation = $null

@@ -356,6 +356,129 @@ Describe 'Excel DSL surface' {
         }
     }
 
+    It 'includes chartsheet charts in workbook summaries' {
+        $path = Join-Path $TestDrive 'WorkbookWithChartSheet.xlsx'
+        $archive = [System.IO.Compression.ZipFile]::Open($path, [System.IO.Compression.ZipArchiveMode]::Create)
+        try {
+            function Add-ZipTextEntry {
+                param(
+                    [Parameter(Mandatory)]
+                    [System.IO.Compression.ZipArchive] $Archive,
+
+                    [Parameter(Mandatory)]
+                    [string] $EntryName,
+
+                    [Parameter(Mandatory)]
+                    [string] $Content
+                )
+
+                $entry = $Archive.CreateEntry($EntryName)
+                $stream = $entry.Open()
+                try {
+                    $writer = [System.IO.StreamWriter]::new($stream, [System.Text.UTF8Encoding]::new($false))
+                    try {
+                        $writer.Write($Content)
+                    } finally {
+                        $writer.Dispose()
+                    }
+                } finally {
+                    $stream.Dispose()
+                }
+            }
+
+            Add-ZipTextEntry -Archive $archive -EntryName '[Content_Types].xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+  <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+  <Override PartName="/xl/chartsheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml"/>
+  <Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>
+  <Override PartName="/xl/charts/chart1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawingml.chart+xml"/>
+</Types>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName '_rels/.rels' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/workbook.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheets>
+    <sheet name="Data" sheetId="1" r:id="rId1"/>
+    <sheet name="Revenue Chart" sheetId="2" r:id="rId2"/>
+  </sheets>
+</workbook>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/_rels/workbook.xml.rels' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/chartsheet" Target="chartsheets/sheet1.xml"/>
+</Relationships>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/worksheets/sheet1.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+  <dimension ref="A1:B2"/>
+  <sheetData>
+    <row r="1"><c r="A1" t="str"><v>Region</v></c><c r="B1" t="str"><v>Revenue</v></c></row>
+    <row r="2"><c r="A2" t="str"><v>EMEA</v></c><c r="B2"><v>42</v></c></row>
+  </sheetData>
+</worksheet>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/chartsheets/sheet1.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<chartsheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheetViews><sheetView workbookViewId="0"/></sheetViews>
+  <drawing r:id="rId1"/>
+</chartsheet>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/chartsheets/_rels/sheet1.xml.rels' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing1.xml"/>
+</Relationships>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/drawings/drawing1.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <xdr:absoluteAnchor>
+    <xdr:pos x="0" y="0"/><xdr:ext cx="6000000" cy="4000000"/>
+    <xdr:graphicFrame macro="">
+      <xdr:nvGraphicFramePr><xdr:cNvPr id="2" name="Chart 1"/><xdr:cNvGraphicFramePr/></xdr:nvGraphicFramePr>
+      <xdr:xfrm><a:off x="0" y="0"/><a:ext cx="6000000" cy="4000000"/></xdr:xfrm>
+      <a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart"><c:chart r:id="rId1"/></a:graphicData></a:graphic>
+    </xdr:graphicFrame>
+    <xdr:clientData/>
+  </xdr:absoluteAnchor>
+</xdr:wsDr>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/drawings/_rels/drawing1.xml.rels' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart" Target="../charts/chart1.xml"/>
+</Relationships>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/charts/chart1.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <c:chart><c:plotArea><c:layout/></c:plotArea></c:chart>
+</c:chartSpace>
+'@
+        } finally {
+            $archive.Dispose()
+        }
+
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.SheetCount | Should -Be 2
+        $summary.ChartCount | Should -Be 1
+        ($summary.Sheets | Where-Object Name -eq 'Revenue Chart').ChartCount | Should -Be 1
+    }
+
     It 'formats Excel charts with legend, labels, and style presets' {
         $path = Join-Path $TestDrive 'DslExcelChartFormatting.xlsx'
         $rows = @(

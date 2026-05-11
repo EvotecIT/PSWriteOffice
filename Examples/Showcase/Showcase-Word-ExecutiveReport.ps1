@@ -14,46 +14,7 @@ $documents = Join-Path $PSScriptRoot '..\Documents'
 New-Item -Path $documents -ItemType Directory -Force | Out-Null
 
 $path = Join-Path $documents 'Showcase-Word-ExecutiveReport.docx'
-$heroPath = Join-Path $documents 'Showcase-Word-ExecutiveReport-Hero.png'
 Remove-Item -Path $path -Force -ErrorAction SilentlyContinue
-Remove-Item -Path $heroPath -Force -ErrorAction SilentlyContinue
-
-Add-Type -AssemblyName System.Drawing
-$bitmap = [System.Drawing.Bitmap]::new(960, 220)
-$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
-$accentBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::Teal)
-$darkBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::DarkSlateGray)
-$whiteBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::White)
-$inkBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(34, 42, 53))
-$mutedBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(84, 96, 111))
-try {
-    $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
-    $graphics.Clear([System.Drawing.Color]::FromArgb(246, 249, 251))
-
-    $graphics.FillRectangle($accentBrush, 0, 0, 18, 220)
-    $graphics.FillRectangle($darkBrush, 18, 0, 140, 220)
-    $graphics.FillEllipse($whiteBrush, 52, 42, 72, 72)
-    $graphics.FillEllipse($accentBrush, 70, 60, 36, 36)
-
-    $titleFont = [System.Drawing.Font]::new('Segoe UI', 32, [System.Drawing.FontStyle]::Bold)
-    $subtitleFont = [System.Drawing.Font]::new('Segoe UI', 16, [System.Drawing.FontStyle]::Regular)
-    $labelFont = [System.Drawing.Font]::new('Segoe UI', 11, [System.Drawing.FontStyle]::Bold)
-    $graphics.DrawString('Executive Service Health Report', $titleFont, $inkBrush, 190, 48)
-    $graphics.DrawString('Generated from PowerShell objects with PSWriteOffice and OfficeIMO', $subtitleFont, $mutedBrush, 194, 102)
-    $graphics.DrawString('TOC   TABLES   CHARTS   NOTES   APPROVALS', $labelFont, $accentBrush, 196, 154)
-} finally {
-    if ($titleFont) { $titleFont.Dispose() }
-    if ($subtitleFont) { $subtitleFont.Dispose() }
-    if ($labelFont) { $labelFont.Dispose() }
-    $accentBrush.Dispose()
-    $darkBrush.Dispose()
-    $whiteBrush.Dispose()
-    $inkBrush.Dispose()
-    $mutedBrush.Dispose()
-    $graphics.Dispose()
-    $bitmap.Save($heroPath, [System.Drawing.Imaging.ImageFormat]::Png)
-    $bitmap.Dispose()
-}
 
 $services = @(
     [pscustomobject]@{ Service = 'Identity Sync'; Owner = 'Platform'; Status = 'Healthy'; Availability = 99.98; Incidents = 1; Risk = 'Low'; NextAction = 'Keep monitoring password hash sync drift' }
@@ -70,6 +31,12 @@ $trend = @(
     [pscustomobject]@{ Month = 'Apr'; Availability = 99.61; Incidents = 5 }
     [pscustomobject]@{ Month = 'May'; Availability = 99.73; Incidents = 4 }
     [pscustomobject]@{ Month = 'Jun'; Availability = 99.82; Incidents = 3 }
+)
+
+$executiveSignals = @(
+    [pscustomobject]@{ Signal = 'Audience'; Detail = 'Technology leadership, service owners, and operational reviewers' }
+    [pscustomobject]@{ Signal = 'Decision'; Detail = 'Approve the focused remediation plan for high-friction services' }
+    [pscustomobject]@{ Signal = 'Evidence'; Detail = 'TOC, scorecard table, trend chart, links, notes, and approval controls' }
 )
 
 $actions = @(
@@ -98,7 +65,8 @@ New-OfficeWord -Path $path {
         Set-OfficeWordDocumentProperty -Name ShowcaseProduct -Value 'Word' -Custom
 
         WordParagraph -Text 'Executive Service Health Report' -Style Heading1
-        WordImage -Path $heroPath -Width 640 -Height 147 -Description 'Executive service health report banner'
+        WordParagraph 'Generated from PowerShell objects with PSWriteOffice and OfficeIMO.'
+        WordTable -InputObject $executiveSignals -Style GridTable5DarkAccent1 -Layout AutoFitToWindow
         WordParagraph {
             WordBold 'Audience: '
             WordText 'technology leadership, service owners, and operational reviewers.'
