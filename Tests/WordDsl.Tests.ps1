@@ -5,6 +5,8 @@ BeforeAll {
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
     Import-Module $ModuleManifest -Global -ErrorAction Stop
+
+    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 }
 
 Describe 'Word DSL surface' {
@@ -124,6 +126,26 @@ Describe 'Word DSL surface' {
         } finally {
             $document.Dispose()
         }
+    }
+
+    It 'adds same-paragraph Word breaks' {
+        $path = Join-Path $TestDrive 'DslWordBreaks.docx'
+
+        New-OfficeWord -Path $path {
+            WordParagraph {
+                WordText 'Line 1'
+                WordBreak
+                WordText 'Line 2'
+            }
+        } | Out-Null
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+
+        $documentXml.SelectNodes('//w:br', $namespaceManager).Count | Should -Be 1
+        $documentXml.SelectSingleNode('//w:t[text()="Line 1"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:t[text()="Line 2"]', $namespaceManager) | Should -Not -BeNullOrEmpty
     }
 
     It 'supports reader helpers and save' {
