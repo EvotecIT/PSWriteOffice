@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -149,7 +150,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         var pivotCount = worksheetPart.PivotTableParts.Count();
         var sparklineGroupCount = worksheet.Descendants<SparklineGroups>().Sum(groups => groups.Elements<SparklineGroup>().Count());
         var hyperlinkCount = worksheet.Elements<Hyperlinks>().FirstOrDefault()?.Elements<Hyperlink>().Count() ?? 0;
-        var commentCount = worksheetPart.WorksheetCommentsPart?.Comments?.CommentList?.Elements<Comment>().Count() ?? 0;
+        var commentCount = CountComments(worksheetPart);
 
         record.Properties.Add(new PSNoteProperty("UsedRange", worksheet.SheetDimension?.Reference?.Value));
         record.Properties.Add(new PSNoteProperty("TableCount", tableRecords.Length));
@@ -178,6 +179,14 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
     {
         return container.Parts.Sum(part =>
             (part.OpenXmlPart is ChartPart ? 1 : 0) + CountChartParts(part.OpenXmlPart));
+    }
+
+    private static int CountComments(WorksheetPart worksheetPart)
+    {
+        var legacyCount = worksheetPart.WorksheetCommentsPart?.Comments?.CommentList?.Elements<Comment>().Count() ?? 0;
+        var threadedCount = worksheetPart.WorksheetThreadedCommentsParts.Sum(part =>
+            part.ThreadedComments?.Elements<ThreadedComment>().Count() ?? 0);
+        return legacyCount + threadedCount;
     }
 
     private static IEnumerable<PSObject> GetTableRecords(WorksheetPart worksheetPart)

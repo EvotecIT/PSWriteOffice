@@ -111,7 +111,7 @@ public sealed class AddOfficePowerPointDesignerDeckCommand : PSCmdlet
 
         if (Preview.IsPresent)
         {
-            WriteObject(brief.DescribeDeckPlan(Plan, 0), enumerateCollection: true);
+            WriteObject(brief.DescribeDeckPlan(Plan, AlternativeCount), enumerateCollection: true);
             return;
         }
 

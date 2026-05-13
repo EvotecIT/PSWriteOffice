@@ -75,6 +75,11 @@ Describe 'Excel DSL surface' {
         $imported[0].Region | Should -Be 'NA'
         $imported[0].Revenue | Should -Be 100
         $imported[0].PSObject.Properties.Name | Should -Not -Contain 'Internal'
+
+        { Import-OfficeExcel -Path $path -WorksheetName 'Data' -StartRow 4 -EndRow 2 -StartColumn 1 -EndColumn 2 } |
+            Should -Throw '*StartRow must be less than or equal to EndRow*'
+        { Import-OfficeExcel -Path $path -WorksheetName 'Data' -StartRow 2 -EndRow 4 -StartColumn 3 -EndColumn 1 } |
+            Should -Throw '*StartColumn must be less than or equal to EndColumn*'
     }
 
     It 'appends rows without rewriting headers' {
@@ -361,6 +366,42 @@ Describe 'Excel DSL surface' {
         $pageMargins.GetAttribute('right') | Should -Be '0.25'
         $pageMargins.GetAttribute('top') | Should -Be '0.5'
         $pageMargins.GetAttribute('bottom') | Should -Be '0.5'
+    }
+
+    It 'counts threaded comments in workbook summaries' {
+        $path = Join-Path $TestDrive 'DslExcelThreadedComments.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+            }
+        }
+
+        $document = [DocumentFormat.OpenXml.Packaging.SpreadsheetDocument]::Open($path, $true)
+        try {
+            $worksheetPart = @($document.WorkbookPart.WorksheetParts)[0]
+            $addPartMethod = [DocumentFormat.OpenXml.Packaging.WorksheetPart].GetMethods() |
+                Where-Object { $_.Name -eq 'AddNewPart' -and $_.IsGenericMethodDefinition -and $_.GetParameters().Count -eq 0 } |
+                Select-Object -First 1
+            $threadedPart = $addPartMethod.MakeGenericMethod([DocumentFormat.OpenXml.Packaging.WorksheetThreadedCommentsPart]).Invoke($worksheetPart, @())
+            $threadedComments = [DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComments]::new()
+            $threadedComment = [DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComment]::new()
+            $threadedComment.Ref = 'A2'
+            $threadedComment.PersonId = '{00000000-0000-0000-0000-000000000001}'
+            $threadedComment.Id = '{00000000-0000-0000-0000-000000000002}'
+            $threadedComment.AppendChild([DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedCommentText]::new('Modern note')) | Out-Null
+            $threadedComments.AppendChild($threadedComment) | Out-Null
+            $threadedComments.Save($threadedPart)
+        } finally {
+            $document.Dispose()
+        }
+
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.CommentCount | Should -Be 1
+        $summary.Sheets[0].CommentCount | Should -Be 1
     }
 
     It 'adds a table of contents and reads ranges with the new Excel readers' {

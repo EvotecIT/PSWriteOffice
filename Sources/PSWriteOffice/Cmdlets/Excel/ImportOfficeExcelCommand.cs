@@ -109,6 +109,16 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
                 throw new PSArgumentException("Coordinate bounds must be 1 or greater.");
             }
 
+            if (StartRow.Value > EndRow.Value)
+            {
+                throw new PSArgumentException("StartRow must be less than or equal to EndRow.");
+            }
+
+            if (StartColumn.Value > EndColumn.Value)
+            {
+                throw new PSArgumentException("StartColumn must be less than or equal to EndColumn.");
+            }
+
             return $"{ExcelA1Address.CellReference(StartRow.Value, StartColumn.Value)}:{ExcelA1Address.CellReference(EndRow.Value, EndColumn.Value)}";
         }
 
