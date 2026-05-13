@@ -306,7 +306,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         sheet.CellValues(cells);
         var endRow = Math.Max(startRow, row - 1);
         var endColumn = StartColumn + table.Columns.Count - 1;
-        return $"{A1.CellReference(startRow, StartColumn)}:{A1.CellReference(endRow, endColumn)}";
+        return $"{ExcelA1Address.CellReference(startRow, StartColumn)}:{ExcelA1Address.CellReference(endRow, endColumn)}";
     }
 
     private string? ResolveAppendTableName(ExcelDocument document, ExcelSheet sheet, bool appendToExistingSheet)

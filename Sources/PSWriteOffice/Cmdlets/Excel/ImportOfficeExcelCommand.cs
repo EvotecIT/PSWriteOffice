@@ -109,7 +109,7 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
                 throw new PSArgumentException("Coordinate bounds must be 1 or greater.");
             }
 
-            return $"{A1.CellReference(StartRow.Value, StartColumn.Value)}:{A1.CellReference(EndRow.Value, EndColumn.Value)}";
+            return $"{ExcelA1Address.CellReference(StartRow.Value, StartColumn.Value)}:{ExcelA1Address.CellReference(EndRow.Value, EndColumn.Value)}";
         }
 
         return sheet.GetUsedRangeA1();
