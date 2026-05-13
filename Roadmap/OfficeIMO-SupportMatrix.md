@@ -3,6 +3,7 @@
 Date: 2026-05-11
 
 This matrix is a quick planning companion for `OfficeIMO-Showcase-PolishPlan.md`.
+For the ImportExcel and PSWriteWord competitive crosswalk, see `ExcelWord-CompetitiveCapabilityAudit.md`.
 
 ## Legend
 

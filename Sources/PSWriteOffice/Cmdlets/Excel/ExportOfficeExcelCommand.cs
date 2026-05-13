@@ -1,0 +1,416 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Management.Automation;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
+using System.Threading;
+using OfficeIMO.Excel;
+using PSWriteOffice.Services;
+using PSWriteOffice.Services.Excel;
+
+namespace PSWriteOffice.Cmdlets.Excel;
+
+/// <summary>Exports PowerShell objects to an Excel workbook using an operator-friendly surface.</summary>
+/// <para>Provides an ImportExcel-style fast path while keeping OfficeIMO as the workbook engine.</para>
+/// <example>
+///   <summary>Export objects to a table.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$rows | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -TableName Data -AutoFit -FreezeTopRow</code>
+///   <para>Creates a workbook, writes the objects as a table, auto-fits columns, and freezes the header row.</para>
+/// </example>
+[Cmdlet(VerbsData.Export, "OfficeExcel")]
+[Alias("ExcelExport")]
+public sealed class ExportOfficeExcelCommand : PSCmdlet
+{
+    private readonly List<object?> _input = new();
+
+    /// <summary>Destination workbook path.</summary>
+    [Parameter(Mandatory = true, Position = 0)]
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
+
+    /// <summary>Objects to write. Accepts pipeline input.</summary>
+    [Parameter(ValueFromPipeline = true)]
+    public object? InputObject { get; set; }
+
+    /// <summary>Worksheet name to create or update.</summary>
+    [Parameter]
+    [Alias("Sheet")]
+    public string WorksheetName { get; set; } = "Sheet1";
+
+    /// <summary>Optional Excel table name.</summary>
+    [Parameter]
+    public string? TableName { get; set; }
+
+    /// <summary>Built-in Excel table style name.</summary>
+    [Parameter]
+    public string TableStyle { get; set; } = "TableStyleMedium9";
+
+    /// <summary>Starting row for new exports. When appending and left at 1, rows are written after the used range.</summary>
+    [Parameter]
+    public int StartRow { get; set; } = 1;
+
+    /// <summary>Starting column for new exports.</summary>
+    [Parameter]
+    public int StartColumn { get; set; } = 1;
+
+    /// <summary>Do not emit a header row.</summary>
+    [Parameter]
+    public SwitchParameter NoHeader { get; set; }
+
+    /// <summary>Do not create an Excel table around the exported data.</summary>
+    [Parameter]
+    public SwitchParameter NoTable { get; set; }
+
+    /// <summary>Disable AutoFilter dropdowns on the created table.</summary>
+    [Parameter]
+    public SwitchParameter NoAutoFilter { get; set; }
+
+    /// <summary>Auto-fit exported columns.</summary>
+    [Parameter]
+    [Alias("AutoSize")]
+    public SwitchParameter AutoFit { get; set; }
+
+    /// <summary>Freeze the exported header row.</summary>
+    [Parameter]
+    public SwitchParameter FreezeTopRow { get; set; }
+
+    /// <summary>Freeze the first exported column.</summary>
+    [Parameter]
+    public SwitchParameter FreezeFirstColumn { get; set; }
+
+    /// <summary>Bold the exported header row.</summary>
+    [Parameter]
+    public SwitchParameter BoldTopRow { get; set; }
+
+    /// <summary>Write a title above the exported table.</summary>
+    [Parameter]
+    public string? Title { get; set; }
+
+    /// <summary>Append rows to an existing worksheet when the workbook exists.</summary>
+    [Parameter]
+    public SwitchParameter Append { get; set; }
+
+    /// <summary>Replace the target worksheet inside an existing workbook.</summary>
+    [Parameter]
+    public SwitchParameter ClearSheet { get; set; }
+
+    /// <summary>Do not overwrite an existing workbook unless appending or clearing a sheet.</summary>
+    [Parameter]
+    public SwitchParameter NoClobber { get; set; }
+
+    /// <summary>Exclude specific properties from exported objects.</summary>
+    [Parameter]
+    public string[]? ExcludeProperty { get; set; }
+
+    /// <summary>Open the workbook after saving.</summary>
+    [Parameter]
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
+
+    /// <summary>Emit the saved FileInfo.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
+    /// <inheritdoc />
+    protected override void ProcessRecord()
+    {
+        AddInput(InputObject);
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        if (_input.Count == 0)
+        {
+            throw new PSArgumentException("Provide at least one object to export.", nameof(InputObject));
+        }
+
+        if (StartRow < 1 || StartColumn < 1)
+        {
+            throw new PSArgumentException("StartRow and StartColumn must be 1 or greater.");
+        }
+
+        if (Append.IsPresent && ClearSheet.IsPresent)
+        {
+            throw new PSArgumentException("Specify either -Append or -ClearSheet, but not both.");
+        }
+
+        if (!Enum.TryParse(TableStyle, ignoreCase: true, out TableStyle style))
+        {
+            throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
+        }
+
+        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        var directory = System.IO.Path.GetDirectoryName(resolvedPath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        if (File.Exists(resolvedPath) && NoClobber.IsPresent && !Append.IsPresent && !ClearSheet.IsPresent)
+        {
+            throw new IOException($"File '{resolvedPath}' already exists.");
+        }
+
+        var preserveWorkbook = File.Exists(resolvedPath) && (Append.IsPresent || ClearSheet.IsPresent);
+        if (File.Exists(resolvedPath) && !preserveWorkbook)
+        {
+            File.Delete(resolvedPath);
+        }
+
+        var document = preserveWorkbook
+            ? ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false)
+            : ExcelDocumentService.CreateDocument(resolvedPath, autoSave: false);
+
+        try
+        {
+            var isAppendingToExistingSheet = Append.IsPresent && SheetExists(document, WorksheetName);
+            var sheet = PrepareSheet(document);
+            var data = BuildDataTable();
+            if (data.Columns.Count == 0)
+            {
+                throw new InvalidOperationException("Unable to infer columns from the supplied data.");
+            }
+
+            var dataStartRow = ResolveDataStartRow(sheet, isAppendingToExistingSheet);
+            var includeHeaders = !NoHeader.IsPresent && !isAppendingToExistingSheet;
+
+            if (!string.IsNullOrWhiteSpace(Title) && !isAppendingToExistingSheet)
+            {
+                sheet.Cell(dataStartRow, StartColumn, Title!);
+                sheet.CellBold(dataStartRow, StartColumn, true);
+                dataStartRow++;
+            }
+
+            var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
+            var range = WriteData(sheet, data, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName);
+
+            if (BoldTopRow.IsPresent && includeHeaders)
+            {
+                BoldRow(sheet, dataStartRow, StartColumn, data.Columns.Count);
+            }
+
+            if (AutoFit.IsPresent)
+            {
+                sheet.AutoFitColumnsFor(Enumerable.Range(StartColumn, data.Columns.Count));
+            }
+
+            if (FreezeTopRow.IsPresent || FreezeFirstColumn.IsPresent)
+            {
+                var frozenRows = FreezeTopRow.IsPresent ? Math.Max(1, dataStartRow) : 0;
+                var frozenColumns = FreezeFirstColumn.IsPresent ? Math.Max(1, StartColumn) : 0;
+                sheet.Freeze(frozenRows, frozenColumns);
+            }
+
+            if (!string.IsNullOrWhiteSpace(range))
+            {
+                WriteVerbose($"Exported data to {sheet.Name}!{range}.");
+            }
+
+            ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+        }
+        catch
+        {
+            document.Dispose();
+            throw;
+        }
+
+        if (PassThru.IsPresent)
+        {
+            WriteObject(new FileInfo(resolvedPath));
+        }
+    }
+
+    private ExcelSheet PrepareSheet(ExcelDocument document)
+    {
+        if (ClearSheet.IsPresent && SheetExists(document, WorksheetName))
+        {
+            document.RemoveWorkSheet(WorksheetName);
+        }
+
+        return document.GetOrCreateSheet(WorksheetName, SheetNameValidationMode.Sanitize);
+    }
+
+    private DataTable BuildDataTable()
+    {
+        var normalized = PowerShellObjectNormalizer.NormalizeItems(_input);
+        var table = ObjectDataTableBuilder.FromObjects(normalized);
+
+        if (ExcludeProperty is { Length: > 0 })
+        {
+            var excluded = new HashSet<string>(
+                ExcludeProperty.Where(static p => !string.IsNullOrWhiteSpace(p)).Select(static p => p.Trim()),
+                StringComparer.OrdinalIgnoreCase);
+
+            foreach (DataColumn column in table.Columns.Cast<DataColumn>().ToArray())
+            {
+                if (excluded.Contains(column.ColumnName))
+                {
+                    table.Columns.Remove(column);
+                }
+            }
+        }
+
+        return table;
+    }
+
+    private string WriteData(ExcelSheet sheet, DataTable table, int startRow, bool includeHeaders, TableStyle style, bool appendRawRows, string? appendTableName)
+    {
+        if (appendRawRows &&
+            !NoTable.IsPresent &&
+            !string.IsNullOrWhiteSpace(appendTableName) &&
+            TryAppendDataTableToTable(sheet, table, appendTableName!, out var updatedTableRange))
+        {
+            return updatedTableRange;
+        }
+
+        if (!NoTable.IsPresent && !appendRawRows)
+        {
+            return sheet.InsertDataTableAsTable(
+                table,
+                startRow,
+                StartColumn,
+                includeHeaders,
+                TableName,
+                style,
+                includeAutoFilter: !NoAutoFilter.IsPresent);
+        }
+
+        var cells = new List<(int Row, int Column, object Value)>();
+        var row = startRow;
+
+        if (includeHeaders)
+        {
+            for (var columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
+            {
+                cells.Add((row, StartColumn + columnIndex, table.Columns[columnIndex].ColumnName));
+            }
+            row++;
+        }
+
+        foreach (DataRow dataRow in table.Rows)
+        {
+            for (var columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
+            {
+                var value = dataRow[columnIndex];
+                cells.Add((row, StartColumn + columnIndex, value is DBNull ? string.Empty : value));
+            }
+            row++;
+        }
+
+        sheet.CellValues(cells);
+        var endRow = Math.Max(startRow, row - 1);
+        var endColumn = StartColumn + table.Columns.Count - 1;
+        return $"{A1.CellReference(startRow, StartColumn)}:{A1.CellReference(endRow, endColumn)}";
+    }
+
+    private string? ResolveAppendTableName(ExcelDocument document, ExcelSheet sheet, bool appendToExistingSheet)
+    {
+        if (!appendToExistingSheet || NoTable.IsPresent)
+        {
+            return null;
+        }
+
+        if (!string.IsNullOrWhiteSpace(TableName))
+        {
+            return TableName;
+        }
+
+        var sheetTables = document.GetTables()
+            .Where(table => string.Equals(table.SheetName, sheet.Name, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        return sheetTables.Count == 1 ? sheetTables[0].Name : null;
+    }
+
+    private bool TryAppendDataTableToTable(ExcelSheet sheet, DataTable table, string tableName, out string range)
+    {
+        var method = typeof(ExcelSheet).GetMethod(
+            "AppendDataTableToTable",
+            BindingFlags.Instance | BindingFlags.Public,
+            binder: null,
+            types: new[] { typeof(DataTable), typeof(string), typeof(bool), typeof(ExecutionMode?), typeof(CancellationToken) },
+            modifiers: null);
+
+        if (method == null)
+        {
+            WriteVerbose("The loaded OfficeIMO.Excel version does not expose AppendDataTableToTable; appending rows after the used range.");
+            range = string.Empty;
+            return false;
+        }
+
+        try
+        {
+            var result = method.Invoke(sheet, new object?[] { table, tableName, true, null, CancellationToken.None });
+            range = result as string ?? string.Empty;
+            return true;
+        }
+        catch (TargetInvocationException exception) when (exception.InnerException != null)
+        {
+            ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
+            throw;
+        }
+    }
+
+    private int ResolveDataStartRow(ExcelSheet sheet, bool appendToExistingSheet)
+    {
+        if (!appendToExistingSheet || StartRow > 1)
+        {
+            return StartRow;
+        }
+
+        var usedRange = sheet.GetUsedRangeA1();
+        if (A1.TryParseRange(usedRange, out _, out _, out var lastRow, out _))
+        {
+            return lastRow + 1;
+        }
+
+        var (row, _) = A1.ParseCellRef(usedRange);
+        return row > 0 ? row + 1 : StartRow;
+    }
+
+    private void AddInput(object? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        if (value is PSObject psObject)
+        {
+            value = psObject.BaseObject is PSCustomObject ? psObject : psObject.BaseObject;
+        }
+
+        if (value is IEnumerable enumerable && value is not string && value is not IDictionary)
+        {
+            foreach (var item in enumerable)
+            {
+                if (item != null)
+                {
+                    _input.Add(item);
+                }
+            }
+            return;
+        }
+
+        _input.Add(value);
+    }
+
+    private static void BoldRow(ExcelSheet sheet, int row, int startColumn, int columnCount)
+    {
+        for (var column = startColumn; column < startColumn + columnCount; column++)
+        {
+            sheet.CellBold(row, column, true);
+        }
+    }
+
+    private static bool SheetExists(ExcelDocument document, string worksheetName)
+    {
+        return document.Sheets.Any(sheet => string.Equals(sheet.Name, worksheetName, StringComparison.OrdinalIgnoreCase));
+    }
+}
