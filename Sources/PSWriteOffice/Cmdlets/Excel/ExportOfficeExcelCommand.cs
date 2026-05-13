@@ -202,7 +202,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             if (FreezeTopRow.IsPresent || FreezeFirstColumn.IsPresent)
             {
-                var frozenRows = FreezeTopRow.IsPresent ? Math.Max(1, dataStartRow) : 0;
+                var frozenRows = ResolveFrozenTopRows(document, sheet, isAppendingToExistingSheet, appendTableName, dataStartRow, includeHeaders);
                 var frozenColumns = FreezeFirstColumn.IsPresent ? Math.Max(1, StartColumn) : 0;
                 sheet.Freeze(frozenRows, frozenColumns);
             }
@@ -326,6 +326,32 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             .ToList();
 
         return sheetTables.Count == 1 ? sheetTables[0].Name : null;
+    }
+
+    private int ResolveFrozenTopRows(ExcelDocument document, ExcelSheet sheet, bool appendToExistingSheet, string? appendTableName, int dataStartRow, bool includeHeaders)
+    {
+        if (!FreezeTopRow.IsPresent)
+        {
+            return 0;
+        }
+
+        if (!appendToExistingSheet)
+        {
+            return Math.Max(1, includeHeaders ? dataStartRow : StartRow);
+        }
+
+        if (!string.IsNullOrWhiteSpace(appendTableName))
+        {
+            var table = document.GetTables().FirstOrDefault(candidate =>
+                string.Equals(candidate.SheetName, sheet.Name, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(candidate.Name, appendTableName, StringComparison.OrdinalIgnoreCase));
+            if (table != null && ExcelA1Address.TryGetRangeStartRow(table.Range, out var tableStartRow))
+            {
+                return Math.Max(1, tableStartRow);
+            }
+        }
+
+        return Math.Max(1, StartRow);
     }
 
     private bool TryAppendDataTableToTable(ExcelSheet sheet, DataTable table, string tableName, out string range)

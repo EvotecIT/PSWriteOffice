@@ -103,6 +103,25 @@ Describe 'Excel DSL surface' {
         }
     }
 
+    It 'keeps append freeze panes anchored to the existing table header' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelAppendFreeze.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+        )
+        $moreRows = @(
+            [PSCustomObject]@{ Region = 'APAC'; Revenue = 150 }
+        )
+
+        $rows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export' -FreezeTopRow
+        $moreRows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -Append -TableName 'Sales' -FreezeTopRow
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $pane = $sheetXml.SelectSingleNode("/*[local-name()='worksheet']/*[local-name()='sheetViews']/*[local-name()='sheetView']/*[local-name()='pane']")
+
+        $pane.GetAttribute('ySplit') | Should -Be '2'
+    }
+
     It 'supports autofit and validation list helpers' {
         $path = Join-Path $TestDrive 'DslExcelExtras.xlsx'
         $rows = @(
