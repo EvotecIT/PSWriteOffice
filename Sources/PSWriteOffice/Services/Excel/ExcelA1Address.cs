@@ -30,4 +30,29 @@ internal static class ExcelA1Address
         builder.Append(row.ToString(CultureInfo.InvariantCulture));
         return builder.ToString();
     }
+
+    internal static bool TryGetRangeStartRow(string? range, out int row)
+    {
+        row = 0;
+        if (string.IsNullOrWhiteSpace(range))
+        {
+            return false;
+        }
+
+        var rangeValue = (range ?? string.Empty).Trim();
+        var separatorIndex = rangeValue.IndexOf(':');
+        var startReference = separatorIndex >= 0 ? rangeValue.Substring(0, separatorIndex) : rangeValue;
+        var digitStart = 0;
+        while (digitStart < startReference.Length && !char.IsDigit(startReference[digitStart]))
+        {
+            digitStart++;
+        }
+
+        if (digitStart >= startReference.Length)
+        {
+            return false;
+        }
+
+        return int.TryParse(startReference.Substring(digitStart), NumberStyles.None, CultureInfo.InvariantCulture, out row);
+    }
 }
