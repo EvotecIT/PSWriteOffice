@@ -53,6 +53,80 @@ Describe 'Excel DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'exports and imports objects through operator cmdlets' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcel.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100; Internal = 'skip' }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200; Internal = 'skip' }
+        )
+
+        $file = $rows |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export' -AutoFit -FreezeTopRow -BoldTopRow -ExcludeProperty Internal -PassThru
+
+        $file.FullName | Should -Be $path
+        Test-Path $path | Should -BeTrue
+
+        $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales')
+        $tables.Count | Should -Be 1
+        $tables[0].Range | Should -Be 'A2:B4'
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A2:B4')
+        $imported.Count | Should -Be 2
+        $imported[0].Region | Should -Be 'NA'
+        $imported[0].Revenue | Should -Be 100
+        $imported[0].PSObject.Properties.Name | Should -Not -Contain 'Internal'
+
+        { Import-OfficeExcel -Path $path -WorksheetName 'Data' -StartRow 4 -EndRow 2 -StartColumn 1 -EndColumn 2 } |
+            Should -Throw '*StartRow must be less than or equal to EndRow*'
+        { Import-OfficeExcel -Path $path -WorksheetName 'Data' -StartRow 2 -EndRow 4 -StartColumn 3 -EndColumn 1 } |
+            Should -Throw '*StartColumn must be less than or equal to EndColumn*'
+    }
+
+    It 'appends rows without rewriting headers' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelAppend.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+        )
+        $moreRows = @(
+            [PSCustomObject]@{ Region = 'APAC'; Revenue = 150 }
+        )
+
+        $rows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -AutoFit
+        $moreRows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -Append -TableName 'Sales' -AutoFit
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B4')
+        $imported.Count | Should -Be 3
+        $imported[2].Region | Should -Be 'APAC'
+        $imported[2].Revenue | Should -Be 150
+
+        $hasTableAppend = @([OfficeIMO.Excel.ExcelSheet].GetMethods() | Where-Object Name -eq 'AppendDataTableToTable').Count -gt 0
+        if ($hasTableAppend) {
+            $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales')
+            $tables.Count | Should -Be 1
+            $tables[0].Range | Should -Be 'A1:B4'
+        }
+    }
+
+    It 'keeps append freeze panes anchored to the existing table header' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelAppendFreeze.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+        )
+        $moreRows = @(
+            [PSCustomObject]@{ Region = 'APAC'; Revenue = 150 }
+        )
+
+        $rows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export' -FreezeTopRow
+        $moreRows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -Append -TableName 'Sales' -FreezeTopRow
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $pane = $sheetXml.SelectSingleNode("/*[local-name()='worksheet']/*[local-name()='sheetViews']/*[local-name()='sheetView']/*[local-name()='pane']")
+
+        $pane.GetAttribute('ySplit') | Should -Be '2'
+    }
+
     It 'supports autofit and validation list helpers' {
         $path = Join-Path $TestDrive 'DslExcelExtras.xlsx'
         $rows = @(
@@ -278,6 +352,10 @@ Describe 'Excel DSL surface' {
         $workbookSheet.GetAttribute('name') | Should -Be 'Data'
         $workbookSheet.GetAttribute('state') | Should -Be 'hidden'
 
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.HiddenSheetCount | Should -Be 1
+        $summary.Sheets[0].State | Should -Be 'Hidden'
+
         $pageSetup = $sheetXml.SelectSingleNode("/*[local-name()='worksheet']/*[local-name()='pageSetup']")
         $pageSetup.GetAttribute('fitToWidth') | Should -Be '1'
         $pageSetup.GetAttribute('fitToHeight') | Should -Be '0'
@@ -288,6 +366,42 @@ Describe 'Excel DSL surface' {
         $pageMargins.GetAttribute('right') | Should -Be '0.25'
         $pageMargins.GetAttribute('top') | Should -Be '0.5'
         $pageMargins.GetAttribute('bottom') | Should -Be '0.5'
+    }
+
+    It 'counts threaded comments in workbook summaries' {
+        $path = Join-Path $TestDrive 'DslExcelThreadedComments.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+            }
+        }
+
+        $document = [DocumentFormat.OpenXml.Packaging.SpreadsheetDocument]::Open($path, $true)
+        try {
+            $worksheetPart = @($document.WorkbookPart.WorksheetParts)[0]
+            $addPartMethod = [DocumentFormat.OpenXml.Packaging.WorksheetPart].GetMethods() |
+                Where-Object { $_.Name -eq 'AddNewPart' -and $_.IsGenericMethodDefinition -and $_.GetParameters().Count -eq 0 } |
+                Select-Object -First 1
+            $threadedPart = $addPartMethod.MakeGenericMethod([DocumentFormat.OpenXml.Packaging.WorksheetThreadedCommentsPart]).Invoke($worksheetPart, @())
+            $threadedComments = [DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComments]::new()
+            $threadedComment = [DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComment]::new()
+            $threadedComment.Ref = 'A2'
+            $threadedComment.PersonId = '{00000000-0000-0000-0000-000000000001}'
+            $threadedComment.Id = '{00000000-0000-0000-0000-000000000002}'
+            $threadedComment.AppendChild([DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedCommentText]::new('Modern note')) | Out-Null
+            $threadedComments.AppendChild($threadedComment) | Out-Null
+            $threadedComments.Save($threadedPart)
+        } finally {
+            $document.Dispose()
+        }
+
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.CommentCount | Should -Be 1
+        $summary.Sheets[0].CommentCount | Should -Be 1
     }
 
     It 'adds a table of contents and reads ranges with the new Excel readers' {
@@ -330,6 +444,16 @@ Describe 'Excel DSL surface' {
         $dataRows.Count | Should -Be 2
         $dataRows[0].Region | Should -Be 'NA'
 
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.SheetCount | Should -Be 3
+        $summary.VisibleSheetCount | Should -Be 3
+        $summary.TableCount | Should -Be 2
+        $summary.NamedRangeCount | Should -Be 1
+        $summary.HyperlinkCount | Should -BeGreaterThan 0
+        $summary.Sheets.Name | Should -Contain 'Data'
+        ($summary.Sheets | Where-Object Name -eq 'Data').UsedRange | Should -Be 'A1:B5'
+        ($summary.Sheets | Where-Object Name -eq 'Data').Tables.Name | Should -Contain 'Sales'
+
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {
             $doc.Sheets[0].Name | Should -Be 'TOC'
@@ -340,6 +464,129 @@ Describe 'Excel DSL surface' {
         } finally {
             Close-OfficeExcel -Document $doc
         }
+    }
+
+    It 'includes chartsheet charts in workbook summaries' {
+        $path = Join-Path $TestDrive 'WorkbookWithChartSheet.xlsx'
+        $archive = [System.IO.Compression.ZipFile]::Open($path, [System.IO.Compression.ZipArchiveMode]::Create)
+        try {
+            function Add-ZipTextEntry {
+                param(
+                    [Parameter(Mandatory)]
+                    [System.IO.Compression.ZipArchive] $Archive,
+
+                    [Parameter(Mandatory)]
+                    [string] $EntryName,
+
+                    [Parameter(Mandatory)]
+                    [string] $Content
+                )
+
+                $entry = $Archive.CreateEntry($EntryName)
+                $stream = $entry.Open()
+                try {
+                    $writer = [System.IO.StreamWriter]::new($stream, [System.Text.UTF8Encoding]::new($false))
+                    try {
+                        $writer.Write($Content)
+                    } finally {
+                        $writer.Dispose()
+                    }
+                } finally {
+                    $stream.Dispose()
+                }
+            }
+
+            Add-ZipTextEntry -Archive $archive -EntryName '[Content_Types].xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+  <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+  <Override PartName="/xl/chartsheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml"/>
+  <Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>
+  <Override PartName="/xl/charts/chart1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawingml.chart+xml"/>
+</Types>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName '_rels/.rels' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/workbook.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheets>
+    <sheet name="Data" sheetId="1" r:id="rId1"/>
+    <sheet name="Revenue Chart" sheetId="2" r:id="rId2"/>
+  </sheets>
+</workbook>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/_rels/workbook.xml.rels' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/chartsheet" Target="chartsheets/sheet1.xml"/>
+</Relationships>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/worksheets/sheet1.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+  <dimension ref="A1:B2"/>
+  <sheetData>
+    <row r="1"><c r="A1" t="str"><v>Region</v></c><c r="B1" t="str"><v>Revenue</v></c></row>
+    <row r="2"><c r="A2" t="str"><v>EMEA</v></c><c r="B2"><v>42</v></c></row>
+  </sheetData>
+</worksheet>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/chartsheets/sheet1.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<chartsheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheetViews><sheetView workbookViewId="0"/></sheetViews>
+  <drawing r:id="rId1"/>
+</chartsheet>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/chartsheets/_rels/sheet1.xml.rels' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing1.xml"/>
+</Relationships>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/drawings/drawing1.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <xdr:absoluteAnchor>
+    <xdr:pos x="0" y="0"/><xdr:ext cx="6000000" cy="4000000"/>
+    <xdr:graphicFrame macro="">
+      <xdr:nvGraphicFramePr><xdr:cNvPr id="2" name="Chart 1"/><xdr:cNvGraphicFramePr/></xdr:nvGraphicFramePr>
+      <xdr:xfrm><a:off x="0" y="0"/><a:ext cx="6000000" cy="4000000"/></xdr:xfrm>
+      <a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart"><c:chart r:id="rId1"/></a:graphicData></a:graphic>
+    </xdr:graphicFrame>
+    <xdr:clientData/>
+  </xdr:absoluteAnchor>
+</xdr:wsDr>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/drawings/_rels/drawing1.xml.rels' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart" Target="../charts/chart1.xml"/>
+</Relationships>
+'@
+            Add-ZipTextEntry -Archive $archive -EntryName 'xl/charts/chart1.xml' -Content @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <c:chart><c:plotArea><c:layout/></c:plotArea></c:chart>
+</c:chartSpace>
+'@
+        } finally {
+            $archive.Dispose()
+        }
+
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.SheetCount | Should -Be 2
+        $summary.ChartCount | Should -Be 1
+        ($summary.Sheets | Where-Object Name -eq 'Revenue Chart').ChartCount | Should -Be 1
     }
 
     It 'formats Excel charts with legend, labels, and style presets' {

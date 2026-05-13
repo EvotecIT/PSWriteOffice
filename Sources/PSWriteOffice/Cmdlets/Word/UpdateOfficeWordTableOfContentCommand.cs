@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Update-OfficeWordTableOfContent</code>
 ///   <para>Marks TOC fields as dirty and updates the document settings.</para>
 /// </example>
-[Cmdlet(VerbsData.Update, "OfficeWordTableOfContent")]
+[Cmdlet(VerbsData.Update, "OfficeWordTableOfContent", DefaultParameterSetName = ParameterSetDocument)]
 [OutputType(typeof(WordTableOfContent))]
 public sealed class UpdateOfficeWordTableOfContentCommand : PSCmdlet
 {

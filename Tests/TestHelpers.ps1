@@ -1,3 +1,7 @@
+if (-not ('System.IO.Compression.ZipFile' -as [type])) {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction Stop
+}
+
 function New-TestOfficeImageFile {
     param(
         [Parameter(Mandatory)]

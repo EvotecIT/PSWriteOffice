@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using OfficeIMO.Excel;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
@@ -208,7 +209,7 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         foreach (var raw in functions)
         {
             if (string.IsNullOrWhiteSpace(raw)) continue;
-            if (!Enum.TryParse(raw, ignoreCase: true, out DataConsolidateFunctionValues fn))
+            if (!OpenXmlValueParser.TryParse(raw, out DataConsolidateFunctionValues fn))
             {
                 throw new PSArgumentException($"Unknown DataFunction '{raw}'.");
             }

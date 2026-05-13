@@ -376,6 +376,34 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'adds and reads footnotes and endnotes in the DSL' {
+        $path = Join-Path $TestDrive 'DslNotes.docx'
+
+        New-OfficeWord -Path $path {
+            WordParagraph {
+                WordText 'Availability is calculated from successful health probes'
+                WordFootnote -Text 'Probe data excludes planned maintenance windows.'
+            }
+
+            WordParagraph {
+                WordText 'The appendix keeps the full scoring details'
+                WordEndnote -Text 'Scoring uses freshness, severity, and service ownership weights.'
+            }
+        } | Out-Null
+
+        $footnotes = @(Get-OfficeWordFootnote -Path $path)
+        $endnotes = @(Get-OfficeWordEndnote -Path $path)
+
+        $footnotes.Count | Should -Be 1
+        $endnotes.Count | Should -Be 1
+        $footnotes[0].Text | Should -Match 'Probe data excludes planned maintenance windows'
+        $endnotes[0].Text | Should -Match 'Scoring uses freshness'
+
+        $entries = @(Get-ZipEntriesLocal -Path $path)
+        $entries | Should -Contain 'word/footnotes.xml'
+        $entries | Should -Contain 'word/endnotes.xml'
+    }
+
     It 'supports hyperlinks and document properties in the DSL' {
         $path = Join-Path $TestDrive 'DslLinksAndProperties.docx'
 
