@@ -75,7 +75,6 @@ public sealed class AddOfficePowerPointDesignerDeckCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var presentation = Presentation ?? PowerPointDslContext.Require(this).Presentation;
         if (Plan == null)
         {
             throw new PSArgumentException("Provide a deck plan.", nameof(Plan));
@@ -116,6 +115,7 @@ public sealed class AddOfficePowerPointDesignerDeckCommand : PSCmdlet
             return;
         }
 
+        var presentation = Presentation ?? PowerPointDslContext.Require(this).Presentation;
         var composer = presentation.UseDesigner(
             brief,
             Plan,

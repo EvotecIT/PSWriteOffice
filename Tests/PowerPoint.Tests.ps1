@@ -648,15 +648,8 @@ Describe 'PowerPoint cmdlets' {
             )
         }
 
-        $previewPresentation = New-OfficePowerPoint -FilePath (Join-Path $TestDrive 'PowerPointDesignerDeckPreview.pptx')
-        try {
-            $preview = @(PptDesignerDeck -Presentation $previewPresentation -Plan $plan -AccentColor '#008C95' -Seed 'designer-test' -Purpose 'technical service brief' -Preview)
-            $preview.Count | Should -BeGreaterThan 0
-        } finally {
-            if ($previewPresentation) {
-                $previewPresentation.Dispose()
-            }
-        }
+        $preview = @(PptDesignerDeck -Plan $plan -AccentColor '#008C95' -Seed 'designer-test' -Purpose 'technical service brief' -Preview)
+        $preview.Count | Should -BeGreaterThan 0
 
         New-OfficePowerPoint -Path $path {
             PptDesignerDeck -Plan $plan -AccentColor '#008C95' -Seed 'designer-test' -Purpose 'technical service brief' -Name 'Designer Test' -LayoutStrategy ContentFirst
@@ -688,6 +681,14 @@ Describe 'PowerPoint cmdlets' {
         } catch {
             $_.Exception.InnerException.Message | Should -Be 'Process steps require at least one item.'
         }
+    }
+
+    It 'normalizes blank optional designer colors to null' {
+        $mapper = [PSWriteOffice.Cmdlets.PowerPoint.AddOfficePowerPointPlanProcessCommand].Assembly.GetType('PSWriteOffice.Services.PowerPoint.PowerPointDesignerDataMapper')
+        $method = $mapper.GetMethod('ToCards', [System.Reflection.BindingFlags] 'Public,Static')
+
+        $cards = $method.Invoke($null, (, [object[]] @([PSCustomObject]@{ Title = 'Blank color'; Items = @('Still valid'); AccentColor = '   ' })))
+        $cards[0].AccentColor | Should -BeNullOrEmpty
     }
 
     It 'supports PowerPoint charts from object data' {

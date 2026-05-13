@@ -117,7 +117,7 @@ internal static class PowerPointDesignerDataMapper
     private static string? GetOptionalColor(object item, params string[] names)
     {
         var value = GetOptionalString(item, names);
-        return string.IsNullOrWhiteSpace(value) ? value : value!.Trim().TrimStart('#');
+        return string.IsNullOrWhiteSpace(value) ? null : value!.Trim().TrimStart('#');
     }
 
     private static double GetRequiredDouble(object item, string name)
