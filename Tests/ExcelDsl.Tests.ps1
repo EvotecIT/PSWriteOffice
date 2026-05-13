@@ -53,6 +53,56 @@ Describe 'Excel DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'exports and imports objects through operator cmdlets' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcel.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100; Internal = 'skip' }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200; Internal = 'skip' }
+        )
+
+        $file = $rows |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export' -AutoFit -FreezeTopRow -BoldTopRow -ExcludeProperty Internal -PassThru
+
+        $file.FullName | Should -Be $path
+        Test-Path $path | Should -BeTrue
+
+        $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales')
+        $tables.Count | Should -Be 1
+        $tables[0].Range | Should -Be 'A2:B4'
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A2:B4')
+        $imported.Count | Should -Be 2
+        $imported[0].Region | Should -Be 'NA'
+        $imported[0].Revenue | Should -Be 100
+        $imported[0].PSObject.Properties.Name | Should -Not -Contain 'Internal'
+    }
+
+    It 'appends rows without rewriting headers' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelAppend.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+        )
+        $moreRows = @(
+            [PSCustomObject]@{ Region = 'APAC'; Revenue = 150 }
+        )
+
+        $rows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -AutoFit
+        $moreRows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -Append -TableName 'Sales' -AutoFit
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B4')
+        $imported.Count | Should -Be 3
+        $imported[2].Region | Should -Be 'APAC'
+        $imported[2].Revenue | Should -Be 150
+
+        $hasTableAppend = @([OfficeIMO.Excel.ExcelSheet].GetMethods() | Where-Object Name -eq 'AppendDataTableToTable').Count -gt 0
+        if ($hasTableAppend) {
+            $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales')
+            $tables.Count | Should -Be 1
+            $tables[0].Range | Should -Be 'A1:B4'
+        }
+    }
+
     It 'supports autofit and validation list helpers' {
         $path = Join-Path $TestDrive 'DslExcelExtras.xlsx'
         $rows = @(

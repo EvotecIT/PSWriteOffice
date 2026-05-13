@@ -171,6 +171,13 @@ $data | ConvertTo-OfficeCsv -OutputPath .\export.csv
 
 `PSWriteOffice` is not only about writing files. The module now has stronger read-back and bridge workflows too.
 
+### Excel import/export fast path
+
+```powershell
+$data | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data' -TableName 'Data' -AutoFit -FreezeTopRow
+Import-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data'
+```
+
 ### Excel readers
 
 ```powershell
