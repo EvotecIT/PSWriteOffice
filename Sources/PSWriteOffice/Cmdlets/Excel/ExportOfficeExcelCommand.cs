@@ -306,7 +306,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         sheet.CellValues(cells);
         var endRow = Math.Max(startRow, row - 1);
         var endColumn = StartColumn + table.Columns.Count - 1;
-        return $"{ExcelA1Address.CellReference(startRow, StartColumn)}:{ExcelA1Address.CellReference(endRow, endColumn)}";
+        return $"{A1.CellReference(startRow, StartColumn)}:{A1.CellReference(endRow, endColumn)}";
     }
 
     private string? ResolveAppendTableName(ExcelDocument document, ExcelSheet sheet, bool appendToExistingSheet)
@@ -345,7 +345,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var table = document.GetTables().FirstOrDefault(candidate =>
                 string.Equals(candidate.SheetName, sheet.Name, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(candidate.Name, appendTableName, StringComparison.OrdinalIgnoreCase));
-            if (table != null && ExcelA1Address.TryGetRangeStartRow(table.Range, out var tableStartRow))
+            if (table != null && !string.IsNullOrWhiteSpace(table.Range) &&
+                A1.TryParseRange(table.Range, out var tableStartRow, out _, out _, out _))
             {
                 return Math.Max(1, tableStartRow);
             }
