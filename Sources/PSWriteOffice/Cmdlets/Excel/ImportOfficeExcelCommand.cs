@@ -119,7 +119,7 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
                 throw new PSArgumentException("StartColumn must be less than or equal to EndColumn.");
             }
 
-            return $"{ExcelA1Address.CellReference(StartRow.Value, StartColumn.Value)}:{ExcelA1Address.CellReference(EndRow.Value, EndColumn.Value)}";
+            return $"{A1.CellReference(StartRow.Value, StartColumn.Value)}:{A1.CellReference(EndRow.Value, EndColumn.Value)}";
         }
 
         return sheet.GetUsedRangeA1();

@@ -68,13 +68,13 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj" />
     </ItemGroup>
     <ItemGroup Condition="!Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') Or !Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj')">
-        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.0" />
-        <PackageReference Include="OfficeIMO.Word" Version="1.0.46" />
-        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.20" />
-        <PackageReference Include="OfficeIMO.Excel" Version="0.6.26" />
-        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.21" />
-        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.13" />
-        <PackageReference Include="OfficeIMO.CSV" Version="0.1.26" />
-        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.20" />
+        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.1" />
+        <PackageReference Include="OfficeIMO.Word" Version="1.0.47" />
+        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.21" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.27" />
+        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.22" />
+        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.14" />
+        <PackageReference Include="OfficeIMO.CSV" Version="0.1.27" />
+        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.21" />
     </ItemGroup>
 </Project>
