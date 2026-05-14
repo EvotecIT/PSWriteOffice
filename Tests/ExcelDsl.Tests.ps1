@@ -195,6 +195,39 @@ Describe 'Excel DSL surface' {
         $replaced[0].Revenue | Should -Be 300
     }
 
+    It 'keeps DataSet fallback sheet names unique against existing workbook sheets' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetFallbackCollision.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Sheet1' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Existing'
+            }
+        }
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $table = [System.Data.DataTable]::new(':')
+        [void] $table.Columns.Add('Region', [string])
+        [void] $table.Columns.Add('Revenue', [int])
+        [void] $table.Rows.Add('NA', 100)
+        [void] $dataSet.Tables.Add($table)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet -Append
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $existingText = $null
+            $doc['Sheet1'].TryGetCellText(1, 1, [ref] $existingText) | Should -BeTrue
+            $existingText | Should -Be 'Existing'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B2')
+        $rows.Count | Should -Be 1
+        $rows[0].Region | Should -Be 'NA'
+        $rows[0].Revenue | Should -Be 100
+    }
+
     It 'adds a DataTable inside the Excel DSL table command' {
         $path = Join-Path $TestDrive 'DslExcelDataTable.xlsx'
         $table = [System.Data.DataTable]::new('Items')

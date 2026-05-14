@@ -242,7 +242,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("DataSet must contain at least one DataTable.", nameof(InputObject));
         }
 
-        var sheetNames = BuildDataSetWorksheetNames(dataSet);
+        var sheetNames = BuildDataSetWorksheetNames(document, dataSet, Append.IsPresent || ClearSheet.IsPresent);
         var tableIndex = 1;
         foreach (DataTable sourceTable in dataSet.Tables)
         {
@@ -539,10 +539,13 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             string.Equals(sheet.Name, normalized, StringComparison.OrdinalIgnoreCase));
     }
 
-    private static string[] BuildDataSetWorksheetNames(DataSet dataSet)
+    private static string[] BuildDataSetWorksheetNames(ExcelDocument document, DataSet dataSet, bool allowExistingMatches)
     {
         var names = new List<string>(dataSet.Tables.Count);
         var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var existing = new HashSet<string>(
+            document.Sheets.Select(sheet => sheet.Name).Where(name => !string.IsNullOrWhiteSpace(name)),
+            StringComparer.OrdinalIgnoreCase);
         var tableIndex = 1;
         foreach (DataTable table in dataSet.Tables)
         {
@@ -550,20 +553,32 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 ? $"Table{tableIndex}"
                 : table.TableName;
 
-            var cleaned = NormalizeWorksheetName(requested);
-            var candidate = cleaned;
-            var suffix = 2;
-            while (used.Contains(candidate))
+            var normalized = NormalizeWorksheetNameInfo(requested);
+            var candidate = allowExistingMatches && !normalized.UsedDefaultFallback
+                ? FindExistingWorksheetName(document, requested, normalized.Name)
+                : null;
+
+            string candidateName;
+            if (!string.IsNullOrWhiteSpace(candidate) && !used.Contains(candidate!))
             {
-                var suffixText = $" ({suffix})";
-                var maxBase = 31 - suffixText.Length;
-                var basePart = cleaned.Length > maxBase ? cleaned.Substring(0, maxBase) : cleaned;
-                candidate = basePart + suffixText;
-                suffix++;
+                candidateName = candidate!;
+            }
+            else
+            {
+                candidateName = normalized.Name;
+                var suffix = 2;
+                while (used.Contains(candidateName) || existing.Contains(candidateName))
+                {
+                    var suffixText = $" ({suffix})";
+                    var maxBase = 31 - suffixText.Length;
+                    var basePart = normalized.Name.Length > maxBase ? normalized.Name.Substring(0, maxBase) : normalized.Name;
+                    candidateName = basePart + suffixText;
+                    suffix++;
+                }
             }
 
-            used.Add(candidate);
-            names.Add(candidate);
+            used.Add(candidateName);
+            names.Add(candidateName);
             tableIndex++;
         }
 
@@ -571,6 +586,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     }
 
     private static string NormalizeWorksheetName(string worksheetName)
+    {
+        return NormalizeWorksheetNameInfo(worksheetName).Name;
+    }
+
+    private static (string Name, bool UsedDefaultFallback) NormalizeWorksheetNameInfo(string worksheetName)
     {
         var baseName = (worksheetName ?? string.Empty).Trim().Trim('\'', ' ');
         var chars = new char[baseName.Length];
@@ -581,12 +601,24 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         }
 
         var cleaned = CollapseUnderscores(new string(chars).Trim()).Trim('_');
+        var usedDefaultFallback = false;
         if (string.IsNullOrEmpty(cleaned))
         {
             cleaned = "Sheet1";
+            usedDefaultFallback = true;
         }
 
-        return cleaned.Length > 31 ? cleaned.Substring(0, 31) : cleaned;
+        var name = cleaned.Length > 31 ? cleaned.Substring(0, 31) : cleaned;
+        return (name, usedDefaultFallback);
+    }
+
+    private static string? FindExistingWorksheetName(ExcelDocument document, string requestedName, string normalizedName)
+    {
+        return document.Sheets
+            .Select(sheet => sheet.Name)
+            .FirstOrDefault(name =>
+                string.Equals(name, requestedName, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(name, normalizedName, StringComparison.OrdinalIgnoreCase));
     }
 
     private static string CollapseUnderscores(string value)
