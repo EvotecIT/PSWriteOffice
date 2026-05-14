@@ -67,7 +67,7 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             throw new PSArgumentException("Provide at least one data row.", nameof(Data));
         }
 
-        var table = ExcelTabularInputService.ToDataTable(Data);
+        var table = ExcelTabularInputService.ToDataTable(Data, TableName);
         if (table.Columns.Count == 0)
         {
             throw new InvalidOperationException("Unable to infer columns from the supplied data.");

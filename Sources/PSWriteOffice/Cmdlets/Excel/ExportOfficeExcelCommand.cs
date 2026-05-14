@@ -242,12 +242,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("DataSet must contain at least one DataTable.", nameof(InputObject));
         }
 
+        var sheetNames = BuildDataSetWorksheetNames(dataSet);
         var tableIndex = 1;
         foreach (DataTable sourceTable in dataSet.Tables)
         {
-            var sheetName = string.IsNullOrWhiteSpace(sourceTable.TableName)
-                ? $"Table{tableIndex}"
-                : sourceTable.TableName;
+            var sheetName = sheetNames[tableIndex - 1];
 
             var sheetExists = SheetExists(document, sheetName);
             if (ClearSheet.IsPresent && sheetExists)
@@ -307,7 +306,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private DataTable BuildDataTable()
     {
-        var table = ExcelTabularInputService.ToDataTable(_input);
+        var table = ExcelTabularInputService.ToDataTable(_input, TableName);
         return ApplyExcludedColumns(table);
     }
 
@@ -534,6 +533,88 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private static bool SheetExists(ExcelDocument document, string worksheetName)
     {
-        return document.Sheets.Any(sheet => string.Equals(sheet.Name, worksheetName, StringComparison.OrdinalIgnoreCase));
+        var normalized = NormalizeWorksheetName(worksheetName);
+        return document.Sheets.Any(sheet =>
+            string.Equals(sheet.Name, worksheetName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(sheet.Name, normalized, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string[] BuildDataSetWorksheetNames(DataSet dataSet)
+    {
+        var names = new List<string>(dataSet.Tables.Count);
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var tableIndex = 1;
+        foreach (DataTable table in dataSet.Tables)
+        {
+            var requested = string.IsNullOrWhiteSpace(table.TableName)
+                ? $"Table{tableIndex}"
+                : table.TableName;
+
+            var cleaned = NormalizeWorksheetName(requested);
+            var candidate = cleaned;
+            var suffix = 2;
+            while (used.Contains(candidate))
+            {
+                var suffixText = $" ({suffix})";
+                var maxBase = 31 - suffixText.Length;
+                var basePart = cleaned.Length > maxBase ? cleaned.Substring(0, maxBase) : cleaned;
+                candidate = basePart + suffixText;
+                suffix++;
+            }
+
+            used.Add(candidate);
+            names.Add(candidate);
+            tableIndex++;
+        }
+
+        return names.ToArray();
+    }
+
+    private static string NormalizeWorksheetName(string worksheetName)
+    {
+        var baseName = (worksheetName ?? string.Empty).Trim().Trim('\'', ' ');
+        var chars = new char[baseName.Length];
+        for (var i = 0; i < baseName.Length; i++)
+        {
+            var ch = baseName[i];
+            chars[i] = ch is ':' or '\\' or '/' or '?' or '*' or '[' or ']' ? '_' : ch;
+        }
+
+        var cleaned = CollapseUnderscores(new string(chars).Trim()).Trim('_');
+        if (string.IsNullOrEmpty(cleaned))
+        {
+            cleaned = "Sheet1";
+        }
+
+        return cleaned.Length > 31 ? cleaned.Substring(0, 31) : cleaned;
+    }
+
+    private static string CollapseUnderscores(string value)
+    {
+        if (value.IndexOf("__", StringComparison.Ordinal) < 0)
+        {
+            return value;
+        }
+
+        var result = new System.Text.StringBuilder(value.Length);
+        var previousWasUnderscore = false;
+        foreach (var ch in value)
+        {
+            if (ch == '_')
+            {
+                if (!previousWasUnderscore)
+                {
+                    result.Append(ch);
+                }
+
+                previousWasUnderscore = true;
+                continue;
+            }
+
+            result.Append(ch);
+            previousWasUnderscore = false;
+        }
+
+        return result.ToString();
     }
 }

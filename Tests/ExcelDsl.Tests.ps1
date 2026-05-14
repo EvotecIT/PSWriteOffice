@@ -154,6 +154,47 @@ Describe 'Excel DSL surface' {
         $inventoryRows[0].Count | Should -Be 5
     }
 
+    It 'appends and clears DataSet sheets using sanitized worksheet names' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetSanitizedAppend.xlsx'
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $sales = [System.Data.DataTable]::new('Sales:2026')
+        [void] $sales.Columns.Add('Region', [string])
+        [void] $sales.Columns.Add('Revenue', [int])
+        [void] $sales.Rows.Add('NA', 100)
+        [void] $dataSet.Tables.Add($sales)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet
+
+        $appendSet = [System.Data.DataSet]::new('Report')
+        $appendSales = [System.Data.DataTable]::new('Sales:2026')
+        [void] $appendSales.Columns.Add('Region', [string])
+        [void] $appendSales.Columns.Add('Revenue', [int])
+        [void] $appendSales.Rows.Add('EMEA', 200)
+        [void] $appendSet.Tables.Add($appendSales)
+
+        Export-OfficeExcel -Path $path -InputObject $appendSet -Append
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026' -Range 'A1:B3')
+        $rows.Count | Should -Be 2
+        $rows[1].Region | Should -Be 'EMEA'
+        $rows[1].Revenue | Should -Be 200
+
+        $replacementSet = [System.Data.DataSet]::new('Report')
+        $replacementSales = [System.Data.DataTable]::new('Sales:2026')
+        [void] $replacementSales.Columns.Add('Region', [string])
+        [void] $replacementSales.Columns.Add('Revenue', [int])
+        [void] $replacementSales.Rows.Add('APAC', 300)
+        [void] $replacementSet.Tables.Add($replacementSales)
+
+        Export-OfficeExcel -Path $path -InputObject $replacementSet -ClearSheet
+
+        $replaced = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026' -Range 'A1:B2')
+        $replaced.Count | Should -Be 1
+        $replaced[0].Region | Should -Be 'APAC'
+        $replaced[0].Revenue | Should -Be 300
+    }
+
     It 'adds a DataTable inside the Excel DSL table command' {
         $path = Join-Path $TestDrive 'DslExcelDataTable.xlsx'
         $table = [System.Data.DataTable]::new('Items')
@@ -172,6 +213,26 @@ Describe 'Excel DSL surface' {
         $imported.Count | Should -Be 2
         $imported[0].Name | Should -Be 'Laptop'
         $imported[0].Quantity | Should -Be 5
+    }
+
+    It 'lets OfficeIMO generate table names when the DSL caller omits them' {
+        $path = Join-Path $TestDrive 'DslExcelGeneratedTableNames.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'First' -Content {
+                Add-OfficeExcelTable -Data $rows
+            }
+            Add-OfficeExcelSheet -Name 'Second' -Content {
+                Add-OfficeExcelTable -Data $rows
+            }
+        }
+
+        $tables = @(Get-OfficeExcelTable -Path $path)
+        $tables.Count | Should -Be 2
+        @($tables.Name | Select-Object -Unique).Count | Should -Be 2
     }
 
     It 'keeps append freeze panes anchored to the existing table header' {
