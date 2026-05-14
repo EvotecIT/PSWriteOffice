@@ -8,7 +8,7 @@ using PSWriteOffice.Services.Excel;
 namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Writes tabular data to the current worksheet and formats it as an Excel table.</summary>
-/// <para>Accepts objects (PSCustomObject, hashtables, POCOs) and converts them into an Excel table with optional styling.</para>
+/// <para>Accepts objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences and writes them into an Excel table with optional styling.</para>
 /// <example>
 ///   <summary>Insert a table starting at A1.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -67,8 +67,7 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             throw new PSArgumentException("Provide at least one data row.", nameof(Data));
         }
 
-        var normalized = PowerShellObjectNormalizer.NormalizeItems(Data);
-        var table = ObjectDataTableBuilder.FromObjects(normalized);
+        var table = ExcelTabularInputService.ToDataTable(Data);
         if (table.Columns.Count == 0)
         {
             throw new InvalidOperationException("Unable to infer columns from the supplied data.");
@@ -89,7 +88,7 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             startRow: StartRow,
             startColumn: StartColumn,
             includeHeaders: !NoHeader.IsPresent,
-            tableName: TableName,
+            tableName: ResolveTableName(table),
             style: style,
             includeAutoFilter: !NoAutoFilter.IsPresent);
 
@@ -103,5 +102,15 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
         {
             WriteObject(range);
         }
+    }
+
+    private string? ResolveTableName(System.Data.DataTable table)
+    {
+        if (!string.IsNullOrWhiteSpace(TableName))
+        {
+            return TableName;
+        }
+
+        return string.IsNullOrWhiteSpace(table.TableName) ? null : table.TableName;
     }
 }

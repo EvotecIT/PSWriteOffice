@@ -169,6 +169,15 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         try
         {
+            var dataSet = ExcelTabularInputService.TryGetSingleDataSet(_input);
+            if (dataSet != null)
+            {
+                ExportDataSet(document, dataSet, style);
+                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+                WritePassThru(resolvedPath);
+                return;
+            }
+
             var isAppendingToExistingSheet = Append.IsPresent && SheetExists(document, WorksheetName);
             var sheet = PrepareSheet(document);
             var data = BuildDataTable();
@@ -188,7 +197,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
 
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
-            var range = WriteData(sheet, data, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName);
+            var range = WriteData(sheet, data, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, ResolveTableName(data));
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -222,7 +231,67 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         if (PassThru.IsPresent)
         {
-            WriteObject(new FileInfo(resolvedPath));
+            WritePassThru(resolvedPath);
+        }
+    }
+
+    private void ExportDataSet(ExcelDocument document, DataSet dataSet, TableStyle style)
+    {
+        if (dataSet.Tables.Count == 0)
+        {
+            throw new PSArgumentException("DataSet must contain at least one DataTable.", nameof(InputObject));
+        }
+
+        var tableIndex = 1;
+        foreach (DataTable sourceTable in dataSet.Tables)
+        {
+            var sheetName = string.IsNullOrWhiteSpace(sourceTable.TableName)
+                ? $"Table{tableIndex}"
+                : sourceTable.TableName;
+
+            var sheetExists = SheetExists(document, sheetName);
+            if (ClearSheet.IsPresent && sheetExists)
+            {
+                document.RemoveWorkSheet(sheetName);
+                sheetExists = false;
+            }
+
+            var sheet = document.GetOrCreateSheet(sheetName, SheetNameValidationMode.Sanitize);
+            var table = ApplyExcludedColumns(sourceTable.Copy());
+            if (table.Columns.Count == 0)
+            {
+                throw new InvalidOperationException($"Unable to infer columns from DataTable '{sourceTable.TableName}'.");
+            }
+
+            var isAppendingToExistingSheet = Append.IsPresent && sheetExists;
+            var dataStartRow = ResolveDataStartRow(sheet, isAppendingToExistingSheet);
+            var includeHeaders = !NoHeader.IsPresent && !isAppendingToExistingSheet;
+            var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
+            var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, ResolveTableName(table, allowExplicitOverride: false));
+
+            if (BoldTopRow.IsPresent && includeHeaders)
+            {
+                BoldRow(sheet, dataStartRow, StartColumn, table.Columns.Count);
+            }
+
+            if (AutoFit.IsPresent)
+            {
+                sheet.AutoFitColumnsFor(Enumerable.Range(StartColumn, table.Columns.Count));
+            }
+
+            if (FreezeTopRow.IsPresent || FreezeFirstColumn.IsPresent)
+            {
+                var frozenRows = ResolveFrozenTopRows(document, sheet, isAppendingToExistingSheet, appendTableName, dataStartRow, includeHeaders);
+                var frozenColumns = FreezeFirstColumn.IsPresent ? Math.Max(1, StartColumn) : 0;
+                sheet.Freeze(frozenRows, frozenColumns);
+            }
+
+            if (!string.IsNullOrWhiteSpace(range))
+            {
+                WriteVerbose($"Exported DataTable '{sourceTable.TableName}' to {sheet.Name}!{range}.");
+            }
+
+            tableIndex++;
         }
     }
 
@@ -238,9 +307,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private DataTable BuildDataTable()
     {
-        var normalized = PowerShellObjectNormalizer.NormalizeItems(_input);
-        var table = ObjectDataTableBuilder.FromObjects(normalized);
+        var table = ExcelTabularInputService.ToDataTable(_input);
+        return ApplyExcludedColumns(table);
+    }
 
+    private DataTable ApplyExcludedColumns(DataTable table)
+    {
         if (ExcludeProperty is { Length: > 0 })
         {
             var excluded = new HashSet<string>(
@@ -259,7 +331,15 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return table;
     }
 
-    private string WriteData(ExcelSheet sheet, DataTable table, int startRow, bool includeHeaders, TableStyle style, bool appendRawRows, string? appendTableName)
+    private void WritePassThru(string resolvedPath)
+    {
+        if (PassThru.IsPresent)
+        {
+            WriteObject(new FileInfo(resolvedPath));
+        }
+    }
+
+    private string WriteData(ExcelSheet sheet, DataTable table, int startRow, bool includeHeaders, TableStyle style, bool appendRawRows, string? appendTableName, string? tableName)
     {
         if (appendRawRows &&
             !NoTable.IsPresent &&
@@ -276,7 +356,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 startRow,
                 StartColumn,
                 includeHeaders,
-                TableName,
+                tableName,
                 style,
                 includeAutoFilter: !NoAutoFilter.IsPresent);
         }
@@ -326,6 +406,16 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             .ToList();
 
         return sheetTables.Count == 1 ? sheetTables[0].Name : null;
+    }
+
+    private string? ResolveTableName(DataTable table, bool allowExplicitOverride = true)
+    {
+        if (allowExplicitOverride && !string.IsNullOrWhiteSpace(TableName))
+        {
+            return TableName;
+        }
+
+        return string.IsNullOrWhiteSpace(table.TableName) ? null : table.TableName;
     }
 
     private int ResolveFrozenTopRows(ExcelDocument document, ExcelSheet sheet, bool appendToExistingSheet, string? appendTableName, int dataStartRow, bool includeHeaders)
@@ -411,6 +501,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         if (value is PSObject psObject)
         {
             value = psObject.BaseObject is PSCustomObject ? psObject : psObject.BaseObject;
+        }
+
+        if (value is DataSet || value is DataTable || value is DataView || value is IDataReader)
+        {
+            _input.Add(value);
+            return;
         }
 
         if (value is IEnumerable enumerable && value is not string && value is not IDictionary)
