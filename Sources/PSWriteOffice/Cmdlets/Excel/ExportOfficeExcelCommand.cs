@@ -555,7 +555,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             var normalized = NormalizeWorksheetNameInfo(requested);
             var candidate = allowExistingMatches && !normalized.UsedDefaultFallback
-                ? FindExistingWorksheetName(document, requested, normalized.Name)
+                ? FindExistingWorksheetName(document, requested, normalized.Name, used)
                 : null;
 
             string candidateName;
@@ -569,10 +569,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 var suffix = 2;
                 while (used.Contains(candidateName) || existing.Contains(candidateName))
                 {
-                    var suffixText = $" ({suffix})";
-                    var maxBase = 31 - suffixText.Length;
-                    var basePart = normalized.Name.Length > maxBase ? normalized.Name.Substring(0, maxBase) : normalized.Name;
-                    candidateName = basePart + suffixText;
+                    candidateName = AppendWorksheetSuffix(normalized.Name, suffix);
                     suffix++;
                 }
             }
@@ -612,13 +609,40 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return (name, usedDefaultFallback);
     }
 
-    private static string? FindExistingWorksheetName(ExcelDocument document, string requestedName, string normalizedName)
+    private static string? FindExistingWorksheetName(ExcelDocument document, string requestedName, string normalizedName, ISet<string> usedNames)
     {
-        return document.Sheets
+        var existing = document.Sheets
             .Select(sheet => sheet.Name)
-            .FirstOrDefault(name =>
-                string.Equals(name, requestedName, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(name, normalizedName, StringComparison.OrdinalIgnoreCase));
+            .Where(name => !string.IsNullOrWhiteSpace(name) && !usedNames.Contains(name))
+            .ToArray();
+
+        var directMatch = existing.FirstOrDefault(name =>
+            string.Equals(name, requestedName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(name, normalizedName, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(directMatch))
+        {
+            return directMatch;
+        }
+
+        for (var suffix = 2; suffix <= existing.Length + usedNames.Count + 1; suffix++)
+        {
+            var suffixedName = AppendWorksheetSuffix(normalizedName, suffix);
+            var match = existing.FirstOrDefault(name => string.Equals(name, suffixedName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(match))
+            {
+                return match;
+            }
+        }
+
+        return null;
+    }
+
+    private static string AppendWorksheetSuffix(string worksheetName, int suffix)
+    {
+        var suffixText = $" ({suffix})";
+        var maxBase = 31 - suffixText.Length;
+        var basePart = worksheetName.Length > maxBase ? worksheetName.Substring(0, maxBase) : worksheetName;
+        return basePart + suffixText;
     }
 
     private static string CollapseUnderscores(string value)

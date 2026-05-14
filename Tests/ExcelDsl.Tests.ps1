@@ -228,6 +228,76 @@ Describe 'Excel DSL surface' {
         $rows[0].Revenue | Should -Be 100
     }
 
+    It 'reuses existing suffixed DataSet sheets when appending and clearing sanitized duplicates' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetDuplicateSanitizedAppend.xlsx'
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $salesColon = [System.Data.DataTable]::new('Sales:2026')
+        [void] $salesColon.Columns.Add('Region', [string])
+        [void] $salesColon.Columns.Add('Revenue', [int])
+        [void] $salesColon.Rows.Add('NA', 100)
+        [void] $dataSet.Tables.Add($salesColon)
+
+        $salesSlash = [System.Data.DataTable]::new('Sales/2026')
+        [void] $salesSlash.Columns.Add('Region', [string])
+        [void] $salesSlash.Columns.Add('Revenue', [int])
+        [void] $salesSlash.Rows.Add('EMEA', 200)
+        [void] $dataSet.Tables.Add($salesSlash)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet
+
+        $appendSet = [System.Data.DataSet]::new('Report')
+        $appendColon = [System.Data.DataTable]::new('Sales:2026')
+        [void] $appendColon.Columns.Add('Region', [string])
+        [void] $appendColon.Columns.Add('Revenue', [int])
+        [void] $appendColon.Rows.Add('APAC', 300)
+        [void] $appendSet.Tables.Add($appendColon)
+
+        $appendSlash = [System.Data.DataTable]::new('Sales/2026')
+        [void] $appendSlash.Columns.Add('Region', [string])
+        [void] $appendSlash.Columns.Add('Revenue', [int])
+        [void] $appendSlash.Rows.Add('LATAM', 400)
+        [void] $appendSet.Tables.Add($appendSlash)
+
+        Export-OfficeExcel -Path $path -InputObject $appendSet -Append
+
+        $firstRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026' -Range 'A1:B3')
+        $secondRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026 (2)' -Range 'A1:B3')
+        $firstRows.Count | Should -Be 2
+        $secondRows.Count | Should -Be 2
+        $firstRows[1].Region | Should -Be 'APAC'
+        $secondRows[1].Region | Should -Be 'LATAM'
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $doc.Sheets.Name | Should -Not -Contain 'Sales_2026 (3)'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $replacementSet = [System.Data.DataSet]::new('Report')
+        $replacementColon = [System.Data.DataTable]::new('Sales:2026')
+        [void] $replacementColon.Columns.Add('Region', [string])
+        [void] $replacementColon.Columns.Add('Revenue', [int])
+        [void] $replacementColon.Rows.Add('NA', 500)
+        [void] $replacementSet.Tables.Add($replacementColon)
+
+        $replacementSlash = [System.Data.DataTable]::new('Sales/2026')
+        [void] $replacementSlash.Columns.Add('Region', [string])
+        [void] $replacementSlash.Columns.Add('Revenue', [int])
+        [void] $replacementSlash.Rows.Add('EMEA', 600)
+        [void] $replacementSet.Tables.Add($replacementSlash)
+
+        Export-OfficeExcel -Path $path -InputObject $replacementSet -ClearSheet
+
+        $replacedFirst = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026' -Range 'A1:B2')
+        $replacedSecond = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026 (2)' -Range 'A1:B2')
+        $replacedFirst.Count | Should -Be 1
+        $replacedSecond.Count | Should -Be 1
+        $replacedFirst[0].Revenue | Should -Be 500
+        $replacedSecond[0].Revenue | Should -Be 600
+    }
+
     It 'adds a DataTable inside the Excel DSL table command' {
         $path = Join-Path $TestDrive 'DslExcelDataTable.xlsx'
         $table = [System.Data.DataTable]::new('Items')
