@@ -9,7 +9,7 @@ namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelTabularInputService
 {
-    public static DataTable ToDataTable(IEnumerable<object?> input, string tableName = "Data")
+    public static DataTable ToDataTable(IEnumerable<object?> input, string? tableName = null)
     {
         if (input == null)
         {
@@ -37,7 +37,9 @@ internal static class ExcelTabularInputService
 
             if (single is IDataReader reader)
             {
-                var dataTableFromReader = new DataTable(tableName);
+                var dataTableFromReader = string.IsNullOrWhiteSpace(tableName)
+                    ? new DataTable()
+                    : new DataTable(tableName);
                 dataTableFromReader.Load(reader);
                 return dataTableFromReader;
             }
@@ -54,7 +56,7 @@ internal static class ExcelTabularInputService
         }
 
         var normalized = PowerShellObjectNormalizer.NormalizeItems(items);
-        return ObjectDataTableBuilder.FromObjects(normalized, tableName);
+        return ObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
     }
 
     public static DataSet? TryGetSingleDataSet(IEnumerable<object?> input)

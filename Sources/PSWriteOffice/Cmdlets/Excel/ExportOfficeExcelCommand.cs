@@ -242,12 +242,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("DataSet must contain at least one DataTable.", nameof(InputObject));
         }
 
+        var sheetNames = BuildDataSetWorksheetNames(document, dataSet, Append.IsPresent || ClearSheet.IsPresent);
         var tableIndex = 1;
         foreach (DataTable sourceTable in dataSet.Tables)
         {
-            var sheetName = string.IsNullOrWhiteSpace(sourceTable.TableName)
-                ? $"Table{tableIndex}"
-                : sourceTable.TableName;
+            var sheetName = sheetNames[tableIndex - 1];
 
             var sheetExists = SheetExists(document, sheetName);
             if (ClearSheet.IsPresent && sheetExists)
@@ -307,7 +306,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private DataTable BuildDataTable()
     {
-        var table = ExcelTabularInputService.ToDataTable(_input);
+        var table = ExcelTabularInputService.ToDataTable(_input, TableName);
         return ApplyExcludedColumns(table);
     }
 
@@ -534,6 +533,149 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private static bool SheetExists(ExcelDocument document, string worksheetName)
     {
-        return document.Sheets.Any(sheet => string.Equals(sheet.Name, worksheetName, StringComparison.OrdinalIgnoreCase));
+        var normalized = NormalizeWorksheetName(worksheetName);
+        return document.Sheets.Any(sheet =>
+            string.Equals(sheet.Name, worksheetName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(sheet.Name, normalized, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string[] BuildDataSetWorksheetNames(ExcelDocument document, DataSet dataSet, bool allowExistingMatches)
+    {
+        var names = new List<string>(dataSet.Tables.Count);
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var existing = new HashSet<string>(
+            document.Sheets.Select(sheet => sheet.Name).Where(name => !string.IsNullOrWhiteSpace(name)),
+            StringComparer.OrdinalIgnoreCase);
+        var tableIndex = 1;
+        foreach (DataTable table in dataSet.Tables)
+        {
+            var requested = string.IsNullOrWhiteSpace(table.TableName)
+                ? $"Table{tableIndex}"
+                : table.TableName;
+
+            var normalized = NormalizeWorksheetNameInfo(requested);
+            var candidate = allowExistingMatches
+                ? FindExistingWorksheetName(document, requested, normalized.Name, used, allowDirectNormalizedMatch: !normalized.UsedDefaultFallback)
+                : null;
+
+            string candidateName;
+            if (!string.IsNullOrWhiteSpace(candidate) && !used.Contains(candidate!))
+            {
+                candidateName = candidate!;
+            }
+            else
+            {
+                candidateName = normalized.Name;
+                var suffix = 2;
+                while (used.Contains(candidateName) || existing.Contains(candidateName))
+                {
+                    candidateName = AppendWorksheetSuffix(normalized.Name, suffix);
+                    suffix++;
+                }
+            }
+
+            used.Add(candidateName);
+            names.Add(candidateName);
+            tableIndex++;
+        }
+
+        return names.ToArray();
+    }
+
+    private static string NormalizeWorksheetName(string worksheetName)
+    {
+        return NormalizeWorksheetNameInfo(worksheetName).Name;
+    }
+
+    private static (string Name, bool UsedDefaultFallback) NormalizeWorksheetNameInfo(string worksheetName)
+    {
+        var baseName = (worksheetName ?? string.Empty).Trim().Trim('\'', ' ');
+        var chars = new char[baseName.Length];
+        for (var i = 0; i < baseName.Length; i++)
+        {
+            var ch = baseName[i];
+            chars[i] = ch is ':' or '\\' or '/' or '?' or '*' or '[' or ']' ? '_' : ch;
+        }
+
+        var cleaned = CollapseUnderscores(new string(chars).Trim()).Trim('_');
+        var usedDefaultFallback = false;
+        if (string.IsNullOrEmpty(cleaned))
+        {
+            cleaned = "Sheet1";
+            usedDefaultFallback = true;
+        }
+
+        var name = cleaned.Length > 31 ? cleaned.Substring(0, 31) : cleaned;
+        return (name, usedDefaultFallback);
+    }
+
+    private static string? FindExistingWorksheetName(
+        ExcelDocument document,
+        string requestedName,
+        string normalizedName,
+        ISet<string> usedNames,
+        bool allowDirectNormalizedMatch)
+    {
+        var existing = document.Sheets
+            .Select(sheet => sheet.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name) && !usedNames.Contains(name))
+            .ToArray();
+
+        var directMatch = existing.FirstOrDefault(name =>
+            string.Equals(name, requestedName, StringComparison.OrdinalIgnoreCase) ||
+            (allowDirectNormalizedMatch && string.Equals(name, normalizedName, StringComparison.OrdinalIgnoreCase)));
+        if (!string.IsNullOrWhiteSpace(directMatch))
+        {
+            return directMatch;
+        }
+
+        for (var suffix = 2; suffix <= existing.Length + usedNames.Count + 1; suffix++)
+        {
+            var suffixedName = AppendWorksheetSuffix(normalizedName, suffix);
+            var match = existing.FirstOrDefault(name => string.Equals(name, suffixedName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(match))
+            {
+                return match;
+            }
+        }
+
+        return null;
+    }
+
+    private static string AppendWorksheetSuffix(string worksheetName, int suffix)
+    {
+        var suffixText = $" ({suffix})";
+        var maxBase = 31 - suffixText.Length;
+        var basePart = worksheetName.Length > maxBase ? worksheetName.Substring(0, maxBase) : worksheetName;
+        return basePart + suffixText;
+    }
+
+    private static string CollapseUnderscores(string value)
+    {
+        if (value.IndexOf("__", StringComparison.Ordinal) < 0)
+        {
+            return value;
+        }
+
+        var result = new System.Text.StringBuilder(value.Length);
+        var previousWasUnderscore = false;
+        foreach (var ch in value)
+        {
+            if (ch == '_')
+            {
+                if (!previousWasUnderscore)
+                {
+                    result.Append(ch);
+                }
+
+                previousWasUnderscore = true;
+                continue;
+            }
+
+            result.Append(ch);
+            previousWasUnderscore = false;
+        }
+
+        return result.ToString();
     }
 }
