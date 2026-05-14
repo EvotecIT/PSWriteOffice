@@ -39,7 +39,7 @@ The best path is not to clone every command name. Add a small set of high-value 
 | Print setup | Freeze, print-ish layout through export knobs | Freeze, margins, orientation, page setup, gridlines | Print area/titles exist in OfficeIMO named-range APIs | Add `Set-OfficeExcelPrintArea` and `Set-OfficeExcelPrintTitles`. |
 | Sheet/workbook protection | `Set-WorksheetProtection`; password parameters on open/export | Protect/unprotect sheet exists | Protection partial; encryption/password support is a roadmap gap | Expose more sheet protection options if stable. Password/encryption needs OfficeIMO engine work first. |
 | File conversion | `ConvertTo-ExcelXlsx`, `Convert-ExcelRangeToImage` | CSV conversion exists, no range-to-image | Range-to-image is not visible in OfficeIMO.Excel | Keep CSV. Add range-to-image only if OfficeIMO grows a renderer or if we accept a rendering dependency. |
-| HTML/data-source bridges | `Import-Html`, `Get-HtmlTable`, `Send-SQLDataToExcel`, `Read-OleDbData`, SQL insert conversion | Not present | Not core OfficeIMO responsibility | Defer. These belong in separate bridge modules or examples, not PSWriteOffice core. |
+| HTML/data-source bridges | `Import-Html`, `Get-HtmlTable`, `Send-SQLDataToExcel`, `Read-OleDbData`, SQL insert conversion | `Export-OfficeExcel` consumes `DataTable`, `DataSet`, `DataView`, `IDataReader`, and objects produced by other modules | OfficeIMO consumes common .NET data objects; HTML parsing belongs in HtmlTinkerX/PSParseHTML; SQL/OleDb clients stay out of OfficeIMO | Document the bridge pattern: `ConvertFrom-HtmlTable -AsDataTable/-AsDataSet | Export-OfficeExcel`. Keep SQL/OleDb/web helpers external. |
 | Diagnostics/schema | `Get-ExcelFileSchema`, `Get-ExcelFileSummary`, workbook/sheet info | `Get-OfficeExcelSummary` exists | Inspection snapshots exist | Covered enough. Add schema inference only if real migration users need it. |
 
 ## Word Crosswalk
@@ -91,7 +91,7 @@ The best path is not to clone every command name. Add a small set of high-value 
 
 ## What Not To Pull Into Core Yet
 
-- ImportExcel's SQL/OleDb/UPS/USPS/HTML scraping helpers should remain external bridge examples unless there is a clear PSWriteOffice ownership decision.
+- ImportExcel's SQL/OleDb/UPS/USPS/web scraping helpers should remain external bridge examples unless there is a clear PSWriteOffice ownership decision. HTML table parsing should live in HtmlTinkerX/PSParseHTML and feed PSWriteOffice through `DataTable`/`DataSet`/object pipelines.
 - `Documentimo` should be treated as inspiration for an opinionated report DSL, not as a compatibility target.
 - Macros and PDF export should stay explicit/deferred because they change dependency and safety expectations.
 - Password/encryption should not be exposed as a hollow parameter until OfficeIMO can actually honor it.
