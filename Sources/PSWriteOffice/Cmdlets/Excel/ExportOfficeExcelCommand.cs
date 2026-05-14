@@ -554,8 +554,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 : table.TableName;
 
             var normalized = NormalizeWorksheetNameInfo(requested);
-            var candidate = allowExistingMatches && !normalized.UsedDefaultFallback
-                ? FindExistingWorksheetName(document, requested, normalized.Name, used)
+            var candidate = allowExistingMatches
+                ? FindExistingWorksheetName(document, requested, normalized.Name, used, allowDirectNormalizedMatch: !normalized.UsedDefaultFallback)
                 : null;
 
             string candidateName;
@@ -609,7 +609,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return (name, usedDefaultFallback);
     }
 
-    private static string? FindExistingWorksheetName(ExcelDocument document, string requestedName, string normalizedName, ISet<string> usedNames)
+    private static string? FindExistingWorksheetName(
+        ExcelDocument document,
+        string requestedName,
+        string normalizedName,
+        ISet<string> usedNames,
+        bool allowDirectNormalizedMatch)
     {
         var existing = document.Sheets
             .Select(sheet => sheet.Name)
@@ -618,7 +623,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         var directMatch = existing.FirstOrDefault(name =>
             string.Equals(name, requestedName, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(name, normalizedName, StringComparison.OrdinalIgnoreCase));
+            (allowDirectNormalizedMatch && string.Equals(name, normalizedName, StringComparison.OrdinalIgnoreCase)));
         if (!string.IsNullOrWhiteSpace(directMatch))
         {
             return directMatch;

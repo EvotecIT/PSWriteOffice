@@ -226,6 +226,44 @@ Describe 'Excel DSL surface' {
         $rows.Count | Should -Be 1
         $rows[0].Region | Should -Be 'NA'
         $rows[0].Revenue | Should -Be 100
+
+        $appendSet = [System.Data.DataSet]::new('Report')
+        $appendTable = [System.Data.DataTable]::new(':')
+        [void] $appendTable.Columns.Add('Region', [string])
+        [void] $appendTable.Columns.Add('Revenue', [int])
+        [void] $appendTable.Rows.Add('EMEA', 200)
+        [void] $appendSet.Tables.Add($appendTable)
+
+        Export-OfficeExcel -Path $path -InputObject $appendSet -Append
+
+        $appendedRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B3')
+        $appendedRows.Count | Should -Be 2
+        $appendedRows[1].Region | Should -Be 'EMEA'
+        $appendedRows[1].Revenue | Should -Be 200
+
+        $replacementSet = [System.Data.DataSet]::new('Report')
+        $replacementTable = [System.Data.DataTable]::new(':')
+        [void] $replacementTable.Columns.Add('Region', [string])
+        [void] $replacementTable.Columns.Add('Revenue', [int])
+        [void] $replacementTable.Rows.Add('APAC', 300)
+        [void] $replacementSet.Tables.Add($replacementTable)
+
+        Export-OfficeExcel -Path $path -InputObject $replacementSet -ClearSheet
+
+        $replacedRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B2')
+        $replacedRows.Count | Should -Be 1
+        $replacedRows[0].Region | Should -Be 'APAC'
+        $replacedRows[0].Revenue | Should -Be 300
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $existingText = $null
+            $doc['Sheet1'].TryGetCellText(1, 1, [ref] $existingText) | Should -BeTrue
+            $existingText | Should -Be 'Existing'
+            $doc.Sheets.Name | Should -Not -Contain 'Sheet1 (3)'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
     }
 
     It 'reuses existing suffixed DataSet sheets when appending and clearing sanitized duplicates' {
