@@ -108,6 +108,72 @@ Describe 'Excel DSL surface' {
         }
     }
 
+    It 'exports DataTable input without exposing DataRow metadata' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataTable.xlsx'
+        $table = [System.Data.DataTable]::new('Sales')
+        [void] $table.Columns.Add('Region', [string])
+        [void] $table.Columns.Add('Revenue', [int])
+        [void] $table.Rows.Add('NA', 100)
+        [void] $table.Rows.Add('EMEA', 200)
+
+        Export-OfficeExcel -Path $path -InputObject $table -WorksheetName 'Data' -TableName 'Sales' -AutoFit
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $imported.Count | Should -Be 2
+        $imported[0].Region | Should -Be 'NA'
+        $imported[0].Revenue | Should -Be 100
+        $imported[0].PSObject.Properties.Name | Should -Not -Contain 'RowError'
+    }
+
+    It 'exports DataSet input as one worksheet per table' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSet.xlsx'
+        $dataSet = [System.Data.DataSet]::new('Report')
+
+        $sales = [System.Data.DataTable]::new('Sales:2026')
+        [void] $sales.Columns.Add('Region', [string])
+        [void] $sales.Columns.Add('Revenue', [int])
+        [void] $sales.Rows.Add('NA', 100)
+        [void] $dataSet.Tables.Add($sales)
+
+        $inventory = [System.Data.DataTable]::new('Inventory')
+        [void] $inventory.Columns.Add('Item', [string])
+        [void] $inventory.Columns.Add('Count', [int])
+        [void] $inventory.Rows.Add('Laptop', 5)
+        [void] $dataSet.Tables.Add($inventory)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet -TableName 'IgnoredForDataSet' -AutoFit
+
+        $salesRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026' -Range 'A1:B2')
+        $inventoryRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Inventory' -Range 'A1:B2')
+
+        $salesRows.Count | Should -Be 1
+        $salesRows[0].Region | Should -Be 'NA'
+        $salesRows[0].Revenue | Should -Be 100
+        $inventoryRows.Count | Should -Be 1
+        $inventoryRows[0].Item | Should -Be 'Laptop'
+        $inventoryRows[0].Count | Should -Be 5
+    }
+
+    It 'adds a DataTable inside the Excel DSL table command' {
+        $path = Join-Path $TestDrive 'DslExcelDataTable.xlsx'
+        $table = [System.Data.DataTable]::new('Items')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Quantity', [int])
+        [void] $table.Rows.Add('Laptop', 5)
+        [void] $table.Rows.Add('Tablet', 12)
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $table -TableName 'Items' -AutoFit
+            }
+        }
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $imported.Count | Should -Be 2
+        $imported[0].Name | Should -Be 'Laptop'
+        $imported[0].Quantity | Should -Be 5
+    }
+
     It 'keeps append freeze panes anchored to the existing table header' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelAppendFreeze.xlsx'
         $rows = @(
