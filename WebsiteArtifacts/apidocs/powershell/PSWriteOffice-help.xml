@@ -5651,7 +5651,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Accepts objects (PSCustomObject, hashtables, POCOs) and converts them into an Excel table with optional styling.</maml:para>
+      <maml:para>Accepts objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences and writes them into an Excel table with optional styling.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
