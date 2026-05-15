@@ -920,6 +920,50 @@ Describe 'Excel DSL surface' {
         $numberFormat.GetAttribute('formatCode') | Should -Be '0.0%'
     }
 
+    It 'formats Excel chart axes series and trendlines' {
+        $path = Join-Path $TestDrive 'DslExcelChartAxisSeriesTrendline.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Month = 'Jan'; Revenue = 100 }
+            [PSCustomObject]@{ Month = 'Feb'; Revenue = 200 }
+            [PSCustomObject]@{ Month = 'Mar'; Revenue = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Line -Title 'Revenue Trend' -PassThru
+                $formattedChart = $chart |
+                    Set-OfficeExcelChartAxis -CategoryTitle 'Month' -ValueTitle 'Revenue' -ValueNumberFormat '$#,##0' -SourceLinked:$false -ValueMinimum 0 -ValueMajorUnit 100 -ShowValueMajorGridlines -ValueGridlineColor '#D9EAD3' |
+                    Set-OfficeExcelChartSeries -SeriesIndex 0 -LineColor '#1F4E79' -LineWidthPoints 1.5 -MarkerStyle Circle -MarkerSize 6 -MarkerFillColor '#4472C4' |
+                    Set-OfficeExcelChartTrendline -SeriesIndex 0 -Type Linear -DisplayEquation -DisplayRSquared -LineColor '#C00000' -LineWidthPoints 1.25
+
+                $formattedChart | Should -Not -BeNullOrEmpty
+            }
+        } | Out-Null
+
+        $chartXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/drawings/charts/chart1.xml'
+        $chartOuterXml = $chartXml.OuterXml
+
+        $categoryTitle = $chartXml.SelectSingleNode("//*[local-name()='catAx']/*[local-name()='title']")
+        $categoryTitle | Should -Not -BeNullOrEmpty
+        $categoryTitle.InnerText | Should -Be 'Month'
+
+        $valueAxis = $chartXml.SelectSingleNode("//*[local-name()='valAx']")
+        $valueAxis | Should -Not -BeNullOrEmpty
+        $valueAxis.SelectSingleNode("*[local-name()='title']").InnerText | Should -Be 'Revenue'
+        $valueAxis.SelectSingleNode("*[local-name()='numFmt']").GetAttribute('formatCode') | Should -Be '$#,##0'
+        $valueAxis.SelectSingleNode("*[local-name()='scaling']/*[local-name()='min']").GetAttribute('val') | Should -Be '0'
+        $valueAxis.SelectSingleNode("*[local-name()='majorUnit']").GetAttribute('val') | Should -Be '100'
+        $valueAxis.SelectSingleNode("*[local-name()='majorGridlines']") | Should -Not -BeNullOrEmpty
+
+        $chartOuterXml | Should -Match 'trendline'
+        $chartOuterXml | Should -Match 'dispEq'
+        $chartOuterXml | Should -Match 'dispRSqr'
+        $chartOuterXml | Should -Match '1F4E79'
+        $chartOuterXml | Should -Match '4472C4'
+        $chartOuterXml | Should -Match 'C00000'
+    }
+
     It 'supports url images and smart hyperlink helpers' {
         $path = Join-Path $TestDrive 'DslExcelLinksAndImages.xlsx'
         $imagePath = New-TestOfficeImageFile -Directory $TestDrive
