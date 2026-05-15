@@ -255,7 +255,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 sheetExists = false;
             }
 
-            var sheet = document.GetOrCreateSheet(sheetName, SheetNameValidationMode.Strict);
+            var sheet = GetOrAddDataSetSheet(document, sheetName);
             var table = ApplyExcludedColumns(sourceTable.Copy());
             if (table.Columns.Count == 0)
             {
@@ -594,7 +594,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         for (var i = 0; i < baseName.Length; i++)
         {
             var ch = baseName[i];
-            chars[i] = ch is ':' or '\\' or '/' or '?' or '*' or '[' or ']' || char.IsControl(ch) ? '_' : ch;
+            chars[i] = IsInvalidWorksheetNameCharacter(ch) ? '_' : ch;
         }
 
         var cleaned = new string(chars).Trim();
@@ -607,6 +607,20 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         var name = cleaned.Length > 31 ? cleaned.Substring(0, 31) : cleaned;
         return (name, usedDefaultFallback);
+    }
+
+    private static ExcelSheet GetOrAddDataSetSheet(ExcelDocument document, string sheetName)
+    {
+        var sheet = document.Sheets.FirstOrDefault(existing =>
+            string.Equals(existing.Name, sheetName, StringComparison.OrdinalIgnoreCase));
+        return sheet ?? document.AddWorkSheet(sheetName, SheetNameValidationMode.None);
+    }
+
+    private static bool IsInvalidWorksheetNameCharacter(char ch)
+    {
+        return ch is ':' or '\\' or '/' or '?' or '*' or '[' or ']' ||
+            char.IsControl(ch) ||
+            char.IsSurrogate(ch);
     }
 
     private static string? FindExistingWorksheetName(
