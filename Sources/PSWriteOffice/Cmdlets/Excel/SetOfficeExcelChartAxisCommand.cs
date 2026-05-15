@@ -118,16 +118,26 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
                 Chart.SetValueAxisScale(ValueMinimum, ValueMaximum, ValueMajorUnit, ValueMinorUnit, axisGroup: AxisGroup);
             }
 
-            bool categoryStyleRequested = !string.IsNullOrWhiteSpace(CategoryGridlineColor) || GridlineWidthPoints.HasValue;
-            if (ShowCategoryMajorGridlines.IsPresent || ShowCategoryMinorGridlines.IsPresent || categoryStyleRequested)
+            bool categoryGridlinesRequested = ShowCategoryMajorGridlines.IsPresent ||
+                ShowCategoryMinorGridlines.IsPresent ||
+                !string.IsNullOrWhiteSpace(CategoryGridlineColor);
+            bool valueGridlinesRequested = ShowValueMajorGridlines.IsPresent ||
+                ShowValueMinorGridlines.IsPresent ||
+                !string.IsNullOrWhiteSpace(ValueGridlineColor);
+            bool widthOnlyRequest = GridlineWidthPoints.HasValue && !categoryGridlinesRequested && !valueGridlinesRequested;
+
+            bool categoryStyleRequested = !string.IsNullOrWhiteSpace(CategoryGridlineColor) ||
+                (GridlineWidthPoints.HasValue && (categoryGridlinesRequested || widthOnlyRequest));
+            if (categoryGridlinesRequested || widthOnlyRequest)
             {
                 bool showMajor = ShowCategoryMajorGridlines.IsPresent || ShowCategoryMinorGridlines.IsPresent || categoryStyleRequested;
                 Chart.SetCategoryAxisGridlines(showMajor,
                     ShowCategoryMinorGridlines.IsPresent, CategoryGridlineColor, GridlineWidthPoints, AxisGroup);
             }
 
-            bool valueStyleRequested = !string.IsNullOrWhiteSpace(ValueGridlineColor) || GridlineWidthPoints.HasValue;
-            if (ShowValueMajorGridlines.IsPresent || ShowValueMinorGridlines.IsPresent || valueStyleRequested)
+            bool valueStyleRequested = !string.IsNullOrWhiteSpace(ValueGridlineColor) ||
+                (GridlineWidthPoints.HasValue && (valueGridlinesRequested || widthOnlyRequest));
+            if (valueGridlinesRequested || widthOnlyRequest)
             {
                 bool showMajor = ShowValueMajorGridlines.IsPresent || ShowValueMinorGridlines.IsPresent || valueStyleRequested;
                 Chart.SetValueAxisGridlines(showMajor,

@@ -235,7 +235,7 @@ Describe 'Excel DSL surface' {
         $replaced[0].Revenue | Should -Be 300
     }
 
-    It 'keeps DataSet fallback sheet names unique against existing workbook sheets' {
+    It 'keeps sanitized symbol DataSet sheet names distinct from existing workbook sheets' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetFallbackCollision.xlsx'
 
         New-OfficeExcel -Path $path {
@@ -262,7 +262,7 @@ Describe 'Excel DSL surface' {
             Close-OfficeExcel -Document $doc
         }
 
-        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B2')
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName '_' -Range 'A1:B2')
         $rows.Count | Should -Be 1
         $rows[0].Region | Should -Be 'NA'
         $rows[0].Revenue | Should -Be 100
@@ -276,7 +276,7 @@ Describe 'Excel DSL surface' {
 
         Export-OfficeExcel -Path $path -InputObject $appendSet -Append
 
-        $appendedRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B3')
+        $appendedRows = @(Import-OfficeExcel -Path $path -WorksheetName '_' -Range 'A1:B3')
         $appendedRows.Count | Should -Be 2
         $appendedRows[1].Region | Should -Be 'EMEA'
         $appendedRows[1].Revenue | Should -Be 200
@@ -290,7 +290,7 @@ Describe 'Excel DSL surface' {
 
         Export-OfficeExcel -Path $path -InputObject $replacementSet -ClearSheet
 
-        $replacedRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B2')
+        $replacedRows = @(Import-OfficeExcel -Path $path -WorksheetName '_' -Range 'A1:B2')
         $replacedRows.Count | Should -Be 1
         $replacedRows[0].Region | Should -Be 'APAC'
         $replacedRows[0].Revenue | Should -Be 300
@@ -300,7 +300,7 @@ Describe 'Excel DSL surface' {
             $existingText = $null
             $doc['Sheet1'].TryGetCellText(1, 1, [ref] $existingText) | Should -BeTrue
             $existingText | Should -Be 'Existing'
-            $doc.Sheets.Name | Should -Not -Contain 'Sheet1 (3)'
+            $doc.Sheets.Name | Should -Not -Contain '_ (2)'
         } finally {
             Close-OfficeExcel -Document $doc
         }
@@ -435,6 +435,32 @@ Describe 'Excel DSL surface' {
         $firstRows[0].Revenue | Should -Be 200
         $sparseRows.Count | Should -Be 1
         $sparseRows[0].Revenue | Should -Be 300
+    }
+
+    It 'preserves symbol-only DataSet sheet names and sanitizes control characters' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetSymbolNames.xlsx'
+        $controlName = "Bad$([char]1)Name"
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        foreach ($name in @('---', '___', $controlName)) {
+            $table = [System.Data.DataTable]::new($name)
+            [void] $table.Columns.Add('Region', [string])
+            [void] $table.Columns.Add('Revenue', [int])
+            [void] $table.Rows.Add('NA', 100)
+            [void] $dataSet.Tables.Add($table)
+        }
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $doc.Sheets.Name | Should -Contain '---'
+            $doc.Sheets.Name | Should -Contain '___'
+            $doc.Sheets.Name | Should -Contain 'Bad_Name'
+            $doc.Sheets.Name | Should -Not -Contain 'Sheet1'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
     }
 
     It 'adds a DataTable inside the Excel DSL table command' {
@@ -1072,9 +1098,12 @@ Describe 'Excel DSL surface' {
         $chartXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/drawings/charts/chart1.xml'
         $chartOuterXml = $chartXml.OuterXml
 
-        $categoryTitle = $chartXml.SelectSingleNode("//*[local-name()='catAx']/*[local-name()='title']")
+        $categoryAxis = $chartXml.SelectSingleNode("//*[local-name()='catAx']")
+        $categoryTitle = $categoryAxis.SelectSingleNode("*[local-name()='title']")
         $categoryTitle | Should -Not -BeNullOrEmpty
         $categoryTitle.InnerText | Should -Be 'Month'
+        $categoryAxis.SelectSingleNode("*[local-name()='majorGridlines']") | Should -BeNullOrEmpty
+        $categoryAxis.SelectSingleNode("*[local-name()='minorGridlines']") | Should -BeNullOrEmpty
 
         $valueAxis = $chartXml.SelectSingleNode("//*[local-name()='valAx']")
         $valueAxis | Should -Not -BeNullOrEmpty

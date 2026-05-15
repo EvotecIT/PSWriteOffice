@@ -594,12 +594,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         for (var i = 0; i < baseName.Length; i++)
         {
             var ch = baseName[i];
-            chars[i] = ch is ':' or '\\' or '/' or '?' or '*' or '[' or ']' ? '_' : ch;
+            chars[i] = ch is ':' or '\\' or '/' or '?' or '*' or '[' or ']' || char.IsControl(ch) ? '_' : ch;
         }
 
         var cleaned = new string(chars).Trim();
         var usedDefaultFallback = false;
-        if (string.IsNullOrEmpty(cleaned) || !cleaned.Any(char.IsLetterOrDigit))
+        if (string.IsNullOrEmpty(cleaned))
         {
             cleaned = "Sheet1";
             usedDefaultFallback = true;
