@@ -7,6 +7,23 @@
     Import-Module $ModuleManifest -Global -ErrorAction Stop
 
     . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
+
+    function Get-TestLoadedType {
+        param(
+            [Parameter(Mandatory)]
+            [string] $Name
+        )
+
+        $type = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType($Name, $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        if ($null -eq $type) {
+            throw "Unable to find loaded type '$Name'."
+        }
+
+        $type
+    }
 }
 
 Describe 'Excel DSL surface' {
@@ -100,7 +117,8 @@ Describe 'Excel DSL surface' {
         $imported[2].Region | Should -Be 'APAC'
         $imported[2].Revenue | Should -Be 150
 
-        $hasTableAppend = @([OfficeIMO.Excel.ExcelSheet].GetMethods() | Where-Object Name -eq 'AppendDataTableToTable').Count -gt 0
+        $excelSheetType = Get-TestLoadedType -Name 'OfficeIMO.Excel.ExcelSheet'
+        $hasTableAppend = @($excelSheetType.GetMethods() | Where-Object Name -eq 'AppendDataTableToTable').Count -gt 0
         if ($hasTableAppend) {
             $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales')
             $tables.Count | Should -Be 1
@@ -580,7 +598,7 @@ Describe 'Excel DSL surface' {
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
                 Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
-                Add-OfficeExcelPivotTable -SourceRange 'A1:F4' -DestinationCell 'J1' -RowField 'Region' -DataField 'Sales'
+                Add-OfficeExcelPivotTable -SourceRange 'A1:F4' -DestinationCell 'J1' -RowField 'Region' -DataField 'Sales' -DataDisplayName 'Total Sales'
                 Add-OfficeExcelValidationWholeNumber -Range 'B2:B4' -Operator Between -Formula1 1 -Formula2 1000 -AllowBlank:$false
                 Add-OfficeExcelValidationDecimal -Range 'C2:C4' -Operator Between -Formula1 0.0 -Formula2 1.0
                 Add-OfficeExcelValidationDate -Range 'D2:D4' -Operator GreaterThan -Formula1 ([datetime]'2024-01-01')
@@ -604,6 +622,7 @@ Describe 'Excel DSL surface' {
         $pivot.RowFields | Should -Contain 'Region'
         @($pivot.DataFields).Count | Should -BeGreaterThan 0
         $pivot.DataFields[0].FieldName | Should -Be 'Sales'
+        $pivot.DataFields[0].DisplayName | Should -Be 'Total Sales'
 
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {
@@ -611,6 +630,42 @@ Describe 'Excel DSL surface' {
             $doc.Sheets[0].IsProtected | Should -BeTrue
         } finally {
             Close-OfficeExcel -Document $doc
+        }
+    }
+
+    It 'uses new pivot options when OfficeIMO supports them and fails clearly otherwise' {
+        $path = Join-Path $TestDrive 'DslExcelPivotOptions.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Product = 'Standard'; Sales = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Product = 'Standard'; Sales = 200 }
+            [PSCustomObject]@{ Region = 'APAC'; Product = 'Legacy'; Sales = 150 }
+        )
+
+        $excelSheetType = Get-TestLoadedType -Name 'OfficeIMO.Excel.ExcelSheet'
+        $supportsNewPivotOptions = $excelSheetType -and (
+            $excelSheetType.GetMethods() |
+                Where-Object {
+                    $_.Name -eq 'AddPivotTable' -and
+                    @($_.GetParameters().Name) -contains 'fieldOptions' -and
+                    @($_.GetParameters().Name) -contains 'grandTotalCaption'
+                } |
+                Select-Object -First 1
+            )
+
+        $createWorkbook = {
+            New-OfficeExcel -Path $path {
+                Add-OfficeExcelSheet -Name 'Data' -Content {
+                    Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+                    Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E1' -RowField 'Region' -PageField 'Product' -DataField 'Sales' -DataNumberFormat '#,##0' -GrandTotalCaption 'Overall' -FieldSort @{ Region = 'Ascending' } -FieldHiddenItems @{ Region = @('APAC') } -PageFieldSelection @{ Product = 'Standard' }
+                }
+            }
+        }
+
+        if ($supportsNewPivotOptions) {
+            & $createWorkbook
+            Test-Path $path | Should -BeTrue
+        } else {
+            $createWorkbook | Should -Throw '*OfficeIMO.Excel version does not support*'
         }
     }
 
@@ -670,19 +725,29 @@ Describe 'Excel DSL surface' {
             }
         }
 
-        $document = [DocumentFormat.OpenXml.Packaging.SpreadsheetDocument]::Open($path, $true)
+        $spreadsheetDocumentType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Packaging.SpreadsheetDocument'
+        $worksheetPartType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Packaging.WorksheetPart'
+        $threadedPartType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Packaging.WorksheetThreadedCommentsPart'
+        $threadedCommentsType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComments'
+        $threadedCommentType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComment'
+        $threadedCommentTextType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedCommentText'
+
+        $openMethod = $spreadsheetDocumentType.GetMethod('Open', [type[]] @([string], [bool]))
+        $openArguments = [object[]] @($path.ToString(), $true)
+        $document = $openMethod.Invoke($null, $openArguments)
         try {
             $worksheetPart = @($document.WorkbookPart.WorksheetParts)[0]
-            $addPartMethod = [DocumentFormat.OpenXml.Packaging.WorksheetPart].GetMethods() |
+            $addPartMethod = $worksheetPartType.GetMethods() |
                 Where-Object { $_.Name -eq 'AddNewPart' -and $_.IsGenericMethodDefinition -and $_.GetParameters().Count -eq 0 } |
                 Select-Object -First 1
-            $threadedPart = $addPartMethod.MakeGenericMethod([DocumentFormat.OpenXml.Packaging.WorksheetThreadedCommentsPart]).Invoke($worksheetPart, @())
-            $threadedComments = [DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComments]::new()
-            $threadedComment = [DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComment]::new()
+            $threadedPart = $addPartMethod.MakeGenericMethod($threadedPartType).Invoke($worksheetPart, @())
+            $threadedComments = [Activator]::CreateInstance($threadedCommentsType)
+            $threadedComment = [Activator]::CreateInstance($threadedCommentType)
             $threadedComment.Ref = 'A2'
             $threadedComment.PersonId = '{00000000-0000-0000-0000-000000000001}'
             $threadedComment.Id = '{00000000-0000-0000-0000-000000000002}'
-            $threadedComment.AppendChild([DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedCommentText]::new('Modern note')) | Out-Null
+            $threadedCommentTextConstructor = $threadedCommentTextType.GetConstructor([type[]] @([string]))
+            $threadedComment.AppendChild($threadedCommentTextConstructor.Invoke([object[]] @('Modern note'))) | Out-Null
             $threadedComments.AppendChild($threadedComment) | Out-Null
             $threadedComments.Save($threadedPart)
         } finally {
