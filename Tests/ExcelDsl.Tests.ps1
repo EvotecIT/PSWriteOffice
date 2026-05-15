@@ -125,6 +125,28 @@ Describe 'Excel DSL surface' {
         $imported[0].PSObject.Properties.Name | Should -Not -Contain 'RowError'
     }
 
+    It 'exports HTML-parser DataTable output with companion link URL columns' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelHtmlDataTable.xlsx'
+        $table = [System.Data.DataTable]::new('HtmlLinks')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('NameUrl', [string])
+        [void] $table.Columns.Add('Status', [string])
+        [void] $table.Rows.Add('Alpha', 'https://example.com/a', 'Ready')
+        [void] $table.Rows.Add('Beta', 'https://example.com/b', 'Hold')
+
+        $table | Export-OfficeExcel -Path $path -WorksheetName 'Links' -TableName 'HtmlLinks' -AutoFit -FreezeTopRow
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Links' -Range 'A1:C3')
+        $imported.Count | Should -Be 2
+        $imported[0].Name | Should -Be 'Alpha'
+        $imported[0].NameUrl | Should -Be 'https://example.com/a'
+        $imported[1].Status | Should -Be 'Hold'
+
+        $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'HtmlLinks')
+        $tables.Count | Should -Be 1
+        $tables[0].Range | Should -Be 'A1:C3'
+    }
+
     It 'exports DataSet input as one worksheet per table' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelDataSet.xlsx'
         $dataSet = [System.Data.DataSet]::new('Report')
