@@ -88,13 +88,18 @@ public sealed class SetOfficeExcelChartSeriesCommand : PSCmdlet
 
             if (!string.IsNullOrWhiteSpace(LineColor) || LineWidthPoints.HasValue)
             {
+                if (string.IsNullOrWhiteSpace(LineColor))
+                {
+                    throw new PSArgumentException("LineColor is required when LineWidthPoints is used because the current OfficeIMO chart API applies series line width together with a line color.");
+                }
+
                 if (ParameterSetName == ParameterSetSeriesName)
                 {
-                    Chart.SetSeriesLineColor(SeriesName, LineColor ?? "000000", LineWidthPoints, IgnoreCase);
+                    Chart.SetSeriesLineColor(SeriesName, LineColor, LineWidthPoints, IgnoreCase);
                 }
                 else
                 {
-                    Chart.SetSeriesLineColor(SeriesIndex, LineColor ?? "000000", LineWidthPoints);
+                    Chart.SetSeriesLineColor(SeriesIndex, LineColor, LineWidthPoints);
                 }
             }
 

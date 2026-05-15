@@ -376,6 +376,67 @@ Describe 'Excel DSL surface' {
         $replacedSecond[0].Revenue | Should -Be 600
     }
 
+    It 'preserves underscore-distinct DataSet sheet names and sparse suffix matches' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetSparseSuffixes.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Q1_Ops' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Existing'
+            }
+            Add-OfficeExcelSheet -Name 'Sparse' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
+            }
+            Add-OfficeExcelSheet -Name 'Sparse (10)' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
+            }
+        }
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $underscored = [System.Data.DataTable]::new('Q1__Ops')
+        [void] $underscored.Columns.Add('Region', [string])
+        [void] $underscored.Columns.Add('Revenue', [int])
+        [void] $underscored.Rows.Add('NA', 100)
+        [void] $dataSet.Tables.Add($underscored)
+
+        $sparseFirst = [System.Data.DataTable]::new('Sparse ')
+        [void] $sparseFirst.Columns.Add('Region', [string])
+        [void] $sparseFirst.Columns.Add('Revenue', [int])
+        [void] $sparseFirst.Rows.Add('EMEA', 200)
+        [void] $dataSet.Tables.Add($sparseFirst)
+
+        $sparseSecond = [System.Data.DataTable]::new(' Sparse')
+        [void] $sparseSecond.Columns.Add('Region', [string])
+        [void] $sparseSecond.Columns.Add('Revenue', [int])
+        [void] $sparseSecond.Rows.Add('APAC', 300)
+        [void] $dataSet.Tables.Add($sparseSecond)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet -Append
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $doc.Sheets.Name | Should -Contain 'Q1__Ops'
+            $doc.Sheets.Name | Should -Not -Contain 'Q1_Ops (2)'
+            $q1Text = $null
+            $doc['Q1_Ops'].TryGetCellText(1, 1, [ref] $q1Text) | Should -BeTrue
+            $q1Text | Should -Be 'Existing'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $underscoredRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Q1__Ops' -Range 'A1:B2')
+        $firstRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sparse' -Range 'A1:B2')
+        $sparseRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sparse (10)' -Range 'A1:B2')
+
+        $underscoredRows.Count | Should -Be 1
+        $underscoredRows[0].Revenue | Should -Be 100
+        $firstRows.Count | Should -Be 1
+        $firstRows[0].Revenue | Should -Be 200
+        $sparseRows.Count | Should -Be 1
+        $sparseRows[0].Revenue | Should -Be 300
+    }
+
     It 'adds a DataTable inside the Excel DSL table command' {
         $path = Join-Path $TestDrive 'DslExcelDataTable.xlsx'
         $table = [System.Data.DataTable]::new('Items')
@@ -997,8 +1058,10 @@ Describe 'Excel DSL surface' {
             Add-OfficeExcelSheet -Name 'Data' -Content {
                 Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
                 $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Line -Title 'Revenue Trend' -PassThru
+                { $chart | Set-OfficeExcelChartSeries -SeriesIndex 0 -LineWidthPoints 1.5 -ErrorAction Stop } |
+                    Should -Throw '*LineColor is required*'
                 $formattedChart = $chart |
-                    Set-OfficeExcelChartAxis -CategoryTitle 'Month' -ValueTitle 'Revenue' -ValueNumberFormat '$#,##0' -SourceLinked:$false -ValueMinimum 0 -ValueMajorUnit 100 -ShowValueMajorGridlines -ValueGridlineColor '#D9EAD3' |
+                    Set-OfficeExcelChartAxis -CategoryTitle 'Month' -ValueTitle 'Revenue' -ValueNumberFormat '$#,##0' -SourceLinked:$false -ValueMinimum 0 -ValueMajorUnit 100 -ShowValueMinorGridlines -ValueGridlineColor '#D9EAD3' -GridlineWidthPoints 0.75 |
                     Set-OfficeExcelChartSeries -SeriesIndex 0 -LineColor '#1F4E79' -LineWidthPoints 1.5 -MarkerStyle Circle -MarkerSize 6 -MarkerFillColor '#4472C4' |
                     Set-OfficeExcelChartTrendline -SeriesIndex 0 -Type Linear -DisplayEquation -DisplayRSquared -LineColor '#C00000' -LineWidthPoints 1.25
 
@@ -1020,6 +1083,7 @@ Describe 'Excel DSL surface' {
         $valueAxis.SelectSingleNode("*[local-name()='scaling']/*[local-name()='min']").GetAttribute('val') | Should -Be '0'
         $valueAxis.SelectSingleNode("*[local-name()='majorUnit']").GetAttribute('val') | Should -Be '100'
         $valueAxis.SelectSingleNode("*[local-name()='majorGridlines']") | Should -Not -BeNullOrEmpty
+        $valueAxis.SelectSingleNode("*[local-name()='minorGridlines']") | Should -Not -BeNullOrEmpty
 
         $chartOuterXml | Should -Match 'trendline'
         $chartOuterXml | Should -Match 'dispEq'

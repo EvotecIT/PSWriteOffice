@@ -118,14 +118,20 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
                 Chart.SetValueAxisScale(ValueMinimum, ValueMaximum, ValueMajorUnit, ValueMinorUnit, axisGroup: AxisGroup);
             }
 
-            if (ShowCategoryMajorGridlines.IsPresent || ShowCategoryMinorGridlines.IsPresent || !string.IsNullOrWhiteSpace(CategoryGridlineColor))
+            bool categoryStyleRequested = !string.IsNullOrWhiteSpace(CategoryGridlineColor) || GridlineWidthPoints.HasValue;
+            if (ShowCategoryMajorGridlines.IsPresent || ShowCategoryMinorGridlines.IsPresent || categoryStyleRequested)
             {
-                Chart.SetCategoryAxisGridlines(ShowCategoryMajorGridlines.IsPresent || !ShowCategoryMinorGridlines.IsPresent, ShowCategoryMinorGridlines.IsPresent, CategoryGridlineColor, GridlineWidthPoints, AxisGroup);
+                bool showMajor = ShowCategoryMajorGridlines.IsPresent || ShowCategoryMinorGridlines.IsPresent || categoryStyleRequested;
+                Chart.SetCategoryAxisGridlines(showMajor,
+                    ShowCategoryMinorGridlines.IsPresent, CategoryGridlineColor, GridlineWidthPoints, AxisGroup);
             }
 
-            if (ShowValueMajorGridlines.IsPresent || ShowValueMinorGridlines.IsPresent || !string.IsNullOrWhiteSpace(ValueGridlineColor))
+            bool valueStyleRequested = !string.IsNullOrWhiteSpace(ValueGridlineColor) || GridlineWidthPoints.HasValue;
+            if (ShowValueMajorGridlines.IsPresent || ShowValueMinorGridlines.IsPresent || valueStyleRequested)
             {
-                Chart.SetValueAxisGridlines(ShowValueMajorGridlines.IsPresent || !ShowValueMinorGridlines.IsPresent, ShowValueMinorGridlines.IsPresent, ValueGridlineColor, GridlineWidthPoints, AxisGroup);
+                bool showMajor = ShowValueMajorGridlines.IsPresent || ShowValueMinorGridlines.IsPresent || valueStyleRequested;
+                Chart.SetValueAxisGridlines(showMajor,
+                    ShowValueMinorGridlines.IsPresent, ValueGridlineColor, GridlineWidthPoints, AxisGroup);
             }
 
             WriteObject(Chart);
