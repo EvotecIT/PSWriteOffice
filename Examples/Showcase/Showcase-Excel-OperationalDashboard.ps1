@@ -42,6 +42,18 @@ $legend = @(
     [pscustomobject]@{ Status = 'Risk'; Meaning = 'Needs active remediation'; Action = 'Open mitigation plan' }
 )
 
+$statusMix = $services |
+    Group-Object Status |
+    ForEach-Object {
+        [pscustomobject]@{
+            Status = $_.Name
+            Count  = $_.Count
+        }
+    }
+
+$serviceRows = $services |
+    Select-Object Service, HealthScore, Incidents, Owner, SlaPercent, Status, Evidence
+
 $ownerSummary = $services |
     Group-Object Owner |
     ForEach-Object {
@@ -60,14 +72,15 @@ New-OfficeExcel -Path $path {
         ExcelCell -Address 'A1' -Value 'Operational Dashboard'
         ExcelCell -Address 'A2' -Value 'Generated with PSWriteOffice from PowerShell objects.'
         ExcelCell -Address 'A4' -Value 'Average Health'
-        ExcelCell -Address 'B4' -Formula 'AVERAGE(Services!C2:C9)' -NumberFormat '0.0'
+        ExcelCell -Address 'B4' -Formula 'AVERAGE(Services!B2:B9)' -NumberFormat '0.0'
         ExcelCell -Address 'D4' -Value 'Total Incidents'
-        ExcelCell -Address 'E4' -Formula 'SUM(Services!D2:D9)' -NumberFormat '0'
+        ExcelCell -Address 'E4' -Formula 'SUM(Services!C2:C9)' -NumberFormat '0'
         ExcelCell -Address 'G4' -Value 'Risk Services'
         ExcelCell -Address 'H4' -Formula 'COUNTIF(Services!F2:F9,"Risk")' -NumberFormat '0'
 
         ExcelTable -Data $legend -TableName 'StatusLegend' -StartRow 7 -StartColumn 1 -TableStyle 'TableStyleMedium4' -AutoFit
-        ExcelChart -Range 'A7:B10' -Row 7 -Column 6 -Type Doughnut -Title 'Status Meaning Mix' -WidthPixels 440 -HeightPixels 260 |
+        ExcelTable -Data $statusMix -TableName 'StatusMix' -StartRow 7 -StartColumn 6 -TableStyle 'TableStyleMedium4' -AutoFit
+        ExcelChart -Range 'F7:G10' -Row 7 -Column 9 -Type Doughnut -Title 'Status Mix' -WidthPixels 440 -HeightPixels 260 |
             Set-OfficeExcelChartLegend -Position Right |
             Set-OfficeExcelChartDataLabels -ShowValue $true -ShowCategoryName $true -Position OutsideEnd |
             Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
@@ -83,14 +96,14 @@ New-OfficeExcel -Path $path {
     }
 
     ExcelSheet 'Services' {
-        ExcelTable -Data $services -TableName 'ServiceHealth' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium9' -AutoFit
+        ExcelTable -Data $serviceRows -TableName 'ServiceHealth' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium9' -AutoFit
         ExcelFreeze -TopRows 1
         ExcelValidationList -Range 'F2:F50' -Values 'Healthy','Watch','Risk'
-        ExcelConditionalColorScale -Range 'C2:C9' -StartColor '#F8696B' -EndColor '#63BE7B'
-        ExcelConditionalDataBar -Range 'D2:D9' -Color '#5B9BD5'
-        ExcelConditionalIconSet -Range 'C2:C9' -IconSet ThreeTrafficLights1 -Reverse $true
+        ExcelConditionalColorScale -Range 'B2:B9' -StartColor '#F8696B' -EndColor '#63BE7B'
+        ExcelConditionalDataBar -Range 'C2:C9' -Color '#5B9BD5'
+        ExcelConditionalIconSet -Range 'B2:B9' -IconSet ThreeTrafficLights1 -Reverse $true
         ExcelUrlLinksByHeader -Header 'Evidence' -TableName 'ServiceHealth' -UrlScript { param($text) "https://evotec.xyz/docs/$text" } -TitleScript { param($text) "Open $text" }
-        ExcelChart -TableName 'ServiceHealth' -Row 12 -Column 1 -Type BarClustered -Title 'Health Score and Incidents' -WidthPixels 760 -HeightPixels 340 |
+        ExcelChart -Range 'A1:C9' -Row 12 -Column 1 -Type BarClustered -Title 'Health Score and Incidents' -WidthPixels 760 -HeightPixels 340 |
             Set-OfficeExcelChartLegend -Position Bottom |
             Set-OfficeExcelChartDataLabels -ShowValue $true -Position OutsideEnd |
             Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
