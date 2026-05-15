@@ -10,6 +10,21 @@ BeforeAll {
 }
 
 Describe 'PowerPoint cmdlets' {
+    It 'closes a presentation through a PowerShell cmdlet' {
+        $path = Join-Path $TestDrive 'PowerPointClose.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+        Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
+
+        Close-OfficePowerPoint -Presentation $presentation -Save
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloaded.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
     It 'creates a presentation with shapes, tables, media, and notes' {
         $path = Join-Path $TestDrive 'PowerPointContent.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path

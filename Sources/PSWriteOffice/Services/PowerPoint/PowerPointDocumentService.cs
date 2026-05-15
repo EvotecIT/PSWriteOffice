@@ -57,4 +57,17 @@ public static class PowerPointDocumentService
             FileOpenService.Open(resolvedPath);
         }
     }
+
+    /// <summary>Closes a presentation, optionally saving and opening it first.</summary>
+    public static void ClosePresentation(PowerPointPresentation presentation, bool save, bool show)
+    {
+        if (save || show)
+        {
+            SavePresentation(presentation, show);
+            return;
+        }
+
+        presentation.Dispose();
+        Presentations.TryRemove(presentation, out _);
+    }
 }
