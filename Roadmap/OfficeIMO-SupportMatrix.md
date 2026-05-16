@@ -1,17 +1,20 @@
 # PSWriteOffice and OfficeIMO Support Matrix
 
-Date: 2026-05-11
+Date: 2026-05-16
 
-This matrix is a quick planning companion for `OfficeIMO-Showcase-PolishPlan.md`.
-For the ImportExcel and PSWriteWord competitive crosswalk, see `ExcelWord-CompetitiveCapabilityAudit.md`.
+This matrix is the current planning companion for `OfficeIMO-Showcase-PolishPlan.md`.
+For the ImportExcel and PSWriteWord competitive crosswalk, see
+`ExcelWord-CompetitiveCapabilityAudit.md`.
 
 ## Legend
 
 - `Wrapped`: available through PSWriteOffice today.
-- `Partial wrapper`: a useful PSWriteOffice surface exists, but deeper OfficeIMO capability remains to expose.
-- `Wrapper gap`: OfficeIMO appears to have a useful capability that PSWriteOffice should expose.
-- `Engine gap`: needs OfficeIMO work first or needs upstream API stabilization.
-- `Deferred`: useful, but should not be pulled into core scope without an explicit decision.
+- `Partial wrapper`: a useful surface exists, but deeper OfficeIMO capability remains
+  to expose or prove.
+- `Wrapper gap`: OfficeIMO appears to have a useful capability that PSWriteOffice
+  should expose.
+- `Engine gap`: needs OfficeIMO work first or upstream API stabilization.
+- `Deferred`: useful, but outside core scope unless approved.
 
 ## Word
 
@@ -19,8 +22,8 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see `ExcelWord-Compet
 | --- | --- | --- |
 | Create/load/save documents | Wrapped | `New-OfficeWord`, `Get-OfficeWord`, `Save-OfficeWord`, `Close-OfficeWord` |
 | Sections, headers, footers, page numbers | Wrapped | Good enough for report examples |
-| Paragraphs, text, lists | Wrapped | Needs richer run/style builder later |
-| Tables from objects | Wrapped | Includes conditional formatting and table-cell helpers |
+| Paragraphs, text, lists | Partial wrapper | Core authoring is wrapped; richer run/paragraph style builders remain |
+| Tables from objects and table-cell content | Partial wrapper | Object tables, conditional rows, nested tables, lists, images, and chart anchoring are wrapped; row/column mutation and merge helpers remain |
 | TOC and field updates | Wrapped | `Add/Set/Get/Update/Remove-OfficeWordTableOfContent`, `Update-OfficeWordFields` |
 | Bookmarks and hyperlinks | Wrapped | External and anchor links are exposed |
 | Document properties | Wrapped | Built-in/custom property surface exists |
@@ -30,11 +33,12 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see `ExcelWord-Compet
 | HTML and Markdown conversion | Wrapped | Useful for sidecar previews/blog code |
 | Mail merge | Wrapped | Suitable for practical examples |
 | Footnotes/endnotes | Wrapped | Add/read wrappers return document-safe note snapshots |
+| Page setup and columns | Wrapper gap | Needs a compact `Set-OfficeWordPageSetup` surface |
 | Advanced image layout | Wrapper gap | Crop, transparency, rotation, wrapping, fixed positioning, alt text |
 | Text boxes and shapes | Wrapper gap | OfficeIMO.Word supports richer shape scenarios than PSWriteOffice exposes |
 | Cover pages | Wrapper gap | Prefer template-driven wrapper if stable |
 | Append/merge documents | Wrapper gap | Useful for report packs and appendices |
-| Paragraph/run style builders | Wrapper gap | Useful once flagship examples need less raw styling |
+| Equations and tab stops | Wrapper gap | Small parity wrappers worth adding |
 | Macros | Deferred | Keep preview-only if added |
 | SmartArt authoring | Deferred | Detection/read helpers are safer first |
 | PDF export | Deferred | Requires package-scope approval for `OfficeIMO.Word.Pdf` |
@@ -44,26 +48,31 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see `ExcelWord-Compet
 | Capability | Status | Notes |
 | --- | --- | --- |
 | Create/load/save workbook | Wrapped | `New/Get/Save/Close-OfficeExcel` |
+| Import/export operator flow | Wrapped | `Export-OfficeExcel` and `Import-OfficeExcel` cover common ImportExcel-style workflows |
+| Bridge data shapes | Wrapped | Objects, dictionaries, `DataTable`, `DataSet`, `DataView`, and `IDataReader` are accepted by table/export paths |
 | Sheets, cells, rows, columns | Wrapped | Strong primitive coverage |
+| Worksheet copy/move/join/compare | Wrapped | Useful maintenance and migration helpers exist |
 | Tables from objects | Wrapped | Core reporting path works |
 | Named ranges | Wrapped | Includes hidden and validation-mode support |
 | TOC and workbook navigation | Wrapped | Includes internal links/backlinks |
 | Range/data/table/pivot readers | Wrapped | Good read-back foundation |
 | Validation | Wrapped | List, whole number, decimal, date, time, text length, custom formula |
 | Conditional formatting | Wrapped | Rules, color scale, data bar, icon set |
-| Charts | Wrapped | Add chart plus style, legend, data labels |
-| Pivot tables and sparklines | Partial wrapper | Cmdlets exist, but desktop Excel open compatibility needs engine follow-up before flagship examples should rely on them |
+| Charts | Wrapped | Add chart plus axis, legend, data labels, style, series, and trendline helpers |
+| Pivot tables and sparklines | Partial wrapper | Cmdlets exist, but desktop Excel open compatibility needs engine confidence before flagship examples rely on them |
 | Images and URL images | Wrapped | Includes in-sheet and header/footer image paths |
 | Hyperlinks | Wrapped | Raw, smart, host, internal, URL by header |
-| Print setup | Wrapped | Orientation, margins, page setup, gridlines, freeze |
+| Print setup | Wrapped | Orientation, margins, page setup, gridlines, freeze, print area, print titles |
 | Sort/autofit | Wrapped | Direct helpers exist |
+| Find/replace and editable rows | Wrapped | `Find-OfficeExcel`, `Update-OfficeExcelText`, `Edit-OfficeExcelRow` |
+| Workbook summary inspection | Wrapped | `Get-OfficeExcelSummary` reports workbook shape and major object collections |
+| HTML to Excel bridge | Wrapped by example | `Example-ExcelHtmlTablesViaPSParseHTML.ps1` keeps HTML parsing outside PSWriteOffice |
 | Fluent report composer | Wrapper gap | OfficeIMO `Compose` / `SheetComposer` should become a PowerShell report sheet DSL |
 | KPI, legend, callout, columns blocks | Wrapper gap | Best route to beautiful default dashboards |
 | Column style by header | Wrapper gap | Currency/percent/date/status formatting without range math |
 | Execution policy/diagnostics | Wrapper gap | Expose only if simple and useful from PowerShell |
-| Workbook summary inspection | Wrapped | `Get-OfficeExcelSummary` reports workbook shape, charts, tables, pivots, sparklines, links, comments, named ranges, sheet visibility, and used ranges |
-| Rich chart axis/series formatting | Wrapper gap | Axis titles, gridlines, scale, number format, trendlines, markers, combo/secondary axis |
-| Find/replace and editable rows | Wrapper gap | Useful for maintenance workflows |
+| Workbook encryption/passwords | Engine gap | Do not add hollow parameters before OfficeIMO can honor them |
+| Range to image | Engine gap | Needs an intentional renderer decision |
 | Google Sheets bridge | Deferred | Explicit package-scope expansion only |
 
 ## PowerPoint
@@ -82,8 +91,8 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see `ExcelWord-Compet
 | Transitions and slide size | Wrapped | Good for showcase deck polish |
 | Import/copy slides | Wrapped | Useful appendix workflow |
 | Text replacement and inspection | Wrapped | Good maintenance surface |
-| Designer brief/recipes/directions | Partial wrapper | `Add-OfficePowerPointDesignerDeck` exposes accent, seed, purpose, creative direction, layout strategy, alternatives, theme application, preview, and summaries |
-| Deck plan and semantic slides | Partial wrapper | `New-OfficePowerPointDeckPlan` plus section, process, card grid, coverage, capability, case study, and logo wall helpers; metrics and visual frames remain |
+| Designer brief/recipes/directions | Partial wrapper | `Add-OfficePowerPointDesignerDeck` exposes the first high-level bridge |
+| Deck plan and semantic slides | Partial wrapper | Section, process, card grid, coverage, capability, case study, and logo wall helpers exist; metrics and visual frames remain |
 | Content-fit diagnostics | Partial wrapper | Preview/render summaries exist; richer fit warnings should still be exposed |
 | Shape layout helpers | Wrapper gap | Align, distribute, stack, grid, fit, resize, z-order, duplicate, group |
 | Guides and snap-to-grid | Wrapper gap | Useful for manual layout scripts |
@@ -91,12 +100,12 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see `ExcelWord-Compet
 | Table cell formatting | Wrapper gap | Merged cells, padding, borders, row heights, autofit, preset style wrappers |
 | Slide hidden/reorder controls | Wrapper gap | Useful deck maintenance commands |
 
-## Recommended First PRs
+## Recommended Next PRs
 
-1. Blog draft preparation once screenshots are produced.
-2. Excel report composer wrapper after the current operational dashboard showcase.
-3. PowerPoint metrics/visual-frame helpers, fit diagnostics, and shape layout polish after the current designer bridge.
-4. Word image layout, cover-page, append/merge, and richer style helpers after the current executive report showcase.
+1. Excel report composer wrapper and column-style-by-header helper.
+2. Word page setup, merge/append, image layout, and cover page helpers.
+3. PowerPoint metrics/visual-frame helpers, fit diagnostics, and shape layout polish.
+4. OfficeIMO engine confidence for Excel pivot/sparkline desktop-open compatibility.
 
 ## Example Quality Bar
 
