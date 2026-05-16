@@ -437,6 +437,43 @@ Describe 'Excel DSL surface' {
         $sparseRows[0].Revenue | Should -Be 300
     }
 
+    It 'matches the lowest suffixed DataSet sheet independent of workbook order' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetLowestSuffix.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data (3)' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
+                Set-OfficeExcelCell -Address 'A2' -Value 'APAC'
+                Set-OfficeExcelCell -Address 'B2' -Value 300
+            }
+            Add-OfficeExcelSheet -Name 'Data (2)' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
+                Set-OfficeExcelCell -Address 'A2' -Value 'EMEA'
+                Set-OfficeExcelCell -Address 'B2' -Value 200
+            }
+        }
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $table = [System.Data.DataTable]::new('Data')
+        [void] $table.Columns.Add('Region', [string])
+        [void] $table.Columns.Add('Revenue', [int])
+        [void] $table.Rows.Add('NA', 100)
+        [void] $dataSet.Tables.Add($table)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet -Append
+
+        $lowestRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data (2)' -Range 'A1:B3')
+        $higherRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data (3)' -Range 'A1:B2')
+
+        $lowestRows.Count | Should -Be 2
+        $lowestRows[1].Region | Should -Be 'NA'
+        $lowestRows[1].Revenue | Should -Be 100
+        $higherRows.Count | Should -Be 1
+        $higherRows[0].Revenue | Should -Be 300
+    }
+
     It 'preserves symbol-only DataSet sheet names and sanitizes control characters' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetSymbolNames.xlsx'
         $controlName = "Bad$([char]1)Name"

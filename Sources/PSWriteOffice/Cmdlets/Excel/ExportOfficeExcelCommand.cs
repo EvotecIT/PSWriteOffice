@@ -643,7 +643,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return directMatch;
         }
 
-        return existing.FirstOrDefault(name => IsSuffixedWorksheetName(name, normalizedName));
+        return existing
+            .Select(name => (Name: name, Suffix: GetWorksheetNameSuffix(name, normalizedName)))
+            .Where(match => match.Suffix.HasValue)
+            .OrderBy(match => match.Suffix!.Value)
+            .Select(match => match.Name)
+            .FirstOrDefault();
     }
 
     private static string AppendWorksheetSuffix(string worksheetName, int suffix)
@@ -656,19 +661,26 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private static bool IsSuffixedWorksheetName(string worksheetName, string normalizedName)
     {
+        return GetWorksheetNameSuffix(worksheetName, normalizedName).HasValue;
+    }
+
+    private static int? GetWorksheetNameSuffix(string worksheetName, string normalizedName)
+    {
         var close = worksheetName.LastIndexOf(')');
         var open = worksheetName.LastIndexOf(" (", StringComparison.Ordinal);
         if (close != worksheetName.Length - 1 || open < 0 || open >= close)
         {
-            return false;
+            return null;
         }
 
         var suffixText = worksheetName.Substring(open + 2, close - open - 2);
         if (!int.TryParse(suffixText, out var suffix) || suffix < 2)
         {
-            return false;
+            return null;
         }
 
-        return string.Equals(worksheetName, AppendWorksheetSuffix(normalizedName, suffix), StringComparison.OrdinalIgnoreCase);
+        return string.Equals(worksheetName, AppendWorksheetSuffix(normalizedName, suffix), StringComparison.OrdinalIgnoreCase)
+            ? suffix
+            : null;
     }
 }
