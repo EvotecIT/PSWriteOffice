@@ -275,6 +275,67 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'wraps OfficeIMO Word page setup, cover pages, equations, tab stops, and statistics' {
+        $path = Join-Path $TestDrive 'DslWordRoadmap.docx'
+        $omml = '<m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"><m:r><m:t>x+1</m:t></m:r></m:oMath>'
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordCoverPage -Template Element -Abstract 'Executive summary' -CompanyEmail 'reports@example.test'
+            Add-OfficeWordSection {
+                Set-OfficeWordPageSetup -PageSize A4 -Orientation Landscape -Margin Narrow -Columns 2 -ColumnSpacing 720 -ColumnSeparator $true
+                Add-OfficeWordParagraph {
+                    Add-OfficeWordTabStop -Position 4320 -Alignment Decimal -Leader Dot
+                    Add-OfficeWordText -Text "Score`t98.5"
+                }
+                Add-OfficeWordEquation -Omml $omml
+            }
+        }
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.CoverPage | Should -Not -BeNullOrEmpty
+            $document.CoverPageProperties.Abstract | Should -Be 'Executive summary'
+            $document.CoverPageProperties.CompanyEmail | Should -Be 'reports@example.test'
+            $document.Sections[0].PageSettings.PageSize | Should -Be ([OfficeIMO.Word.WordPageSize]::A4)
+            $document.Sections[0].PageOrientation | Should -Be ([DocumentFormat.OpenXml.Wordprocessing.PageOrientationValues]::Landscape)
+            $document.Sections[0].Margins.Type | Should -Be ([OfficeIMO.Word.WordMargin]::Narrow)
+            $document.Sections[0].ColumnCount | Should -Be 2
+            $document.Sections[0].ColumnsSpace | Should -Be 720
+            $document.Sections[0].HasColumnSeparator | Should -BeTrue
+            ($document.Paragraphs | Where-Object { $_.TabStops.Count -gt 0 }).Count | Should -BeGreaterThan 0
+            $document.Equations.Count | Should -Be 1
+        } finally {
+            $document.Dispose()
+        }
+
+        $stats = Get-OfficeWordStatistics -Path $path
+        $stats.Paragraphs | Should -BeGreaterThan 0
+        $stats.Words | Should -BeGreaterThan 0
+    }
+
+    It 'joins Word documents through the thin append wrapper' {
+        $basePath = Join-Path $TestDrive 'JoinBase.docx'
+        $appendPath = Join-Path $TestDrive 'JoinAppendix.docx'
+        $outputPath = Join-Path $TestDrive 'JoinMerged.docx'
+
+        New-OfficeWord -Path $basePath {
+            Add-OfficeWordParagraph -Text 'Base report'
+        }
+        New-OfficeWord -Path $appendPath {
+            Add-OfficeWordParagraph -Text 'Appendix detail'
+        }
+
+        Join-OfficeWordDocument -Path $basePath -AppendPath $appendPath -OutputPath $outputPath
+
+        $document = Get-OfficeWord -Path $outputPath -ReadOnly
+        try {
+            ($document.Paragraphs.Text -join "`n") | Should -Match 'Base report'
+            ($document.Paragraphs.Text -join "`n") | Should -Match 'Appendix detail'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'adds Word charts to paragraphs created inside table cells' {
         $path = Join-Path $TestDrive 'DslWordChartInCell.docx'
         $tableRows = @(
