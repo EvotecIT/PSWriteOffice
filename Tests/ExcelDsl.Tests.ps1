@@ -875,6 +875,90 @@ Describe 'Excel DSL surface' {
         $pageMargins.GetAttribute('bottom') | Should -Be '0.5'
     }
 
+    It 'wraps OfficeIMO worksheet operations and print definitions' {
+        $path = Join-Path $TestDrive 'ExcelWorksheetOperations.xlsx'
+        $sourcePath = Join-Path $TestDrive 'ExcelWorksheetOperationsSource.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Sales = 200 }
+        )
+        $moreRows = @(
+            [PSCustomObject]@{ Region = 'APAC'; Sales = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+            }
+            Add-OfficeExcelSheet -Name 'More' -Content {
+                Add-OfficeExcelTable -Data $moreRows -TableName 'MoreSales'
+            }
+        }
+        New-OfficeExcel -Path $sourcePath {
+            Add-OfficeExcelSheet -Name 'External' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Name'
+                Set-OfficeExcelCell -Address 'A2' -Value 'Imported'
+            }
+        }
+
+        Copy-OfficeExcelSheet -Path $path -SourceSheet 'Data' -NewName 'DataCopy' | Should -Not -BeNullOrEmpty
+        Move-OfficeExcelSheet -Path $path -Sheet 'DataCopy' -Index 0
+        Copy-OfficeExcelSheet -Path $path -SourcePath $sourcePath -SourceSheet 'External' -NewName 'ExternalCopy' | Should -Not -BeNullOrEmpty
+        $join = Join-OfficeExcelSheet -Path $path -TargetSheet 'Data' -SourceSheet 'More' -MatchColumnsByHeader
+        Set-OfficeExcelPrintArea -Path $path -Sheet 'Data' -Range 'A1:B4'
+        Set-OfficeExcelPrintTitles -Path $path -Sheet 'Data' -FirstRow 1 -LastRow 1
+
+        $join.RowsCopied | Should -Be 1
+        $join.TargetSheetName | Should -Be 'Data'
+
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.Sheets[0].Name | Should -Be 'DataCopy'
+        $summary.Sheets.Name | Should -Contain 'ExternalCopy'
+
+        $external = @(Import-OfficeExcel -Path $path -WorksheetName 'ExternalCopy' -Range 'A1:A2')
+        $external.Count | Should -Be 1
+        $external[0].Name | Should -Be 'Imported'
+
+        $merged = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B4')
+        $merged.Count | Should -Be 3
+        $merged[2].Region | Should -Be 'APAC'
+
+        $differences = @(Compare-OfficeExcelRange -Path $path -LeftSheet 'Data' -RightSheet 'DataCopy')
+        $differences.Count | Should -BeGreaterThan 0
+
+        $names = @(Get-OfficeExcelNamedRange -Path $path -Sheet 'Data')
+        ($names | Where-Object Name -eq '_xlnm.Print_Area').Count | Should -Be 1
+        ($names | Where-Object Name -eq '_xlnm.Print_Titles').Count | Should -Be 1
+    }
+
+    It 'finds, replaces, and edits Excel row values' {
+        $path = Join-Path $TestDrive 'ExcelFindReplaceEditRows.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Ada'; Status = 'Draft' }
+            [PSCustomObject]@{ Name = 'Grace'; Status = 'Draft' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'People'
+            }
+        }
+
+        @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text 'Draft').Count | Should -Be 2
+        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue 'Draft' -NewValue 'Ready' | Should -Be 2
+        Edit-OfficeExcelRow -Path $path -Sheet 'Data' -ScriptBlock {
+            param($row)
+            if ($row.CellByHeader('Name').Value -eq 'Ada') {
+                $row.Set('Status', 'Done')
+            }
+        }
+
+        $updated = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $updated[0].Status | Should -Be 'Done'
+        $updated[1].Status | Should -Be 'Ready'
+        @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text '^Done$' -Regex).Count | Should -Be 1
+    }
+
     It 'counts threaded comments in workbook summaries' {
         $path = Join-Path $TestDrive 'DslExcelThreadedComments.xlsx'
         $rows = @(
