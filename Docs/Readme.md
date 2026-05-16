@@ -31,6 +31,9 @@ Adds an icon set conditional format to a range.
 ### [Add-OfficeExcelConditionalRule](Add-OfficeExcelConditionalRule.md)
 Adds a conditional formatting rule to the current worksheet.
 
+### [Add-OfficeExcelDataSet](Add-OfficeExcelDataSet.md)
+Writes every table in a DataSet to separate Excel worksheets.
+
 ### [Add-OfficeExcelImage](Add-OfficeExcelImage.md)
 Adds an image anchored to a worksheet cell.
 
@@ -259,6 +262,9 @@ Closes a PowerPoint presentation and optionally saves it.
 ### [Close-OfficeWord](Close-OfficeWord.md)
 Closes one or more tracked Word documents, optionally saving them.
 
+### [Compare-OfficeExcelRange](Compare-OfficeExcelRange.md)
+Compares two Excel worksheets or ranges and returns cell-level differences.
+
 ### [ConvertFrom-OfficeWordHtml](ConvertFrom-OfficeWordHtml.md)
 Creates a Word document from HTML.
 
@@ -280,11 +286,20 @@ Converts a Word document to HTML.
 ### [ConvertTo-OfficeWordMarkdown](ConvertTo-OfficeWordMarkdown.md)
 Converts a Word document to Markdown.
 
+### [Copy-OfficeExcelSheet](Copy-OfficeExcelSheet.md)
+Copies a worksheet within a workbook or from another workbook.
+
 ### [Copy-OfficePowerPointSlide](Copy-OfficePowerPointSlide.md)
 Copies an existing slide within a PowerPoint presentation.
 
+### [Edit-OfficeExcelRow](Edit-OfficeExcelRow.md)
+Runs a script block against editable worksheet rows.
+
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
 Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
+
+### [Find-OfficeExcel](Find-OfficeExcel.md)
+Finds text in worksheet values.
 
 ### [Find-OfficeWord](Find-OfficeWord.md)
 Finds text matches inside a Word document.
@@ -427,6 +442,12 @@ Sorts the used range on the current worksheet.
 ### [Invoke-OfficeWordMailMerge](Invoke-OfficeWordMailMerge.md)
 Executes a simple mail merge against MERGEFIELD values in a Word document.
 
+### [Join-OfficeExcelSheet](Join-OfficeExcelSheet.md)
+Appends or merges rows from one worksheet into another.
+
+### [Move-OfficeExcelSheet](Move-OfficeExcelSheet.md)
+Moves a worksheet to a new workbook position.
+
 ### [New-OfficeExcel](New-OfficeExcel.md)
 Creates a new Excel workbook using the DSL.
 
@@ -529,6 +550,12 @@ Sets the page orientation on a worksheet.
 ### [Set-OfficeExcelPageSetup](Set-OfficeExcelPageSetup.md)
 Configures page setup options on a worksheet.
 
+### [Set-OfficeExcelPrintArea](Set-OfficeExcelPrintArea.md)
+Sets the print area for a worksheet.
+
+### [Set-OfficeExcelPrintTitles](Set-OfficeExcelPrintTitles.md)
+Sets or clears repeating print title rows and columns for a worksheet.
+
 ### [Set-OfficeExcelRow](Set-OfficeExcelRow.md)
 Writes a row of values to the current worksheet.
 
@@ -594,6 +621,9 @@ Sets properties on a table of contents in a Word document.
 
 ### [Unprotect-OfficeExcelSheet](Unprotect-OfficeExcelSheet.md)
 Removes worksheet protection.
+
+### [Update-OfficeExcelText](Update-OfficeExcelText.md)
+Replaces text in worksheet values.
 
 ### [Update-OfficePowerPointText](Update-OfficePowerPointText.md)
 Replaces text in a PowerPoint slide or presentation.

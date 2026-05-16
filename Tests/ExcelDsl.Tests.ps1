@@ -70,6 +70,62 @@ Describe 'Excel DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'writes a DataTable directly as an Excel table' {
+        $path = Join-Path $TestDrive 'DslExcelDataTable.xlsx'
+        $table = [System.Data.DataTable]::new('People')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Score', [int])
+        [void] $table.Rows.Add('Ada', 10)
+        [void] $table.Rows.Add('Grace', 20)
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -DataTable $table -TableName 'PeopleTable' -AutoFit
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
+        $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'PeopleTable')
+        $tables.Count | Should -Be 1
+        $tables[0].Range | Should -Be 'A1:B3'
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $imported.Count | Should -Be 2
+        $imported[0].Name | Should -Be 'Ada'
+        $imported[0].Score | Should -Be 10
+    }
+
+    It 'writes a DataSet as one worksheet per table' {
+        $path = Join-Path $TestDrive 'DslExcelDataSet.xlsx'
+        $dataSet = [System.Data.DataSet]::new('Report')
+
+        $sales = [System.Data.DataTable]::new('Sales:2026')
+        [void] $sales.Columns.Add('Region', [string])
+        [void] $sales.Columns.Add('Revenue', [int])
+        [void] $sales.Rows.Add('NA', 100)
+        [void] $sales.Rows.Add('EMEA', 200)
+        [void] $dataSet.Tables.Add($sales)
+
+        $notes = [System.Data.DataTable]::new('Notes')
+        [void] $notes.Columns.Add('Text', [string])
+        [void] $notes.Rows.Add('Checked')
+        [void] $dataSet.Tables.Add($notes)
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelDataSet -DataSet $dataSet -AutoFit
+        }
+
+        Test-Path $path | Should -BeTrue
+        $salesRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026' -Range 'A1:B3')
+        $salesRows.Count | Should -Be 2
+        $salesRows[1].Region | Should -Be 'EMEA'
+        $salesRows[1].Revenue | Should -Be 200
+
+        $notesRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Notes' -Range 'A1:A2')
+        $notesRows.Count | Should -Be 1
+        $notesRows[0].Text | Should -Be 'Checked'
+    }
+
     It 'exports and imports objects through operator cmdlets' {
         $path = Join-Path $TestDrive 'ExportOfficeExcel.xlsx'
         $rows = @(
@@ -817,6 +873,90 @@ Describe 'Excel DSL surface' {
         $pageMargins.GetAttribute('right') | Should -Be '0.25'
         $pageMargins.GetAttribute('top') | Should -Be '0.5'
         $pageMargins.GetAttribute('bottom') | Should -Be '0.5'
+    }
+
+    It 'wraps OfficeIMO worksheet operations and print definitions' {
+        $path = Join-Path $TestDrive 'ExcelWorksheetOperations.xlsx'
+        $sourcePath = Join-Path $TestDrive 'ExcelWorksheetOperationsSource.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Sales = 200 }
+        )
+        $moreRows = @(
+            [PSCustomObject]@{ Region = 'APAC'; Sales = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+            }
+            Add-OfficeExcelSheet -Name 'More' -Content {
+                Add-OfficeExcelTable -Data $moreRows -TableName 'MoreSales'
+            }
+        }
+        New-OfficeExcel -Path $sourcePath {
+            Add-OfficeExcelSheet -Name 'External' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Name'
+                Set-OfficeExcelCell -Address 'A2' -Value 'Imported'
+            }
+        }
+
+        Copy-OfficeExcelSheet -Path $path -SourceSheet 'Data' -NewName 'DataCopy' | Should -Not -BeNullOrEmpty
+        Move-OfficeExcelSheet -Path $path -Sheet 'DataCopy' -Index 0
+        Copy-OfficeExcelSheet -Path $path -SourcePath $sourcePath -SourceSheet 'External' -NewName 'ExternalCopy' | Should -Not -BeNullOrEmpty
+        $join = Join-OfficeExcelSheet -Path $path -TargetSheet 'Data' -SourceSheet 'More' -MatchColumnsByHeader
+        Set-OfficeExcelPrintArea -Path $path -Sheet 'Data' -Range 'A1:B4'
+        Set-OfficeExcelPrintTitles -Path $path -Sheet 'Data' -FirstRow 1 -LastRow 1
+
+        $join.RowsCopied | Should -Be 1
+        $join.TargetSheetName | Should -Be 'Data'
+
+        $summary = Get-OfficeExcelSummary -Path $path -IncludeSheets
+        $summary.Sheets[0].Name | Should -Be 'DataCopy'
+        $summary.Sheets.Name | Should -Contain 'ExternalCopy'
+
+        $external = @(Import-OfficeExcel -Path $path -WorksheetName 'ExternalCopy' -Range 'A1:A2')
+        $external.Count | Should -Be 1
+        $external[0].Name | Should -Be 'Imported'
+
+        $merged = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B4')
+        $merged.Count | Should -Be 3
+        $merged[2].Region | Should -Be 'APAC'
+
+        $differences = @(Compare-OfficeExcelRange -Path $path -LeftSheet 'Data' -RightSheet 'DataCopy')
+        $differences.Count | Should -BeGreaterThan 0
+
+        $names = @(Get-OfficeExcelNamedRange -Path $path -Sheet 'Data')
+        ($names | Where-Object Name -eq '_xlnm.Print_Area').Count | Should -Be 1
+        ($names | Where-Object Name -eq '_xlnm.Print_Titles').Count | Should -Be 1
+    }
+
+    It 'finds, replaces, and edits Excel row values' {
+        $path = Join-Path $TestDrive 'ExcelFindReplaceEditRows.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Ada'; Status = 'Draft' }
+            [PSCustomObject]@{ Name = 'Grace'; Status = 'Draft' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'People'
+            }
+        }
+
+        @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text 'Draft').Count | Should -Be 2
+        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue 'Draft' -NewValue 'Ready' | Should -Be 2
+        Edit-OfficeExcelRow -Path $path -Sheet 'Data' -ScriptBlock {
+            param($row)
+            if ($row.CellByHeader('Name').Value -eq 'Ada') {
+                $row.Set('Status', 'Done')
+            }
+        }
+
+        $updated = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $updated[0].Status | Should -Be 'Done'
+        $updated[1].Status | Should -Be 'Ready'
+        @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text '^Done$' -Regex).Count | Should -Be 1
     }
 
     It 'counts threaded comments in workbook summaries' {

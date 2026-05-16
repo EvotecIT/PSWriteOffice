@@ -4,42 +4,41 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Add-OfficeExcelTable
+# Update-OfficeExcelText
 ## SYNOPSIS
-Writes tabular data to the current worksheet and formats it as an Excel table.
+Replaces text in worksheet values.
 
 ## SYNTAX
-### Objects (Default)
+### Path (Default)
 ```powershell
-Add-OfficeExcelTable -Data <Object[]> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-TableName <string>] [-TableStyle <string>] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
+Update-OfficeExcelText [-InputPath] <string> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-CaseSensitive] [-Regex] [-Show] [<CommonParameters>]
 ```
 
-### DataTable
+### Document
 ```powershell
-Add-OfficeExcelTable -DataTable <DataTable> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-TableName <string>] [-TableStyle <string>] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
+Update-OfficeExcelText -Document <ExcelDocument> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-CaseSensitive] [-Regex] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Accepts objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences and writes them into an Excel table with optional styling.
+Replaces text in worksheet values.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> $data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })
-              ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }
+PS> Update-OfficeExcelText -Path .\Report.xlsx -OldValue Draft -NewValue Ready
 ```
 
-Writes two rows and formats them as a styled Excel table.
+Updates matching text cells and returns the replacement count.
 
 ## PARAMETERS
 
-### -AutoFit
-Auto-fit the table columns after insertion.
+### -CaseSensitive
+Use case-sensitive matching.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Objects, DataTable
+Parameter Sets: Path, Document
 Aliases: None
 Possible values:
 
@@ -50,28 +49,12 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Data
-Source objects to convert into table rows.
+### -Document
+Workbook to update outside the DSL context.
 
 ```yaml
-Type: Object[]
-Parameter Sets: Objects
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -DataTable
-Source DataTable to write directly.
-
-```yaml
-Type: DataTable
-Parameter Sets: DataTable
+Type: ExcelDocument
+Parameter Sets: Document
 Aliases: None
 Possible values:
 
@@ -82,92 +65,60 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -NoAutoFilter
-Disable AutoFilter dropdowns.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Objects, DataTable
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NoHeader
-Skip writing headers.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Objects, DataTable
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -PassThru
-Return the created range string.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Objects, DataTable
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -StartColumn
-Starting column for the data (1-based).
-
-```yaml
-Type: Int32
-Parameter Sets: Objects, DataTable
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -StartRow
-Starting row for the data (1-based).
-
-```yaml
-Type: Int32
-Parameter Sets: Objects, DataTable
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -TableName
-Name to assign to the table.
+### -InputPath
+Workbook path to update.
 
 ```yaml
 Type: String
-Parameter Sets: Objects, DataTable
+Parameter Sets: Path
+Aliases: Path, FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NewValue
+Replacement text.
+
+```yaml
+Type: String
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OldValue
+Text or pattern to replace.
+
+```yaml
+Type: String
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Range
+A1 range to update. Defaults to each selected worksheet's used range.
+
+```yaml
+Type: String
+Parameter Sets: Path, Document
 Aliases: None
 Possible values:
 
@@ -178,12 +129,60 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -TableStyle
-Built-in table style to apply.
+### -Regex
+Treat -OldValue as a regular expression.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Sheet
+Worksheet name. Defaults to all sheets for path/document use and current sheet inside an ExcelSheet block.
 
 ```yaml
 Type: String
-Parameter Sets: Objects, DataTable
+Parameter Sets: Path, Document
+Aliases: WorksheetName
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SheetIndex
+Worksheet index when using a workbook object or path.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Open the file after saving when using -Path.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path
 Aliases: None
 Possible values:
 
@@ -199,11 +198,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `System.Data.DataTable`
+- `OfficeIMO.Excel.ExcelDocument`
 
 ## OUTPUTS
 
-- `System.Object`
+- `System.Int32`
 
 ## RELATED LINKS
 

@@ -116,7 +116,7 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
         DotSourceClasses                  = $true
         DeleteTargetModuleBeforeBuild     = $true
         NETBinaryModuleDocumentation      = $true
-        RefreshPSD1Only                   = $false
+        RefreshPSD1Only                   = $refreshPSD1Only
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat
