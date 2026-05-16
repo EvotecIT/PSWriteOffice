@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Excel;
@@ -16,13 +18,20 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }</code>
 ///   <para>Writes two rows and formats them as a styled Excel table.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelTable")]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelTable", DefaultParameterSetName = ParameterSetObjects)]
 [Alias("ExcelTable")]
 public sealed class AddOfficeExcelTableCommand : PSCmdlet
 {
+    private const string ParameterSetObjects = "Objects";
+    private const string ParameterSetDataTable = "DataTable";
+
     /// <summary>Source objects to convert into table rows.</summary>
-    [Parameter(Mandatory = true)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetObjects)]
     public object[] Data { get; set; } = Array.Empty<object>();
+
+    /// <summary>Source <see cref="DataTable"/> to write directly.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDataTable, ValueFromPipeline = true)]
+    public DataTable? DataTable { get; set; }
 
     /// <summary>Starting row for the data (1-based).</summary>
     [Parameter]
@@ -62,12 +71,7 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
         var context = ExcelDslContext.Require(this);
         var sheet = context.RequireSheet();
 
-        if (Data == null || Data.Length == 0)
-        {
-            throw new PSArgumentException("Provide at least one data row.", nameof(Data));
-        }
-
-        var table = ExcelTabularInputService.ToDataTable(Data, TableName);
+        var table = ExcelTabularInputService.ToDataTable(GetSourceInput(), TableName);
         if (table.Columns.Count == 0)
         {
             throw new InvalidOperationException("Unable to infer columns from the supplied data.");
@@ -112,5 +116,25 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
         }
 
         return string.IsNullOrWhiteSpace(table.TableName) ? null : table.TableName;
+    }
+
+    private IEnumerable<object?> GetSourceInput()
+    {
+        if (ParameterSetName == ParameterSetDataTable)
+        {
+            if (DataTable == null)
+            {
+                throw new PSArgumentNullException(nameof(DataTable));
+            }
+
+            return new object?[] { DataTable };
+        }
+
+        if (Data == null || Data.Length == 0)
+        {
+            throw new PSArgumentException("Provide at least one data row.", nameof(Data));
+        }
+
+        return Data;
     }
 }

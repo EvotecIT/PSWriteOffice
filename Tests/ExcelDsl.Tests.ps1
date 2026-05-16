@@ -70,6 +70,62 @@ Describe 'Excel DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'writes a DataTable directly as an Excel table' {
+        $path = Join-Path $TestDrive 'DslExcelDataTable.xlsx'
+        $table = [System.Data.DataTable]::new('People')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Score', [int])
+        [void] $table.Rows.Add('Ada', 10)
+        [void] $table.Rows.Add('Grace', 20)
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -DataTable $table -TableName 'PeopleTable' -AutoFit
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
+        $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'PeopleTable')
+        $tables.Count | Should -Be 1
+        $tables[0].Range | Should -Be 'A1:B3'
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $imported.Count | Should -Be 2
+        $imported[0].Name | Should -Be 'Ada'
+        $imported[0].Score | Should -Be 10
+    }
+
+    It 'writes a DataSet as one worksheet per table' {
+        $path = Join-Path $TestDrive 'DslExcelDataSet.xlsx'
+        $dataSet = [System.Data.DataSet]::new('Report')
+
+        $sales = [System.Data.DataTable]::new('Sales:2026')
+        [void] $sales.Columns.Add('Region', [string])
+        [void] $sales.Columns.Add('Revenue', [int])
+        [void] $sales.Rows.Add('NA', 100)
+        [void] $sales.Rows.Add('EMEA', 200)
+        [void] $dataSet.Tables.Add($sales)
+
+        $notes = [System.Data.DataTable]::new('Notes')
+        [void] $notes.Columns.Add('Text', [string])
+        [void] $notes.Rows.Add('Checked')
+        [void] $dataSet.Tables.Add($notes)
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelDataSet -DataSet $dataSet -AutoFit
+        }
+
+        Test-Path $path | Should -BeTrue
+        $salesRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales_2026' -Range 'A1:B3')
+        $salesRows.Count | Should -Be 2
+        $salesRows[1].Region | Should -Be 'EMEA'
+        $salesRows[1].Revenue | Should -Be 200
+
+        $notesRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Notes' -Range 'A1:A2')
+        $notesRows.Count | Should -Be 1
+        $notesRows[0].Text | Should -Be 'Checked'
+    }
+
     It 'exports and imports objects through operator cmdlets' {
         $path = Join-Path $TestDrive 'ExportOfficeExcel.xlsx'
         $rows = @(
