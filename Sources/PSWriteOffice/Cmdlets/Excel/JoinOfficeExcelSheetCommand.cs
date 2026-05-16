@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -90,34 +88,15 @@ public sealed class JoinOfficeExcelSheetCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        ExcelDocument? targetDocument = null;
-        ExcelDocument? openedSource = null;
-        var disposeTarget = false;
+        using var targetWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        var targetDocument = targetWorkbook.Document;
+        var targetSheet = ExcelWorkbookCommandService.ResolveSheet(this, targetDocument, ParameterSetName, TargetSheet, TargetSheetIndex);
+        using var sourceWorkbook = ExcelWorkbookCommandService.ResolveSourceWorkbook(this, targetDocument, SourceDocument, SourcePath, readOnly: true);
+        var sourceSheet = sourceWorkbook.Document[SourceSheet];
 
-        try
-        {
-            ValidateSourceOptions();
-            targetDocument = ResolveTargetDocument(out disposeTarget);
-            var targetSheet = ResolveTargetSheet(targetDocument);
-            var sourceDocument = ResolveSourceDocument(targetDocument, out openedSource);
-            var sourceSheet = sourceDocument[SourceSheet];
-
-            var result = targetDocument.JoinWorksheets(targetSheet, sourceSheet, BuildOptions());
-            if (disposeTarget)
-            {
-                targetDocument.Save(false);
-            }
-
-            WriteObject(result);
-        }
-        finally
-        {
-            openedSource?.Dispose();
-            if (disposeTarget)
-            {
-                targetDocument?.Dispose();
-            }
-        }
+        var result = targetDocument.JoinWorksheets(targetSheet, sourceSheet, BuildOptions());
+        targetWorkbook.SaveIfOwned();
+        WriteObject(result);
     }
 
     private ExcelWorksheetMergeOptions BuildOptions()
@@ -136,54 +115,4 @@ public sealed class JoinOfficeExcelSheetCommand : PSCmdlet
         };
     }
 
-    private ExcelDocument ResolveTargetDocument(out bool dispose)
-    {
-        dispose = false;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!File.Exists(resolvedPath))
-            {
-                throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-            }
-
-            dispose = true;
-            return ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false);
-        }
-
-        return ParameterSetName == ParameterSetDocument
-            ? Document ?? throw new PSArgumentException("Provide an Excel document.")
-            : ExcelDslContext.Require(this).Document;
-    }
-
-    private ExcelSheet ResolveTargetSheet(ExcelDocument document)
-    {
-        if (ParameterSetName == ParameterSetContext && string.IsNullOrWhiteSpace(TargetSheet) && !TargetSheetIndex.HasValue)
-        {
-            return ExcelDslContext.Require(this).RequireSheet();
-        }
-
-        return ExcelSheetResolver.Resolve(document, TargetSheet, TargetSheetIndex);
-    }
-
-    private ExcelDocument ResolveSourceDocument(ExcelDocument targetDocument, out ExcelDocument? openedSource)
-    {
-        openedSource = null;
-        if (!string.IsNullOrWhiteSpace(SourcePath))
-        {
-            var resolvedSource = SessionState.Path.GetUnresolvedProviderPathFromPSPath(SourcePath!);
-            openedSource = ExcelDocumentService.LoadDocument(resolvedSource, readOnly: true, autoSave: false);
-            return openedSource;
-        }
-
-        return SourceDocument ?? targetDocument;
-    }
-
-    private void ValidateSourceOptions()
-    {
-        if (SourceDocument != null && !string.IsNullOrWhiteSpace(SourcePath))
-        {
-            throw new PSArgumentException("Specify either -SourceDocument or -SourcePath, not both.");
-        }
-    }
 }

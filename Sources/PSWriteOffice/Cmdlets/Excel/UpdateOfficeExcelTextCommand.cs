@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
 using OfficeIMO.Excel;
@@ -70,39 +68,26 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        ExcelDocument? document = null;
-        var dispose = false;
         var replacements = 0;
-
-        try
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        var document = workbook.Document;
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
-            document = ResolveDocument(out dispose);
-            foreach (var sheet in ResolveSheets(document))
-            {
-                replacements += ReplaceInSheet(document, sheet);
-            }
-
-            if (dispose)
-            {
-                document.Save(false);
-                var savedPath = document.FilePath ?? InputPath;
-                document.Dispose();
-                document = null;
-                if (Show.IsPresent)
-                {
-                    FileOpenService.Open(savedPath);
-                }
-            }
-
-            WriteObject(replacements);
+            replacements += ReplaceInSheet(document, sheet);
         }
-        finally
+
+        workbook.SaveIfOwned();
+        var openPath = workbook.OwnsDocument && Show.IsPresent
+            ? document.FilePath ?? InputPath
+            : null;
+
+        if (!string.IsNullOrWhiteSpace(openPath))
         {
-            if (dispose)
-            {
-                document?.Dispose();
-            }
+            workbook.Dispose();
+            FileOpenService.Open(openPath!);
         }
+
+        WriteObject(replacements);
     }
 
     private int ReplaceInSheet(ExcelDocument document, ExcelSheet sheet)
@@ -169,43 +154,4 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
         return result;
     }
 
-    private ExcelDocument ResolveDocument(out bool dispose)
-    {
-        dispose = false;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!File.Exists(resolvedPath))
-            {
-                throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-            }
-
-            dispose = true;
-            return ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false);
-        }
-
-        return ParameterSetName == ParameterSetDocument
-            ? Document ?? throw new PSArgumentException("Provide an Excel document.")
-            : ExcelDslContext.Require(this).Document;
-    }
-
-    private IEnumerable<ExcelSheet> ResolveSheets(ExcelDocument document)
-    {
-        if (ParameterSetName == ParameterSetContext && string.IsNullOrWhiteSpace(Sheet) && !SheetIndex.HasValue)
-        {
-            yield return ExcelDslContext.Require(this).RequireSheet();
-            yield break;
-        }
-
-        if (!string.IsNullOrWhiteSpace(Sheet) || SheetIndex.HasValue)
-        {
-            yield return ExcelSheetResolver.Resolve(document, Sheet, SheetIndex);
-            yield break;
-        }
-
-        foreach (var sheet in document.Sheets)
-        {
-            yield return sheet;
-        }
-    }
 }

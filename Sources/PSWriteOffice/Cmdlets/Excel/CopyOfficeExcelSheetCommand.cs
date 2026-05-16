@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -60,97 +58,16 @@ public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        ExcelDocument? target = null;
-        ExcelDocument? openedSource = null;
-        var disposeTarget = false;
+        using var targetWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        var target = targetWorkbook.Document;
+        var sourceSheet = ExcelWorkbookCommandService.ResolveSheetNameOrCurrent(this, target, ParameterSetName, SourceSheet);
+        using var sourceWorkbook = ExcelWorkbookCommandService.ResolveSourceWorkbook(this, target, SourceDocument, SourcePath, readOnly: true);
 
-        try
-        {
-            target = ResolveTargetDocument(out disposeTarget);
-            var sourceSheet = ResolveSourceSheetName(target);
-            ValidateSourceOptions();
+        var copied = sourceWorkbook.Document == target
+            ? target.CopyWorksheet(sourceSheet, NewName, ValidationMode)
+            : target.CopyWorksheetFrom(sourceWorkbook.Document, sourceSheet, NewName, ValidationMode);
 
-            ExcelSheet copied;
-            if (!string.IsNullOrWhiteSpace(SourcePath))
-            {
-                var resolvedSource = SessionState.Path.GetUnresolvedProviderPathFromPSPath(SourcePath!);
-                openedSource = ExcelDocumentService.LoadDocument(resolvedSource, readOnly: true, autoSave: false);
-                copied = target.CopyWorksheetFrom(openedSource, sourceSheet, NewName, ValidationMode);
-            }
-            else if (SourceDocument != null)
-            {
-                copied = target.CopyWorksheetFrom(SourceDocument, sourceSheet, NewName, ValidationMode);
-            }
-            else
-            {
-                copied = target.CopyWorksheet(sourceSheet, NewName, ValidationMode);
-            }
-
-            if (disposeTarget)
-            {
-                target.Save(false);
-            }
-
-            WriteObject(copied);
-        }
-        finally
-        {
-            openedSource?.Dispose();
-            if (disposeTarget)
-            {
-                target?.Dispose();
-            }
-        }
-    }
-
-    private ExcelDocument ResolveTargetDocument(out bool dispose)
-    {
-        dispose = false;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!File.Exists(resolvedPath))
-            {
-                throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-            }
-
-            dispose = true;
-            return ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false);
-        }
-
-        if (ParameterSetName == ParameterSetDocument)
-        {
-            return Document ?? throw new PSArgumentException("Provide an Excel document.");
-        }
-
-        return ExcelDslContext.Require(this).Document;
-    }
-
-    private string ResolveSourceSheetName(ExcelDocument target)
-    {
-        if (!string.IsNullOrWhiteSpace(SourceSheet))
-        {
-            return SourceSheet!;
-        }
-
-        if (ParameterSetName == ParameterSetContext)
-        {
-            return ExcelDslContext.Require(this).RequireSheet().Name;
-        }
-
-        if (target.Sheets.Count == 0)
-        {
-            throw new InvalidOperationException("Workbook contains no worksheets.");
-        }
-
-        return target.Sheets[0].Name;
-    }
-
-    private void ValidateSourceOptions()
-    {
-        if (SourceDocument != null && !string.IsNullOrWhiteSpace(SourcePath))
-        {
-            throw new PSArgumentException("Specify either -SourceDocument or -SourcePath, not both.");
-        }
+        targetWorkbook.SaveIfOwned();
+        WriteObject(copied);
     }
 }

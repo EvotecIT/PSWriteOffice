@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -79,76 +77,38 @@ public sealed class CompareOfficeExcelRangeCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        ExcelDocument? leftDocument = null;
-        ExcelDocument? openedLeft = null;
-        ExcelDocument? openedRight = null;
+        using var leftWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+        var leftDocument = leftWorkbook.Document;
+        using var rightWorkbook = ResolveRightWorkbook(leftDocument);
+        var rightDocument = rightWorkbook.Document;
+        var leftSheet = ExcelWorkbookCommandService.ResolveSheet(this, leftDocument, ParameterSetName, LeftSheet, LeftSheetIndex);
+        var rightSheet = ResolveRightSheet(rightDocument, leftSheet.Name);
 
-        try
+        var options = new ExcelRangeCompareOptions
         {
-            leftDocument = ResolveLeftDocument(out openedLeft);
-            var rightDocument = ResolveRightDocument(leftDocument, out openedRight);
-            var leftSheet = ResolveLeftSheet(leftDocument);
-            var rightSheet = ResolveRightSheet(rightDocument, leftSheet.Name);
+            TrimStrings = TrimStrings.IsPresent,
+            IgnoreCase = IgnoreCase.IsPresent,
+            TreatNullAndEmptyStringAsEqual = !StrictNullEmpty.IsPresent
+        };
 
-            var options = new ExcelRangeCompareOptions
-            {
-                TrimStrings = TrimStrings.IsPresent,
-                IgnoreCase = IgnoreCase.IsPresent,
-                TreatNullAndEmptyStringAsEqual = !StrictNullEmpty.IsPresent
-            };
+        var differences = leftDocument.CompareRanges(
+            leftSheet,
+            string.IsNullOrWhiteSpace(LeftRange) ? leftSheet.GetUsedRangeA1() : LeftRange!,
+            rightSheet,
+            string.IsNullOrWhiteSpace(RightRange) ? rightSheet.GetUsedRangeA1() : RightRange!,
+            options);
 
-            var differences = leftDocument.CompareRanges(
-                leftSheet,
-                string.IsNullOrWhiteSpace(LeftRange) ? leftSheet.GetUsedRangeA1() : LeftRange!,
-                rightSheet,
-                string.IsNullOrWhiteSpace(RightRange) ? rightSheet.GetUsedRangeA1() : RightRange!,
-                options);
-
-            WriteObject(differences, enumerateCollection: true);
-        }
-        finally
-        {
-            openedRight?.Dispose();
-            openedLeft?.Dispose();
-        }
+        WriteObject(differences, enumerateCollection: true);
     }
 
-    private ExcelDocument ResolveLeftDocument(out ExcelDocument? opened)
+    private ExcelWorkbookCommandScope ResolveRightWorkbook(ExcelDocument leftDocument)
     {
-        opened = null;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            opened = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
-            return opened;
-        }
-
-        return ParameterSetName == ParameterSetDocument
-            ? Document ?? throw new PSArgumentException("Provide an Excel document.")
-            : ExcelDslContext.Require(this).Document;
-    }
-
-    private ExcelDocument ResolveRightDocument(ExcelDocument leftDocument, out ExcelDocument? opened)
-    {
-        opened = null;
         if (ParameterSetName == ParameterSetPath && !string.IsNullOrWhiteSpace(RightPath))
         {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(RightPath!);
-            opened = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
-            return opened;
+            return ExcelWorkbookCommandService.OpenWorkbook(this, RightPath!, readOnly: true);
         }
 
-        return RightDocument ?? leftDocument;
-    }
-
-    private ExcelSheet ResolveLeftSheet(ExcelDocument document)
-    {
-        if (ParameterSetName == ParameterSetContext && string.IsNullOrWhiteSpace(LeftSheet) && !LeftSheetIndex.HasValue)
-        {
-            return ExcelDslContext.Require(this).RequireSheet();
-        }
-
-        return ExcelSheetResolver.Resolve(document, LeftSheet, LeftSheetIndex);
+        return new ExcelWorkbookCommandScope(RightDocument ?? leftDocument, ownsDocument: false);
     }
 
     private ExcelSheet ResolveRightSheet(ExcelDocument document, string leftSheetName)

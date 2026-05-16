@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
 using OfficeIMO.Excel;
@@ -64,73 +62,21 @@ public sealed class FindOfficeExcelCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        ExcelDocument? document = null;
-        var dispose = false;
-
-        try
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+        var document = workbook.Document;
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
-            document = ResolveDocument(out dispose);
-            foreach (var sheet in ResolveSheets(document))
+            var range = string.IsNullOrWhiteSpace(Range) ? sheet.GetUsedRangeA1() : Range!;
+            using var reader = document.CreateReader();
+            var sheetReader = reader.GetSheet(sheet.Name);
+            foreach (var cell in sheetReader.EnumerateRange(range))
             {
-                var range = string.IsNullOrWhiteSpace(Range) ? sheet.GetUsedRangeA1() : Range!;
-                using var reader = document.CreateReader();
-                var sheetReader = reader.GetSheet(sheet.Name);
-                foreach (var cell in sheetReader.EnumerateRange(range))
+                var cellText = Convert.ToString(cell.Value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+                if (IsMatch(cellText))
                 {
-                    var cellText = Convert.ToString(cell.Value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
-                    if (IsMatch(cellText))
-                    {
-                        WriteObject(CreateRecord(sheet.Name, cell.Row, cell.Column, cell.Value));
-                    }
+                    WriteObject(CreateRecord(sheet.Name, cell.Row, cell.Column, cell.Value));
                 }
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
-                document?.Dispose();
-            }
-        }
-    }
-
-    private ExcelDocument ResolveDocument(out bool dispose)
-    {
-        dispose = false;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!File.Exists(resolvedPath))
-            {
-                throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-            }
-
-            dispose = true;
-            return ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
-        }
-
-        return ParameterSetName == ParameterSetDocument
-            ? Document ?? throw new PSArgumentException("Provide an Excel document.")
-            : ExcelDslContext.Require(this).Document;
-    }
-
-    private IEnumerable<ExcelSheet> ResolveSheets(ExcelDocument document)
-    {
-        if (ParameterSetName == ParameterSetContext && string.IsNullOrWhiteSpace(Sheet) && !SheetIndex.HasValue)
-        {
-            yield return ExcelDslContext.Require(this).RequireSheet();
-            yield break;
-        }
-
-        if (!string.IsNullOrWhiteSpace(Sheet) || SheetIndex.HasValue)
-        {
-            yield return ExcelSheetResolver.Resolve(document, Sheet, SheetIndex);
-            yield break;
-        }
-
-        foreach (var sheet in document.Sheets)
-        {
-            yield return sheet;
         }
     }
 

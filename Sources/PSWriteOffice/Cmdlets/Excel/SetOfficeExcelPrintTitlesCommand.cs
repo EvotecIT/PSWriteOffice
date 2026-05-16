@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -71,37 +69,21 @@ public sealed class SetOfficeExcelPrintTitlesCommand : PSCmdlet
             throw new PSArgumentException("Provide row titles, column titles, or -Clear.");
         }
 
-        ExcelDocument? document = null;
-        var dispose = false;
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        var document = workbook.Document;
+        var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
+        document.SetPrintTitles(
+            sheet,
+            Clear.IsPresent ? null : FirstRow,
+            Clear.IsPresent ? null : LastRow,
+            Clear.IsPresent ? null : FirstColumn,
+            Clear.IsPresent ? null : LastColumn,
+            save: false);
+        workbook.SaveIfOwned();
 
-        try
+        if (PassThru.IsPresent)
         {
-            document = ResolveDocument(out dispose);
-            var sheet = ResolveSheet(document);
-            document.SetPrintTitles(
-                sheet,
-                Clear.IsPresent ? null : FirstRow,
-                Clear.IsPresent ? null : LastRow,
-                Clear.IsPresent ? null : FirstColumn,
-                Clear.IsPresent ? null : LastColumn,
-                save: false);
-
-            if (dispose)
-            {
-                document.Save(false);
-            }
-
-            if (PassThru.IsPresent)
-            {
-                WriteObject(sheet);
-            }
-        }
-        finally
-        {
-            if (dispose)
-            {
-                document?.Dispose();
-            }
+            WriteObject(sheet);
         }
     }
 
@@ -115,33 +97,4 @@ public sealed class SetOfficeExcelPrintTitlesCommand : PSCmdlet
         return FirstColumn.HasValue && LastColumn.HasValue;
     }
 
-    private ExcelDocument ResolveDocument(out bool dispose)
-    {
-        dispose = false;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!File.Exists(resolvedPath))
-            {
-                throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-            }
-
-            dispose = true;
-            return ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false);
-        }
-
-        return ParameterSetName == ParameterSetDocument
-            ? Document ?? throw new PSArgumentException("Provide an Excel document.")
-            : ExcelDslContext.Require(this).Document;
-    }
-
-    private ExcelSheet ResolveSheet(ExcelDocument document)
-    {
-        if (ParameterSetName == ParameterSetContext && string.IsNullOrWhiteSpace(Sheet) && !SheetIndex.HasValue)
-        {
-            return ExcelDslContext.Require(this).RequireSheet();
-        }
-
-        return ExcelSheetResolver.Resolve(document, Sheet, SheetIndex);
-    }
 }
