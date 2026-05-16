@@ -1407,4 +1407,72 @@ Describe 'Excel DSL surface' {
         $hyperlinks = $sheetXml.SelectNodes("/*[local-name()='worksheet']/*[local-name()='hyperlinks']/*[local-name()='hyperlink']")
         $hyperlinks.Count | Should -Be 4
     }
+
+    It 'styles Excel columns by header without range math' {
+        $path = Join-Path $TestDrive 'DslExcelColumnStyleByHeader.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; Revenue = 1200.5; Rate = 0.42; Status = 'Ready' }
+            [PSCustomObject]@{ Name = 'Beta'; Revenue = 800.25; Rate = 0.18; Status = 'Blocked' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'ReportRows'
+                Set-OfficeExcelColumnStyleByHeader -Header Revenue -Style Currency -CultureName en-US -AutoFit
+                Set-OfficeExcelColumnStyleByHeader -Header Rate -Style Percent -Decimals 1
+                Set-OfficeExcelColumnStyleByHeader -Header Status -BackgroundByText @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' } -BoldByText Blocked
+            }
+        }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $revenueCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='B2']")
+        $rateCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='C2']")
+        $statusCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='D3']")
+
+        $revenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $rateCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $statusCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+    }
+
+    It 'creates composed Excel report sheets from PowerShell blocks' {
+        $path = Join-Path $TestDrive 'DslExcelReportSheet.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; Score = 9; Status = 'Ready' }
+            [PSCustomObject]@{ Name = 'Beta'; Score = 4; Status = 'Blocked' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelReportSheet -Name 'Summary' {
+                Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current view'
+                Add-OfficeExcelReportKpiRow -Data ([ordered] @{ Ready = 1; Blocked = 1 }) -PerRow 2
+                Add-OfficeExcelReportCallout -Kind Warning -Title 'Attention' -Body 'One item needs review.'
+                Add-OfficeExcelReportTable -Data $rows -Title 'Rows'
+                Add-OfficeExcelReportLegend -Title 'Legend' -Headers 'Status','Meaning' -Rows @(
+                    @('Ready', 'No action')
+                    @('Blocked', 'Needs owner')
+                ) -FirstColumnFillByValue @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' }
+            }
+        }
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $sheet = $doc['Summary']
+            $title = $null
+            $subtitle = $null
+            $readyLabel = $null
+            $calloutTitle = $null
+
+            $sheet.TryGetCellText(1, 1, [ref] $title) | Should -BeTrue
+            $sheet.TryGetCellText(2, 1, [ref] $subtitle) | Should -BeTrue
+            $sheet.TryGetCellText(4, 1, [ref] $readyLabel) | Should -BeTrue
+            $sheet.TryGetCellText(7, 1, [ref] $calloutTitle) | Should -BeTrue
+
+            $title | Should -Be 'Operational Summary'
+            $subtitle | Should -Be 'Current view'
+            $readyLabel | Should -Be 'Ready'
+            $calloutTitle | Should -Be 'Attention'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
 }

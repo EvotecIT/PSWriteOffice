@@ -67,9 +67,9 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | Find/replace and editable rows | Wrapped | `Find-OfficeExcel`, `Update-OfficeExcelText`, `Edit-OfficeExcelRow` |
 | Workbook summary inspection | Wrapped | `Get-OfficeExcelSummary` reports workbook shape and major object collections |
 | HTML to Excel bridge | Wrapped by example | `Example-ExcelHtmlTablesViaPSParseHTML.ps1` keeps HTML parsing outside PSWriteOffice |
-| Fluent report composer | Wrapper gap | OfficeIMO `Compose` / `SheetComposer` should become a PowerShell report sheet DSL |
-| KPI, legend, callout, columns blocks | Wrapper gap | Best route to beautiful default dashboards |
-| Column style by header | Wrapper gap | Currency/percent/date/status formatting without range math |
+| Fluent report composer | Wrapped | `Add-OfficeExcelReportSheet` exposes OfficeIMO `SheetComposer` as a PowerShell report sheet DSL |
+| KPI, legend, callout, table blocks | Wrapped | Report-sheet cmdlets cover the first reusable dashboard blocks |
+| Column style by header | Wrapped | `Set-OfficeExcelColumnStyleByHeader` handles currency, percent, dates, durations, fills, and status maps without range math |
 | Execution policy/diagnostics | Wrapper gap | Expose only if simple and useful from PowerShell |
 | Workbook encryption/passwords | Engine gap | Do not add hollow parameters before OfficeIMO can honor them |
 | Range to image | Engine gap | Needs an intentional renderer decision |
@@ -102,10 +102,9 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 
 ## Recommended Next PRs
 
-1. Excel report composer wrapper and column-style-by-header helper.
-2. Word page setup, merge/append, image layout, and cover page helpers.
-3. PowerPoint metrics/visual-frame helpers, fit diagnostics, and shape layout polish.
-4. OfficeIMO engine confidence for Excel pivot/sparkline desktop-open compatibility.
+1. Word page setup, merge/append, image layout, and cover page helpers.
+2. PowerPoint metrics/visual-frame helpers, fit diagnostics, and shape layout polish.
+3. OfficeIMO engine confidence for Excel pivot/sparkline desktop-open compatibility.
 
 ## Example Quality Bar
 

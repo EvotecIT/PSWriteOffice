@@ -36,7 +36,7 @@ page setup, equations, tab stops, and report-composer examples.
 | Open/edit/save package flow | Wrapped by `Get-OfficeExcel`, `Save-OfficeExcel`, `Close-OfficeExcel`, and `Export-OfficeExcel -Append/-ClearSheet` | No ImportExcel-style package object clone needed. |
 | Worksheet management | Copy, move, join, and range compare are wrapped | Remove/rename wrappers can be added if operators ask for them directly. |
 | Tables and named ranges | Wrapped | Table totals and column-level table style knobs remain optional polish. |
-| Formatting and styles | Rows, columns, formulas, headers/footers, conditional formatting, validation, print setup, gridlines, and chart finishing are wrapped | `Set-OfficeExcelColumnStyleByHeader` is the main remaining ergonomic gap. |
+| Formatting and styles | Rows, columns, formulas, headers/footers, conditional formatting, validation, print setup, gridlines, chart finishing, and header-based column styling are wrapped | Covered for the current ImportExcel-style migration surface. |
 | Charts | Add chart plus axis, legend, labels, series, style, and trendline wrappers exist | Keep extending only where OfficeIMO exposes stable chart APIs. |
 | Pivots and sparklines | Wrapped, but still need desktop Excel open-compatibility confidence before flagship examples rely on them | OfficeIMO engine compatibility tests are the right place for deeper fixes. |
 | Find/replace and editable rows | Wrapped by `Find-OfficeExcel`, `Update-OfficeExcelText`, and `Edit-OfficeExcelRow` | Add more row-edit helpers only if maintenance scripts need them. |
@@ -71,13 +71,9 @@ page setup, equations, tab stops, and report-composer examples.
 
 ### PowerShell Ergonomics
 
-1. Add Excel column-style-by-header helpers for currency, percent, dates, durations,
-   status fills, and common report formats.
-2. Add a higher-level Excel report-sheet/composer wrapper over OfficeIMO's fluent
-   reporting blocks.
-3. Add Word page setup, run/paragraph style, merge/append, table mutation, equation,
+1. Add Word page setup, run/paragraph style, merge/append, table mutation, equation,
    and tab-stop wrappers.
-4. Add Word image layout and cover-page helpers for polished report output.
+2. Add Word image layout and cover-page helpers for polished report output.
 
 ### OfficeIMO Engine First
 
