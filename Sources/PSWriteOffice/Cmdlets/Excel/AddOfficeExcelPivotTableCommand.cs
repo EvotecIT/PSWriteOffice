@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using OfficeIMO.Excel;
@@ -362,124 +361,63 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         bool? fieldListSortAscending,
         bool? customListSort)
     {
-        MethodInfo method = typeof(ExcelSheet).GetMethods()
-            .Where(m => m.Name == "AddPivotTable")
-            .OrderByDescending(m => m.GetParameters().Length)
-            .First();
-        var parameters = method.GetParameters();
-        object?[] args = new object?[parameters.Length];
-        object? fieldOptions = null;
-
-        for (int i = 0; i < parameters.Length; i++)
-        {
-            args[i] = parameters[i].Name switch
-            {
-                "sourceRange" => SourceRange,
-                "destinationCell" => DestinationCell,
-                "name" => Name,
-                "rowFields" => RowField,
-                "columnFields" => ColumnField,
-                "pageFields" => PageField,
-                "dataFields" => dataFields,
-                "showRowGrandTotals" => !NoRowGrandTotals.IsPresent,
-                "showColumnGrandTotals" => !NoColumnGrandTotals.IsPresent,
-                "pivotStyleName" => PivotStyle,
-                "layout" => layout,
-                "dataOnRows" => dataOnRows,
-                "showHeaders" => showHeaders,
-                "showEmptyRows" => showEmptyRows,
-                "showEmptyColumns" => showEmptyColumns,
-                "showDrill" => showDrill,
-                "fieldOptions" => fieldOptions ??= BuildFieldOptions(parameters[i].ParameterType),
-                "rowHeaderCaption" => RowHeaderCaption,
-                "columnHeaderCaption" => ColumnHeaderCaption,
-                "grandTotalCaption" => GrandTotalCaption,
-                "missingCaption" => MissingCaption,
-                "errorCaption" => ErrorCaption,
-                "showDataDropDown" => showDataDropDown,
-                "showDropZones" => showDropZones,
-                "showDataTips" => showDataTips,
-                "showMemberPropertyTips" => showMemberPropertyTips,
-                "fieldListSortAscending" => fieldListSortAscending,
-                "customListSort" => customListSort,
-                _ => parameters[i].HasDefaultValue ? parameters[i].DefaultValue : null
-            };
-        }
-
-        if (RequiresNewOfficeIMO() && !SupportsNewPivotOptions(parameters))
-        {
-            throw new PSInvalidOperationException("The installed OfficeIMO.Excel version does not support pivot field filters, captions, or data field number formats yet. Update OfficeIMO.Excel and rebuild PSWriteOffice.");
-        }
-
-        try
-        {
-            method.Invoke(sheet, args);
-        }
-        catch (TargetInvocationException ex) when (ex.InnerException != null)
-        {
-            throw ex.InnerException;
-        }
+        sheet.AddPivotTable(
+            SourceRange,
+            DestinationCell,
+            Name,
+            RowField,
+            ColumnField,
+            PageField,
+            dataFields,
+            showRowGrandTotals: !NoRowGrandTotals.IsPresent,
+            showColumnGrandTotals: !NoColumnGrandTotals.IsPresent,
+            pivotStyleName: PivotStyle,
+            layout: layout,
+            dataOnRows: dataOnRows,
+            showHeaders: showHeaders,
+            showEmptyRows: showEmptyRows,
+            showEmptyColumns: showEmptyColumns,
+            showDrill: showDrill,
+            fieldOptions: BuildFieldOptions(),
+            rowHeaderCaption: RowHeaderCaption,
+            columnHeaderCaption: ColumnHeaderCaption,
+            grandTotalCaption: GrandTotalCaption,
+            missingCaption: MissingCaption,
+            errorCaption: ErrorCaption,
+            showDataDropDown: showDataDropDown,
+            showDropZones: showDropZones,
+            showDataTips: showDataTips,
+            showMemberPropertyTips: showMemberPropertyTips,
+            fieldListSortAscending: fieldListSortAscending,
+            customListSort: customListSort);
     }
 
-    private object? BuildFieldOptions(Type parameterType)
+    private IEnumerable<ExcelPivotFieldOptions>? BuildFieldOptions()
     {
         if (!RequiresFieldOptions()) return null;
 
-        Type? enumerableType = parameterType.GetInterfaces()
-            .Concat(new[] { parameterType })
-            .FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
-        Type? optionType = enumerableType?.GetGenericArguments()[0];
-        if (optionType == null)
-        {
-            throw new PSInvalidOperationException("The installed OfficeIMO.Excel version does not expose ExcelPivotFieldOptions.");
-        }
-
         var fields = CollectOptionFieldNames();
-        Array array = Array.CreateInstance(optionType, fields.Count);
-        int index = 0;
-        foreach (string field in fields)
-        {
-            array.SetValue(CreateFieldOption(optionType, field), index++);
-        }
-
-        return array;
+        return fields.Select(CreateFieldOption).ToArray();
     }
 
-    private object CreateFieldOption(Type optionType, string field)
+    private ExcelPivotFieldOptions CreateFieldOption(string field)
     {
-        ConstructorInfo constructor = optionType.GetConstructors().OrderByDescending(c => c.GetParameters().Length).First();
-        var parameters = constructor.GetParameters();
-        object?[] args = new object?[parameters.Length];
-        for (int i = 0; i < parameters.Length; i++)
-        {
-            args[i] = parameters[i].Name switch
-            {
-                "fieldName" => field,
-                "sortType" => ResolveFieldSort(field),
-                "numberFormatId" => null,
-                "numberFormat" => null,
-                "showAll" => null,
-                "defaultSubtotal" => ContainsField(FieldNoDefaultSubtotal, field) ? false : null,
-                "subtotalTop" => ContainsField(FieldSubtotalTop, field) ? true : null,
-                "insertBlankRow" => ContainsField(FieldInsertBlankRow, field) ? true : null,
-                "insertPageBreak" => ContainsField(FieldInsertPageBreak, field) ? true : null,
-                "compact" => ContainsField(FieldCompact, field) ? true : null,
-                "outline" => ContainsField(FieldOutline, field) ? true : null,
-                "showDropDowns" => ContainsField(FieldHideDropDowns, field) ? false : null,
-                "multipleItemSelectionAllowed" => null,
-                "includeNewItemsInFilter" => null,
-                "subtotalCaption" => null,
-                "hiddenItems" => ResolveMapItems(FieldHiddenItems, field),
-                "visibleItems" => ResolveMapItems(FieldVisibleItems, field),
-                "selectedItem" => ResolveMapScalar(PageFieldSelection, field),
-                _ => parameters[i].HasDefaultValue ? parameters[i].DefaultValue : null
-            };
-        }
-
-        return constructor.Invoke(args);
+        return new ExcelPivotFieldOptions(
+            field,
+            sortType: ResolveFieldSort(field),
+            defaultSubtotal: ContainsField(FieldNoDefaultSubtotal, field) ? false : null,
+            subtotalTop: ContainsField(FieldSubtotalTop, field) ? true : null,
+            insertBlankRow: ContainsField(FieldInsertBlankRow, field) ? true : null,
+            insertPageBreak: ContainsField(FieldInsertPageBreak, field) ? true : null,
+            compact: ContainsField(FieldCompact, field) ? true : null,
+            outline: ContainsField(FieldOutline, field) ? true : null,
+            showDropDowns: ContainsField(FieldHideDropDowns, field) ? false : null,
+            hiddenItems: ResolveMapItems(FieldHiddenItems, field),
+            visibleItems: ResolveMapItems(FieldVisibleItems, field),
+            selectedItem: ResolveMapScalar(PageFieldSelection, field));
     }
 
-    private object? ResolveFieldSort(string field)
+    private FieldSortValues? ResolveFieldSort(string field)
     {
         string? sort = ResolveMapScalar(FieldSort, field);
         if (string.IsNullOrWhiteSpace(sort)) return null;
@@ -515,7 +453,7 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         foreach (object? value in values)
         {
             string? text = value?.ToString();
-            if (!string.IsNullOrWhiteSpace(text)) fields.Add(text.Trim());
+            if (!string.IsNullOrWhiteSpace(text)) fields.Add(text!.Trim());
         }
     }
 
@@ -576,37 +514,6 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
             || FieldHideDropDowns?.Length > 0;
     }
 
-    private bool RequiresNewOfficeIMO()
-    {
-        return RequiresFieldOptions()
-            || HasAny(DataNumberFormat)
-            || !string.IsNullOrWhiteSpace(RowHeaderCaption)
-            || !string.IsNullOrWhiteSpace(ColumnHeaderCaption)
-            || !string.IsNullOrWhiteSpace(GrandTotalCaption)
-            || !string.IsNullOrWhiteSpace(MissingCaption)
-            || !string.IsNullOrWhiteSpace(ErrorCaption)
-            || ShowDataDropDown.IsPresent
-            || HideDataDropDown.IsPresent
-            || ShowDropZones.IsPresent
-            || HideDropZones.IsPresent
-            || ShowDataTips.IsPresent
-            || HideDataTips.IsPresent
-            || ShowMemberPropertyTips.IsPresent
-            || HideMemberPropertyTips.IsPresent
-            || FieldListSortAscending.IsPresent
-            || FieldListSortDescending.IsPresent
-            || CustomListSort.IsPresent
-            || NoCustomListSort.IsPresent;
-    }
-
-    private static bool SupportsNewPivotOptions(ParameterInfo[] parameters)
-    {
-        return parameters.Any(parameter => parameter.Name == "fieldOptions")
-            && parameters.Any(parameter => parameter.Name == "grandTotalCaption");
-    }
-
-    private static bool HasAny(string[]? values) => values?.Length > 0;
-
     private static string? ResolveIndexedValue(string[]? values, int index)
     {
         if (values == null || values.Length == 0) return null;
@@ -616,25 +523,7 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
 
     private ExcelPivotDataField CreatePivotDataField(string fieldName, DataConsolidateFunctionValues function, string? displayName, string? numberFormat)
     {
-        if (string.IsNullOrWhiteSpace(numberFormat))
-        {
-            return new ExcelPivotDataField(fieldName, function, displayName);
-        }
-
-        ConstructorInfo? constructor = typeof(ExcelPivotDataField).GetConstructor(new[]
-        {
-            typeof(string),
-            typeof(DataConsolidateFunctionValues?),
-            typeof(string),
-            typeof(uint?),
-            typeof(string)
-        });
-        if (constructor == null)
-        {
-            throw new PSInvalidOperationException("The installed OfficeIMO.Excel version does not support pivot data-field number formats yet. Update OfficeIMO.Excel and rebuild PSWriteOffice.");
-        }
-
-        return (ExcelPivotDataField)constructor.Invoke(new object?[] { fieldName, function, displayName, null, numberFormat });
+        return new ExcelPivotDataField(fieldName, function, displayName, numberFormatId: null, numberFormat: numberFormat);
     }
 
     private static List<DataConsolidateFunctionValues> ParseFunctions(string[]? functions)

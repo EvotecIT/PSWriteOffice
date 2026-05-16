@@ -720,7 +720,7 @@ Describe 'Excel DSL surface' {
         }
     }
 
-    It 'uses new pivot options when OfficeIMO supports them and fails clearly otherwise' {
+    It 'uses OfficeIMO pivot field options and captions' {
         $path = Join-Path $TestDrive 'DslExcelPivotOptions.xlsx'
         $rows = @(
             [PSCustomObject]@{ Region = 'NA'; Product = 'Standard'; Sales = 100 }
@@ -728,32 +728,14 @@ Describe 'Excel DSL surface' {
             [PSCustomObject]@{ Region = 'APAC'; Product = 'Legacy'; Sales = 150 }
         )
 
-        $excelSheetType = Get-TestLoadedType -Name 'OfficeIMO.Excel.ExcelSheet'
-        $supportsNewPivotOptions = $excelSheetType -and (
-            $excelSheetType.GetMethods() |
-                Where-Object {
-                    $_.Name -eq 'AddPivotTable' -and
-                    @($_.GetParameters().Name) -contains 'fieldOptions' -and
-                    @($_.GetParameters().Name) -contains 'grandTotalCaption'
-                } |
-                Select-Object -First 1
-            )
-
-        $createWorkbook = {
-            New-OfficeExcel -Path $path {
-                Add-OfficeExcelSheet -Name 'Data' -Content {
-                    Add-OfficeExcelTable -Data $rows -TableName 'Sales'
-                    Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E1' -RowField 'Region' -PageField 'Product' -DataField 'Sales' -DataNumberFormat '#,##0' -GrandTotalCaption 'Overall' -FieldSort @{ Region = 'Ascending' } -FieldHiddenItems @{ Region = @('APAC') } -PageFieldSelection @{ Product = 'Standard' }
-                }
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+                Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E1' -RowField 'Region' -PageField 'Product' -DataField 'Sales' -DataNumberFormat '#,##0' -GrandTotalCaption 'Overall' -FieldSort @{ Region = 'Ascending' } -FieldHiddenItems @{ Region = @('APAC') } -PageFieldSelection @{ Product = 'Standard' }
             }
         }
 
-        if ($supportsNewPivotOptions) {
-            & $createWorkbook
-            Test-Path $path | Should -BeTrue
-        } else {
-            $createWorkbook | Should -Throw '*OfficeIMO.Excel version does not support*'
-        }
+        Test-Path $path | Should -BeTrue
     }
 
     It 'supports advanced Excel page setup and visibility helpers' {
