@@ -7,6 +7,23 @@
     Import-Module $ModuleManifest -Global -ErrorAction Stop
 
     . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
+
+    function Get-TestLoadedType {
+        param(
+            [Parameter(Mandatory)]
+            [string] $Name
+        )
+
+        $type = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType($Name, $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        if ($null -eq $type) {
+            throw "Unable to find loaded type '$Name'."
+        }
+
+        $type
+    }
 }
 
 Describe 'Excel DSL surface' {
@@ -100,7 +117,8 @@ Describe 'Excel DSL surface' {
         $imported[2].Region | Should -Be 'APAC'
         $imported[2].Revenue | Should -Be 150
 
-        $hasTableAppend = @([OfficeIMO.Excel.ExcelSheet].GetMethods() | Where-Object Name -eq 'AppendDataTableToTable').Count -gt 0
+        $excelSheetType = Get-TestLoadedType -Name 'OfficeIMO.Excel.ExcelSheet'
+        $hasTableAppend = @($excelSheetType.GetMethods() | Where-Object Name -eq 'AppendDataTableToTable').Count -gt 0
         if ($hasTableAppend) {
             $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales')
             $tables.Count | Should -Be 1
@@ -217,7 +235,7 @@ Describe 'Excel DSL surface' {
         $replaced[0].Revenue | Should -Be 300
     }
 
-    It 'keeps DataSet fallback sheet names unique against existing workbook sheets' {
+    It 'keeps sanitized symbol DataSet sheet names distinct from existing workbook sheets' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetFallbackCollision.xlsx'
 
         New-OfficeExcel -Path $path {
@@ -244,7 +262,7 @@ Describe 'Excel DSL surface' {
             Close-OfficeExcel -Document $doc
         }
 
-        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B2')
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName '_' -Range 'A1:B2')
         $rows.Count | Should -Be 1
         $rows[0].Region | Should -Be 'NA'
         $rows[0].Revenue | Should -Be 100
@@ -258,7 +276,7 @@ Describe 'Excel DSL surface' {
 
         Export-OfficeExcel -Path $path -InputObject $appendSet -Append
 
-        $appendedRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B3')
+        $appendedRows = @(Import-OfficeExcel -Path $path -WorksheetName '_' -Range 'A1:B3')
         $appendedRows.Count | Should -Be 2
         $appendedRows[1].Region | Should -Be 'EMEA'
         $appendedRows[1].Revenue | Should -Be 200
@@ -272,7 +290,7 @@ Describe 'Excel DSL surface' {
 
         Export-OfficeExcel -Path $path -InputObject $replacementSet -ClearSheet
 
-        $replacedRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1 (2)' -Range 'A1:B2')
+        $replacedRows = @(Import-OfficeExcel -Path $path -WorksheetName '_' -Range 'A1:B2')
         $replacedRows.Count | Should -Be 1
         $replacedRows[0].Region | Should -Be 'APAC'
         $replacedRows[0].Revenue | Should -Be 300
@@ -282,7 +300,7 @@ Describe 'Excel DSL surface' {
             $existingText = $null
             $doc['Sheet1'].TryGetCellText(1, 1, [ref] $existingText) | Should -BeTrue
             $existingText | Should -Be 'Existing'
-            $doc.Sheets.Name | Should -Not -Contain 'Sheet1 (3)'
+            $doc.Sheets.Name | Should -Not -Contain '_ (2)'
         } finally {
             Close-OfficeExcel -Document $doc
         }
@@ -356,6 +374,130 @@ Describe 'Excel DSL surface' {
         $replacedSecond.Count | Should -Be 1
         $replacedFirst[0].Revenue | Should -Be 500
         $replacedSecond[0].Revenue | Should -Be 600
+    }
+
+    It 'preserves underscore-distinct DataSet sheet names and sparse suffix matches' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetSparseSuffixes.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Q1_Ops' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Existing'
+            }
+            Add-OfficeExcelSheet -Name 'Sparse' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
+            }
+            Add-OfficeExcelSheet -Name 'Sparse (10)' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
+            }
+        }
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $underscored = [System.Data.DataTable]::new('Q1__Ops')
+        [void] $underscored.Columns.Add('Region', [string])
+        [void] $underscored.Columns.Add('Revenue', [int])
+        [void] $underscored.Rows.Add('NA', 100)
+        [void] $dataSet.Tables.Add($underscored)
+
+        $sparseFirst = [System.Data.DataTable]::new('Sparse ')
+        [void] $sparseFirst.Columns.Add('Region', [string])
+        [void] $sparseFirst.Columns.Add('Revenue', [int])
+        [void] $sparseFirst.Rows.Add('EMEA', 200)
+        [void] $dataSet.Tables.Add($sparseFirst)
+
+        $sparseSecond = [System.Data.DataTable]::new(' Sparse')
+        [void] $sparseSecond.Columns.Add('Region', [string])
+        [void] $sparseSecond.Columns.Add('Revenue', [int])
+        [void] $sparseSecond.Rows.Add('APAC', 300)
+        [void] $dataSet.Tables.Add($sparseSecond)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet -Append
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $doc.Sheets.Name | Should -Contain 'Q1__Ops'
+            $doc.Sheets.Name | Should -Not -Contain 'Q1_Ops (2)'
+            $q1Text = $null
+            $doc['Q1_Ops'].TryGetCellText(1, 1, [ref] $q1Text) | Should -BeTrue
+            $q1Text | Should -Be 'Existing'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $underscoredRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Q1__Ops' -Range 'A1:B2')
+        $firstRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sparse' -Range 'A1:B2')
+        $sparseRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Sparse (10)' -Range 'A1:B2')
+
+        $underscoredRows.Count | Should -Be 1
+        $underscoredRows[0].Revenue | Should -Be 100
+        $firstRows.Count | Should -Be 1
+        $firstRows[0].Revenue | Should -Be 200
+        $sparseRows.Count | Should -Be 1
+        $sparseRows[0].Revenue | Should -Be 300
+    }
+
+    It 'matches the lowest suffixed DataSet sheet independent of workbook order' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetLowestSuffix.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data (3)' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
+                Set-OfficeExcelCell -Address 'A2' -Value 'APAC'
+                Set-OfficeExcelCell -Address 'B2' -Value 300
+            }
+            Add-OfficeExcelSheet -Name 'Data (2)' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
+                Set-OfficeExcelCell -Address 'A2' -Value 'EMEA'
+                Set-OfficeExcelCell -Address 'B2' -Value 200
+            }
+        }
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $table = [System.Data.DataTable]::new('Data')
+        [void] $table.Columns.Add('Region', [string])
+        [void] $table.Columns.Add('Revenue', [int])
+        [void] $table.Rows.Add('NA', 100)
+        [void] $dataSet.Tables.Add($table)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet -Append
+
+        $lowestRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data (2)' -Range 'A1:B3')
+        $higherRows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data (3)' -Range 'A1:B2')
+
+        $lowestRows.Count | Should -Be 2
+        $lowestRows[1].Region | Should -Be 'NA'
+        $lowestRows[1].Revenue | Should -Be 100
+        $higherRows.Count | Should -Be 1
+        $higherRows[0].Revenue | Should -Be 300
+    }
+
+    It 'preserves symbol-only DataSet sheet names and sanitizes control characters' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetSymbolNames.xlsx'
+        $controlName = "Bad$([char]1)Name"
+
+        $dataSet = [System.Data.DataSet]::new('Report')
+        foreach ($name in @('---', '___', $controlName)) {
+            $table = [System.Data.DataTable]::new($name)
+            [void] $table.Columns.Add('Region', [string])
+            [void] $table.Columns.Add('Revenue', [int])
+            [void] $table.Rows.Add('NA', 100)
+            [void] $dataSet.Tables.Add($table)
+        }
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $doc.Sheets.Name | Should -Contain '---'
+            $doc.Sheets.Name | Should -Contain '___'
+            $doc.Sheets.Name | Should -Contain 'Bad_Name'
+            $doc.Sheets.Name | Should -Not -Contain 'Sheet1'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
     }
 
     It 'adds a DataTable inside the Excel DSL table command' {
@@ -580,7 +722,7 @@ Describe 'Excel DSL surface' {
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
                 Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
-                Add-OfficeExcelPivotTable -SourceRange 'A1:F4' -DestinationCell 'J1' -RowField 'Region' -DataField 'Sales'
+                Add-OfficeExcelPivotTable -SourceRange 'A1:F4' -DestinationCell 'J1' -RowField 'Region' -DataField 'Sales' -DataDisplayName 'Total Sales'
                 Add-OfficeExcelValidationWholeNumber -Range 'B2:B4' -Operator Between -Formula1 1 -Formula2 1000 -AllowBlank:$false
                 Add-OfficeExcelValidationDecimal -Range 'C2:C4' -Operator Between -Formula1 0.0 -Formula2 1.0
                 Add-OfficeExcelValidationDate -Range 'D2:D4' -Operator GreaterThan -Formula1 ([datetime]'2024-01-01')
@@ -604,6 +746,7 @@ Describe 'Excel DSL surface' {
         $pivot.RowFields | Should -Contain 'Region'
         @($pivot.DataFields).Count | Should -BeGreaterThan 0
         $pivot.DataFields[0].FieldName | Should -Be 'Sales'
+        $pivot.DataFields[0].DisplayName | Should -Be 'Total Sales'
 
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {
@@ -612,6 +755,24 @@ Describe 'Excel DSL surface' {
         } finally {
             Close-OfficeExcel -Document $doc
         }
+    }
+
+    It 'uses OfficeIMO pivot field options and captions' {
+        $path = Join-Path $TestDrive 'DslExcelPivotOptions.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Product = 'Standard'; Sales = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Product = 'Standard'; Sales = 200 }
+            [PSCustomObject]@{ Region = 'APAC'; Product = 'Legacy'; Sales = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+                Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E1' -RowField 'Region' -PageField 'Product' -DataField 'Sales' -DataNumberFormat '#,##0' -GrandTotalCaption 'Overall' -FieldSort @{ Region = 'Ascending' } -FieldHiddenItems @{ Region = @('APAC') } -PageFieldSelection @{ Product = 'Standard' }
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
     }
 
     It 'supports advanced Excel page setup and visibility helpers' {
@@ -670,19 +831,29 @@ Describe 'Excel DSL surface' {
             }
         }
 
-        $document = [DocumentFormat.OpenXml.Packaging.SpreadsheetDocument]::Open($path, $true)
+        $spreadsheetDocumentType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Packaging.SpreadsheetDocument'
+        $worksheetPartType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Packaging.WorksheetPart'
+        $threadedPartType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Packaging.WorksheetThreadedCommentsPart'
+        $threadedCommentsType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComments'
+        $threadedCommentType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComment'
+        $threadedCommentTextType = Get-TestLoadedType -Name 'DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedCommentText'
+
+        $openMethod = $spreadsheetDocumentType.GetMethod('Open', [type[]] @([string], [bool]))
+        $openArguments = [object[]] @($path.ToString(), $true)
+        $document = $openMethod.Invoke($null, $openArguments)
         try {
             $worksheetPart = @($document.WorkbookPart.WorksheetParts)[0]
-            $addPartMethod = [DocumentFormat.OpenXml.Packaging.WorksheetPart].GetMethods() |
+            $addPartMethod = $worksheetPartType.GetMethods() |
                 Where-Object { $_.Name -eq 'AddNewPart' -and $_.IsGenericMethodDefinition -and $_.GetParameters().Count -eq 0 } |
                 Select-Object -First 1
-            $threadedPart = $addPartMethod.MakeGenericMethod([DocumentFormat.OpenXml.Packaging.WorksheetThreadedCommentsPart]).Invoke($worksheetPart, @())
-            $threadedComments = [DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComments]::new()
-            $threadedComment = [DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedComment]::new()
+            $threadedPart = $addPartMethod.MakeGenericMethod($threadedPartType).Invoke($worksheetPart, @())
+            $threadedComments = [Activator]::CreateInstance($threadedCommentsType)
+            $threadedComment = [Activator]::CreateInstance($threadedCommentType)
             $threadedComment.Ref = 'A2'
             $threadedComment.PersonId = '{00000000-0000-0000-0000-000000000001}'
             $threadedComment.Id = '{00000000-0000-0000-0000-000000000002}'
-            $threadedComment.AppendChild([DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments.ThreadedCommentText]::new('Modern note')) | Out-Null
+            $threadedCommentTextConstructor = $threadedCommentTextType.GetConstructor([type[]] @([string]))
+            $threadedComment.AppendChild($threadedCommentTextConstructor.Invoke([object[]] @('Modern note'))) | Out-Null
             $threadedComments.AppendChild($threadedComment) | Out-Null
             $threadedComments.Save($threadedPart)
         } finally {
@@ -918,6 +1089,56 @@ Describe 'Excel DSL surface' {
         $numberFormat = $dataLabels.SelectSingleNode("*[local-name()='numFmt']")
         $numberFormat | Should -Not -BeNullOrEmpty
         $numberFormat.GetAttribute('formatCode') | Should -Be '0.0%'
+    }
+
+    It 'formats Excel chart axes series and trendlines' {
+        $path = Join-Path $TestDrive 'DslExcelChartAxisSeriesTrendline.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Month = 'Jan'; Revenue = 100 }
+            [PSCustomObject]@{ Month = 'Feb'; Revenue = 200 }
+            [PSCustomObject]@{ Month = 'Mar'; Revenue = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Line -Title 'Revenue Trend' -PassThru
+                { $chart | Set-OfficeExcelChartSeries -SeriesIndex 0 -LineWidthPoints 1.5 -ErrorAction Stop } |
+                    Should -Throw '*LineColor is required*'
+                $formattedChart = $chart |
+                    Set-OfficeExcelChartAxis -CategoryTitle 'Month' -ValueTitle 'Revenue' -ValueNumberFormat '$#,##0' -SourceLinked:$false -ValueMinimum 0 -ValueMajorUnit 100 -ShowValueMinorGridlines -ValueGridlineColor '#D9EAD3' -GridlineWidthPoints 0.75 |
+                    Set-OfficeExcelChartSeries -SeriesIndex 0 -LineColor '#1F4E79' -LineWidthPoints 1.5 -MarkerStyle Circle -MarkerSize 6 -MarkerFillColor '#4472C4' |
+                    Set-OfficeExcelChartTrendline -SeriesIndex 0 -Type Linear -DisplayEquation -DisplayRSquared -LineColor '#C00000' -LineWidthPoints 1.25
+
+                $formattedChart | Should -Not -BeNullOrEmpty
+            }
+        } | Out-Null
+
+        $chartXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/drawings/charts/chart1.xml'
+        $chartOuterXml = $chartXml.OuterXml
+
+        $categoryAxis = $chartXml.SelectSingleNode("//*[local-name()='catAx']")
+        $categoryTitle = $categoryAxis.SelectSingleNode("*[local-name()='title']")
+        $categoryTitle | Should -Not -BeNullOrEmpty
+        $categoryTitle.InnerText | Should -Be 'Month'
+        $categoryAxis.SelectSingleNode("*[local-name()='majorGridlines']") | Should -BeNullOrEmpty
+        $categoryAxis.SelectSingleNode("*[local-name()='minorGridlines']") | Should -BeNullOrEmpty
+
+        $valueAxis = $chartXml.SelectSingleNode("//*[local-name()='valAx']")
+        $valueAxis | Should -Not -BeNullOrEmpty
+        $valueAxis.SelectSingleNode("*[local-name()='title']").InnerText | Should -Be 'Revenue'
+        $valueAxis.SelectSingleNode("*[local-name()='numFmt']").GetAttribute('formatCode') | Should -Be '$#,##0'
+        $valueAxis.SelectSingleNode("*[local-name()='scaling']/*[local-name()='min']").GetAttribute('val') | Should -Be '0'
+        $valueAxis.SelectSingleNode("*[local-name()='majorUnit']").GetAttribute('val') | Should -Be '100'
+        $valueAxis.SelectSingleNode("*[local-name()='majorGridlines']") | Should -Not -BeNullOrEmpty
+        $valueAxis.SelectSingleNode("*[local-name()='minorGridlines']") | Should -Not -BeNullOrEmpty
+
+        $chartOuterXml | Should -Match 'trendline'
+        $chartOuterXml | Should -Match 'dispEq'
+        $chartOuterXml | Should -Match 'dispRSqr'
+        $chartOuterXml | Should -Match '1F4E79'
+        $chartOuterXml | Should -Match '4472C4'
+        $chartOuterXml | Should -Match 'C00000'
     }
 
     It 'supports url images and smart hyperlink helpers' {

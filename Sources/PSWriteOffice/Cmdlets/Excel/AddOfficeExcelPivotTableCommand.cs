@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using OfficeIMO.Excel;
@@ -66,6 +68,14 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
     [Parameter]
     public string[]? DataFunction { get; set; }
 
+    /// <summary>Display names for data fields.</summary>
+    [Parameter]
+    public string[]? DataDisplayName { get; set; }
+
+    /// <summary>Number format codes for data fields.</summary>
+    [Parameter]
+    public string[]? DataNumberFormat { get; set; }
+
     /// <summary>Disable row grand totals.</summary>
     [Parameter]
     public SwitchParameter NoRowGrandTotals { get; set; }
@@ -122,6 +132,118 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
     [Parameter]
     public SwitchParameter HideDrill { get; set; }
 
+    /// <summary>Optional row header caption.</summary>
+    [Parameter]
+    public string? RowHeaderCaption { get; set; }
+
+    /// <summary>Optional column header caption.</summary>
+    [Parameter]
+    public string? ColumnHeaderCaption { get; set; }
+
+    /// <summary>Optional grand total caption.</summary>
+    [Parameter]
+    public string? GrandTotalCaption { get; set; }
+
+    /// <summary>Optional missing-value caption.</summary>
+    [Parameter]
+    public string? MissingCaption { get; set; }
+
+    /// <summary>Optional error-value caption.</summary>
+    [Parameter]
+    public string? ErrorCaption { get; set; }
+
+    /// <summary>Show the data drop-down.</summary>
+    [Parameter]
+    public SwitchParameter ShowDataDropDown { get; set; }
+
+    /// <summary>Hide the data drop-down.</summary>
+    [Parameter]
+    public SwitchParameter HideDataDropDown { get; set; }
+
+    /// <summary>Show pivot drop zones.</summary>
+    [Parameter]
+    public SwitchParameter ShowDropZones { get; set; }
+
+    /// <summary>Hide pivot drop zones.</summary>
+    [Parameter]
+    public SwitchParameter HideDropZones { get; set; }
+
+    /// <summary>Show pivot data tips.</summary>
+    [Parameter]
+    public SwitchParameter ShowDataTips { get; set; }
+
+    /// <summary>Hide pivot data tips.</summary>
+    [Parameter]
+    public SwitchParameter HideDataTips { get; set; }
+
+    /// <summary>Show member property tips.</summary>
+    [Parameter]
+    public SwitchParameter ShowMemberPropertyTips { get; set; }
+
+    /// <summary>Hide member property tips.</summary>
+    [Parameter]
+    public SwitchParameter HideMemberPropertyTips { get; set; }
+
+    /// <summary>Sort pivot field list ascending.</summary>
+    [Parameter]
+    public SwitchParameter FieldListSortAscending { get; set; }
+
+    /// <summary>Sort pivot field list descending.</summary>
+    [Parameter]
+    public SwitchParameter FieldListSortDescending { get; set; }
+
+    /// <summary>Use Excel custom-list sorting.</summary>
+    [Parameter]
+    public SwitchParameter CustomListSort { get; set; }
+
+    /// <summary>Disable Excel custom-list sorting.</summary>
+    [Parameter]
+    public SwitchParameter NoCustomListSort { get; set; }
+
+    /// <summary>Field sort map, for example @{ Region = 'Ascending' }.</summary>
+    [Parameter]
+    public Hashtable? FieldSort { get; set; }
+
+    /// <summary>Field item captions to hide, for example @{ Region = @('Legacy') }.</summary>
+    [Parameter]
+    public Hashtable? FieldHiddenItems { get; set; }
+
+    /// <summary>Field item captions to keep visible, hiding other known items.</summary>
+    [Parameter]
+    public Hashtable? FieldVisibleItems { get; set; }
+
+    /// <summary>Selected page-field item captions, for example @{ Product = 'Standard' }.</summary>
+    [Parameter]
+    public Hashtable? PageFieldSelection { get; set; }
+
+    /// <summary>Fields with default subtotal disabled.</summary>
+    [Parameter]
+    public string[]? FieldNoDefaultSubtotal { get; set; }
+
+    /// <summary>Fields with subtotals shown at the top.</summary>
+    [Parameter]
+    public string[]? FieldSubtotalTop { get; set; }
+
+    /// <summary>Fields that insert blank rows after items.</summary>
+    [Parameter]
+    public string[]? FieldInsertBlankRow { get; set; }
+
+    /// <summary>Fields that insert page breaks after items.</summary>
+    [Parameter]
+    public string[]? FieldInsertPageBreak { get; set; }
+
+    /// <summary>Fields using compact field layout.</summary>
+    [Parameter]
+    public string[]? FieldCompact { get; set; }
+
+    /// <summary>Fields using outline field layout.</summary>
+    [Parameter]
+    public string[]? FieldOutline { get; set; }
+
+    /// <summary>Fields whose filter drop-downs should be hidden.</summary>
+    [Parameter]
+    public string[]? FieldHideDropDowns { get; set; }
+
     /// <summary>Emit the worksheet after creating the pivot table.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -141,24 +263,28 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         var showEmptyRows = ResolveToggle(ShowEmptyRows, HideEmptyRows, "ShowEmptyRows/HideEmptyRows");
         var showEmptyColumns = ResolveToggle(ShowEmptyColumns, HideEmptyColumns, "ShowEmptyColumns/HideEmptyColumns");
         var showDrill = ResolveToggle(ShowDrill, HideDrill, "ShowDrill/HideDrill");
+        var showDataDropDown = ResolveToggle(ShowDataDropDown, HideDataDropDown, "ShowDataDropDown/HideDataDropDown");
+        var showDropZones = ResolveToggle(ShowDropZones, HideDropZones, "ShowDropZones/HideDropZones");
+        var showDataTips = ResolveToggle(ShowDataTips, HideDataTips, "ShowDataTips/HideDataTips");
+        var showMemberPropertyTips = ResolveToggle(ShowMemberPropertyTips, HideMemberPropertyTips, "ShowMemberPropertyTips/HideMemberPropertyTips");
+        var fieldListSortAscending = ResolveToggle(FieldListSortAscending, FieldListSortDescending, "FieldListSortAscending/FieldListSortDescending");
+        var customListSort = ResolveToggle(CustomListSort, NoCustomListSort, "CustomListSort/NoCustomListSort");
 
-        sheet.AddPivotTable(
-            sourceRange: SourceRange,
-            destinationCell: DestinationCell,
-            name: Name,
-            rowFields: RowField,
-            columnFields: ColumnField,
-            pageFields: PageField,
-            dataFields: dataFields,
-            showRowGrandTotals: !NoRowGrandTotals.IsPresent,
-            showColumnGrandTotals: !NoColumnGrandTotals.IsPresent,
-            pivotStyleName: PivotStyle,
-            layout: layout,
-            dataOnRows: dataOnRows,
-            showHeaders: showHeaders,
-            showEmptyRows: showEmptyRows,
-            showEmptyColumns: showEmptyColumns,
-            showDrill: showDrill);
+        InvokeAddPivotTable(
+            sheet,
+            dataFields,
+            layout,
+            dataOnRows,
+            showHeaders,
+            showEmptyRows,
+            showEmptyColumns,
+            showDrill,
+            showDataDropDown,
+            showDropZones,
+            showDataTips,
+            showMemberPropertyTips,
+            fieldListSortAscending,
+            customListSort);
 
         if (PassThru.IsPresent)
         {
@@ -174,6 +300,14 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
             {
                 throw new PSArgumentException("DataFunction requires DataField to be provided.");
             }
+            if (DataDisplayName != null && DataDisplayName.Length > 0)
+            {
+                throw new PSArgumentException("DataDisplayName requires DataField to be provided.");
+            }
+            if (DataNumberFormat != null && DataNumberFormat.Length > 0)
+            {
+                throw new PSArgumentException("DataNumberFormat requires DataField to be provided.");
+            }
             return null;
         }
 
@@ -181,6 +315,14 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         if (functions.Count > 1 && functions.Count != DataField.Length)
         {
             throw new PSArgumentException("When providing multiple DataFunction values, the count must match DataField.");
+        }
+        if (DataDisplayName != null && DataDisplayName.Length > 1 && DataDisplayName.Length != DataField.Length)
+        {
+            throw new PSArgumentException("When providing multiple DataDisplayName values, the count must match DataField.");
+        }
+        if (DataNumberFormat != null && DataNumberFormat.Length > 1 && DataNumberFormat.Length != DataField.Length)
+        {
+            throw new PSArgumentException("When providing multiple DataNumberFormat values, the count must match DataField.");
         }
 
         var result = new List<ExcelPivotDataField>(DataField.Length);
@@ -195,10 +337,193 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
                 1 => functions[0],
                 _ => functions[i]
             };
-            result.Add(new ExcelPivotDataField(fieldName.Trim(), fn));
+            string? displayName = ResolveIndexedValue(DataDisplayName, i);
+            string? numberFormat = ResolveIndexedValue(DataNumberFormat, i);
+            result.Add(CreatePivotDataField(fieldName.Trim(), fn, displayName, numberFormat));
         }
 
         return result.Count == 0 ? null : result;
+    }
+
+    private void InvokeAddPivotTable(
+        ExcelSheet sheet,
+        IEnumerable<ExcelPivotDataField>? dataFields,
+        ExcelPivotLayout layout,
+        bool? dataOnRows,
+        bool? showHeaders,
+        bool? showEmptyRows,
+        bool? showEmptyColumns,
+        bool? showDrill,
+        bool? showDataDropDown,
+        bool? showDropZones,
+        bool? showDataTips,
+        bool? showMemberPropertyTips,
+        bool? fieldListSortAscending,
+        bool? customListSort)
+    {
+        sheet.AddPivotTable(
+            SourceRange,
+            DestinationCell,
+            Name,
+            RowField,
+            ColumnField,
+            PageField,
+            dataFields,
+            showRowGrandTotals: !NoRowGrandTotals.IsPresent,
+            showColumnGrandTotals: !NoColumnGrandTotals.IsPresent,
+            pivotStyleName: PivotStyle,
+            layout: layout,
+            dataOnRows: dataOnRows,
+            showHeaders: showHeaders,
+            showEmptyRows: showEmptyRows,
+            showEmptyColumns: showEmptyColumns,
+            showDrill: showDrill,
+            fieldOptions: BuildFieldOptions(),
+            rowHeaderCaption: RowHeaderCaption,
+            columnHeaderCaption: ColumnHeaderCaption,
+            grandTotalCaption: GrandTotalCaption,
+            missingCaption: MissingCaption,
+            errorCaption: ErrorCaption,
+            showDataDropDown: showDataDropDown,
+            showDropZones: showDropZones,
+            showDataTips: showDataTips,
+            showMemberPropertyTips: showMemberPropertyTips,
+            fieldListSortAscending: fieldListSortAscending,
+            customListSort: customListSort);
+    }
+
+    private IEnumerable<ExcelPivotFieldOptions>? BuildFieldOptions()
+    {
+        if (!RequiresFieldOptions()) return null;
+
+        var fields = CollectOptionFieldNames();
+        return fields.Select(CreateFieldOption).ToArray();
+    }
+
+    private ExcelPivotFieldOptions CreateFieldOption(string field)
+    {
+        return new ExcelPivotFieldOptions(
+            field,
+            sortType: ResolveFieldSort(field),
+            defaultSubtotal: ContainsField(FieldNoDefaultSubtotal, field) ? false : null,
+            subtotalTop: ContainsField(FieldSubtotalTop, field) ? true : null,
+            insertBlankRow: ContainsField(FieldInsertBlankRow, field) ? true : null,
+            insertPageBreak: ContainsField(FieldInsertPageBreak, field) ? true : null,
+            compact: ContainsField(FieldCompact, field) ? true : null,
+            outline: ContainsField(FieldOutline, field) ? true : null,
+            showDropDowns: ContainsField(FieldHideDropDowns, field) ? false : null,
+            hiddenItems: ResolveMapItems(FieldHiddenItems, field),
+            visibleItems: ResolveMapItems(FieldVisibleItems, field),
+            selectedItem: ResolveMapScalar(PageFieldSelection, field));
+    }
+
+    private FieldSortValues? ResolveFieldSort(string field)
+    {
+        string? sort = ResolveMapScalar(FieldSort, field);
+        if (string.IsNullOrWhiteSpace(sort)) return null;
+
+        if (!OpenXmlValueParser.TryParse(sort, out FieldSortValues parsed))
+        {
+            throw new PSArgumentException($"Unknown field sort value '{sort}'.");
+        }
+
+        return parsed;
+    }
+
+    private SortedSet<string> CollectOptionFieldNames()
+    {
+        var fields = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+        AddFields(fields, FieldSort?.Keys);
+        AddFields(fields, FieldHiddenItems?.Keys);
+        AddFields(fields, FieldVisibleItems?.Keys);
+        AddFields(fields, PageFieldSelection?.Keys);
+        AddFields(fields, FieldNoDefaultSubtotal);
+        AddFields(fields, FieldSubtotalTop);
+        AddFields(fields, FieldInsertBlankRow);
+        AddFields(fields, FieldInsertPageBreak);
+        AddFields(fields, FieldCompact);
+        AddFields(fields, FieldOutline);
+        AddFields(fields, FieldHideDropDowns);
+        return fields;
+    }
+
+    private static void AddFields(SortedSet<string> fields, IEnumerable? values)
+    {
+        if (values == null) return;
+        foreach (object? value in values)
+        {
+            string? text = value?.ToString();
+            if (!string.IsNullOrWhiteSpace(text)) fields.Add(text!.Trim());
+        }
+    }
+
+    private static string[]? ResolveMapItems(Hashtable? map, string field)
+    {
+        object? value = ResolveMapValue(map, field);
+        if (value == null) return null;
+        if (value is string text) return new[] { text };
+        if (value is IEnumerable enumerable)
+        {
+            return enumerable.Cast<object?>()
+                .Select(item => item?.ToString())
+                .Where(item => !string.IsNullOrWhiteSpace(item))
+                .Select(item => item!.Trim())
+                .ToArray();
+        }
+
+        return new[] { value.ToString() ?? string.Empty };
+    }
+
+    private static string? ResolveMapScalar(Hashtable? map, string field)
+    {
+        object? value = ResolveMapValue(map, field);
+        return value?.ToString();
+    }
+
+    private static object? ResolveMapValue(Hashtable? map, string field)
+    {
+        if (map == null) return null;
+        foreach (DictionaryEntry entry in map)
+        {
+            if (entry.Key != null && string.Equals(entry.Key.ToString(), field, StringComparison.OrdinalIgnoreCase))
+            {
+                return entry.Value;
+            }
+        }
+
+        return null;
+    }
+
+    private static bool ContainsField(string[]? fields, string field)
+    {
+        return fields?.Any(value => string.Equals(value, field, StringComparison.OrdinalIgnoreCase)) == true;
+    }
+
+    private bool RequiresFieldOptions()
+    {
+        return FieldSort?.Count > 0
+            || FieldHiddenItems?.Count > 0
+            || FieldVisibleItems?.Count > 0
+            || PageFieldSelection?.Count > 0
+            || FieldNoDefaultSubtotal?.Length > 0
+            || FieldSubtotalTop?.Length > 0
+            || FieldInsertBlankRow?.Length > 0
+            || FieldInsertPageBreak?.Length > 0
+            || FieldCompact?.Length > 0
+            || FieldOutline?.Length > 0
+            || FieldHideDropDowns?.Length > 0;
+    }
+
+    private static string? ResolveIndexedValue(string[]? values, int index)
+    {
+        if (values == null || values.Length == 0) return null;
+        if (values.Length == 1) return values[0];
+        return index < values.Length ? values[index] : null;
+    }
+
+    private ExcelPivotDataField CreatePivotDataField(string fieldName, DataConsolidateFunctionValues function, string? displayName, string? numberFormat)
+    {
+        return new ExcelPivotDataField(fieldName, function, displayName, numberFormatId: null, numberFormat: numberFormat);
     }
 
     private static List<DataConsolidateFunctionValues> ParseFunctions(string[]? functions)

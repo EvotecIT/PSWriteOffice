@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 1.0.0
+Help Version: 1.0.3
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -121,8 +121,32 @@ Adds a bulleted list to a PowerPoint slide.
 ### [Add-OfficePowerPointChart](Add-OfficePowerPointChart.md)
 Adds a chart to a PowerPoint slide.
 
+### [Add-OfficePowerPointDesignerDeck](Add-OfficePowerPointDesignerDeck.md)
+Renders a semantic deck plan through OfficeIMO PowerPoint designer helpers.
+
 ### [Add-OfficePowerPointImage](Add-OfficePowerPointImage.md)
 Adds an image to a PowerPoint slide.
+
+### [Add-OfficePowerPointPlanCapability](Add-OfficePowerPointPlanCapability.md)
+Adds a semantic capability/content slide to a PowerPoint deck plan.
+
+### [Add-OfficePowerPointPlanCardGrid](Add-OfficePowerPointPlanCardGrid.md)
+Adds a semantic card-grid slide to a PowerPoint deck plan.
+
+### [Add-OfficePowerPointPlanCaseStudy](Add-OfficePowerPointPlanCaseStudy.md)
+Adds a semantic case-study slide to a PowerPoint deck plan.
+
+### [Add-OfficePowerPointPlanCoverage](Add-OfficePowerPointPlanCoverage.md)
+Adds a semantic coverage/location slide to a PowerPoint deck plan.
+
+### [Add-OfficePowerPointPlanLogoWall](Add-OfficePowerPointPlanLogoWall.md)
+Adds a semantic logo/proof-wall slide to a PowerPoint deck plan.
+
+### [Add-OfficePowerPointPlanProcess](Add-OfficePowerPointPlanProcess.md)
+Adds a semantic process/timeline slide to a PowerPoint deck plan.
+
+### [Add-OfficePowerPointPlanSection](Add-OfficePowerPointPlanSection.md)
+Adds a semantic section/title slide to a PowerPoint deck plan.
 
 ### [Add-OfficePowerPointSection](Add-OfficePowerPointSection.md)
 Adds a section to a PowerPoint presentation.
@@ -142,6 +166,9 @@ Adds a text box to a slide.
 ### [Add-OfficeWordBookmark](Add-OfficeWordBookmark.md)
 Adds a bookmark to the current paragraph.
 
+### [Add-OfficeWordBreak](Add-OfficeWordBreak.md)
+Adds a break to a Word paragraph.
+
 ### [Add-OfficeWordChart](Add-OfficeWordChart.md)
 Adds a chart to a Word document.
 
@@ -160,11 +187,17 @@ Adds a date picker content control to the current paragraph.
 ### [Add-OfficeWordDropDownList](Add-OfficeWordDropDownList.md)
 Adds a dropdown list content control to the current paragraph.
 
+### [Add-OfficeWordEndnote](Add-OfficeWordEndnote.md)
+Adds an endnote reference to a Word paragraph.
+
 ### [Add-OfficeWordField](Add-OfficeWordField.md)
 Adds a field to the current paragraph.
 
 ### [Add-OfficeWordFooter](Add-OfficeWordFooter.md)
 Adds content to a section footer.
+
+### [Add-OfficeWordFootnote](Add-OfficeWordFootnote.md)
+Adds a footnote reference to a Word paragraph.
 
 ### [Add-OfficeWordHeader](Add-OfficeWordHeader.md)
 Adds content to a section header.
@@ -220,6 +253,9 @@ Clears any AutoFilter on the current worksheet.
 ### [Close-OfficeExcel](Close-OfficeExcel.md)
 Closes an Excel workbook and optionally saves it.
 
+### [Close-OfficePowerPoint](Close-OfficePowerPoint.md)
+Closes a PowerPoint presentation and optionally saves it.
+
 ### [Close-OfficeWord](Close-OfficeWord.md)
 Closes one or more tracked Word documents, optionally saving them.
 
@@ -247,6 +283,9 @@ Converts a Word document to Markdown.
 ### [Copy-OfficePowerPointSlide](Copy-OfficePowerPointSlide.md)
 Copies an existing slide within a PowerPoint presentation.
 
+### [Export-OfficeExcel](Export-OfficeExcel.md)
+Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
+
 ### [Find-OfficeWord](Find-OfficeWord.md)
 Finds text matches inside a Word document.
 
@@ -270,6 +309,9 @@ Gets pivot tables defined in a workbook.
 
 ### [Get-OfficeExcelRange](Get-OfficeExcelRange.md)
 Reads an explicit A1 range from an Excel workbook.
+
+### [Get-OfficeExcelSummary](Get-OfficeExcelSummary.md)
+Gets a compact structural summary of an Excel workbook.
 
 ### [Get-OfficeExcelTable](Get-OfficeExcelTable.md)
 Gets Excel tables defined in a workbook.
@@ -337,8 +379,14 @@ Gets built-in and custom document properties from a Word document.
 ### [Get-OfficeWordDropDownList](Get-OfficeWordDropDownList.md)
 Gets dropdown list content controls from a Word document.
 
+### [Get-OfficeWordEndnote](Get-OfficeWordEndnote.md)
+Gets endnotes from a Word document or section.
+
 ### [Get-OfficeWordField](Get-OfficeWordField.md)
 Gets fields from a Word document.
+
+### [Get-OfficeWordFootnote](Get-OfficeWordFootnote.md)
+Gets footnotes from a Word document or section.
 
 ### [Get-OfficeWordHyperlink](Get-OfficeWordHyperlink.md)
 Gets hyperlinks from a Word document.
@@ -364,6 +412,9 @@ Gets tables from a Word document or section.
 ### [Get-OfficeWordTableOfContent](Get-OfficeWordTableOfContent.md)
 Gets the table of contents from a Word document.
 
+### [Import-OfficeExcel](Import-OfficeExcel.md)
+Imports rows from an Excel workbook as PowerShell objects.
+
 ### [Import-OfficePowerPointSlide](Import-OfficePowerPointSlide.md)
 Imports a slide from another PowerPoint presentation.
 
@@ -384,6 +435,9 @@ Creates a Markdown document using a DSL scriptblock.
 
 ### [New-OfficePowerPoint](New-OfficePowerPoint.md)
 Creates a PowerPoint presentation using the DSL.
+
+### [New-OfficePowerPointDeckPlan](New-OfficePowerPointDeckPlan.md)
+Creates a semantic PowerPoint deck plan for designer rendering.
 
 ### [New-OfficeWord](New-OfficeWord.md)
 Creates a Word document using the DSL.
@@ -418,14 +472,23 @@ Saves a Word document without disposing it.
 ### [Set-OfficeExcelCell](Set-OfficeExcelCell.md)
 Sets a cell value, formula, or number format within the current worksheet.
 
+### [Set-OfficeExcelChartAxis](Set-OfficeExcelChartAxis.md)
+Configures common Excel chart axis titles, formats, scale, and gridlines.
+
 ### [Set-OfficeExcelChartDataLabels](Set-OfficeExcelChartDataLabels.md)
 Configures data labels and optional styling for an Excel chart.
 
 ### [Set-OfficeExcelChartLegend](Set-OfficeExcelChartLegend.md)
 Configures legend visibility and styling for an Excel chart.
 
+### [Set-OfficeExcelChartSeries](Set-OfficeExcelChartSeries.md)
+Configures Excel chart series colors, line style, and markers.
+
 ### [Set-OfficeExcelChartStyle](Set-OfficeExcelChartStyle.md)
 Applies a built-in style and color preset to an Excel chart.
+
+### [Set-OfficeExcelChartTrendline](Set-OfficeExcelChartTrendline.md)
+Adds or replaces an Excel chart series trendline.
 
 ### [Set-OfficeExcelColumn](Set-OfficeExcelColumn.md)
 Writes values or formatting to a column in the current worksheet.

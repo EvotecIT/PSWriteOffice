@@ -255,7 +255,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 sheetExists = false;
             }
 
-            var sheet = document.GetOrCreateSheet(sheetName, SheetNameValidationMode.Sanitize);
+            var sheet = GetOrAddDataSetSheet(document, sheetName);
             var table = ApplyExcludedColumns(sourceTable.Copy());
             if (table.Columns.Count == 0)
             {
@@ -594,10 +594,10 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         for (var i = 0; i < baseName.Length; i++)
         {
             var ch = baseName[i];
-            chars[i] = ch is ':' or '\\' or '/' or '?' or '*' or '[' or ']' ? '_' : ch;
+            chars[i] = IsInvalidWorksheetNameCharacter(ch) ? '_' : ch;
         }
 
-        var cleaned = CollapseUnderscores(new string(chars).Trim()).Trim('_');
+        var cleaned = new string(chars).Trim();
         var usedDefaultFallback = false;
         if (string.IsNullOrEmpty(cleaned))
         {
@@ -607,6 +607,20 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         var name = cleaned.Length > 31 ? cleaned.Substring(0, 31) : cleaned;
         return (name, usedDefaultFallback);
+    }
+
+    private static ExcelSheet GetOrAddDataSetSheet(ExcelDocument document, string sheetName)
+    {
+        var sheet = document.Sheets.FirstOrDefault(existing =>
+            string.Equals(existing.Name, sheetName, StringComparison.OrdinalIgnoreCase));
+        return sheet ?? document.AddWorkSheet(sheetName, SheetNameValidationMode.None);
+    }
+
+    private static bool IsInvalidWorksheetNameCharacter(char ch)
+    {
+        return ch is ':' or '\\' or '/' or '?' or '*' or '[' or ']' ||
+            char.IsControl(ch) ||
+            char.IsSurrogate(ch);
     }
 
     private static string? FindExistingWorksheetName(
@@ -629,17 +643,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return directMatch;
         }
 
-        for (var suffix = 2; suffix <= existing.Length + usedNames.Count + 1; suffix++)
-        {
-            var suffixedName = AppendWorksheetSuffix(normalizedName, suffix);
-            var match = existing.FirstOrDefault(name => string.Equals(name, suffixedName, StringComparison.OrdinalIgnoreCase));
-            if (!string.IsNullOrWhiteSpace(match))
-            {
-                return match;
-            }
-        }
-
-        return null;
+        return existing
+            .Select(name => (Name: name, Suffix: GetWorksheetNameSuffix(name, normalizedName)))
+            .Where(match => match.Suffix.HasValue)
+            .OrderBy(match => match.Suffix!.Value)
+            .Select(match => match.Name)
+            .FirstOrDefault();
     }
 
     private static string AppendWorksheetSuffix(string worksheetName, int suffix)
@@ -650,32 +659,28 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return basePart + suffixText;
     }
 
-    private static string CollapseUnderscores(string value)
+    private static bool IsSuffixedWorksheetName(string worksheetName, string normalizedName)
     {
-        if (value.IndexOf("__", StringComparison.Ordinal) < 0)
+        return GetWorksheetNameSuffix(worksheetName, normalizedName).HasValue;
+    }
+
+    private static int? GetWorksheetNameSuffix(string worksheetName, string normalizedName)
+    {
+        var close = worksheetName.LastIndexOf(')');
+        var open = worksheetName.LastIndexOf(" (", StringComparison.Ordinal);
+        if (close != worksheetName.Length - 1 || open < 0 || open >= close)
         {
-            return value;
+            return null;
         }
 
-        var result = new System.Text.StringBuilder(value.Length);
-        var previousWasUnderscore = false;
-        foreach (var ch in value)
+        var suffixText = worksheetName.Substring(open + 2, close - open - 2);
+        if (!int.TryParse(suffixText, out var suffix) || suffix < 2)
         {
-            if (ch == '_')
-            {
-                if (!previousWasUnderscore)
-                {
-                    result.Append(ch);
-                }
-
-                previousWasUnderscore = true;
-                continue;
-            }
-
-            result.Append(ch);
-            previousWasUnderscore = false;
+            return null;
         }
 
-        return result.ToString();
+        return string.Equals(worksheetName, AppendWorksheetSuffix(normalizedName, suffix), StringComparison.OrdinalIgnoreCase)
+            ? suffix
+            : null;
     }
 }
