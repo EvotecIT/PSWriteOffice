@@ -82,9 +82,9 @@ internal sealed class ExcelDslContext : IDisposable
         }
     }
 
-    public ExcelSheet? CurrentSheet => _scopes.OfType<ExcelSheet>().LastOrDefault();
+    public ExcelSheet? CurrentSheet => _scopes.OfType<ExcelSheet>().FirstOrDefault();
 
-    public SheetComposer? CurrentComposer => _scopes.OfType<SheetComposer>().LastOrDefault();
+    public SheetComposer? CurrentComposer => _scopes.OfType<SheetComposer>().FirstOrDefault();
 
     public ExcelSheet RequireSheet()
     {

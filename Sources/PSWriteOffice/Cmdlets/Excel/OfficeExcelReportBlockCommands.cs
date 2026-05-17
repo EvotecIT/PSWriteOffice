@@ -155,6 +155,10 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
     [Parameter]
     public string? HeaderFillColor { get; set; }
 
+    /// <summary>Use case-sensitive matching for first-column fill values.</summary>
+    [Parameter]
+    public SwitchParameter CaseSensitive { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -162,7 +166,7 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
             Title,
             Headers,
             Rows.Select(row => ReportBlockInput.ToRow(row, Headers)),
-            ReportBlockInput.ToStringMap(FirstColumnFillByValue),
+            ReportBlockInput.ToStringMap(FirstColumnFillByValue, CaseSensitive.IsPresent),
             HeaderFillColor);
     }
 }
@@ -291,14 +295,15 @@ internal static class ReportBlockInput
         return headers.Select(header => Convert.ToString(GetPropertyValue(psObject, header), CultureInfo.InvariantCulture) ?? string.Empty).ToArray();
     }
 
-    public static Dictionary<string, string>? ToStringMap(Hashtable? table)
+    public static Dictionary<string, string>? ToStringMap(Hashtable? table, bool caseSensitive = false)
     {
         if (table == null || table.Count == 0)
         {
             return null;
         }
 
-        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+        var result = new Dictionary<string, string>(comparer);
         foreach (DictionaryEntry entry in table)
         {
             var key = Convert.ToString(entry.Key, CultureInfo.InvariantCulture);
