@@ -25,7 +25,7 @@ public static partial class WordDocumentService
 
         if (!string.IsNullOrEmpty(password))
         {
-            return RegisterDocument(WordDocument.LoadEncrypted(resolvedPath, password!, readOnly, autoSave));
+            return RegisterDocument(OfficeEncryptedPackageService.LoadWord(resolvedPath, password!, readOnly, autoSave));
         }
 
         return RegisterDocument(WordDocument.Load(resolvedPath, readOnly, autoSave));
@@ -77,7 +77,7 @@ public static partial class WordDocumentService
         else if (!string.IsNullOrEmpty(password))
         {
             var targetPath = document.FilePath!;
-            document.SaveEncrypted(targetPath, password!, false);
+            OfficeEncryptedPackageService.SaveWord(document, targetPath, password!, false);
         }
         else
         {
@@ -97,7 +97,7 @@ public static partial class WordDocumentService
     {
         if (!string.IsNullOrEmpty(password))
         {
-            document.SaveEncrypted(path, password!, openWord);
+            OfficeEncryptedPackageService.SaveWord(document, path, password!, openWord);
             return;
         }
 

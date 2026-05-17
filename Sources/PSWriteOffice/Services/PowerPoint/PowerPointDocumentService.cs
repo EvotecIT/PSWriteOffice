@@ -35,7 +35,7 @@ public static class PowerPointDocumentService
         }
 
         var presentation = !string.IsNullOrEmpty(password)
-            ? PowerPointPresentation.OpenEncrypted(resolvedPath, password!)
+            ? OfficeEncryptedPackageService.OpenPowerPoint(resolvedPath, password!)
             : PowerPointPresentation.Open(resolvedPath);
         Presentations[presentation] = resolvedPath;
         return presentation;
@@ -53,7 +53,7 @@ public static class PowerPointDocumentService
         if (!string.IsNullOrEmpty(password))
         {
             using var encrypted = new MemoryStream();
-            presentation.SaveEncrypted(encrypted, password!);
+            OfficeEncryptedPackageService.SavePowerPoint(presentation, encrypted, password!);
             presentation.Dispose();
             File.WriteAllBytes(resolvedPath, encrypted.ToArray());
         }

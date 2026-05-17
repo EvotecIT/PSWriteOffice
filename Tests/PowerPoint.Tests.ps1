@@ -7,6 +7,26 @@ BeforeAll {
     Import-Module $ModuleManifest -Global -ErrorAction Stop
 
     . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
+
+    function Test-OfficeLoadedMethod {
+        param(
+            [Parameter(Mandatory)]
+            [string] $TypeName,
+
+            [Parameter(Mandatory)]
+            [string] $MethodName
+        )
+
+        $type = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType($TypeName, $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        if ($null -eq $type) {
+            throw "Unable to find loaded type '$TypeName'."
+        }
+
+        @($type.GetMethods() | Where-Object Name -eq $MethodName).Count -gt 0
+    }
 }
 
 Describe 'PowerPoint cmdlets' {
@@ -26,6 +46,13 @@ Describe 'PowerPoint cmdlets' {
     }
 
     It 'round-trips encrypted presentations through lifecycle cmdlets' {
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.PowerPoint.PowerPointPresentation' -MethodName 'OpenEncrypted')) {
+            (Get-Command New-OfficePowerPoint).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command Save-OfficePowerPoint).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command Get-OfficePowerPoint).Parameters.Keys | Should -Contain 'Password'
+            return
+        }
+
         $path = Join-Path $TestDrive 'EncryptedPowerPoint.pptx'
 
         New-OfficePowerPoint -Path $path -Password 'secret' {

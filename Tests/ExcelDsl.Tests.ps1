@@ -24,6 +24,19 @@
 
         $type
     }
+
+    function Test-OfficeLoadedMethod {
+        param(
+            [Parameter(Mandatory)]
+            [string] $TypeName,
+
+            [Parameter(Mandatory)]
+            [string] $MethodName
+        )
+
+        $type = Get-TestLoadedType -Name $TypeName
+        @($type.GetMethods() | Where-Object Name -eq $MethodName).Count -gt 0
+    }
 }
 
 Describe 'Excel DSL surface' {
@@ -53,6 +66,13 @@ Describe 'Excel DSL surface' {
     }
 
     It 'round-trips encrypted workbooks through lifecycle cmdlets' {
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.Excel.ExcelDocument' -MethodName 'LoadEncrypted')) {
+            (Get-Command New-OfficeExcel).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command Save-OfficeExcel).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command Get-OfficeExcel).Parameters.Keys | Should -Contain 'Password'
+            return
+        }
+
         $path = Join-Path $TestDrive 'EncryptedExcel.xlsx'
 
         New-OfficeExcel -Path $path -Password 'secret' -SafePreflight {

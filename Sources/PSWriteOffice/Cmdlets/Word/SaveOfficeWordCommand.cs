@@ -56,7 +56,7 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
             if (!string.IsNullOrEmpty(Password))
             {
-                Document.SaveEncrypted(resolvedPath, Password!, false);
+                OfficeEncryptedPackageService.SaveWord(Document, resolvedPath, Password!, false);
             }
             else
             {
@@ -72,7 +72,7 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
         {
             if (!string.IsNullOrEmpty(Password))
             {
-                Document.SaveEncrypted(Document.FilePath, Password!, false);
+                OfficeEncryptedPackageService.SaveWord(Document, Document.FilePath!, Password!, false);
             }
             else
             {

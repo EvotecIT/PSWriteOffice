@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using OfficeIMO.Excel;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Services.Excel;
 
@@ -26,7 +27,7 @@ internal static class ExcelDocumentService
 
         if (!string.IsNullOrEmpty(password))
         {
-            return ExcelDocument.LoadEncrypted(resolvedPath, password!, readOnly, autoSave);
+            return OfficeEncryptedPackageService.LoadExcel(resolvedPath, password!, readOnly, autoSave);
         }
 
         return ExcelDocument.Load(resolvedPath, readOnly, autoSave);
@@ -61,7 +62,7 @@ internal static class ExcelDocumentService
             }
 
             var targetPath = document.FilePath!;
-            document.SaveEncrypted(targetPath, password!, false, saveOptions);
+            OfficeEncryptedPackageService.SaveExcel(document, targetPath, password!, false, saveOptions);
         }
         else
         {
@@ -107,7 +108,7 @@ internal static class ExcelDocumentService
     {
         if (!string.IsNullOrEmpty(password))
         {
-            document.SaveEncrypted(path, password!, openExcel, saveOptions);
+            OfficeEncryptedPackageService.SaveExcel(document, path, password!, openExcel, saveOptions);
             return;
         }
 

@@ -71,7 +71,7 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
             if (!string.IsNullOrEmpty(Password))
             {
-                Document.SaveEncrypted(resolvedPath, Password!, false, saveOptions);
+                OfficeEncryptedPackageService.SaveExcel(Document, resolvedPath, Password!, false, saveOptions);
             }
             else
             {
@@ -87,7 +87,7 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
         {
             if (!string.IsNullOrEmpty(Password))
             {
-                Document.SaveEncrypted(Document.FilePath, Password!, false, saveOptions);
+                OfficeEncryptedPackageService.SaveExcel(Document, Document.FilePath!, Password!, false, saveOptions);
             }
             else
             {
