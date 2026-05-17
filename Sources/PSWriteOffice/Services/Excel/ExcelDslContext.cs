@@ -4,6 +4,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using OfficeIMO.Excel;
+using OfficeIMO.Excel.Fluent;
 
 namespace PSWriteOffice.Services.Excel;
 
@@ -81,7 +82,9 @@ internal sealed class ExcelDslContext : IDisposable
         }
     }
 
-    public ExcelSheet? CurrentSheet => _scopes.OfType<ExcelSheet>().LastOrDefault();
+    public ExcelSheet? CurrentSheet => _scopes.OfType<ExcelSheet>().FirstOrDefault();
+
+    public SheetComposer? CurrentComposer => _scopes.OfType<SheetComposer>().FirstOrDefault();
 
     public ExcelSheet RequireSheet()
     {
@@ -92,6 +95,17 @@ internal sealed class ExcelDslContext : IDisposable
         }
 
         return sheet;
+    }
+
+    public SheetComposer RequireComposer()
+    {
+        var composer = CurrentComposer;
+        if (composer == null)
+        {
+            throw new InvalidOperationException("No report sheet context available. Use Add-OfficeExcelReportSheet / ExcelReportSheet first.");
+        }
+
+        return composer;
     }
 
     public void Dispose()
