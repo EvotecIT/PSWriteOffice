@@ -50,30 +50,29 @@ page setup, equations, tab stops, and report-composer examples.
 
 | Capability | Current status | Remaining work |
 | --- | --- | --- |
-| Document create/load/save | Wrapped | Add append/merge helpers for report packs. |
+| Document create/load/save | Wrapped | Includes append/merge helpers for report packs. |
 | Declarative report DSL | Word DSL aliases cover practical authoring | Do not port `Documentimo` verbatim; prefer one modern report-composer example. |
 | Paragraph/text formatting | Core add/update/find/read helpers exist | Add compact `Set-OfficeWordRunStyle` and `Set-OfficeWordParagraphStyle` instead of many PSWriteWord-style micro-cmdlets. |
-| Page setup | Sections exist, but page setup ergonomics are thin | Add `Set-OfficeWordPageSetup` for margins, size, orientation, columns if stable. |
+| Page setup | Wrapped | `Set-OfficeWordPageSetup` covers margins, size, orientation, and columns. |
 | Tables | Object tables, table cells, conditional rows, nested tables, images/lists/chart anchoring are covered | Add row/column mutation, merge cell, layout, and width helpers. |
 | Pictures/images | Basic image insertion exists | Add crop/fill, rotate, flip, transparency, fixed positioning, and alt-text mutation if OfficeIMO exposes them cleanly. |
 | Headers/footers/page numbers | Wrapped | Covered. |
 | Bookmarks/text replacement | Wrapped | Covered, with optional bookmark-text convenience later. |
 | Document properties | Wrapped | Covered. |
 | Charts | Wrapped | Add richer chart formatting only after command shapes stay consistent with Excel. |
-| Equations and tab stops | Still missing | Small, useful parity wrappers. |
+| Equations and tab stops | Wrapped | `Add-OfficeWordEquation` and `Add-OfficeWordTabStop` expose the stable OfficeIMO.Word APIs. |
 | TOC and fields | Wrapped | Covered. |
 | Protection | Wrapped | Covered enough. |
-| Cover pages | Missing | Add template-driven wrapper if OfficeIMO templates are stable. |
+| Cover pages | Wrapped | `Add-OfficeWordCoverPage` exposes template-driven cover pages with basic cover metadata. |
 | Text boxes/shapes/SmartArt | Mostly missing | Start with predictable read/template helpers, not broad freeform authoring. |
-| Comments/revisions/compare/statistics/macros/variables/embedded docs | Mostly missing | Add comments/statistics/compare before macros; keep macros explicit/deferred. |
+| Comments/revisions/compare/statistics/macros/variables/embedded docs | Partially wrapped | `Get-OfficeWordStatistics` is wrapped; comments/compare should come before macros, and macros stay explicit/deferred. |
 
 ## Remaining Roadmap
 
 ### PowerShell Ergonomics
 
-1. Add Word page setup, run/paragraph style, merge/append, table mutation, equation,
-   and tab-stop wrappers.
-2. Add Word image layout and cover-page helpers for polished report output.
+1. Add Word run/paragraph style and table mutation helpers.
+2. Add Word image layout, text box/shape helpers, and other polished report output gaps.
 
 ### OfficeIMO Engine First
 

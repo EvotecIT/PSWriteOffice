@@ -33,12 +33,13 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | HTML and Markdown conversion | Wrapped | Useful for sidecar previews/blog code |
 | Mail merge | Wrapped | Suitable for practical examples |
 | Footnotes/endnotes | Wrapped | Add/read wrappers return document-safe note snapshots |
-| Page setup and columns | Wrapper gap | Needs a compact `Set-OfficeWordPageSetup` surface |
+| Page setup and columns | Wrapped | `Set-OfficeWordPageSetup` covers page size, orientation, margins, and columns |
 | Advanced image layout | Wrapper gap | Crop, transparency, rotation, wrapping, fixed positioning, alt text |
 | Text boxes and shapes | Wrapper gap | OfficeIMO.Word supports richer shape scenarios than PSWriteOffice exposes |
-| Cover pages | Wrapper gap | Prefer template-driven wrapper if stable |
-| Append/merge documents | Wrapper gap | Useful for report packs and appendices |
-| Equations and tab stops | Wrapper gap | Small parity wrappers worth adding |
+| Cover pages | Wrapped | `Add-OfficeWordCoverPage` exposes stable OfficeIMO templates and basic cover metadata |
+| Append/merge documents | Wrapped | `Join-OfficeWordDocument` appends one or more documents into a base document |
+| Equations and tab stops | Wrapped | `Add-OfficeWordEquation` and `Add-OfficeWordTabStop` expose stable OfficeIMO.Word APIs |
+| Document statistics | Wrapped | `Get-OfficeWordStatistics` exposes page/paragraph/word/object counts |
 | Macros | Deferred | Keep preview-only if added |
 | SmartArt authoring | Deferred | Detection/read helpers are safer first |
 | PDF export | Deferred | Requires package-scope approval for `OfficeIMO.Word.Pdf` |
@@ -102,7 +103,7 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 
 ## Recommended Next PRs
 
-1. Word page setup, merge/append, image layout, and cover page helpers.
+1. Word image layout, table mutation, and text box helpers.
 2. PowerPoint metrics/visual-frame helpers, fit diagnostics, and shape layout polish.
 3. OfficeIMO engine confidence for Excel pivot/sparkline desktop-open compatibility.
 
