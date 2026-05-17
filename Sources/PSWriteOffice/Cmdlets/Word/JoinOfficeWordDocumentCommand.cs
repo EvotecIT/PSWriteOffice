@@ -68,21 +68,27 @@ public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
                 document.AppendDocument(source);
             }
 
+            string? savedPath = null;
+
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
-                document.Save(ResolveOutputPath(OutputPath!), false);
+                savedPath = ResolveOutputPath(OutputPath!);
+                document.Save(savedPath, false);
             }
             else if (ParameterSetName == ParameterSetPath)
             {
+                document.Save(false);
+                savedPath = document.FilePath;
+            }
+            else if (Show.IsPresent)
+            {
+                savedPath = document.FilePath ?? throw new InvalidOperationException("No saved file path was available.");
                 document.Save(false);
             }
 
             if (Show.IsPresent)
             {
-                var savedPath = !string.IsNullOrWhiteSpace(OutputPath)
-                    ? ResolveOutputPath(OutputPath!)
-                    : document.FilePath ?? throw new InvalidOperationException("No saved file path was available.");
-                FileOpenService.Open(savedPath);
+                FileOpenService.Open(savedPath ?? throw new InvalidOperationException("No saved file path was available."));
             }
 
             if (PassThru.IsPresent)
