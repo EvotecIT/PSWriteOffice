@@ -1407,4 +1407,188 @@ Describe 'Excel DSL surface' {
         $hyperlinks = $sheetXml.SelectNodes("/*[local-name()='worksheet']/*[local-name()='hyperlinks']/*[local-name()='hyperlink']")
         $hyperlinks.Count | Should -Be 4
     }
+
+    It 'styles Excel columns by header without range math' {
+        $path = Join-Path $TestDrive 'DslExcelColumnStyleByHeader.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; Revenue = 1200.5; Rate = 0.42; Status = 'Ready' }
+            [PSCustomObject]@{ Name = 'Beta'; Revenue = 800.25; Rate = 0.18; Status = 'Blocked' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'ReportRows'
+                Set-OfficeExcelColumnStyleByHeader -Header Revenue -Style Currency -CultureName en-US -AutoFit
+                Set-OfficeExcelColumnStyleByHeader -Header Rate -Style Percent -Decimals 1
+                Set-OfficeExcelColumnStyleByHeader -Header Status -BackgroundByText @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' } -BoldByText Blocked
+            }
+        }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $revenueCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='B2']")
+        $rateCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='C2']")
+        $statusCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='D3']")
+
+        $revenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $rateCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $statusCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+    }
+
+    It 'preserves case-distinct text style map entries when requested' {
+        $path = Join-Path $TestDrive 'DslExcelColumnStyleByHeaderCaseSensitive.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; Status = 'Ready' }
+            [PSCustomObject]@{ Name = 'Beta'; Status = 'ready' }
+        )
+        $statusColors = [hashtable]::new([System.StringComparer]::Ordinal)
+        $statusColors.Add('Ready', '#D4EDDA')
+        $statusColors.Add('ready', '#F8D7DA')
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'ReportRows'
+                Set-OfficeExcelColumnStyleByHeader -Header Status -BackgroundByText $statusColors -CaseSensitive
+            }
+        }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $upperCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='B2']")
+        $lowerCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+
+        $upperCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $lowerCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $upperCell.GetAttribute('s') | Should -Not -Be $lowerCell.GetAttribute('s')
+    }
+
+    It 'creates composed Excel report sheets from PowerShell blocks' {
+        $path = Join-Path $TestDrive 'DslExcelReportSheet.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; Score = 9; Status = 'Ready' }
+            [PSCustomObject]@{ Name = 'Beta'; Score = 4; Status = 'Blocked' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelReportSheet -Name 'Summary' {
+                Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current view'
+                Add-OfficeExcelReportKpiRow -Data ([ordered] @{ Ready = 1; Blocked = 1 }) -PerRow 2
+                Add-OfficeExcelReportCallout -Kind Warning -Title 'Attention' -Body 'One item needs review.'
+                Add-OfficeExcelReportTable -Data $rows -Title 'Rows'
+                Add-OfficeExcelReportLegend -Title 'Legend' -Headers 'Status','Meaning' -Rows @(
+                    @('Ready', 'No action'),
+                    @('Blocked', 'Needs owner')
+                ) -FirstColumnFillByValue @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' }
+            }
+        }
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $sheet = $doc['Summary']
+            $title = $null
+            $subtitle = $null
+            $readyLabel = $null
+            $calloutTitle = $null
+
+            $sheet.TryGetCellText(1, 1, [ref] $title) | Should -BeTrue
+            $sheet.TryGetCellText(2, 1, [ref] $subtitle) | Should -BeTrue
+            $sheet.TryGetCellText(4, 1, [ref] $readyLabel) | Should -BeTrue
+            $sheet.TryGetCellText(7, 1, [ref] $calloutTitle) | Should -BeTrue
+
+            $title | Should -Be 'Operational Summary'
+            $subtitle | Should -Be 'Current view'
+            $readyLabel | Should -Be 'Ready'
+            $calloutTitle | Should -Be 'Attention'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
+
+    It 'preserves case-distinct report legend fill entries when requested' {
+        $path = Join-Path $TestDrive 'DslExcelReportLegendCaseSensitive.xlsx'
+        $statusColors = [hashtable]::new([System.StringComparer]::Ordinal)
+        $statusColors.Add('Ready', '#D4EDDA')
+        $statusColors.Add('ready', '#F8D7DA')
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelReportSheet -Name 'Legend' {
+                Add-OfficeExcelReportLegend -Headers 'Status','Meaning' -Rows @(
+                    @('Ready', 'Upper'),
+                    @('ready', 'Lower')
+                ) -FirstColumnFillByValue $statusColors -CaseSensitive
+            }
+        }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $upperCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='A2']")
+        $lowerCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='A3']")
+
+        $upperCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $lowerCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $upperCell.GetAttribute('s') | Should -Not -Be $lowerCell.GetAttribute('s')
+    }
+
+    It 'uses the topmost report composer for nested report sheets' {
+        $path = Join-Path $TestDrive 'DslExcelNestedReportSheets.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelReportSheet -Name 'Outer' {
+                Add-OfficeExcelReportTitle -Title 'Outer title'
+                Add-OfficeExcelReportSheet -Name 'Inner' {
+                    Add-OfficeExcelReportTitle -Title 'Inner title'
+                }
+                Add-OfficeExcelReportParagraph -Text 'Outer after inner'
+            }
+        }
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $outer = $doc['Outer']
+            $inner = $doc['Inner']
+            $outerTitle = $null
+            $outerAfter = $null
+            $innerTitle = $null
+
+            $outer.TryGetCellText(1, 1, [ref] $outerTitle) | Should -BeTrue
+            $outer.TryGetCellText(3, 1, [ref] $outerAfter) | Should -BeTrue
+            $inner.TryGetCellText(1, 1, [ref] $innerTitle) | Should -BeTrue
+
+            $outerTitle | Should -Be 'Outer title'
+            $outerAfter | Should -Be 'Outer after inner'
+            $innerTitle | Should -Be 'Inner title'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
+
+    It 'uses the topmost worksheet for nested sheet blocks' {
+        $path = Join-Path $TestDrive 'DslExcelNestedSheets.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Outer' {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Outer start'
+                Add-OfficeExcelSheet -Name 'Inner' {
+                    Set-OfficeExcelCell -Address 'A1' -Value 'Inner value'
+                }
+                Set-OfficeExcelCell -Address 'A2' -Value 'Outer after inner'
+            }
+        }
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $outer = $doc['Outer']
+            $inner = $doc['Inner']
+            $outerStart = $null
+            $outerAfter = $null
+            $innerValue = $null
+
+            $outer.TryGetCellText(1, 1, [ref] $outerStart) | Should -BeTrue
+            $outer.TryGetCellText(2, 1, [ref] $outerAfter) | Should -BeTrue
+            $inner.TryGetCellText(1, 1, [ref] $innerValue) | Should -BeTrue
+
+            $outerStart | Should -Be 'Outer start'
+            $outerAfter | Should -Be 'Outer after inner'
+            $innerValue | Should -Be 'Inner value'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
 }
