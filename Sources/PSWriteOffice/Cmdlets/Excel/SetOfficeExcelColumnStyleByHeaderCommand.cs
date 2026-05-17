@@ -187,13 +187,13 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
 
         if (BackgroundByText != null && BackgroundByText.Count > 0)
         {
-            builder.BackgroundByTextMap(ToStringMap(BackgroundByText), !CaseSensitive.IsPresent);
+            builder.BackgroundByTextMap(ToStringMap(BackgroundByText, CaseSensitive.IsPresent), !CaseSensitive.IsPresent);
             hasAction = true;
         }
 
         if (FontColorByText != null && FontColorByText.Count > 0)
         {
-            builder.FontColorByTextMap(ToStringMap(FontColorByText), !CaseSensitive.IsPresent);
+            builder.FontColorByTextMap(ToStringMap(FontColorByText, CaseSensitive.IsPresent), !CaseSensitive.IsPresent);
             hasAction = true;
         }
 
@@ -288,9 +288,10 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
         return CultureInfo.GetCultureInfo(CultureName!);
     }
 
-    private static Dictionary<string, string> ToStringMap(Hashtable table)
+    private static Dictionary<string, string> ToStringMap(Hashtable table, bool caseSensitive)
     {
-        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+        var result = new Dictionary<string, string>(comparer);
         foreach (DictionaryEntry entry in table)
         {
             var key = Convert.ToString(entry.Key, CultureInfo.InvariantCulture);

@@ -1434,6 +1434,32 @@ Describe 'Excel DSL surface' {
         $statusCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
     }
 
+    It 'preserves case-distinct text style map entries when requested' {
+        $path = Join-Path $TestDrive 'DslExcelColumnStyleByHeaderCaseSensitive.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; Status = 'Ready' }
+            [PSCustomObject]@{ Name = 'Beta'; Status = 'ready' }
+        )
+        $statusColors = [hashtable]::new([System.StringComparer]::Ordinal)
+        $statusColors.Add('Ready', '#D4EDDA')
+        $statusColors.Add('ready', '#F8D7DA')
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -Data $rows -TableName 'ReportRows'
+                Set-OfficeExcelColumnStyleByHeader -Header Status -BackgroundByText $statusColors -CaseSensitive
+            }
+        }
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $upperCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='B2']")
+        $lowerCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+
+        $upperCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $lowerCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $upperCell.GetAttribute('s') | Should -Not -Be $lowerCell.GetAttribute('s')
+    }
+
     It 'creates composed Excel report sheets from PowerShell blocks' {
         $path = Join-Path $TestDrive 'DslExcelReportSheet.xlsx'
         $rows = @(
