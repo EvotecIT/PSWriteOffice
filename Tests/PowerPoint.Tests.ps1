@@ -25,6 +25,25 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'round-trips encrypted presentations through lifecycle cmdlets' {
+        $path = Join-Path $TestDrive 'EncryptedPowerPoint.pptx'
+
+        New-OfficePowerPoint -Path $path -Password 'secret' {
+            PptSlide {
+                PptTitle -Title 'Encrypted deck'
+            }
+        }
+
+        { Get-ZipEntriesLocal -Path $path } | Should -Throw
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path -Password 'secret'
+        try {
+            $reloaded.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
     It 'creates a presentation with shapes, tables, media, and notes' {
         $path = Join-Path $TestDrive 'PowerPointContent.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path

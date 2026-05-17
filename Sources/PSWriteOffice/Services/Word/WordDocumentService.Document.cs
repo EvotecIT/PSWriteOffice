@@ -15,12 +15,17 @@ public static partial class WordDocumentService
     private static readonly AsyncLocal<WordDocument[]?> TrackedDocuments = new();
 
     /// <summary>Loads an existing Word document.</summary>
-    public static WordDocument LoadDocument(string filePath, bool readOnly, bool autoSave)
+    public static WordDocument LoadDocument(string filePath, bool readOnly, bool autoSave, string? password = null)
     {
         var resolvedPath = Path.GetFullPath(filePath);
         if (!File.Exists(resolvedPath))
         {
             throw new FileNotFoundException($"File {resolvedPath} doesn't exist.", resolvedPath);
+        }
+
+        if (!string.IsNullOrEmpty(password))
+        {
+            return RegisterDocument(WordDocument.LoadEncrypted(resolvedPath, password!, readOnly, autoSave));
         }
 
         return RegisterDocument(WordDocument.Load(resolvedPath, readOnly, autoSave));
@@ -58,16 +63,21 @@ public static partial class WordDocumentService
     }
 
     /// <summary>Saves the document, optionally to a new path, and closes it.</summary>
-    public static void SaveDocument(WordDocument document, bool show, string? filePath)
+    public static void SaveDocument(WordDocument document, bool show, string? filePath, string? password = null)
     {
-        if (document.FilePath == null && filePath == null)
+        if (string.IsNullOrWhiteSpace(document.FilePath) && string.IsNullOrWhiteSpace(filePath))
         {
             throw new InvalidOperationException("No file path provided.");
         }
 
         if (filePath != null)
         {
-            document.Save(Path.GetFullPath(filePath), false);
+            SaveDocumentToPath(document, Path.GetFullPath(filePath), false, password);
+        }
+        else if (!string.IsNullOrEmpty(password))
+        {
+            var targetPath = document.FilePath!;
+            document.SaveEncrypted(targetPath, password!, false);
         }
         else
         {
@@ -81,6 +91,17 @@ public static partial class WordDocumentService
         {
             FileOpenService.Open(savedPath);
         }
+    }
+
+    private static void SaveDocumentToPath(WordDocument document, string path, bool openWord, string? password)
+    {
+        if (!string.IsNullOrEmpty(password))
+        {
+            document.SaveEncrypted(path, password!, openWord);
+            return;
+        }
+
+        document.Save(path, openWord);
     }
 
     /// <summary>Returns the most recently tracked Word document for the current runspace.</summary>

@@ -1,6 +1,7 @@
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services;
+using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -27,6 +28,22 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <summary>Password used to save the workbook as an encrypted package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>Run OfficeIMO worksheet preflight cleanup before saving.</summary>
+    [Parameter]
+    public SwitchParameter SafePreflight { get; set; }
+
+    /// <summary>Repair common defined-name issues before saving.</summary>
+    [Parameter]
+    public SwitchParameter SafeRepairDefinedNames { get; set; }
+
+    /// <summary>Validate the saved package with OpenXmlValidator and throw on errors.</summary>
+    [Parameter]
+    public SwitchParameter ValidateOpenXml { get; set; }
+
     /// <summary>Emit the workbook for further processing.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -44,10 +61,23 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             throw new PSInvalidOperationException("No file path provided. Use -Path or open the workbook from disk.");
         }
 
+        var saveOptions = ExcelDocumentService.CreateSaveOptions(
+            SafePreflight.IsPresent,
+            SafeRepairDefinedNames.IsPresent,
+            ValidateOpenXml.IsPresent);
+
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-            Document.Save(resolvedPath, false);
+            if (!string.IsNullOrEmpty(Password))
+            {
+                Document.SaveEncrypted(resolvedPath, Password!, false, saveOptions);
+            }
+            else
+            {
+                Document.Save(resolvedPath, false, saveOptions);
+            }
+
             if (Show.IsPresent)
             {
                 FileOpenService.Open(resolvedPath);
@@ -55,7 +85,22 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
         }
         else
         {
-            Document.Save(false);
+            if (!string.IsNullOrEmpty(Password))
+            {
+                Document.SaveEncrypted(Document.FilePath, Password!, false, saveOptions);
+            }
+            else
+            {
+                if (saveOptions == null)
+                {
+                    Document.Save(false);
+                }
+                else
+                {
+                    Document.Save(Document.FilePath!, false, saveOptions);
+                }
+            }
+
             if (Show.IsPresent)
             {
                 FileOpenService.Open(Document.FilePath);

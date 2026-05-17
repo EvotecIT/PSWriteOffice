@@ -25,6 +25,10 @@ public class SaveOfficePowerPointCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <summary>Password used to save the presentation as an encrypted package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -38,7 +42,7 @@ public class SaveOfficePowerPointCommand : PSCmdlet
         {
             if (ShouldProcess("PowerPoint presentation", "Save"))
             {
-                PowerPointDocumentService.SavePresentation(Presentation, Show.IsPresent);
+                PowerPointDocumentService.SavePresentation(Presentation, Show.IsPresent, Password);
             }
         }
         catch (Exception ex)

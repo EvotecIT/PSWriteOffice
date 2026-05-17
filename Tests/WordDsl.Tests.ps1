@@ -34,6 +34,25 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'round-trips encrypted Word documents through lifecycle cmdlets' {
+        $path = Join-Path $TestDrive 'EncryptedWord.docx'
+
+        New-OfficeWord -Path $path -Password 'secret' {
+            WordSection {
+                WordParagraph -Text 'Encrypted Word value'
+            }
+        }
+
+        { Get-ZipEntriesLocal -Path $path } | Should -Throw
+
+        $document = Get-OfficeWord -Path $path -Password 'secret' -ReadOnly
+        try {
+            $document.Paragraphs.Text | Should -Contain 'Encrypted Word value'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'supports alias-style DSL with tables' {
         $path = Join-Path $TestDrive 'DslAlias.docx'
         $rows = @(

@@ -41,6 +41,10 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     [Parameter]
     public SwitchParameter AutoSave { get; set; }
 
+    /// <summary>Password used to save the document as an encrypted package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -70,7 +74,7 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         }
         else
         {
-            WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath);
+            WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
         }
 
         if (PassThru.IsPresent)

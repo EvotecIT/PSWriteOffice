@@ -33,7 +33,7 @@ page setup, equations, tab stops, and report-composer examples.
 | --- | --- | --- |
 | One-shot object export | Wrapped by `Export-OfficeExcel` | Add only user-driven convenience switches after real migration feedback. |
 | Import rows as objects | Wrapped by `Import-OfficeExcel` and lower-level range/table readers | Add coercion presets only if current raw/object/DataTable output proves insufficient. |
-| Open/edit/save package flow | Wrapped by `Get-OfficeExcel`, `Save-OfficeExcel`, `Close-OfficeExcel`, and `Export-OfficeExcel -Append/-ClearSheet` | No ImportExcel-style package object clone needed. |
+| Open/edit/save package flow | Wrapped by `Get-OfficeExcel`, `Save-OfficeExcel`, `Close-OfficeExcel`, and `Export-OfficeExcel -Append/-ClearSheet` | Includes encrypted package open/save and OfficeIMO save preflight/repair/validation switches. |
 | Worksheet management | Copy, move, join, and range compare are wrapped | Remove/rename wrappers can be added if operators ask for them directly. |
 | Tables and named ranges | Wrapped | Table totals and column-level table style knobs remain optional polish. |
 | Formatting and styles | Rows, columns, formulas, headers/footers, conditional formatting, validation, print setup, gridlines, chart finishing, and header-based column styling are wrapped | Covered for the current ImportExcel-style migration surface. |
@@ -41,10 +41,10 @@ page setup, equations, tab stops, and report-composer examples.
 | Pivots and sparklines | Wrapped, but still need desktop Excel open-compatibility confidence before flagship examples rely on them | OfficeIMO engine compatibility tests are the right place for deeper fixes. |
 | Find/replace and editable rows | Wrapped by `Find-OfficeExcel`, `Update-OfficeExcelText`, and `Edit-OfficeExcelRow` | Add more row-edit helpers only if maintenance scripts need them. |
 | Print setup | Wrapped, including print area and titles | Covered. |
-| Sheet/workbook protection | Sheet protect/unprotect is wrapped | Workbook encryption/password support should wait for real OfficeIMO engine support. |
-| File conversion | CSV conversion exists | Range-to-image remains intentionally unowned until OfficeIMO has a renderer or we approve a rendering dependency. |
+| Sheet/workbook protection | Sheet protect/unprotect and encrypted package open/save are wrapped | Workbook structure/sheet protection remains separate from package encryption. |
+| File conversion | CSV conversion exists | Range-to-image is explicitly out of parity scope unless OfficeIMO grows an intentional pure renderer. |
 | HTML/data-source bridges | `Export-OfficeExcel` accepts bridge-friendly .NET data shapes; `Example-ExcelHtmlTablesViaPSParseHTML.ps1` shows HTML to Excel | Keep HTML parsing and SQL/OleDb clients outside PSWriteOffice core. |
-| Diagnostics/schema | `Get-OfficeExcelSummary` exists | Schema inference is optional migration polish, not a current gap. |
+| Diagnostics/schema | `Get-OfficeExcelSummary`, `Set-OfficeExcelExecutionPolicy`, and save validation switches exist | Schema inference is optional migration polish, not a current gap. |
 
 ## Word Status
 
@@ -77,9 +77,7 @@ page setup, equations, tab stops, and report-composer examples.
 ### OfficeIMO Engine First
 
 1. Pivot and sparkline desktop-open compatibility confidence.
-2. Workbook encryption/password support, if enterprise workbook parity becomes a goal.
-3. Range-to-image only with an intentional renderer decision.
-4. Richer Word image, shape, SmartArt, compare, and macro APIs only when the engine
+2. Richer Word image, shape, SmartArt, compare, and macro APIs only when the engine
    behavior is stable enough to expose safely.
 
 ### Explicitly Out of Core

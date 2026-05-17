@@ -44,6 +44,10 @@ public class NewOfficePowerPointCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <summary>Password used to save the presentation as an encrypted package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -83,7 +87,7 @@ public class NewOfficePowerPointCommand : PSCmdlet
                 return;
             }
 
-            PowerPointDocumentService.SavePresentation(presentation, Open.IsPresent);
+            PowerPointDocumentService.SavePresentation(presentation, Open.IsPresent, Password);
 
             if (PassThru.IsPresent)
             {
