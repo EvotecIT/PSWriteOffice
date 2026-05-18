@@ -242,6 +242,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("DataSet must contain at least one DataTable.", nameof(InputObject));
         }
 
+        dataSet = PrepareDataSetForExport(dataSet);
         var sheetNames = BuildDataSetWorksheetNames(document, dataSet, Append.IsPresent || ClearSheet.IsPresent);
         var tableIndex = 1;
         foreach (DataTable sourceTable in dataSet.Tables)
@@ -256,7 +257,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
 
             var sheet = GetOrAddDataSetSheet(document, sheetName);
-            var table = ApplyExcludedColumns(sourceTable.Copy());
+            var table = sourceTable;
             if (table.Columns.Count == 0)
             {
                 throw new InvalidOperationException($"Unable to infer columns from DataTable '{sourceTable.TableName}'.");
@@ -292,6 +293,32 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             tableIndex++;
         }
+    }
+
+    private DataSet PrepareDataSetForExport(DataSet dataSet)
+    {
+        if (dataSet.Tables.Count == 0)
+        {
+            throw new PSArgumentException("DataSet must contain at least one DataTable.", nameof(InputObject));
+        }
+
+        var copy = string.IsNullOrWhiteSpace(dataSet.DataSetName)
+            ? new DataSet()
+            : new DataSet(dataSet.DataSetName);
+
+        foreach (DataTable sourceTable in dataSet.Tables)
+        {
+            var table = ApplyExcludedColumns(sourceTable.Copy());
+
+            if (table.Columns.Count == 0)
+            {
+                throw new InvalidOperationException($"Unable to infer columns from DataTable '{sourceTable.TableName}'.");
+            }
+
+            copy.Tables.Add(table);
+        }
+
+        return copy;
     }
 
     private ExcelSheet PrepareSheet(ExcelDocument document)
