@@ -56,6 +56,10 @@ public sealed class CloseOfficeWordCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <summary>Password used to save the document as an encrypted package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -98,7 +102,7 @@ public sealed class CloseOfficeWordCommand : PSCmdlet
             var resolvedPath = !string.IsNullOrWhiteSpace(Path)
                 ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
                 : null;
-            WordDocumentService.SaveDocument(document, Show.IsPresent, resolvedPath);
+            WordDocumentService.SaveDocument(document, Show.IsPresent, resolvedPath, Password);
             return;
         }
 

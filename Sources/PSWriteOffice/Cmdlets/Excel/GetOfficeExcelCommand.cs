@@ -29,6 +29,10 @@ public sealed class GetOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter AutoSave { get; set; }
 
+    /// <summary>Password used to open an encrypted workbook package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -38,7 +42,7 @@ public sealed class GetOfficeExcelCommand : PSCmdlet
             throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
-        ExcelDocument document = ExcelDocumentService.LoadDocument(resolvedPath, ReadOnly.IsPresent, AutoSave.IsPresent);
+        ExcelDocument document = ExcelDocumentService.LoadDocument(resolvedPath, ReadOnly.IsPresent, AutoSave.IsPresent, Password);
         WriteObject(document);
     }
 }

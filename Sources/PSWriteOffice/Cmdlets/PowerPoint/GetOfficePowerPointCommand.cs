@@ -22,13 +22,17 @@ public class GetOfficePowerPointCommand : PSCmdlet
     [ValidateNotNullOrEmpty]
     public string FilePath { get; set; } = string.Empty;
 
+    /// <summary>Password used to open an encrypted presentation package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         try
         {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
-            var presentation = PowerPointDocumentService.LoadPresentation(resolvedPath);
+            var presentation = PowerPointDocumentService.LoadPresentation(resolvedPath, Password);
             WriteObject(presentation);
         }
         catch (FileNotFoundException ex)

@@ -26,7 +26,7 @@ public static class PowerPointDocumentService
     }
 
     /// <summary>Loads an existing presentation.</summary>
-    public static PowerPointPresentation LoadPresentation(string filePath)
+    public static PowerPointPresentation LoadPresentation(string filePath, string? password = null)
     {
         var resolvedPath = Path.GetFullPath(filePath);
         if (!File.Exists(resolvedPath))
@@ -34,13 +34,15 @@ public static class PowerPointDocumentService
             throw new FileNotFoundException($"File {resolvedPath} doesn't exist.", resolvedPath);
         }
 
-        var presentation = PowerPointPresentation.Open(resolvedPath);
+        var presentation = !string.IsNullOrEmpty(password)
+            ? OfficeEncryptedPackageService.OpenPowerPoint(resolvedPath, password!)
+            : PowerPointPresentation.Open(resolvedPath);
         Presentations[presentation] = resolvedPath;
         return presentation;
     }
 
     /// <summary>Saves and optionally opens the presentation.</summary>
-    public static void SavePresentation(PowerPointPresentation presentation, bool show)
+    public static void SavePresentation(PowerPointPresentation presentation, bool show, string? password = null)
     {
         if (!Presentations.TryGetValue(presentation, out var filePath))
         {
@@ -48,8 +50,18 @@ public static class PowerPointDocumentService
         }
 
         var resolvedPath = Path.GetFullPath(filePath);
-        presentation.Save();
-        presentation.Dispose();
+        if (!string.IsNullOrEmpty(password))
+        {
+            using var encrypted = new MemoryStream();
+            OfficeEncryptedPackageService.SavePowerPoint(presentation, encrypted, password!);
+            presentation.Dispose();
+            File.WriteAllBytes(resolvedPath, encrypted.ToArray());
+        }
+        else
+        {
+            presentation.Save();
+            presentation.Dispose();
+        }
         Presentations.TryRemove(presentation, out _);
 
         if (show)
@@ -59,11 +71,11 @@ public static class PowerPointDocumentService
     }
 
     /// <summary>Closes a presentation, optionally saving and opening it first.</summary>
-    public static void ClosePresentation(PowerPointPresentation presentation, bool save, bool show)
+    public static void ClosePresentation(PowerPointPresentation presentation, bool save, bool show, string? password = null)
     {
         if (save || show)
         {
-            SavePresentation(presentation, show);
+            SavePresentation(presentation, show, password);
             return;
         }
 

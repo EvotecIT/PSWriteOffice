@@ -20,7 +20,7 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 
 | Capability | Status | Notes |
 | --- | --- | --- |
-| Create/load/save documents | Wrapped | `New-OfficeWord`, `Get-OfficeWord`, `Save-OfficeWord`, `Close-OfficeWord` |
+| Create/load/save documents | Wrapped | `New-OfficeWord`, `Get-OfficeWord`, `Save-OfficeWord`, `Close-OfficeWord`, including encrypted package open/save |
 | Sections, headers, footers, page numbers | Wrapped | Good enough for report examples |
 | Paragraphs, text, lists | Partial wrapper | Core authoring is wrapped; richer run/paragraph style builders remain |
 | Tables from objects and table-cell content | Partial wrapper | Object tables, conditional rows, nested tables, lists, images, and chart anchoring are wrapped; row/column mutation and merge helpers remain |
@@ -48,7 +48,7 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 
 | Capability | Status | Notes |
 | --- | --- | --- |
-| Create/load/save workbook | Wrapped | `New/Get/Save/Close-OfficeExcel` |
+| Create/load/save workbook | Wrapped | `New/Get/Save/Close-OfficeExcel`, including encrypted package open/save |
 | Import/export operator flow | Wrapped | `Export-OfficeExcel` and `Import-OfficeExcel` cover common ImportExcel-style workflows |
 | Bridge data shapes | Wrapped | Objects, dictionaries, `DataTable`, `DataSet`, `DataView`, and `IDataReader` are accepted by table/export paths |
 | Sheets, cells, rows, columns | Wrapped | Strong primitive coverage |
@@ -71,16 +71,16 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | Fluent report composer | Wrapped | `Add-OfficeExcelReportSheet` exposes OfficeIMO `SheetComposer` as a PowerShell report sheet DSL |
 | KPI, legend, callout, table blocks | Wrapped | Report-sheet cmdlets cover the first reusable dashboard blocks |
 | Column style by header | Wrapped | `Set-OfficeExcelColumnStyleByHeader` handles currency, percent, dates, durations, fills, and status maps without range math |
-| Execution policy/diagnostics | Wrapper gap | Expose only if simple and useful from PowerShell |
-| Workbook encryption/passwords | Engine gap | Do not add hollow parameters before OfficeIMO can honor them |
-| Range to image | Engine gap | Needs an intentional renderer decision |
+| Execution policy/diagnostics | Wrapped | `Set-OfficeExcelExecutionPolicy` plus save preflight/repair/validation switches expose the simple OfficeIMO knobs |
+| Workbook encryption/passwords | Wrapped | OfficeIMO encrypted package APIs are surfaced through lifecycle commands |
+| Range to image | Deferred | Explicitly out of parity scope unless OfficeIMO intentionally grows a pure renderer |
 | Google Sheets bridge | Deferred | Explicit package-scope expansion only |
 
 ## PowerPoint
 
 | Capability | Status | Notes |
 | --- | --- | --- |
-| Create/load/save decks | Wrapped | `New/Get/Save-OfficePowerPoint` |
+| Create/load/save decks | Wrapped | `New/Get/Save/Close-OfficePowerPoint`, including encrypted package open/save |
 | Slides, title, text box, bullets | Wrapped | Current examples use these |
 | Tables, images, shapes | Wrapped | Primitive coverage exists |
 | Charts | Wrapped | Column, pie, doughnut, scatter exposed |

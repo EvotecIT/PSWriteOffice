@@ -35,6 +35,10 @@ public sealed class CloseOfficePowerPointCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <summary>Password used to save the presentation as an encrypted package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -49,7 +53,7 @@ public sealed class CloseOfficePowerPointCommand : PSCmdlet
             var action = Save.IsPresent || Show.IsPresent ? "Save and close" : "Close";
             if (ShouldProcess("PowerPoint presentation", action))
             {
-                PowerPointDocumentService.ClosePresentation(Presentation, Save.IsPresent, Show.IsPresent);
+                PowerPointDocumentService.ClosePresentation(Presentation, Save.IsPresent, Show.IsPresent, Password);
             }
         }
         catch (Exception ex)

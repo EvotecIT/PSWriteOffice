@@ -24,6 +24,19 @@
 
         $type
     }
+
+    function Test-OfficeLoadedMethod {
+        param(
+            [Parameter(Mandatory)]
+            [string] $TypeName,
+
+            [Parameter(Mandatory)]
+            [string] $MethodName
+        )
+
+        $type = Get-TestLoadedType -Name $TypeName
+        @($type.GetMethods() | Where-Object Name -eq $MethodName).Count -gt 0
+    }
 }
 
 Describe 'Excel DSL surface' {
@@ -47,6 +60,58 @@ Describe 'Excel DSL surface' {
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {
             $doc.Sheets.Count | Should -BeGreaterThan 0
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
+
+    It 'round-trips encrypted workbooks through lifecycle cmdlets' {
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.Excel.ExcelDocument' -MethodName 'LoadEncrypted')) {
+            (Get-Command New-OfficeExcel).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command Save-OfficeExcel).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command Get-OfficeExcel).Parameters.Keys | Should -Contain 'Password'
+            return
+        }
+
+        $path = Join-Path $TestDrive 'EncryptedExcel.xlsx'
+
+        New-OfficeExcel -Path $path -Password 'secret' -SafePreflight {
+            Set-OfficeExcelExecutionPolicy -Mode Sequential -ParallelThreshold 5 -WorksheetValidation Always -Diagnostics
+            Add-OfficeExcelSheet -Name 'Secure' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Encrypted value'
+            }
+        }
+
+        { Get-ZipEntriesLocal -Path $path } | Should -Throw
+
+        $doc = Get-OfficeExcel -Path $path -Password 'secret' -ReadOnly
+        try {
+            $doc.Sheets[0].Name | Should -Be 'Secure'
+            $value = $null
+            $doc.Sheets[0].TryGetCellText(1, 1, [ref] $value) | Should -BeTrue
+            $value | Should -Be 'Encrypted value'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+    }
+
+    It 'configures Excel execution policy from PowerShell' {
+        $path = Join-Path $TestDrive 'ExcelExecutionPolicy.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Policy'
+        }
+        $doc = Get-OfficeExcel -Path $path
+        try {
+            $result = $doc | Set-OfficeExcelExecutionPolicy -Mode Parallel -ParallelThreshold 3 -MaxDegreeOfParallelism 2 -WorksheetValidation Disabled -Diagnostics -DisableAutoFitImmediateSave -PassThru
+
+            $result | Should -Be $doc
+            $doc.Execution.Mode.ToString() | Should -Be 'Parallel'
+            $doc.Execution.ParallelThreshold | Should -Be 3
+            $doc.Execution.MaxDegreeOfParallelism | Should -Be 2
+            $doc.Execution.WorksheetValidation.ToString() | Should -Be 'Disabled'
+            $doc.Execution.DiagnosticsRequested | Should -BeTrue
+            $doc.Execution.SaveWorksheetAfterAutoFit | Should -BeFalse
         } finally {
             Close-OfficeExcel -Document $doc
         }
@@ -927,8 +992,8 @@ Describe 'Excel DSL surface' {
         $differences.Count | Should -BeGreaterThan 0
 
         $names = @(Get-OfficeExcelNamedRange -Path $path -Sheet 'Data')
-        ($names | Where-Object Name -eq '_xlnm.Print_Area').Count | Should -Be 1
-        ($names | Where-Object Name -eq '_xlnm.Print_Titles').Count | Should -Be 1
+        @($names | Where-Object Name -eq '_xlnm.Print_Area').Count | Should -Be 1
+        @($names | Where-Object Name -eq '_xlnm.Print_Titles').Count | Should -Be 1
     }
 
     It 'finds, replaces, and edits Excel row values' {

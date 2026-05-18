@@ -10,18 +10,18 @@ what still moves the product forward.
 
 PSWriteOffice is no longer missing the common primitives.
 
-- Word wraps document lifecycle, readers, paragraphs, lists, tables, table-cell
+- Word wraps document lifecycle, encrypted package open/save, readers, paragraphs, lists, tables, table-cell
   content, conditional table formatting, TOC, bookmarks, fields, footnotes/endnotes,
   content controls, charts, hyperlinks, document properties, backgrounds, watermarks,
   protection, mail merge, HTML conversion, and Markdown conversion.
-- Excel wraps import/export, sheets, cells, rows, columns, tables, `DataTable` and
+- Excel wraps import/export, encrypted package open/save, sheets, cells, rows, columns, tables, `DataTable` and
   `DataSet` ingestion, named ranges, formulas, validation, conditional formatting,
   comments, images and URL images, charts and chart finishing, pivots, sparklines,
   TOC/navigation, internal links, URL links, smart hyperlinks, print setup, header
   and footer images, gridlines, freeze panes, sheet visibility, sorting, autofit,
   worksheet copy/move/join/compare, find/replace, editable rows, range/read helpers,
-  and workbook summary inspection.
-- PowerPoint wraps deck lifecycle, slides, titles, text boxes, bullets, notes,
+  execution policy/save diagnostics, and workbook summary inspection.
+- PowerPoint wraps deck lifecycle, encrypted package open/save, slides, titles, text boxes, bullets, notes,
   sections, tables, images, shapes, charts, backgrounds, layouts, layout placeholders,
   layout boxes, theme colors/fonts/name, slide transitions, slide sizing, slide import,
   slide copy, text replacement, inspection helpers, and the initial OfficeIMO
@@ -38,28 +38,22 @@ Focus on professional report assembly:
 
 1. Image layout wrappers for crop/fill, rotation, transparency, fixed positioning,
    wrapping, and alt text.
-2. Cover-page and append/merge-document helpers.
-3. Page setup and compact run/paragraph style helpers.
-4. Table row/column mutation, merge-cell, layout, and width helpers.
-5. Equation and tab-stop wrappers.
+2. Compact run/paragraph style helpers.
+3. Table row/column mutation, merge-cell, layout, and width helpers.
+4. Text box and shape helpers.
 
-Keep macros, SmartArt authoring, PDF export, compare, and embedded-document work as
+Keep macros, SmartArt authoring, PDF export, and embedded-document work as
 explicit scope decisions.
 
 ### Excel
 
 Focus on human-readable workbooks and migration ergonomics:
 
-1. `Add-OfficeExcelReportSheet` / `ExcelReportSheet` wrapper over OfficeIMO's fluent
-   report blocks.
-2. `Set-OfficeExcelColumnStyleByHeader` for currency, percentages, dates, durations,
-   and status fills without range math.
-3. KPI, legend, callout, section, and reference blocks for dashboard composition.
-4. Execution policy and diagnostics only if they remain simple from PowerShell.
-5. OfficeIMO engine confidence for pivot and sparkline desktop-open compatibility.
+1. OfficeIMO engine confidence for pivot and sparkline desktop-open compatibility.
+2. Optional schema/coercion conveniences only after real migration feedback.
 
-Keep SQL/OleDb clients, HTML parsing, Excel COM, workbook passwords, and range-to-image
-outside core until there is an explicit ownership/dependency decision.
+Keep SQL/OleDb clients, HTML parsing, Excel COM, and range-to-image outside core.
+Range-to-image only returns if OfficeIMO intentionally grows a pure renderer.
 
 ### PowerPoint
 

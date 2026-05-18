@@ -30,6 +30,10 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Show { get; set; }
 
+    /// <summary>Password used to save the document as an encrypted package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <summary>Emit the document object for further processing.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -50,7 +54,15 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-            Document.Save(resolvedPath, false);
+            if (!string.IsNullOrEmpty(Password))
+            {
+                OfficeEncryptedPackageService.SaveWord(Document, resolvedPath, Password!, false);
+            }
+            else
+            {
+                Document.Save(resolvedPath, false);
+            }
+
             if (Show.IsPresent)
             {
                 FileOpenService.Open(resolvedPath);
@@ -58,7 +70,15 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
         }
         else
         {
-            Document.Save(false);
+            if (!string.IsNullOrEmpty(Password))
+            {
+                OfficeEncryptedPackageService.SaveWord(Document, Document.FilePath!, Password!, false);
+            }
+            else
+            {
+                Document.Save(false);
+            }
+
             if (Show.IsPresent)
             {
                 FileOpenService.Open(Document.FilePath);

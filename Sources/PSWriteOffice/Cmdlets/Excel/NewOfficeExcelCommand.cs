@@ -38,6 +38,22 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Open { get; set; }
 
+    /// <summary>Password used to save the workbook as an encrypted package.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>Run OfficeIMO worksheet preflight cleanup before saving.</summary>
+    [Parameter]
+    public SwitchParameter SafePreflight { get; set; }
+
+    /// <summary>Repair common defined-name issues before saving.</summary>
+    [Parameter]
+    public SwitchParameter SafeRepairDefinedNames { get; set; }
+
+    /// <summary>Validate the saved package with OpenXmlValidator and throw on errors.</summary>
+    [Parameter]
+    public SwitchParameter ValidateOpenXml { get; set; }
+
     /// <summary>Emit a <see cref="FileInfo"/> for convenience.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -66,7 +82,11 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
                 {
                     document.AddWorkSheet(string.Empty, SheetNameValidationMode.Sanitize);
                 }
-                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+                var saveOptions = ExcelDocumentService.CreateSaveOptions(
+                    SafePreflight.IsPresent,
+                    SafeRepairDefinedNames.IsPresent,
+                    ValidateOpenXml.IsPresent);
+                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, Password, saveOptions);
             }
             else
             {

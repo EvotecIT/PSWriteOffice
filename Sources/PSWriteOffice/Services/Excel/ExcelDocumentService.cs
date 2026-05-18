@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using OfficeIMO.Excel;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Services.Excel;
 
@@ -16,7 +17,7 @@ internal static class ExcelDocumentService
         return ExcelDocument.Create(Path.GetFullPath(filePath), autoSave);
     }
 
-    public static ExcelDocument LoadDocument(string filePath, bool readOnly, bool autoSave)
+    public static ExcelDocument LoadDocument(string filePath, bool readOnly, bool autoSave, string? password = null)
     {
         var resolvedPath = Path.GetFullPath(filePath);
         if (!File.Exists(resolvedPath))
@@ -24,10 +25,15 @@ internal static class ExcelDocumentService
             throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
+        if (!string.IsNullOrEmpty(password))
+        {
+            return OfficeEncryptedPackageService.LoadExcel(resolvedPath, password!, readOnly, autoSave);
+        }
+
         return ExcelDocument.Load(resolvedPath, readOnly, autoSave);
     }
 
-    public static void SaveDocument(ExcelDocument document, bool show, string? filePath)
+    public static void SaveDocument(ExcelDocument document, bool show, string? filePath, string? password = null, ExcelSaveOptions? saveOptions = null)
     {
         if (document == null) throw new ArgumentNullException(nameof(document));
 
@@ -37,7 +43,7 @@ internal static class ExcelDocumentService
             var target = filePath!;
             if (!string.Equals(target, currentPath, StringComparison.OrdinalIgnoreCase))
             {
-                document.Save(Path.GetFullPath(target), false);
+                SaveDocumentToPath(document, Path.GetFullPath(target), false, password, saveOptions);
                 var savedAsPath = document.FilePath ?? target;
                 document.Dispose();
                 if (show)
@@ -48,13 +54,65 @@ internal static class ExcelDocumentService
             }
         }
 
-        document.Save(false);
+        if (!string.IsNullOrEmpty(password))
+        {
+            if (string.IsNullOrWhiteSpace(document.FilePath))
+            {
+                throw new InvalidOperationException("No file path provided for encrypted save.");
+            }
+
+            var targetPath = document.FilePath!;
+            OfficeEncryptedPackageService.SaveExcel(document, targetPath, password!, false, saveOptions);
+        }
+        else
+        {
+            if (saveOptions == null)
+            {
+                document.Save(false);
+            }
+            else if (!string.IsNullOrWhiteSpace(document.FilePath))
+            {
+                var targetPath = document.FilePath!;
+                document.Save(targetPath, false, saveOptions);
+            }
+            else
+            {
+                throw new InvalidOperationException("No file path provided for save options.");
+            }
+        }
+
         var savedPath = document.FilePath ?? filePath ?? throw new InvalidOperationException("No saved file path was available.");
         document.Dispose();
         if (show)
         {
             FileOpenService.Open(savedPath);
         }
+    }
+
+    public static ExcelSaveOptions? CreateSaveOptions(bool safePreflight, bool safeRepairDefinedNames, bool validateOpenXml)
+    {
+        if (!safePreflight && !safeRepairDefinedNames && !validateOpenXml)
+        {
+            return null;
+        }
+
+        return new ExcelSaveOptions
+        {
+            SafePreflight = safePreflight,
+            SafeRepairDefinedNames = safeRepairDefinedNames,
+            ValidateOpenXml = validateOpenXml
+        };
+    }
+
+    private static void SaveDocumentToPath(ExcelDocument document, string path, bool openExcel, string? password, ExcelSaveOptions? saveOptions)
+    {
+        if (!string.IsNullOrEmpty(password))
+        {
+            OfficeEncryptedPackageService.SaveExcel(document, path, password!, openExcel, saveOptions);
+            return;
+        }
+
+        document.Save(path, openExcel, saveOptions);
     }
 
     public static void CloseDocument(ExcelDocument document)

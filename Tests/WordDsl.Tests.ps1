@@ -7,6 +7,26 @@ BeforeAll {
     Import-Module $ModuleManifest -Global -ErrorAction Stop
 
     . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
+
+    function Test-OfficeLoadedMethod {
+        param(
+            [Parameter(Mandatory)]
+            [string] $TypeName,
+
+            [Parameter(Mandatory)]
+            [string] $MethodName
+        )
+
+        $type = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType($TypeName, $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        if ($null -eq $type) {
+            throw "Unable to find loaded type '$TypeName'."
+        }
+
+        @($type.GetMethods() | Where-Object Name -eq $MethodName).Count -gt 0
+    }
 }
 
 Describe 'Word DSL surface' {
@@ -29,6 +49,32 @@ Describe 'Word DSL surface' {
         try {
             $document.Sections.Count | Should -BeGreaterThan 0
             $document.Paragraphs.Count | Should -BeGreaterThan 0
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'round-trips encrypted Word documents through lifecycle cmdlets' {
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.Word.WordDocument' -MethodName 'LoadEncrypted')) {
+            (Get-Command New-OfficeWord).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command Save-OfficeWord).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command Get-OfficeWord).Parameters.Keys | Should -Contain 'Password'
+            return
+        }
+
+        $path = Join-Path $TestDrive 'EncryptedWord.docx'
+
+        New-OfficeWord -Path $path -Password 'secret' {
+            WordSection {
+                WordParagraph -Text 'Encrypted Word value'
+            }
+        }
+
+        { Get-ZipEntriesLocal -Path $path } | Should -Throw
+
+        $document = Get-OfficeWord -Path $path -Password 'secret' -ReadOnly
+        try {
+            $document.Paragraphs.Text | Should -Contain 'Encrypted Word value'
         } finally {
             $document.Dispose()
         }
@@ -663,6 +709,72 @@ Describe 'Word DSL surface' {
             (Find-OfficeWord -Document $saved -Text 'Still tracked after null guard').Count | Should -Be 1
         } finally {
             $saved.Dispose()
+        }
+    }
+
+    It 'wraps OfficeIMO Word image and shape editing helpers' {
+        $path = Join-Path $TestDrive 'DslWordImagesAndShapes.docx'
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
+
+        New-OfficeWord -Path $path {
+            WordParagraph {
+                $image = WordImage -Path $imagePath -Width 32 -Height 32 -PassThru
+                $image |
+                    Set-OfficeWordImage -Width 48 -Height 24 -Title 'Status Logo' -Description 'Logo alt text' -HorizontalFlip $true -Rotation 5 -PassThru |
+                    Should -Not -BeNullOrEmpty
+            }
+
+            WordParagraph {
+                $shape = WordShape -Type RoundedRectangle -Width 144 -Height 36 -FillColor '#DDEEFF' -StrokeColor '#1F4E79' -StrokeWidth 1 -Title 'Callout' -Description 'Callout shape' -PassThru
+                $shape |
+                    Set-OfficeWordShape -Left 24 -Top 12 -Rotation 2 -ZIndex 3 -PassThru |
+                    Should -Not -BeNullOrEmpty
+                $shape.FillColorHex | Should -Be 'ddeeff'
+                $shape.StrokeColorHex | Should -Be '1f4e79'
+            }
+        } | Out-Null
+
+        $images = @(Get-OfficeWordImage -Path $path)
+        $shapes = @(Get-OfficeWordShape -Path $path)
+
+        $images.Count | Should -Be 1
+        $images[0].Title | Should -Be 'Status Logo'
+        $images[0].Description | Should -Be 'Logo alt text'
+        $images[0].HorizontalFlip | Should -BeTrue
+
+        $shapes.Count | Should -Be 1
+        $shapes[0].FillColorHex | Should -Be 'ddeeff'
+        $shapes[0].StrokeColorHex | Should -Be '1f4e79'
+    }
+
+    It 'wraps OfficeIMO Word table cell read and style helpers' {
+        $path = Join-Path $TestDrive 'DslWordTableCells.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Alpha'; State = 'Ready' }
+            [PSCustomObject]@{ Name = 'Beta'; State = 'Blocked' }
+        )
+
+        New-OfficeWord -Path $path {
+            $table = WordTable -Data $rows -Style TableGrid -PassThru
+            $cell = $table |
+                Get-OfficeWordTableCell -Row 1 -Column 1 |
+                Set-OfficeWordTableCell -ShadingFillColor '#DDEEFF' -Width 2400 -WidthType Dxa -WrapText $false -FitText $true -PassThru
+
+            $cell.ShadingFillColorHex | Should -Be 'DDEEFF'
+            $cell.Width | Should -Be 2400
+            $cell.FitText | Should -BeTrue
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $cell = $table | Get-OfficeWordTableCell -Row 1 -Column 1
+
+            $cell.ShadingFillColorHex | Should -Be 'DDEEFF'
+            $cell.Width | Should -Be 2400
+            $cell.WidthType | Should -Be ([DocumentFormat.OpenXml.Wordprocessing.TableWidthUnitValues]::Dxa)
+        } finally {
+            $document.Dispose()
         }
     }
 }
