@@ -2,7 +2,8 @@ param(
     [int[]] $RowCount = @(1000, 10000, 25000),
     [int] $RepeatCount = 3,
     [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\ExcelPerformance'),
-    [switch] $SkipImportExcelInstall
+    [switch] $SkipImportExcelInstall,
+    [switch] $SkipExcelFastInstall
 )
 
 Set-StrictMode -Version Latest
@@ -39,6 +40,24 @@ function Ensure-ImportExcel {
     }
 
     Save-Module -Name ImportExcel -Path $moduleRoot -Repository PSGallery -Force
+    Add-ModulePath -Path $moduleRoot
+}
+
+function Ensure-ExcelFast {
+    if (Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1) {
+        return
+    }
+
+    Add-ModulePath -Path $moduleRoot
+    if (Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1) {
+        return
+    }
+
+    if ($SkipExcelFastInstall.IsPresent) {
+        throw 'ExcelFast is not installed. Rerun without -SkipExcelFastInstall to save it under the benchmark module folder.'
+    }
+
+    Save-Module -Name ExcelFast -Path $moduleRoot -Repository PSGallery -AllowPrerelease -Force
     Add-ModulePath -Path $moduleRoot
 }
 
@@ -116,11 +135,13 @@ function Invoke-BenchmarkOperation {
 }
 
 Ensure-ImportExcel
+Ensure-ExcelFast
 
 $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
 $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
 Import-Module (Join-Path $repoRoot 'PSWriteOffice.psd1') -Force -ErrorAction Stop
 Import-Module ImportExcel -Force -ErrorAction Stop
+Import-Module ExcelFast -Force -ErrorAction Stop
 
 $results = [Collections.Generic.List[object]]::new()
 foreach ($rows in $RowCount) {
@@ -138,6 +159,24 @@ foreach ($rows in $RowCount) {
                 Name = 'Export objects as table'
                 Path = Join-Path $workRoot "importexcel-objects-table-$rows-$iteration.xlsx"
                 Script = { $data | Export-Excel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data -TableName Data -AutoFilter }
+            },
+            @{
+                Engine = 'PSWriteOffice'
+                Name = 'Export objects default'
+                Path = Join-Path $workRoot "pswriteoffice-objects-default-$rows-$iteration.xlsx"
+                Script = { $data | Export-OfficeExcel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data }
+            },
+            @{
+                Engine = 'ImportExcel'
+                Name = 'Export objects default'
+                Path = Join-Path $workRoot "importexcel-objects-default-$rows-$iteration.xlsx"
+                Script = { $data | Export-Excel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data }
+            },
+            @{
+                Engine = 'ExcelFast'
+                Name = 'Export objects default'
+                Path = Join-Path $workRoot "excelfast-objects-default-$rows-$iteration.xlsx"
+                Script = { Export-Workbook -Destination $scenarios[$scenarioIndex].Path -InputObject $data -SheetName Data -Force }
             },
             @{
                 Engine = 'PSWriteOffice'
@@ -177,8 +216,18 @@ foreach ($rows in $RowCount) {
                 $importPath = $scenario.Path
                 if ($scenario.Engine -eq 'PSWriteOffice') {
                     $results.Add((Invoke-BenchmarkOperation -Engine 'PSWriteOffice' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-OfficeExcel -Path $importPath -WorksheetName Data }))
-                } else {
+                } elseif ($scenario.Engine -eq 'ImportExcel') {
                     $results.Add((Invoke-BenchmarkOperation -Engine 'ImportExcel' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-Excel -Path $importPath -WorksheetName Data }))
+                }
+            } elseif ($scenario.Name -eq 'Export objects default' -and (Test-Path $scenario.Path)) {
+                $importName = 'Import full sheet from default export'
+                $importPath = $scenario.Path
+                if ($scenario.Engine -eq 'PSWriteOffice') {
+                    $results.Add((Invoke-BenchmarkOperation -Engine 'PSWriteOffice' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-OfficeExcel -Path $importPath -WorksheetName Data }))
+                } elseif ($scenario.Engine -eq 'ImportExcel') {
+                    $results.Add((Invoke-BenchmarkOperation -Engine 'ImportExcel' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-Excel -Path $importPath -WorksheetName Data }))
+                } elseif ($scenario.Engine -eq 'ExcelFast') {
+                    $results.Add((Invoke-BenchmarkOperation -Engine 'ExcelFast' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-Workbook -Path $importPath -SheetName Data }))
                 }
             }
         }
@@ -215,6 +264,7 @@ $summary | Export-Csv -NoTypeInformation -Path $summaryPath
     PowerShellVersion = $PSVersionTable.PSVersion.ToString()
     PSEdition = $PSEdition
     ImportExcel = (Get-Module ImportExcel).Version.ToString()
+    ExcelFast = (Get-Module ExcelFast).Version.ToString()
     PSWriteOffice = (Get-Module PSWriteOffice).Version.ToString()
     OfficeIMOExcelAssembly = ([Reflection.AssemblyName]::GetAssemblyName((Join-Path $repoRoot 'Sources\PSWriteOffice\bin\Debug\net8.0\OfficeIMO.Excel.dll')).Version.ToString())
     RowCount = $RowCount

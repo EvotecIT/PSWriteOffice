@@ -315,6 +315,37 @@ Describe 'Excel DSL surface' {
         $inventoryRows[0].Count | Should -Be 5
     }
 
+    It 'exports DataSet tables one at a time without mutating source tables' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetNamespaceDuplicates.xlsx'
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $dataSet.Namespace = 'urn:report'
+
+        $inheritedNamespace = [System.Data.DataTable]::new('T')
+        [void] $inheritedNamespace.Columns.Add('Name', [string])
+        [void] $inheritedNamespace.Columns.Add('Secret', [string])
+        [void] $inheritedNamespace.Rows.Add('Inherited', 'one')
+        [void] $dataSet.Tables.Add($inheritedNamespace)
+
+        $emptyNamespace = [System.Data.DataTable]::new('T')
+        $emptyNamespace.Namespace = ''
+        [void] $emptyNamespace.Columns.Add('Name', [string])
+        [void] $emptyNamespace.Columns.Add('Secret', [string])
+        [void] $emptyNamespace.Rows.Add('Empty', 'two')
+        [void] $dataSet.Tables.Add($emptyNamespace)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet -ExcludeProperty Secret
+
+        $firstRows = @(Import-OfficeExcel -Path $path -WorksheetName 'T' -Range 'A1:A2')
+        $secondRows = @(Import-OfficeExcel -Path $path -WorksheetName 'T (2)' -Range 'A1:A2')
+
+        $firstRows.Count | Should -Be 1
+        $firstRows[0].Name | Should -Be 'Inherited'
+        $secondRows.Count | Should -Be 1
+        $secondRows[0].Name | Should -Be 'Empty'
+        $inheritedNamespace.Columns.Contains('Secret') | Should -BeTrue
+        $emptyNamespace.Columns.Contains('Secret') | Should -BeTrue
+    }
+
     It 'appends and clears DataSet sheets using sanitized worksheet names' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetSanitizedAppend.xlsx'
 

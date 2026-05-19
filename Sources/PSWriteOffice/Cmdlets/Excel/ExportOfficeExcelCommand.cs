@@ -242,8 +242,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("DataSet must contain at least one DataTable.", nameof(InputObject));
         }
 
-        dataSet = PrepareDataSetForExport(dataSet);
         var sheetNames = BuildDataSetWorksheetNames(document, dataSet, Append.IsPresent || ClearSheet.IsPresent);
+        var usedTableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var tableIndex = 1;
         foreach (DataTable sourceTable in dataSet.Tables)
         {
@@ -257,7 +257,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
 
             var sheet = GetOrAddDataSetSheet(document, sheetName);
-            var table = sourceTable;
+            var table = PrepareDataTableForExport(sourceTable);
             if (table.Columns.Count == 0)
             {
                 throw new InvalidOperationException($"Unable to infer columns from DataTable '{sourceTable.TableName}'.");
@@ -267,7 +267,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var dataStartRow = ResolveDataStartRow(sheet, isAppendingToExistingSheet);
             var includeHeaders = !NoHeader.IsPresent && !isAppendingToExistingSheet;
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
-            var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, ResolveTableName(table, allowExplicitOverride: false));
+            var tableName = ResolveDataSetTableName(table, usedTableNames);
+            var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, tableName);
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -295,30 +296,33 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         }
     }
 
-    private DataSet PrepareDataSetForExport(DataSet dataSet)
+    private DataTable PrepareDataTableForExport(DataTable sourceTable)
     {
-        if (dataSet.Tables.Count == 0)
+        if (ExcludeProperty is { Length: > 0 })
         {
-            throw new PSArgumentException("DataSet must contain at least one DataTable.", nameof(InputObject));
+            return ApplyExcludedColumns(sourceTable.Copy());
         }
 
-        var copy = string.IsNullOrWhiteSpace(dataSet.DataSetName)
-            ? new DataSet()
-            : new DataSet(dataSet.DataSetName);
+        return sourceTable;
+    }
 
-        foreach (DataTable sourceTable in dataSet.Tables)
+    private string? ResolveDataSetTableName(DataTable table, ISet<string> usedTableNames)
+    {
+        var tableName = ResolveTableName(table, allowExplicitOverride: false);
+        if (string.IsNullOrWhiteSpace(tableName))
         {
-            var table = ApplyExcludedColumns(sourceTable.Copy());
-
-            if (table.Columns.Count == 0)
-            {
-                throw new InvalidOperationException($"Unable to infer columns from DataTable '{sourceTable.TableName}'.");
-            }
-
-            copy.Tables.Add(table);
+            return null;
         }
 
-        return copy;
+        var candidate = tableName!;
+        var suffix = 2;
+        while (!usedTableNames.Add(candidate))
+        {
+            candidate = $"{tableName}_{suffix}";
+            suffix++;
+        }
+
+        return candidate;
     }
 
     private ExcelSheet PrepareSheet(ExcelDocument document)
