@@ -86,7 +86,7 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
                     continue;
                 }
 
-                WriteObject(CreateRecord(table.Name, table.Range, table.SheetName));
+                WriteObject(CreateRecord(table.Name, table.Range, table.SheetName, ParameterSetName == ParameterSetPath ? InputPath : null));
             }
         }
         finally
@@ -117,12 +117,18 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
         return null;
     }
 
-    private static PSObject CreateRecord(string name, string range, string sheet)
+    private static PSObject CreateRecord(string name, string range, string sheet, string? path)
     {
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Name", name));
         record.Properties.Add(new PSNoteProperty("Range", range));
         record.Properties.Add(new PSNoteProperty("Sheet", sheet));
+        record.Properties.Add(new PSNoteProperty("WorksheetName", sheet));
+        if (!string.IsNullOrWhiteSpace(path))
+        {
+            record.Properties.Add(new PSNoteProperty("Path", path));
+            record.Properties.Add(new PSNoteProperty("InputPath", path));
+        }
         return record;
     }
 }

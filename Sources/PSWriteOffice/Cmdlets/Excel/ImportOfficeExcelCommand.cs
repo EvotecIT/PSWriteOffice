@@ -13,26 +13,33 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data</code>
 ///   <para>Reads the used range on the Data worksheet and emits PSCustomObjects.</para>
 /// </example>
-[Cmdlet(VerbsData.Import, "OfficeExcel")]
+[Cmdlet(VerbsData.Import, "OfficeExcel", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelImport")]
 public sealed class ImportOfficeExcelCommand : PSCmdlet
 {
+    private const string ParameterSetPath = "Path";
+    private const string ParameterSetDocument = "Document";
+
     /// <summary>Workbook path to import.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
-    [Alias("FilePath")]
-    public string Path { get; set; } = string.Empty;
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPath)]
+    [Alias("FilePath", "InputPath", "FullName")]
+    public string? Path { get; set; }
+
+    /// <summary>Workbook document to import from.</summary>
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    public ExcelDocument? Document { get; set; }
 
     /// <summary>Worksheet name to read; defaults to the first sheet.</summary>
-    [Parameter]
+    [Parameter(ValueFromPipelineByPropertyName = true)]
     [Alias("Sheet")]
     public string? WorksheetName { get; set; }
 
     /// <summary>Zero-based worksheet index to read.</summary>
-    [Parameter]
+    [Parameter(ValueFromPipelineByPropertyName = true)]
     public int? SheetIndex { get; set; }
 
     /// <summary>Optional A1 range to read. When omitted, the used range is imported.</summary>
-    [Parameter]
+    [Parameter(ValueFromPipelineByPropertyName = true)]
     public string? Range { get; set; }
 
     /// <summary>Starting row for an explicit rectangular range.</summary>
@@ -70,24 +77,44 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-        if (!File.Exists(resolvedPath))
-        {
-            throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-        }
-
         if (!string.IsNullOrWhiteSpace(Range) && HasCoordinateRange())
         {
             throw new PSArgumentException("Specify either -Range or coordinate bounds, but not both.");
         }
 
         var options = ExcelReadOutputService.CreateOptions(NumericAsDecimal.IsPresent);
-        using var reader = ExcelDocumentReader.Open(resolvedPath, options);
+        using var reader = CreateReader(options);
         var sheet = ExcelReadOutputService.ResolveSheetReader(reader, WorksheetName, SheetIndex);
         var range = ResolveRange(sheet);
         var table = sheet.ReadRangeAsDataTable(range, headersInFirstRow: !NoHeader.IsPresent);
 
         ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent);
+    }
+
+    private ExcelDocumentReader CreateReader(ExcelReadOptions options)
+    {
+        if (ParameterSetName == ParameterSetDocument)
+        {
+            if (Document == null)
+            {
+                throw new PSArgumentException("Excel document was not provided.", nameof(Document));
+            }
+
+            return ExcelDocumentReader.Wrap(Document._spreadSheetDocument, options);
+        }
+
+        if (string.IsNullOrWhiteSpace(Path))
+        {
+            throw new PSArgumentException("Workbook path was not provided.", nameof(Path));
+        }
+
+        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path!);
+        if (!File.Exists(resolvedPath))
+        {
+            throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
+        }
+
+        return ExcelDocumentReader.Open(resolvedPath, options);
     }
 
     private string ResolveRange(ExcelSheetReader sheet)

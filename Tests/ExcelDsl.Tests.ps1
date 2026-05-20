@@ -752,8 +752,22 @@ Describe 'Excel DSL surface' {
         $tables = Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales'
         $tables | Should -Not -BeNullOrEmpty
 
+        $namedRows = @($named | Import-OfficeExcel)
+        $namedRows.Count | Should -Be 2
+        $namedRows[0].Name | Should -Be 'Alpha'
+        $namedRows[0].Value | Should -Be 10
+
+        $tableRows = @($tables | Import-OfficeExcel)
+        $tableRows.Count | Should -Be 2
+        $tableRows[1].Name | Should -Be 'Beta'
+        $tableRows[1].Value | Should -Be 20
+
         $doc = Get-OfficeExcel -Path $path
         try {
+            $documentRows = @($doc | Import-OfficeExcel -Sheet 'Data' -Range 'A1:B3')
+            $documentRows.Count | Should -Be 2
+            $documentRows[0].Name | Should -Be 'Alpha'
+
             $doc | Save-OfficeExcel | Out-Null
         } finally {
             Close-OfficeExcel -Document $doc

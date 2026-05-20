@@ -77,7 +77,7 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
                 var range = document.GetNamedRange(Name!, scope);
                 if (range != null)
                 {
-                    WriteObject(CreateRecord(Name!, range, scope));
+                    WriteObject(CreateRecord(Name!, range, scope, ParameterSetName == ParameterSetPath ? InputPath : null));
                 }
                 return;
             }
@@ -85,7 +85,7 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
             var ranges = document.GetAllNamedRanges(scope);
             foreach (var entry in ranges)
             {
-                WriteObject(CreateRecord(entry.Key, entry.Value, scope));
+                WriteObject(CreateRecord(entry.Key, entry.Value, scope, ParameterSetName == ParameterSetPath ? InputPath : null));
             }
         }
         finally
@@ -116,12 +116,30 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
         return null;
     }
 
-    private static PSObject CreateRecord(string name, string range, ExcelSheet? scope)
+    private static PSObject CreateRecord(string name, string range, ExcelSheet? scope, string? path)
     {
         var record = new PSObject();
+        var sheetName = scope?.Name;
         record.Properties.Add(new PSNoteProperty("Name", name));
-        record.Properties.Add(new PSNoteProperty("Range", range));
-        record.Properties.Add(new PSNoteProperty("Scope", scope?.Name ?? "Workbook"));
+        record.Properties.Add(new PSNoteProperty("Range", NormalizeRange(range)));
+        record.Properties.Add(new PSNoteProperty("Scope", sheetName ?? "Workbook"));
+        if (!string.IsNullOrWhiteSpace(sheetName))
+        {
+            record.Properties.Add(new PSNoteProperty("Sheet", sheetName));
+            record.Properties.Add(new PSNoteProperty("WorksheetName", sheetName));
+        }
+        if (!string.IsNullOrWhiteSpace(path))
+        {
+            record.Properties.Add(new PSNoteProperty("Path", path));
+            record.Properties.Add(new PSNoteProperty("InputPath", path));
+        }
         return record;
+    }
+
+    private static string NormalizeRange(string range)
+    {
+        return string.IsNullOrWhiteSpace(range)
+            ? range
+            : range.Replace("$", string.Empty);
     }
 }
