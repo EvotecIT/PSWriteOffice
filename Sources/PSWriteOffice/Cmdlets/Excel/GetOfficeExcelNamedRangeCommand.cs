@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
+using System.Text.RegularExpressions;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -19,6 +20,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
 {
     private const string ParameterSetPath = "Path";
+    private const string ParameterSetUri = "Uri";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
@@ -26,9 +28,18 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
     [Alias("FilePath", "Path")]
     public string InputPath { get; set; } = string.Empty;
 
+    /// <summary>Remote workbook URI to inspect.</summary>
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetUri)]
+    [Alias("Url")]
+    public Uri? Uri { get; set; }
+
     /// <summary>Workbook to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public ExcelDocument Document { get; set; } = null!;
+
+    /// <summary>Allow HTTP workbook downloads in addition to HTTPS.</summary>
+    [Parameter(ParameterSetName = ParameterSetUri)]
+    public SwitchParameter AllowHttp { get; set; }
 
     /// <summary>Optional named range to retrieve.</summary>
     [Parameter]
@@ -60,6 +71,16 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
                 document = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
             }
+            else if (ParameterSetName == ParameterSetUri)
+            {
+                if (Uri == null)
+                {
+                    throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
+                }
+
+                document = ExcelDocumentService.LoadDocument(Uri, readOnly: true, allowHttp: AllowHttp.IsPresent);
+                dispose = true;
+            }
             else
             {
                 document = Document;
@@ -77,7 +98,12 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
                 var range = document.GetNamedRange(Name!, scope);
                 if (range != null)
                 {
-                    WriteObject(CreateRecord(Name!, range, scope, ParameterSetName == ParameterSetPath ? InputPath : null));
+                    WriteObject(CreateRecord(
+                        Name!,
+                        range,
+                        scope,
+                        ParameterSetName == ParameterSetPath ? InputPath : null,
+                        ParameterSetName == ParameterSetUri ? Uri : null));
                 }
                 return;
             }
@@ -85,7 +111,12 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
             var ranges = document.GetAllNamedRanges(scope);
             foreach (var entry in ranges)
             {
-                WriteObject(CreateRecord(entry.Key, entry.Value, scope, ParameterSetName == ParameterSetPath ? InputPath : null));
+                WriteObject(CreateRecord(
+                    entry.Key,
+                    entry.Value,
+                    scope,
+                    ParameterSetName == ParameterSetPath ? InputPath : null,
+                    ParameterSetName == ParameterSetUri ? Uri : null));
             }
         }
         finally
@@ -116,7 +147,7 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
         return null;
     }
 
-    private static PSObject CreateRecord(string name, string range, ExcelSheet? scope, string? path)
+    private static PSObject CreateRecord(string name, string range, ExcelSheet? scope, string? path, Uri? uri)
     {
         var record = new PSObject();
         var sheetName = scope?.Name;
@@ -133,13 +164,61 @@ public sealed class GetOfficeExcelNamedRangeCommand : PSCmdlet
             record.Properties.Add(new PSNoteProperty("Path", path));
             record.Properties.Add(new PSNoteProperty("InputPath", path));
         }
+        if (uri != null)
+        {
+            record.Properties.Add(new PSNoteProperty("Uri", uri));
+        }
         return record;
     }
 
     private static string NormalizeRange(string range)
     {
-        return string.IsNullOrWhiteSpace(range)
-            ? range
-            : range.Replace("$", string.Empty);
+        if (string.IsNullOrWhiteSpace(range))
+        {
+            return range;
+        }
+
+        var separatorIndex = FindSheetSeparator(range);
+        if (separatorIndex >= 0)
+        {
+            var prefix = range.Substring(0, separatorIndex + 1);
+            var reference = range.Substring(separatorIndex + 1);
+            return prefix + NormalizeA1Reference(reference);
+        }
+
+        return NormalizeA1Reference(range);
+    }
+
+    private static string NormalizeA1Reference(string reference)
+    {
+        return Regex.IsMatch(reference, @"^\$?[A-Za-z]{1,3}\$?\d+(?::\$?[A-Za-z]{1,3}\$?\d+)?$")
+            ? reference.Replace("$", string.Empty)
+            : reference;
+    }
+
+    private static int FindSheetSeparator(string range)
+    {
+        var inQuotedSheetName = false;
+        for (var i = 0; i < range.Length; i++)
+        {
+            if (range[i] == '\'')
+            {
+                if (inQuotedSheetName && i + 1 < range.Length && range[i + 1] == '\'')
+                {
+                    i++;
+                    continue;
+                }
+
+                inQuotedSheetName = !inQuotedSheetName;
+                continue;
+            }
+
+            if (!inQuotedSheetName && range[i] == '!')
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

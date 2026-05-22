@@ -749,6 +749,10 @@ Describe 'Excel DSL surface' {
         $named = Get-OfficeExcelNamedRange -Path $path -Sheet 'Data' | Where-Object Name -eq 'ManualRange'
         $named | Should -Not -BeNullOrEmpty
 
+        $namedRangeType = Get-TestLoadedType -Name 'PSWriteOffice.Cmdlets.Excel.GetOfficeExcelNamedRangeCommand'
+        $normalizeRange = $namedRangeType.GetMethod('NormalizeRange', [System.Reflection.BindingFlags] 'NonPublic, Static')
+        $normalizeRange.Invoke($null, @("'Budget`$2026'!`$A`$1:`$B`$2")) | Should -Be "'Budget`$2026'!A1:B2"
+
         $tables = Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales'
         $tables | Should -Not -BeNullOrEmpty
 
@@ -771,6 +775,40 @@ Describe 'Excel DSL surface' {
             $doc | Save-OfficeExcel | Out-Null
         } finally {
             Close-OfficeExcel -Document $doc
+        }
+
+        $server = Start-TestHttpFileServer -FilePath $path -ContentType 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' -RequestCount 8
+        try {
+            $uri = [uri] $server.Url
+
+            $remoteRows = @(Import-OfficeExcel -Uri $uri -AllowHttp -Sheet 'Data' -Range 'A1:B3')
+            $remoteRows.Count | Should -Be 2
+            $remoteRows[1].Name | Should -Be 'Beta'
+
+            $remoteRange = @(Get-OfficeExcelRange -Uri $uri -AllowHttp -Sheet 'Data' -Range 'A1:B3')
+            $remoteRange.Count | Should -Be 2
+            $remoteRange[0].Value | Should -Be 10
+
+            $remoteUsedRange = Get-OfficeExcelUsedRange -Uri $uri -AllowHttp -Sheet 'Data' -AsDataTable
+            $remoteUsedRange.Rows.Count | Should -Be 6
+
+            $remoteTables = Get-OfficeExcelTable -Uri $uri -AllowHttp | Where-Object Name -eq 'Sales'
+            $remoteTableRows = @($remoteTables | Import-OfficeExcel -AllowHttp)
+            $remoteTableRows.Count | Should -Be 2
+
+            $remoteNamed = Get-OfficeExcelNamedRange -Uri $uri -AllowHttp -Sheet 'Data' | Where-Object Name -eq 'ManualRange'
+            $remoteNamedRows = @($remoteNamed | Import-OfficeExcel -AllowHttp)
+            $remoteNamedRows.Count | Should -Be 2
+
+            $remoteDoc = Get-OfficeExcel -Uri $uri -AllowHttp -ReadOnly
+            try {
+                $remoteDocRows = @($remoteDoc | Import-OfficeExcel -Sheet 'Data' -Range 'A1:B3')
+                $remoteDocRows.Count | Should -Be 2
+            } finally {
+                Close-OfficeExcel -Document $remoteDoc
+            }
+        } finally {
+            Stop-TestHttpFileServer -Server $server
         }
     }
 

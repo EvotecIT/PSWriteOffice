@@ -33,6 +33,16 @@ internal static class ExcelDocumentService
         return ExcelDocument.Load(resolvedPath, readOnly, autoSave);
     }
 
+    public static ExcelDocument LoadDocument(Uri uri, bool readOnly, bool allowHttp, string? password = null)
+    {
+        if (!string.IsNullOrEmpty(password))
+        {
+            throw new NotSupportedException("Encrypted remote workbook loads are not supported.");
+        }
+
+        return ExcelDocument.Load(uri, ExcelHttpLoadService.CreateOptions(allowHttp), readOnly);
+    }
+
     public static void SaveDocument(ExcelDocument document, bool show, string? filePath, string? password = null, ExcelSaveOptions? saveOptions = null)
     {
         if (document == null) throw new ArgumentNullException(nameof(document));

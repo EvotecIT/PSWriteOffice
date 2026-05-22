@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
@@ -18,6 +19,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 public sealed class ImportOfficeExcelCommand : PSCmdlet
 {
     private const string ParameterSetPath = "Path";
+    private const string ParameterSetUri = "Uri";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path to import.</summary>
@@ -25,9 +27,18 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     [Alias("FilePath", "InputPath", "FullName")]
     public string? Path { get; set; }
 
+    /// <summary>Remote workbook URI to import.</summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetUri)]
+    [Alias("Url")]
+    public Uri? Uri { get; set; }
+
     /// <summary>Workbook document to import from.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public ExcelDocument? Document { get; set; }
+
+    /// <summary>Allow HTTP workbook downloads in addition to HTTPS.</summary>
+    [Parameter(ParameterSetName = ParameterSetUri)]
+    public SwitchParameter AllowHttp { get; set; }
 
     /// <summary>Worksheet name to read; defaults to the first sheet.</summary>
     [Parameter(ValueFromPipelineByPropertyName = true)]
@@ -101,6 +112,16 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
             }
 
             return ExcelDocumentReader.Wrap(Document._spreadSheetDocument, options);
+        }
+
+        if (ParameterSetName == ParameterSetUri)
+        {
+            if (Uri == null)
+            {
+                throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
+            }
+
+            return ExcelDocumentReader.Open(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp));
         }
 
         if (string.IsNullOrWhiteSpace(Path))

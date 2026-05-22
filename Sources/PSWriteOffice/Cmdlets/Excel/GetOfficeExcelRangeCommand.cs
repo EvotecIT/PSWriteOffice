@@ -20,6 +20,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 public sealed class GetOfficeExcelRangeCommand : PSCmdlet
 {
     private const string ParameterSetPath = "Path";
+    private const string ParameterSetUri = "Uri";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
@@ -27,9 +28,18 @@ public sealed class GetOfficeExcelRangeCommand : PSCmdlet
     [Alias("FilePath", "Path")]
     public string InputPath { get; set; } = string.Empty;
 
+    /// <summary>Remote workbook URI to read.</summary>
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetUri)]
+    [Alias("Url")]
+    public Uri? Uri { get; set; }
+
     /// <summary>Workbook to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public ExcelDocument Document { get; set; } = null!;
+
+    /// <summary>Allow HTTP workbook downloads in addition to HTTPS.</summary>
+    [Parameter(ParameterSetName = ParameterSetUri)]
+    public SwitchParameter AllowHttp { get; set; }
 
     /// <summary>A1 range to read.</summary>
     [Parameter(Mandatory = true)]
@@ -75,6 +85,16 @@ public sealed class GetOfficeExcelRangeCommand : PSCmdlet
         if (ParameterSetName == ParameterSetDocument)
         {
             return ExcelDocumentReader.Wrap(Document._spreadSheetDocument, options);
+        }
+
+        if (ParameterSetName == ParameterSetUri)
+        {
+            if (Uri == null)
+            {
+                throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
+            }
+
+            return ExcelDocumentReader.Open(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp));
         }
 
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);

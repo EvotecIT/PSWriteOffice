@@ -260,13 +260,26 @@ $summary = $results |
     Sort-Object Scenario, Rows, Engine
 
 $summary | Export-Csv -NoTypeInformation -Path $summaryPath
+$officeIMOExcelAssemblyPath = Join-Path $repoRoot 'Sources\PSWriteOffice\bin\Debug\net8.0\OfficeIMO.Excel.dll'
+$officeIMOExcelAssemblyVersion = if (Test-Path $officeIMOExcelAssemblyPath) {
+    [Reflection.AssemblyName]::GetAssemblyName($officeIMOExcelAssemblyPath).Version.ToString()
+} else {
+    $loadedOfficeIMOExcel = [AppDomain]::CurrentDomain.GetAssemblies() |
+        Where-Object { $_.GetName().Name -eq 'OfficeIMO.Excel' } |
+        Select-Object -First 1
+    if ($loadedOfficeIMOExcel) {
+        $loadedOfficeIMOExcel.GetName().Version.ToString()
+    } else {
+        $null
+    }
+}
 [pscustomobject]@{
     PowerShellVersion = $PSVersionTable.PSVersion.ToString()
     PSEdition = $PSEdition
     ImportExcel = (Get-Module ImportExcel).Version.ToString()
     ExcelFast = (Get-Module ExcelFast).Version.ToString()
     PSWriteOffice = (Get-Module PSWriteOffice).Version.ToString()
-    OfficeIMOExcelAssembly = ([Reflection.AssemblyName]::GetAssemblyName((Join-Path $repoRoot 'Sources\PSWriteOffice\bin\Debug\net8.0\OfficeIMO.Excel.dll')).Version.ToString())
+    OfficeIMOExcelAssembly = $officeIMOExcelAssemblyVersion
     RowCount = $RowCount
     RepeatCount = $RepeatCount
     ResultsPath = $resultsPath

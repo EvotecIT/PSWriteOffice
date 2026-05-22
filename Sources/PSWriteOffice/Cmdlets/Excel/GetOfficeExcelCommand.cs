@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
@@ -13,13 +14,25 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>$workbook = Get-OfficeExcel -Path .\report.xlsx -ReadOnly</code>
 ///   <para>Loads <c>report.xlsx</c> for inspection without enabling writes.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeExcel")]
+[Cmdlet(VerbsCommon.Get, "OfficeExcel", DefaultParameterSetName = ParameterSetPath)]
 public sealed class GetOfficeExcelCommand : PSCmdlet
 {
+    private const string ParameterSetPath = "Path";
+    private const string ParameterSetUri = "Uri";
+
     /// <summary>Path to the workbook to load.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
     [Alias("Path", "FilePath")]
     public string InputPath { get; set; } = string.Empty;
+
+    /// <summary>Remote workbook URI to load.</summary>
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetUri)]
+    [Alias("Url")]
+    public Uri? Uri { get; set; }
+
+    /// <summary>Allow HTTP workbook downloads in addition to HTTPS.</summary>
+    [Parameter(ParameterSetName = ParameterSetUri)]
+    public SwitchParameter AllowHttp { get; set; }
 
     /// <summary>Open the file in read-only mode.</summary>
     [Parameter]
@@ -36,6 +49,23 @@ public sealed class GetOfficeExcelCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (ParameterSetName == ParameterSetUri)
+        {
+            if (AutoSave.IsPresent)
+            {
+                throw new PSArgumentException("Remote workbooks cannot be opened with AutoSave. Save to a local path explicitly after loading.");
+            }
+
+            if (Uri == null)
+            {
+                throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
+            }
+
+            var remoteDocument = ExcelDocumentService.LoadDocument(Uri, ReadOnly.IsPresent, AllowHttp.IsPresent, Password);
+            WriteObject(remoteDocument);
+            return;
+        }
+
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
         if (!File.Exists(resolvedPath))
         {

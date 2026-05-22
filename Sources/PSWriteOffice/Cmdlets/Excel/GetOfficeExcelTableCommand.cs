@@ -18,6 +18,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 public sealed class GetOfficeExcelTableCommand : PSCmdlet
 {
     private const string ParameterSetPath = "Path";
+    private const string ParameterSetUri = "Uri";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
@@ -25,9 +26,18 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
     [Alias("FilePath", "Path")]
     public string InputPath { get; set; } = string.Empty;
 
+    /// <summary>Remote workbook URI to inspect.</summary>
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetUri)]
+    [Alias("Url")]
+    public Uri? Uri { get; set; }
+
     /// <summary>Workbook to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public ExcelDocument Document { get; set; } = null!;
+
+    /// <summary>Allow HTTP workbook downloads in addition to HTTPS.</summary>
+    [Parameter(ParameterSetName = ParameterSetUri)]
+    public SwitchParameter AllowHttp { get; set; }
 
     /// <summary>Optional table name filter.</summary>
     [Parameter]
@@ -59,6 +69,16 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
                 document = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
             }
+            else if (ParameterSetName == ParameterSetUri)
+            {
+                if (Uri == null)
+                {
+                    throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
+                }
+
+                document = ExcelDocumentService.LoadDocument(Uri, readOnly: true, allowHttp: AllowHttp.IsPresent);
+                dispose = true;
+            }
             else
             {
                 document = Document;
@@ -86,7 +106,12 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
                     continue;
                 }
 
-                WriteObject(CreateRecord(table.Name, table.Range, table.SheetName, ParameterSetName == ParameterSetPath ? InputPath : null));
+                WriteObject(CreateRecord(
+                    table.Name,
+                    table.Range,
+                    table.SheetName,
+                    ParameterSetName == ParameterSetPath ? InputPath : null,
+                    ParameterSetName == ParameterSetUri ? Uri : null));
             }
         }
         finally
@@ -117,7 +142,7 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
         return null;
     }
 
-    private static PSObject CreateRecord(string name, string range, string sheet, string? path)
+    private static PSObject CreateRecord(string name, string range, string sheet, string? path, Uri? uri)
     {
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Name", name));
@@ -128,6 +153,10 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
         {
             record.Properties.Add(new PSNoteProperty("Path", path));
             record.Properties.Add(new PSNoteProperty("InputPath", path));
+        }
+        if (uri != null)
+        {
+            record.Properties.Add(new PSNoteProperty("Uri", uri));
         }
         return record;
     }
