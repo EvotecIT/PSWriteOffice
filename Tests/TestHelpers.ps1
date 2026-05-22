@@ -100,16 +100,19 @@ function Start-TestHttpFileServer {
     }
 
     $url = "http://127.0.0.1:$port/$fileName"
+    $readyPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "PSWriteOffice-HttpServer-$([guid]::NewGuid()).ready")
     $job = Start-Job -ScriptBlock {
         param(
             [int] $JobPort,
             [string] $JobFilePath,
             [string] $JobContentType,
-            [int] $JobRequestCount
+            [int] $JobRequestCount,
+            [string] $JobReadyPath
         )
 
         $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $JobPort)
         $listener.Start()
+        [System.IO.File]::WriteAllText($JobReadyPath, 'ready')
 
         try {
             for ($requestIndex = 0; $requestIndex -lt $JobRequestCount; $requestIndex++) {
@@ -161,9 +164,24 @@ function Start-TestHttpFileServer {
             } catch {
             }
         }
-    } -ArgumentList $port, $FilePath, $ContentType, $RequestCount
+    } -ArgumentList $port, $FilePath, $ContentType, $RequestCount, $readyPath
 
-    Start-Sleep -Milliseconds 300
+    $readyDeadline = [DateTime]::UtcNow.AddSeconds(5)
+    while (-not (Test-Path -LiteralPath $readyPath)) {
+        if ($job.State -ne 'Running') {
+            throw "Test HTTP file server job exited before listening on port $port."
+        }
+
+        if ([DateTime]::UtcNow -gt $readyDeadline) {
+            Stop-Job -Job $job -ErrorAction SilentlyContinue | Out-Null
+            Remove-Job -Job $job -Force -ErrorAction SilentlyContinue | Out-Null
+            throw "Timed out waiting for test HTTP file server to listen on port $port."
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+
+    Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
 
     [PSCustomObject]@{
         Url = $url
