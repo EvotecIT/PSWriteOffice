@@ -454,6 +454,164 @@ function Invoke-BenchmarkOperation {
     }
 }
 
+function Get-MedianValue {
+    param(
+        [object[]] $InputObject,
+        [string] $PropertyName
+    )
+
+    $values = @(
+        $InputObject |
+            ForEach-Object {
+                if ($_.PSObject.Properties[$PropertyName]) {
+                    [double]$_.PSObject.Properties[$PropertyName].Value
+                }
+            } |
+            Sort-Object
+    )
+
+    if ($values.Count -eq 0) {
+        return 0
+    }
+
+    $values[[int][math]::Floor(($values.Count - 1) / 2)]
+}
+
+function Format-Ratio {
+    param([double] $Value)
+
+    if ($Value -le 0 -or [double]::IsNaN($Value) -or [double]::IsInfinity($Value)) {
+        return $null
+    }
+
+    if ($Value -lt 10) {
+        return ('{0:0.##} x' -f $Value)
+    }
+
+    ('{0:0.#} x' -f $Value)
+}
+
+function Get-ComparisonRating {
+    param(
+        [double] $Ratio,
+        [int] $Rank
+    )
+
+    if ($Rank -eq 1) {
+        return 'fastest'
+    }
+    if ($Ratio -le 1.15) {
+        return 'competitive'
+    }
+    if ($Ratio -le 2) {
+        return 'watch'
+    }
+
+    'behind'
+}
+
+function New-BenchmarkComparison {
+    param([object[]] $Summary)
+
+    $comparisonRows = [Collections.Generic.List[object]]::new()
+    $groups = $Summary | Group-Object ScenarioKey, Scenario, Profile, Rows
+
+    foreach ($group in $groups) {
+        $passed = @(
+            $group.Group |
+                Where-Object { [int]$_.Passed -gt 0 -and [double]$_.MedianMs -gt 0 } |
+                Sort-Object MedianMs
+        )
+
+        if ($passed.Count -eq 0) {
+            continue
+        }
+
+        $fastest = $passed[0]
+        $fastestMs = [double]$fastest.MedianMs
+        $smallestFile = @($passed | Where-Object { [double]$_.MedianFileKB -gt 0 } | Sort-Object MedianFileKB | Select-Object -First 1)
+        $pswriteOffice = @($passed | Where-Object Engine -eq 'PSWriteOffice' | Select-Object -First 1)
+        $pswriteOfficeRank = 0
+        $pswriteOfficeRatio = 0.0
+        $pswriteOfficeText = 'not tested'
+        $leadText = $null
+        $rating = 'not tested'
+
+        if ($pswriteOffice.Count -gt 0) {
+            $pswriteOfficeRank = [array]::IndexOf($passed, $pswriteOffice[0]) + 1
+            $pswriteOfficeRatio = [math]::Round(([double]$pswriteOffice[0].MedianMs) / $fastestMs, 4)
+            if ($pswriteOfficeRank -eq 1) {
+                if ($passed.Count -gt 1) {
+                    $next = $passed[1]
+                    $leadRatio = [math]::Round(([double]$next.MedianMs) / ([double]$pswriteOffice[0].MedianMs), 4)
+                    $leadText = 'lead {0} vs {1}' -f (Format-Ratio -Value $leadRatio), $next.Engine
+                    $pswriteOfficeText = '1 x (fastest, {0})' -f $leadText
+                } else {
+                    $pswriteOfficeText = '1 x (fastest)'
+                }
+            } else {
+                $pswriteOfficeText = '{0} slower than {1}' -f (Format-Ratio -Value $pswriteOfficeRatio), $fastest.Engine
+            }
+
+            $rating = Get-ComparisonRating -Ratio $pswriteOfficeRatio -Rank $pswriteOfficeRank
+        }
+
+        $engineResults = @(
+            $passed |
+                ForEach-Object {
+                    $timeRatio = [math]::Round(([double]$_.MedianMs) / $fastestMs, 4)
+                    $fileRatio = if ($smallestFile.Count -gt 0 -and [double]$smallestFile[0].MedianFileKB -gt 0 -and [double]$_.MedianFileKB -gt 0) {
+                        [math]::Round(([double]$_.MedianFileKB) / ([double]$smallestFile[0].MedianFileKB), 4)
+                    } else {
+                        $null
+                    }
+
+                    [pscustomobject]@{
+                        Engine = $_.Engine
+                        Rank = [array]::IndexOf($passed, $_) + 1
+                        MedianMs = [double]$_.MedianMs
+                        MinMs = [double]$_.MinMs
+                        MaxMs = [double]$_.MaxMs
+                        MedianFileKB = [double]$_.MedianFileKB
+                        TimeVsFastest = $timeRatio
+                        TimeVsFastestText = Format-Ratio -Value $timeRatio
+                        FileVsSmallest = $fileRatio
+                        FileVsSmallestText = if ($fileRatio) { Format-Ratio -Value $fileRatio } else { $null }
+                    }
+                }
+        )
+
+        $row = [ordered]@{
+            ScenarioKey = $group.Group[0].ScenarioKey
+            Scenario = $group.Group[0].Scenario
+            Profile = $group.Group[0].Profile
+            Rows = [int]$group.Group[0].Rows
+            FastestEngine = $fastest.Engine
+            FastestMs = $fastestMs
+            PSWriteOfficeRank = $pswriteOfficeRank
+            PSWriteOfficeVsFastest = $pswriteOfficeRatio
+            PSWriteOfficeVsFastestText = $pswriteOfficeText
+            LeadText = $leadText
+            SmallestFileEngine = if ($smallestFile.Count -gt 0) { $smallestFile[0].Engine } else { $null }
+            Rating = $rating
+            Engines = $engineResults
+        }
+
+        foreach ($engineName in @('PSWriteOffice', 'ImportExcel', 'ExcelFast')) {
+            $engineResult = @($engineResults | Where-Object Engine -eq $engineName | Select-Object -First 1)
+            $prefix = $engineName -replace '[^A-Za-z0-9]', ''
+            $row["${prefix}Ms"] = if ($engineResult.Count -gt 0) { $engineResult[0].MedianMs } else { $null }
+            $row["${prefix}VsFastest"] = if ($engineResult.Count -gt 0) { $engineResult[0].TimeVsFastest } else { $null }
+            $row["${prefix}FileKB"] = if ($engineResult.Count -gt 0) { $engineResult[0].MedianFileKB } else { $null }
+        }
+
+        $comparisonRows.Add([pscustomobject]$row)
+    }
+
+    $comparisonRows |
+        Sort-Object ScenarioKey, Profile, Rows
+}
+
 if (-not $PSBoundParameters.ContainsKey('RowCount') -or -not $RowCount) {
     $RowCount = switch ($Suite) {
         'Smoke' { @(1000) }
@@ -576,6 +734,8 @@ foreach ($rows in $RowCount) {
 
 $resultsPath = Join-Path $workRoot 'excel-performance-results.csv'
 $summaryPath = Join-Path $workRoot 'excel-performance-summary.csv'
+$comparisonCsvPath = Join-Path $workRoot 'excel-performance-comparison.csv'
+$comparisonJsonPath = Join-Path $workRoot 'excel-performance-comparison.json'
 $metadataPath = Join-Path $workRoot 'metadata.json'
 
 $results | Export-Csv -NoTypeInformation -Path $resultsPath
@@ -597,11 +757,18 @@ $summary = $results |
             MinMs        = if ($passed.Count) { ($passed | Measure-Object Milliseconds -Minimum).Minimum } else { 0 }
             MaxMs        = if ($passed.Count) { ($passed | Measure-Object Milliseconds -Maximum).Maximum } else { 0 }
             MedianFileKB = if ($passed.Count) { [math]::Round((($passed | Sort-Object FileBytes)[[int][math]::Floor(($passed.Count - 1) / 2)].FileBytes) / 1KB, 1) } else { 0 }
+            MedianWorkingSetDeltaMB = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName WorkingSetDeltaMB), 3) } else { 0 }
+            MedianManagedDeltaMB = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName ManagedDeltaMB), 3) } else { 0 }
         }
     } |
     Sort-Object ScenarioKey, Profile, Rows, Engine
 
 $summary | Export-Csv -NoTypeInformation -Path $summaryPath
+$comparison = @(New-BenchmarkComparison -Summary $summary)
+$comparison |
+    Select-Object ScenarioKey, Scenario, Profile, Rows, FastestEngine, FastestMs, PSWriteOfficeMs, PSWriteOfficeRank, PSWriteOfficeVsFastest, PSWriteOfficeVsFastestText, LeadText, Rating, ImportExcelMs, ImportExcelVsFastest, ExcelFastMs, ExcelFastVsFastest, SmallestFileEngine, PSWriteOfficeFileKB, ImportExcelFileKB, ExcelFastFileKB |
+    Export-Csv -NoTypeInformation -Path $comparisonCsvPath
+$comparison | ConvertTo-Json -Depth 8 | Set-Content -Path $comparisonJsonPath -Encoding UTF8
 $officeIMOExcelAssemblyPath = Join-Path $repoRoot 'Sources\PSWriteOffice\bin\Debug\net8.0\OfficeIMO.Excel.dll'
 $officeIMOExcelAssemblyVersion = if (Test-Path $officeIMOExcelAssemblyPath) {
     [Reflection.AssemblyName]::GetAssemblyName($officeIMOExcelAssemblyPath).Version.ToString()
@@ -631,9 +798,16 @@ $officeIMOExcelAssemblyVersion = if (Test-Path $officeIMOExcelAssemblyPath) {
     ScenarioCount = $selectedScenarios.Count
     ResultsPath = $resultsPath
     SummaryPath = $summaryPath
+    ComparisonCsvPath = $comparisonCsvPath
+    ComparisonJsonPath = $comparisonJsonPath
 } | ConvertTo-Json -Depth 5 | Set-Content -Path $metadataPath -Encoding UTF8
 
 Write-Host "Results: $resultsPath"
 Write-Host "Summary: $summaryPath"
+Write-Host "Comparison CSV: $comparisonCsvPath"
+Write-Host "Comparison JSON: $comparisonJsonPath"
 Write-Host "Metadata: $metadataPath"
+$comparison |
+    Select-Object ScenarioKey, Rows, FastestEngine, FastestMs, PSWriteOfficeMs, PSWriteOfficeVsFastestText, Rating |
+    Format-Table -AutoSize
 $summary | Format-Table -AutoSize
