@@ -1,8 +1,22 @@
 param(
-    [int[]] $RowCount = @(1000, 10000, 25000),
-    [int] $RepeatCount = 3,
+    [ValidateSet('Smoke', 'Standard', 'Full')]
+    [string] $Suite = 'Standard',
+
+    [int[]] $RowCount,
+
+    [int] $RepeatCount = 0,
+
+    [string[]] $Scenario,
+
+    [ValidateSet('PSWriteOffice', 'ImportExcel', 'ExcelFast')]
+    [string[]] $Engine = @('PSWriteOffice', 'ImportExcel', 'ExcelFast'),
+
     [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\ExcelPerformance'),
+
+    [switch] $ListScenarios,
+
     [switch] $SkipImportExcelInstall,
+
     [switch] $SkipExcelFastInstall
 )
 
@@ -14,8 +28,7 @@ $invariantCulture = [Globalization.CultureInfo]::InvariantCulture
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $moduleRoot = Join-Path $OutputDirectory 'Modules'
-$workRoot = Join-Path $OutputDirectory ('Run-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
-$null = New-Item -ItemType Directory -Force -Path $moduleRoot, $workRoot
+$workRoot = Join-Path $OutputDirectory ('Run-{0}-{1}' -f (Get-Date -Format 'yyyyMMdd-HHmmss'), $PID)
 
 function Add-ModulePath {
     param([string] $Path)
@@ -80,22 +93,326 @@ function New-BenchmarkRows {
     }
 }
 
+function New-WideBenchmarkRows {
+    param([int] $Count)
+
+    for ($i = 1; $i -le $Count; $i++) {
+        $row = [ordered]@{
+            Id      = $i
+            Name    = 'Wide-{0:000000}' -f $i
+            Created = ([datetime]'2024-01-01').AddSeconds($i)
+            Enabled = ($i % 2) -eq 0
+        }
+
+        for ($column = 1; $column -le 36; $column++) {
+            $row["Metric$column"] = [math]::Round((($i + $column) * 1.017) % 10000, 4)
+        }
+
+        [pscustomobject]$row
+    }
+}
+
+function New-BenchmarkDataTable {
+    param([int] $Count)
+
+    $table = [Data.DataTable]::new('Data')
+    $null = $table.Columns.Add('Id', [int])
+    $null = $table.Columns.Add('Name', [string])
+    $null = $table.Columns.Add('Created', [datetime])
+    $null = $table.Columns.Add('Amount', [decimal])
+    $null = $table.Columns.Add('Enabled', [bool])
+    $null = $table.Columns.Add('Notes', [string])
+
+    for ($i = 1; $i -le $Count; $i++) {
+        $row = $table.NewRow()
+        $row.Id = $i
+        $row.Name = 'Account-{0:000000}' -f $i
+        $row.Created = ([datetime]'2024-01-01').AddMinutes($i)
+        $row.Amount = [decimal]([math]::Round(($i * 11.317) % 100000, 2))
+        $row.Enabled = ($i % 4) -ne 0
+        $row.Notes = 'DataTable row {0}' -f $i
+        $table.Rows.Add($row)
+    }
+
+    , $table
+}
+
+function New-BenchmarkDataSet {
+    param([int] $Count)
+
+    $dataSet = [Data.DataSet]::new('Report')
+    $sales = New-BenchmarkDataTable -Count $Count
+    $sales.TableName = 'Sales'
+    $inventory = [Data.DataTable]::new('Inventory')
+    $null = $inventory.Columns.Add('Sku', [string])
+    $null = $inventory.Columns.Add('Quantity', [int])
+    $null = $inventory.Columns.Add('Updated', [datetime])
+
+    $inventoryCount = [math]::Max(1, [math]::Floor($Count / 4))
+    for ($i = 1; $i -le $inventoryCount; $i++) {
+        $row = $inventory.NewRow()
+        $row.Sku = 'SKU-{0:000000}' -f $i
+        $row.Quantity = $i % 500
+        $row.Updated = ([datetime]'2024-01-01').AddHours($i)
+        $inventory.Rows.Add($row)
+    }
+
+    $dataSet.Tables.Add($sales)
+    $dataSet.Tables.Add($inventory)
+    , $dataSet
+}
+
+function Get-BenchmarkData {
+    param(
+        [string] $Profile,
+        [int] $Count
+    )
+
+    switch ($Profile) {
+        'MixedObjects' {
+            [pscustomobject]@{
+                Data = @(New-BenchmarkRows -Count $Count)
+                ColumnCount = 10
+                WorksheetName = 'Data'
+            }
+            break
+        }
+        'WideObjects' {
+            [pscustomobject]@{
+                Data = @(New-WideBenchmarkRows -Count $Count)
+                ColumnCount = 40
+                WorksheetName = 'Data'
+            }
+            break
+        }
+        'DataTable' {
+            [pscustomobject]@{
+                Data = New-BenchmarkDataTable -Count $Count
+                ColumnCount = 6
+                WorksheetName = 'Data'
+            }
+            break
+        }
+        'DataSet' {
+            [pscustomobject]@{
+                Data = New-BenchmarkDataSet -Count $Count
+                ColumnCount = 6
+                WorksheetName = 'Sales'
+            }
+            break
+        }
+        default {
+            throw "Unknown benchmark data profile '$Profile'."
+        }
+    }
+}
+
+function ConvertTo-ExcelColumnName {
+    param([int] $ColumnNumber)
+
+    $name = ''
+    $value = $ColumnNumber
+    while ($value -gt 0) {
+        $value--
+        $name = [char](65 + ($value % 26)) + $name
+        $value = [math]::Floor($value / 26)
+    }
+
+    $name
+}
+
 function Get-RowCount {
     param([object] $Rows)
 
     if ($null -eq $Rows) { return 0 }
     if ($Rows -is [array]) { return $Rows.Count }
+    if ($Rows -is [Data.DataTable]) { return $Rows.Rows.Count }
+    if ($Rows -is [Data.DataSet]) {
+        $count = 0
+        foreach ($table in $Rows.Tables) {
+            $count += $table.Rows.Count
+        }
+        return $count
+    }
+
     return @($Rows).Count
+}
+
+function New-FollowUpScenario {
+    param(
+        [string] $Key,
+        [string] $Name,
+        [string[]] $Suites,
+        [scriptblock] $Script
+    )
+
+    [pscustomobject]@{
+        Key = $Key
+        Name = $Name
+        Suites = $Suites
+        Script = $Script
+    }
+}
+
+function New-ExportScenario {
+    param(
+        [string] $Key,
+        [string] $Name,
+        [string[]] $Suites,
+        [string] $Engine,
+        [string] $Profile,
+        [string] $FileStem,
+        [scriptblock] $Script,
+        [object[]] $FollowUps = @()
+    )
+
+    [pscustomobject]@{
+        Key = $Key
+        Name = $Name
+        Suites = $Suites
+        Engine = $Engine
+        Profile = $Profile
+        FileStem = $FileStem
+        Script = $Script
+        FollowUps = @($FollowUps)
+    }
+}
+
+function Get-ExcelBenchmarkScenarios {
+    $defaultImport = New-FollowUpScenario -Key 'import-default-full' -Name 'Import full sheet from default export' -Suites @('Smoke', 'Standard', 'Full') -Script {
+        param($Context)
+
+        switch ($Context.Engine) {
+            'PSWriteOffice' { Import-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName }
+            'ImportExcel' { Import-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName }
+            'ExcelFast' { Import-Workbook -Path $Context.Path -SheetName $Context.WorksheetName }
+        }
+    }
+
+    $defaultRangeImport = New-FollowUpScenario -Key 'import-default-range' -Name 'Import A1 range from default export' -Suites @('Standard', 'Full') -Script {
+        param($Context)
+
+        switch ($Context.Engine) {
+            'PSWriteOffice' { Import-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -Range $Context.Range }
+            'ImportExcel' { Import-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -StartRow 1 -EndRow ($Context.Rows + 1) -StartColumn 1 -EndColumn $Context.ColumnCount }
+            'ExcelFast' { Import-Workbook -Path $Context.Path -SheetName $Context.WorksheetName -StartCell 'A1' -EndCell $Context.RangeEndCell }
+        }
+    }
+
+    $tableImport = New-FollowUpScenario -Key 'import-table-full' -Name 'Import full sheet from table export' -Suites @('Smoke', 'Standard', 'Full') -Script {
+        param($Context)
+
+        switch ($Context.Engine) {
+            'PSWriteOffice' { Import-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName }
+            'ImportExcel' { Import-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName }
+            'ExcelFast' { Import-Workbook -Path $Context.Path -SheetName $Context.WorksheetName }
+        }
+    }
+
+    @(
+        New-ExportScenario -Key 'objects-table' -Name 'Export objects as table' -Suites @('Smoke', 'Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-table' -FollowUps @($tableImport) -Script {
+            param($Context)
+            $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data
+        }
+        New-ExportScenario -Key 'objects-table' -Name 'Export objects as table' -Suites @('Smoke', 'Standard', 'Full') -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-table' -FollowUps @($tableImport) -Script {
+            param($Context)
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter
+        }
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites @('Smoke', 'Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+            $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites @('Smoke', 'Standard', 'Full') -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites @('Smoke', 'Standard', 'Full') -Engine 'ExcelFast' -Profile 'MixedObjects' -FileStem 'excelfast-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+            Export-Workbook -Destination $Context.Path -InputObject $Context.Data -SheetName $Context.WorksheetName -Force
+        }
+        New-ExportScenario -Key 'objects-no-table' -Name 'Export objects no table' -Suites @('Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-notable' -Script {
+            param($Context)
+            $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -NoTable
+        }
+        New-ExportScenario -Key 'objects-no-table' -Name 'Export objects no table' -Suites @('Standard', 'Full') -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-notable' -Script {
+            param($Context)
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'objects-table-autofit' -Name 'Export objects table autofit' -Suites @('Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-table-autofit' -Script {
+            param($Context)
+            $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFit
+        }
+        New-ExportScenario -Key 'objects-table-autofit' -Name 'Export objects table autofit' -Suites @('Standard', 'Full') -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-table-autofit' -Script {
+            param($Context)
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -AutoSize
+        }
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites @('Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'WideObjects' -FileStem 'pswriteoffice-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+            $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites @('Standard', 'Full') -Engine 'ImportExcel' -Profile 'WideObjects' -FileStem 'importexcel-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites @('Standard', 'Full') -Engine 'ExcelFast' -Profile 'WideObjects' -FileStem 'excelfast-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+            Export-Workbook -Destination $Context.Path -InputObject $Context.Data -SheetName $Context.WorksheetName -Force
+        }
+        New-ExportScenario -Key 'datatable-default' -Name 'Export DataTable default' -Suites @('Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'DataTable' -FileStem 'pswriteoffice-datatable-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+            Export-OfficeExcel -Path $Context.Path -InputObject $Context.Data -WorksheetName $Context.WorksheetName -TableName Data
+        }
+        New-ExportScenario -Key 'datatable-default' -Name 'Export DataTable default' -Suites @('Standard', 'Full') -Engine 'ImportExcel' -Profile 'DataTable' -FileStem 'importexcel-datatable-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'dataset-worksheets' -Name 'Export DataSet worksheets' -Suites @('Full') -Engine 'PSWriteOffice' -Profile 'DataSet' -FileStem 'pswriteoffice-dataset-worksheets' -FollowUps @($defaultImport) -Script {
+            param($Context)
+            Export-OfficeExcel -Path $Context.Path -InputObject $Context.Data
+        }
+    )
+}
+
+function Test-ScenarioFilter {
+    param(
+        [object] $ScenarioObject,
+        [string[]] $Patterns
+    )
+
+    if (-not $Patterns -or $Patterns.Count -eq 0) {
+        return $true
+    }
+
+    foreach ($pattern in $Patterns) {
+        if ($ScenarioObject.Key -like $pattern -or $ScenarioObject.Name -like $pattern) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Get-SelectedFollowUps {
+    param([object] $ScenarioObject)
+
+    $followUps = @($ScenarioObject.FollowUps | Where-Object { $_.Suites -contains $Suite })
+    if (-not $Scenario -or $Scenario.Count -eq 0) {
+        return $followUps
+    }
+
+    if (Test-ScenarioFilter -ScenarioObject $ScenarioObject -Patterns $Scenario) {
+        return $followUps
+    }
+
+    @($followUps | Where-Object { Test-ScenarioFilter -ScenarioObject $_ -Patterns $Scenario })
 }
 
 function Invoke-BenchmarkOperation {
     param(
-        [string] $Engine,
-        [string] $Scenario,
-        [int] $Rows,
-        [int] $Iteration,
-        [scriptblock] $ScriptBlock,
-        [string] $FilePath
+        [object] $Context,
+        [string] $ScenarioKey,
+        [string] $ScenarioName,
+        [scriptblock] $ScriptBlock
     )
 
     [GC]::Collect()
@@ -109,7 +426,7 @@ function Invoke-BenchmarkOperation {
     $status = 'Passed'
     $errorMessage = $null
     try {
-        $result = & $ScriptBlock
+        $result = & $ScriptBlock $Context
         $resultCount = Get-RowCount -Rows $result
     } catch {
         $status = 'Failed'
@@ -120,13 +437,16 @@ function Invoke-BenchmarkOperation {
 
     [pscustomobject]@{
         TimestampUtc      = [datetime]::UtcNow.ToString('o')
-        Engine            = $Engine
-        Scenario          = $Scenario
-        Rows              = $Rows
-        Iteration         = $Iteration
+        Suite             = $Suite
+        Engine            = $Context.Engine
+        ScenarioKey       = $ScenarioKey
+        Scenario          = $ScenarioName
+        Profile           = $Context.Profile
+        Rows              = $Context.Rows
+        Iteration         = $Context.Iteration
         Milliseconds      = [math]::Round($stopwatch.Elapsed.TotalMilliseconds, 3)
         ResultCount       = $resultCount
-        FileBytes         = if (Test-Path $FilePath) { (Get-Item $FilePath).Length } else { 0 }
+        FileBytes         = if (Test-Path $Context.Path) { (Get-Item $Context.Path).Length } else { 0 }
         WorkingSetDeltaMB = [math]::Round(($process.WorkingSet64 - $beforeWorkingSet) / 1MB, 3)
         ManagedDeltaMB    = [math]::Round(([GC]::GetTotalMemory($false) - $beforeManaged) / 1MB, 3)
         Status            = $status
@@ -134,100 +454,120 @@ function Invoke-BenchmarkOperation {
     }
 }
 
-Ensure-ImportExcel
-Ensure-ExcelFast
+if (-not $PSBoundParameters.ContainsKey('RowCount') -or -not $RowCount) {
+    $RowCount = switch ($Suite) {
+        'Smoke' { @(1000) }
+        'Standard' { @(1000, 10000, 25000) }
+        'Full' { @(1000, 10000, 25000, 100000) }
+    }
+}
 
-$env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
-$env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
-Import-Module (Join-Path $repoRoot 'PSWriteOffice.psd1') -Force -ErrorAction Stop
-Import-Module ImportExcel -Force -ErrorAction Stop
-Import-Module ExcelFast -Force -ErrorAction Stop
+if ($RepeatCount -le 0) {
+    $RepeatCount = switch ($Suite) {
+        'Smoke' { 1 }
+        'Standard' { 3 }
+        'Full' { 5 }
+    }
+}
+
+$allScenarios = @(
+    Get-ExcelBenchmarkScenarios |
+        Where-Object { $_ -and $_.PSObject.Properties['Key'] -and $_.PSObject.Properties['Engine'] -and $_.PSObject.Properties['Script'] }
+)
+if ($ListScenarios.IsPresent) {
+    $allScenarios |
+        Sort-Object Key, Engine |
+        ForEach-Object {
+            [pscustomobject]@{
+                Key = $_.Key
+                Engine = $_.Engine
+                Name = $_.Name
+                Profile = $_.Profile
+                Suites = ($_.Suites -join ', ')
+                FollowUps = (@($_.FollowUps | Where-Object { $_ -and $_.PSObject.Properties['Key'] } | ForEach-Object { $_.Key }) -join ', ')
+            }
+        } |
+        Format-Table -AutoSize
+    return
+}
+
+$selectedScenarios = @(
+    $allScenarios |
+        Where-Object { $_.Suites -contains $Suite } |
+        Where-Object { $Engine -contains $_.Engine } |
+        Where-Object {
+            if (-not $Scenario -or $Scenario.Count -eq 0) {
+                return $true
+            }
+
+            if (Test-ScenarioFilter -ScenarioObject $_ -Patterns $Scenario) {
+                return $true
+            }
+
+            $matchingFollowUps = @(Get-SelectedFollowUps -ScenarioObject $_)
+            return $matchingFollowUps.Count -gt 0
+        }
+)
+
+if ($selectedScenarios.Count -eq 0) {
+    throw 'No benchmark scenarios matched the requested suite, engine, and scenario filters.'
+}
+
+$null = New-Item -ItemType Directory -Force -Path $moduleRoot, $workRoot
+
+if ($Engine -contains 'ImportExcel') {
+    Ensure-ImportExcel
+}
+if ($Engine -contains 'ExcelFast') {
+    Ensure-ExcelFast
+}
+
+if ($Engine -contains 'PSWriteOffice') {
+    $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
+    $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
+    Import-Module (Join-Path $repoRoot 'PSWriteOffice.psd1') -Force -ErrorAction Stop
+}
+if ($Engine -contains 'ImportExcel') {
+    Import-Module ImportExcel -Force -ErrorAction Stop
+}
+if ($Engine -contains 'ExcelFast') {
+    Import-Module ExcelFast -Force -ErrorAction Stop
+}
 
 $results = [Collections.Generic.List[object]]::new()
 foreach ($rows in $RowCount) {
-    $data = @(New-BenchmarkRows -Count $rows)
+    $profileCache = @{}
     for ($iteration = 1; $iteration -le $RepeatCount; $iteration++) {
-        $scenarios = @(
-            @{
-                Engine = 'PSWriteOffice'
-                Name = 'Export objects as table'
-                Path = Join-Path $workRoot "pswriteoffice-objects-table-$rows-$iteration.xlsx"
-                Script = { $data | Export-OfficeExcel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data -TableName Data }
-            },
-            @{
-                Engine = 'ImportExcel'
-                Name = 'Export objects as table'
-                Path = Join-Path $workRoot "importexcel-objects-table-$rows-$iteration.xlsx"
-                Script = { $data | Export-Excel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data -TableName Data -AutoFilter }
-            },
-            @{
-                Engine = 'PSWriteOffice'
-                Name = 'Export objects default'
-                Path = Join-Path $workRoot "pswriteoffice-objects-default-$rows-$iteration.xlsx"
-                Script = { $data | Export-OfficeExcel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data }
-            },
-            @{
-                Engine = 'ImportExcel'
-                Name = 'Export objects default'
-                Path = Join-Path $workRoot "importexcel-objects-default-$rows-$iteration.xlsx"
-                Script = { $data | Export-Excel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data }
-            },
-            @{
-                Engine = 'ExcelFast'
-                Name = 'Export objects default'
-                Path = Join-Path $workRoot "excelfast-objects-default-$rows-$iteration.xlsx"
-                Script = { Export-Workbook -Destination $scenarios[$scenarioIndex].Path -InputObject $data -SheetName Data -Force }
-            },
-            @{
-                Engine = 'PSWriteOffice'
-                Name = 'Export objects no table'
-                Path = Join-Path $workRoot "pswriteoffice-objects-notable-$rows-$iteration.xlsx"
-                Script = { $data | Export-OfficeExcel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data -NoTable }
-            },
-            @{
-                Engine = 'ImportExcel'
-                Name = 'Export objects no table'
-                Path = Join-Path $workRoot "importexcel-objects-notable-$rows-$iteration.xlsx"
-                Script = { $data | Export-Excel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data }
-            },
-            @{
-                Engine = 'PSWriteOffice'
-                Name = 'Export objects table autofit'
-                Path = Join-Path $workRoot "pswriteoffice-objects-table-autofit-$rows-$iteration.xlsx"
-                Script = { $data | Export-OfficeExcel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data -TableName Data -AutoFit }
-            },
-            @{
-                Engine = 'ImportExcel'
-                Name = 'Export objects table autofit'
-                Path = Join-Path $workRoot "importexcel-objects-table-autofit-$rows-$iteration.xlsx"
-                Script = { $data | Export-Excel -Path $scenarios[$scenarioIndex].Path -WorksheetName Data -TableName Data -AutoFilter -AutoSize }
+        foreach ($benchmarkScenario in $selectedScenarios) {
+            if (-not $profileCache.ContainsKey($benchmarkScenario.Profile)) {
+                $profileCache[$benchmarkScenario.Profile] = Get-BenchmarkData -Profile $benchmarkScenario.Profile -Count $rows
             }
-        )
 
-        for ($scenarioIndex = 0; $scenarioIndex -lt $scenarios.Count; $scenarioIndex++) {
-            $scenario = $scenarios[$scenarioIndex]
-            if (Test-Path $scenario.Path) {
-                Remove-Item $scenario.Path -Force
+            $profile = $profileCache[$benchmarkScenario.Profile]
+            $path = Join-Path $workRoot ('{0}-{1}-{2}.xlsx' -f $benchmarkScenario.FileStem, $rows, $iteration)
+            $rangeEndColumn = ConvertTo-ExcelColumnName -ColumnNumber $profile.ColumnCount
+            $context = [pscustomobject]@{
+                Engine = $benchmarkScenario.Engine
+                Profile = $benchmarkScenario.Profile
+                Data = $profile.Data
+                ColumnCount = $profile.ColumnCount
+                Rows = $rows
+                Iteration = $iteration
+                WorksheetName = $profile.WorksheetName
+                Path = $path
+                Range = 'A1:{0}{1}' -f $rangeEndColumn, ($rows + 1)
+                RangeEndCell = '{0}{1}' -f $rangeEndColumn, ($rows + 1)
             }
-            $results.Add((Invoke-BenchmarkOperation -Engine $scenario.Engine -Scenario $scenario.Name -Rows $rows -Iteration $iteration -FilePath $scenario.Path -ScriptBlock $scenario.Script))
 
-            if ($scenario.Name -eq 'Export objects as table' -and (Test-Path $scenario.Path)) {
-                $importName = 'Import full sheet from table export'
-                $importPath = $scenario.Path
-                if ($scenario.Engine -eq 'PSWriteOffice') {
-                    $results.Add((Invoke-BenchmarkOperation -Engine 'PSWriteOffice' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-OfficeExcel -Path $importPath -WorksheetName Data }))
-                } elseif ($scenario.Engine -eq 'ImportExcel') {
-                    $results.Add((Invoke-BenchmarkOperation -Engine 'ImportExcel' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-Excel -Path $importPath -WorksheetName Data }))
-                }
-            } elseif ($scenario.Name -eq 'Export objects default' -and (Test-Path $scenario.Path)) {
-                $importName = 'Import full sheet from default export'
-                $importPath = $scenario.Path
-                if ($scenario.Engine -eq 'PSWriteOffice') {
-                    $results.Add((Invoke-BenchmarkOperation -Engine 'PSWriteOffice' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-OfficeExcel -Path $importPath -WorksheetName Data }))
-                } elseif ($scenario.Engine -eq 'ImportExcel') {
-                    $results.Add((Invoke-BenchmarkOperation -Engine 'ImportExcel' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-Excel -Path $importPath -WorksheetName Data }))
-                } elseif ($scenario.Engine -eq 'ExcelFast') {
-                    $results.Add((Invoke-BenchmarkOperation -Engine 'ExcelFast' -Scenario $importName -Rows $rows -Iteration $iteration -FilePath $importPath -ScriptBlock { Import-Workbook -Path $importPath -SheetName Data }))
+            if (Test-Path $context.Path) {
+                Remove-Item $context.Path -Force
+            }
+
+            $results.Add((Invoke-BenchmarkOperation -Context $context -ScenarioKey $benchmarkScenario.Key -ScenarioName $benchmarkScenario.Name -ScriptBlock $benchmarkScenario.Script))
+
+            if (Test-Path $context.Path) {
+                foreach ($followUp in (Get-SelectedFollowUps -ScenarioObject $benchmarkScenario)) {
+                    $results.Add((Invoke-BenchmarkOperation -Context $context -ScenarioKey $followUp.Key -ScenarioName $followUp.Name -ScriptBlock $followUp.Script))
                 }
             }
         }
@@ -240,14 +580,16 @@ $metadataPath = Join-Path $workRoot 'metadata.json'
 
 $results | Export-Csv -NoTypeInformation -Path $resultsPath
 $summary = $results |
-    Group-Object Engine, Scenario, Rows |
+    Group-Object Engine, ScenarioKey, Scenario, Profile, Rows |
     ForEach-Object {
         $passed = @($_.Group | Where-Object Status -eq 'Passed')
         $ordered = @($passed | Sort-Object Milliseconds)
         $median = if ($ordered.Count -eq 0) { 0 } else { $ordered[[int][math]::Floor(($ordered.Count - 1) / 2)].Milliseconds }
         [pscustomobject]@{
             Engine       = $_.Group[0].Engine
+            ScenarioKey  = $_.Group[0].ScenarioKey
             Scenario     = $_.Group[0].Scenario
+            Profile      = $_.Group[0].Profile
             Rows         = $_.Group[0].Rows
             Runs         = $_.Group.Count
             Passed       = $passed.Count
@@ -257,7 +599,7 @@ $summary = $results |
             MedianFileKB = if ($passed.Count) { [math]::Round((($passed | Sort-Object FileBytes)[[int][math]::Floor(($passed.Count - 1) / 2)].FileBytes) / 1KB, 1) } else { 0 }
         }
     } |
-    Sort-Object Scenario, Rows, Engine
+    Sort-Object ScenarioKey, Profile, Rows, Engine
 
 $summary | Export-Csv -NoTypeInformation -Path $summaryPath
 $officeIMOExcelAssemblyPath = Join-Path $repoRoot 'Sources\PSWriteOffice\bin\Debug\net8.0\OfficeIMO.Excel.dll'
@@ -273,15 +615,20 @@ $officeIMOExcelAssemblyVersion = if (Test-Path $officeIMOExcelAssemblyPath) {
         $null
     }
 }
+
 [pscustomobject]@{
     PowerShellVersion = $PSVersionTable.PSVersion.ToString()
     PSEdition = $PSEdition
-    ImportExcel = (Get-Module ImportExcel).Version.ToString()
-    ExcelFast = (Get-Module ExcelFast).Version.ToString()
-    PSWriteOffice = (Get-Module PSWriteOffice).Version.ToString()
+    Suite = $Suite
+    ImportExcel = if (Get-Module ImportExcel) { (Get-Module ImportExcel).Version.ToString() } else { $null }
+    ExcelFast = if (Get-Module ExcelFast) { (Get-Module ExcelFast).Version.ToString() } else { $null }
+    PSWriteOffice = if (Get-Module PSWriteOffice) { (Get-Module PSWriteOffice).Version.ToString() } else { $null }
     OfficeIMOExcelAssembly = $officeIMOExcelAssemblyVersion
+    Engines = $Engine
+    ScenarioFilter = $Scenario
     RowCount = $RowCount
     RepeatCount = $RepeatCount
+    ScenarioCount = $selectedScenarios.Count
     ResultsPath = $resultsPath
     SummaryPath = $summaryPath
 } | ConvertTo-Json -Depth 5 | Set-Content -Path $metadataPath -Encoding UTF8
