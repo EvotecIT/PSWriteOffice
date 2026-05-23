@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('Smoke', 'Standard', 'Full')]
+    [ValidateSet('Smoke', 'Standard', 'Large', 'Full', 'SuperLarge')]
     [string] $Suite = 'Standard',
 
     [int[]] $RowCount,
@@ -214,8 +214,8 @@ function ConvertTo-ExcelColumnName {
     $value = $ColumnNumber
     while ($value -gt 0) {
         $value--
-        $name = [char](65 + ($value % 26)) + $name
-        $value = [math]::Floor($value / 26)
+        $name = [char][int](65 + ($value % 26)) + $name
+        $value = [int][math]::Floor($value / 26)
     }
 
     $name
@@ -279,7 +279,13 @@ function New-ExportScenario {
 }
 
 function Get-ExcelBenchmarkScenarios {
-    $defaultImport = New-FollowUpScenario -Key 'import-default-full' -Name 'Import full sheet from default export' -Suites @('Smoke', 'Standard', 'Full') -Script {
+    $basicSuites = @('Smoke', 'Standard', 'Large', 'Full', 'SuperLarge')
+    $tableSuites = @('Smoke', 'Standard', 'Large', 'Full')
+    $standardSuites = @('Standard', 'Large', 'Full')
+    $scaleSuites = @('Standard', 'Large', 'Full', 'SuperLarge')
+    $dataSetSuites = @('Large', 'Full')
+
+    $defaultImport = New-FollowUpScenario -Key 'import-default-full' -Name 'Import full sheet from default export' -Suites $basicSuites -Script {
         param($Context)
 
         switch ($Context.Engine) {
@@ -289,7 +295,7 @@ function Get-ExcelBenchmarkScenarios {
         }
     }
 
-    $defaultRangeImport = New-FollowUpScenario -Key 'import-default-range' -Name 'Import A1 range from default export' -Suites @('Standard', 'Full') -Script {
+    $defaultRangeImport = New-FollowUpScenario -Key 'import-default-range' -Name 'Import A1 range from default export' -Suites $scaleSuites -Script {
         param($Context)
 
         switch ($Context.Engine) {
@@ -299,7 +305,7 @@ function Get-ExcelBenchmarkScenarios {
         }
     }
 
-    $tableImport = New-FollowUpScenario -Key 'import-table-full' -Name 'Import full sheet from table export' -Suites @('Smoke', 'Standard', 'Full') -Script {
+    $tableImport = New-FollowUpScenario -Key 'import-table-full' -Name 'Import full sheet from table export' -Suites $tableSuites -Script {
         param($Context)
 
         switch ($Context.Engine) {
@@ -310,63 +316,63 @@ function Get-ExcelBenchmarkScenarios {
     }
 
     @(
-        New-ExportScenario -Key 'objects-table' -Name 'Export objects as table' -Suites @('Smoke', 'Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-table' -FollowUps @($tableImport) -Script {
+        New-ExportScenario -Key 'objects-table' -Name 'Export objects as table' -Suites $tableSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-table' -FollowUps @($tableImport) -Script {
             param($Context)
             $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data
         }
-        New-ExportScenario -Key 'objects-table' -Name 'Export objects as table' -Suites @('Smoke', 'Standard', 'Full') -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-table' -FollowUps @($tableImport) -Script {
+        New-ExportScenario -Key 'objects-table' -Name 'Export objects as table' -Suites $tableSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-table' -FollowUps @($tableImport) -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter
         }
-        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites @('Smoke', 'Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites @('Smoke', 'Standard', 'Full') -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites @('Smoke', 'Standard', 'Full') -Engine 'ExcelFast' -Profile 'MixedObjects' -FileStem 'excelfast-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'ExcelFast' -Profile 'MixedObjects' -FileStem 'excelfast-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             Export-Workbook -Destination $Context.Path -InputObject $Context.Data -SheetName $Context.WorksheetName -Force
         }
-        New-ExportScenario -Key 'objects-no-table' -Name 'Export objects no table' -Suites @('Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-notable' -Script {
+        New-ExportScenario -Key 'objects-no-table' -Name 'Export objects no table' -Suites $scaleSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-notable' -Script {
             param($Context)
             $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -NoTable
         }
-        New-ExportScenario -Key 'objects-no-table' -Name 'Export objects no table' -Suites @('Standard', 'Full') -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-notable' -Script {
+        New-ExportScenario -Key 'objects-no-table' -Name 'Export objects no table' -Suites $scaleSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-notable' -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'objects-table-autofit' -Name 'Export objects table autofit' -Suites @('Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-table-autofit' -Script {
+        New-ExportScenario -Key 'objects-table-autofit' -Name 'Export objects table autofit' -Suites $standardSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-table-autofit' -Script {
             param($Context)
             $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFit
         }
-        New-ExportScenario -Key 'objects-table-autofit' -Name 'Export objects table autofit' -Suites @('Standard', 'Full') -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-table-autofit' -Script {
+        New-ExportScenario -Key 'objects-table-autofit' -Name 'Export objects table autofit' -Suites $standardSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-table-autofit' -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -AutoSize
         }
-        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites @('Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'WideObjects' -FileStem 'pswriteoffice-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'PSWriteOffice' -Profile 'WideObjects' -FileStem 'pswriteoffice-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites @('Standard', 'Full') -Engine 'ImportExcel' -Profile 'WideObjects' -FileStem 'importexcel-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'ImportExcel' -Profile 'WideObjects' -FileStem 'importexcel-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites @('Standard', 'Full') -Engine 'ExcelFast' -Profile 'WideObjects' -FileStem 'excelfast-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'ExcelFast' -Profile 'WideObjects' -FileStem 'excelfast-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             Export-Workbook -Destination $Context.Path -InputObject $Context.Data -SheetName $Context.WorksheetName -Force
         }
-        New-ExportScenario -Key 'datatable-default' -Name 'Export DataTable default' -Suites @('Standard', 'Full') -Engine 'PSWriteOffice' -Profile 'DataTable' -FileStem 'pswriteoffice-datatable-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'datatable-default' -Name 'Export DataTable default' -Suites $scaleSuites -Engine 'PSWriteOffice' -Profile 'DataTable' -FileStem 'pswriteoffice-datatable-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             Export-OfficeExcel -Path $Context.Path -InputObject $Context.Data -WorksheetName $Context.WorksheetName -TableName Data
         }
-        New-ExportScenario -Key 'datatable-default' -Name 'Export DataTable default' -Suites @('Standard', 'Full') -Engine 'ImportExcel' -Profile 'DataTable' -FileStem 'importexcel-datatable-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'datatable-default' -Name 'Export DataTable default' -Suites $scaleSuites -Engine 'ImportExcel' -Profile 'DataTable' -FileStem 'importexcel-datatable-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'dataset-worksheets' -Name 'Export DataSet worksheets' -Suites @('Full') -Engine 'PSWriteOffice' -Profile 'DataSet' -FileStem 'pswriteoffice-dataset-worksheets' -FollowUps @($defaultImport) -Script {
+        New-ExportScenario -Key 'dataset-worksheets' -Name 'Export DataSet worksheets' -Suites $dataSetSuites -Engine 'PSWriteOffice' -Profile 'DataSet' -FileStem 'pswriteoffice-dataset-worksheets' -FollowUps @($defaultImport) -Script {
             param($Context)
             Export-OfficeExcel -Path $Context.Path -InputObject $Context.Data
         }
@@ -616,7 +622,9 @@ if (-not $PSBoundParameters.ContainsKey('RowCount') -or -not $RowCount) {
     $RowCount = switch ($Suite) {
         'Smoke' { @(1000) }
         'Standard' { @(1000, 10000, 25000) }
+        'Large' { @(25000, 100000, 250000) }
         'Full' { @(1000, 10000, 25000, 100000) }
+        'SuperLarge' { @(250000, 500000, 1000000) }
     }
 }
 
@@ -624,7 +632,9 @@ if ($RepeatCount -le 0) {
     $RepeatCount = switch ($Suite) {
         'Smoke' { 1 }
         'Standard' { 3 }
+        'Large' { 3 }
         'Full' { 5 }
+        'SuperLarge' { 1 }
     }
 }
 
@@ -808,6 +818,6 @@ Write-Host "Comparison CSV: $comparisonCsvPath"
 Write-Host "Comparison JSON: $comparisonJsonPath"
 Write-Host "Metadata: $metadataPath"
 $comparison |
-    Select-Object ScenarioKey, Rows, FastestEngine, FastestMs, PSWriteOfficeMs, PSWriteOfficeVsFastestText, Rating |
+    Select-Object ScenarioKey, Profile, Rows, FastestEngine, FastestMs, PSWriteOfficeMs, PSWriteOfficeVsFastestText, Rating |
     Format-Table -AutoSize
 $summary | Format-Table -AutoSize

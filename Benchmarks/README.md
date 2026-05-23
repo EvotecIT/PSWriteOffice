@@ -24,10 +24,22 @@ Default comparison run:
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard
 ```
 
+Large comparison run:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Large
+```
+
 Longer comparison run:
 
 ```powershell
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Full
+```
+
+Scale stress run:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite SuperLarge
 ```
 
 Focus on a specific workflow:
@@ -48,7 +60,11 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
 
 `Standard` covers the everyday decisions people make: default export, table export, no-table export, autofit, full-sheet import, range import, wide objects, and DataTable input.
 
-`Full` includes everything in `Standard` plus larger default row counts and PSWriteOffice-only DataSet worksheet export.
+`Large` runs the broad workflow family at `25k`, `100k`, and `250k` rows, including the PSWriteOffice DataSet worksheet path.
+
+`Full` includes everything in `Standard` plus a `100k` row count, more repeats, and PSWriteOffice-only DataSet worksheet export.
+
+`SuperLarge` runs scale-safe workflows at `250k`, `500k`, and `1m` rows. It intentionally skips table/autofit/DataSet defaults; use `-Scenario` and `-RowCount` when you want to force those expensive paths.
 
 ## Output Files
 
