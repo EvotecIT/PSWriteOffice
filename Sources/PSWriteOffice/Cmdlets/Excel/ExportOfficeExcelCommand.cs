@@ -26,6 +26,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Alias("ExcelExport")]
 public sealed class ExportOfficeExcelCommand : PSCmdlet
 {
+    private static readonly MethodInfo? AppendDataTableToTableMethod = typeof(ExcelSheet).GetMethod(
+        "AppendDataTableToTable",
+        BindingFlags.Instance | BindingFlags.Public,
+        binder: null,
+        types: new[] { typeof(DataTable), typeof(string), typeof(bool), typeof(ExecutionMode?), typeof(CancellationToken) },
+        modifiers: null);
+
     private readonly List<object?> _input = new();
 
     /// <summary>Destination workbook path.</summary>
@@ -337,7 +344,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private DataTable BuildDataTable()
     {
-        var table = ExcelTabularInputService.ToDataTable(_input, TableName);
+        var table = ExcelTabularInputService.ToDataTable(_input, TableName, copyExistingTables: ExcludeProperty is { Length: > 0 });
         return ApplyExcludedColumns(table);
     }
 
@@ -391,7 +398,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 includeAutoFilter: !NoAutoFilter.IsPresent);
         }
 
-        var cells = new List<(int Row, int Column, object Value)>();
+        var cellCount = checked((table.Rows.Count + (includeHeaders ? 1 : 0)) * table.Columns.Count);
+        var cells = new List<(int Row, int Column, object Value)>(cellCount);
         var row = startRow;
 
         if (includeHeaders)
@@ -477,14 +485,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private bool TryAppendDataTableToTable(ExcelSheet sheet, DataTable table, string tableName, out string range)
     {
-        var method = typeof(ExcelSheet).GetMethod(
-            "AppendDataTableToTable",
-            BindingFlags.Instance | BindingFlags.Public,
-            binder: null,
-            types: new[] { typeof(DataTable), typeof(string), typeof(bool), typeof(ExecutionMode?), typeof(CancellationToken) },
-            modifiers: null);
-
-        if (method == null)
+        if (AppendDataTableToTableMethod == null)
         {
             WriteVerbose("The loaded OfficeIMO.Excel version does not expose AppendDataTableToTable; appending rows after the used range.");
             range = string.Empty;
@@ -493,7 +494,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         try
         {
-            var result = method.Invoke(sheet, new object?[] { table, tableName, true, null, CancellationToken.None });
+            var result = AppendDataTableToTableMethod.Invoke(sheet, new object?[] { table, tableName, true, null, CancellationToken.None });
             range = result as string ?? string.Empty;
             return true;
         }

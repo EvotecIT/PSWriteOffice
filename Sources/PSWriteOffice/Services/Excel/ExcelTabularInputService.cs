@@ -9,14 +9,24 @@ namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelTabularInputService
 {
-    public static DataTable ToDataTable(IEnumerable<object?> input, string? tableName = null)
+    public static DataTable ToDataTable(IEnumerable<object?> input, string? tableName = null, bool copyExistingTables = true)
     {
         if (input == null)
         {
             throw new ArgumentNullException(nameof(input));
         }
 
-        var items = input.Where(item => item != null).ToList();
+        var items = new List<object?>();
+        foreach (var item in input)
+        {
+            if (item == null)
+            {
+                continue;
+            }
+
+            items.Add(item);
+        }
+
         if (items.Count == 0)
         {
             throw new ArgumentException("Provide at least one data row.", nameof(input));
@@ -27,7 +37,7 @@ internal static class ExcelTabularInputService
             var single = Unwrap(items[0]);
             if (single is DataTable dataTable)
             {
-                return dataTable.Copy();
+                return copyExistingTables ? dataTable.Copy() : dataTable;
             }
 
             if (single is DataView dataView)
@@ -45,14 +55,45 @@ internal static class ExcelTabularInputService
             }
         }
 
-        if (items.All(item => Unwrap(item) is DataRow))
+        var first = Unwrap(items[0]);
+        if (first is DataRow firstRow)
         {
-            return FromDataRows(items.Select(item => (DataRow)Unwrap(item)!).ToList());
+            var rows = new List<DataRow>(items.Count) { firstRow };
+            for (var i = 1; i < items.Count; i++)
+            {
+                if (Unwrap(items[i]) is not DataRow row)
+                {
+                    rows.Clear();
+                    break;
+                }
+
+                rows.Add(row);
+            }
+
+            if (rows.Count > 0)
+            {
+                return FromDataRows(rows);
+            }
         }
 
-        if (items.All(item => Unwrap(item) is DataRowView))
+        if (first is DataRowView firstRowView)
         {
-            return FromDataRows(items.Select(item => ((DataRowView)Unwrap(item)!).Row).ToList());
+            var rows = new List<DataRow>(items.Count) { firstRowView.Row };
+            for (var i = 1; i < items.Count; i++)
+            {
+                if (Unwrap(items[i]) is not DataRowView rowView)
+                {
+                    rows.Clear();
+                    break;
+                }
+
+                rows.Add(rowView.Row);
+            }
+
+            if (rows.Count > 0)
+            {
+                return FromDataRows(rows);
+            }
         }
 
         var normalized = PowerShellObjectNormalizer.NormalizeItems(items);
@@ -66,8 +107,25 @@ internal static class ExcelTabularInputService
             throw new ArgumentNullException(nameof(input));
         }
 
-        var items = input.Where(item => item != null).Select(Unwrap).ToList();
-        return items.Count == 1 ? items[0] as DataSet : null;
+        DataSet? dataSet = null;
+        var count = 0;
+        foreach (var item in input)
+        {
+            if (item == null)
+            {
+                continue;
+            }
+
+            count++;
+            if (count > 1)
+            {
+                return null;
+            }
+
+            dataSet = Unwrap(item) as DataSet;
+        }
+
+        return count == 1 ? dataSet : null;
     }
 
     private static DataTable FromDataRows(IReadOnlyList<DataRow> rows)
