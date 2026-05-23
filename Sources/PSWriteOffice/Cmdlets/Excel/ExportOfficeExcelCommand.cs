@@ -186,6 +186,21 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
 
             var isAppendingToExistingSheet = Append.IsPresent && SheetExists(document, WorksheetName);
+            var reader = ExcelTabularInputService.TryGetSingleDataReader(_input);
+            if (reader != null && CanExportReaderDirectly(isAppendingToExistingSheet))
+            {
+                var readerSheet = PrepareSheet(document);
+                var readerRange = ExportDataReader(readerSheet, reader, style);
+                if (!string.IsNullOrWhiteSpace(readerRange))
+                {
+                    WriteVerbose($"Exported data reader to {readerSheet.Name}!{readerRange}.");
+                }
+
+                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+                WritePassThru(resolvedPath);
+                return;
+            }
+
             var sheet = PrepareSheet(document);
             var data = BuildDataTable();
             if (data.Columns.Count == 0)
@@ -240,6 +255,50 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         {
             WritePassThru(resolvedPath);
         }
+    }
+
+    private bool CanExportReaderDirectly(bool isAppendingToExistingSheet)
+    {
+        return !isAppendingToExistingSheet && ExcludeProperty is not { Length: > 0 };
+    }
+
+    private string ExportDataReader(ExcelSheet sheet, IDataReader reader, TableStyle style)
+    {
+        var dataStartRow = StartRow;
+        if (!string.IsNullOrWhiteSpace(Title))
+        {
+            sheet.Cell(dataStartRow, StartColumn, Title!);
+            sheet.CellBold(dataStartRow, StartColumn, true);
+            dataStartRow++;
+        }
+
+        var range = sheet.InsertDataReader(
+            reader,
+            startRow: dataStartRow,
+            startColumn: StartColumn,
+            includeHeaders: !NoHeader.IsPresent,
+            tableName: TableName,
+            style: style,
+            includeAutoFilter: !NoAutoFilter.IsPresent,
+            createTable: !NoTable.IsPresent,
+            autoFit: AutoFit.IsPresent);
+
+        if (!string.IsNullOrWhiteSpace(range))
+        {
+            if (BoldTopRow.IsPresent && !NoHeader.IsPresent)
+            {
+                BoldRow(sheet, dataStartRow, StartColumn, reader.FieldCount);
+            }
+
+            if (FreezeTopRow.IsPresent || FreezeFirstColumn.IsPresent)
+            {
+                var frozenRows = FreezeTopRow.IsPresent ? Math.Max(1, !NoHeader.IsPresent ? dataStartRow : StartRow) : 0;
+                var frozenColumns = FreezeFirstColumn.IsPresent ? Math.Max(1, StartColumn) : 0;
+                sheet.Freeze(frozenRows, frozenColumns);
+            }
+        }
+
+        return range;
     }
 
     private void ExportDataSet(ExcelDocument document, DataSet dataSet, TableStyle style)
