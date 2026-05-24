@@ -128,6 +128,34 @@ internal static class ExcelTabularInputService
         return count == 1 ? dataSet : null;
     }
 
+    public static IDataReader? TryGetSingleDataReader(IEnumerable<object?> input)
+    {
+        if (input == null)
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
+
+        IDataReader? reader = null;
+        var count = 0;
+        foreach (var item in input)
+        {
+            if (item == null)
+            {
+                continue;
+            }
+
+            count++;
+            if (count > 1)
+            {
+                return null;
+            }
+
+            reader = Unwrap(item) as IDataReader;
+        }
+
+        return count == 1 ? reader : null;
+    }
+
     private static DataTable FromDataRows(IReadOnlyList<DataRow> rows)
     {
         if (rows.Count == 0)

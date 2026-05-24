@@ -264,6 +264,23 @@ Describe 'Excel DSL surface' {
         $imported[0].PSObject.Properties.Name | Should -Not -Contain 'RowError'
     }
 
+    It 'exports IDataReader input without requiring callers to buffer it first' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataReader.xlsx'
+        $table = [System.Data.DataTable]::new('SqlRows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('A', 1)
+        [void] $table.Rows.Add('B', 2)
+        $reader = $table.CreateDataReader()
+
+        Export-OfficeExcel -Path $path -InputObject $reader -WorksheetName 'Data' -TableName 'SqlRows' -AutoFit -FreezeTopRow
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $rows.Count | Should -Be 2
+        $rows[0].Name | Should -Be 'A'
+        $rows[1].Value | Should -Be 2
+    }
+
     It 'exports HTML-parser DataTable output with companion link URL columns' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelHtmlDataTable.xlsx'
         $table = [System.Data.DataTable]::new('HtmlLinks')
