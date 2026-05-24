@@ -1,6 +1,6 @@
 # PSWriteOffice and OfficeIMO Support Matrix
 
-Date: 2026-05-16
+Date: 2026-05-18
 
 This matrix is the current planning companion for `OfficeIMO-Showcase-PolishPlan.md`.
 For the ImportExcel and PSWriteWord competitive crosswalk, see
@@ -23,7 +23,7 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | Create/load/save documents | Wrapped | `New-OfficeWord`, `Get-OfficeWord`, `Save-OfficeWord`, `Close-OfficeWord`, including encrypted package open/save |
 | Sections, headers, footers, page numbers | Wrapped | Good enough for report examples |
 | Paragraphs, text, lists | Partial wrapper | Core authoring is wrapped; richer run/paragraph style builders remain |
-| Tables from objects and table-cell content | Partial wrapper | Object tables, conditional rows, nested tables, lists, images, and chart anchoring are wrapped; row/column mutation and merge helpers remain |
+| Tables from objects and table-cell content | Partial wrapper | Object tables, conditional rows, nested tables, lists, images, chart anchoring, table-cell read/style, width, merge, and split helpers are wrapped; row/column mutation remains |
 | TOC and field updates | Wrapped | `Add/Set/Get/Update/Remove-OfficeWordTableOfContent`, `Update-OfficeWordFields` |
 | Bookmarks and hyperlinks | Wrapped | External and anchor links are exposed |
 | Document properties | Wrapped | Built-in/custom property surface exists |
@@ -34,8 +34,8 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | Mail merge | Wrapped | Suitable for practical examples |
 | Footnotes/endnotes | Wrapped | Add/read wrappers return document-safe note snapshots |
 | Page setup and columns | Wrapped | `Set-OfficeWordPageSetup` covers page size, orientation, margins, and columns |
-| Advanced image layout | Wrapper gap | Crop, transparency, rotation, wrapping, fixed positioning, alt text |
-| Text boxes and shapes | Wrapper gap | OfficeIMO.Word supports richer shape scenarios than PSWriteOffice exposes |
+| Advanced image layout | Partial wrapper | `Get/Set-OfficeWordImage` exposes crop, rotation, flip, wrapping, metadata, and visibility; fixed-position semantics remain engine-led |
+| Text boxes and shapes | Partial wrapper | `Add/Get/Set-OfficeWordShape` exposes basic shape authoring and styling; text boxes and richer templates remain |
 | Cover pages | Wrapped | `Add-OfficeWordCoverPage` exposes stable OfficeIMO templates and basic cover metadata |
 | Append/merge documents | Wrapped | `Join-OfficeWordDocument` appends one or more documents into a base document |
 | Equations and tab stops | Wrapped | `Add-OfficeWordEquation` and `Add-OfficeWordTabStop` expose stable OfficeIMO.Word APIs |
@@ -50,7 +50,7 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | --- | --- | --- |
 | Create/load/save workbook | Wrapped | `New/Get/Save/Close-OfficeExcel`, including encrypted package open/save |
 | Import/export operator flow | Wrapped | `Export-OfficeExcel` and `Import-OfficeExcel` cover common ImportExcel-style workflows |
-| Bridge data shapes | Wrapped | Objects, dictionaries, `DataTable`, `DataSet`, `DataView`, and `IDataReader` are accepted by table/export paths |
+| Bridge data shapes | Wrapped | Objects, dictionaries, `DataTable`, `DataSet`, `DataView`, and `IDataReader` are accepted by table/export paths; performance selection stays inside OfficeIMO normal APIs |
 | Sheets, cells, rows, columns | Wrapped | Strong primitive coverage |
 | Worksheet copy/move/join/compare | Wrapped | Useful maintenance and migration helpers exist |
 | Tables from objects | Wrapped | Core reporting path works |
@@ -103,7 +103,7 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 
 ## Recommended Next PRs
 
-1. Word image layout, table mutation, and text box helpers.
+1. Word run/paragraph style, row/column table mutation, and text box helpers.
 2. PowerPoint metrics/visual-frame helpers, fit diagnostics, and shape layout polish.
 3. OfficeIMO engine confidence for Excel pivot/sparkline desktop-open compatibility.
 

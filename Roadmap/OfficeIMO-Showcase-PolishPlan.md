@@ -1,6 +1,6 @@
 # PSWriteOffice Showcase and OfficeIMO Polish Plan
 
-Date: 2026-05-16
+Date: 2026-05-18
 
 This plan tracks the current showcase and polish work after the broad OfficeIMO
 wrapper pass. Completed backlog slices were removed; this file now focuses only on
@@ -11,9 +11,9 @@ what still moves the product forward.
 PSWriteOffice is no longer missing the common primitives.
 
 - Word wraps document lifecycle, encrypted package open/save, readers, paragraphs, lists, tables, table-cell
-  content, conditional table formatting, TOC, bookmarks, fields, footnotes/endnotes,
+  content/read/style helpers, conditional table formatting, TOC, bookmarks, fields, footnotes/endnotes,
   content controls, charts, hyperlinks, document properties, backgrounds, watermarks,
-  protection, mail merge, HTML conversion, and Markdown conversion.
+  protection, mail merge, image mutation, shape authoring/style helpers, HTML conversion, and Markdown conversion.
 - Excel wraps import/export, encrypted package open/save, sheets, cells, rows, columns, tables, `DataTable` and
   `DataSet` ingestion, named ranges, formulas, validation, conditional formatting,
   comments, images and URL images, charts and chart finishing, pivots, sparklines,
@@ -36,11 +36,9 @@ diagnostics, and showcase examples that feel like real reporting products.
 
 Focus on professional report assembly:
 
-1. Image layout wrappers for crop/fill, rotation, transparency, fixed positioning,
-   wrapping, and alt text.
-2. Compact run/paragraph style helpers.
-3. Table row/column mutation, merge-cell, layout, and width helpers.
-4. Text box and shape helpers.
+1. Compact run/paragraph style helpers.
+2. Table row/column mutation helpers.
+3. Text box helpers and richer shape templates where OfficeIMO exposes stable APIs.
 
 Keep macros, SmartArt authoring, PDF export, and embedded-document work as
 explicit scope decisions.
@@ -94,9 +92,9 @@ Keep demonstrating:
 
 Next polish:
 
-- cover page helper once stable
-- richer image layout/alt text
-- merge/append-document appendix flow
+- compact run/paragraph style helpers
+- table row/column mutation helpers
+- text box helpers
 
 ### Excel Showcase
 
@@ -121,8 +119,6 @@ Keep demonstrating:
 
 Next polish:
 
-- report composer wrapper over OfficeIMO `SheetComposer`
-- column-style-by-header wrapper
 - pivot/sparkline compatibility confidence before relying on them in flagship output
 
 ### PowerPoint Showcase

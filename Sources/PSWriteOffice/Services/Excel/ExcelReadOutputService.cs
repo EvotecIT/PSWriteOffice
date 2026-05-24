@@ -75,15 +75,22 @@ internal static class ExcelReadOutputService
             return;
         }
 
+        var columnCount = table.Columns.Count;
+        var columnNames = new string[columnCount];
+        for (var i = 0; i < columnCount; i++)
+        {
+            columnNames[i] = table.Columns[i].ColumnName;
+        }
+
         foreach (DataRow row in table.Rows)
         {
             if (asHashtable)
             {
-                var hashtable = new Hashtable(StringComparer.OrdinalIgnoreCase);
-                foreach (DataColumn column in table.Columns)
+                var hashtable = new Hashtable(columnCount, StringComparer.OrdinalIgnoreCase);
+                for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
                 {
-                    var value = row[column];
-                    hashtable[column.ColumnName] = value is DBNull ? null : value;
+                    var value = row[columnIndex];
+                    hashtable[columnNames[columnIndex]] = value is DBNull ? null : value;
                 }
 
                 cmdlet.WriteObject(hashtable);
@@ -91,10 +98,10 @@ internal static class ExcelReadOutputService
             else
             {
                 var psObject = new PSObject();
-                foreach (DataColumn column in table.Columns)
+                for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
                 {
-                    var value = row[column];
-                    psObject.Properties.Add(new PSNoteProperty(column.ColumnName, value is DBNull ? null : value));
+                    var value = row[columnIndex];
+                    psObject.Properties.Add(new PSNoteProperty(columnNames[columnIndex], value is DBNull ? null : value));
                 }
 
                 cmdlet.WriteObject(psObject);

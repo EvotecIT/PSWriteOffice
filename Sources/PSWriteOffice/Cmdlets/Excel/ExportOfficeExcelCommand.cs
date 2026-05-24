@@ -26,6 +26,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Alias("ExcelExport")]
 public sealed class ExportOfficeExcelCommand : PSCmdlet
 {
+    private static readonly MethodInfo? AppendDataTableToTableMethod = typeof(ExcelSheet).GetMethod(
+        "AppendDataTableToTable",
+        BindingFlags.Instance | BindingFlags.Public,
+        binder: null,
+        types: new[] { typeof(DataTable), typeof(string), typeof(bool), typeof(ExecutionMode?), typeof(CancellationToken) },
+        modifiers: null);
+
     private readonly List<object?> _input = new();
 
     /// <summary>Destination workbook path.</summary>
@@ -179,6 +186,21 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
 
             var isAppendingToExistingSheet = Append.IsPresent && SheetExists(document, WorksheetName);
+            var reader = ExcelTabularInputService.TryGetSingleDataReader(_input);
+            if (reader != null && CanExportReaderDirectly(isAppendingToExistingSheet))
+            {
+                var readerSheet = PrepareSheet(document);
+                var readerRange = ExportDataReader(readerSheet, reader, style);
+                if (!string.IsNullOrWhiteSpace(readerRange))
+                {
+                    WriteVerbose($"Exported data reader to {readerSheet.Name}!{readerRange}.");
+                }
+
+                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+                WritePassThru(resolvedPath);
+                return;
+            }
+
             var sheet = PrepareSheet(document);
             var data = BuildDataTable();
             if (data.Columns.Count == 0)
@@ -235,6 +257,50 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         }
     }
 
+    private bool CanExportReaderDirectly(bool isAppendingToExistingSheet)
+    {
+        return !isAppendingToExistingSheet && ExcludeProperty is not { Length: > 0 };
+    }
+
+    private string ExportDataReader(ExcelSheet sheet, IDataReader reader, TableStyle style)
+    {
+        var dataStartRow = StartRow;
+        if (!string.IsNullOrWhiteSpace(Title))
+        {
+            sheet.Cell(dataStartRow, StartColumn, Title!);
+            sheet.CellBold(dataStartRow, StartColumn, true);
+            dataStartRow++;
+        }
+
+        var range = sheet.InsertDataReader(
+            reader,
+            startRow: dataStartRow,
+            startColumn: StartColumn,
+            includeHeaders: !NoHeader.IsPresent,
+            tableName: TableName,
+            style: style,
+            includeAutoFilter: !NoAutoFilter.IsPresent,
+            createTable: !NoTable.IsPresent,
+            autoFit: AutoFit.IsPresent);
+
+        if (!string.IsNullOrWhiteSpace(range))
+        {
+            if (BoldTopRow.IsPresent && !NoHeader.IsPresent)
+            {
+                BoldRow(sheet, dataStartRow, StartColumn, reader.FieldCount);
+            }
+
+            if (FreezeTopRow.IsPresent || FreezeFirstColumn.IsPresent)
+            {
+                var frozenRows = FreezeTopRow.IsPresent ? Math.Max(1, !NoHeader.IsPresent ? dataStartRow : StartRow) : 0;
+                var frozenColumns = FreezeFirstColumn.IsPresent ? Math.Max(1, StartColumn) : 0;
+                sheet.Freeze(frozenRows, frozenColumns);
+            }
+        }
+
+        return range;
+    }
+
     private void ExportDataSet(ExcelDocument document, DataSet dataSet, TableStyle style)
     {
         if (dataSet.Tables.Count == 0)
@@ -243,6 +309,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         }
 
         var sheetNames = BuildDataSetWorksheetNames(document, dataSet, Append.IsPresent || ClearSheet.IsPresent);
+        var usedTableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var tableIndex = 1;
         foreach (DataTable sourceTable in dataSet.Tables)
         {
@@ -256,7 +323,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
 
             var sheet = GetOrAddDataSetSheet(document, sheetName);
-            var table = ApplyExcludedColumns(sourceTable.Copy());
+            var table = PrepareDataTableForExport(sourceTable);
             if (table.Columns.Count == 0)
             {
                 throw new InvalidOperationException($"Unable to infer columns from DataTable '{sourceTable.TableName}'.");
@@ -266,7 +333,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var dataStartRow = ResolveDataStartRow(sheet, isAppendingToExistingSheet);
             var includeHeaders = !NoHeader.IsPresent && !isAppendingToExistingSheet;
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
-            var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, ResolveTableName(table, allowExplicitOverride: false));
+            var tableName = ResolveDataSetTableName(table, usedTableNames);
+            var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, tableName);
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -294,6 +362,35 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         }
     }
 
+    private DataTable PrepareDataTableForExport(DataTable sourceTable)
+    {
+        if (ExcludeProperty is { Length: > 0 })
+        {
+            return ApplyExcludedColumns(sourceTable.Copy());
+        }
+
+        return sourceTable;
+    }
+
+    private string? ResolveDataSetTableName(DataTable table, ISet<string> usedTableNames)
+    {
+        var tableName = ResolveTableName(table, allowExplicitOverride: false);
+        if (string.IsNullOrWhiteSpace(tableName))
+        {
+            return null;
+        }
+
+        var candidate = tableName!;
+        var suffix = 2;
+        while (!usedTableNames.Add(candidate))
+        {
+            candidate = $"{tableName}_{suffix}";
+            suffix++;
+        }
+
+        return candidate;
+    }
+
     private ExcelSheet PrepareSheet(ExcelDocument document)
     {
         if (ClearSheet.IsPresent && SheetExists(document, WorksheetName))
@@ -306,7 +403,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private DataTable BuildDataTable()
     {
-        var table = ExcelTabularInputService.ToDataTable(_input, TableName);
+        var table = ExcelTabularInputService.ToDataTable(_input, TableName, copyExistingTables: ExcludeProperty is { Length: > 0 });
         return ApplyExcludedColumns(table);
     }
 
@@ -360,7 +457,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 includeAutoFilter: !NoAutoFilter.IsPresent);
         }
 
-        var cells = new List<(int Row, int Column, object Value)>();
+        var cellCount = checked((table.Rows.Count + (includeHeaders ? 1 : 0)) * table.Columns.Count);
+        var cells = new List<(int Row, int Column, object Value)>(cellCount);
         var row = startRow;
 
         if (includeHeaders)
@@ -446,14 +544,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private bool TryAppendDataTableToTable(ExcelSheet sheet, DataTable table, string tableName, out string range)
     {
-        var method = typeof(ExcelSheet).GetMethod(
-            "AppendDataTableToTable",
-            BindingFlags.Instance | BindingFlags.Public,
-            binder: null,
-            types: new[] { typeof(DataTable), typeof(string), typeof(bool), typeof(ExecutionMode?), typeof(CancellationToken) },
-            modifiers: null);
-
-        if (method == null)
+        if (AppendDataTableToTableMethod == null)
         {
             WriteVerbose("The loaded OfficeIMO.Excel version does not expose AppendDataTableToTable; appending rows after the used range.");
             range = string.Empty;
@@ -462,7 +553,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         try
         {
-            var result = method.Invoke(sheet, new object?[] { table, tableName, true, null, CancellationToken.None });
+            var result = AppendDataTableToTableMethod.Invoke(sheet, new object?[] { table, tableName, true, null, CancellationToken.None });
             range = result as string ?? string.Empty;
             return true;
         }

@@ -1,6 +1,6 @@
 # Excel and Word Competitive Capability Audit
 
-Date: 2026-05-16
+Date: 2026-05-18
 
 This is the current competitive snapshot after the ImportExcel/PSWriteWord parity work.
 Older backlog files were removed because the high-value wrapper work they tracked has
@@ -45,6 +45,7 @@ page setup, equations, tab stops, and report-composer examples.
 | File conversion | CSV conversion exists | Range-to-image is explicitly out of parity scope unless OfficeIMO grows an intentional pure renderer. |
 | HTML/data-source bridges | `Export-OfficeExcel` accepts bridge-friendly .NET data shapes; `Example-ExcelHtmlTablesViaPSParseHTML.ps1` shows HTML to Excel | Keep HTML parsing and SQL/OleDb clients outside PSWriteOffice core. |
 | Diagnostics/schema | `Get-OfficeExcelSummary`, `Set-OfficeExcelExecutionPolicy`, and save validation switches exist | Schema inference is optional migration polish, not a current gap. |
+| Fast import/export | Existing OfficeIMO read/write paths are used | OfficeIMO chooses fast/slow internals behind its normal APIs; package-mode PSWriteOffice is updated to the published OfficeIMO Excel performance release. |
 
 ## Word Status
 
@@ -54,8 +55,8 @@ page setup, equations, tab stops, and report-composer examples.
 | Declarative report DSL | Word DSL aliases cover practical authoring | Do not port `Documentimo` verbatim; prefer one modern report-composer example. |
 | Paragraph/text formatting | Core add/update/find/read helpers exist | Add compact `Set-OfficeWordRunStyle` and `Set-OfficeWordParagraphStyle` instead of many PSWriteWord-style micro-cmdlets. |
 | Page setup | Wrapped | `Set-OfficeWordPageSetup` covers margins, size, orientation, and columns. |
-| Tables | Object tables, table cells, conditional rows, nested tables, images/lists/chart anchoring are covered | Add row/column mutation, merge cell, layout, and width helpers. |
-| Pictures/images | Basic image insertion exists | Add crop/fill, rotate, flip, transparency, fixed positioning, and alt-text mutation if OfficeIMO exposes them cleanly. |
+| Tables | Object tables, table cells, conditional rows, nested tables, images/lists/chart anchoring, cell read/style, width, merge, and split helpers are covered | Add row/column mutation helpers only if report scripts need them. |
+| Pictures/images | Image insertion plus read/style mutation is wrapped | Rich fixed-position semantics stay engine-led; current wrappers expose crop, rotation, flip, wrapping, metadata, and visibility where OfficeIMO does. |
 | Headers/footers/page numbers | Wrapped | Covered. |
 | Bookmarks/text replacement | Wrapped | Covered, with optional bookmark-text convenience later. |
 | Document properties | Wrapped | Covered. |
@@ -64,20 +65,20 @@ page setup, equations, tab stops, and report-composer examples.
 | TOC and fields | Wrapped | Covered. |
 | Protection | Wrapped | Covered enough. |
 | Cover pages | Wrapped | `Add-OfficeWordCoverPage` exposes template-driven cover pages with basic cover metadata. |
-| Text boxes/shapes/SmartArt | Mostly missing | Start with predictable read/template helpers, not broad freeform authoring. |
+| Text boxes/shapes/SmartArt | Shape add/read/style is wrapped; text boxes and SmartArt remain gaps | Start text boxes with predictable read/template helpers, not broad freeform authoring. |
 | Comments/revisions/compare/statistics/macros/variables/embedded docs | Partially wrapped | `Get-OfficeWordStatistics` is wrapped; comments/compare should come before macros, and macros stay explicit/deferred. |
 
 ## Remaining Roadmap
 
 ### PowerShell Ergonomics
 
-1. Add Word run/paragraph style and table mutation helpers.
-2. Add Word image layout, text box/shape helpers, and other polished report output gaps.
+1. Add Word run/paragraph style helpers.
+2. Add Word row/column table mutation and text box helpers where OfficeIMO exposes stable APIs.
 
 ### OfficeIMO Engine First
 
 1. Pivot and sparkline desktop-open compatibility confidence.
-2. Richer Word image, shape, SmartArt, compare, and macro APIs only when the engine
+2. Richer Word text box, SmartArt, compare, and macro APIs only when the engine
    behavior is stable enough to expose safely.
 
 ### Explicitly Out of Core

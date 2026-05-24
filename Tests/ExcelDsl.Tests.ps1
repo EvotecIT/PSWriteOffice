@@ -264,6 +264,23 @@ Describe 'Excel DSL surface' {
         $imported[0].PSObject.Properties.Name | Should -Not -Contain 'RowError'
     }
 
+    It 'exports IDataReader input without requiring callers to buffer it first' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataReader.xlsx'
+        $table = [System.Data.DataTable]::new('SqlRows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('A', 1)
+        [void] $table.Rows.Add('B', 2)
+        $reader = $table.CreateDataReader()
+
+        Export-OfficeExcel -Path $path -InputObject $reader -WorksheetName 'Data' -TableName 'SqlRows' -AutoFit -FreezeTopRow
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $rows.Count | Should -Be 2
+        $rows[0].Name | Should -Be 'A'
+        $rows[1].Value | Should -Be 2
+    }
+
     It 'exports HTML-parser DataTable output with companion link URL columns' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelHtmlDataTable.xlsx'
         $table = [System.Data.DataTable]::new('HtmlLinks')
@@ -313,6 +330,37 @@ Describe 'Excel DSL surface' {
         $inventoryRows.Count | Should -Be 1
         $inventoryRows[0].Item | Should -Be 'Laptop'
         $inventoryRows[0].Count | Should -Be 5
+    }
+
+    It 'exports DataSet tables one at a time without mutating source tables' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataSetNamespaceDuplicates.xlsx'
+        $dataSet = [System.Data.DataSet]::new('Report')
+        $dataSet.Namespace = 'urn:report'
+
+        $inheritedNamespace = [System.Data.DataTable]::new('T')
+        [void] $inheritedNamespace.Columns.Add('Name', [string])
+        [void] $inheritedNamespace.Columns.Add('Secret', [string])
+        [void] $inheritedNamespace.Rows.Add('Inherited', 'one')
+        [void] $dataSet.Tables.Add($inheritedNamespace)
+
+        $emptyNamespace = [System.Data.DataTable]::new('T')
+        $emptyNamespace.Namespace = ''
+        [void] $emptyNamespace.Columns.Add('Name', [string])
+        [void] $emptyNamespace.Columns.Add('Secret', [string])
+        [void] $emptyNamespace.Rows.Add('Empty', 'two')
+        [void] $dataSet.Tables.Add($emptyNamespace)
+
+        Export-OfficeExcel -Path $path -InputObject $dataSet -ExcludeProperty Secret
+
+        $firstRows = @(Import-OfficeExcel -Path $path -WorksheetName 'T' -Range 'A1:A2')
+        $secondRows = @(Import-OfficeExcel -Path $path -WorksheetName 'T (2)' -Range 'A1:A2')
+
+        $firstRows.Count | Should -Be 1
+        $firstRows[0].Name | Should -Be 'Inherited'
+        $secondRows.Count | Should -Be 1
+        $secondRows[0].Name | Should -Be 'Empty'
+        $inheritedNamespace.Columns.Contains('Secret') | Should -BeTrue
+        $emptyNamespace.Columns.Contains('Secret') | Should -BeTrue
     }
 
     It 'appends and clears DataSet sheets using sanitized worksheet names' {
@@ -718,14 +766,66 @@ Describe 'Excel DSL surface' {
         $named = Get-OfficeExcelNamedRange -Path $path -Sheet 'Data' | Where-Object Name -eq 'ManualRange'
         $named | Should -Not -BeNullOrEmpty
 
+        $namedRangeType = Get-TestLoadedType -Name 'PSWriteOffice.Cmdlets.Excel.GetOfficeExcelNamedRangeCommand'
+        $normalizeRange = $namedRangeType.GetMethod('NormalizeRange', [System.Reflection.BindingFlags] 'NonPublic, Static')
+        $normalizeRange.Invoke($null, @("'Budget`$2026'!`$A`$1:`$B`$2")) | Should -Be "'Budget`$2026'!A1:B2"
+
         $tables = Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales'
         $tables | Should -Not -BeNullOrEmpty
 
+        $namedRows = @($named | Import-OfficeExcel)
+        $namedRows.Count | Should -Be 2
+        $namedRows[0].Name | Should -Be 'Alpha'
+        $namedRows[0].Value | Should -Be 10
+
+        $tableRows = @($tables | Import-OfficeExcel)
+        $tableRows.Count | Should -Be 2
+        $tableRows[1].Name | Should -Be 'Beta'
+        $tableRows[1].Value | Should -Be 20
+
         $doc = Get-OfficeExcel -Path $path
         try {
+            $documentRows = @($doc | Import-OfficeExcel -Sheet 'Data' -Range 'A1:B3')
+            $documentRows.Count | Should -Be 2
+            $documentRows[0].Name | Should -Be 'Alpha'
+
             $doc | Save-OfficeExcel | Out-Null
         } finally {
             Close-OfficeExcel -Document $doc
+        }
+
+        $server = Start-TestHttpFileServer -FilePath $path -ContentType 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' -RequestCount 8
+        try {
+            $uri = [uri] $server.Url
+
+            $remoteRows = @(Import-OfficeExcel -Uri $uri -AllowHttp -Sheet 'Data' -Range 'A1:B3')
+            $remoteRows.Count | Should -Be 2
+            $remoteRows[1].Name | Should -Be 'Beta'
+
+            $remoteRange = @(Get-OfficeExcelRange -Uri $uri -AllowHttp -Sheet 'Data' -Range 'A1:B3')
+            $remoteRange.Count | Should -Be 2
+            $remoteRange[0].Value | Should -Be 10
+
+            $remoteUsedRange = Get-OfficeExcelUsedRange -Uri $uri -AllowHttp -Sheet 'Data' -AsDataTable
+            $remoteUsedRange.Rows.Count | Should -Be 6
+
+            $remoteTables = Get-OfficeExcelTable -Uri $uri -AllowHttp | Where-Object Name -eq 'Sales'
+            $remoteTableRows = @($remoteTables | Import-OfficeExcel -AllowHttp)
+            $remoteTableRows.Count | Should -Be 2
+
+            $remoteNamed = Get-OfficeExcelNamedRange -Uri $uri -AllowHttp -Sheet 'Data' | Where-Object Name -eq 'ManualRange'
+            $remoteNamedRows = @($remoteNamed | Import-OfficeExcel -AllowHttp)
+            $remoteNamedRows.Count | Should -Be 2
+
+            $remoteDoc = Get-OfficeExcel -Uri $uri -AllowHttp -ReadOnly
+            try {
+                $remoteDocRows = @($remoteDoc | Import-OfficeExcel -Sheet 'Data' -Range 'A1:B3')
+                $remoteDocRows.Count | Should -Be 2
+            } finally {
+                Close-OfficeExcel -Document $remoteDoc
+            }
+        } finally {
+            Stop-TestHttpFileServer -Server $server
         }
     }
 

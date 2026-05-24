@@ -81,7 +81,9 @@ function Start-TestHttpFileServer {
         [Parameter(Mandatory)]
         [string] $FilePath,
 
-        [string] $ContentType = 'application/octet-stream'
+        [string] $ContentType = 'application/octet-stream',
+
+        [int] $RequestCount = 1
     )
 
     $probe = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
@@ -98,57 +100,63 @@ function Start-TestHttpFileServer {
     }
 
     $url = "http://127.0.0.1:$port/$fileName"
+    $readyPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "PSWriteOffice-HttpServer-$([guid]::NewGuid()).ready")
     $job = Start-Job -ScriptBlock {
         param(
             [int] $JobPort,
             [string] $JobFilePath,
-            [string] $JobContentType
+            [string] $JobContentType,
+            [int] $JobRequestCount,
+            [string] $JobReadyPath
         )
 
         $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $JobPort)
         $listener.Start()
+        [System.IO.File]::WriteAllText($JobReadyPath, 'ready')
 
         try {
-            try {
-                $client = $listener.AcceptTcpClient()
-            } catch {
-                return
-            }
-
-            try {
-                $bytes = [System.IO.File]::ReadAllBytes($JobFilePath)
-                $stream = $client.GetStream()
+            for ($requestIndex = 0; $requestIndex -lt $JobRequestCount; $requestIndex++) {
                 try {
-                    $stream.ReadTimeout = 5000
-                    $stream.WriteTimeout = 5000
+                    $client = $listener.AcceptTcpClient()
+                } catch {
+                    return
+                }
 
-                    $requestBuffer = New-Object byte[] 4096
-                    $requestBytes = 0
-                    do {
-                        $read = $stream.Read($requestBuffer, $requestBytes, $requestBuffer.Length - $requestBytes)
-                        if ($read -le 0) {
-                            break
-                        }
+                try {
+                    $bytes = [System.IO.File]::ReadAllBytes($JobFilePath)
+                    $stream = $client.GetStream()
+                    try {
+                        $stream.ReadTimeout = 5000
+                        $stream.WriteTimeout = 5000
 
-                        $requestBytes += $read
-                        if ($requestBytes -ge 4) {
-                            $requestText = [System.Text.Encoding]::ASCII.GetString($requestBuffer, 0, $requestBytes)
-                            if ($requestText.Contains("`r`n`r`n")) {
+                        $requestBuffer = New-Object byte[] 4096
+                        $requestBytes = 0
+                        do {
+                            $read = $stream.Read($requestBuffer, $requestBytes, $requestBuffer.Length - $requestBytes)
+                            if ($read -le 0) {
                                 break
                             }
-                        }
-                    } while ($requestBytes -lt $requestBuffer.Length)
 
-                    $header = "HTTP/1.1 200 OK`r`nContent-Type: $JobContentType`r`nContent-Length: $($bytes.Length)`r`nConnection: close`r`n`r`n"
-                    $headerBytes = [System.Text.Encoding]::ASCII.GetBytes($header)
-                    $stream.Write($headerBytes, 0, $headerBytes.Length)
-                    $stream.Write($bytes, 0, $bytes.Length)
-                    $stream.Flush()
+                            $requestBytes += $read
+                            if ($requestBytes -ge 4) {
+                                $requestText = [System.Text.Encoding]::ASCII.GetString($requestBuffer, 0, $requestBytes)
+                                if ($requestText.Contains("`r`n`r`n")) {
+                                    break
+                                }
+                            }
+                        } while ($requestBytes -lt $requestBuffer.Length)
+
+                        $header = "HTTP/1.1 200 OK`r`nContent-Type: $JobContentType`r`nContent-Length: $($bytes.Length)`r`nConnection: close`r`n`r`n"
+                        $headerBytes = [System.Text.Encoding]::ASCII.GetBytes($header)
+                        $stream.Write($headerBytes, 0, $headerBytes.Length)
+                        $stream.Write($bytes, 0, $bytes.Length)
+                        $stream.Flush()
+                    } finally {
+                        $stream.Dispose()
+                    }
                 } finally {
-                    $stream.Dispose()
+                    $client.Dispose()
                 }
-            } finally {
-                $client.Dispose()
             }
         } finally {
             try {
@@ -156,9 +164,24 @@ function Start-TestHttpFileServer {
             } catch {
             }
         }
-    } -ArgumentList $port, $FilePath, $ContentType
+    } -ArgumentList $port, $FilePath, $ContentType, $RequestCount, $readyPath
 
-    Start-Sleep -Milliseconds 300
+    $readyDeadline = [DateTime]::UtcNow.AddSeconds(5)
+    while (-not (Test-Path -LiteralPath $readyPath)) {
+        if ($job.State -ne 'Running') {
+            throw "Test HTTP file server job exited before listening on port $port."
+        }
+
+        if ([DateTime]::UtcNow -gt $readyDeadline) {
+            Stop-Job -Job $job -ErrorAction SilentlyContinue | Out-Null
+            Remove-Job -Job $job -Force -ErrorAction SilentlyContinue | Out-Null
+            throw "Timed out waiting for test HTTP file server to listen on port $port."
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+
+    Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
 
     [PSCustomObject]@{
         Url = $url
