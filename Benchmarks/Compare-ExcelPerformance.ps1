@@ -8,7 +8,6 @@ param(
 
     [string[]] $Scenario,
 
-    [ValidateSet('PSWriteOffice', 'ImportExcel', 'ExcelFast')]
     [string[]] $Engine = @('PSWriteOffice', 'ImportExcel', 'ExcelFast'),
 
     [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\ExcelPerformance'),
@@ -29,6 +28,38 @@ $invariantCulture = [Globalization.CultureInfo]::InvariantCulture
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $moduleRoot = Join-Path $OutputDirectory 'Modules'
 $workRoot = Join-Path $OutputDirectory ('Run-{0}-{1}' -f (Get-Date -Format 'yyyyMMdd-HHmmss'), $PID)
+$validEngines = @('PSWriteOffice', 'ImportExcel', 'ExcelFast')
+
+function Resolve-EngineList {
+    param([string[]] $Value)
+
+    $resolved = [Collections.Generic.List[string]]::new()
+    foreach ($item in @($Value)) {
+        foreach ($engineName in ($item -split ',')) {
+            $name = $engineName.Trim()
+            if ([string]::IsNullOrWhiteSpace($name)) {
+                continue
+            }
+
+            $match = @($validEngines | Where-Object { $_ -eq $name })
+            if ($match.Count -eq 0) {
+                throw "Unknown engine '$name'. Valid engines: $($validEngines -join ', ')."
+            }
+
+            if (-not $resolved.Contains($match[0])) {
+                $resolved.Add($match[0])
+            }
+        }
+    }
+
+    if ($resolved.Count -eq 0) {
+        throw "At least one engine is required. Valid engines: $($validEngines -join ', ')."
+    }
+
+    , $resolved.ToArray()
+}
+
+$Engine = Resolve-EngineList -Value $Engine
 
 function Add-ModulePath {
     param([string] $Path)
@@ -284,6 +315,7 @@ function Get-ExcelBenchmarkScenarios {
     $standardSuites = @('Standard', 'Large', 'Full')
     $scaleSuites = @('Standard', 'Large', 'Full', 'SuperLarge')
     $dataSetSuites = @('Large', 'Full')
+    $reportSuites = @('Smoke', 'Standard', 'Large', 'Full')
 
     $defaultImport = New-FollowUpScenario -Key 'import-default-full' -Name 'Import full sheet from default export' -Suites $basicSuites -Script {
         param($Context)
@@ -371,6 +403,46 @@ function Get-ExcelBenchmarkScenarios {
         New-ExportScenario -Key 'datatable-default' -Name 'Export DataTable default' -Suites $scaleSuites -Engine 'ImportExcel' -Profile 'DataTable' -FileStem 'importexcel-datatable-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'report-workbook' -Name 'Export report workbook with table chart pivot formatting' -Suites $reportSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-report-workbook' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+
+            $lastRow = $Context.Rows + 1
+            $sourceRange = 'A1:{0}{1}' -f (ConvertTo-ExcelColumnName -ColumnNumber $Context.ColumnCount), $lastRow
+            New-OfficeExcel -Path $Context.Path {
+                Add-OfficeExcelSheet -Name $Context.WorksheetName -Content {
+                    Add-OfficeExcelTable -Data $Context.Data -TableName Data -AutoFit
+                    Set-OfficeExcelFreeze -TopRows 1
+                    Add-OfficeExcelConditionalRule -Range "G2:G$lastRow" -Operator GreaterThan -Formula1 '750'
+                    Add-OfficeExcelConditionalDataBar -Range "G2:G$lastRow" -Color '#70AD47'
+                    Add-OfficeExcelConditionalColorScale -Range "I2:I$lastRow" -StartColor '#F4CCCC' -EndColor '#D9EAD3'
+                    Add-OfficeExcelConditionalIconSet -Range "I2:I$lastRow"
+                    Add-OfficeExcelValidationList -Range "D2:D$lastRow" -Values 'NA', 'EU', 'APAC', 'LATAM'
+                    Set-OfficeExcelColumnStyleByHeader -Header Score -NumberFormat '#,##0.000'
+                    Set-OfficeExcelColumnStyleByHeader -Header Created -NumberFormat 'yyyy-mm-dd hh:mm'
+                    Add-OfficeExcelChart -TableName Data -Row 2 -Column 12 -Type ColumnClustered -Title 'Score by region'
+                    Add-OfficeExcelPivotTable -SourceRange $sourceRange -DestinationCell 'L24' -Name 'SummaryPivot' -RowField Region -ColumnField Department -DataField Score, TicketCount -DataFunction Average, Sum -DataDisplayName 'Average Score', 'Tickets' -DataNumberFormat '#,##0.00', '#,##0'
+                }
+            } | Out-Null
+        }
+        New-ExportScenario -Key 'report-workbook' -Name 'Export report workbook with table chart pivot formatting' -Suites $reportSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-report-workbook' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+
+            $lastRow = $Context.Rows + 1
+            $excel = $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -AutoSize -FreezeTopRow -BoldTopRow -PassThru
+            try {
+                $worksheet = $excel.Workbook.Worksheets[$Context.WorksheetName]
+                Add-ConditionalFormatting -Worksheet $worksheet -Address "G2:G$lastRow" -RuleType GreaterThan -ConditionValue 750 -BackgroundColor LightPink
+                Add-ConditionalFormatting -Worksheet $worksheet -Address "G2:G$lastRow" -DataBarColor Green
+                Add-ConditionalFormatting -Worksheet $worksheet -Address "I2:I$lastRow" -ThreeIconsSet TrafficLights1
+                Add-ExcelDataValidationRule -Worksheet $worksheet -Range "D2:D$lastRow" -ValidationType List -ValueSet @('NA', 'EU', 'APAC', 'LATAM')
+                $worksheet.Cells["G2:G$lastRow"].Style.Numberformat.Format = '#,##0.000'
+                $worksheet.Cells["F2:F$lastRow"].Style.Numberformat.Format = 'yyyy-mm-dd hh:mm'
+                Add-ExcelChart -Worksheet $worksheet -ChartType ColumnClustered -Title 'Score by region' -XRange "D2:D$lastRow" -YRange "G2:G$lastRow" -Row 2 -Column 12 -Width 640 -Height 360
+                Add-PivotTable -ExcelPackage $excel -Address $worksheet.Cells['L24'] -SourceWorksheet $worksheet -SourceRange $worksheet.Tables[0].Address -PivotTableName SummaryPivot -PivotRows Region -PivotColumns Department -PivotData @{ Score = 'Average'; TicketCount = 'Sum' } -PivotNumberFormat '#,##0.00'
+            } finally {
+                Close-ExcelPackage -ExcelPackage $excel
+            }
         }
         New-ExportScenario -Key 'dataset-worksheets' -Name 'Export DataSet worksheets' -Suites $dataSetSuites -Engine 'PSWriteOffice' -Profile 'DataSet' -FileStem 'pswriteoffice-dataset-worksheets' -FollowUps @($defaultImport) -Script {
             param($Context)
