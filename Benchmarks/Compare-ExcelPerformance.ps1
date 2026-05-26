@@ -2,7 +2,7 @@ param(
     [ValidateSet('Smoke', 'Standard', 'Large', 'Full', 'SuperLarge')]
     [string] $Suite = 'Standard',
 
-    [int[]] $RowCount,
+    [object[]] $RowCount,
 
     [int] $RepeatCount = 0,
 
@@ -13,6 +13,8 @@ param(
     [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\ExcelPerformance'),
 
     [switch] $ListScenarios,
+
+    [switch] $SkipFollowUps,
 
     [switch] $SkipImportExcelInstall,
 
@@ -60,6 +62,58 @@ function Resolve-EngineList {
 }
 
 $Engine = Resolve-EngineList -Value $Engine
+
+function Resolve-RowCountList {
+    param([object[]] $Value)
+
+    $resolved = [Collections.Generic.List[int]]::new()
+    foreach ($item in @($Value)) {
+        foreach ($rowCountText in ($item -split ',')) {
+            $text = $rowCountText.Trim()
+            if ([string]::IsNullOrWhiteSpace($text)) {
+                continue
+            }
+
+            try {
+                $rowCountValue = [int]::Parse($text, [Globalization.NumberStyles]::None, $invariantCulture)
+            } catch {
+                throw "Invalid row count '$text'. Use plain integers such as 10000, not grouped numbers."
+            }
+
+            if ($rowCountValue -le 0) {
+                throw "Invalid row count '$text'. Row counts must be greater than zero."
+            }
+
+            $resolved.Add($rowCountValue)
+        }
+    }
+
+    if ($resolved.Count -eq 0) {
+        throw 'At least one row count is required.'
+    }
+
+    , $resolved.ToArray()
+}
+
+function Resolve-StringList {
+    param([string[]] $Value)
+
+    $resolved = [Collections.Generic.List[string]]::new()
+    foreach ($item in @($Value)) {
+        foreach ($textValue in ($item -split ',')) {
+            $text = $textValue.Trim()
+            if (-not [string]::IsNullOrWhiteSpace($text)) {
+                $resolved.Add($text)
+            }
+        }
+    }
+
+    , $resolved.ToArray()
+}
+
+if ($Scenario -and $Scenario.Count -gt 0) {
+    $Scenario = Resolve-StringList -Value $Scenario
+}
 
 function Add-ModulePath {
     param([string] $Path)
@@ -699,6 +753,7 @@ if (-not $PSBoundParameters.ContainsKey('RowCount') -or -not $RowCount) {
         'SuperLarge' { @(250000, 500000, 1000000) }
     }
 }
+$RowCount = Resolve-RowCountList -Value $RowCount
 
 if ($RepeatCount -le 0) {
     $RepeatCount = switch ($Suite) {
@@ -805,7 +860,7 @@ foreach ($rows in $RowCount) {
 
             $results.Add((Invoke-BenchmarkOperation -Context $context -ScenarioKey $benchmarkScenario.Key -ScenarioName $benchmarkScenario.Name -ScriptBlock $benchmarkScenario.Script))
 
-            if (Test-Path $context.Path) {
+            if ((-not $SkipFollowUps.IsPresent) -and (Test-Path $context.Path)) {
                 foreach ($followUp in (Get-SelectedFollowUps -ScenarioObject $benchmarkScenario)) {
                     $results.Add((Invoke-BenchmarkOperation -Context $context -ScenarioKey $followUp.Key -ScenarioName $followUp.Name -ScriptBlock $followUp.Script))
                 }
@@ -877,6 +932,7 @@ $officeIMOExcelAssemblyVersion = if (Test-Path $officeIMOExcelAssemblyPath) {
     ScenarioFilter = $Scenario
     RowCount = $RowCount
     RepeatCount = $RepeatCount
+    SkipFollowUps = $SkipFollowUps.IsPresent
     ScenarioCount = $selectedScenarios.Count
     ResultsPath = $resultsPath
     SummaryPath = $summaryPath

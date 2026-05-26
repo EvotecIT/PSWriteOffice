@@ -54,6 +54,12 @@ Run the richer report workbook workflow:
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario report-workbook -RowCount 1000,10000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel
 ```
 
+Measure export creation without import follow-up timing:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario objects-default,wide-objects-default -RowCount 25000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel,ExcelFast -SkipFollowUps
+```
+
 Compare only selected engines:
 
 ```powershell
