@@ -25,8 +25,8 @@ try {
     $tables = $document | Get-OfficeWordTable
     Write-Host "Tables:" $tables.Count
 
-    Write-Host 'First runs:'
-    $paragraphs | Select-Object -First 1 | Get-OfficeWordRun | Select-Object -First 3 | ForEach-Object {
+    Write-Host 'First text segments:'
+    $paragraphs | Select-Object -First 1 | Get-OfficeWordText | Select-Object -First 3 | ForEach-Object {
         Write-Host "  -" $_.Text
     }
 } finally {
