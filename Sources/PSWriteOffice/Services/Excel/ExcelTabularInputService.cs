@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services;
 
@@ -96,6 +97,11 @@ internal static class ExcelTabularInputService
             }
         }
 
+        if (TryBuildFromPowerShellObjects(items, tableName, out var powerShellObjectTable))
+        {
+            return powerShellObjectTable;
+        }
+
         var normalized = PowerShellObjectNormalizer.NormalizeItems(items);
         return ObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
     }
@@ -176,6 +182,126 @@ internal static class ExcelTabularInputService
         }
 
         return result;
+    }
+
+    private static bool TryBuildFromPowerShellObjects(IReadOnlyList<object?> items, string? tableName, out DataTable table)
+    {
+        table = new DataTable();
+        var result = string.IsNullOrWhiteSpace(tableName)
+            ? new DataTable()
+            : new DataTable(tableName);
+
+        if (items.Count == 0)
+        {
+            return false;
+        }
+
+        if (items[0] is not PSObject firstObject)
+        {
+            return false;
+        }
+
+        var columns = GetPowerShellPropertyNames(firstObject);
+        if (columns.Count == 0)
+        {
+            return false;
+        }
+
+        foreach (var column in columns)
+        {
+            result.Columns.Add(column, typeof(object));
+        }
+
+        var columnIndexes = CreateColumnIndexMap(columns);
+
+        var values = new object?[columns.Count];
+        result.BeginLoadData();
+        try
+        {
+            foreach (var item in items)
+            {
+                if (item is not PSObject psObject)
+                {
+                    return false;
+                }
+
+                if (!TryReadPowerShellObjectRow(psObject, columns.Count, columnIndexes, values))
+                {
+                    return false;
+                }
+
+                result.Rows.Add(values);
+            }
+        }
+        finally
+        {
+            result.EndLoadData();
+        }
+
+        table = result;
+        return true;
+    }
+
+    private static List<string> GetPowerShellPropertyNames(PSObject psObject)
+    {
+        var names = new List<string>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var property in psObject.Properties)
+        {
+            if (!IsExportablePowerShellProperty(property))
+            {
+                continue;
+            }
+
+            var name = property.Name;
+            if (string.IsNullOrWhiteSpace(name) || !seen.Add(name))
+            {
+                continue;
+            }
+
+            names.Add(name);
+        }
+
+        return names;
+    }
+
+    private static bool TryReadPowerShellObjectRow(PSObject psObject, int columnCount, IReadOnlyDictionary<string, int> columnIndexes, object?[] values)
+    {
+        Array.Clear(values, 0, values.Length);
+        var matched = 0;
+        foreach (var property in psObject.Properties)
+        {
+            if (!IsExportablePowerShellProperty(property))
+            {
+                continue;
+            }
+
+            if (!columnIndexes.TryGetValue(property.Name, out var columnIndex))
+            {
+                return false;
+            }
+
+            values[columnIndex] = property.Value ?? DBNull.Value;
+            matched++;
+        }
+
+        return matched == columnCount;
+    }
+
+    private static Dictionary<string, int> CreateColumnIndexMap(IReadOnlyList<string> columns)
+    {
+        var columnIndexes = new Dictionary<string, int>(columns.Count, StringComparer.OrdinalIgnoreCase);
+        for (var columnIndex = 0; columnIndex < columns.Count; columnIndex++)
+        {
+            columnIndexes[columns[columnIndex]] = columnIndex;
+        }
+
+        return columnIndexes;
+    }
+
+    private static bool IsExportablePowerShellProperty(PSPropertyInfo property)
+    {
+        return property.MemberType is PSMemberTypes.NoteProperty or PSMemberTypes.Property;
     }
 
     private static object? Unwrap(object? item)

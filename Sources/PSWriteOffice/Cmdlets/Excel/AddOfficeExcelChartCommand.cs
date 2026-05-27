@@ -99,9 +99,21 @@ public sealed class AddOfficeExcelChartCommand : PSCmdlet
 
         var sheet = ResolveSheet();
 
-        ExcelChart chart = ParameterSetName == ParameterSetContextTable || ParameterSetName == ParameterSetDocumentTable
-            ? sheet.AddChartFromTable(TableName, Row, Column, WidthPixels, HeightPixels, Type, Title, IncludeCachedData)
-            : sheet.AddChartFromRange(Range, Row, Column, WidthPixels, HeightPixels, Type, HasHeaders, Title, IncludeCachedData);
+        ExcelChart chart;
+        if (ParameterSetName == ParameterSetContextTable || ParameterSetName == ParameterSetDocumentTable)
+        {
+            var tableRange = TryGetContextTableRange(sheet) ?? sheet.GetTableRange(TableName);
+            if (string.IsNullOrWhiteSpace(tableRange))
+            {
+                throw new InvalidOperationException($"Table '{TableName}' was not found on sheet '{sheet.Name}'.");
+            }
+
+            chart = sheet.AddChartFromRange(tableRange!, Row, Column, WidthPixels, HeightPixels, Type, hasHeaders: true, Title, IncludeCachedData);
+        }
+        else
+        {
+            chart = sheet.AddChartFromRange(Range, Row, Column, WidthPixels, HeightPixels, Type, HasHeaders, Title, IncludeCachedData);
+        }
 
         if (PassThru.IsPresent)
         {
@@ -123,5 +135,23 @@ public sealed class AddOfficeExcelChartCommand : PSCmdlet
 
         var context = ExcelDslContext.Require(this);
         return context.RequireSheet();
+    }
+
+    private string? TryGetContextTableRange(ExcelSheet sheet)
+    {
+        if (ParameterSetName != ParameterSetContextTable)
+        {
+            return null;
+        }
+
+        try
+        {
+            var context = ExcelDslContext.Require(this);
+            return context.TryGetTableRange(sheet, TableName, out var range) ? range : null;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
     }
 }

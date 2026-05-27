@@ -35,6 +35,88 @@ Describe 'Markdown cmdlets' {
         $html | Should -Match 'Title'
     }
 
+    It 'converts HTML to Markdown' {
+        $markdown = ConvertFrom-OfficeMarkdownHtml -Html '<h1>Title</h1><p>Hello</p>'
+        $markdown | Should -Match '# Title'
+        $markdown | Should -Match 'Hello'
+    }
+
+    It 'converts HTML to a Markdown document' {
+        $doc = ConvertFrom-OfficeMarkdownHtml -Html '<h1>Title</h1><p>Hello</p>' -AsDocument
+        $doc | Should -BeOfType OfficeIMO.Markdown.MarkdownDoc
+        $doc.ToMarkdown() | Should -Match '# Title'
+    }
+
+    It 'gets heading metadata as PowerShell-friendly objects' {
+        $headings = Get-OfficeMarkdownHeading -Text "# Report`n`n## Details`n`n### Deep Dive" -MinLevel 2 -MaxLevel 3
+
+        $headings.Count | Should -Be 2
+        $headings[0].Text | Should -Be 'Details'
+        $headings[0].Anchor | Should -Be 'details'
+        $headings[1].Level | Should -Be 3
+    }
+
+    It 'gets the Markdown object tree as PowerShell-friendly nodes' {
+        $markdown = @"
+# Report
+
+> [!NOTE]
+> Remember this.
+
+| Name | Value |
+| --- | ---: |
+| Alpha | 1 |
+"@
+
+        $nodes = Get-OfficeMarkdownNode -Text $markdown
+        $nodes[0].Type | Should -Be 'MarkdownDoc'
+        $nodes.Type | Should -Contain 'HeadingBlock'
+        $nodes.Type | Should -Contain 'CalloutBlock'
+        $nodes.Type | Should -Contain 'TableBlock'
+        $nodes.Type | Should -Contain 'TableCell'
+        ($nodes | Where-Object Type -EQ 'HeadingBlock').Text | Should -Be 'Report'
+    }
+
+    It 'filters Markdown object tree nodes by type and depth' {
+        $nodes = Get-OfficeMarkdownNode -Text "# Report`n`n## Details" -NodeType '*Heading*' -MaxDepth 1
+
+        $nodes.Count | Should -Be 2
+        $nodes.Type | Should -Contain 'HeadingBlock'
+        ($nodes | Where-Object Type -EQ 'MarkdownDoc').Count | Should -Be 0
+    }
+
+    It 'gets front matter entries from Markdown' {
+        $frontMatter = Get-OfficeMarkdownFrontMatter -Text "---`ntitle: Report`nowner: Ops`n---`n# Report"
+
+        $frontMatter.Count | Should -Be 2
+        $frontMatter[0].Key | Should -Be 'title'
+        $frontMatter[0].Value | Should -Be 'Report'
+    }
+
+    It 'gets Markdown tables as PowerShell objects' {
+        $markdown = @"
+| Name | Value |
+| --- | ---: |
+| Alpha | 1 |
+| Beta | 2 |
+"@
+
+        $rows = Get-OfficeMarkdownTable -Text $markdown -AsObject
+
+        $rows.Count | Should -Be 2
+        $rows[0].Name | Should -Be 'Alpha'
+        $rows[0].Value | Should -Be '1'
+        $rows[1].Name | Should -Be 'Beta'
+    }
+
+    It 'saves converted HTML as Markdown' {
+        $path = Join-Path $TestDrive 'converted.md'
+        $file = ConvertFrom-OfficeMarkdownHtml -Html '<h1>Title</h1><p>Hello</p>' -OutputPath $path -PassThru
+
+        $file | Should -BeOfType System.IO.FileInfo
+        (Get-Content -Path $path -Raw) | Should -Match '# Title'
+    }
+
     It 'builds Markdown via DSL helpers' {
         $path = Join-Path $TestDrive 'MarkdownDsl.md'
         $rows = @(

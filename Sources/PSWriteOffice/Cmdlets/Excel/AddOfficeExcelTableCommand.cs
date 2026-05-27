@@ -87,14 +87,16 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }
 
+        var resolvedTableName = ResolveTableName(table);
         var range = sheet.InsertDataTableAsTable(
             table,
             startRow: StartRow,
             startColumn: StartColumn,
             includeHeaders: !NoHeader.IsPresent,
-            tableName: ResolveTableName(table),
+            tableName: resolvedTableName,
             style: style,
             includeAutoFilter: !NoAutoFilter.IsPresent);
+        context.RegisterTableRange(sheet, resolvedTableName, range);
 
         if (AutoFit.IsPresent)
         {

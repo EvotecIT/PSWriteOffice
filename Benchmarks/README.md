@@ -48,6 +48,18 @@ Focus on a specific workflow:
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario objects-default -RowCount 25000 -RepeatCount 5
 ```
 
+Run the richer report workbook workflow:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario report-workbook -RowCount 1000,10000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel
+```
+
+Measure export creation without import follow-up timing:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario objects-default,wide-objects-default -RowCount 25000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel,ExcelFast -SkipFollowUps
+```
+
 Compare only selected engines:
 
 ```powershell
@@ -56,9 +68,9 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
 
 ## Scenario Suites
 
-`Smoke` is a quick confidence pass for default and table export/import paths.
+`Smoke` is a quick confidence pass for default, table, and report workbook export/import paths.
 
-`Standard` covers the everyday decisions people make: default export, table export, no-table export, autofit, full-sheet import, range import, wide objects, and DataTable input.
+`Standard` covers the everyday decisions people make: default export, table export, no-table export, autofit, full-sheet import, range import, wide objects, DataTable input, and a report workbook with a table, freeze row, conditional formatting, validation, a chart, and a pivot table.
 
 `Large` runs the broad workflow family at `25k`, `100k`, and `250k` rows, including the PSWriteOffice DataSet worksheet path.
 

@@ -30,7 +30,7 @@ PowerShell-first document automation for Word, Excel, PowerPoint, Markdown, and 
 | Word | Mature | Document creation, readers, bookmarks, content controls, fields, HTML conversion, Markdown conversion |
 | Excel | Advanced | Sheets, tables, named ranges, formulas, validation, charts, pivots, comments, TOC/navigation, explicit range readers, chart formatting, smarter links, URL images, summary-sheet linking |
 | PowerPoint | Experimental but useful | Slides, titles, text boxes, bullets, notes, layouts, placeholders, sections, text replacement, slide import, slide copy, transitions, sizing |
-| Markdown | Solid | Read Markdown, build Markdown with a DSL, render HTML |
+| Markdown | Solid | Read Markdown, inspect full object trees/headings/front matter/tables, build Markdown with a DSL, render HTML, convert HTML |
 | CSV | Solid | Read CSV, emit CSV, object-focused data workflows |
 
 ## Quick Start 🚀

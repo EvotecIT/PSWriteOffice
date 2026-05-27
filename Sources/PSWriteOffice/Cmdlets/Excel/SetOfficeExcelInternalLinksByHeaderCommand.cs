@@ -91,7 +91,16 @@ public sealed class SetOfficeExcelInternalLinksByHeaderCommand : PSCmdlet
         {
             case ParameterSetContextTable:
             case ParameterSetDocumentTable:
-                sheet.LinkByHeaderToInternalSheetsInTable(TableName, Header, toSheet, TargetAddress, display, !NoStyle.IsPresent);
+                var tableRange = TryGetContextTableRange(sheet);
+                if (tableRange == null || tableRange.Length == 0)
+                {
+                    sheet.LinkByHeaderToInternalSheetsInTable(TableName, Header, toSheet, TargetAddress, display, !NoStyle.IsPresent);
+                }
+                else
+                {
+                    sheet.LinkByHeaderToInternalSheetsInRange(tableRange, Header, toSheet, TargetAddress, display, !NoStyle.IsPresent);
+                }
+
                 break;
             case ParameterSetContextRange:
             case ParameterSetDocumentRange:
@@ -118,5 +127,23 @@ public sealed class SetOfficeExcelInternalLinksByHeaderCommand : PSCmdlet
         }
 
         return ExcelDslContext.Require(this).RequireSheet();
+    }
+
+    private string? TryGetContextTableRange(ExcelSheet sheet)
+    {
+        if (ParameterSetName != ParameterSetContextTable)
+        {
+            return null;
+        }
+
+        try
+        {
+            var context = ExcelDslContext.Require(this);
+            return context.TryGetTableRange(sheet, TableName, out var range) ? range : null;
+        }
+        catch (System.InvalidOperationException)
+        {
+            return null;
+        }
     }
 }
