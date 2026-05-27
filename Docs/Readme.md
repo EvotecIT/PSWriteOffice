@@ -265,6 +265,9 @@ Closes one or more tracked Word documents, optionally saving them.
 ### [Compare-OfficeExcelRange](Compare-OfficeExcelRange.md)
 Compares two Excel worksheets or ranges and returns cell-level differences.
 
+### [ConvertFrom-OfficeMarkdownHtml](ConvertFrom-OfficeMarkdownHtml.md)
+Converts HTML content to Markdown.
+
 ### [ConvertFrom-OfficeWordHtml](ConvertFrom-OfficeWordHtml.md)
 Creates a Word document from HTML.
 
@@ -336,6 +339,18 @@ Reads the used range from an Excel workbook.
 
 ### [Get-OfficeMarkdown](Get-OfficeMarkdown.md)
 Parses Markdown text or files into a Markdown document model.
+
+### [Get-OfficeMarkdownFrontMatter](Get-OfficeMarkdownFrontMatter.md)
+Gets YAML front matter entries from a Markdown document.
+
+### [Get-OfficeMarkdownHeading](Get-OfficeMarkdownHeading.md)
+Gets heading metadata from a Markdown document.
+
+### [Get-OfficeMarkdownNode](Get-OfficeMarkdownNode.md)
+Gets the OfficeIMO.Markdown object tree from Markdown content.
+
+### [Get-OfficeMarkdownTable](Get-OfficeMarkdownTable.md)
+Gets Markdown tables from a Markdown document.
 
 ### [Get-OfficePowerPoint](Get-OfficePowerPoint.md)
 Loads an existing PowerPoint presentation.
@@ -636,4 +651,3 @@ Updates the table of contents in a Word document.
 
 ### [Update-OfficeWordText](Update-OfficeWordText.md)
 Replaces text in a Word document.
-

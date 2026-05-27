@@ -18,7 +18,7 @@ If you want to inspect existing files:
 - Word: [Docs/Get-OfficeWordParagraph.md](Docs/Get-OfficeWordParagraph.md), [Docs/Find-OfficeWord.md](Docs/Find-OfficeWord.md)
 - Excel: [Docs/Get-OfficeExcelData.md](Docs/Get-OfficeExcelData.md), [Docs/Get-OfficeExcelRange.md](Docs/Get-OfficeExcelRange.md), [Docs/Get-OfficeExcelUsedRange.md](Docs/Get-OfficeExcelUsedRange.md), [Docs/Get-OfficeExcelNamedRange.md](Docs/Get-OfficeExcelNamedRange.md)
 - PowerPoint: [Docs/Get-OfficePowerPoint.md](Docs/Get-OfficePowerPoint.md), [Docs/Get-OfficePowerPointSlideSummary.md](Docs/Get-OfficePowerPointSlideSummary.md), [Docs/Get-OfficePowerPointShape.md](Docs/Get-OfficePowerPointShape.md), [Docs/Get-OfficePowerPointSection.md](Docs/Get-OfficePowerPointSection.md), [Docs/Get-OfficePowerPointTheme.md](Docs/Get-OfficePowerPointTheme.md)
-- Markdown: [Docs/Get-OfficeMarkdown.md](Docs/Get-OfficeMarkdown.md)
+- Markdown: [Docs/Get-OfficeMarkdown.md](Docs/Get-OfficeMarkdown.md), [Docs/Get-OfficeMarkdownNode.md](Docs/Get-OfficeMarkdownNode.md), [Docs/Get-OfficeMarkdownHeading.md](Docs/Get-OfficeMarkdownHeading.md), [Docs/Get-OfficeMarkdownTable.md](Docs/Get-OfficeMarkdownTable.md)
 - CSV: [Docs/Get-OfficeCsv.md](Docs/Get-OfficeCsv.md), [Docs/Get-OfficeCsvData.md](Docs/Get-OfficeCsvData.md)
 
 If you want conversion and bridge workflows:
@@ -27,6 +27,8 @@ If you want conversion and bridge workflows:
 - HTML to Word: [Docs/ConvertFrom-OfficeWordHtml.md](Docs/ConvertFrom-OfficeWordHtml.md)
 - Word to Markdown: [Docs/ConvertTo-OfficeWordMarkdown.md](Docs/ConvertTo-OfficeWordMarkdown.md)
 - Markdown to Word: [Docs/ConvertFrom-OfficeWordMarkdown.md](Docs/ConvertFrom-OfficeWordMarkdown.md)
+- Markdown to HTML: [Docs/ConvertTo-OfficeMarkdownHtml.md](Docs/ConvertTo-OfficeMarkdownHtml.md)
+- HTML to Markdown: [Docs/ConvertFrom-OfficeMarkdownHtml.md](Docs/ConvertFrom-OfficeMarkdownHtml.md)
 - Word text replacement: [Docs/Update-OfficeWordText.md](Docs/Update-OfficeWordText.md)
 - Word chart example: [Examples/Word/Example-WordCharts.ps1](Examples/Word/Example-WordCharts.ps1)
 - Word table projection example: [Examples/Word/Example-WordTableCalculatedColumns.ps1](Examples/Word/Example-WordTableCalculatedColumns.ps1)
@@ -49,7 +51,7 @@ If you want conversion and bridge workflows:
 | Word | Mature | [Docs/New-OfficeWord.md](Docs/New-OfficeWord.md), [Docs/Get-OfficeWord.md](Docs/Get-OfficeWord.md), [Docs/ConvertTo-OfficeWordMarkdown.md](Docs/ConvertTo-OfficeWordMarkdown.md) |
 | Excel | Advanced | [Docs/New-OfficeExcel.md](Docs/New-OfficeExcel.md), [Docs/Get-OfficeExcel.md](Docs/Get-OfficeExcel.md), [Docs/Get-OfficeExcelRange.md](Docs/Get-OfficeExcelRange.md), [Docs/Add-OfficeExcelTableOfContents.md](Docs/Add-OfficeExcelTableOfContents.md), [Docs/Set-OfficeExcelChartLegend.md](Docs/Set-OfficeExcelChartLegend.md), [Docs/Set-OfficeExcelSmartHyperlink.md](Docs/Set-OfficeExcelSmartHyperlink.md), [Docs/Set-OfficeExcelInternalLinks.md](Docs/Set-OfficeExcelInternalLinks.md), [Docs/Set-OfficeExcelUrlLinks.md](Docs/Set-OfficeExcelUrlLinks.md) |
 | PowerPoint | Improving fast | [Docs/New-OfficePowerPoint.md](Docs/New-OfficePowerPoint.md), [Docs/Get-OfficePowerPointSlideSummary.md](Docs/Get-OfficePowerPointSlideSummary.md), [Docs/Get-OfficePowerPointShape.md](Docs/Get-OfficePowerPointShape.md), [Docs/Get-OfficePowerPointSection.md](Docs/Get-OfficePowerPointSection.md), [Docs/Get-OfficePowerPointTheme.md](Docs/Get-OfficePowerPointTheme.md), [Docs/Copy-OfficePowerPointSlide.md](Docs/Copy-OfficePowerPointSlide.md), [Docs/Set-OfficePowerPointSlideTransition.md](Docs/Set-OfficePowerPointSlideTransition.md), [Docs/Set-OfficePowerPointSlideLayout.md](Docs/Set-OfficePowerPointSlideLayout.md) |
-| Markdown | Solid | [Docs/New-OfficeMarkdown.md](Docs/New-OfficeMarkdown.md), [Docs/Get-OfficeMarkdown.md](Docs/Get-OfficeMarkdown.md), [Docs/ConvertTo-OfficeMarkdownHtml.md](Docs/ConvertTo-OfficeMarkdownHtml.md) |
+| Markdown | Solid | [Docs/New-OfficeMarkdown.md](Docs/New-OfficeMarkdown.md), [Docs/Get-OfficeMarkdown.md](Docs/Get-OfficeMarkdown.md), [Docs/Get-OfficeMarkdownNode.md](Docs/Get-OfficeMarkdownNode.md), [Docs/Get-OfficeMarkdownHeading.md](Docs/Get-OfficeMarkdownHeading.md), [Docs/Get-OfficeMarkdownTable.md](Docs/Get-OfficeMarkdownTable.md), [Docs/ConvertTo-OfficeMarkdownHtml.md](Docs/ConvertTo-OfficeMarkdownHtml.md), [Docs/ConvertFrom-OfficeMarkdownHtml.md](Docs/ConvertFrom-OfficeMarkdownHtml.md) |
 | CSV | Solid | [Docs/Get-OfficeCsv.md](Docs/Get-OfficeCsv.md), [Docs/Get-OfficeCsvData.md](Docs/Get-OfficeCsvData.md), [Docs/ConvertTo-OfficeCsv.md](Docs/ConvertTo-OfficeCsv.md) |
 
 ## Recommended Examples 🧪
