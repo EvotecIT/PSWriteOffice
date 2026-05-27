@@ -6,23 +6,23 @@ using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
-/// <summary>Updates styling on Word text runs returned by Get-OfficeWordRun.</summary>
+/// <summary>Updates styling on Word text.</summary>
 /// <example>
-///   <summary>Style runs selected from a document.</summary>
+///   <summary>Style text inside a Word paragraph.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun | Where-Object Text -eq 'Warning' | Set-OfficeWordRunStyle -Bold $true -Color '#C00000'</code>
-///   <para>Applies bold red styling to matching runs.</para>
+///   <code>WordParagraph -Text 'Warning' -PassThru | Set-OfficeWordTextStyle -Bold $true -Color '#C00000'</code>
+///   <para>Applies bold red styling to matching text.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficeWordRunStyle")]
-[Alias("WordRunStyle")]
+[Cmdlet(VerbsCommon.Set, "OfficeWordTextStyle")]
+[Alias("WordTextStyle")]
 [OutputType(typeof(WordParagraph))]
-public sealed class SetOfficeWordRunStyleCommand : PSCmdlet
+public sealed class SetOfficeWordTextStyleCommand : PSCmdlet
 {
-    /// <summary>Run to update. Runs are represented by OfficeIMO.Word.WordParagraph instances.</summary>
+    /// <summary>Word text item to update.</summary>
     [Parameter(ValueFromPipeline = true, Position = 0)]
-    public WordParagraph? Run { get; set; }
+    public WordParagraph? InputObject { get; set; }
 
-    /// <summary>Replace the run text.</summary>
+    /// <summary>Replace the text.</summary>
     [Parameter]
     public string? Text { get; set; }
 
@@ -90,46 +90,46 @@ public sealed class SetOfficeWordRunStyleCommand : PSCmdlet
     [Parameter]
     public bool? Emboss { get; set; }
 
-    /// <summary>Emit the updated run.</summary>
+    /// <summary>Emit the updated text item.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var run = Run ?? WordDslContext.Current?.CurrentParagraph;
-        if (run == null)
+        var text = InputObject ?? WordDslContext.Current?.CurrentParagraph;
+        if (text == null)
         {
-            throw new PSInvalidOperationException("Provide a Word run from Get-OfficeWordRun or run this command inside a Word paragraph DSL scope.");
+            throw new PSInvalidOperationException("Provide a Word text item or run this command inside a Word paragraph DSL scope.");
         }
 
-        if (IsBound(nameof(Text))) run.Text = Text ?? string.Empty;
-        if (Style.HasValue) run.SetCharacterStyle(Style.Value);
-        if (!string.IsNullOrWhiteSpace(StyleId)) run.SetCharacterStyleId(StyleId!);
-        if (IsBound(nameof(Bold))) run.Bold = Bold ?? false;
-        if (IsBound(nameof(Italic))) run.Italic = Italic ?? false;
+        if (IsBound(nameof(Text))) text.Text = Text ?? string.Empty;
+        if (Style.HasValue) text.SetCharacterStyle(Style.Value);
+        if (!string.IsNullOrWhiteSpace(StyleId)) text.SetCharacterStyleId(StyleId!);
+        if (IsBound(nameof(Bold))) text.Bold = Bold ?? false;
+        if (IsBound(nameof(Italic))) text.Italic = Italic ?? false;
         if (!string.IsNullOrWhiteSpace(Underline))
         {
-            run.Underline = ParseOpenXmlValue<UnderlineValues>(Underline!, nameof(Underline));
+            text.Underline = ParseOpenXmlValue<UnderlineValues>(Underline!, nameof(Underline));
         }
-        if (IsBound(nameof(Color))) run.ColorHex = Color ?? string.Empty;
-        if (IsBound(nameof(FontSize))) run.FontSize = FontSize;
-        if (IsBound(nameof(FontFamily))) run.FontFamily = FontFamily;
+        if (IsBound(nameof(Color))) text.ColorHex = Color ?? string.Empty;
+        if (IsBound(nameof(FontSize))) text.FontSize = FontSize;
+        if (IsBound(nameof(FontFamily))) text.FontFamily = FontFamily;
         if (!string.IsNullOrWhiteSpace(Highlight))
         {
-            run.Highlight = ParseOpenXmlValue<HighlightColorValues>(Highlight!, nameof(Highlight));
+            text.Highlight = ParseOpenXmlValue<HighlightColorValues>(Highlight!, nameof(Highlight));
         }
-        if (IsBound(nameof(Strike))) run.Strike = Strike ?? false;
-        if (IsBound(nameof(DoubleStrike))) run.DoubleStrike = DoubleStrike ?? false;
-        if (CapsStyle.HasValue) run.CapsStyle = CapsStyle.Value;
-        if (IsBound(nameof(Spacing))) run.Spacing = Spacing;
-        if (IsBound(nameof(Outline))) run.Outline = Outline ?? false;
-        if (IsBound(nameof(Shadow))) run.Shadow = Shadow ?? false;
-        if (IsBound(nameof(Emboss))) run.Emboss = Emboss ?? false;
+        if (IsBound(nameof(Strike))) text.Strike = Strike ?? false;
+        if (IsBound(nameof(DoubleStrike))) text.DoubleStrike = DoubleStrike ?? false;
+        if (CapsStyle.HasValue) text.CapsStyle = CapsStyle.Value;
+        if (IsBound(nameof(Spacing))) text.Spacing = Spacing;
+        if (IsBound(nameof(Outline))) text.Outline = Outline ?? false;
+        if (IsBound(nameof(Shadow))) text.Shadow = Shadow ?? false;
+        if (IsBound(nameof(Emboss))) text.Emboss = Emboss ?? false;
 
         if (PassThru.IsPresent)
         {
-            WriteObject(run);
+            WriteObject(text);
         }
     }
 

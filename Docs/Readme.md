@@ -430,7 +430,7 @@ Gets picture content controls from a Word document.
 ### [Get-OfficeWordRepeatingSection](Get-OfficeWordRepeatingSection.md)
 Gets repeating section content controls from a Word document.
 
-### [Get-OfficeWordRun](Get-OfficeWordRun.md)
+### [Get-OfficeWordText](Get-OfficeWordText.md)
 Gets runs from Word paragraphs.
 
 ### [Get-OfficeWordSection](Get-OfficeWordSection.md)

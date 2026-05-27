@@ -7,16 +7,16 @@ using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
-/// <summary>Gets runs from Word paragraphs.</summary>
+/// <summary>Gets text segments from Word paragraphs.</summary>
 /// <example>
-///   <summary>Enumerate runs for all paragraphs.</summary>
+///   <summary>Enumerate text segments for all paragraphs.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun</code>
-///   <para>Returns each run as a <see cref="WordParagraph"/> instance.</para>
+///   <code>Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordText</code>
+///   <para>Returns each text segment as a <see cref="WordParagraph"/> instance.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeWordRun", DefaultParameterSetName = ParameterSetParagraph)]
+[Cmdlet(VerbsCommon.Get, "OfficeWordText", DefaultParameterSetName = ParameterSetParagraph)]
 [OutputType(typeof(WordParagraph))]
-public sealed class GetOfficeWordRunCommand : PSCmdlet
+public sealed class GetOfficeWordTextCommand : PSCmdlet
 {
     private const string ParameterSetParagraph = "Paragraph";
     private const string ParameterSetSection = "Section";
@@ -78,9 +78,9 @@ public sealed class GetOfficeWordRunCommand : PSCmdlet
 
             foreach (var paragraph in paragraphs)
             {
-                foreach (var run in paragraph.GetRuns())
+                foreach (var text in paragraph.GetRuns())
                 {
-                    WriteObject(run);
+                    WriteObject(text);
                 }
             }
         }

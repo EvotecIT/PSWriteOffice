@@ -1227,12 +1227,12 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordRepeatingSectionCommand.cs#L21"
     },
     {
-      "name": "Get-OfficeWordRun",
+      "name": "Get-OfficeWordText",
       "kind": "Cmdlet",
       "aliases": [],
-      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordRunCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordRunCommand.cs#L19"
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTextCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/word-text-style-api-cleanup/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTextCommand.cs#L17"
     },
     {
       "name": "Get-OfficeWordSection",
@@ -1843,14 +1843,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/word-style-helpers/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordParagraphStyleCommand.cs#L19"
     },
     {
-      "name": "Set-OfficeWordRunStyle",
+      "name": "Set-OfficeWordTextStyle",
       "kind": "Cmdlet",
       "aliases": [
-        "WordRunStyle"
+        "WordTextStyle"
       ],
-      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordRunStyleCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/word-style-helpers/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordRunStyleCommand.cs#L19"
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTextStyleCommand.cs",
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/word-text-style-api-cleanup/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTextStyleCommand.cs#L16"
     },
     {
       "name": "Set-OfficeWordShape",

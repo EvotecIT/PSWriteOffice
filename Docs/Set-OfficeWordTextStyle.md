@@ -4,27 +4,27 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Set-OfficeWordRunStyle
+# Set-OfficeWordTextStyle
 ## SYNOPSIS
-Updates styling on Word text runs returned by Get-OfficeWordRun.
+Updates styling on Word text.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordRunStyle [[-Run] <WordParagraph>] [-Text <string>] [-Style <WordCharacterStyles>] [-StyleId <string>] [-Bold <bool>] [-Italic <bool>] [-Underline <string>] [-Color <string>] [-FontSize <int>] [-FontFamily <string>] [-Highlight <string>] [-Strike <bool>] [-DoubleStrike <bool>] [-CapsStyle <CapsStyle>] [-Spacing <int>] [-Outline <bool>] [-Shadow <bool>] [-Emboss <bool>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordTextStyle [[-InputObject] <WordParagraph>] [-Text <string>] [-Style <WordCharacterStyles>] [-StyleId <string>] [-Bold <bool>] [-Italic <bool>] [-Underline <string>] [-Color <string>] [-FontSize <int>] [-FontFamily <string>] [-Highlight <string>] [-Strike <bool>] [-DoubleStrike <bool>] [-CapsStyle <CapsStyle>] [-Spacing <int>] [-Outline <bool>] [-Shadow <bool>] [-Emboss <bool>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Updates styling on Word text runs returned by Get-OfficeWordRun.
+Updates styling on Word text.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun | Where-Object Text -eq 'Warning' | Set-OfficeWordRunStyle -Bold $true -Color '#C00000'
+PS> WordParagraph -Text 'Warning' -PassThru | Set-OfficeWordTextStyle -Bold $true -Color '#C00000'
 ```
 
-Applies bold red styling to matching runs.
+Applies bold red styling to matching text.
 
 ## PARAMETERS
 
@@ -156,6 +156,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -InputObject
+Word text item to update.
+
+```yaml
+Type: WordParagraph
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
 ### -Italic
 Set or clear italic formatting.
 
@@ -189,7 +205,7 @@ Accept wildcard characters: True
 ```
 
 ### -PassThru
-Emit the updated run.
+Emit the updated text item.
 
 ```yaml
 Type: SwitchParameter
@@ -201,22 +217,6 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Run
-Run to update. Runs are represented by OfficeIMO.Word.WordParagraph instances.
-
-```yaml
-Type: WordParagraph
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: 0
-Default value: None
-Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -301,7 +301,7 @@ Accept wildcard characters: True
 ```
 
 ### -Text
-Replace the run text.
+Replace the text.
 
 ```yaml
 Type: String

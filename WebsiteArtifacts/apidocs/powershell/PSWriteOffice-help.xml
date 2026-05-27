@@ -42889,19 +42889,19 @@ OfficeIMO.Word.WordSection</maml:name>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
-      <command:name>Get-OfficeWordRun</command:name>
+      <command:name>Get-OfficeWordText</command:name>
       <command:verb>Get</command:verb>
-      <command:noun>OfficeWordRun</command:noun>
+      <command:noun>OfficeWordText</command:noun>
       <maml:description>
-        <maml:para>Gets runs from Word paragraphs.</maml:para>
+        <maml:para>Gets text segments from Word paragraphs.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Gets runs from Word paragraphs.</maml:para>
+      <maml:para>Gets text segments from Word paragraphs.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Paragraph">
-        <maml:name>Get-OfficeWordRun</maml:name>
+        <maml:name>Get-OfficeWordText</maml:name>
         <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Paragraph</maml:name>
           <maml:description>
@@ -42916,7 +42916,7 @@ OfficeIMO.Word.WordSection</maml:name>
         </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Section">
-        <maml:name>Get-OfficeWordRun</maml:name>
+        <maml:name>Get-OfficeWordText</maml:name>
         <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Section</maml:name>
           <maml:description>
@@ -42931,7 +42931,7 @@ OfficeIMO.Word.WordSection</maml:name>
         </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Document">
-        <maml:name>Get-OfficeWordRun</maml:name>
+        <maml:name>Get-OfficeWordText</maml:name>
         <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
@@ -42946,7 +42946,7 @@ OfficeIMO.Word.WordSection</maml:name>
         </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Path">
-        <maml:name>Get-OfficeWordRun</maml:name>
+        <maml:name>Get-OfficeWordText</maml:name>
         <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="FilePath,Path">
           <maml:name>InputPath</maml:name>
           <maml:description>
@@ -43034,13 +43034,13 @@ OfficeIMO.Word.WordDocument</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Enumerate runs for all paragraphs.</maml:title>
+        <maml:title>Enumerate text segments for all paragraphs.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun</dev:code>
+        <dev:code>Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordText</dev:code>
         <dev:remarks>
-          <maml:para>Returns each run as a WordParagraph instance.</maml:para>
+          <maml:para>Returns each text segment as a WordParagraph instance.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -66768,19 +66768,19 @@ OfficeIMO.Word.WordDocument</maml:name>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
-      <command:name>Set-OfficeWordRunStyle</command:name>
+      <command:name>Set-OfficeWordTextStyle</command:name>
       <command:verb>Set</command:verb>
-      <command:noun>OfficeWordRunStyle</command:noun>
+      <command:noun>OfficeWordTextStyle</command:noun>
       <maml:description>
-        <maml:para>Updates styling on Word text runs returned by Get-OfficeWordRun.</maml:para>
+        <maml:para>Updates styling on Word text.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Updates styling on Word text runs returned by Get-OfficeWordRun.</maml:para>
+      <maml:para>Updates styling on Word text.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
-        <maml:name>Set-OfficeWordRunStyle</maml:name>
+        <maml:name>Set-OfficeWordTextStyle</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>Bold</maml:name>
           <maml:description>
@@ -66904,7 +66904,7 @@ OfficeIMO.Word.WordDocument</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Emit the updated run.</maml:para>
+            <maml:para>Emit the updated text item.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -66914,9 +66914,9 @@ OfficeIMO.Word.WordDocument</maml:name>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
-          <maml:name>Run</maml:name>
+          <maml:name>InputObject</maml:name>
           <maml:description>
-            <maml:para>Run to update. Runs are represented by OfficeIMO.Word.WordParagraph instances.</maml:para>
+            <maml:para>Word text item to update.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">WordParagraph</command:parameterValue>
           <dev:type>
@@ -66988,7 +66988,7 @@ OfficeIMO.Word.WordDocument</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>Text</maml:name>
           <maml:description>
-            <maml:para>Replace the run text.</maml:para>
+            <maml:para>Replace the text.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -67135,7 +67135,7 @@ OfficeIMO.Word.WordDocument</maml:name>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
-          <maml:para>Emit the updated run.</maml:para>
+          <maml:para>Emit the updated text item.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -67145,9 +67145,9 @@ OfficeIMO.Word.WordDocument</maml:name>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
-        <maml:name>Run</maml:name>
+        <maml:name>InputObject</maml:name>
         <maml:description>
-          <maml:para>Run to update. Runs are represented by OfficeIMO.Word.WordParagraph instances.</maml:para>
+          <maml:para>Word text item to update.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">WordParagraph</command:parameterValue>
         <dev:type>
@@ -67219,7 +67219,7 @@ OfficeIMO.Word.WordDocument</maml:name>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
         <maml:name>Text</maml:name>
         <maml:description>
-          <maml:para>Replace the run text.</maml:para>
+          <maml:para>Replace the text.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -67262,13 +67262,13 @@ OfficeIMO.Word.WordDocument</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Style runs selected from a document.</maml:title>
+        <maml:title>Style text inside a Word paragraph.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun | Where-Object Text -eq 'Warning' | Set-OfficeWordRunStyle -Bold $true -Color '#C00000'</dev:code>
+        <dev:code>WordParagraph -Text 'Warning' -PassThru | Set-OfficeWordTextStyle -Bold $true -Color '#C00000'</dev:code>
         <dev:remarks>
-          <maml:para>Applies bold red styling to matching runs.</maml:para>
+          <maml:para>Applies bold red styling to matching text.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

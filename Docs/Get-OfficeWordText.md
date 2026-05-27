@@ -4,42 +4,42 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Get-OfficeWordRun
+# Get-OfficeWordText
 ## SYNOPSIS
-Gets runs from Word paragraphs.
+Gets text segments from Word paragraphs.
 
 ## SYNTAX
 ### Paragraph (Default)
 ```powershell
-Get-OfficeWordRun -Paragraph <WordParagraph> [<CommonParameters>]
+Get-OfficeWordText -Paragraph <WordParagraph> [<CommonParameters>]
 ```
 
 ### Section
 ```powershell
-Get-OfficeWordRun -Section <WordSection> [<CommonParameters>]
+Get-OfficeWordText -Section <WordSection> [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeWordRun -Document <WordDocument> [<CommonParameters>]
+Get-OfficeWordText -Document <WordDocument> [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Get-OfficeWordRun [-InputPath] <string> [<CommonParameters>]
+Get-OfficeWordText [-InputPath] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Gets runs from Word paragraphs.
+Gets text segments from Word paragraphs.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordRun
+PS> Get-OfficeWordParagraph -Path .\Report.docx | Get-OfficeWordText
 ```
 
-Returns each run as a WordParagraph instance.
+Returns each text segment as a WordParagraph instance.
 
 ## PARAMETERS
 
@@ -50,7 +50,7 @@ Document to enumerate.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -66,7 +66,7 @@ Path to the document.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -82,7 +82,7 @@ Paragraph to enumerate.
 Type: WordParagraph
 Parameter Sets: Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -98,7 +98,7 @@ Section to enumerate.
 Type: WordSection
 Parameter Sets: Section
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -123,4 +123,3 @@ OfficeIMO.Word.WordDocument`
 ## RELATED LINKS
 
 - None
-
