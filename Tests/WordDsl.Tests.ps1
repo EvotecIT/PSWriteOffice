@@ -236,9 +236,9 @@ Describe 'Word DSL surface' {
         $document = Get-OfficeWord -Path $path -ReadOnly
         try {
             $document.Tables.Count | Should -Be 3
-            $document.Tables[0].LayoutMode | Should -Be ([OfficeIMO.Word.WordTableLayoutType]::AutoFitToContents)
-            $document.Tables[1].LayoutMode | Should -Be ([OfficeIMO.Word.WordTableLayoutType]::AutoFitToWindow)
-            $document.Tables[2].LayoutType | Should -Be ([DocumentFormat.OpenXml.Wordprocessing.TableLayoutValues]::Fixed)
+            $document.Tables[0].LayoutMode.ToString() | Should -Be 'AutoFitToContents'
+            $document.Tables[1].LayoutMode.ToString() | Should -Be 'AutoFitToWindow'
+            $document.Tables[2].LayoutType.Value | Should -Be 'fixed'
         } finally {
             $document.Dispose()
         }
@@ -342,9 +342,9 @@ Describe 'Word DSL surface' {
             $document.CoverPage | Should -Not -BeNullOrEmpty
             $document.CoverPageProperties.Abstract | Should -Be 'Executive summary'
             $document.CoverPageProperties.CompanyEmail | Should -Be 'reports@example.test'
-            $document.Sections[0].PageSettings.PageSize | Should -Be ([OfficeIMO.Word.WordPageSize]::A4)
-            $document.Sections[0].PageOrientation | Should -Be ([DocumentFormat.OpenXml.Wordprocessing.PageOrientationValues]::Landscape)
-            $document.Sections[0].Margins.Type | Should -Be ([OfficeIMO.Word.WordMargin]::Narrow)
+            $document.Sections[0].PageSettings.PageSize.ToString() | Should -Be 'A4'
+            $document.Sections[0].PageOrientation.Value | Should -Be 'landscape'
+            $document.Sections[0].Margins.Type.ToString() | Should -Be 'Narrow'
             $document.Sections[0].ColumnCount | Should -Be 2
             $document.Sections[0].ColumnsSpace | Should -Be 720
             $document.Sections[0].HasColumnSeparator | Should -BeTrue
@@ -772,7 +772,54 @@ Describe 'Word DSL surface' {
 
             $cell.ShadingFillColorHex | Should -Be 'DDEEFF'
             $cell.Width | Should -Be 2400
-            $cell.WidthType | Should -Be ([DocumentFormat.OpenXml.Wordprocessing.TableWidthUnitValues]::Dxa)
+            $cell.WidthType.Value | Should -Be 'dxa'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'wraps OfficeIMO Word paragraph and run style helpers' {
+        $path = Join-Path $TestDrive 'DslWordStyles.docx'
+
+        New-OfficeWord -Path $path {
+            $paragraph = WordParagraph -Text 'Executive Summary' -PassThru
+            $paragraph |
+                Set-OfficeWordParagraphStyle -Style Heading2 -Alignment Center -SpacingBeforePoints 6 -SpacingAfterPoints 12 -IndentationBeforePoints 18 -KeepWithNext $true -PassThru |
+                Should -Not -BeNullOrEmpty
+
+            $runParagraph = WordParagraph -Text 'Initial' -PassThru
+            $run = @($runParagraph.GetRuns())[0]
+            $run |
+                Set-OfficeWordRunStyle -Text 'Styled run' -Bold $true -Italic $true -Underline Single -Color '#C00000' -FontSize 14 -FontFamily 'Aptos' -Highlight Yellow -CapsStyle SmallCaps -Strike $true -Style Heading2Char -PassThru |
+                Should -Not -BeNullOrEmpty
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $styledParagraph = $document.Paragraphs | Where-Object Text -EQ 'Executive Summary' | Select-Object -First 1
+            $styledParagraph.Style.ToString() | Should -Be 'Heading2'
+            $styledParagraph.ParagraphAlignment.Value | Should -Be 'center'
+            $styledParagraph.LineSpacingBeforePoints | Should -Be 6
+            $styledParagraph.LineSpacingAfterPoints | Should -Be 12
+            $styledParagraph.IndentationBeforePoints | Should -Be 18
+            $styledParagraph.KeepWithNext | Should -BeTrue
+
+            $styledRun = $document.Paragraphs |
+                Where-Object Text -EQ 'Styled run' |
+                ForEach-Object { $_.GetRuns() } |
+                Select-Object -First 1
+
+            $styledRun.Text | Should -Be 'Styled run'
+            $styledRun.Bold | Should -BeTrue
+            $styledRun.Italic | Should -BeTrue
+            $styledRun.Underline.Value | Should -Be 'single'
+            $styledRun.ColorHex | Should -Be 'c00000'
+            $styledRun.FontSize | Should -Be 14
+            $styledRun.FontFamily | Should -Be 'Aptos'
+            $styledRun.Highlight.Value | Should -Be 'yellow'
+            $styledRun.CapsStyle.ToString() | Should -Be 'SmallCaps'
+            $styledRun.Strike | Should -BeTrue
+            $styledRun.CharacterStyle.ToString() | Should -Be 'Heading2Char'
         } finally {
             $document.Dispose()
         }
