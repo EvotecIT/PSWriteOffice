@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-05-27T16:15:25.8422823+00:00",
+  "generatedAt": "2026-05-27T20:38:50.9873939+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -8,7 +8,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelAutoFilterCommand.cs",
       "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelAutoFilterCommand.cs#L27"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelAutoFilterCommand.cs#L27"
     },
     {
       "name": "Add-OfficeExcelChart",
@@ -16,7 +16,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelChartCommand.cs",
       "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelChartCommand.cs#L23"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelChartCommand.cs#L23"
     },
     {
       "name": "Add-OfficeExcelComment",
@@ -24,7 +24,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelCommentCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelCommentCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelCommentCommand.cs#L17"
     },
     {
       "name": "Add-OfficeExcelConditionalColorScale",
@@ -32,7 +32,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalColorScaleCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalColorScaleCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalColorScaleCommand.cs#L17"
     },
     {
       "name": "Add-OfficeExcelConditionalDataBar",
@@ -40,7 +40,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalDataBarCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalDataBarCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalDataBarCommand.cs#L17"
     },
     {
       "name": "Add-OfficeExcelConditionalIconSet",
@@ -48,7 +48,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalIconSetCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalIconSetCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalIconSetCommand.cs#L19"
     },
     {
       "name": "Add-OfficeExcelConditionalRule",
@@ -56,7 +56,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalRuleCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalRuleCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalRuleCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelDataSet",
@@ -64,7 +64,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelDataSetCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelDataSetCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelDataSetCommand.cs#L20"
     },
     {
       "name": "Add-OfficeExcelImage",
@@ -72,7 +72,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelImageCommand.cs",
       "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelImageCommand.cs#L24"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelImageCommand.cs#L24"
     },
     {
       "name": "Add-OfficeExcelImageFromUrl",
@@ -80,7 +80,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelImageFromUrlCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelImageFromUrlCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelImageFromUrlCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelPivotTable",
@@ -88,7 +88,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPivotTableCommand.cs",
       "sourceLine": 22,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPivotTableCommand.cs#L22"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPivotTableCommand.cs#L22"
     },
     {
       "name": "Add-OfficeExcelReportCallout",
@@ -121,7 +121,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelReportSheetCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelReportSheetCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelReportSheetCommand.cs#L21"
     },
     {
       "name": "Add-OfficeExcelReportSpacer",
@@ -144,7 +144,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSheetCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSheetCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSheetCommand.cs#L17"
     },
     {
       "name": "Add-OfficeExcelSparkline",
@@ -152,7 +152,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSparklineCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSparklineCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSparklineCommand.cs#L19"
     },
     {
       "name": "Add-OfficeExcelTable",
@@ -160,7 +160,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableCommand.cs",
       "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableCommand.cs#L23"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableCommand.cs#L23"
     },
     {
       "name": "Add-OfficeExcelTableOfContents",
@@ -168,7 +168,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableOfContentsCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableOfContentsCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableOfContentsCommand.cs#L19"
     },
     {
       "name": "Add-OfficeExcelValidationCustomFormula",
@@ -176,7 +176,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationCustomFormulaCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationCustomFormulaCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationCustomFormulaCommand.cs#L16"
     },
     {
       "name": "Add-OfficeExcelValidationDate",
@@ -184,7 +184,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationDateCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationDateCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationDateCommand.cs#L19"
     },
     {
       "name": "Add-OfficeExcelValidationDecimal",
@@ -192,7 +192,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationDecimalCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationDecimalCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationDecimalCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelValidationList",
@@ -200,7 +200,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationListCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationListCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationListCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelValidationTextLength",
@@ -208,7 +208,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationTextLengthCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationTextLengthCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationTextLengthCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelValidationTime",
@@ -216,7 +216,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationTimeCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationTimeCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationTimeCommand.cs#L19"
     },
     {
       "name": "Add-OfficeExcelValidationWholeNumber",
@@ -224,7 +224,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationWholeNumberCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationWholeNumberCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationWholeNumberCommand.cs#L18"
     },
     {
       "name": "Add-OfficeMarkdownCallout",
@@ -232,7 +232,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownCalloutCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownCalloutCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownCalloutCommand.cs#L17"
     },
     {
       "name": "Add-OfficeMarkdownCode",
@@ -240,7 +240,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownCodeCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownCodeCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownCodeCommand.cs#L17"
     },
     {
       "name": "Add-OfficeMarkdownDefinitionList",
@@ -248,7 +248,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownDefinitionListCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownDefinitionListCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownDefinitionListCommand.cs#L19"
     },
     {
       "name": "Add-OfficeMarkdownDetails",
@@ -256,7 +256,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownDetailsCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownDetailsCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownDetailsCommand.cs#L17"
     },
     {
       "name": "Add-OfficeMarkdownFrontMatter",
@@ -264,7 +264,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownFrontMatterCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownFrontMatterCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownFrontMatterCommand.cs#L21"
     },
     {
       "name": "Add-OfficeMarkdownHeading",
@@ -272,7 +272,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownHeadingCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownHeadingCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownHeadingCommand.cs#L18"
     },
     {
       "name": "Add-OfficeMarkdownHorizontalRule",
@@ -280,7 +280,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownHorizontalRuleCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownHorizontalRuleCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownHorizontalRuleCommand.cs#L17"
     },
     {
       "name": "Add-OfficeMarkdownImage",
@@ -288,7 +288,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownImageCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownImageCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownImageCommand.cs#L17"
     },
     {
       "name": "Add-OfficeMarkdownList",
@@ -296,7 +296,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownListCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownListCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownListCommand.cs#L20"
     },
     {
       "name": "Add-OfficeMarkdownParagraph",
@@ -304,7 +304,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownParagraphCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownParagraphCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownParagraphCommand.cs#L17"
     },
     {
       "name": "Add-OfficeMarkdownQuote",
@@ -312,7 +312,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownQuoteCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownQuoteCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownQuoteCommand.cs#L17"
     },
     {
       "name": "Add-OfficeMarkdownTable",
@@ -320,7 +320,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableCommand.cs",
       "sourceLine": 28,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableCommand.cs#L28"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableCommand.cs#L28"
     },
     {
       "name": "Add-OfficeMarkdownTableOfContents",
@@ -328,7 +328,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableOfContentsCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableOfContentsCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableOfContentsCommand.cs#L18"
     },
     {
       "name": "Add-OfficeMarkdownTaskList",
@@ -336,7 +336,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTaskListCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTaskListCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTaskListCommand.cs#L20"
     },
     {
       "name": "Add-OfficePowerPointBullets",
@@ -344,7 +344,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointBulletsCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointBulletsCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointBulletsCommand.cs#L21"
     },
     {
       "name": "Add-OfficePowerPointChart",
@@ -352,7 +352,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointChartCommand.cs",
       "sourceLine": 44,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointChartCommand.cs#L44"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointChartCommand.cs#L44"
     },
     {
       "name": "Add-OfficePowerPointDesignerDeck",
@@ -360,7 +360,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointDesignerDeckCommand.cs",
       "sourceLine": 13,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointDesignerDeckCommand.cs#L13"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointDesignerDeckCommand.cs#L13"
     },
     {
       "name": "Add-OfficePowerPointImage",
@@ -368,7 +368,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointImageCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointImageCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointImageCommand.cs#L19"
     },
     {
       "name": "Add-OfficePowerPointPlanCapability",
@@ -376,7 +376,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCapabilityCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCapabilityCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCapabilityCommand.cs#L11"
     },
     {
       "name": "Add-OfficePowerPointPlanCardGrid",
@@ -384,7 +384,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCardGridCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCardGridCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCardGridCommand.cs#L11"
     },
     {
       "name": "Add-OfficePowerPointPlanCaseStudy",
@@ -392,7 +392,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCaseStudyCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCaseStudyCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCaseStudyCommand.cs#L11"
     },
     {
       "name": "Add-OfficePowerPointPlanCoverage",
@@ -400,7 +400,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCoverageCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCoverageCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanCoverageCommand.cs#L11"
     },
     {
       "name": "Add-OfficePowerPointPlanLogoWall",
@@ -408,7 +408,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanLogoWallCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanLogoWallCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanLogoWallCommand.cs#L11"
     },
     {
       "name": "Add-OfficePowerPointPlanProcess",
@@ -416,7 +416,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanProcessCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanProcessCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanProcessCommand.cs#L11"
     },
     {
       "name": "Add-OfficePowerPointPlanSection",
@@ -424,7 +424,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanSectionCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanSectionCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointPlanSectionCommand.cs#L11"
     },
     {
       "name": "Add-OfficePowerPointSection",
@@ -432,7 +432,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointSectionCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointSectionCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointSectionCommand.cs#L19"
     },
     {
       "name": "Add-OfficePowerPointShape",
@@ -440,7 +440,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointShapeCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointShapeCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointShapeCommand.cs#L21"
     },
     {
       "name": "Add-OfficePowerPointSlide",
@@ -448,7 +448,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointSlideCommand.cs",
       "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointSlideCommand.cs#L25"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointSlideCommand.cs#L25"
     },
     {
       "name": "Add-OfficePowerPointTable",
@@ -456,7 +456,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableCommand.cs",
       "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableCommand.cs#L24"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableCommand.cs#L24"
     },
     {
       "name": "Add-OfficePowerPointTextBox",
@@ -464,7 +464,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTextBoxCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTextBoxCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTextBoxCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordBookmark",
@@ -472,7 +472,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordBookmarkCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordBookmarkCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordBookmarkCommand.cs#L16"
     },
     {
       "name": "Add-OfficeWordBreak",
@@ -480,7 +480,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordBreakCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordBreakCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordBreakCommand.cs#L20"
     },
     {
       "name": "Add-OfficeWordChart",
@@ -488,7 +488,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordChartCommand.cs",
       "sourceLine": 44,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordChartCommand.cs#L44"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordChartCommand.cs#L44"
     },
     {
       "name": "Add-OfficeWordCheckBox",
@@ -496,7 +496,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordCheckBoxCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordCheckBoxCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordCheckBoxCommand.cs#L17"
     },
     {
       "name": "Add-OfficeWordComboBox",
@@ -504,7 +504,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordComboBoxCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordComboBoxCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordComboBoxCommand.cs#L20"
     },
     {
       "name": "Add-OfficeWordContentControl",
@@ -512,7 +512,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordContentControlCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordContentControlCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordContentControlCommand.cs#L17"
     },
     {
       "name": "Add-OfficeWordCoverPage",
@@ -520,7 +520,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordCoverPageCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordCoverPageCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordCoverPageCommand.cs#L19"
     },
     {
       "name": "Add-OfficeWordDatePicker",
@@ -528,7 +528,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordDatePickerCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordDatePickerCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordDatePickerCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordDropDownList",
@@ -536,7 +536,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordDropDownListCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordDropDownListCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordDropDownListCommand.cs#L20"
     },
     {
       "name": "Add-OfficeWordEndnote",
@@ -544,7 +544,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordEndnoteCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordEndnoteCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordEndnoteCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordEquation",
@@ -552,7 +552,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordEquationCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordEquationCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordEquationCommand.cs#L19"
     },
     {
       "name": "Add-OfficeWordField",
@@ -560,7 +560,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFieldCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFieldCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFieldCommand.cs#L19"
     },
     {
       "name": "Add-OfficeWordFooter",
@@ -568,7 +568,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFooterCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFooterCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFooterCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordFootnote",
@@ -576,7 +576,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFootnoteCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFootnoteCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordFootnoteCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordHeader",
@@ -584,7 +584,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordHeaderCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordHeaderCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordHeaderCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordHyperlink",
@@ -592,7 +592,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordHyperlinkCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordHyperlinkCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordHyperlinkCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordImage",
@@ -600,7 +600,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordImageCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordImageCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordImageCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordList",
@@ -608,7 +608,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListCommand.cs#L17"
     },
     {
       "name": "Add-OfficeWordListItem",
@@ -616,7 +616,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListItemCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListItemCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListItemCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordPageNumber",
@@ -624,7 +624,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordPageNumberCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordPageNumberCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordPageNumberCommand.cs#L19"
     },
     {
       "name": "Add-OfficeWordParagraph",
@@ -632,7 +632,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordParagraphCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordParagraphCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordParagraphCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordPictureControl",
@@ -640,7 +640,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordPictureControlCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordPictureControlCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordPictureControlCommand.cs#L17"
     },
     {
       "name": "Add-OfficeWordRepeatingSection",
@@ -648,7 +648,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordRepeatingSectionCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordRepeatingSectionCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordRepeatingSectionCommand.cs#L17"
     },
     {
       "name": "Add-OfficeWordSection",
@@ -656,7 +656,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordSectionCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordSectionCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordSectionCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordShape",
@@ -664,7 +664,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordShapeCommand.cs",
       "sourceLine": 12,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordShapeCommand.cs#L12"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordShapeCommand.cs#L12"
     },
     {
       "name": "Add-OfficeWordTable",
@@ -672,7 +672,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCommand.cs",
       "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCommand.cs#L24"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCommand.cs#L24"
     },
     {
       "name": "Add-OfficeWordTableCell",
@@ -680,7 +680,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCellCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCellCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCellCommand.cs#L19"
     },
     {
       "name": "Add-OfficeWordTableCondition",
@@ -688,7 +688,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableConditionCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableConditionCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableConditionCommand.cs#L19"
     },
     {
       "name": "Add-OfficeWordTableOfContent",
@@ -696,7 +696,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordTabStop",
@@ -704,7 +704,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTabStopCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTabStopCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTabStopCommand.cs#L20"
     },
     {
       "name": "Add-OfficeWordText",
@@ -712,7 +712,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTextCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTextCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTextCommand.cs#L18"
     },
     {
       "name": "Add-OfficeWordWatermark",
@@ -720,7 +720,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordWatermarkCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordWatermarkCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordWatermarkCommand.cs#L18"
     },
     {
       "name": "Clear-OfficeExcelAutoFilter",
@@ -728,7 +728,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelAutoFilterCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelAutoFilterCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelAutoFilterCommand.cs#L16"
     },
     {
       "name": "Close-OfficeExcel",
@@ -736,7 +736,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/CloseOfficeExcelCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/CloseOfficeExcelCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/CloseOfficeExcelCommand.cs#L16"
     },
     {
       "name": "Close-OfficePowerPoint",
@@ -744,7 +744,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/CloseOfficePowerPointCommand.cs",
       "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/CloseOfficePowerPointCommand.cs#L23"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/CloseOfficePowerPointCommand.cs#L23"
     },
     {
       "name": "Close-OfficeWord",
@@ -752,7 +752,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/CloseOfficeWordCommand.cs",
       "sourceLine": 28,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/CloseOfficeWordCommand.cs#L28"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/CloseOfficeWordCommand.cs#L28"
     },
     {
       "name": "Compare-OfficeExcelRange",
@@ -762,7 +762,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/CompareOfficeExcelRangeCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/CompareOfficeExcelRangeCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/CompareOfficeExcelRangeCommand.cs#L17"
     },
     {
       "name": "ConvertFrom-OfficeMarkdownHtml",
@@ -772,7 +772,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/ConvertFromOfficeMarkdownHtmlCommand.cs",
       "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertFromOfficeMarkdownHtmlCommand.cs#L27"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertFromOfficeMarkdownHtmlCommand.cs#L27"
     },
     {
       "name": "ConvertFrom-OfficeWordHtml",
@@ -782,7 +782,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordHtmlCommand.cs",
       "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordHtmlCommand.cs#L27"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordHtmlCommand.cs#L27"
     },
     {
       "name": "ConvertFrom-OfficeWordMarkdown",
@@ -792,7 +792,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordMarkdownCommand.cs",
       "sourceLine": 30,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordMarkdownCommand.cs#L30"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordMarkdownCommand.cs#L30"
     },
     {
       "name": "ConvertTo-OfficeCsv",
@@ -800,7 +800,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/ConvertToOfficeCsvCommand.cs",
       "sourceLine": 38,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Csv/ConvertToOfficeCsvCommand.cs#L38"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Csv/ConvertToOfficeCsvCommand.cs#L38"
     },
     {
       "name": "ConvertTo-OfficeMarkdown",
@@ -808,7 +808,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownCommand.cs",
       "sourceLine": 33,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownCommand.cs#L33"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownCommand.cs#L33"
     },
     {
       "name": "ConvertTo-OfficeMarkdownHtml",
@@ -818,7 +818,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownHtmlCommand.cs",
       "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownHtmlCommand.cs#L25"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownHtmlCommand.cs#L25"
     },
     {
       "name": "ConvertTo-OfficeWordHtml",
@@ -828,7 +828,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/ConvertToOfficeWordHtmlCommand.cs",
       "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/ConvertToOfficeWordHtmlCommand.cs#L27"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/ConvertToOfficeWordHtmlCommand.cs#L27"
     },
     {
       "name": "ConvertTo-OfficeWordMarkdown",
@@ -838,7 +838,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/ConvertToOfficeWordMarkdownCommand.cs",
       "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/ConvertToOfficeWordMarkdownCommand.cs#L27"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/ConvertToOfficeWordMarkdownCommand.cs#L27"
     },
     {
       "name": "Copy-OfficeExcelSheet",
@@ -846,7 +846,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelSheetCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelSheetCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelSheetCommand.cs#L17"
     },
     {
       "name": "Copy-OfficePowerPointSlide",
@@ -854,7 +854,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/CopyOfficePowerPointSlideCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/CopyOfficePowerPointSlideCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/CopyOfficePowerPointSlideCommand.cs#L18"
     },
     {
       "name": "Edit-OfficeExcelRow",
@@ -864,7 +864,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/EditOfficeExcelRowCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/EditOfficeExcelRowCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/EditOfficeExcelRowCommand.cs#L17"
     },
     {
       "name": "Export-OfficeExcel",
@@ -872,7 +872,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ExportOfficeExcelCommand.cs",
       "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/ExportOfficeExcelCommand.cs#L27"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/ExportOfficeExcelCommand.cs#L27"
     },
     {
       "name": "Find-OfficeExcel",
@@ -880,7 +880,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/FindOfficeExcelCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/FindOfficeExcelCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/FindOfficeExcelCommand.cs#L18"
     },
     {
       "name": "Find-OfficeWord",
@@ -888,7 +888,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordCommand.cs#L21"
     },
     {
       "name": "Get-OfficeCsv",
@@ -896,7 +896,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvCommand.cs",
       "sourceLine": 31,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvCommand.cs#L31"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvCommand.cs#L31"
     },
     {
       "name": "Get-OfficeCsvData",
@@ -904,7 +904,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvDataCommand.cs",
       "sourceLine": 32,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvDataCommand.cs#L32"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvDataCommand.cs#L32"
     },
     {
       "name": "Get-OfficeExcel",
@@ -912,7 +912,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelCommand.cs#L18"
     },
     {
       "name": "Get-OfficeExcelData",
@@ -920,7 +920,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataCommand.cs#L19"
     },
     {
       "name": "Get-OfficeExcelNamedRange",
@@ -928,7 +928,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelNamedRangeCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelNamedRangeCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelNamedRangeCommand.cs#L20"
     },
     {
       "name": "Get-OfficeExcelPivotTable",
@@ -936,7 +936,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelPivotTableCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelPivotTableCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelPivotTableCommand.cs#L21"
     },
     {
       "name": "Get-OfficeExcelRange",
@@ -944,7 +944,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRangeCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRangeCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRangeCommand.cs#L20"
     },
     {
       "name": "Get-OfficeExcelSummary",
@@ -952,7 +952,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelSummaryCommand.cs",
       "sourceLine": 26,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelSummaryCommand.cs#L26"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelSummaryCommand.cs#L26"
     },
     {
       "name": "Get-OfficeExcelTable",
@@ -960,7 +960,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTableCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTableCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTableCommand.cs#L18"
     },
     {
       "name": "Get-OfficeExcelUsedRange",
@@ -968,7 +968,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelUsedRangeCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelUsedRangeCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelUsedRangeCommand.cs#L20"
     },
     {
       "name": "Get-OfficeMarkdown",
@@ -976,7 +976,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownCommand.cs",
       "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownCommand.cs#L23"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownCommand.cs#L23"
     },
     {
       "name": "Get-OfficeMarkdownFrontMatter",
@@ -984,7 +984,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownFrontMatterCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownFrontMatterCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownFrontMatterCommand.cs#L16"
     },
     {
       "name": "Get-OfficeMarkdownHeading",
@@ -992,7 +992,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownHeadingCommand.cs",
       "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownHeadingCommand.cs#L23"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownHeadingCommand.cs#L23"
     },
     {
       "name": "Get-OfficeMarkdownNode",
@@ -1000,7 +1000,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownNodeCommand.cs",
       "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownNodeCommand.cs#L25"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownNodeCommand.cs#L25"
     },
     {
       "name": "Get-OfficeMarkdownTable",
@@ -1008,7 +1008,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownTableCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownTableCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownTableCommand.cs#L18"
     },
     {
       "name": "Get-OfficePowerPoint",
@@ -1016,7 +1016,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointCommand.cs#L18"
     },
     {
       "name": "Get-OfficePowerPointLayout",
@@ -1024,7 +1024,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutCommand.cs",
       "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutCommand.cs#L23"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutCommand.cs#L23"
     },
     {
       "name": "Get-OfficePowerPointLayoutBox",
@@ -1032,7 +1032,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutBoxCommand.cs",
       "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutBoxCommand.cs#L25"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutBoxCommand.cs#L25"
     },
     {
       "name": "Get-OfficePowerPointLayoutPlaceholder",
@@ -1040,7 +1040,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutPlaceholderCommand.cs",
       "sourceLine": 26,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutPlaceholderCommand.cs#L26"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointLayoutPlaceholderCommand.cs#L26"
     },
     {
       "name": "Get-OfficePowerPointNotes",
@@ -1048,7 +1048,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointNotesCommand.cs",
       "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointNotesCommand.cs#L24"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointNotesCommand.cs#L24"
     },
     {
       "name": "Get-OfficePowerPointPlaceholder",
@@ -1056,7 +1056,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointPlaceholderCommand.cs",
       "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointPlaceholderCommand.cs#L25"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointPlaceholderCommand.cs#L25"
     },
     {
       "name": "Get-OfficePowerPointSection",
@@ -1064,7 +1064,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSectionCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSectionCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSectionCommand.cs#L18"
     },
     {
       "name": "Get-OfficePowerPointShape",
@@ -1072,7 +1072,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointShapeCommand.cs",
       "sourceLine": 26,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointShapeCommand.cs#L26"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointShapeCommand.cs#L26"
     },
     {
       "name": "Get-OfficePowerPointSlide",
@@ -1080,7 +1080,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSlideCommand.cs",
       "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSlideCommand.cs#L23"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSlideCommand.cs#L23"
     },
     {
       "name": "Get-OfficePowerPointSlideSummary",
@@ -1088,7 +1088,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSlideSummaryCommand.cs",
       "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSlideSummaryCommand.cs#L24"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointSlideSummaryCommand.cs#L24"
     },
     {
       "name": "Get-OfficePowerPointTheme",
@@ -1096,7 +1096,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointThemeCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointThemeCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointThemeCommand.cs#L18"
     },
     {
       "name": "Get-OfficeWord",
@@ -1104,7 +1104,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCommand.cs#L17"
     },
     {
       "name": "Get-OfficeWordBookmark",
@@ -1112,7 +1112,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordBookmarkCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordBookmarkCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordBookmarkCommand.cs#L20"
     },
     {
       "name": "Get-OfficeWordCheckBox",
@@ -1120,7 +1120,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCheckBoxCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCheckBoxCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCheckBoxCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordComboBox",
@@ -1128,7 +1128,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordComboBoxCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordComboBoxCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordComboBoxCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordContentControl",
@@ -1136,7 +1136,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordContentControlCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordContentControlCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordContentControlCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordDatePicker",
@@ -1144,7 +1144,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDatePickerCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDatePickerCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDatePickerCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordDocumentProperty",
@@ -1152,7 +1152,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDocumentPropertyCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDocumentPropertyCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDocumentPropertyCommand.cs#L20"
     },
     {
       "name": "Get-OfficeWordDropDownList",
@@ -1160,7 +1160,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDropDownListCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDropDownListCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordDropDownListCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordEndnote",
@@ -1168,7 +1168,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordEndnoteCommand.cs",
       "sourceLine": 15,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordEndnoteCommand.cs#L15"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordEndnoteCommand.cs#L15"
     },
     {
       "name": "Get-OfficeWordField",
@@ -1176,7 +1176,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordFieldCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordFieldCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordFieldCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordFootnote",
@@ -1184,7 +1184,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordFootnoteCommand.cs",
       "sourceLine": 15,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordFootnoteCommand.cs#L15"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordFootnoteCommand.cs#L15"
     },
     {
       "name": "Get-OfficeWordHyperlink",
@@ -1192,7 +1192,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordHyperlinkCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordHyperlinkCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordHyperlinkCommand.cs#L19"
     },
     {
       "name": "Get-OfficeWordImage",
@@ -1200,7 +1200,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordImageCommand.cs",
       "sourceLine": 13,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordImageCommand.cs#L13"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordImageCommand.cs#L13"
     },
     {
       "name": "Get-OfficeWordParagraph",
@@ -1208,7 +1208,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordParagraphCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordParagraphCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordParagraphCommand.cs#L19"
     },
     {
       "name": "Get-OfficeWordPictureControl",
@@ -1216,7 +1216,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordPictureControlCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordPictureControlCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordPictureControlCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordRepeatingSection",
@@ -1224,7 +1224,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordRepeatingSectionCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordRepeatingSectionCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordRepeatingSectionCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordText",
@@ -1240,7 +1240,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordSectionCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordSectionCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordSectionCommand.cs#L20"
     },
     {
       "name": "Get-OfficeWordShape",
@@ -1248,7 +1248,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordShapeCommand.cs",
       "sourceLine": 13,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordShapeCommand.cs#L13"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordShapeCommand.cs#L13"
     },
     {
       "name": "Get-OfficeWordStatistics",
@@ -1256,7 +1256,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordStatisticsCommand.cs",
       "sourceLine": 15,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordStatisticsCommand.cs#L15"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordStatisticsCommand.cs#L15"
     },
     {
       "name": "Get-OfficeWordTable",
@@ -1264,7 +1264,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableCommand.cs#L19"
     },
     {
       "name": "Get-OfficeWordTableCell",
@@ -1272,7 +1272,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableCellCommand.cs",
       "sourceLine": 12,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableCellCommand.cs#L12"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableCellCommand.cs#L12"
     },
     {
       "name": "Get-OfficeWordTableOfContent",
@@ -1280,7 +1280,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableOfContentCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableOfContentCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableOfContentCommand.cs#L19"
     },
     {
       "name": "Import-OfficeExcel",
@@ -1288,7 +1288,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs#L19"
     },
     {
       "name": "Import-OfficePowerPointSlide",
@@ -1296,7 +1296,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/ImportOfficePowerPointSlideCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/ImportOfficePowerPointSlideCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/ImportOfficePowerPointSlideCommand.cs#L19"
     },
     {
       "name": "Invoke-OfficeExcelAutoFit",
@@ -1304,7 +1304,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelAutoFitCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelAutoFitCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelAutoFitCommand.cs#L19"
     },
     {
       "name": "Invoke-OfficeExcelSort",
@@ -1312,7 +1312,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelSortCommand.cs",
       "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelSortCommand.cs#L25"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelSortCommand.cs#L25"
     },
     {
       "name": "Invoke-OfficeWordMailMerge",
@@ -1320,7 +1320,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/InvokeOfficeWordMailMergeCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/InvokeOfficeWordMailMergeCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/InvokeOfficeWordMailMergeCommand.cs#L21"
     },
     {
       "name": "Join-OfficeExcelSheet",
@@ -1330,7 +1330,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/JoinOfficeExcelSheetCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/JoinOfficeExcelSheetCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/JoinOfficeExcelSheetCommand.cs#L17"
     },
     {
       "name": "Join-OfficeWordDocument",
@@ -1340,7 +1340,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/JoinOfficeWordDocumentCommand.cs",
       "sourceLine": 15,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/JoinOfficeWordDocumentCommand.cs#L15"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/JoinOfficeWordDocumentCommand.cs#L15"
     },
     {
       "name": "Move-OfficeExcelSheet",
@@ -1350,7 +1350,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/MoveOfficeExcelSheetCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/MoveOfficeExcelSheetCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/MoveOfficeExcelSheetCommand.cs#L16"
     },
     {
       "name": "New-OfficeExcel",
@@ -1358,7 +1358,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelCommand.cs#L18"
     },
     {
       "name": "New-OfficeMarkdown",
@@ -1366,7 +1366,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/NewOfficeMarkdownCommand.cs",
       "sourceLine": 31,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Markdown/NewOfficeMarkdownCommand.cs#L31"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Markdown/NewOfficeMarkdownCommand.cs#L31"
     },
     {
       "name": "New-OfficePowerPoint",
@@ -1374,7 +1374,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointCommand.cs",
       "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointCommand.cs#L24"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointCommand.cs#L24"
     },
     {
       "name": "New-OfficePowerPointDeckPlan",
@@ -1382,7 +1382,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointDeckPlanCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointDeckPlanCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointDeckPlanCommand.cs#L11"
     },
     {
       "name": "New-OfficeWord",
@@ -1390,7 +1390,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs#L17"
     },
     {
       "name": "Protect-OfficeExcelSheet",
@@ -1398,7 +1398,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ProtectOfficeExcelSheetCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/ProtectOfficeExcelSheetCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/ProtectOfficeExcelSheetCommand.cs#L16"
     },
     {
       "name": "Protect-OfficeWordDocument",
@@ -1406,7 +1406,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/ProtectOfficeWordDocumentCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/ProtectOfficeWordDocumentCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/ProtectOfficeWordDocumentCommand.cs#L18"
     },
     {
       "name": "Remove-OfficeExcelComment",
@@ -1414,7 +1414,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelCommentCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelCommentCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelCommentCommand.cs#L16"
     },
     {
       "name": "Remove-OfficePowerPointSlide",
@@ -1422,7 +1422,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/RemoveOfficePowerPointSlideCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/RemoveOfficePowerPointSlideCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/RemoveOfficePowerPointSlideCommand.cs#L16"
     },
     {
       "name": "Remove-OfficeWordTableOfContent",
@@ -1430,7 +1430,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/RemoveOfficeWordTableOfContentCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/RemoveOfficeWordTableOfContentCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/RemoveOfficeWordTableOfContentCommand.cs#L16"
     },
     {
       "name": "Rename-OfficePowerPointSection",
@@ -1438,7 +1438,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/RenameOfficePowerPointSectionCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/RenameOfficePowerPointSectionCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/RenameOfficePowerPointSectionCommand.cs#L18"
     },
     {
       "name": "Save-OfficeExcel",
@@ -1446,7 +1446,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SaveOfficeExcelCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SaveOfficeExcelCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SaveOfficeExcelCommand.cs#L17"
     },
     {
       "name": "Save-OfficePowerPoint",
@@ -1454,7 +1454,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SaveOfficePowerPointCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SaveOfficePowerPointCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SaveOfficePowerPointCommand.cs#L17"
     },
     {
       "name": "Save-OfficeWord",
@@ -1462,7 +1462,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SaveOfficeWordCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SaveOfficeWordCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SaveOfficeWordCommand.cs#L18"
     },
     {
       "name": "Set-OfficeExcelCell",
@@ -1470,7 +1470,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelCellCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelCellCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelCellCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelChartAxis",
@@ -1478,7 +1478,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartAxisCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartAxisCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartAxisCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelChartDataLabels",
@@ -1486,7 +1486,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartDataLabelsCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartDataLabelsCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartDataLabelsCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelChartLegend",
@@ -1494,7 +1494,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartLegendCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartLegendCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartLegendCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelChartSeries",
@@ -1502,7 +1502,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartSeriesCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartSeriesCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartSeriesCommand.cs#L19"
     },
     {
       "name": "Set-OfficeExcelChartStyle",
@@ -1510,7 +1510,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartStyleCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartStyleCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartStyleCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelChartTrendline",
@@ -1518,7 +1518,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartTrendlineCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartTrendlineCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartTrendlineCommand.cs#L19"
     },
     {
       "name": "Set-OfficeExcelColumn",
@@ -1526,7 +1526,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnCommand.cs#L18"
     },
     {
       "name": "Set-OfficeExcelColumnStyleByHeader",
@@ -1534,7 +1534,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnStyleByHeaderCommand.cs",
       "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnStyleByHeaderCommand.cs#L24"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnStyleByHeaderCommand.cs#L24"
     },
     {
       "name": "Set-OfficeExcelExecutionPolicy",
@@ -1542,7 +1542,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelExecutionPolicyCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelExecutionPolicyCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelExecutionPolicyCommand.cs#L18"
     },
     {
       "name": "Set-OfficeExcelFormula",
@@ -1550,7 +1550,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelFormulaCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelFormulaCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelFormulaCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelFreeze",
@@ -1558,7 +1558,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelFreezeCommand.cs",
       "sourceLine": 22,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelFreezeCommand.cs#L22"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelFreezeCommand.cs#L22"
     },
     {
       "name": "Set-OfficeExcelGridlines",
@@ -1566,7 +1566,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelGridlinesCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelGridlinesCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelGridlinesCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelHeaderFooter",
@@ -1574,7 +1574,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHeaderFooterCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHeaderFooterCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHeaderFooterCommand.cs#L19"
     },
     {
       "name": "Set-OfficeExcelHostHyperlink",
@@ -1582,7 +1582,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHostHyperlinkCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHostHyperlinkCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHostHyperlinkCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelHyperlink",
@@ -1590,7 +1590,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHyperlinkCommand.cs",
       "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHyperlinkCommand.cs#L23"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelHyperlinkCommand.cs#L23"
     },
     {
       "name": "Set-OfficeExcelInternalLinks",
@@ -1598,7 +1598,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelInternalLinksCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelInternalLinksCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelInternalLinksCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelInternalLinksByHeader",
@@ -1606,7 +1606,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelInternalLinksByHeaderCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelInternalLinksByHeaderCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelInternalLinksByHeaderCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelMargins",
@@ -1614,7 +1614,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelMarginsCommand.cs",
       "sourceLine": 22,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelMarginsCommand.cs#L22"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelMarginsCommand.cs#L22"
     },
     {
       "name": "Set-OfficeExcelNamedRange",
@@ -1622,7 +1622,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelNamedRangeCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelNamedRangeCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelNamedRangeCommand.cs#L18"
     },
     {
       "name": "Set-OfficeExcelOrientation",
@@ -1630,7 +1630,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelOrientationCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelOrientationCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelOrientationCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelPageSetup",
@@ -1638,7 +1638,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPageSetupCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPageSetupCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPageSetupCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelPrintArea",
@@ -1646,7 +1646,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintAreaCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintAreaCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintAreaCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelPrintTitles",
@@ -1654,7 +1654,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintTitlesCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintTitlesCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintTitlesCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelRow",
@@ -1662,7 +1662,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRowCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRowCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRowCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelSheetVisibility",
@@ -1670,7 +1670,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSheetVisibilityCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSheetVisibilityCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSheetVisibilityCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelSmartHyperlink",
@@ -1678,7 +1678,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSmartHyperlinkCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSmartHyperlinkCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSmartHyperlinkCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelUrlLinks",
@@ -1686,7 +1686,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelUrlLinksCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelUrlLinksCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelUrlLinksCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelUrlLinksByHeader",
@@ -1694,7 +1694,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelUrlLinksByHeaderCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelUrlLinksByHeaderCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelUrlLinksByHeaderCommand.cs#L18"
     },
     {
       "name": "Set-OfficePowerPointBackground",
@@ -1702,7 +1702,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointBackgroundCommand.cs",
       "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointBackgroundCommand.cs#L24"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointBackgroundCommand.cs#L24"
     },
     {
       "name": "Set-OfficePowerPointLayoutPlaceholderBounds",
@@ -1710,7 +1710,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderBoundsCommand.cs",
       "sourceLine": 29,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderBoundsCommand.cs#L29"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderBoundsCommand.cs#L29"
     },
     {
       "name": "Set-OfficePowerPointLayoutPlaceholderTextMargins",
@@ -1718,7 +1718,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextMarginsCommand.cs",
       "sourceLine": 29,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextMarginsCommand.cs#L29"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextMarginsCommand.cs#L29"
     },
     {
       "name": "Set-OfficePowerPointLayoutPlaceholderTextStyle",
@@ -1726,7 +1726,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextStyleCommand.cs",
       "sourceLine": 30,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextStyleCommand.cs#L30"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextStyleCommand.cs#L30"
     },
     {
       "name": "Set-OfficePowerPointNotes",
@@ -1734,7 +1734,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointNotesCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointNotesCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointNotesCommand.cs#L18"
     },
     {
       "name": "Set-OfficePowerPointPlaceholderText",
@@ -1742,7 +1742,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointPlaceholderTextCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointPlaceholderTextCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointPlaceholderTextCommand.cs#L20"
     },
     {
       "name": "Set-OfficePowerPointSlideLayout",
@@ -1750,7 +1750,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideLayoutCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideLayoutCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideLayoutCommand.cs#L19"
     },
     {
       "name": "Set-OfficePowerPointSlideSize",
@@ -1758,7 +1758,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideSizeCommand.cs",
       "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideSizeCommand.cs#L25"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideSizeCommand.cs#L25"
     },
     {
       "name": "Set-OfficePowerPointSlideTitle",
@@ -1766,7 +1766,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideTitleCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideTitleCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideTitleCommand.cs#L19"
     },
     {
       "name": "Set-OfficePowerPointSlideTransition",
@@ -1774,7 +1774,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideTransitionCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideTransitionCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideTransitionCommand.cs#L19"
     },
     {
       "name": "Set-OfficePowerPointThemeColor",
@@ -1782,7 +1782,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeColorCommand.cs",
       "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeColorCommand.cs#L27"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeColorCommand.cs#L27"
     },
     {
       "name": "Set-OfficePowerPointThemeFonts",
@@ -1790,7 +1790,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeFontsCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeFontsCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeFontsCommand.cs#L18"
     },
     {
       "name": "Set-OfficePowerPointThemeName",
@@ -1798,7 +1798,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeNameCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeNameCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeNameCommand.cs#L18"
     },
     {
       "name": "Set-OfficeWordBackground",
@@ -1806,7 +1806,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordBackgroundCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordBackgroundCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordBackgroundCommand.cs#L18"
     },
     {
       "name": "Set-OfficeWordDocumentProperty",
@@ -1814,7 +1814,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordDocumentPropertyCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordDocumentPropertyCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordDocumentPropertyCommand.cs#L17"
     },
     {
       "name": "Set-OfficeWordImage",
@@ -1822,7 +1822,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordImageCommand.cs",
       "sourceLine": 10,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordImageCommand.cs#L10"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordImageCommand.cs#L10"
     },
     {
       "name": "Set-OfficeWordPageSetup",
@@ -1830,17 +1830,15 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordPageSetupCommand.cs",
       "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordPageSetupCommand.cs#L21"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordPageSetupCommand.cs#L21"
     },
     {
       "name": "Set-OfficeWordParagraphStyle",
       "kind": "Cmdlet",
-      "aliases": [
-        "WordParagraphStyle"
-      ],
+      "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordParagraphStyleCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/word-style-helpers/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordParagraphStyleCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordParagraphStyleCommand.cs#L19"
     },
     {
       "name": "Set-OfficeWordTextStyle",
@@ -1858,7 +1856,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordShapeCommand.cs",
       "sourceLine": 10,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordShapeCommand.cs#L10"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordShapeCommand.cs#L10"
     },
     {
       "name": "Set-OfficeWordTableCell",
@@ -1866,7 +1864,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableCellCommand.cs",
       "sourceLine": 11,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableCellCommand.cs#L11"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableCellCommand.cs#L11"
     },
     {
       "name": "Set-OfficeWordTableOfContent",
@@ -1874,7 +1872,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableOfContentCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableOfContentCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableOfContentCommand.cs#L17"
     },
     {
       "name": "Unprotect-OfficeExcelSheet",
@@ -1882,7 +1880,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/UnprotectOfficeExcelSheetCommand.cs",
       "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/UnprotectOfficeExcelSheetCommand.cs#L16"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/UnprotectOfficeExcelSheetCommand.cs#L16"
     },
     {
       "name": "Update-OfficeExcelText",
@@ -1892,7 +1890,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/UpdateOfficeExcelTextCommand.cs",
       "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Excel/UpdateOfficeExcelTextCommand.cs#L20"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Excel/UpdateOfficeExcelTextCommand.cs#L20"
     },
     {
       "name": "Update-OfficePowerPointText",
@@ -1902,7 +1900,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/UpdateOfficePowerPointTextCommand.cs",
       "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/PowerPoint/UpdateOfficePowerPointTextCommand.cs#L19"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/PowerPoint/UpdateOfficePowerPointTextCommand.cs#L19"
     },
     {
       "name": "Update-OfficeWordFields",
@@ -1910,7 +1908,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordFieldsCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordFieldsCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordFieldsCommand.cs#L17"
     },
     {
       "name": "Update-OfficeWordTableOfContent",
@@ -1918,7 +1916,7 @@
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTableOfContentCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTableOfContentCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTableOfContentCommand.cs#L17"
     },
     {
       "name": "Update-OfficeWordText",
@@ -1928,7 +1926,7 @@
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTextCommand.cs",
       "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTextCommand.cs#L25"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/925c728339fc9a1f75933bdbc89f1124c5755d4e/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTextCommand.cs#L25"
     }
   ]
 }
