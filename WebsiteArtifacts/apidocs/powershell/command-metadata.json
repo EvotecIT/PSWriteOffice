@@ -1833,6 +1833,26 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/26f5671e8f5e1b92ed0c26fbd9eb0ee5c8beae54/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordPageSetupCommand.cs#L21"
     },
     {
+      "name": "Set-OfficeWordParagraphStyle",
+      "kind": "Cmdlet",
+      "aliases": [
+        "WordParagraphStyle"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordParagraphStyleCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/word-style-helpers/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordParagraphStyleCommand.cs#L19"
+    },
+    {
+      "name": "Set-OfficeWordRunStyle",
+      "kind": "Cmdlet",
+      "aliases": [
+        "WordRunStyle"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordRunStyleCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/word-style-helpers/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordRunStyleCommand.cs#L19"
+    },
+    {
       "name": "Set-OfficeWordShape",
       "kind": "Cmdlet",
       "aliases": [],
