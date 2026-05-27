@@ -212,7 +212,7 @@ Describe 'Word DSL surface' {
             ($document | Get-OfficeWordSection).Count | Should -BeGreaterThan 0
             ($document | Get-OfficeWordParagraph).Count | Should -BeGreaterThan 0
             ($document | Get-OfficeWordTable).Count | Should -BeGreaterThan 0
-            ($document | Get-OfficeWordParagraph | Select-Object -First 1 | Get-OfficeWordRun).Count | Should -BeGreaterThan 0
+            ($document | Get-OfficeWordParagraph | Select-Object -First 1 | Get-OfficeWordText).Count | Should -BeGreaterThan 0
 
             $document | Save-OfficeWord | Out-Null
         } finally {
@@ -778,7 +778,7 @@ Describe 'Word DSL surface' {
         }
     }
 
-    It 'wraps OfficeIMO Word paragraph and run style helpers' {
+    It 'wraps OfficeIMO Word paragraph and text style helpers' {
         $path = Join-Path $TestDrive 'DslWordStyles.docx'
 
         New-OfficeWord -Path $path {
@@ -787,10 +787,10 @@ Describe 'Word DSL surface' {
                 Set-OfficeWordParagraphStyle -Style Heading2 -Alignment Center -SpacingBeforePoints 6 -SpacingAfterPoints 12 -IndentationBeforePoints 18 -KeepWithNext $true -PassThru |
                 Should -Not -BeNullOrEmpty
 
-            $runParagraph = WordParagraph -Text 'Initial' -PassThru
-            $run = @($runParagraph.GetRuns())[0]
-            $run |
-                Set-OfficeWordRunStyle -Text 'Styled run' -Bold $true -Italic $true -Underline Single -Color '#C00000' -FontSize 14 -FontFamily 'Aptos' -Highlight Yellow -CapsStyle SmallCaps -Strike $true -Style Heading2Char -PassThru |
+            $textParagraph = WordParagraph -Text 'Initial' -PassThru
+            $textItem = @($textParagraph.GetRuns())[0]
+            $textItem |
+                Set-OfficeWordTextStyle -Text 'Styled text' -Bold $true -Italic $true -Underline Single -Color '#C00000' -FontSize 14 -FontFamily 'Aptos' -Highlight Yellow -CapsStyle SmallCaps -Strike $true -Style Heading2Char -PassThru |
                 Should -Not -BeNullOrEmpty
         } | Out-Null
 
@@ -804,22 +804,22 @@ Describe 'Word DSL surface' {
             $styledParagraph.IndentationBeforePoints | Should -Be 18
             $styledParagraph.KeepWithNext | Should -BeTrue
 
-            $styledRun = $document.Paragraphs |
-                Where-Object Text -EQ 'Styled run' |
+            $styledText = $document.Paragraphs |
+                Where-Object Text -EQ 'Styled text' |
                 ForEach-Object { $_.GetRuns() } |
                 Select-Object -First 1
 
-            $styledRun.Text | Should -Be 'Styled run'
-            $styledRun.Bold | Should -BeTrue
-            $styledRun.Italic | Should -BeTrue
-            $styledRun.Underline.Value | Should -Be 'single'
-            $styledRun.ColorHex | Should -Be 'c00000'
-            $styledRun.FontSize | Should -Be 14
-            $styledRun.FontFamily | Should -Be 'Aptos'
-            $styledRun.Highlight.Value | Should -Be 'yellow'
-            $styledRun.CapsStyle.ToString() | Should -Be 'SmallCaps'
-            $styledRun.Strike | Should -BeTrue
-            $styledRun.CharacterStyle.ToString() | Should -Be 'Heading2Char'
+            $styledText.Text | Should -Be 'Styled text'
+            $styledText.Bold | Should -BeTrue
+            $styledText.Italic | Should -BeTrue
+            $styledText.Underline.Value | Should -Be 'single'
+            $styledText.ColorHex | Should -Be 'c00000'
+            $styledText.FontSize | Should -Be 14
+            $styledText.FontFamily | Should -Be 'Aptos'
+            $styledText.Highlight.Value | Should -Be 'yellow'
+            $styledText.CapsStyle.ToString() | Should -Be 'SmallCaps'
+            $styledText.Strike | Should -BeTrue
+            $styledText.CharacterStyle.ToString() | Should -Be 'Heading2Char'
         } finally {
             $document.Dispose()
         }
