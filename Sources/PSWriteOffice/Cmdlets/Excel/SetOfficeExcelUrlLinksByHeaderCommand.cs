@@ -83,7 +83,16 @@ public sealed class SetOfficeExcelUrlLinksByHeaderCommand : PSCmdlet
         {
             case ParameterSetContextTable:
             case ParameterSetDocumentTable:
-                sheet.LinkByHeaderToUrlsInTable(TableName, Header, urlForText, titleForText, !NoStyle.IsPresent);
+                var tableRange = TryGetContextTableRange(sheet);
+                if (tableRange == null || tableRange.Length == 0)
+                {
+                    sheet.LinkByHeaderToUrlsInTable(TableName, Header, urlForText, titleForText, !NoStyle.IsPresent);
+                }
+                else
+                {
+                    sheet.LinkByHeaderToUrlsInRange(tableRange, Header, urlForText, titleForText, !NoStyle.IsPresent);
+                }
+
                 break;
             case ParameterSetContextRange:
             case ParameterSetDocumentRange:
@@ -110,5 +119,23 @@ public sealed class SetOfficeExcelUrlLinksByHeaderCommand : PSCmdlet
         }
 
         return ExcelDslContext.Require(this).RequireSheet();
+    }
+
+    private string? TryGetContextTableRange(ExcelSheet sheet)
+    {
+        if (ParameterSetName != ParameterSetContextTable)
+        {
+            return null;
+        }
+
+        try
+        {
+            var context = ExcelDslContext.Require(this);
+            return context.TryGetTableRange(sheet, TableName, out var range) ? range : null;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
     }
 }

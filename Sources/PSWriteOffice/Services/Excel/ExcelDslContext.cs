@@ -12,6 +12,7 @@ internal sealed class ExcelDslContext : IDisposable
 {
     private static readonly AsyncLocal<ExcelDslContext?> CurrentScope = new();
     private readonly Stack<object> _scopes = new();
+    private readonly Dictionary<ExcelSheet, Dictionary<string, string>> _tableRanges = new();
 
     private ExcelDslContext(ExcelDocument document)
     {
@@ -95,6 +96,37 @@ internal sealed class ExcelDslContext : IDisposable
         }
 
         return sheet;
+    }
+
+    public void RegisterTableRange(ExcelSheet sheet, string? tableName, string range)
+    {
+        var normalizedTableName = tableName?.Trim();
+        if (sheet == null || normalizedTableName == null || normalizedTableName.Length == 0 || string.IsNullOrWhiteSpace(range))
+        {
+            return;
+        }
+
+        if (!_tableRanges.TryGetValue(sheet, out var ranges))
+        {
+            ranges = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _tableRanges[sheet] = ranges;
+        }
+
+        ranges[normalizedTableName] = range;
+    }
+
+    public bool TryGetTableRange(ExcelSheet sheet, string? tableName, out string? range)
+    {
+        range = null;
+        var normalizedTableName = tableName?.Trim();
+        if (sheet == null || normalizedTableName == null || normalizedTableName.Length == 0)
+        {
+            return false;
+        }
+
+        return _tableRanges.TryGetValue(sheet, out var ranges)
+            && ranges.TryGetValue(normalizedTableName, out range)
+            && !string.IsNullOrWhiteSpace(range);
     }
 
     public SheetComposer RequireComposer()
