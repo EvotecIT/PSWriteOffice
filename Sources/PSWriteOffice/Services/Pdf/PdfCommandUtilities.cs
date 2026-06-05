@@ -155,9 +155,14 @@ internal static class PdfCommandUtilities
         return rows.ToArray();
     }
 
-    internal static string[][] ConvertDataRows(IEnumerable rows)
+    internal static string[][] ConvertDataRows(IEnumerable rows, string[]? header = null)
     {
         var result = new List<string[]>();
+        if (header != null && header.Length > 0)
+        {
+            result.Add(header);
+        }
+
         foreach (var row in rows)
         {
             if (row is string[] strings)

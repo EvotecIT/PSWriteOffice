@@ -79,6 +79,23 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
+    It 'renders explicit headers for array row tables' {
+        $path = Join-Path $TestDrive 'array-row-table-header.pdf'
+
+        New-OfficePdf -Path $path {
+            PdfTable -Header Name, Value -InputObject @(
+                @('Alpha', 1),
+                @('Beta', 2)
+            )
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Name'
+        $text | Should -Match 'Value'
+        $text | Should -Match 'Alpha'
+        $text | Should -Match 'Beta'
+    }
+
     It 'keeps the current page size when only margins are updated' {
         $path = Join-Path $TestDrive 'page-size-margin.pdf'
 
@@ -218,6 +235,30 @@ Describe 'PDF cmdlets' {
         } | Out-Null
 
         Get-OfficePdfText -Path $path | Should -Match 'Single content block'
+    }
+
+    It 'renders a single table object inside PDF row columns' {
+        $path = Join-Path $TestDrive 'layout-row-single-table-object.pdf'
+        New-OfficePdf -Path $path {
+            PdfRow -Column @(
+                @{
+                    Width = 100
+                    Content = @(
+                        @{
+                            Type = 'Table'
+                            InputObject = @{ Name = 'Alpha'; Value = 1 }
+                            Header = @('Name', 'Value')
+                        }
+                    )
+                }
+            )
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Name'
+        $text | Should -Match 'Value'
+        $text | Should -Match 'Alpha'
+        $text | Should -Match '1'
     }
 
     It 'renders a single hashtable rich-text run inside PDF row columns' {

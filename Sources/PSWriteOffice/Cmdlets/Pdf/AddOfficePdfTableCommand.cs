@@ -45,9 +45,9 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var rowArrayInput = InputObject.All(item => item is IEnumerable && item is not string && item is not IDictionary);
         string[][] rows = rowArrayInput
-            ? PdfCommandUtilities.ConvertDataRows(InputObject)
+            ? PdfCommandUtilities.ConvertDataRows(InputObject, Header)
             : InputObject.Length == 1 && InputObject[0] is IEnumerable enumerable && InputObject[0] is not string && InputObject[0] is not IDictionary
-            ? PdfCommandUtilities.ConvertDataRows(enumerable)
+            ? PdfCommandUtilities.ConvertDataRows(enumerable, Header)
             : PdfCommandUtilities.ConvertToTableRows(InputObject, Property, Header);
 
         document.Table(rows, Align);

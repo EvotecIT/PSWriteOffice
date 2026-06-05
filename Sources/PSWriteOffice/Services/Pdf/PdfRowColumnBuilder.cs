@@ -193,7 +193,12 @@ internal static class PdfRowColumnBuilder
         var property = GetOptionalStringArray(specification, "Property", "Properties");
         var header = GetOptionalStringArray(specification, "Header", "Headers");
 
-        if (value is IEnumerable enumerable && value is not string)
+        if (value is IDictionary || value is not IEnumerable || value is string)
+        {
+            return PdfCommandUtilities.ConvertToTableRows(new[] { value }, property, header);
+        }
+
+        if (value is IEnumerable enumerable)
         {
             var items = enumerable.Cast<object>().ToArray();
             if (items.Length == 0)
@@ -203,7 +208,7 @@ internal static class PdfRowColumnBuilder
 
             var rowLike = items[0] is IEnumerable && items[0] is not string && items[0] is not IDictionary;
             return rowLike
-                ? PdfCommandUtilities.ConvertDataRows(items)
+                ? PdfCommandUtilities.ConvertDataRows(items, header)
                 : PdfCommandUtilities.ConvertToTableRows(items, property, header);
         }
 
