@@ -38,12 +38,7 @@ $RequiredCommands = @(
     'New-OfficeExcel',
     'New-OfficePowerPoint',
     'ConvertTo-OfficeCsv',
-    'Get-OfficeMarkdown',
-    'New-OfficePdf',
-    'Add-OfficePdfText',
-    'Add-OfficePdfRow',
-    'Save-OfficePdf',
-    'Get-OfficePdfInfo'
+    'Get-OfficeMarkdown'
 )
 
 $RequiredCommandsLiteral = "'" + ($RequiredCommands -join "', '") + "'"
