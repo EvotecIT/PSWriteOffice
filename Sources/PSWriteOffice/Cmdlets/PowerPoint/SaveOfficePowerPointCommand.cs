@@ -1,9 +1,7 @@
 using System;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
-#if OFFICEIMO_PDF_COMPANIONS
 using OfficeIMO.PowerPoint.Pdf;
-#endif
 using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.PowerPoint;
 
@@ -69,10 +67,6 @@ public class SaveOfficePowerPointCommand : PSCmdlet
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
         PdfCommandUtilities.EnsureDirectory(pdfPath);
-#if OFFICEIMO_PDF_COMPANIONS
         Presentation.SaveAsPdf(pdfPath);
-#else
-        throw new PSInvalidOperationException("PowerPoint PDF sidecar export requires OfficeIMO.PowerPoint.Pdf, which is not available in the current package-reference build.");
-#endif
     }
 }

@@ -203,6 +203,23 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
+    It 'renders a single hashtable content block inside PDF row columns' {
+        $path = Join-Path $TestDrive 'layout-row-single-content.pdf'
+        New-OfficePdf -Path $path {
+            PdfRow -Column @(
+                @{
+                    Width = 100
+                    Content = @{
+                        Type = 'Paragraph'
+                        Text = 'Single content block'
+                    }
+                }
+            )
+        } | Out-Null
+
+        Get-OfficePdfText -Path $path | Should -Match 'Single content block'
+    }
+
     It 'renders a single hashtable rich-text run inside PDF row columns' {
         $path = Join-Path $TestDrive 'layout-row-rich-run.pdf'
         New-OfficePdf -Path $path {

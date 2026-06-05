@@ -2,9 +2,7 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
-#if OFFICEIMO_PDF_COMPANIONS
 using OfficeIMO.Excel.Pdf;
-#endif
 using PSWriteOffice.Services.Excel;
 using PSWriteOffice.Services.Pdf;
 
@@ -123,10 +121,6 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
         PdfCommandUtilities.EnsureDirectory(pdfPath);
-#if OFFICEIMO_PDF_COMPANIONS
         document.SaveAsPdf(pdfPath);
-#else
-        throw new PSInvalidOperationException("Excel PDF sidecar export requires OfficeIMO.Excel.Pdf, which is not available in the current package-reference build.");
-#endif
     }
 }

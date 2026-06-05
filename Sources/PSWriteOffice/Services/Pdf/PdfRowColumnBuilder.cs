@@ -12,11 +12,18 @@ internal static class PdfRowColumnBuilder
 {
     internal static void AddContent(PdfRowColumnCompose column, object specification)
     {
-        if (TryGetValue(specification, out var content, "Content", "Blocks") && IsEnumerableContent(content))
+        if (TryGetValue(specification, out var content, "Content", "Blocks"))
         {
-            foreach (var item in ((IEnumerable)content!).Cast<object>())
+            if (IsEnumerableContent(content))
             {
-                AddItem(column, item);
+                foreach (var item in ((IEnumerable)content!).Cast<object>())
+                {
+                    AddItem(column, item);
+                }
+            }
+            else
+            {
+                AddItem(column, content!);
             }
 
             return;
@@ -359,7 +366,7 @@ internal static class PdfRowColumnBuilder
 
     private static bool IsEnumerableContent(object? value)
     {
-        return value is IEnumerable && value is not string;
+        return value is IEnumerable && value is not string && value is not IDictionary;
     }
 
     private static bool HasExplicitType(object specification)
