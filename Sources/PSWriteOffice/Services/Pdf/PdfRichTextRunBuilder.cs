@@ -72,6 +72,11 @@ internal static class PdfRichTextRunBuilder
             return new object[] { text };
         }
 
+        if (runs is IDictionary)
+        {
+            return new[] { runs };
+        }
+
         return runs is IEnumerable enumerable
             ? enumerable.Cast<object>().ToArray()
             : new[] { runs };

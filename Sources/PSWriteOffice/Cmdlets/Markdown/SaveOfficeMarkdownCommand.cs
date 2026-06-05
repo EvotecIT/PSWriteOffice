@@ -2,7 +2,9 @@ using System.IO;
 using System.Management.Automation;
 using System.Text;
 using OfficeIMO.Markdown;
+#if OFFICEIMO_PDF_COMPANIONS
 using OfficeIMO.Markdown.Pdf;
+#endif
 using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Markdown;
@@ -49,7 +51,13 @@ public sealed class SaveOfficeMarkdownCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(PdfPath))
         {
-            Document.SaveAsPdf(PdfCommandUtilities.ResolvePath(this, PdfPath!));
+            var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+            PdfCommandUtilities.EnsureDirectory(pdfPath);
+#if OFFICEIMO_PDF_COMPANIONS
+            Document.SaveAsPdf(pdfPath);
+#else
+            throw new PSInvalidOperationException("Markdown PDF sidecar export requires OfficeIMO.Markdown.Pdf, which is not available in the current package-reference build.");
+#endif
         }
 
         WriteObject(PassThru.IsPresent ? Document : savedFile ?? (object)Document);

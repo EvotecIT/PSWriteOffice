@@ -106,6 +106,8 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
             return;
         }
 
-        Document.SaveAsPdf(PdfCommandUtilities.ResolvePath(this, PdfPath!));
+        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        PdfCommandUtilities.EnsureDirectory(pdfPath);
+        Document.SaveAsPdf(pdfPath);
     }
 }

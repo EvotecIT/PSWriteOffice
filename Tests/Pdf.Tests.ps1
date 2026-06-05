@@ -203,6 +203,28 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
+    It 'renders a single hashtable rich-text run inside PDF row columns' {
+        $path = Join-Path $TestDrive 'layout-row-rich-run.pdf'
+        New-OfficePdf -Path $path {
+            PdfRow -Column @(
+                @{
+                    Width = 100
+                    Content = @(
+                        @{
+                            Type = 'Paragraph'
+                            Run = @{
+                                Text = 'Approved'
+                                Bold = $true
+                            }
+                        }
+                    )
+                }
+            )
+        } | Out-Null
+
+        Get-OfficePdfText -Path $path | Should -Match 'Approved'
+    }
+
     It 'builds rich PDF text with emphasis and links' {
         $path = Join-Path $TestDrive 'rich-text.pdf'
         New-OfficePdf -Path $path {

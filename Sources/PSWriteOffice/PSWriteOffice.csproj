@@ -25,6 +25,16 @@
         <DefineConstants>$(DefineConstants);FRAMEWORK</DefineConstants>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(UseOfficeIMOProjectReferences)' == 'true'">
+        <DefineConstants>$(DefineConstants);OFFICEIMO_PDF_COMPANIONS</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
+        <Compile Remove="Cmdlets\Pdf\**\*.cs" />
+        <Compile Remove="Services\Pdf\*.cs" />
+        <Compile Include="Services\Pdf\PdfCommandUtilities.cs" />
+    </ItemGroup>
+
     <!-- Make sure the output DLL's from library are included in the output -->
     <PropertyGroup>
         <!-- Make sure the output DLL's from library are included in the output -->
@@ -82,11 +92,7 @@
         <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.34" />
         <PackageReference Include="OfficeIMO.Markdown" Version="0.6.26" />
         <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.26" />
-        <PackageReference Include="OfficeIMO.Pdf" Version="0.1.34" />
         <PackageReference Include="OfficeIMO.Word.Pdf" Version="1.0.33" />
-        <PackageReference Include="OfficeIMO.Excel.Pdf" Version="1.0.0" />
-        <PackageReference Include="OfficeIMO.Markdown.Pdf" Version="1.0.0" />
-        <PackageReference Include="OfficeIMO.PowerPoint.Pdf" Version="1.0.0" />
         <PackageReference Include="OfficeIMO.CSV" Version="0.1.39" />
         <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.33" />
     </ItemGroup>

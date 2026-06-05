@@ -5,7 +5,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
+#if OFFICEIMO_PDF_COMPANIONS
 using OfficeIMO.Pdf;
+#endif
 
 namespace PSWriteOffice.Services.Pdf;
 
@@ -69,6 +71,7 @@ internal static class PdfCommandUtilities
         }
     }
 
+#if OFFICEIMO_PDF_COMPANIONS
     internal static PdfDocument ResolveDocument(PSCmdlet cmdlet, PdfDocument? document, string parameterSetName, string documentParameterSet)
     {
         return parameterSetName == documentParameterSet
@@ -215,6 +218,7 @@ internal static class PdfCommandUtilities
             options.UsePageRanges(PdfPageRange.ParseMany(pageRange!));
         }
     }
+#endif
 
     private static string[] GetPropertyNames(object item)
     {

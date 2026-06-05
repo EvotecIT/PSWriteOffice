@@ -105,6 +105,8 @@ public sealed class NewOfficeWordCommand : PSCmdlet
             return;
         }
 
-        document.SaveAsPdf(PdfCommandUtilities.ResolvePath(this, PdfPath!));
+        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        PdfCommandUtilities.EnsureDirectory(pdfPath);
+        document.SaveAsPdf(pdfPath);
     }
 }
