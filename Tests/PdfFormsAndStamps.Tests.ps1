@@ -36,6 +36,22 @@ Describe 'PDF forms and stamps' {
         (Get-OfficePdfInfo -Path $filledPath).FormFieldCount | Should -Be 0
     }
 
+    It 'creates the output directory when filling PDF forms' {
+        $formPath = Join-Path $TestDrive 'nested-form-source.pdf'
+        New-OfficePdf -Path $formPath {
+            PdfHeading 'Customer intake'
+            PdfFormField -Name 'CustomerName' -Type Text
+        } | Out-Null
+
+        $filledPath = Join-Path $TestDrive 'nested\filled.pdf'
+        Set-OfficePdfForm -Path $formPath -OutputPath $filledPath -Field @{
+            CustomerName = 'Alice Example'
+        } | Should -BeOfType System.IO.FileInfo
+
+        Test-Path $filledPath | Should -BeTrue
+        (Get-OfficePdfPreflight -Path $filledPath).CanRead | Should -BeTrue
+    }
+
     It 'updates existing PDF metadata and adds extractable text stamps' {
         $sourcePath = Join-Path $TestDrive 'source.pdf'
         New-OfficePdf -Path $sourcePath {

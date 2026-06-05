@@ -140,6 +140,14 @@ internal static class PdfCommandUtilities
 
         foreach (var item in inputObject)
         {
+            if (item is IDictionary dictionary)
+            {
+                rows.Add(propertyNames.Select(name => TryGetDictionaryValue(dictionary, name, out var value)
+                    ? Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty
+                    : string.Empty).ToArray());
+                continue;
+            }
+
             var psObject = PSObject.AsPSObject(item);
             rows.Add(propertyNames.Select(name => Convert.ToString(psObject.Properties[name]?.Value, CultureInfo.InvariantCulture) ?? string.Empty).ToArray());
         }
@@ -219,5 +227,26 @@ internal static class PdfCommandUtilities
             .Where(property => property.IsGettable)
             .Select(property => property.Name)
             .ToArray();
+    }
+
+    private static bool TryGetDictionaryValue(IDictionary dictionary, string key, out object? value)
+    {
+        if (dictionary.Contains(key))
+        {
+            value = dictionary[key];
+            return true;
+        }
+
+        foreach (DictionaryEntry entry in dictionary)
+        {
+            if (string.Equals(Convert.ToString(entry.Key, CultureInfo.InvariantCulture), key, StringComparison.OrdinalIgnoreCase))
+            {
+                value = entry.Value;
+                return true;
+            }
+        }
+
+        value = null;
+        return false;
     }
 }

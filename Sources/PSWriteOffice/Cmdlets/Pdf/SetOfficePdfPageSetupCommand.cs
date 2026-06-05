@@ -19,7 +19,7 @@ public sealed class SetOfficePdfPageSetupCommand : PSCmdlet
 
     /// <summary>Page size name: A4, A5, Letter, Legal, or Custom.</summary>
     [Parameter]
-    public string PageSize { get; set; } = "Letter";
+    public string? PageSize { get; set; }
 
     /// <summary>Custom page width in PDF points when -PageSize Custom is used.</summary>
     [Parameter]
@@ -61,7 +61,14 @@ public sealed class SetOfficePdfPageSetupCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Size(PdfCommandUtilities.ResolvePageSize(PageSize, Width, Height, Landscape.IsPresent));
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(PageSize)) ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(Width)) ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(Height)) ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(Landscape)))
+        {
+            document.Size(PdfCommandUtilities.ResolvePageSize(PageSize, Width, Height, Landscape.IsPresent));
+        }
+
         if (Margin.HasValue)
         {
             document.Margin(Margin.Value);

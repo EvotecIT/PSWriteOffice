@@ -14,6 +14,7 @@
 
     <PropertyGroup>
         <OfficeIMORoot Condition=" '$(OfficeIMORoot)' == '' ">..\..\..\OfficeIMO</OfficeIMORoot>
+        <UseOfficeIMOProjectReferences Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Pdf\OfficeIMO.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Pdf\OfficeIMO.Word.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Pdf\OfficeIMO.Excel.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Pdf\OfficeIMO.Markdown.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Pdf\OfficeIMO.PowerPoint.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj')">true</UseOfficeIMOProjectReferences>
     </PropertyGroup>
 
     <ItemGroup>
@@ -57,7 +58,7 @@
         <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(PublishDir)" />
     </Target>
 
-    <ItemGroup Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj')">
+    <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' == 'true'">
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj" />
@@ -73,7 +74,7 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj" />
     </ItemGroup>
-    <ItemGroup Condition="!Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') Or !Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') Or !Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj')">
+    <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
         <PackageReference Include="OfficeIMO.Drawing" Version="1.0.13" />
         <PackageReference Include="OfficeIMO.Word" Version="1.0.59" />
         <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.33" />

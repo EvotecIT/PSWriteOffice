@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
@@ -42,7 +43,10 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        string[][] rows = InputObject.Length == 1 && InputObject[0] is IEnumerable enumerable && InputObject[0] is not string
+        var rowArrayInput = InputObject.All(item => item is IEnumerable && item is not string && item is not IDictionary);
+        string[][] rows = rowArrayInput
+            ? PdfCommandUtilities.ConvertDataRows(InputObject)
+            : InputObject.Length == 1 && InputObject[0] is IEnumerable enumerable && InputObject[0] is not string && InputObject[0] is not IDictionary
             ? PdfCommandUtilities.ConvertDataRows(enumerable)
             : PdfCommandUtilities.ConvertToTableRows(InputObject, Property, Header);
 
