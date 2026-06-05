@@ -75,15 +75,15 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
-        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.13" />
-        <PackageReference Include="OfficeIMO.Word" Version="1.0.59" />
+        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.14" />
+        <PackageReference Include="OfficeIMO.Word" Version="1.0.60" />
         <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.33" />
-        <PackageReference Include="OfficeIMO.Excel" Version="0.6.39" />
-        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.34" />
-        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.26" />
-        <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.26" />
-        <PackageReference Include="OfficeIMO.Pdf" Version="0.1.34" />
-        <PackageReference Include="OfficeIMO.Word.Pdf" Version="1.0.33" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.40" />
+        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.35" />
+        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.27" />
+        <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.27" />
+        <PackageReference Include="OfficeIMO.Pdf" Version="0.1.35" />
+        <PackageReference Include="OfficeIMO.Word.Pdf" Version="1.0.34" />
         <PackageReference Include="OfficeIMO.Excel.Pdf" Version="1.0.0" />
         <PackageReference Include="OfficeIMO.Markdown.Pdf" Version="1.0.0" />
         <PackageReference Include="OfficeIMO.PowerPoint.Pdf" Version="1.0.0" />

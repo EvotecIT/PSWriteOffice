@@ -10,7 +10,7 @@
 Describe 'Markdown cmdlets' {
     It 'parses Markdown text into a document' {
         $doc = Get-OfficeMarkdown -Text "# Title`n`nHello"
-        $doc | Should -BeOfType OfficeIMO.Markdown.MarkdownDoc
+        $doc.GetType().FullName | Should -Be 'OfficeIMO.Markdown.MarkdownDoc'
     }
 
     It 'supports reader profiles when parsing Markdown' {
@@ -43,7 +43,7 @@ Describe 'Markdown cmdlets' {
 
     It 'converts HTML to a Markdown document' {
         $doc = ConvertFrom-OfficeMarkdownHtml -Html '<h1>Title</h1><p>Hello</p>' -AsDocument
-        $doc | Should -BeOfType OfficeIMO.Markdown.MarkdownDoc
+        $doc.GetType().FullName | Should -Be 'OfficeIMO.Markdown.MarkdownDoc'
         $doc.ToMarkdown() | Should -Match '# Title'
     }
 
@@ -186,7 +186,7 @@ Describe 'Markdown cmdlets' {
     }
 
     It 'supports advanced Markdown cmdlets against document objects' {
-        $doc = [OfficeIMO.Markdown.MarkdownDoc]::Create()
+        $doc = Get-OfficeMarkdown -Text '# Seed'
 
         $doc |
             Add-OfficeMarkdownFrontMatter -Data @{ title = 'Doc pipeline' } -PassThru |
