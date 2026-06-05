@@ -76,6 +76,27 @@ Describe 'PDF forms and stamps' {
         $text | Should -Match 'APPROVED'
     }
 
+    It 'creates output directories for PDF metadata and stamps' {
+        $sourcePath = Join-Path $TestDrive 'source-nested.pdf'
+        New-OfficePdf -Path $sourcePath {
+            PdfHeading 'Invoice'
+            PdfParagraph 'Original body'
+        } | Out-Null
+
+        $metadataPath = Join-Path $TestDrive 'metadata\out.pdf'
+        Set-OfficePdfMetadata -Path $sourcePath -OutputPath $metadataPath -Title 'Nested Metadata' |
+            Should -BeOfType System.IO.FileInfo
+
+        $stampedPath = Join-Path $TestDrive 'stamps\approved.pdf'
+        Add-OfficePdfStamp -Path $metadataPath -OutputPath $stampedPath -Text 'APPROVED' -X 72 -Y 72 |
+            Should -BeOfType System.IO.FileInfo
+
+        Test-Path $metadataPath | Should -BeTrue
+        Test-Path $stampedPath | Should -BeTrue
+        (Get-OfficePdfInfo -Path $metadataPath).Metadata.Title | Should -Be 'Nested Metadata'
+        Get-OfficePdfText -Path $stampedPath | Should -Match 'APPROVED'
+    }
+
     It 'converts PDF forms to flat PDFs with an approved verb' {
         $formPath = Join-Path $TestDrive 'flat-source.pdf'
         New-OfficePdf -Path $formPath {
@@ -88,5 +109,19 @@ Describe 'PDF forms and stamps' {
 
         (Get-OfficePdfInfo -Path $flatPath).FormFieldCount | Should -Be 0
         (Get-OfficePdfPreflight -Path $flatPath).CanRead | Should -BeTrue
+    }
+
+    It 'creates the output directory when converting forms to flat PDFs' {
+        $formPath = Join-Path $TestDrive 'flat-nested-source.pdf'
+        New-OfficePdf -Path $formPath {
+            PdfHeading 'Approval'
+            PdfFormField -Name 'ApprovedBy' -Type Text -Value 'Reviewer'
+        } | Out-Null
+
+        $flatPath = Join-Path $TestDrive 'flat\nested.pdf'
+        ConvertTo-OfficePdfFlatForm -Path $formPath -OutputPath $flatPath | Should -BeOfType System.IO.FileInfo
+
+        Test-Path $flatPath | Should -BeTrue
+        (Get-OfficePdfInfo -Path $flatPath).FormFieldCount | Should -Be 0
     }
 }

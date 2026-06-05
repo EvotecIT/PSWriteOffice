@@ -186,6 +186,23 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'After layout row'
     }
 
+    It 'renders typed list content directly inside PDF row columns' {
+        $path = Join-Path $TestDrive 'layout-row-list.pdf'
+        New-OfficePdf -Path $path {
+            PdfRow -Column @(
+                @{
+                    Width = 100
+                    Type = 'List'
+                    Items = @('Alpha', 'Beta')
+                }
+            )
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Alpha'
+        $text | Should -Match 'Beta'
+    }
+
     It 'builds rich PDF text with emphasis and links' {
         $path = Join-Path $TestDrive 'rich-text.pdf'
         New-OfficePdf -Path $path {

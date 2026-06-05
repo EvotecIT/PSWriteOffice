@@ -141,6 +141,18 @@ Describe 'Markdown cmdlets' {
         $content | Should -Match 'Value'
     }
 
+    It 'does not save Markdown or PDF sidecars when NoSave is used' {
+        $path = Join-Path $TestDrive 'NoSave.md'
+        $pdfPath = Join-Path $TestDrive 'NoSave.pdf'
+
+        New-OfficeMarkdown -Path $path -PdfPath $pdfPath -NoSave {
+            MarkdownHeading -Level 1 -Text 'Draft'
+        } | Out-Null
+
+        Test-Path $path | Should -BeFalse
+        Test-Path $pdfPath | Should -BeFalse
+    }
+
     It 'builds advanced Markdown blocks via DSL helpers' {
         $path = Join-Path $TestDrive 'MarkdownAdvancedDsl.md'
 

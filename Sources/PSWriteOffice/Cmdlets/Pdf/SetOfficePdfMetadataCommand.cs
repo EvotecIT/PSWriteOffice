@@ -74,6 +74,7 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
         {
             var inputPath = PdfCommandUtilities.ResolvePath(this, Path!);
             var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+            PdfCommandUtilities.EnsureDirectory(outputPath);
             PdfMetadataEditor.UpdateMetadata(inputPath, outputPath, Title, Author, Subject, Keywords);
             WriteObject(new FileInfo(outputPath));
             return;

@@ -78,9 +78,8 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
         if (!NoSave.IsPresent)
         {
             File.WriteAllText(fullPath, document.ToMarkdown(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+            SavePdfIfRequested(document);
         }
-
-        SavePdfIfRequested(document);
 
         if (PassThru.IsPresent)
         {

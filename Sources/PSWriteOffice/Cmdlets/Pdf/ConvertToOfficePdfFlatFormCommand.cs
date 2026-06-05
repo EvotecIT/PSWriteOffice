@@ -24,6 +24,7 @@ public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
     {
         var result = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Forms.Flatten();
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath);
         WriteObject(new FileInfo(outputPath));
     }
