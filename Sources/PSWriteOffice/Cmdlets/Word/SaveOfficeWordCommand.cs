@@ -1,7 +1,9 @@
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Word;
+using OfficeIMO.Word.Pdf;
 using PSWriteOffice.Services;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
@@ -33,6 +35,10 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
     /// <summary>Password used to save the document as an encrypted package.</summary>
     [Parameter]
     public string? Password { get; set; }
+
+    /// <summary>Optional PDF path to create from the same Word document.</summary>
+    [Parameter]
+    public string? PdfPath { get; set; }
 
     /// <summary>Emit the document object for further processing.</summary>
     [Parameter]
@@ -85,9 +91,21 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
             }
         }
 
+        SavePdfIfRequested();
+
         if (PassThru.IsPresent)
         {
             WriteObject(Document);
         }
+    }
+
+    private void SavePdfIfRequested()
+    {
+        if (string.IsNullOrWhiteSpace(PdfPath))
+        {
+            return;
+        }
+
+        Document.SaveAsPdf(PdfCommandUtilities.ResolvePath(this, PdfPath!));
     }
 }

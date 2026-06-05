@@ -57,7 +57,7 @@ Sort descending (single-column sort).
 Type: SwitchParameter
 Parameter Sets: ContextSingle, DocumentSingle
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -73,7 +73,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: DocumentSingle, DocumentOrder
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -89,7 +89,7 @@ Header to sort by (single-column sort).
 Type: String
 Parameter Sets: ContextSingle, DocumentSingle
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -105,7 +105,7 @@ Ordered dictionary of header => ascending (true/false).
 Type: Hashtable
 Parameter Sets: DocumentOrder, ContextOrder
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -121,7 +121,7 @@ Emit the worksheet after sorting.
 Type: SwitchParameter
 Parameter Sets: ContextSingle, DocumentSingle, DocumentOrder, ContextOrder
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -137,7 +137,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: DocumentSingle, DocumentOrder
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -153,7 +153,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: DocumentSingle, DocumentOrder
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -176,4 +176,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

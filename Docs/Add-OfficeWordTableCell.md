@@ -40,7 +40,7 @@ Zero-based column index.
 Type: Int32
 Parameter Sets: Context, Table
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -56,7 +56,7 @@ DSL content executed inside the selected cell.
 Type: ScriptBlock
 Parameter Sets: Context, Table
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 0
@@ -72,7 +72,7 @@ Emit the selected WordTableCell.
 Type: SwitchParameter
 Parameter Sets: Context, Table
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Zero-based row index.
 Type: Int32
 Parameter Sets: Context, Table
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -104,7 +104,7 @@ Optional table to target outside the active DSL table scope.
 Type: WordTable
 Parameter Sets: Table
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -127,4 +127,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

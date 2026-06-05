@@ -50,7 +50,7 @@ Disable automatic alignment heuristics for tables.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -66,7 +66,7 @@ Objects to convert into Markdown.
 Type: Object
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -82,7 +82,7 @@ Emit a Markdown document object instead of text.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -106,4 +106,3 @@ OfficeIMO.Markdown.MarkdownDoc`
 ## RELATED LINKS
 
 - None
-

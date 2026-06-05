@@ -1,47 +1,380 @@
+---
+external help file: PSWriteOffice-help.xml
+Module Name: PSWriteOffice
+online version: https://github.com/EvotecIT/PSWriteOffice
+schema: 2.0.0
+---
 # Export-OfficeExcel
+## SYNOPSIS
+Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
 
-Exports PowerShell objects to an Excel workbook using an ImportExcel-style operator surface backed by OfficeIMO.
-
-## Synopsis
-
+## SYNTAX
+### __AllParameterSets
 ```powershell
-$rows | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -TableName Data -AutoFit -FreezeTopRow
+Export-OfficeExcel [-Path] <string> [-InputObject <Object>] [-WorksheetName <string>] [-TableName <string>] [-TableStyle <string>] [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-NoTable] [-NoAutoFilter] [-AutoFit] [-FreezeTopRow] [-FreezeFirstColumn] [-BoldTopRow] [-Title <string>] [-Append] [-ClearSheet] [-NoClobber] [-ExcludeProperty <string[]>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
-## Description
+## DESCRIPTION
+Provides an ImportExcel-style fast path while keeping OfficeIMO as the workbook engine.
 
-`Export-OfficeExcel` is the quick path for object-to-workbook reporting. It writes pipeline input to a worksheet, creates an Excel table by default, can auto-fit columns, freeze the header row, add a title, append rows, clear an existing sheet, and optionally open the saved workbook.
+## EXAMPLES
 
-Use the lower-level `New-OfficeExcel` DSL when you need full workbook composition.
-
-## Examples
-
+### EXAMPLE 1
 ```powershell
-$rows = @(
-    [pscustomobject]@{ Region = 'NA'; Revenue = 100 }
-    [pscustomobject]@{ Region = 'EMEA'; Revenue = 200 }
-)
-
-$rows | Export-OfficeExcel -Path .\Sales.xlsx -WorksheetName Data -TableName Sales -AutoFit -FreezeTopRow -BoldTopRow
+PS> $rows | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -TableName Data -AutoFit -FreezeTopRow
 ```
 
-```powershell
-$moreRows | Export-OfficeExcel -Path .\Sales.xlsx -WorksheetName Data -TableName Sales -Append -AutoFit
+Creates a workbook, writes the objects as a table, auto-fits columns, and freezes the header row.
+
+## PARAMETERS
+
+### -Append
+Append rows to an existing worksheet when the workbook exists.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
-```powershell
-$rows | Export-OfficeExcel -Path .\Sales.xlsx -WorksheetName Data -ClearSheet -Title 'Sales Export' -Show
+### -AutoFit
+Auto-fit exported columns.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: AutoSize
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
-```powershell
-Import-Module PSParseHTML
+### -BoldTopRow
+Bold the exported header row.
 
-ConvertFrom-HtmlTable -Path .\report.html -TableId 'results' -AsDataTable -IncludeLinkUrls |
-    Export-OfficeExcel -Path .\HtmlTables.xlsx -WorksheetName Results -TableName Results -AutoFit -FreezeTopRow
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
-`ConvertFrom-HtmlTable` comes from PSParseHTML/HtmlTinkerX. PSWriteOffice intentionally does not parse HTML itself; it consumes the `DataTable`, `DataSet`, reader, or objects produced by the upstream parser.
+### -ClearSheet
+Replace the target worksheet inside an existing workbook.
 
-## Notes
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
-`-Append` skips headers by default. When `-TableName` identifies an existing table, or the target sheet has exactly one table, PSWriteOffice uses OfficeIMO table append support when available so the Excel table range grows with the new rows. Older OfficeIMO builds fall back to writing raw rows after the used range.
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ExcludeProperty
+Exclude specific properties from exported objects.
+
+```yaml
+Type: String[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FreezeFirstColumn
+Freeze the first exported column.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FreezeTopRow
+Freeze the exported header row.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -InputObject
+Objects to write. Accepts pipeline input.
+
+```yaml
+Type: Object
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -NoAutoFilter
+Disable AutoFilter dropdowns on the created table.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoClobber
+Do not overwrite an existing workbook unless appending or clearing a sheet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoHeader
+Do not emit a header row.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoTable
+Do not create an Excel table around the exported data.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Open
+Open the workbook after saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThru
+Emit the saved FileInfo.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Path
+Destination workbook path.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -StartColumn
+Starting column for new exports.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -StartRow
+Starting row for new exports. When appending and left at 1, rows are written after the used range.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TableName
+Optional Excel table name.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TableStyle
+Built-in Excel table style name.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Title
+Write a title above the exported table.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -WorksheetName
+Worksheet name to create or update.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: Sheet
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.Object`
+
+## OUTPUTS
+
+- `System.Object`
+
+## RELATED LINKS
+
+- None

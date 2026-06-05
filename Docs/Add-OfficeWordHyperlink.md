@@ -50,7 +50,7 @@ Bookmark anchor target within the document.
 Type: String
 Parameter Sets: ParagraphAnchor, ContextAnchor
 Aliases: Bookmark
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -66,7 +66,7 @@ Do not mark the hyperlink in navigation history.
 Type: SwitchParameter
 Parameter Sets: ContextUrl, ParagraphUrl, ParagraphAnchor, ContextAnchor
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -82,7 +82,7 @@ Paragraph to update outside the DSL context.
 Type: WordParagraph
 Parameter Sets: ParagraphUrl, ParagraphAnchor
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -98,7 +98,7 @@ Emit the created hyperlink.
 Type: SwitchParameter
 Parameter Sets: ContextUrl, ParagraphUrl, ParagraphAnchor, ContextAnchor
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -114,7 +114,7 @@ Apply the built-in hyperlink style.
 Type: SwitchParameter
 Parameter Sets: ContextUrl, ParagraphUrl, ParagraphAnchor, ContextAnchor
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -130,7 +130,7 @@ Displayed hyperlink text.
 Type: String
 Parameter Sets: ContextUrl, ParagraphUrl, ParagraphAnchor, ContextAnchor
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -146,7 +146,7 @@ Optional hyperlink tooltip.
 Type: String
 Parameter Sets: ContextUrl, ParagraphUrl, ParagraphAnchor, ContextAnchor
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -162,7 +162,7 @@ External hyperlink URL.
 Type: String
 Parameter Sets: ContextUrl, ParagraphUrl
 Aliases: Uri
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -185,4 +185,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

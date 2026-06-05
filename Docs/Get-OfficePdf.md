@@ -1,0 +1,59 @@
+---
+external help file: PSWriteOffice-help.xml
+Module Name: PSWriteOffice
+online version: https://github.com/EvotecIT/PSWriteOffice
+schema: 2.0.0
+---
+# Get-OfficePdf
+## SYNOPSIS
+Opens an existing PDF as an OfficeIMO.Pdf document.
+
+## SYNTAX
+### __AllParameterSets
+```powershell
+Get-OfficePdf [-Path] <string> [<CommonParameters>]
+```
+
+## DESCRIPTION
+Opens an existing PDF as an OfficeIMO.Pdf document.
+
+## EXAMPLES
+
+### EXAMPLE 1
+```powershell
+Get-OfficePdf -Path 'C:\Path'
+```
+
+
+## PARAMETERS
+
+### -Path
+PDF file path.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `OfficeIMO.Pdf.PdfDocument`
+
+## RELATED LINKS
+
+- None

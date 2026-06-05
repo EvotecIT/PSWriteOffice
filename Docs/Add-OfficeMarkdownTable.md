@@ -48,7 +48,7 @@ Disable automatic alignment heuristics for tables.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -64,7 +64,7 @@ Markdown document to update outside the DSL context.
 Type: MarkdownDoc
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -80,7 +80,7 @@ Objects to convert into a Markdown table.
 Type: Object
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -96,7 +96,7 @@ Emit the Markdown document after appending the table.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -120,4 +120,3 @@ System.Object`
 ## RELATED LINKS
 
 - None
-

@@ -45,7 +45,7 @@ Use case-sensitive matching for layout names.
 Type: SwitchParameter
 Parameter Sets: Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -61,7 +61,7 @@ Layout index to use.
 Type: Int32
 Parameter Sets: Index
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -77,7 +77,7 @@ Layout name to use.
 Type: String
 Parameter Sets: Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -93,7 +93,7 @@ Layout type to use.
 Type: SlideLayoutValues
 Parameter Sets: Type
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -109,7 +109,7 @@ Slide master index to use.
 Type: Int32
 Parameter Sets: Index, Name, Type
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -125,7 +125,7 @@ Slide to update (optional inside a slide DSL scope).
 Type: PowerPointSlide
 Parameter Sets: Index, Name, Type
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -148,4 +148,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

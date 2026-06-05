@@ -20,9 +20,7 @@ ConvertFrom-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-As
 ```
 
 ## DESCRIPTION
-Returns Markdown text by default. Use `-OutputPath` to save Markdown to disk, or `-AsDocument` to return an `OfficeIMO.Markdown.MarkdownDoc` for further editing and rendering.
-
-This command is for static HTML fragments and documents. For browser-backed scraping, table extraction, metadata extraction, or rendered-page workflows, use PSParseHTML first and pass the resulting objects or Markdown into PSWriteOffice.
+Returns Markdown text or saves it to a file when -OutputPath is specified.
 
 ## EXAMPLES
 
@@ -31,21 +29,14 @@ This command is for static HTML fragments and documents. For browser-backed scra
 PS> $markdown = ConvertFrom-OfficeMarkdownHtml -Html '<h1>Report</h1><p>Ready</p>'
 ```
 
-Returns Markdown converted from the supplied HTML fragment.
+Returns Markdown text converted from the supplied HTML.
 
 ### EXAMPLE 2
-```powershell
-PS> ConvertFrom-OfficeMarkdownHtml -Path .\report.html -Portable -OutputPath .\report.md -PassThru
-```
-
-Saves portable Markdown converted from an HTML file and returns the created file.
-
-### EXAMPLE 3
 ```powershell
 PS> $doc = ConvertFrom-OfficeMarkdownHtml -Path .\report.html -AsDocument
 ```
 
-Returns a Markdown document object for additional edits or conversion to HTML/Word.
+Returns a Markdown document for further editing or rendering.
 
 ## PARAMETERS
 
@@ -55,9 +46,14 @@ Emit a Markdown document object instead of Markdown text.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -BaseUri
@@ -66,9 +62,14 @@ Base URI used to resolve relative links and image sources.
 ```yaml
 Type: String
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -DropUnsupportedBlocks
@@ -77,9 +78,14 @@ Drop unsupported block HTML instead of preserving it as raw HTML.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -DropUnsupportedInlineHtml
@@ -88,9 +94,14 @@ Drop unsupported inline HTML instead of preserving it as raw HTML.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -Html
@@ -99,9 +110,14 @@ HTML markup to convert.
 ```yaml
 Type: String
 Parameter Sets: Html
+Aliases: None
+Possible values:
+
 Required: True
 Position: 0
+Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
 ```
 
 ### -IncludeDocumentChrome
@@ -110,9 +126,14 @@ Convert the full HTML document instead of only body contents.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -InputPath
@@ -122,9 +143,13 @@ Path to an HTML file.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
+Possible values:
+
 Required: True
 Position: 0
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -MaxInputCharacters
@@ -133,9 +158,14 @@ Maximum input length, in characters, accepted by the converter.
 ```yaml
 Type: Nullable`1
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -Options
@@ -144,9 +174,14 @@ Optional conversion options.
 ```yaml
 Type: HtmlToMarkdownOptions
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -OutputPath
@@ -156,9 +191,13 @@ Optional output path for the Markdown file.
 Type: String
 Parameter Sets: Html, Path
 Aliases: OutPath
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -PassThru
@@ -167,20 +206,30 @@ Emit a FileInfo when saving to disk.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -Portable
-Use portable Markdown output when `-Options` is not supplied.
+Use portable Markdown output when Options is not supplied.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
 
 ### -PreserveScriptsAndStyles
@@ -189,12 +238,29 @@ Preserve script, style, noscript, and template elements.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
 Required: False
 Position: named
+Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
 ```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String`
+
+## OUTPUTS
+
+- `System.String
+System.IO.FileInfo
+OfficeIMO.Markdown.MarkdownDoc`
 
 ## RELATED LINKS
 
-[ConvertTo-OfficeMarkdownHtml](ConvertTo-OfficeMarkdownHtml.md)
-[ConvertFrom-OfficeWordHtml](ConvertFrom-OfficeWordHtml.md)
+- None

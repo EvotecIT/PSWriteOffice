@@ -57,7 +57,7 @@ A1-style cell address (e.g., A1, C5).
 Type: String
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -73,7 +73,7 @@ Accept wildcard characters: True
 Type: Nullable`1
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -89,7 +89,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: DocumentPath, DocumentUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -105,7 +105,7 @@ Image height in pixels.
 Type: Int32
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -121,7 +121,7 @@ Horizontal offset in pixels from the cell origin.
 Type: Int32
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -137,7 +137,7 @@ Vertical offset in pixels from the cell origin.
 Type: Int32
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -153,7 +153,7 @@ Emit the worksheet after inserting the image.
 Type: SwitchParameter
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -169,7 +169,7 @@ Image file path.
 Type: String
 Parameter Sets: ContextPath, DocumentPath
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -185,7 +185,7 @@ Accept wildcard characters: True
 Type: Nullable`1
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -201,7 +201,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: DocumentPath, DocumentUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -217,7 +217,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: DocumentPath, DocumentUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -233,7 +233,7 @@ Image URL to download.
 Type: String
 Parameter Sets: DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -249,7 +249,7 @@ Image width in pixels.
 Type: Int32
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -272,4 +272,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

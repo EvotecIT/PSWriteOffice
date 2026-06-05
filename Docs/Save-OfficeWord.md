@@ -11,7 +11,7 @@ Saves a Word document without disposing it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeWord [-Document] <WordDocument> [-Path <string>] [-Show] [-PassThru] [<CommonParameters>]
+Save-OfficeWord [-Document] <WordDocument> [-Path <string>] [-Show] [-Password <string>] [-PdfPath <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,7 +35,7 @@ Document to save.
 Type: WordDocument
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -51,7 +51,23 @@ Emit the document object for further processing.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to save the document as an encrypted package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -67,7 +83,23 @@ Optional save-as path.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: FilePath
-Possible values: 
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PdfPath
+Optional PDF path to create from the same Word document.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -83,7 +115,7 @@ Open the document after saving.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -106,4 +138,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

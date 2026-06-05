@@ -47,7 +47,7 @@ Word document instance to convert.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -63,7 +63,7 @@ Exclude footnotes from the HTML output.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -79,7 +79,7 @@ Path to a .docx file.
 Type: String
 Parameter Sets: Path
 Aliases: Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -95,7 +95,7 @@ Optional font family to use during conversion.
 Type: String
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -111,7 +111,7 @@ Include the built-in default CSS in the HTML head.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -127,7 +127,7 @@ Include font styles as inline CSS.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,7 +143,7 @@ Include list style metadata.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -159,7 +159,7 @@ Emit paragraph styles as CSS classes.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -175,7 +175,7 @@ Emit run styles as CSS classes.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -191,7 +191,7 @@ Optional output path for the HTML file.
 Type: String
 Parameter Sets: Path, Document
 Aliases: OutPath
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -207,7 +207,7 @@ Emit a FileInfo when saving to disk.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -223,7 +223,7 @@ Store image references as file paths instead of base64 data URIs.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -247,4 +247,3 @@ System.IO.FileInfo`
 ## RELATED LINKS
 
 - None
-

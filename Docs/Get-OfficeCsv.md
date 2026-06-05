@@ -54,7 +54,7 @@ Allow empty lines in the input.
 Type: SwitchParameter
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -70,7 +70,7 @@ Culture used for type conversions.
 Type: CultureInfo
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -86,7 +86,7 @@ Field delimiter character.
 Type: Char
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -102,7 +102,7 @@ Encoding used when reading the file.
 Type: Encoding
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -118,7 +118,7 @@ Indicates whether the first record is a header row.
 Type: Boolean
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -134,7 +134,7 @@ Path to the CSV file.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -166,7 +166,7 @@ CSV text to parse.
 Type: String
 Parameter Sets: Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -182,7 +182,7 @@ Trim whitespace around unquoted fields.
 Type: Boolean
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -205,4 +205,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

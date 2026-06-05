@@ -40,7 +40,7 @@ Horizontal offset for the watermark.
 Type: Nullable`1
 Parameter Sets: Text, Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Path to an image watermark.
 Type: String
 Parameter Sets: Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -72,7 +72,7 @@ Emit the created watermark.
 Type: SwitchParameter
 Parameter Sets: Text, Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Scale factor for the watermark.
 Type: Double
 Parameter Sets: Text, Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Watermark text.
 Type: String
 Parameter Sets: Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -120,7 +120,7 @@ Vertical offset for the watermark.
 Type: Nullable`1
 Parameter Sets: Text, Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,4 +143,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

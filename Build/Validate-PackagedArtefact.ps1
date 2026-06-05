@@ -33,12 +33,27 @@ if (-not (Test-Path -LiteralPath $ArtefactManifest)) {
 
 $ArtefactManifestLiteral = $ArtefactManifest.Replace("'", "''")
 
+$RequiredCommands = @(
+    'New-OfficeWord',
+    'New-OfficeExcel',
+    'New-OfficePowerPoint',
+    'ConvertTo-OfficeCsv',
+    'Get-OfficeMarkdown',
+    'New-OfficePdf',
+    'Add-OfficePdfText',
+    'Add-OfficePdfRow',
+    'Save-OfficePdf',
+    'Get-OfficePdfInfo'
+)
+
+$RequiredCommandsLiteral = "'" + ($RequiredCommands -join "', '") + "'"
+
 $ImportChecks = @(
     @{
         Name    = 'PowerShell 7'
         Command = (@'
 Import-Module '__ARTEFACT__' -Force -ErrorAction Stop
-$required = @('New-OfficeWord', 'New-OfficeExcel', 'New-OfficePowerPoint', 'ConvertTo-OfficeCsv', 'Get-OfficeMarkdown')
+$required = @(__REQUIRED_COMMANDS__)
 $missing = foreach ($name in $required) {
     if (-not (Get-Command -Name $name -ErrorAction SilentlyContinue)) {
         $name
@@ -48,14 +63,14 @@ if ($missing) {
     throw ('Missing required commands: ' + ($missing -join ', '))
 }
 (Get-Command -Module PSWriteOffice | Measure-Object).Count
-'@).Replace('__ARTEFACT__', $ArtefactManifestLiteral)
+'@).Replace('__ARTEFACT__', $ArtefactManifestLiteral).Replace('__REQUIRED_COMMANDS__', $RequiredCommandsLiteral)
         Engine  = 'pwsh'
     }
     @{
         Name    = 'Windows PowerShell'
         Command = (@'
 Import-Module '__ARTEFACT__' -Force -ErrorAction Stop
-$required = @('New-OfficeWord', 'New-OfficeExcel', 'New-OfficePowerPoint', 'ConvertTo-OfficeCsv', 'Get-OfficeMarkdown')
+$required = @(__REQUIRED_COMMANDS__)
 $missing = foreach ($name in $required) {
     if (-not (Get-Command -Name $name -ErrorAction SilentlyContinue)) {
         $name
@@ -65,7 +80,7 @@ if ($missing) {
     throw ('Missing required commands: ' + ($missing -join ', '))
 }
 (Get-Command -Module PSWriteOffice | Measure-Object).Count
-'@).Replace('__ARTEFACT__', $ArtefactManifestLiteral)
+'@).Replace('__ARTEFACT__', $ArtefactManifestLiteral).Replace('__REQUIRED_COMMANDS__', $RequiredCommandsLiteral)
         Engine  = 'powershell'
     }
 )

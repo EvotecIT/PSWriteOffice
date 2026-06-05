@@ -42,7 +42,7 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | Document statistics | Wrapped | `Get-OfficeWordStatistics` exposes page/paragraph/word/object counts |
 | Macros | Deferred | Keep preview-only if added |
 | SmartArt authoring | Deferred | Detection/read helpers are safer first |
-| PDF export | Deferred | Requires package-scope approval for `OfficeIMO.Word.Pdf` |
+| PDF export | Wrapped | `New/Save-OfficeWord -PdfPath` use OfficeIMO.Word.Pdf sidecar export |
 
 ## Excel
 
@@ -75,6 +75,7 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | Workbook encryption/passwords | Wrapped | OfficeIMO encrypted package APIs are surfaced through lifecycle commands |
 | Range to image | Deferred | Explicitly out of parity scope unless OfficeIMO intentionally grows a pure renderer |
 | Google Sheets bridge | Deferred | Explicit package-scope expansion only |
+| PDF export | Wrapped | `New/Save-OfficeExcel -PdfPath` use OfficeIMO.Excel.Pdf sidecar export |
 
 ## PowerPoint
 
@@ -100,6 +101,19 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | Rich chart formatting | Wrapper gap | Match OfficeIMO chart title/legend/axis/series/marker/trendline APIs |
 | Table cell formatting | Wrapper gap | Merged cells, padding, borders, row heights, autofit, preset style wrappers |
 | Slide hidden/reorder controls | Wrapper gap | Useful deck maintenance commands |
+| PDF export | Wrapped | `New/Save-OfficePowerPoint -PdfPath` use OfficeIMO.PowerPoint.Pdf sidecar export |
+
+## PDF
+
+| Capability | Status | Notes |
+| --- | --- | --- |
+| Create/load/save documents | Wrapped | `New/Get/Save-OfficePdf` wrap OfficeIMO.Pdf directly |
+| Composition blocks | Wrapped | Themes, headings, paragraphs, rich inline text/link runs, lists, tables, images, panels, horizontal rules, bookmarks, spacers, row/column layout, page breaks, headers, footers, metadata, watermarks, backgrounds, background images/shapes, page borders, page setup, font options, attachments, and form fields |
+| Existing-PDF readback | Wrapped | Info, preflight, text, logical Markdown, form fields, images, and attachments |
+| Existing-PDF operations | Wrapped | Join, split, copy, remove, move, rotate through `Set-OfficePdfPage -Rotation`, metadata updates, form fill/flat conversion, and text/image stamps |
+| Compliance readiness | Partial wrapper | Generated document profile/groundwork and readiness reports are wrapped; existing-PDF conformance checks remain engine-led |
+| HTML to PDF | Engine gap | Do not recreate the old PSWritePDF command in PSWriteOffice until OfficeIMO owns the conversion |
+| Signatures, encryption, redaction | Engine gap | Add only when OfficeIMO.Pdf exposes stable reusable APIs |
 
 ## Recommended Next PRs
 

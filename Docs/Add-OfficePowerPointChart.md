@@ -52,7 +52,7 @@ Property name used for category labels on standard charts.
 Type: String
 Parameter Sets: Categorical
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -68,7 +68,7 @@ Source objects used to build chart data.
 Type: Object[]
 Parameter Sets: Categorical, Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -84,7 +84,7 @@ Chart height in points.
 Type: Double
 Parameter Sets: Default, Categorical, Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -100,7 +100,7 @@ Property names used as numeric series on standard charts.
 Type: String[]
 Parameter Sets: Categorical
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -116,7 +116,7 @@ Target slide that will receive the chart (optional inside DSL).
 Type: PowerPointSlide
 Parameter Sets: Default, Categorical, Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -132,7 +132,7 @@ Optional chart title.
 Type: String
 Parameter Sets: Default, Categorical, Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -164,7 +164,7 @@ Chart width in points.
 Type: Double
 Parameter Sets: Default, Categorical, Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -180,7 +180,7 @@ Left offset in points from the slide origin.
 Type: Double
 Parameter Sets: Default, Categorical, Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -196,7 +196,7 @@ Property name used for the X axis on scatter charts.
 Type: String
 Parameter Sets: Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -212,7 +212,7 @@ Top offset in points from the slide origin.
 Type: Double
 Parameter Sets: Default, Categorical, Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -228,7 +228,7 @@ Property names used as numeric Y series on scatter charts.
 Type: String[]
 Parameter Sets: Scatter
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -251,4 +251,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

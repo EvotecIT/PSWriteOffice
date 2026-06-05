@@ -40,7 +40,7 @@ Paragraph justification.
 Type: Nullable`1
 Parameter Sets: Text, Content
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Nested DSL content (runs, lists, images).
 Type: ScriptBlock
 Parameter Sets: Content
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 0
@@ -72,7 +72,7 @@ Emit the WordParagraph for further use.
 Type: SwitchParameter
 Parameter Sets: Text, Content
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Paragraph style.
 Type: Nullable`1
 Parameter Sets: Text, Content
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Optional initial paragraph text.
 Type: String
 Parameter Sets: Text, Content
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 0
@@ -127,4 +127,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

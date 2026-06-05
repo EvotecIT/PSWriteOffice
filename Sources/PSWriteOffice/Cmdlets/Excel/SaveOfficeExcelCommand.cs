@@ -1,7 +1,9 @@
 using System.Management.Automation;
 using OfficeIMO.Excel;
+using OfficeIMO.Excel.Pdf;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -43,6 +45,10 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
     /// <summary>Validate the saved package with OpenXmlValidator and throw on errors.</summary>
     [Parameter]
     public SwitchParameter ValidateOpenXml { get; set; }
+
+    /// <summary>Optional PDF path to create from the same workbook.</summary>
+    [Parameter]
+    public string? PdfPath { get; set; }
 
     /// <summary>Emit the workbook for further processing.</summary>
     [Parameter]
@@ -107,9 +113,21 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             }
         }
 
+        SavePdfIfRequested();
+
         if (PassThru.IsPresent)
         {
             WriteObject(Document);
         }
+    }
+
+    private void SavePdfIfRequested()
+    {
+        if (string.IsNullOrWhiteSpace(PdfPath))
+        {
+            return;
+        }
+
+        Document.SaveAsPdf(PdfCommandUtilities.ResolvePath(this, PdfPath!));
     }
 }

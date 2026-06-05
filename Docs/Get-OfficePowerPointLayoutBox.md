@@ -52,7 +52,7 @@ Number of columns to generate.
 Type: Int32
 Parameter Sets: Columns
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -68,7 +68,7 @@ Column or row gutter in centimeters.
 Type: Double
 Parameter Sets: Columns, Rows
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -84,7 +84,7 @@ Outer slide margin in centimeters.
 Type: Double
 Parameter Sets: Content, Columns, Rows
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -100,7 +100,7 @@ Presentation to inspect (optional inside DSL).
 Type: PowerPointPresentation
 Parameter Sets: Content, Columns, Rows
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -116,7 +116,7 @@ Number of rows to generate.
 Type: Int32
 Parameter Sets: Rows
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -139,4 +139,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

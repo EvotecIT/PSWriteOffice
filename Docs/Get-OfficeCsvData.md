@@ -49,7 +49,7 @@ Allow empty lines in the input.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -65,7 +65,7 @@ Emit dictionaries instead of PSCustomObjects.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -81,7 +81,7 @@ Culture used for type conversions.
 Type: CultureInfo
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -97,7 +97,7 @@ Field delimiter character.
 Type: Char
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -113,7 +113,7 @@ CSV document to read when already loaded.
 Type: CsvDocument
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -129,7 +129,7 @@ Encoding used when reading the file.
 Type: Encoding
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -145,7 +145,7 @@ Indicates whether the first record is a header row.
 Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -161,7 +161,7 @@ Path to a CSV file.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: False
 Position: 0
@@ -193,7 +193,7 @@ Trim whitespace around unquoted fields.
 Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -216,4 +216,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

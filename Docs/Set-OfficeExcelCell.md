@@ -40,7 +40,7 @@ A1-style cell address (e.g., A1, C5).
 Type: String
 Parameter Sets: Address
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Accept wildcard characters: True
 Type: Nullable`1
 Parameter Sets: Coordinates
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Formula text (without leading =).
 Type: String
 Parameter Sets: Coordinates, Address
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Number format code to apply.
 Type: String
 Parameter Sets: Coordinates, Address
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Accept wildcard characters: True
 Type: Nullable`1
 Parameter Sets: Coordinates
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -120,7 +120,7 @@ Cell value to assign.
 Type: Object
 Parameter Sets: Coordinates, Address
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,4 +143,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

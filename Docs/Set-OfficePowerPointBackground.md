@@ -52,7 +52,7 @@ Clears any explicit background color or image.
 Type: SwitchParameter
 Parameter Sets: Clear
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -68,7 +68,7 @@ Background color (hex or named color).
 Type: String
 Parameter Sets: Color
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -84,7 +84,7 @@ Path to a background image file.
 Type: String
 Parameter Sets: Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -100,7 +100,7 @@ Slide to update (optional inside a slide DSL scope).
 Type: PowerPointSlide
 Parameter Sets: Color, Image, Clear
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -123,4 +123,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

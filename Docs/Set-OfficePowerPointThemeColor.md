@@ -47,7 +47,7 @@ Apply the changes across all slide masters.
 Type: SwitchParameter
 Parameter Sets: Single, Multiple
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -79,7 +79,7 @@ Hashtable of theme color names to hex values.
 Type: Hashtable
 Parameter Sets: Multiple
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -95,7 +95,7 @@ Slide master index to update when not using AllMasters.
 Type: Int32
 Parameter Sets: Single, Multiple
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -111,7 +111,7 @@ Emit the presentation after update.
 Type: SwitchParameter
 Parameter Sets: Single, Multiple
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -127,7 +127,7 @@ Presentation to update (optional inside New-OfficePowerPoint).
 Type: PowerPointPresentation
 Parameter Sets: Single, Multiple
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,7 +143,7 @@ Hex color value (for example C00000 or #C00000).
 Type: String
 Parameter Sets: Single
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -166,4 +166,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

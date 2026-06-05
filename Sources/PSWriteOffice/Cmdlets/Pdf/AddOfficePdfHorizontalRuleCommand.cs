@@ -1,0 +1,50 @@
+using System.Management.Automation;
+using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
+
+namespace PSWriteOffice.Cmdlets.Pdf;
+
+/// <summary>Adds a horizontal rule divider to a generated PDF document.</summary>
+[Cmdlet(VerbsCommon.Add, "OfficePdfHorizontalRule", DefaultParameterSetName = ParameterSetContext)]
+[Alias("PdfHorizontalRule", "PdfHr")]
+[OutputType(typeof(PdfDocument))]
+public sealed class AddOfficePdfHorizontalRuleCommand : PSCmdlet
+{
+    private const string ParameterSetContext = "Context";
+    private const string ParameterSetDocument = "Document";
+
+    /// <summary>PDF document to update outside the DSL context.</summary>
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    public PdfDocument Document { get; set; } = null!;
+
+    /// <summary>Rule thickness in PDF points.</summary>
+    [Parameter]
+    public double? Thickness { get; set; }
+
+    /// <summary>Rule color in #RRGGBB format.</summary>
+    [Parameter]
+    public string? Color { get; set; }
+
+    /// <summary>Spacing before the rule in PDF points.</summary>
+    [Parameter]
+    public double? SpacingBefore { get; set; }
+
+    /// <summary>Spacing after the rule in PDF points.</summary>
+    [Parameter]
+    public double? SpacingAfter { get; set; }
+
+    /// <summary>Emit the updated document.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
+    /// <inheritdoc />
+    protected override void ProcessRecord()
+    {
+        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
+        document.HR(Thickness, PdfCommandUtilities.ParseColor(Color), SpacingBefore, SpacingAfter);
+        if (PassThru.IsPresent)
+        {
+            WriteObject(document);
+        }
+    }
+}

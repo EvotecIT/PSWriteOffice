@@ -47,7 +47,7 @@ Optional zero-based slide index when reading from a presentation.
 Type: Nullable`1
 Parameter Sets: Presentation
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -63,7 +63,7 @@ Presentation whose slides should be summarized.
 Type: PowerPointPresentation
 Parameter Sets: Presentation
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -79,7 +79,7 @@ Slide to inspect (optional inside the DSL).
 Type: PowerPointSlide
 Parameter Sets: Slide
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -103,4 +103,3 @@ OfficeIMO.PowerPoint.PowerPointPresentation`
 ## RELATED LINKS
 
 - None
-

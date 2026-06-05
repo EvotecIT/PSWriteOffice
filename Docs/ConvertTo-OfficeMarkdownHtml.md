@@ -84,7 +84,7 @@ Markdown document to convert.
 Type: MarkdownDoc
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -100,7 +100,7 @@ Render a full HTML document instead of a fragment.
 Type: SwitchParameter
 Parameter Sets: Path, Text, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -116,7 +116,7 @@ Path to the Markdown file.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -132,7 +132,7 @@ Optional output path for the HTML file.
 Type: String
 Parameter Sets: Path, Text, Document
 Aliases: OutPath
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -148,7 +148,7 @@ Emit a FileInfo when saving to disk.
 Type: SwitchParameter
 Parameter Sets: Path, Text, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -164,7 +164,7 @@ Named reader profile used when ReaderOptions is not supplied.
 Type: Nullable`1
 Parameter Sets: Path, Text, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -180,7 +180,7 @@ Optional reader options when parsing Markdown.
 Type: MarkdownReaderOptions
 Parameter Sets: Path, Text, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -212,7 +212,7 @@ Markdown text to convert.
 Type: String
 Parameter Sets: Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -228,7 +228,7 @@ Optional title for HTML documents.
 Type: String
 Parameter Sets: Path, Text, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -252,4 +252,3 @@ System.IO.FileInfo`
 ## RELATED LINKS
 
 - None
-

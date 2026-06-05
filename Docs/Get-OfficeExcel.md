@@ -9,9 +9,14 @@ schema: 2.0.0
 Opens an existing Excel workbook.
 
 ## SYNTAX
-### __AllParameterSets
+### Path (Default)
 ```powershell
-Get-OfficeExcel [-InputPath] <string> [-ReadOnly] [-AutoSave] [<CommonParameters>]
+Get-OfficeExcel [-InputPath] <string> [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
+```
+
+### Uri
+```powershell
+Get-OfficeExcel [-Uri] <uri> [-AllowHttp] [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,14 +33,30 @@ Loads report.xlsx for inspection without enabling writes.
 
 ## PARAMETERS
 
+### -AllowHttp
+Allow HTTP workbook downloads in addition to HTTPS.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Uri
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -AutoSave
 Enable automatic saves on the underlying document.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Path, Uri
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -49,12 +70,28 @@ Path to the workbook to load.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Path
 Aliases: Path, FilePath
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to open an encrypted workbook package.
+
+```yaml
+Type: String
+Parameter Sets: Path, Uri
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -65,12 +102,28 @@ Open the file in read-only mode.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Path, Uri
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Uri
+Remote workbook URI to load.
+
+```yaml
+Type: Uri
+Parameter Sets: Uri
+Aliases: Url
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -90,4 +143,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

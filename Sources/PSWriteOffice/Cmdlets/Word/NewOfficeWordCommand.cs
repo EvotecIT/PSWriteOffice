@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Management.Automation;
+using OfficeIMO.Word.Pdf;
+using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
@@ -45,6 +47,10 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>Optional PDF path to create from the same Word document before closing it.</summary>
+    [Parameter]
+    public string? PdfPath { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -74,6 +80,7 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         }
         else
         {
+            SavePdfIfRequested(document);
             WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
         }
 
@@ -89,5 +96,15 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         return Path.IsPathRooted(providerPath)
             ? providerPath
             : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
+    }
+
+    private void SavePdfIfRequested(OfficeIMO.Word.WordDocument document)
+    {
+        if (string.IsNullOrWhiteSpace(PdfPath))
+        {
+            return;
+        }
+
+        document.SaveAsPdf(PdfCommandUtilities.ResolvePath(this, PdfPath!));
     }
 }

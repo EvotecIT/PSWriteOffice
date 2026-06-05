@@ -7,7 +7,7 @@ Locale: en-US
 ---
 # PSWriteOffice Module
 ## Description
-PowerShell module to create and read Microsoft Word, Excel, PowerPoint (experimental), Markdown, and CSV documents without Microsoft Office installed. Powered by OfficeIMO.*.
+PowerShell module to create and read Microsoft Word, Excel, PowerPoint (experimental), PDF, Markdown, and CSV documents without Microsoft Office installed. Powered by OfficeIMO.*.
 
 ## PSWriteOffice Cmdlets
 ### [Add-OfficeExcelAutoFilter](Add-OfficeExcelAutoFilter.md)
@@ -42,6 +42,33 @@ Adds an image from a URL anchored to a worksheet cell.
 
 ### [Add-OfficeExcelPivotTable](Add-OfficeExcelPivotTable.md)
 Adds a pivot table to a worksheet.
+
+### [Add-OfficeExcelReportCallout](Add-OfficeExcelReportCallout.md)
+Adds a colored callout block to the current Excel report sheet.
+
+### [Add-OfficeExcelReportKpiRow](Add-OfficeExcelReportKpiRow.md)
+Adds a KPI row to the current Excel report sheet.
+
+### [Add-OfficeExcelReportLegend](Add-OfficeExcelReportLegend.md)
+Adds a legend table to the current Excel report sheet.
+
+### [Add-OfficeExcelReportParagraph](Add-OfficeExcelReportParagraph.md)
+Adds a paragraph line to the current Excel report sheet.
+
+### [Add-OfficeExcelReportSection](Add-OfficeExcelReportSection.md)
+Adds a section heading to the current Excel report sheet.
+
+### [Add-OfficeExcelReportSheet](Add-OfficeExcelReportSheet.md)
+Creates a worksheet through the OfficeIMO sheet composer and runs report-block cmdlets inside it.
+
+### [Add-OfficeExcelReportSpacer](Add-OfficeExcelReportSpacer.md)
+Adds vertical spacing to the current Excel report sheet.
+
+### [Add-OfficeExcelReportTable](Add-OfficeExcelReportTable.md)
+Adds an object table to the current Excel report sheet using the OfficeIMO sheet composer.
+
+### [Add-OfficeExcelReportTitle](Add-OfficeExcelReportTitle.md)
+Adds a title block to the current Excel report sheet.
 
 ### [Add-OfficeExcelSheet](Add-OfficeExcelSheet.md)
 Adds or reuses a worksheet within the current Excel DSL scope.
@@ -118,6 +145,57 @@ Adds a Markdown table of contents placeholder.
 ### [Add-OfficeMarkdownTaskList](Add-OfficeMarkdownTaskList.md)
 Adds a Markdown task list.
 
+### [Add-OfficePdfAttachment](Add-OfficePdfAttachment.md)
+Adds an embedded file attachment to a generated PDF document.
+
+### [Add-OfficePdfBackgroundShape](Add-OfficePdfBackgroundShape.md)
+Adds a decorative generated PDF page background shape or band.
+
+### [Add-OfficePdfBookmark](Add-OfficePdfBookmark.md)
+Adds a named bookmark at the current generated PDF flow position.
+
+### [Add-OfficePdfFormField](Add-OfficePdfFormField.md)
+Adds a simple AcroForm field to a generated PDF document.
+
+### [Add-OfficePdfHeading](Add-OfficePdfHeading.md)
+Adds a heading to a PDF document.
+
+### [Add-OfficePdfHorizontalRule](Add-OfficePdfHorizontalRule.md)
+Adds a horizontal rule divider to a generated PDF document.
+
+### [Add-OfficePdfImage](Add-OfficePdfImage.md)
+Adds an image to a PDF document.
+
+### [Add-OfficePdfList](Add-OfficePdfList.md)
+Adds a bullet or numbered list to a PDF document.
+
+### [Add-OfficePdfPageBreak](Add-OfficePdfPageBreak.md)
+Adds a page break to a PDF document.
+
+### [Add-OfficePdfPanel](Add-OfficePdfPanel.md)
+Adds a visually separated panel paragraph to a PDF document.
+
+### [Add-OfficePdfParagraph](Add-OfficePdfParagraph.md)
+Adds a paragraph to a PDF document.
+
+### [Add-OfficePdfRow](Add-OfficePdfRow.md)
+Adds a semantic row with percentage-based columns to a generated PDF document.
+
+### [Add-OfficePdfSpacer](Add-OfficePdfSpacer.md)
+Adds invisible vertical spacing to a generated PDF document.
+
+### [Add-OfficePdfStamp](Add-OfficePdfStamp.md)
+Adds a text or image stamp to an existing PDF.
+
+### [Add-OfficePdfTable](Add-OfficePdfTable.md)
+Adds a table to a PDF document.
+
+### [Add-OfficePdfText](Add-OfficePdfText.md)
+Adds a rich inline-text paragraph to a generated PDF document.
+
+### [Add-OfficePdfWatermark](Add-OfficePdfWatermark.md)
+Adds a generated-document text watermark.
+
 ### [Add-OfficePowerPointBullets](Add-OfficePowerPointBullets.md)
 Adds a bulleted list to a PowerPoint slide.
 
@@ -184,6 +262,9 @@ Adds a combo box content control to the current paragraph.
 ### [Add-OfficeWordContentControl](Add-OfficeWordContentControl.md)
 Adds a structured content control to the current paragraph.
 
+### [Add-OfficeWordCoverPage](Add-OfficeWordCoverPage.md)
+Adds a built-in cover page template to a Word document.
+
 ### [Add-OfficeWordDatePicker](Add-OfficeWordDatePicker.md)
 Adds a date picker content control to the current paragraph.
 
@@ -192,6 +273,9 @@ Adds a dropdown list content control to the current paragraph.
 
 ### [Add-OfficeWordEndnote](Add-OfficeWordEndnote.md)
 Adds an endnote reference to a Word paragraph.
+
+### [Add-OfficeWordEquation](Add-OfficeWordEquation.md)
+Adds an Office Math equation to a Word document or paragraph.
 
 ### [Add-OfficeWordField](Add-OfficeWordField.md)
 Adds a field to the current paragraph.
@@ -232,6 +316,9 @@ Adds a repeating section content control to the current paragraph.
 ### [Add-OfficeWordSection](Add-OfficeWordSection.md)
 Adds or reuses a section inside the current Word document.
 
+### [Add-OfficeWordShape](Add-OfficeWordShape.md)
+Adds a basic OfficeIMO Word shape to the current paragraph.
+
 ### [Add-OfficeWordTable](Add-OfficeWordTable.md)
 Creates a table from PowerShell objects.
 
@@ -244,6 +331,9 @@ Attaches conditional formatting logic to the current table.
 ### [Add-OfficeWordTableOfContent](Add-OfficeWordTableOfContent.md)
 Adds a table of contents to a Word document.
 
+### [Add-OfficeWordTabStop](Add-OfficeWordTabStop.md)
+Adds a tab stop to a Word paragraph.
+
 ### [Add-OfficeWordText](Add-OfficeWordText.md)
 Adds inline text to the current paragraph.
 
@@ -252,6 +342,9 @@ Adds a watermark to the current section or header.
 
 ### [Clear-OfficeExcelAutoFilter](Clear-OfficeExcelAutoFilter.md)
 Clears any AutoFilter on the current worksheet.
+
+### [Clear-OfficePdfBackgroundShape](Clear-OfficePdfBackgroundShape.md)
+Clears generated PDF page background shapes.
 
 ### [Close-OfficeExcel](Close-OfficeExcel.md)
 Closes an Excel workbook and optionally saves it.
@@ -283,6 +376,12 @@ Converts objects into a Markdown table.
 ### [ConvertTo-OfficeMarkdownHtml](ConvertTo-OfficeMarkdownHtml.md)
 Converts Markdown content to HTML.
 
+### [ConvertTo-OfficePdfFlatForm](ConvertTo-OfficePdfFlatForm.md)
+Converts a PDF with simple AcroForm fields into a flat PDF.
+
+### [ConvertTo-OfficePdfMarkdown](ConvertTo-OfficePdfMarkdown.md)
+Converts PDF logical text readback to Markdown.
+
 ### [ConvertTo-OfficeWordHtml](ConvertTo-OfficeWordHtml.md)
 Converts a Word document to HTML.
 
@@ -291,6 +390,9 @@ Converts a Word document to Markdown.
 
 ### [Copy-OfficeExcelSheet](Copy-OfficeExcelSheet.md)
 Copies a worksheet within a workbook or from another workbook.
+
+### [Copy-OfficePdfPage](Copy-OfficePdfPage.md)
+Copies selected PDF pages into a new PDF.
 
 ### [Copy-OfficePowerPointSlide](Copy-OfficePowerPointSlide.md)
 Copies an existing slide within a PowerPoint presentation.
@@ -351,6 +453,30 @@ Gets the OfficeIMO.Markdown object tree from Markdown content.
 
 ### [Get-OfficeMarkdownTable](Get-OfficeMarkdownTable.md)
 Gets Markdown tables from a Markdown document.
+
+### [Get-OfficePdf](Get-OfficePdf.md)
+Opens an existing PDF as an OfficeIMO.Pdf document.
+
+### [Get-OfficePdfAttachment](Get-OfficePdfAttachment.md)
+Gets or extracts embedded file attachments from a PDF.
+
+### [Get-OfficePdfCompliance](Get-OfficePdfCompliance.md)
+Gets a generated PDF document compliance readiness report.
+
+### [Get-OfficePdfFormField](Get-OfficePdfFormField.md)
+Gets simple AcroForm fields from a PDF.
+
+### [Get-OfficePdfImage](Get-OfficePdfImage.md)
+Gets or extracts image resources from a PDF.
+
+### [Get-OfficePdfInfo](Get-OfficePdfInfo.md)
+Gets PDF metadata, page information, forms, links, and structural flags.
+
+### [Get-OfficePdfPreflight](Get-OfficePdfPreflight.md)
+Reports whether OfficeIMO.Pdf can read or rewrite a PDF safely.
+
+### [Get-OfficePdfText](Get-OfficePdfText.md)
+Extracts text or Markdown from a PDF.
 
 ### [Get-OfficePowerPoint](Get-OfficePowerPoint.md)
 Loads an existing PowerPoint presentation.
@@ -421,6 +547,9 @@ Gets footnotes from a Word document or section.
 ### [Get-OfficeWordHyperlink](Get-OfficeWordHyperlink.md)
 Gets hyperlinks from a Word document.
 
+### [Get-OfficeWordImage](Get-OfficeWordImage.md)
+Gets images from a Word document, section, or paragraph.
+
 ### [Get-OfficeWordParagraph](Get-OfficeWordParagraph.md)
 Gets paragraphs from a Word document or section.
 
@@ -430,17 +559,26 @@ Gets picture content controls from a Word document.
 ### [Get-OfficeWordRepeatingSection](Get-OfficeWordRepeatingSection.md)
 Gets repeating section content controls from a Word document.
 
-### [Get-OfficeWordText](Get-OfficeWordText.md)
-Gets runs from Word paragraphs.
-
 ### [Get-OfficeWordSection](Get-OfficeWordSection.md)
 Gets sections from a Word document.
+
+### [Get-OfficeWordShape](Get-OfficeWordShape.md)
+Gets shapes from a Word document, section, or paragraph.
+
+### [Get-OfficeWordStatistics](Get-OfficeWordStatistics.md)
+Gets document statistics from a Word document.
 
 ### [Get-OfficeWordTable](Get-OfficeWordTable.md)
 Gets tables from a Word document or section.
 
+### [Get-OfficeWordTableCell](Get-OfficeWordTableCell.md)
+Gets cells from an OfficeIMO Word table.
+
 ### [Get-OfficeWordTableOfContent](Get-OfficeWordTableOfContent.md)
 Gets the table of contents from a Word document.
+
+### [Get-OfficeWordText](Get-OfficeWordText.md)
+Gets text segments from Word paragraphs.
 
 ### [Import-OfficeExcel](Import-OfficeExcel.md)
 Imports rows from an Excel workbook as PowerShell objects.
@@ -460,14 +598,26 @@ Executes a simple mail merge against MERGEFIELD values in a Word document.
 ### [Join-OfficeExcelSheet](Join-OfficeExcelSheet.md)
 Appends or merges rows from one worksheet into another.
 
+### [Join-OfficePdf](Join-OfficePdf.md)
+Joins multiple PDF files into a single PDF.
+
+### [Join-OfficeWordDocument](Join-OfficeWordDocument.md)
+Appends one or more Word documents into a base Word document.
+
 ### [Move-OfficeExcelSheet](Move-OfficeExcelSheet.md)
 Moves a worksheet to a new workbook position.
+
+### [Move-OfficePdfPage](Move-OfficePdfPage.md)
+Moves selected pages before another page and writes a new PDF.
 
 ### [New-OfficeExcel](New-OfficeExcel.md)
 Creates a new Excel workbook using the DSL.
 
 ### [New-OfficeMarkdown](New-OfficeMarkdown.md)
 Creates a Markdown document using a DSL scriptblock.
+
+### [New-OfficePdf](New-OfficePdf.md)
+Creates a PDF document using the OfficeIMO.Pdf composition engine.
 
 ### [New-OfficePowerPoint](New-OfficePowerPoint.md)
 Creates a PowerPoint presentation using the DSL.
@@ -487,6 +637,9 @@ Protects a Word document with a password.
 ### [Remove-OfficeExcelComment](Remove-OfficeExcelComment.md)
 Removes a comment (note) from a worksheet cell.
 
+### [Remove-OfficePdfPage](Remove-OfficePdfPage.md)
+Removes selected pages from a PDF and writes a new PDF.
+
 ### [Remove-OfficePowerPointSlide](Remove-OfficePowerPointSlide.md)
 Removes a slide by index.
 
@@ -498,6 +651,12 @@ Renames a PowerPoint section.
 
 ### [Save-OfficeExcel](Save-OfficeExcel.md)
 Saves an Excel workbook without disposing it.
+
+### [Save-OfficeMarkdown](Save-OfficeMarkdown.md)
+Saves a Markdown document and optionally creates a PDF sidecar.
+
+### [Save-OfficePdf](Save-OfficePdf.md)
+Saves an OfficeIMO.Pdf document.
 
 ### [Save-OfficePowerPoint](Save-OfficePowerPoint.md)
 Saves a presentation to disk.
@@ -528,6 +687,12 @@ Adds or replaces an Excel chart series trendline.
 
 ### [Set-OfficeExcelColumn](Set-OfficeExcelColumn.md)
 Writes values or formatting to a column in the current worksheet.
+
+### [Set-OfficeExcelColumnStyleByHeader](Set-OfficeExcelColumnStyleByHeader.md)
+Applies common number, fill, font, and status styles to a worksheet column resolved by header text.
+
+### [Set-OfficeExcelExecutionPolicy](Set-OfficeExcelExecutionPolicy.md)
+Configures OfficeIMO Excel execution and validation behavior for a workbook.
 
 ### [Set-OfficeExcelFormula](Set-OfficeExcelFormula.md)
 Sets a formula in a worksheet cell.
@@ -586,6 +751,39 @@ Converts cells in a range into external URL hyperlinks.
 ### [Set-OfficeExcelUrlLinksByHeader](Set-OfficeExcelUrlLinksByHeader.md)
 Converts cells under a header into external URL hyperlinks.
 
+### [Set-OfficePdfBackground](Set-OfficePdfBackground.md)
+Sets or clears the generated PDF page background color.
+
+### [Set-OfficePdfBackgroundImage](Set-OfficePdfBackgroundImage.md)
+Sets or clears a generated PDF page background image.
+
+### [Set-OfficePdfCompliance](Set-OfficePdfCompliance.md)
+Sets generated PDF compliance profile and readiness groundwork.
+
+### [Set-OfficePdfFooter](Set-OfficePdfFooter.md)
+Sets running PDF footer text.
+
+### [Set-OfficePdfForm](Set-OfficePdfForm.md)
+Fills and optionally flattens simple AcroForm fields in an existing PDF.
+
+### [Set-OfficePdfHeader](Set-OfficePdfHeader.md)
+Sets running PDF header text.
+
+### [Set-OfficePdfMetadata](Set-OfficePdfMetadata.md)
+Sets PDF document metadata on generated documents or existing PDF files.
+
+### [Set-OfficePdfPage](Set-OfficePdfPage.md)
+Sets page-level PDF properties and writes a new PDF.
+
+### [Set-OfficePdfPageBorder](Set-OfficePdfPageBorder.md)
+Sets or clears the generated PDF page border decoration.
+
+### [Set-OfficePdfPageSetup](Set-OfficePdfPageSetup.md)
+Sets PDF page size, orientation, and margins.
+
+### [Set-OfficePdfTheme](Set-OfficePdfTheme.md)
+Applies an OfficeIMO.Pdf theme preset to a generated PDF document.
+
 ### [Set-OfficePowerPointBackground](Set-OfficePowerPointBackground.md)
 Sets the slide background color or image.
 
@@ -631,8 +829,29 @@ Sets the background for a Word document.
 ### [Set-OfficeWordDocumentProperty](Set-OfficeWordDocumentProperty.md)
 Sets a built-in or custom document property on a Word document.
 
+### [Set-OfficeWordImage](Set-OfficeWordImage.md)
+Updates OfficeIMO Word image sizing, wrapping, crop, and metadata.
+
+### [Set-OfficeWordPageSetup](Set-OfficeWordPageSetup.md)
+Sets page setup options on Word sections.
+
+### [Set-OfficeWordParagraphStyle](Set-OfficeWordParagraphStyle.md)
+Updates paragraph style, spacing, indentation, and pagination hints.
+
+### [Set-OfficeWordShape](Set-OfficeWordShape.md)
+Updates OfficeIMO Word shape metadata, sizing, and colors.
+
+### [Set-OfficeWordTableCell](Set-OfficeWordTableCell.md)
+Updates OfficeIMO Word table-cell layout and merge settings.
+
 ### [Set-OfficeWordTableOfContent](Set-OfficeWordTableOfContent.md)
 Sets properties on a table of contents in a Word document.
+
+### [Set-OfficeWordTextStyle](Set-OfficeWordTextStyle.md)
+Updates styling on Word text.
+
+### [Split-OfficePdf](Split-OfficePdf.md)
+Splits a PDF into one file per page.
 
 ### [Unprotect-OfficeExcelSheet](Unprotect-OfficeExcelSheet.md)
 Removes worksheet protection.

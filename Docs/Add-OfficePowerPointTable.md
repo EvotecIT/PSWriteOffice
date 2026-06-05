@@ -41,7 +41,7 @@ Column count for an empty table.
 Type: Int32
 Parameter Sets: Size
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -57,7 +57,7 @@ Source objects to convert into table rows.
 Type: Object[]
 Parameter Sets: Data
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -73,7 +73,7 @@ Optional header order to apply to the table.
 Type: String[]
 Parameter Sets: Data
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -89,7 +89,7 @@ Table height in points.
 Type: Double
 Parameter Sets: Data, Size
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -105,7 +105,7 @@ Skip writing header row.
 Type: SwitchParameter
 Parameter Sets: Data
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -121,7 +121,7 @@ Row count for an empty table.
 Type: Int32
 Parameter Sets: Size
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -137,7 +137,7 @@ Target slide that will receive the table (optional inside DSL).
 Type: PowerPointSlide
 Parameter Sets: Data, Size
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 0
@@ -153,7 +153,7 @@ Optional table style ID (GUID string).
 Type: String
 Parameter Sets: Data, Size
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -169,7 +169,7 @@ Table width in points.
 Type: Double
 Parameter Sets: Data, Size
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -185,7 +185,7 @@ Left offset (in points) from the slide origin.
 Type: Double
 Parameter Sets: Data, Size
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -201,7 +201,7 @@ Top offset (in points) from the slide origin.
 Type: Double
 Parameter Sets: Data, Size
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -224,4 +224,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

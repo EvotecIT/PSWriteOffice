@@ -60,7 +60,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: DocumentUsedRange, DocumentTable, DocumentRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -76,7 +76,7 @@ Header text to locate.
 Type: String
 Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -92,7 +92,7 @@ Skip hyperlink styling (blue + underline).
 Type: SwitchParameter
 Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -108,7 +108,7 @@ Emit the worksheet after creating links.
 Type: SwitchParameter
 Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -124,7 +124,7 @@ Restrict linking to a specific A1 range whose first row contains headers.
 Type: String
 Parameter Sets: DocumentRange, ContextRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -140,7 +140,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: DocumentUsedRange, DocumentTable, DocumentRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -156,7 +156,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: DocumentUsedRange, DocumentTable, DocumentRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -172,7 +172,7 @@ Restrict linking to a named table.
 Type: String
 Parameter Sets: DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -188,7 +188,7 @@ Optional mapping from cell text to display text.
 Type: ScriptBlock
 Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -204,7 +204,7 @@ Maps the cell text to a URL.
 Type: ScriptBlock
 Parameter Sets: ContextUsedRange, DocumentUsedRange, DocumentTable, DocumentRange, ContextTable, ContextRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -227,4 +227,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

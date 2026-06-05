@@ -35,7 +35,7 @@ Hashtable or object whose properties map to MERGEFIELD names.
 Type: Object
 Parameter Sets: __AllParameterSets
 Aliases: Values
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -51,7 +51,7 @@ Document to update when provided explicitly.
 Type: WordDocument
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -67,7 +67,7 @@ Emit the updated document.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -83,7 +83,7 @@ Preserve field codes and only update displayed field text.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -106,4 +106,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

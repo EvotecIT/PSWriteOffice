@@ -42,7 +42,7 @@ Optional placeholder index.
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -58,7 +58,7 @@ Placeholder type to filter on.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Type
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -74,7 +74,7 @@ Slide to inspect (optional inside DSL).
 Type: PowerPointSlide
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -97,4 +97,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

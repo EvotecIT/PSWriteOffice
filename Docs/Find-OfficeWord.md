@@ -50,7 +50,7 @@ Emit the full WordFind result for regex searches.
 Type: SwitchParameter
 Parameter Sets: PathRegex, DocumentRegex
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -66,7 +66,7 @@ Use case-sensitive matching.
 Type: SwitchParameter
 Parameter Sets: PathText, PathRegex, DocumentText, DocumentRegex
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -82,7 +82,7 @@ Word document to search.
 Type: WordDocument
 Parameter Sets: DocumentText, DocumentRegex
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -98,7 +98,7 @@ Path to the .docx file.
 Type: String
 Parameter Sets: PathText, PathRegex
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -114,7 +114,7 @@ Regular expression pattern to find.
 Type: String
 Parameter Sets: PathRegex, DocumentRegex
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 1
@@ -130,7 +130,7 @@ Text to find.
 Type: String
 Parameter Sets: PathText, DocumentText
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 1
@@ -154,4 +154,3 @@ OfficeIMO.Word.WordFind`
 ## RELATED LINKS
 
 - None
-

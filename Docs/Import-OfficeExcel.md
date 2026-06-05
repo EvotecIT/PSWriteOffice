@@ -1,29 +1,297 @@
+---
+external help file: PSWriteOffice-help.xml
+Module Name: PSWriteOffice
+online version: https://github.com/EvotecIT/PSWriteOffice
+schema: 2.0.0
+---
 # Import-OfficeExcel
+## SYNOPSIS
+Imports rows from an Excel workbook as PowerShell objects.
 
-Imports rows from an Excel workbook as PowerShell objects using the OfficeIMO reader pipeline.
-
-## Synopsis
-
+## SYNTAX
+### Path (Default)
 ```powershell
-Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data
+Import-OfficeExcel [-Path] <string> [-WorksheetName <string>] [-SheetIndex <int>] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
 ```
 
-## Description
-
-`Import-OfficeExcel` reads the used range from a worksheet by default and emits one object per row. Use `-Range` for an explicit A1 range or provide coordinate bounds with `-StartRow`, `-EndRow`, `-StartColumn`, and `-EndColumn`.
-
-The first row is treated as headers unless `-NoHeader` is specified.
-
-## Examples
-
+### Uri
 ```powershell
-Import-OfficeExcel -Path .\Sales.xlsx -WorksheetName Data
+Import-OfficeExcel [-Uri] <uri> [-AllowHttp] [-WorksheetName <string>] [-SheetIndex <int>] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
 ```
 
+### Document
 ```powershell
-Import-OfficeExcel -Path .\Sales.xlsx -WorksheetName Data -Range 'A1:D20' -AsHashtable
+Import-OfficeExcel -Document <ExcelDocument> [-WorksheetName <string>] [-SheetIndex <int>] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
 ```
 
+## DESCRIPTION
+Provides an ImportExcel-style read command over the OfficeIMO reader pipeline.
+
+## EXAMPLES
+
+### EXAMPLE 1
 ```powershell
-Import-OfficeExcel -Path .\Sales.xlsx -WorksheetName Data -StartRow 1 -EndRow 20 -StartColumn 1 -EndColumn 4 -AsDataTable
+PS> Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data
 ```
+
+Reads the used range on the Data worksheet and emits PSCustomObjects.
+
+## PARAMETERS
+
+### -AllowHttp
+Allow HTTP workbook downloads in addition to HTTPS.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Uri
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AsDataTable
+Emit a DataTable instead of enumerating row objects.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AsHashtable
+Emit rows as hashtables instead of PSCustomObjects.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Document
+Workbook document to import from.
+
+```yaml
+Type: ExcelDocument
+Parameter Sets: Document
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -EndColumn
+Ending column for an explicit rectangular range.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -EndRow
+Ending row for an explicit rectangular range.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoHeader
+Treat all rows as data and generate column names instead of using the first row as headers.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NumericAsDecimal
+Prefer decimals instead of doubles for numeric values.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Path
+Workbook path to import.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: FilePath, InputPath, FullName
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: True
+```
+
+### -Range
+Optional A1 range to read. When omitted, the used range is imported.
+
+```yaml
+Type: String
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: True
+```
+
+### -SheetIndex
+Zero-based worksheet index to read.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: True
+```
+
+### -StartColumn
+Starting column for an explicit rectangular range.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -StartRow
+Starting row for an explicit rectangular range.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Uri
+Remote workbook URI to import.
+
+```yaml
+Type: Uri
+Parameter Sets: Uri
+Aliases: Url
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: True
+```
+
+### -WorksheetName
+Worksheet name to read; defaults to the first sheet.
+
+```yaml
+Type: String
+Parameter Sets: Path, Uri, Document
+Aliases: Sheet
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `System.String
+System.Uri
+OfficeIMO.Excel.ExcelDocument
+System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]`
+
+## OUTPUTS
+
+- `System.Object`
+
+## RELATED LINKS
+
+- None

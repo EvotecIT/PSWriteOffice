@@ -45,7 +45,7 @@ Include notes text in the replacement operation.
 Type: SwitchParameter
 Parameter Sets: Auto, Presentation, Slide
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -61,7 +61,7 @@ Include table cells in the replacement operation.
 Type: Boolean
 Parameter Sets: Auto, Presentation, Slide
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -77,7 +77,7 @@ Replacement text.
 Type: String
 Parameter Sets: Auto, Presentation, Slide
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -93,7 +93,7 @@ Text to find.
 Type: String
 Parameter Sets: Auto, Presentation, Slide
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -109,7 +109,7 @@ Presentation to update.
 Type: PowerPointPresentation
 Parameter Sets: Presentation
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -125,7 +125,7 @@ Slide to update.
 Type: PowerPointSlide
 Parameter Sets: Slide
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -149,4 +149,3 @@ OfficeIMO.PowerPoint.PowerPointSlide`
 ## RELATED LINKS
 
 - None
-

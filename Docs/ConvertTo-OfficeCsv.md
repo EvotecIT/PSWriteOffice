@@ -58,7 +58,7 @@ Culture used for value formatting.
 Type: CultureInfo
 Parameter Sets: InputObject, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -74,7 +74,7 @@ Field delimiter character.
 Type: Char
 Parameter Sets: InputObject, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -90,7 +90,7 @@ CSV document to serialize.
 Type: CsvDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -106,7 +106,7 @@ Encoding used when writing files.
 Type: Encoding
 Parameter Sets: InputObject, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -122,7 +122,7 @@ Include the header row in the output.
 Type: Boolean
 Parameter Sets: InputObject, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -138,7 +138,7 @@ Objects to convert into CSV rows.
 Type: Object
 Parameter Sets: InputObject
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -154,7 +154,7 @@ Override the newline sequence.
 Type: String
 Parameter Sets: InputObject, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -170,7 +170,7 @@ Optional output path for the CSV file.
 Type: String
 Parameter Sets: InputObject, Document
 Aliases: OutPath
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -186,7 +186,7 @@ Emit a FileInfo when saving to disk.
 Type: SwitchParameter
 Parameter Sets: InputObject, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -211,4 +211,3 @@ System.IO.FileInfo`
 ## RELATED LINKS
 
 - None
-

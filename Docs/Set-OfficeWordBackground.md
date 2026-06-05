@@ -40,7 +40,7 @@ Background color in hex format (#RRGGBB or RRGGBB).
 Type: String
 Parameter Sets: Color
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -56,7 +56,7 @@ Document to update when provided explicitly.
 Type: WordDocument
 Parameter Sets: Color, Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Optional background image height in pixels.
 Type: Nullable`1
 Parameter Sets: Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Path to the background image.
 Type: String
 Parameter Sets: Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -104,7 +104,7 @@ Emit the updated document.
 Type: SwitchParameter
 Parameter Sets: Color, Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -120,7 +120,7 @@ Optional background image width in pixels.
 Type: Nullable`1
 Parameter Sets: Image
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,4 +143,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-
