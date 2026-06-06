@@ -27,7 +27,7 @@ Clears generated PDF page background shapes.
 ### EXAMPLE 1
 ```powershell
 PS> $pdf = New-OfficePdf {
-                Add-OfficePdfBackgroundShape -Shape Rectangle -Color '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120
+                Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120
                 Add-OfficePdfHeading -Text 'Clean variant'
             } -NoSave
             $pdf | Clear-OfficePdfBackgroundShape | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf

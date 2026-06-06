@@ -9,12 +9,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <example>
 ///   <summary>Save, validate, and close an open workbook.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$workbook = New-OfficeExcel -Path .\report.xlsx -PassThru {
+///   <code>New-OfficeExcel -Path .\report.xlsx {
 ///     Add-OfficeExcelSheet -Name Data {
 ///         Set-OfficeExcelRow -Row 1 -Values 'Region', 'Revenue'
 ///         Set-OfficeExcelRow -Row 2 -Values 'EMEA', 98000
 ///     }
 /// }
+/// $workbook = Get-OfficeExcel -Path .\report.xlsx
 /// $workbook | Close-OfficeExcel -Save -Path .\report-final.xlsx -SafePreflight -ValidateOpenXml</code>
 ///   <para>Saves pending changes through OfficeIMO's normal save path, validates the package, and releases the workbook.</para>
 /// </example>

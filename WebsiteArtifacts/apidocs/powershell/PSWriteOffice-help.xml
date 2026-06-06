@@ -6329,10 +6329,17 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportCallout -Body 'Value'</dev:code>
+        <maml:title>Add a warning callout to a report sheet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportCallout -Kind Warning -Title 'Manual validation' -Body 'Open the workbook in desktop Excel before publishing pivot-heavy reports.'&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Renders a composer callout block using the current report theme.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6450,10 +6457,17 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportKpiRow -Data 'Value'</dev:code>
+        <maml:title>Add three KPI values to a summary sheet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Renders PowerShell key/value data as a KPI row through the OfficeIMO sheet composer.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6643,10 +6657,21 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportLegend -Headers @('Value') -Rows @('Value')</dev:code>
+        <maml:title>Add a status legend with colored first-column values.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$legendRows = @(&#xD;
+                [pscustomobject]@{ Status = 'Ready'; Meaning = 'Validated and ready' }&#xD;
+                [pscustomobject]@{ Status = 'Review'; Meaning = 'Needs owner review' }&#xD;
+            )&#xD;
+            New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportLegend -Title 'Status legend' -Headers Status, Meaning -Rows $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Renders legend rows and applies optional fill colors keyed by the first column.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6716,10 +6741,18 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportParagraph -Text 'Value'</dev:code>
+        <maml:title>Add narrative text below a title block.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportTitle -Title 'Operational Summary'&#xD;
+                    Add-OfficeExcelReportParagraph -Text 'This workbook was generated from the validated source data.'&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds prose to an OfficeIMO-composed Excel report sheet.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6789,10 +6822,18 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportSection -Text 'Value'</dev:code>
+        <maml:title>Add a section and paragraph to a report sheet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportSection -Text 'Service health'&#xD;
+                    Add-OfficeExcelReportParagraph -Text 'All monitored services are reporting.'&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Uses the report composer to add a section heading and narrative text.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -7087,10 +7128,19 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportSpacer -Rows 1</dev:code>
+        <maml:title>Add spacing between report blocks.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportTitle -Title 'Operational Summary'&#xD;
+                    Add-OfficeExcelReportSpacer -Rows 2&#xD;
+                    Add-OfficeExcelReportSection -Text 'Details'&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Advances the composer cursor before adding the next report block.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -7304,10 +7354,21 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportTable -Data @('Value')</dev:code>
+        <maml:title>Add a styled report table from objects.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$rows = @(&#xD;
+                [pscustomobject]@{ Area = 'PDF'; Status = 'Ready' }&#xD;
+                [pscustomobject]@{ Area = 'Word'; Status = 'Review' }&#xD;
+            )&#xD;
+            New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportTable -Data $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Renders object rows as a formatted Excel table through the sheet composer.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -31213,9 +31274,9 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </maml:introduction>
         <dev:code>New-OfficeWord -Path .\ExecutiveReport.docx {&#xD;
                 Add-OfficeWordTableOfContent -Style Template1&#xD;
-                Add-OfficeWordHeading -Text 'Executive summary' -Level 1&#xD;
+                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1&#xD;
                 Add-OfficeWordParagraph -Text 'Summary text'&#xD;
-                Add-OfficeWordHeading -Text 'Appendix' -Level 1&#xD;
+                Add-OfficeWordParagraph -Text 'Appendix' -Style Heading1&#xD;
                 Add-OfficeWordParagraph -Text 'Supporting details'&#xD;
                 Update-OfficeWordTableOfContent&#xD;
             }</dev:code>
@@ -32101,7 +32162,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>$pdf = New-OfficePdf {&#xD;
-                Add-OfficePdfBackgroundShape -Shape Rectangle -Color '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120&#xD;
+                Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120&#xD;
                 Add-OfficePdfHeading -Text 'Clean variant'&#xD;
             } -NoSave&#xD;
             $pdf | Clear-OfficePdfBackgroundShape | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf</dev:code>
@@ -32348,12 +32409,13 @@ OfficeIMO.Word.WordParagraph</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$workbook = New-OfficeExcel -Path .\report.xlsx -PassThru {&#xD;
+        <dev:code>New-OfficeExcel -Path .\report.xlsx {&#xD;
                 Add-OfficeExcelSheet -Name Data {&#xD;
                     Set-OfficeExcelRow -Row 1 -Values 'Region', 'Revenue'&#xD;
                     Set-OfficeExcelRow -Row 2 -Values 'EMEA', 98000&#xD;
                 }&#xD;
             }&#xD;
+            $workbook = Get-OfficeExcel -Path .\report.xlsx&#xD;
             $workbook | Close-OfficeExcel -Save -Path .\report-final.xlsx -SafePreflight -ValidateOpenXml</dev:code>
         <dev:remarks>
           <maml:para>Saves pending changes through OfficeIMO's normal save path, validates the package, and releases the workbook.</maml:para>
@@ -51937,7 +51999,7 @@ OfficeIMO.Word.WordDocument</maml:name>
           <maml:name>System.String&#xD;
 System.Uri&#xD;
 OfficeIMO.Excel.ExcelDocument&#xD;
-System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]</maml:name>
+System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -79666,7 +79728,7 @@ OfficeIMO.Word.WordDocument</maml:name>
         <dev:code>New-OfficeWord -Path .\Report.docx {&#xD;
                 Add-OfficeWordTableOfContent&#xD;
                 Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries yet'&#xD;
-                Add-OfficeWordHeading -Text 'Executive summary' -Level 1&#xD;
+                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1&#xD;
                 Update-OfficeWordTableOfContent&#xD;
             }</dev:code>
         <dev:remarks>
@@ -81446,7 +81508,7 @@ OfficeIMO.Word.WordDocument</maml:name>
         </maml:introduction>
         <dev:code>New-OfficeWord -Path .\ExecutiveReport.docx {&#xD;
                 Add-OfficeWordTableOfContent&#xD;
-                Add-OfficeWordHeading -Text 'Executive summary' -Level 1&#xD;
+                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1&#xD;
                 Add-OfficeWordParagraph -Text 'Summary text'&#xD;
                 Update-OfficeWordTableOfContent&#xD;
             }</dev:code>

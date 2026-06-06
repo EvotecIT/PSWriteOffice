@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>New-OfficeWord -Path .\Report.docx {
 ///     Add-OfficeWordTableOfContent
 ///     Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries yet'
-///     Add-OfficeWordHeading -Text 'Executive summary' -Level 1
+///     Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
 ///     Update-OfficeWordTableOfContent
 /// }</code>
 ///   <para>Updates TOC display text, adds heading content, and marks the TOC for refresh.</para>

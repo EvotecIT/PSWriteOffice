@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficeWord -Path .\ExecutiveReport.docx {
 ///     Add-OfficeWordTableOfContent
-///     Add-OfficeWordHeading -Text 'Executive summary' -Level 1
+///     Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
 ///     Add-OfficeWordParagraph -Text 'Summary text'
 ///     Update-OfficeWordTableOfContent
 /// }</code>

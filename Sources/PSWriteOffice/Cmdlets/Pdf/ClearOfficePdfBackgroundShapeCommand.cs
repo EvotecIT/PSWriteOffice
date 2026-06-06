@@ -9,7 +9,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <summary>Remove background shapes before saving a variant.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$pdf = New-OfficePdf {
-///     Add-OfficePdfBackgroundShape -Shape Rectangle -Color '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120
+///     Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120
 ///     Add-OfficePdfHeading -Text 'Clean variant'
 /// } -NoSave
 /// $pdf | Clear-OfficePdfBackgroundShape | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf</code>

@@ -31,48 +31,79 @@ function Get-XmlExampleMetric {
         [string] $DocsRoot
     )
 
-    $text = Get-Content -LiteralPath $SourcePath -Raw
-    if ($text -notmatch '\[Cmdlet\(') {
-        return
-    }
-
-    $classMatch = [regex]::Match($text, 'class\s+([A-Za-z0-9_]+)Command\b')
-    if (-not $classMatch.Success) {
-        return
-    }
-
-    $commandName = ConvertTo-CommandName -ClassBaseName $classMatch.Groups[1].Value
-    $category = Split-Path (Split-Path $SourcePath -Parent) -Leaf
-    $docPath = Join-Path $DocsRoot ($commandName + '.md')
-    $examples = [regex]::Matches($text, '(?s)///\s*<example>(.*?)///\s*</example>')
-    $codeLineCounts = [System.Collections.Generic.List[int]]::new()
-    $hasContextualExample = $false
-
-    foreach ($example in $examples) {
-        $body = $example.Groups[1].Value
-        $codeMatches = [regex]::Matches($body, '(?s)<code>(.*?)</code>')
-
-        foreach ($codeMatch in $codeMatches) {
-            $code = [System.Net.WebUtility]::HtmlDecode($codeMatch.Groups[1].Value).Trim()
-            $lineCount = @($code -split "`r?`n" | Where-Object { $_.Trim().Length -gt 0 }).Count
-            $codeLineCounts.Add($lineCount)
-
-            if ($lineCount -ge 2 -or $code -match '\$\w+\s*=|\{|\|') {
-                $hasContextualExample = $true
+    $lines = Get-Content -LiteralPath $SourcePath
+    $cmdletLineIndexes = @(
+        for ($lineIndex = 0; $lineIndex -lt $lines.Count; $lineIndex++) {
+            if ($lines[$lineIndex] -match '^\s*\[Cmdlet\(') {
+                $lineIndex
             }
         }
+    )
+
+    if ($cmdletLineIndexes.Count -eq 0) {
+        return
     }
 
-    [pscustomobject]@{
-        Category               = $category
-        Command                = $commandName
-        Source                 = [System.IO.Path]::GetRelativePath($RepositoryRoot, $SourcePath)
-        HasDoc                 = Test-Path -LiteralPath $docPath -PathType Leaf
-        ExampleCount           = $examples.Count
-        MultilineExampleCount  = @($codeLineCounts | Where-Object { $_ -ge 3 }).Count
-        MaxCodeLines           = if ($codeLineCounts.Count -gt 0) { ($codeLineCounts | Measure-Object -Maximum).Maximum } else { 0 }
-        HasContextualExample   = $hasContextualExample
-        NeedsXmlExampleWork    = $examples.Count -eq 0 -or -not $hasContextualExample
+    $category = Split-Path (Split-Path $SourcePath -Parent) -Leaf
+
+    foreach ($cmdletLineIndex in $cmdletLineIndexes) {
+        $className = $null
+        $classSearchEnd = [Math]::Min($cmdletLineIndex + 12, $lines.Count - 1)
+        for ($lineIndex = $cmdletLineIndex + 1; $lineIndex -le $classSearchEnd; $lineIndex++) {
+            if ($lines[$lineIndex] -match 'public\s+(?:sealed\s+)?class\s+([A-Za-z0-9_]+)Command\b') {
+                $className = $Matches[1]
+                break
+            }
+        }
+
+        if (-not $className) {
+            continue
+        }
+
+        $commentEndIndex = $cmdletLineIndex - 1
+        $commentStartIndex = $commentEndIndex
+        while ($commentStartIndex -ge 0 -and $lines[$commentStartIndex] -match '^\s*///') {
+            $commentStartIndex--
+        }
+
+        $comments = if ($commentStartIndex -lt $commentEndIndex) {
+            $lines[($commentStartIndex + 1)..$commentEndIndex] -join "`n"
+        } else {
+            ''
+        }
+
+        $commandName = ConvertTo-CommandName -ClassBaseName $className
+        $docPath = Join-Path $DocsRoot ($commandName + '.md')
+        $examples = [regex]::Matches($comments, '(?s)///\s*<example>(.*?)///\s*</example>')
+        $codeLineCounts = [System.Collections.Generic.List[int]]::new()
+        $hasContextualExample = $false
+
+        foreach ($example in $examples) {
+            $body = $example.Groups[1].Value
+            $codeMatches = [regex]::Matches($body, '(?s)<code>(.*?)</code>')
+
+            foreach ($codeMatch in $codeMatches) {
+                $code = [System.Net.WebUtility]::HtmlDecode($codeMatch.Groups[1].Value).Trim()
+                $lineCount = @($code -split "`r?`n" | Where-Object { $_.Trim().Length -gt 0 }).Count
+                $codeLineCounts.Add($lineCount)
+
+                if ($lineCount -ge 2 -or $code -match '\$\w+\s*=|\{|\|') {
+                    $hasContextualExample = $true
+                }
+            }
+        }
+
+        [pscustomobject]@{
+            Category               = $category
+            Command                = $commandName
+            Source                 = [System.IO.Path]::GetRelativePath($RepositoryRoot, $SourcePath)
+            HasDoc                 = Test-Path -LiteralPath $docPath -PathType Leaf
+            ExampleCount           = $examples.Count
+            MultilineExampleCount  = @($codeLineCounts | Where-Object { $_ -ge 3 }).Count
+            MaxCodeLines           = if ($codeLineCounts.Count -gt 0) { ($codeLineCounts | Measure-Object -Maximum).Maximum } else { 0 }
+            HasContextualExample   = $hasContextualExample
+            NeedsXmlExampleWork    = $examples.Count -eq 0 -or -not $hasContextualExample
+        }
     }
 }
 
@@ -103,7 +134,7 @@ if ($Summary.IsPresent) {
                 WithMultilineExamples = @($group | Where-Object { $_.MultilineExampleCount -gt 0 }).Count
             }
         }
-} else {
+} elseif (-not $RequireExamples.IsPresent) {
     $metrics
 }
 

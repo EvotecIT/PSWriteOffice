@@ -21,12 +21,13 @@ Convenience wrapper so scripts do not need to call Save or Dispose directly.
 
 ### EXAMPLE 1
 ```powershell
-PS> $workbook = New-OfficeExcel -Path .\report.xlsx -PassThru {
+PS> New-OfficeExcel -Path .\report.xlsx {
                 Add-OfficeExcelSheet -Name Data {
                     Set-OfficeExcelRow -Row 1 -Values 'Region', 'Revenue'
                     Set-OfficeExcelRow -Row 2 -Values 'EMEA', 98000
                 }
             }
+            $workbook = Get-OfficeExcel -Path .\report.xlsx
             $workbook | Close-OfficeExcel -Save -Path .\report-final.xlsx -SafePreflight -ValidateOpenXml
 ```
 

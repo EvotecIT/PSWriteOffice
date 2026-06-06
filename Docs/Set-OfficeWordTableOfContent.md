@@ -29,7 +29,7 @@ Sets properties on a table of contents in a Word document.
 PS> New-OfficeWord -Path .\Report.docx {
                 Add-OfficeWordTableOfContent
                 Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries yet'
-                Add-OfficeWordHeading -Text 'Executive summary' -Level 1
+                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
                 Update-OfficeWordTableOfContent
             }
 ```
