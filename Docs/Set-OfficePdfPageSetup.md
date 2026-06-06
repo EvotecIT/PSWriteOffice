@@ -26,15 +26,14 @@ Sets PDF page size, orientation, and margins.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficePdfPageSetup -Bottom 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfPageSetup.pdf {
+                Set-OfficePdfPageSetup -PageSize A4 -Margin 42
+                Add-OfficePdfHeading -Text 'A4 report'
+                Add-OfficePdfParagraph -Text 'The report uses custom margins.'
+            }
 ```
 
-
-### EXAMPLE 2
-```powershell
-Set-OfficePdfPageSetup -Document 'Value'
-```
-
+Applies page setup before adding generated PDF content.
 
 ## PARAMETERS
 

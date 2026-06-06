@@ -10,8 +10,13 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Insert an image.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficePowerPointImage -Slide $slide -Path .\logo.png -X 40 -Y 60 -Width 200 -Height 120</code>
-///   <para>Adds a picture to the slide.</para>
+///   <code>$image = '.\Tests\Assets\CellImage.png'
+/// New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImage.pptx {
+///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Evidence'
+///     Add-OfficePowerPointImage -Slide $slide -Path $image -X 60 -Y 130 -Width 180 -Height 120
+/// }</code>
+///   <para>Adds a picture to a generated slide.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointImage")]
 [Alias("PptImage")]

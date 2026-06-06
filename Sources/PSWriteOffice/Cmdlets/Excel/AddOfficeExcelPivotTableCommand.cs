@@ -12,10 +12,20 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Adds a pivot table to a worksheet.</summary>
 /// <example>
-///   <summary>Create a basic pivot table.</summary>
+///   <summary>Create a pivot table from a report data sheet.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficeExcelPivotTable -SourceRange 'A1:D200' -DestinationCell 'F2' -RowField 'Region' -DataField 'Sales'</code>
-///   <para>Creates a pivot table in F2 using Region as rows and Sales as the data field.</para>
+///   <code>$rows = @(
+///     [pscustomobject]@{ Region = 'North America'; Product = 'Standard'; Sales = 125000 }
+///     [pscustomobject]@{ Region = 'EMEA'; Product = 'Standard'; Sales = 98000 }
+///     [pscustomobject]@{ Region = 'APAC'; Product = 'Premium'; Sales = 143000 }
+/// )
+/// New-OfficeExcel -Path .\SalesPivot.xlsx {
+///     Add-OfficeExcelSheet -Name Data {
+///         Add-OfficeExcelTable -Data $rows -TableName Sales -AutoFit
+///         Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E2' -Name 'SalesByRegion' -RowField Region -ColumnField Product -DataField Sales -DataFunction Sum -PivotStyle PivotStyleMedium9
+///     }
+/// }</code>
+///   <para>Writes source rows to a worksheet and creates a pivot table using the existing OfficeIMO pivot support.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelPivotTable", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelPivotTable")]

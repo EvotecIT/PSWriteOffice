@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets checkbox content controls from a Word document.</summary>
 /// <example>
-///   <summary>List all checkboxes.</summary>
+///   <summary>Review unchecked approval boxes.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordCheckBox -Path .\Report.docx</code>
-///   <para>Returns all checkbox content controls in the document.</para>
+///   <code>$openItems = Get-OfficeWordCheckBox -Path .\Report.docx -Tag 'approval-*' -Unchecked
+/// $openItems |
+///     Select-Object -Property Alias, Tag, IsChecked |
+///     Format-Table -AutoSize</code>
+///   <para>Finds unchecked approval checkboxes by tag so a review workflow can show what is still pending.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordCheckBox", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordCheckBoxes")]

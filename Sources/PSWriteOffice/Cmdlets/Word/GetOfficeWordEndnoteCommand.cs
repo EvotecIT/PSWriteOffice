@@ -9,6 +9,15 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets endnotes from a Word document or section.</summary>
+/// <example>
+///   <summary>Export endnotes for editorial review.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$endnotes = Get-OfficeWordEndnote -Path .\ResearchReport.docx
+/// $endnotes |
+///     Select-Object -Property Kind, ReferenceId, ParentText, Text |
+///     Export-Csv -Path .\Endnotes.csv -NoTypeInformation</code>
+///   <para>Reads endnotes from the document and exports the PowerShell-friendly note snapshot.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordEndnote", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordEndnotes")]
 [OutputType(typeof(WordNoteInfo))]

@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets combo box content controls from a Word document.</summary>
 /// <example>
-///   <summary>List combo box controls.</summary>
+///   <summary>Audit combo box controls in a template.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordComboBox -Path .\Report.docx</code>
-///   <para>Returns all combo box controls in the document.</para>
+///   <code>$controls = Get-OfficeWordComboBox -Path .\Template.docx -Alias 'Owner*'
+/// $controls |
+///     Select-Object -Property Alias, Tag |
+///     Format-Table -AutoSize</code>
+///   <para>Filters combo box content controls so template owners can verify the expected owner fields exist.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordComboBox", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordComboBoxes")]

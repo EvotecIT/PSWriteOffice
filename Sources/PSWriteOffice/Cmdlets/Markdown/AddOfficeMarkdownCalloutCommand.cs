@@ -6,10 +6,14 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown callout block.</summary>
 /// <example>
-///   <summary>Add a note callout.</summary>
+///   <summary>Add release callouts to a Markdown report.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownCallout -Kind 'note' -Title 'Remember' -Body 'Update the metrics.'</code>
-///   <para>Appends a callout block to the document.</para>
+///   <code>New-OfficeMarkdown -Path .\ReleaseNotes.md {
+///     Add-OfficeMarkdownHeading -Level 1 -Text 'Release notes'
+///     Add-OfficeMarkdownCallout -Kind 'note' -Title 'Validation' -Body 'Artifacts were generated from deterministic example data.'
+///     Add-OfficeMarkdownCallout -Kind 'warning' -Title 'Manual step' -Body 'Open the workbook in desktop Excel before publishing pivots.'
+/// }</code>
+///   <para>Appends callout blocks while composing a Markdown report.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownCallout", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownCallout")]

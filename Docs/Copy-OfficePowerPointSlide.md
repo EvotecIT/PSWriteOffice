@@ -21,10 +21,15 @@ Uses OfficeIMO slide duplication so charts, notes, and shapes are preserved.
 
 ### EXAMPLE 1
 ```powershell
-PS> Copy-OfficePowerPointSlide -Presentation $ppt -Index 0
+PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCopySlide.pptx {
+                $slide = Add-OfficePowerPointSlide -Layout 1
+                Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Original'
+                $copy = Copy-OfficePowerPointSlide -Index 0
+                Set-OfficePowerPointSlideTitle -Slide $copy -Title 'Copied appendix'
+            }
 ```
 
-Creates a duplicate of slide 1 and inserts it at position 2.
+Duplicates a slide and updates the copied slide title.
 
 ## PARAMETERS
 

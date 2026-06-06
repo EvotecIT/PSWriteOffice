@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets structured content controls from a Word document.</summary>
 /// <example>
-///   <summary>List all content controls.</summary>
+///   <summary>Inventory content controls by tag.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordContentControl -Path .\Report.docx</code>
-///   <para>Returns all structured document tags in the document.</para>
+///   <code>$controls = Get-OfficeWordContentControl -Path .\Template.docx -Tag 'report-*'
+/// $controls |
+///     Group-Object -Property Tag |
+///     Select-Object -Property Name, Count</code>
+///   <para>Returns structured document tags matching the template tag convention and summarizes their counts.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordContentControl", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordContentControls")]

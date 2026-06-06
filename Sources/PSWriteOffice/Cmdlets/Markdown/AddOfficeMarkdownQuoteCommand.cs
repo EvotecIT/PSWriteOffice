@@ -6,10 +6,14 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown block quote.</summary>
 /// <example>
-///   <summary>Add a quote block.</summary>
+///   <summary>Add an executive takeaway quote.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownQuote -Text 'Key takeaway goes here.'</code>
-///   <para>Appends a quote block to the document.</para>
+///   <code>New-OfficeMarkdown -Path .\ExecutiveSummary.md {
+///     Add-OfficeMarkdownHeading -Level 1 -Text 'Executive summary'
+///     Add-OfficeMarkdownQuote -Text 'The release is ready when examples, generated docs, and artifact readback all agree.'
+///     Add-OfficeMarkdownParagraph -Text 'Detailed validation follows.'
+/// }</code>
+///   <para>Appends a quote block to the current Markdown document.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownQuote", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownQuote")]

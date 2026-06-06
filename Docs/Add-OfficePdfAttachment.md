@@ -26,15 +26,15 @@ Adds an embedded file attachment to a generated PDF document.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfAttachment -Path 'C:\Path'
+PS> $dataPath = '.\Examples\Documents\ServiceData.json'
+            Set-Content -Path $dataPath -Value '{ "service": "Directory", "status": "Healthy" }'
+            New-OfficePdf -Path .\Examples\Documents\PdfWithAttachment.pdf {
+                Add-OfficePdfHeading -Text 'Service report'
+                Add-OfficePdfAttachment -Path $dataPath -Name 'service-data.json' -MimeType 'application/json' -Description 'Source data used by the report.'
+            }
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfAttachment -Document 'Value'
-```
-
+Embeds a supporting JSON file in the generated PDF.
 
 ## PARAMETERS
 

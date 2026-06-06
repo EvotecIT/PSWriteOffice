@@ -11,8 +11,11 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Import the first slide from another deck.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Import-OfficePowerPointSlide -Presentation $target -SourcePath .\source.pptx -SourceIndex 0</code>
-///   <para>Copies the first slide from source.pptx into the target presentation.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImportTarget.pptx {
+///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Target deck'
+///     Import-OfficePowerPointSlide -SourcePath .\Examples\Documents\SourceDeck.pptx -SourceIndex 0 -InsertAt 1
+/// }</code>
+///   <para>Imports the first slide from another deck into the target presentation.</para>
 /// </example>
 [Cmdlet(VerbsData.Import, "OfficePowerPointSlide", DefaultParameterSetName = ParameterSetSourcePresentation)]
 [OutputType(typeof(PowerPointSlide))]

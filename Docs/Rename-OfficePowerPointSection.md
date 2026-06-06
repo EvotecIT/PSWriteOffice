@@ -21,10 +21,13 @@ Renames a PowerPoint section.
 
 ### EXAMPLE 1
 ```powershell
-PS> Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'
+PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointRenameSection.pptx
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
+            Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 0 | Out-Null
+            Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive' -PassThru
 ```
 
-Renames the first matching section from Results to Deep Dive.
+Renames the first matching section and returns the updated section metadata.
 
 ## PARAMETERS
 

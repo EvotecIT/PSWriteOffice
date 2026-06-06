@@ -11,8 +11,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Set the title placeholder text.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'</code>
-///   <para>Updates the Title placeholder on the slide.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointPlaceholderText.pptx {
+///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'
+///     Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Body -Text 'Review signals and decisions' -IgnoreMissing
+/// }</code>
+///   <para>Updates placeholder text when the selected layout exposes matching placeholders.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointPlaceholderText")]
 [OutputType(typeof(PowerPointTextBox))]

@@ -32,9 +32,12 @@ Copies a worksheet within a workbook or from another workbook.
 ### EXAMPLE 1
 ```powershell
 PS> Copy-OfficeExcelSheet -Path .\Report.xlsx -SourceSheet Data -NewName DataCopy
+            Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |
+                Select-Object -ExpandProperty Sheets |
+                Where-Object Name -eq 'DataCopy'
 ```
 
-Creates a copy of the Data worksheet.
+Creates a copy of the Data worksheet and reads the workbook summary to verify the new tab.
 
 ## PARAMETERS
 

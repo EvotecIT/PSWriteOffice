@@ -21,9 +21,11 @@ Extracts text or Markdown from a PDF.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficePdfText -Path 'C:\Path'
+PS> Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -PageRange '1'
+            Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -AsMarkdown -OutputPath .\Examples\Documents\ReportText.md
 ```
 
+Reads plain text directly and writes Markdown readback to a file.
 
 ## PARAMETERS
 

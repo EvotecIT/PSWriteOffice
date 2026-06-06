@@ -26,15 +26,14 @@ Sets generated PDF compliance profile and readiness groundwork.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficePdfCompliance -Profile 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {
+                Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'
+                Add-OfficePdfHeading -Text 'Compliance-ready report'
+                Get-OfficePdfCompliance -Profile PdfA3B
+            }
 ```
 
-
-### EXAMPLE 2
-```powershell
-Set-OfficePdfCompliance -Document 'Value' -Profile 'Value'
-```
-
+Applies OfficeIMO.Pdf compliance groundwork and emits a readiness report inside the DSL.
 
 ## PARAMETERS
 

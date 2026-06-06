@@ -21,9 +21,20 @@ Creates a semantic PowerPoint deck plan for designer rendering.
 
 ### EXAMPLE 1
 ```powershell
-New-OfficePowerPointDeckPlan -Content { }
+PS> $plan = New-OfficePowerPointDeckPlan {
+                Add-OfficePowerPointPlanSection -Title 'Service Review' -Subtitle 'Monthly operating brief'
+                Add-OfficePowerPointPlanProcess -Title 'Operating rhythm' -Steps @(
+                  @{ Title = 'Collect'; Body = 'Gather health signals' }
+                  @{ Title = 'Review'; Body = 'Confirm owner decisions' }
+                  @{ Title = 'Publish'; Body = 'Share the final brief' }
+                )
+            }
+            New-OfficePowerPoint -Path .\Examples\Documents\DesignerDeck.pptx {
+                Add-OfficePowerPointDesignerDeck -Plan $plan
+            }
 ```
 
+Builds a deck plan and renders it through the OfficeIMO designer helpers.
 
 ## PARAMETERS
 

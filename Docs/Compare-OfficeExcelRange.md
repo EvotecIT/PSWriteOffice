@@ -31,10 +31,13 @@ Compares two Excel worksheets or ranges and returns cell-level differences.
 
 ### EXAMPLE 1
 ```powershell
-PS> Compare-OfficeExcelRange -Path .\Report.xlsx -LeftSheet Current -RightSheet Expected
+PS> $differences = Compare-OfficeExcelRange -Path .\Report.xlsx -LeftSheet Current -RightSheet Expected -LeftRange A1:D20 -RightRange A1:D20 -TrimStrings -IgnoreCase
+            if ($differences) {
+                $differences | Export-Csv -Path .\RangeDifferences.csv -NoTypeInformation
+            }
 ```
 
-Compares the used ranges of the two worksheets.
+Compares two ranges and exports cell-level differences when the workbook does not match the expected sheet.
 
 ## PARAMETERS
 

@@ -5,6 +5,15 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a visually separated panel paragraph to a PDF document.</summary>
+/// <example>
+///   <summary>Add a callout panel to a report.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfPanel.pdf {
+///     Add-OfficePdfHeading -Text 'Executive summary'
+///     Add-OfficePdfPanel -Text 'No critical incidents were detected in the current reporting window.' -Align Center
+/// }</code>
+///   <para>Adds a highlighted panel paragraph to the generated PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfPanel", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfPanel")]
 [OutputType(typeof(PdfDocument))]

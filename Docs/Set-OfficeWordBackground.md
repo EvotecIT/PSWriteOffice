@@ -26,10 +26,22 @@ Sets the background for a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Set-OfficeWordBackground -Color '#f4f7fb'
+PS> New-OfficeWord -Path .\BrandedReport.docx {
+                Set-OfficeWordBackground -Color '#f4f7fb'
+                Add-OfficeWordParagraph -Text 'Executive summary'
+            }
 ```
 
-Sets the document background to the provided hex color.
+Sets the document background to the provided hex color and continues normal document composition.
+
+### EXAMPLE 2
+```powershell
+PS> $doc = Get-OfficeWord -Path .\Draft.docx
+            $doc | Set-OfficeWordBackground -ImagePath .\Assets\Background.png -Width 600 -Height 800 -PassThru |
+                Save-OfficeWord -Path .\Draft-Branded.docx
+```
+
+Uses OfficeIMO.Word background image support and saves the updated document through the standard save cmdlet.
 
 ## PARAMETERS
 

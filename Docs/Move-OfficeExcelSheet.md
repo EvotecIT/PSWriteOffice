@@ -32,9 +32,12 @@ Moves a worksheet to a new workbook position.
 ### EXAMPLE 1
 ```powershell
 PS> Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0
+            Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |
+                Select-Object -ExpandProperty Sheets |
+                Select-Object -First 3 -Property Index, Name
 ```
 
-Moves Summary to the first worksheet tab.
+Moves Summary to the first worksheet tab and reads back the first sheets from workbook summary.
 
 ## PARAMETERS
 

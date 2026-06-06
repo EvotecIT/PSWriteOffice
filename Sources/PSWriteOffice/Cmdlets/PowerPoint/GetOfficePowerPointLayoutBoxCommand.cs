@@ -10,14 +10,23 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Get the content area for a deck.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficePowerPointLayoutBox -Presentation $ppt -MarginCm 1.5</code>
-///   <para>Returns a single layout box representing the usable slide area.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointLayoutBox.pptx {
+///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     $box = Get-OfficePowerPointLayoutBox -MarginCm 1.5
+///     Add-OfficePowerPointTextBox -Slide $slide -Text 'Inside the content box' -X ($box.LeftPoints) -Y ($box.TopPoints) -Width ($box.WidthPoints) -Height 60
+/// }</code>
+///   <para>Returns a content box and uses it to position slide text.</para>
 /// </example>
 /// <example>
 ///   <summary>Split the slide into two columns.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficePowerPointLayoutBox -Presentation $ppt -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0</code>
-///   <para>Returns one layout box per column.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointColumns.pptx {
+///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     $columns = Get-OfficePowerPointLayoutBox -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0
+///     Add-OfficePowerPointTextBox -Slide $slide -Text 'Left column' -X ($columns[0].LeftPoints) -Y ($columns[0].TopPoints) -Width ($columns[0].WidthPoints) -Height 80
+///     Add-OfficePowerPointTextBox -Slide $slide -Text 'Right column' -X ($columns[1].LeftPoints) -Y ($columns[1].TopPoints) -Width ($columns[1].WidthPoints) -Height 80
+/// }</code>
+///   <para>Uses two layout boxes to place text in columns.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePowerPointLayoutBox", DefaultParameterSetName = ParameterSetContent)]
 [Alias("PptLayoutBox")]

@@ -31,10 +31,12 @@ Can run inside the Excel DSL, against an open workbook, or directly against a fi
 
 ### EXAMPLE 1
 ```powershell
-PS> Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks
+PS> Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks -PassThru
+            Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets |
+                Select-Object -Property SheetCount, NamedRangeCount, Sheets
 ```
 
-Creates or refreshes a TOC sheet, lists named ranges, and adds back links on other sheets.
+Creates or refreshes a TOC sheet, adds back links, and reads back workbook navigation metadata.
 
 ## PARAMETERS
 

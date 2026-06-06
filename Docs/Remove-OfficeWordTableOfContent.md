@@ -21,10 +21,12 @@ Removes the table of contents from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Remove-OfficeWordTableOfContent
+PS> $doc = Get-OfficeWord -Path .\Report.docx
+            $doc | Remove-OfficeWordTableOfContent -PassThru |
+                Save-OfficeWord -Path .\Report-NoToc.docx
 ```
 
-Deletes the table of contents if one exists.
+Removes the TOC from an OfficeIMO document object and saves the changed document to a new file.
 
 ## PARAMETERS
 

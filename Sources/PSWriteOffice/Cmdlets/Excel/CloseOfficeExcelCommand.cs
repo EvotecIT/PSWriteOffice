@@ -7,10 +7,16 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <summary>Closes an Excel workbook and optionally saves it.</summary>
 /// <para>Convenience wrapper so scripts do not need to call <see cref="ExcelDocument.Save()"/> or <c>Dispose</c> directly.</para>
 /// <example>
-///   <summary>Save to a new path and open the file.</summary>
+///   <summary>Save, validate, and close an open workbook.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Close-OfficeExcel -Document $workbook -Save -Path .\report-final.xlsx -Show</code>
-///   <para>Saves pending changes to a new file, launches Excel, and releases the workbook.</para>
+///   <code>$workbook = New-OfficeExcel -Path .\report.xlsx -PassThru {
+///     Add-OfficeExcelSheet -Name Data {
+///         Set-OfficeExcelRow -Row 1 -Values 'Region', 'Revenue'
+///         Set-OfficeExcelRow -Row 2 -Values 'EMEA', 98000
+///     }
+/// }
+/// $workbook | Close-OfficeExcel -Save -Path .\report-final.xlsx -SafePreflight -ValidateOpenXml</code>
+///   <para>Saves pending changes through OfficeIMO's normal save path, validates the package, and releases the workbook.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Close, "OfficeExcel")]
 public sealed class CloseOfficeExcelCommand : PSCmdlet

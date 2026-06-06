@@ -31,10 +31,12 @@ Sets or clears repeating print title rows and columns for a worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS> Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Data -FirstRow 1 -LastRow 1
+PS> Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Data -FirstRow 1 -LastRow 1 -FirstColumn 1 -LastColumn 1
+            Get-OfficeExcelSummary -Path .\Report.xlsx |
+                Select-Object -Property SheetCount, TableCount
 ```
 
-Stores Excel print titles for the Data worksheet.
+Stores Excel print titles for the Data worksheet and then reads back workbook structure as a quick proof step.
 
 ## PARAMETERS
 

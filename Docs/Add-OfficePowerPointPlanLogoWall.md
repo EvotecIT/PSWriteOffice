@@ -21,9 +21,16 @@ Adds a semantic logo/proof-wall slide to a PowerPoint deck plan.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePowerPointPlanLogoWall -Logos @('Value')
+PS> $logos = @(
+                @{ Name = 'Directory'; Subtitle = 'Identity platform'; AccentColor = '#2563EB' }
+                @{ Name = 'Mail'; Subtitle = 'Messaging platform'; AccentColor = '#0F766E' }
+            )
+            New-OfficePowerPointDeckPlan {
+                Add-OfficePowerPointPlanLogoWall -Title 'Systems covered' -Subtitle 'Representative services' -Logos $logos
+            }
 ```
 
+Adds a semantic logo/proof-wall slide to the plan.
 
 ## PARAMETERS
 

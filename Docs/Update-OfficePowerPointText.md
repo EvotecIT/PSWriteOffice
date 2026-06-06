@@ -31,10 +31,14 @@ Can replace text in text boxes, tables, and optionally notes using the OfficeIMO
 
 ### EXAMPLE 1
 ```powershell
-PS> Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
+PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointUpdateText.pptx
+            $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+            Add-OfficePowerPointTextBox -Slide $slide -Text 'FY24 summary' | Out-Null
+            Set-OfficePowerPointNotes -Slide $slide -Text 'Mention FY24 assumptions.' | Out-Null
+            Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
 ```
 
-Replaces matching text throughout the presentation and notes.
+Replaces matching text throughout the presentation and notes, returning the replacement count.
 
 ## PARAMETERS
 

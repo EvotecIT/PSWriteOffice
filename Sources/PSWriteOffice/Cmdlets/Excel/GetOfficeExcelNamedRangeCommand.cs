@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Gets defined names (named ranges) from an Excel workbook.</summary>
 /// <example>
-///   <summary>List named ranges.</summary>
+///   <summary>List workbook and sheet-scoped names.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeExcelNamedRange -Path .\report.xlsx</code>
-///   <para>Returns workbook-level named ranges.</para>
+///   <code>$ranges = Get-OfficeExcelNamedRange -Path .\report.xlsx
+/// $ranges |
+///     Select-Object -Property Name, Scope, Range |
+///     Format-Table -AutoSize</code>
+///   <para>Returns named ranges so workbook navigation and formulas can be reviewed.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelNamedRange", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject))]

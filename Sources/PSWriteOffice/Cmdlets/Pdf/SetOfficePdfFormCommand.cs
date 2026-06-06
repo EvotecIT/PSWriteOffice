@@ -7,6 +7,17 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Fills and optionally flattens simple AcroForm fields in an existing PDF.</summary>
+/// <example>
+///   <summary>Fill and flatten a PDF form.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$fields = @{
+///     Requester = 'Ada Lovelace'
+///     Priority = 'High'
+///     Approved = $true
+/// }
+/// Set-OfficePdfForm -Path .\Examples\Documents\Request.pdf -OutputPath .\Examples\Documents\Request-FilledFlat.pdf -Field $fields -Flatten</code>
+///   <para>Fills simple AcroForm fields and writes a flattened PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfForm")]
 [OutputType(typeof(FileInfo))]
 public sealed class SetOfficePdfFormCommand : PSCmdlet

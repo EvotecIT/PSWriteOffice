@@ -9,10 +9,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets paragraphs from a Word document or section.</summary>
 /// <example>
-///   <summary>Enumerate paragraphs from a document.</summary>
+///   <summary>Extract visible paragraph text.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordParagraph -Path .\Report.docx</code>
-///   <para>Returns all paragraphs in the document.</para>
+///   <code>$paragraphs = Get-OfficeWordParagraph -Path .\Report.docx
+/// $paragraphs |
+///     Where-Object { $_.Text } |
+///     Select-Object -Property Text |
+///     Set-Content -Path .\ReportParagraphs.txt</code>
+///   <para>Enumerates document paragraphs and writes their text for a lightweight review workflow.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordParagraph", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordParagraph))]

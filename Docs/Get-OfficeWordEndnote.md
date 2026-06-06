@@ -31,21 +31,13 @@ Gets endnotes from a Word document or section.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficeWordEndnote -InputPath 'C:\Path'
+PS> $endnotes = Get-OfficeWordEndnote -Path .\ResearchReport.docx
+            $endnotes |
+                Select-Object -Property Kind, ReferenceId, ParentText, Text |
+                Export-Csv -Path .\Endnotes.csv -NoTypeInformation
 ```
 
-
-### EXAMPLE 2
-```powershell
-Get-OfficeWordEndnote -Document 'Value'
-```
-
-
-### EXAMPLE 3
-```powershell
-Get-OfficeWordEndnote -Section 'Value'
-```
-
+Reads endnotes from the document and exports the PowerShell-friendly note snapshot.
 
 ## PARAMETERS
 

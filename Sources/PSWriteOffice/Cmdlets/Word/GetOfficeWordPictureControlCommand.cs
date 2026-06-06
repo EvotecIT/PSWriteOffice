@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets picture content controls from a Word document.</summary>
 /// <example>
-///   <summary>List picture controls.</summary>
+///   <summary>Find picture placeholder controls.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordPictureControl -Path .\Report.docx</code>
-///   <para>Returns all picture content controls in the document.</para>
+///   <code>$pictures = Get-OfficeWordPictureControl -Path .\Template.docx -Tag 'logo-*'
+/// $pictures |
+///     Select-Object -Property Alias, Tag |
+///     Format-Table -AutoSize</code>
+///   <para>Filters picture content controls used as image placeholders in a Word template.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordPictureControl", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordPictureControls")]

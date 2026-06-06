@@ -9,8 +9,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Delete the first slide.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Remove-OfficePowerPointSlide -Presentation $ppt -Index 0</code>
-///   <para>Removes slide 1 from the deck.</para>
+///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointRemoveSlide.pptx
+/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
+/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
+/// Remove-OfficePowerPointSlide -Presentation $ppt -Index 0 -Confirm:$false
+/// Save-OfficePowerPoint -Presentation $ppt</code>
+///   <para>Removes the first slide and saves the updated deck.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Remove, "OfficePowerPointSlide", SupportsShouldProcess = true)]
 public class RemoveOfficePowerPointSlideCommand : PSCmdlet

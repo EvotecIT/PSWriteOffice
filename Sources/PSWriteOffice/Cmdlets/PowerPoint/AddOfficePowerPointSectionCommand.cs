@@ -11,8 +11,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Create a section that starts at slide 3.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2</code>
-///   <para>Creates a section named Results starting at the third slide.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSections.pptx {
+///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Overview'
+///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Results'
+///     Add-OfficePowerPointSection -Name 'Results' -StartSlideIndex 1
+/// }</code>
+///   <para>Creates a section named Results starting at the second slide.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointSection")]
 [OutputType(typeof(PowerPointSectionInfo))]

@@ -26,15 +26,14 @@ Sets or clears the generated PDF page background color.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficePdfBackground -Clear
+PS> New-OfficePdf -Path .\Examples\Documents\PdfBackground.pdf {
+                Set-OfficePdfBackground -Color '#F8FAFC'
+                Add-OfficePdfHeading -Text 'Report on a soft background'
+                Add-OfficePdfParagraph -Text 'The background color applies to generated pages.'
+            }
 ```
 
-
-### EXAMPLE 2
-```powershell
-Set-OfficePdfBackground -Document 'Value'
-```
-
+Applies a page background color before adding content.
 
 ## PARAMETERS
 

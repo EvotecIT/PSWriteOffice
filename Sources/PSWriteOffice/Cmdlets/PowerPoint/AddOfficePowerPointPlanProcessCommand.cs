@@ -5,6 +5,19 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Adds a semantic process/timeline slide to a PowerPoint deck plan.</summary>
+/// <example>
+///   <summary>Add a process slide to a deck plan.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$steps = @(
+///     @{ Title = 'Collect'; Body = 'Gather health and delivery signals' }
+///     @{ Title = 'Review'; Body = 'Confirm decisions with owners' }
+///     @{ Title = 'Publish'; Body = 'Send the service brief' }
+/// )
+/// New-OfficePowerPointDeckPlan {
+///     Add-OfficePowerPointPlanProcess -Title 'Operating rhythm' -Subtitle 'How the review is produced' -Steps $steps
+/// }</code>
+///   <para>Adds a semantic timeline/process slide to the plan.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointPlanProcess")]
 [Alias("PptPlanProcess")]
 [OutputType(typeof(PowerPointDeckPlan))]

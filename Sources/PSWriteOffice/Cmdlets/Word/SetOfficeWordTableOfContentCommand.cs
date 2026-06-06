@@ -7,10 +7,25 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Sets properties on a table of contents in a Word document.</summary>
 /// <example>
-///   <summary>Update the table of contents headings.</summary>
+///   <summary>Customize table of contents text during composition.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries'</code>
-///   <para>Updates the table of contents display text.</para>
+///   <code>New-OfficeWord -Path .\Report.docx {
+///     Add-OfficeWordTableOfContent
+///     Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries yet'
+///     Add-OfficeWordHeading -Text 'Executive summary' -Level 1
+///     Update-OfficeWordTableOfContent
+/// }</code>
+///   <para>Updates TOC display text, adds heading content, and marks the TOC for refresh.</para>
+/// </example>
+/// <example>
+///   <summary>Update an existing TOC object from a document.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$doc = Get-OfficeWord -Path .\Report.docx
+/// $doc |
+///     Get-OfficeWordTableOfContent |
+///     Set-OfficeWordTableOfContent -Text 'Report contents'
+/// $doc | Save-OfficeWord -Path .\Report-Toc.docx</code>
+///   <para>Pipes the OfficeIMO TOC object into the thin setter and saves the document.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeWordTableOfContent")]
 [OutputType(typeof(WordTableOfContent))]

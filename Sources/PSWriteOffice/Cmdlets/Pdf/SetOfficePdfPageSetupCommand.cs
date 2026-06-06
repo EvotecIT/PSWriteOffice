@@ -5,6 +5,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Sets PDF page size, orientation, and margins.</summary>
+/// <example>
+///   <summary>Set page size and margins for a generated report.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfPageSetup.pdf {
+///     Set-OfficePdfPageSetup -PageSize A4 -Margin 42
+///     Add-OfficePdfHeading -Text 'A4 report'
+///     Add-OfficePdfParagraph -Text 'The report uses custom margins.'
+/// }</code>
+///   <para>Applies page setup before adding generated PDF content.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfPageSetup", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfPageSetup")]
 [OutputType(typeof(PdfDocument))]

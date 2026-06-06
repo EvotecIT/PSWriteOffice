@@ -21,10 +21,13 @@ Invokes the PowerPoint service to persist the document and optionally launch it.
 
 ### EXAMPLE 1
 ```powershell
-PS> Save-OfficePowerPoint -Presentation $ppt -Show
+PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointSave.pptx
+            $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+            Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Saved later'
+            Save-OfficePowerPoint -Presentation $ppt -PdfPath .\Examples\Documents\PowerPointSave.pdf
 ```
 
-Saves the current presentation and opens it in PowerPoint.
+Saves the current presentation and exports a PDF sidecar.
 
 ## PARAMETERS
 

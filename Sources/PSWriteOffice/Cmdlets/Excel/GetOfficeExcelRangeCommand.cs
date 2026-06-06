@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <summary>Reads an explicit A1 range from an Excel workbook.</summary>
 /// <para>Returns rows as PSCustomObjects by default, with optional hashtable or DataTable output for scripting and interoperability.</para>
 /// <example>
-///   <summary>Read a rectangular range as objects.</summary>
+///   <summary>Read a rectangular range and summarize revenue.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeExcelRange -Path .\report.xlsx -Sheet 'Data' -Range 'A1:C10'</code>
-///   <para>Uses the first row as headers and returns each remaining row as a PSCustomObject.</para>
+///   <code>$rows = Get-OfficeExcelRange -Path .\report.xlsx -Sheet Data -Range A1:C10 -NumericAsDecimal
+/// $rows |
+///     Group-Object -Property Region |
+///     Select-Object Name, Count</code>
+///   <para>Uses the first row as headers, returns row objects, and keeps numeric values decimal-friendly.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelRange", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject), typeof(System.Collections.Hashtable), typeof(DataTable))]

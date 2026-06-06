@@ -6,6 +6,15 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Sets or clears the generated PDF page border decoration.</summary>
+/// <example>
+///   <summary>Add a subtle page border.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfPageBorder.pdf {
+///     Set-OfficePdfPageBorder -Color '#CBD5E1' -Width 0.75 -Inset 24 -Opacity 0.8
+///     Add-OfficePdfHeading -Text 'Bordered report'
+/// }</code>
+///   <para>Decorates generated pages with an OfficeIMO.Pdf page border.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfPageBorder", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfPageBorder")]
 [OutputType(typeof(PdfDocument))]

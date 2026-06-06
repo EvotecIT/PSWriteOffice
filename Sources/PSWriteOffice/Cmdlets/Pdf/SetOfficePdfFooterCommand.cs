@@ -5,6 +5,17 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Sets running PDF footer text.</summary>
+/// <example>
+///   <summary>Add page numbers to a generated PDF.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfFooter.pdf {
+///     Set-OfficePdfFooter -Text 'Page {page} of {pages}' -Align Center -FontSize 8
+///     Add-OfficePdfHeading -Text 'Report with footer'
+///     Add-OfficePdfPageBreak
+///     Add-OfficePdfParagraph -Text 'The footer includes generated page numbers.'
+/// }</code>
+///   <para>Uses page placeholders in a running footer.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfFooter", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfFooter")]
 [OutputType(typeof(PdfDocument))]

@@ -7,6 +7,15 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets shapes from a Word document, section, or paragraph.</summary>
+/// <example>
+///   <summary>List shapes and metadata.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$shapes = Get-OfficeWordShape -Path .\Report.docx
+/// $shapes |
+///     Select-Object -Property Title, Description, Width, Height, FillColorHex |
+///     Format-Table -AutoSize</code>
+///   <para>Reads OfficeIMO Word shapes from the document so styling and alternate text can be audited.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordShape", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordShapes")]
 [OutputType(typeof(WordShape))]

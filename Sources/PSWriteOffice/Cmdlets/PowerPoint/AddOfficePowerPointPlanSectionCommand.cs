@@ -5,6 +5,17 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Adds a semantic section/title slide to a PowerPoint deck plan.</summary>
+/// <example>
+///   <summary>Add a title section to a deck plan.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$plan = New-OfficePowerPointDeckPlan {
+///     Add-OfficePowerPointPlanSection -Title 'Service Review' -Subtitle 'Monthly operating brief' -Seed 'service-review'
+///     Add-OfficePowerPointPlanCardGrid -Title 'Signals' -Cards @(
+///       @{ Title = 'Health'; Items = @('Green', 'No blockers') }
+///     )
+/// }</code>
+///   <para>Adds a semantic opening section slide to the plan.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointPlanSection")]
 [Alias("PptPlanSection")]
 [OutputType(typeof(PowerPointDeckPlan))]

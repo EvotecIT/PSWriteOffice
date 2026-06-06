@@ -10,8 +10,11 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Join two PDFs in order.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Join-OfficePdf -Path .\Cover.pdf, .\Report.pdf -OutputPath .\Combined.pdf -PassThru</code>
-///   <para>Writes a single PDF containing the input documents in the requested order.</para>
+///   <code>$cover = '.\Examples\Documents\Cover.pdf'
+/// $report = '.\Examples\Documents\Report.pdf'
+/// Join-OfficePdf -Path $cover, $report -OutputPath .\Examples\Documents\Combined.pdf -PassThru
+/// Get-OfficePdfInfo -Path .\Examples\Documents\Combined.pdf | Select-Object PageCount</code>
+///   <para>Writes a single PDF containing the input documents in the requested order, then checks the result.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Join, "OfficePdf")]
 [OutputType(typeof(FileInfo))]

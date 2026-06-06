@@ -10,6 +10,17 @@ using PSWriteOffice.Services.Excel;
 namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Adds a title block to the current Excel report sheet.</summary>
+/// <example>
+///   <summary>Add a polished title to a report sheet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current month'
+///         Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }
+///     }
+/// }</code>
+///   <para>Uses the OfficeIMO sheet composer through PSWriteOffice's thin report-block wrapper.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportTitle")]
 [Alias("ExcelReportTitle")]
 public sealed class AddOfficeExcelReportTitleCommand : PSCmdlet

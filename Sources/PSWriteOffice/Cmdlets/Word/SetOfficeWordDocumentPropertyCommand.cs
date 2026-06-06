@@ -7,10 +7,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Sets a built-in or custom document property on a Word document.</summary>
 /// <example>
-///   <summary>Set the document title.</summary>
+///   <summary>Set built-in and custom release metadata.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'</code>
-///   <para>Updates the built-in Title property on the active Word document.</para>
+///   <code>New-OfficeWord -Path .\QuarterlyReport.docx {
+///     Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'
+///     Set-OfficeWordDocumentProperty -Name ReleaseStatus -Value 'Approved' -Custom
+///     Add-OfficeWordParagraph -Text 'Approved quarterly report'
+/// }
+/// Get-OfficeWordDocumentProperty -Path .\QuarterlyReport.docx -Name Title, ReleaseStatus</code>
+///   <para>Writes document metadata during composition and reads it back for proof.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeWordDocumentProperty")]
 [OutputType(typeof(WordDocument))]

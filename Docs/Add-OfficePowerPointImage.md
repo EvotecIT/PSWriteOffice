@@ -21,10 +21,15 @@ Places the picture at the requested coordinates using point measurements.
 
 ### EXAMPLE 1
 ```powershell
-PS> Add-OfficePowerPointImage -Slide $slide -Path .\logo.png -X 40 -Y 60 -Width 200 -Height 120
+PS> $image = '.\Tests\Assets\CellImage.png'
+            New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImage.pptx {
+                $slide = Add-OfficePowerPointSlide -Layout 1
+                Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Evidence'
+                Add-OfficePowerPointImage -Slide $slide -Path $image -X 60 -Y 130 -Width 180 -Height 120
+            }
 ```
 
-Adds a picture to the slide.
+Adds a picture to a generated slide.
 
 ## PARAMETERS
 

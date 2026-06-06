@@ -9,10 +9,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <summary>Imports rows from an Excel workbook as PowerShell objects.</summary>
 /// <para>Provides an ImportExcel-style read command over the OfficeIMO reader pipeline.</para>
 /// <example>
-///   <summary>Import worksheet rows.</summary>
+///   <summary>Import worksheet rows and filter pending items.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data</code>
-///   <para>Reads the used range on the Data worksheet and emits PSCustomObjects.</para>
+///   <code>$rows = Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -NumericAsDecimal
+/// $rows |
+///     Where-Object Status -eq 'Pending' |
+///     Export-Csv -Path .\PendingRows.csv -NoTypeInformation</code>
+///   <para>Reads the used range on the Data worksheet, emits PSCustomObjects, and filters them in PowerShell.</para>
 /// </example>
 [Cmdlet(VerbsData.Import, "OfficeExcel", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelImport")]

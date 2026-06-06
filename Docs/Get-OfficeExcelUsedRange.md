@@ -31,10 +31,13 @@ Returns rows as PSCustomObjects by default, with optional hashtable or DataTable
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet 'Data'
+PS> $rows = Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet Data
+            $rows |
+                Group-Object -Property Status |
+                Select-Object -Property Name, Count
 ```
 
-Reads the sheet's used range, treating the first row as headers.
+Reads the sheet's used range, treats the first row as headers, and summarizes a status column.
 
 ## PARAMETERS
 

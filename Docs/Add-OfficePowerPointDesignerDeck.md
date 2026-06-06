@@ -21,9 +21,19 @@ Renders a semantic deck plan through OfficeIMO PowerPoint designer helpers.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePowerPointDesignerDeck -Plan 'Value'
+PS> $plan = New-OfficePowerPointDeckPlan {
+                Add-OfficePowerPointPlanSection -Title 'Service Review'
+                Add-OfficePowerPointPlanCardGrid -Title 'Current signals' -Cards @(
+                  @{ Title = 'Availability'; Items = @('Healthy', 'No critical incidents') }
+                  @{ Title = 'Risk'; Items = @('One dependency on watch') }
+                )
+            }
+            New-OfficePowerPoint -Path .\Examples\Documents\DesignerDeck.pptx {
+                Add-OfficePowerPointDesignerDeck -Plan $plan -AccentColor '#0F766E' -Purpose 'monthly service brief'
+            }
 ```
 
+Uses OfficeIMO design selection to turn semantic content into slides.
 
 ## PARAMETERS
 

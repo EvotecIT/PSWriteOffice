@@ -13,14 +13,16 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Add a review stamp to selected pages.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficePdfStamp -Path .\Report.pdf -OutputPath .\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'</code>
-///   <para>Adds a text stamp to the first two pages.</para>
+///   <code>Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'
+/// Get-OfficePdfPreflight -Path .\Examples\Documents\Stamped.pdf</code>
+///   <para>Adds a text stamp to the first two pages and preflights the result.</para>
 /// </example>
 /// <example>
 ///   <summary>Add an image watermark.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficePdfStamp -Path .\Report.pdf -OutputPath .\Watermarked.pdf -Image .\logo.png -Width 160 -Watermark</code>
-///   <para>Adds a logo behind existing content.</para>
+///   <code>$logo = '.\Tests\Assets\CellImage.png'
+/// Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Watermarked.pdf -Image $logo -Width 160 -Watermark</code>
+///   <para>Adds a logo behind existing content as a watermark.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfStamp", DefaultParameterSetName = ParameterSetText)]
 [Alias("PdfStamp")]

@@ -7,6 +7,15 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets images from a Word document, section, or paragraph.</summary>
+/// <example>
+///   <summary>List images and their accessibility metadata.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$images = Get-OfficeWordImage -Path .\Report.docx
+/// $images |
+///     Select-Object -Property Title, Description, Width, Height |
+///     Format-Table -AutoSize</code>
+///   <para>Reads images from a document so metadata and sizing can be reviewed before publication.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordImage", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordImages")]
 [OutputType(typeof(WordImage))]

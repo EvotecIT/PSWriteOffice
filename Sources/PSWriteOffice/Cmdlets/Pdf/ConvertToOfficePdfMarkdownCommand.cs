@@ -6,6 +6,13 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Converts PDF logical text readback to Markdown.</summary>
+/// <example>
+///   <summary>Export logical PDF text as Markdown.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>ConvertTo-OfficePdfMarkdown -Path .\Examples\Documents\Report.pdf -PageRange '1-3' -OutputPath .\Examples\Documents\Report.md
+/// Get-Content .\Examples\Documents\Report.md -TotalCount 20</code>
+///   <para>Writes Markdown readback for selected pages to a file.</para>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficePdfMarkdown")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet

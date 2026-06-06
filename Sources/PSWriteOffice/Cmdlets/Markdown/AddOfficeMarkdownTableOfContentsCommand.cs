@@ -7,9 +7,16 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown table of contents placeholder.</summary>
 /// <example>
-///   <summary>Add a TOC at the top of the document.</summary>
+///   <summary>Add a TOC at the top of a generated report.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop</code>
+///   <code>New-OfficeMarkdown -Path .\Report.md {
+///     Add-OfficeMarkdownHeading -Level 1 -Text 'Release Report'
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Summary'
+///     Add-OfficeMarkdownParagraph -Text 'Current state and risks.'
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Appendix'
+///     Add-OfficeMarkdownParagraph -Text 'Supporting evidence.'
+///     Add-OfficeMarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop
+/// }</code>
 ///   <para>Inserts a generated table of contents for headings in the document.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownTableOfContents", DefaultParameterSetName = ParameterSetContext)]

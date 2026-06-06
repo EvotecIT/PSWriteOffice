@@ -21,9 +21,16 @@ Adds a semantic card-grid slide to a PowerPoint deck plan.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePowerPointPlanCardGrid -Cards @('Value')
+PS> $cards = @(
+                @{ Title = 'Availability'; Items = @('99.98%', 'No major incidents'); AccentColor = '#16A34A' }
+                @{ Title = 'Risk'; Items = @('One dependency on watch'); AccentColor = '#F59E0B' }
+            )
+            New-OfficePowerPointDeckPlan {
+                Add-OfficePowerPointPlanCardGrid -Title 'Current signals' -Cards $cards
+            }
 ```
 
+Adds a card grid slide to the semantic deck plan.
 
 ## PARAMETERS
 

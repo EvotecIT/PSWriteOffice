@@ -5,6 +5,18 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Adds a semantic capability/content slide to a PowerPoint deck plan.</summary>
+/// <example>
+///   <summary>Add capability sections to a deck plan.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$sections = @(
+///     @{ Heading = 'Monitoring'; Body = 'Signals and ownership'; Items = @('Alerts', 'Dashboards') }
+///     @{ Heading = 'Reporting'; Body = 'Executive-ready output'; Items = @('Summary', 'Appendix') }
+/// )
+/// New-OfficePowerPointDeckPlan {
+///     Add-OfficePowerPointPlanCapability -Title 'Capabilities' -Subtitle 'What the team provides' -Sections $sections
+/// }</code>
+///   <para>Adds a semantic capability/content slide to the plan.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointPlanCapability")]
 [Alias("PptPlanCapability")]
 [OutputType(typeof(PowerPointDeckPlan))]

@@ -21,9 +21,13 @@ Gets cells from an OfficeIMO Word table.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficeWordTableCell -Column 'Value'
+PS> $table = Get-OfficeWordTable -Path .\Report.docx | Select-Object -First 1
+            $cell = $table | Get-OfficeWordTableCell -Row 1 -Column 2
+            $cell.Paragraphs |
+                Select-Object -Property Text
 ```
 
+Gets a zero-based table cell from an OfficeIMO table object and inspects its paragraphs.
 
 ## PARAMETERS
 

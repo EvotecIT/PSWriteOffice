@@ -4,6 +4,16 @@ using OfficeIMO.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Updates OfficeIMO Word shape metadata, sizing, and colors.</summary>
+/// <example>
+///   <summary>Restyle callout shapes in an opened report.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$doc = Get-OfficeWord -Path .\Report.docx
+/// $doc |
+///     Get-OfficeWordShape |
+///     Set-OfficeWordShape -FillColor '#fff7e6' -StrokeColor '#fa8c16' -StrokeWidth 1.25 -Description 'Highlighted callout'
+/// $doc | Save-OfficeWord -Path .\Report-Shapes.docx</code>
+///   <para>Updates OfficeIMO shape objects through the pipeline and persists the document with the standard save command.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeWordShape")]
 [Alias("WordShapeStyle")]
 [OutputType(typeof(WordShape))]

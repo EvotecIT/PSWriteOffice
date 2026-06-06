@@ -9,10 +9,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Replaces text in worksheet values.</summary>
 /// <example>
-///   <summary>Replace status text in a workbook.</summary>
+///   <summary>Replace status text and verify the update count.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Update-OfficeExcelText -Path .\Report.xlsx -OldValue Draft -NewValue Ready</code>
-///   <para>Updates matching text cells and returns the replacement count.</para>
+///   <code>$count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready
+/// [pscustomobject]@{
+///     Path = '.\Report.xlsx'
+///     Replacements = $count
+/// }</code>
+///   <para>Updates matching text cells on a sheet, saves the workbook, and returns the replacement count.</para>
 /// </example>
 [Cmdlet(VerbsData.Update, "OfficeExcelText", DefaultParameterSetName = ParameterSetPath)]
 [Alias("Replace-OfficeExcelText")]

@@ -31,10 +31,13 @@ Provides an ImportExcel-style read command over the OfficeIMO reader pipeline.
 
 ### EXAMPLE 1
 ```powershell
-PS> Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data
+PS> $rows = Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -NumericAsDecimal
+            $rows |
+                Where-Object Status -eq 'Pending' |
+                Export-Csv -Path .\PendingRows.csv -NoTypeInformation
 ```
 
-Reads the used range on the Data worksheet and emits PSCustomObjects.
+Reads the used range on the Data worksheet, emits PSCustomObjects, and filters them in PowerShell.
 
 ## PARAMETERS
 
@@ -286,7 +289,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 - `System.String
 System.Uri
 OfficeIMO.Excel.ExcelDocument
-System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]`
+System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]`
 
 ## OUTPUTS
 

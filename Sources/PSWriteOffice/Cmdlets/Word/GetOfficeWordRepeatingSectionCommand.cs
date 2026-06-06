@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets repeating section content controls from a Word document.</summary>
 /// <example>
-///   <summary>List repeating section controls.</summary>
+///   <summary>Audit repeating section controls in a template.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordRepeatingSection -Path .\Report.docx</code>
-///   <para>Returns all repeating section controls in the document.</para>
+///   <code>$sections = Get-OfficeWordRepeatingSection -Path .\Template.docx -Tag 'risk-row-*'
+/// $sections |
+///     Select-Object -Property Alias, Tag |
+///     Format-Table -AutoSize</code>
+///   <para>Finds repeating sections used for repeatable rows in a document template.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordRepeatingSection", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordRepeatingSections")]

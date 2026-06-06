@@ -6,10 +6,13 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown image.</summary>
 /// <example>
-///   <summary>Add an image with alt text.</summary>
+///   <summary>Add a report image with alt text and sizing.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownImage -Path '.\logo.png' -Alt 'Logo'</code>
-///   <para>Appends an image block to the document.</para>
+///   <code>New-OfficeMarkdown -Path .\Report.md {
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Architecture'
+///     Add-OfficeMarkdownImage -Path '.\Assets\architecture.png' -Alt 'Architecture diagram' -Title 'Current architecture' -Width 640
+/// }</code>
+///   <para>Appends an image block with accessibility text and optional presentation metadata.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownImage", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownImage")]

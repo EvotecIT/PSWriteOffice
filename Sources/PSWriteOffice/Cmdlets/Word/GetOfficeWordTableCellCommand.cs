@@ -6,6 +6,15 @@ using OfficeIMO.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets cells from an OfficeIMO Word table.</summary>
+/// <example>
+///   <summary>Read a specific status cell from the first table.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$table = Get-OfficeWordTable -Path .\Report.docx | Select-Object -First 1
+/// $cell = $table | Get-OfficeWordTableCell -Row 1 -Column 2
+/// $cell.Paragraphs |
+///     Select-Object -Property Text</code>
+///   <para>Gets a zero-based table cell from an OfficeIMO table object and inspects its paragraphs.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordTableCell")]
 [Alias("WordTableCells")]
 [OutputType(typeof(WordTableCell))]

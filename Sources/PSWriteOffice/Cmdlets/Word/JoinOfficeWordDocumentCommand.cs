@@ -9,6 +9,22 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Appends one or more Word documents into a base Word document.</summary>
 /// <para>Uses OfficeIMO.Word document append support and preserves the wrapper as an operator-friendly merge command.</para>
+/// <example>
+///   <summary>Merge a cover, body, and appendix into a release packet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx
+/// Get-OfficeWordStatistics -Path .\ReleasePacket.docx |
+///     Select-Object -Property Paragraphs, Tables, Images</code>
+///   <para>Appends the source documents with OfficeIMO.Word and then reads back basic structure from the merged output.</para>
+/// </example>
+/// <example>
+///   <summary>Append into an already-open document object.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$doc = Get-OfficeWord -Path .\Base.docx
+/// $doc | Join-OfficeWordDocument -AppendPath .\Section1.docx, .\Section2.docx -PassThru |
+///     Save-OfficeWord -Path .\Combined.docx</code>
+///   <para>Keeps the wrapper thin by piping the OfficeIMO document object through append and save commands.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Join, "OfficeWordDocument", DefaultParameterSetName = ParameterSetPath)]
 [Alias("Merge-OfficeWordDocument", "WordDocumentJoin")]
 [OutputType(typeof(WordDocument))]

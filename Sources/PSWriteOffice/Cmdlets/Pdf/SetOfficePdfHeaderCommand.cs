@@ -5,6 +5,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Sets running PDF header text.</summary>
+/// <example>
+///   <summary>Add a running report header.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfHeader.pdf {
+///     Set-OfficePdfHeader -Text 'Service Review' -Align Right -FontSize 9
+///     Add-OfficePdfHeading -Text 'Service Review'
+///     Add-OfficePdfParagraph -Text 'The header repeats on generated pages.'
+/// }</code>
+///   <para>Sets header text for the generated PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfHeader", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfHeader")]
 [OutputType(typeof(PdfDocument))]

@@ -21,10 +21,17 @@ Adds a table of contents to a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Add-OfficeWordTableOfContent
+PS> New-OfficeWord -Path .\ExecutiveReport.docx {
+                Add-OfficeWordTableOfContent -Style Template1
+                Add-OfficeWordHeading -Text 'Executive summary' -Level 1
+                Add-OfficeWordParagraph -Text 'Summary text'
+                Add-OfficeWordHeading -Text 'Appendix' -Level 1
+                Add-OfficeWordParagraph -Text 'Supporting details'
+                Update-OfficeWordTableOfContent
+            }
 ```
 
-Inserts a table of contents using the default template.
+Creates a navigable report outline and marks the TOC for refresh when the document opens.
 
 ## PARAMETERS
 

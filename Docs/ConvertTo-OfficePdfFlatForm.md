@@ -21,9 +21,14 @@ Converts a PDF with simple AcroForm fields into a flat PDF.
 
 ### EXAMPLE 1
 ```powershell
-ConvertTo-OfficePdfFlatForm -Path 'C:\Path'
+PS> Set-OfficePdfForm -Path .\Examples\Documents\Request.pdf -OutputPath .\Examples\Documents\Request-Filled.pdf -Field @{
+                Requester = 'Ada Lovelace'
+                Priority = 'High'
+            }
+            ConvertTo-OfficePdfFlatForm -Path .\Examples\Documents\Request-Filled.pdf -OutputPath .\Examples\Documents\Request-Flat.pdf
 ```
 
+Turns simple form fields into static page content.
 
 ## PARAMETERS
 

@@ -10,8 +10,9 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Split a PDF into page files.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Split-OfficePdf -Path .\Combined.pdf -OutputDirectory .\Pages -Prefix 'page'</code>
-///   <para>Creates one output PDF for each page.</para>
+///   <code>$pages = Split-OfficePdf -Path .\Examples\Documents\Combined.pdf -OutputDirectory .\Examples\Documents\Pages -Prefix 'combined-page'
+/// $pages | Select-Object Name, Length</code>
+///   <para>Creates one output PDF for each page and returns the written files.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Split, "OfficePdf")]
 [OutputType(typeof(FileInfo))]

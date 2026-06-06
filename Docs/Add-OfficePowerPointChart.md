@@ -31,14 +31,28 @@ Supports default chart data or object-based category/series mappings for standar
 
 ### EXAMPLE 1
 ```powershell
-PS> Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
+PS> $rows = @(
+                [pscustomobject]@{ Month = 'Jan'; Sales = 42; Profit = 9 }
+                [pscustomobject]@{ Month = 'Feb'; Sales = 55; Profit = 13 }
+            )
+            New-OfficePowerPoint -Path .\Examples\Documents\PowerPointChart.pptx {
+                $slide = Add-OfficePowerPointSlide -Layout 1
+                Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
+            }
 ```
 
 Creates a clustered column chart using Month for categories and Sales/Profit as series.
 
 ### EXAMPLE 2
 ```powershell
-PS> Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
+PS> $rows = @(
+                [pscustomobject]@{ Quarter = 1; Revenue = 20 }
+                [pscustomobject]@{ Quarter = 2; Revenue = 34 }
+            )
+            New-OfficePowerPoint -Path .\Examples\Documents\PowerPointScatter.pptx {
+                $slide = Add-OfficePowerPointSlide -Layout 1
+                Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
+            }
 ```
 
 Creates a scatter chart using Quarter on the X axis and Revenue on the Y axis.

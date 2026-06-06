@@ -26,15 +26,21 @@ Uses OfficeIMO.Word document append support and preserves the wrapper as an oper
 
 ### EXAMPLE 1
 ```powershell
-Join-OfficeWordDocument -AppendPath @('C:\Path')
+PS> Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx
+            Get-OfficeWordStatistics -Path .\ReleasePacket.docx |
+                Select-Object -Property Paragraphs, Tables, Images
 ```
 
+Appends the source documents with OfficeIMO.Word and then reads back basic structure from the merged output.
 
 ### EXAMPLE 2
 ```powershell
-Join-OfficeWordDocument -Document 'Value'
+PS> $doc = Get-OfficeWord -Path .\Base.docx
+            $doc | Join-OfficeWordDocument -AppendPath .\Section1.docx, .\Section2.docx -PassThru |
+                Save-OfficeWord -Path .\Combined.docx
 ```
 
+Keeps the wrapper thin by piping the OfficeIMO document object through append and save commands.
 
 ## PARAMETERS
 

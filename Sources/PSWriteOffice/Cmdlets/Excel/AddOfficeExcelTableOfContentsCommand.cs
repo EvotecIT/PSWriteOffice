@@ -8,10 +8,12 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <summary>Adds or refreshes a workbook table of contents sheet.</summary>
 /// <para>Can run inside the Excel DSL, against an open workbook, or directly against a file path.</para>
 /// <example>
-///   <summary>Add a TOC sheet to an existing workbook.</summary>
+///   <summary>Add a TOC sheet and verify workbook structure.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks</code>
-///   <para>Creates or refreshes a TOC sheet, lists named ranges, and adds back links on other sheets.</para>
+///   <code>Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks -PassThru
+/// Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets |
+///     Select-Object -Property SheetCount, NamedRangeCount, Sheets</code>
+///   <para>Creates or refreshes a TOC sheet, adds back links, and reads back workbook navigation metadata.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelTableOfContents", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelTableOfContents")]

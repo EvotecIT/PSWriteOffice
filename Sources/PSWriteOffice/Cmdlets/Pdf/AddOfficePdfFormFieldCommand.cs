@@ -5,6 +5,19 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a simple AcroForm field to a generated PDF document.</summary>
+/// <example>
+///   <summary>Create a simple PDF form.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfForm.pdf {
+///     Add-OfficePdfHeading -Text 'Access request'
+///     Add-OfficePdfParagraph -Text 'Requester'
+///     Add-OfficePdfFormField -Name 'Requester' -Type Text -Width 240
+///     Add-OfficePdfParagraph -Text 'Priority'
+///     Add-OfficePdfFormField -Name 'Priority' -Type Choice -Options 'Low','Normal','High' -Value 'Normal'
+///     Add-OfficePdfFormField -Name 'Approved' -Type CheckBox
+///   }</code>
+///   <para>Adds text, choice, and checkbox form fields to a generated PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfFormField", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfFormField")]
 [OutputType(typeof(PdfDocument))]

@@ -5,6 +5,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Sets or clears the generated PDF page background color.</summary>
+/// <example>
+///   <summary>Set a generated PDF page background.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfBackground.pdf {
+///     Set-OfficePdfBackground -Color '#F8FAFC'
+///     Add-OfficePdfHeading -Text 'Report on a soft background'
+///     Add-OfficePdfParagraph -Text 'The background color applies to generated pages.'
+/// }</code>
+///   <para>Applies a page background color before adding content.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfBackground", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfBackground")]
 [OutputType(typeof(PdfDocument))]

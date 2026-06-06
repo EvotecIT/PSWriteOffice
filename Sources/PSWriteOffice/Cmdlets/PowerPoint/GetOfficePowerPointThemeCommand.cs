@@ -9,8 +9,11 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Inspect the default master theme.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficePowerPointTheme -Presentation $ppt</code>
-///   <para>Returns the theme name, theme colors, and configured fonts for master 0.</para>
+///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointThemeRead.pptx
+/// Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Service Brief'
+/// Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos Display' -MinorLatin 'Aptos'
+/// Get-OfficePowerPointTheme -Presentation $ppt | Select-Object Name, Master</code>
+///   <para>Returns theme information after updating the deck theme metadata.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePowerPointTheme")]
 [Alias("PptTheme")]

@@ -26,15 +26,14 @@ Adds a generated-document text watermark.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfWatermark -Color 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfWatermark.pdf {
+                Add-OfficePdfWatermark -Text 'DRAFT' -FontSize 72 -Opacity 0.12 -RotationAngle -35 -Color '#64748B'
+                Add-OfficePdfHeading -Text 'Draft service review'
+                Add-OfficePdfParagraph -Text 'This copy is not final.'
+            }
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfWatermark -Document 'Value'
-```
-
+Adds a text watermark while generating the PDF.
 
 ## PARAMETERS
 

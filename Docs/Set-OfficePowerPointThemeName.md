@@ -21,10 +21,13 @@ Sets the PowerPoint theme name.
 
 ### EXAMPLE 1
 ```powershell
-PS> Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Contoso Theme' -AllMasters
+PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeName.pptx {
+                Set-OfficePowerPointThemeName -Name 'Service Brief' -AllMasters
+                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Named theme'
+            }
 ```
 
-Applies a friendly theme name across every master.
+Applies a friendly theme name across every master before saving.
 
 ## PARAMETERS
 

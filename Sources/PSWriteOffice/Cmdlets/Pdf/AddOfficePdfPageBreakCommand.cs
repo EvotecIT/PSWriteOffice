@@ -5,6 +5,17 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a page break to a PDF document.</summary>
+/// <example>
+///   <summary>Start an appendix on a new page.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfPageBreak.pdf {
+///     Add-OfficePdfHeading -Text 'Service review'
+///     Add-OfficePdfParagraph -Text 'Summary content stays on the first page.'
+///     Add-OfficePdfPageBreak
+///     Add-OfficePdfHeading -Text 'Appendix' -Level 2
+/// }</code>
+///   <para>Forces the appendix section to begin on the next page.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfPageBreak", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfPageBreak")]
 [OutputType(typeof(PdfDocument))]

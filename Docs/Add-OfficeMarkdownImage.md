@@ -26,10 +26,13 @@ Adds a Markdown image.
 
 ### EXAMPLE 1
 ```powershell
-PS> MarkdownImage -Path '.\logo.png' -Alt 'Logo'
+PS> New-OfficeMarkdown -Path .\Report.md {
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Architecture'
+                Add-OfficeMarkdownImage -Path '.\Assets\architecture.png' -Alt 'Architecture diagram' -Title 'Current architecture' -Width 640
+            }
 ```
 
-Appends an image block to the document.
+Appends an image block with accessibility text and optional presentation metadata.
 
 ## PARAMETERS
 

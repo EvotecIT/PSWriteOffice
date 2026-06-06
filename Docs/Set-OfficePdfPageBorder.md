@@ -26,15 +26,13 @@ Sets or clears the generated PDF page border decoration.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficePdfPageBorder -Clear
+PS> New-OfficePdf -Path .\Examples\Documents\PdfPageBorder.pdf {
+                Set-OfficePdfPageBorder -Color '#CBD5E1' -Width 0.75 -Inset 24 -Opacity 0.8
+                Add-OfficePdfHeading -Text 'Bordered report'
+            }
 ```
 
-
-### EXAMPLE 2
-```powershell
-Set-OfficePdfPageBorder -Document 'Value'
-```
-
+Decorates generated pages with an OfficeIMO.Pdf page border.
 
 ## PARAMETERS
 

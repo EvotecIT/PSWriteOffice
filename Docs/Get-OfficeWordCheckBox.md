@@ -26,10 +26,13 @@ Gets checkbox content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordCheckBox -Path .\Report.docx
+PS> $openItems = Get-OfficeWordCheckBox -Path .\Report.docx -Tag 'approval-*' -Unchecked
+            $openItems |
+                Select-Object -Property Alias, Tag, IsChecked |
+                Format-Table -AutoSize
 ```
 
-Returns all checkbox content controls in the document.
+Finds unchecked approval checkboxes by tag so a review workflow can show what is still pending.
 
 ## PARAMETERS
 

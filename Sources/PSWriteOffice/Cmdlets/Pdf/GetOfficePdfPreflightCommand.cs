@@ -5,6 +5,14 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Reports whether OfficeIMO.Pdf can read or rewrite a PDF safely.</summary>
+/// <example>
+///   <summary>Preflight a PDF before migration operations.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$preflight = Get-OfficePdfPreflight -Path .\Examples\Documents\Report.pdf
+/// $preflight.HasReadBlockers
+/// $preflight.HasRewriteBlockers</code>
+///   <para>Checks whether OfficeIMO.Pdf can read or rewrite the PDF safely.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdfPreflight")]
 [OutputType(typeof(PdfDocumentPreflight))]
 public sealed class GetOfficePdfPreflightCommand : PSCmdlet

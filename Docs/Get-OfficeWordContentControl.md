@@ -26,10 +26,13 @@ Gets structured content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordContentControl -Path .\Report.docx
+PS> $controls = Get-OfficeWordContentControl -Path .\Template.docx -Tag 'report-*'
+            $controls |
+                Group-Object -Property Tag |
+                Select-Object -Property Name, Count
 ```
 
-Returns all structured document tags in the document.
+Returns structured document tags matching the template tag convention and summarizes their counts.
 
 ## PARAMETERS
 

@@ -6,10 +6,15 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown horizontal rule.</summary>
 /// <example>
-///   <summary>Add a horizontal rule.</summary>
+///   <summary>Separate summary and appendix sections.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownHorizontalRule</code>
-///   <para>Appends a horizontal rule to the document.</para>
+///   <code>New-OfficeMarkdown -Path .\Report.md {
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Summary'
+///     Add-OfficeMarkdownParagraph -Text 'Key decisions and status.'
+///     Add-OfficeMarkdownHorizontalRule
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Appendix'
+/// }</code>
+///   <para>Appends a horizontal rule between sections of the current Markdown document.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownHorizontalRule", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownHorizontalRule", "MarkdownHr")]

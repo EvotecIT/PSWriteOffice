@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets date picker content controls from a Word document.</summary>
 /// <example>
-///   <summary>List date picker controls.</summary>
+///   <summary>Find date picker controls used by a form.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordDatePicker -Path .\Report.docx</code>
-///   <para>Returns all date picker controls in the document.</para>
+///   <code>$dates = Get-OfficeWordDatePicker -Path .\IntakeForm.docx -Tag 'deadline-*'
+/// $dates |
+///     Select-Object -Property Alias, Tag |
+///     Format-Table -AutoSize</code>
+///   <para>Filters date picker content controls by tag before a form validation pass.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordDatePicker", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordDatePickers")]
