@@ -11,7 +11,7 @@ Closes an Excel workbook and optionally saves it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Show] [<CommonParameters>]
+Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Show] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,12 +35,28 @@ Workbook to close.
 Type: ExcelDocument
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to save the workbook as an encrypted package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -51,7 +67,39 @@ Optional output path when saving.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SafePreflight
+Run OfficeIMO worksheet preflight cleanup before saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SafeRepairDefinedNames
+Repair common defined-name issues before saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -67,7 +115,7 @@ Persist changes before closing.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -83,7 +131,23 @@ Open the workbook in Excel after saving.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ValidateOpenXml
+Validate the saved package with OpenXmlValidator and throw on errors.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -106,4 +170,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

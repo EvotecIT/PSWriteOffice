@@ -1,0 +1,150 @@
+---
+external help file: PSWriteOffice-help.xml
+Module Name: PSWriteOffice
+online version: https://github.com/EvotecIT/PSWriteOffice
+schema: 2.0.0
+---
+# Join-OfficeWordDocument
+## SYNOPSIS
+Appends one or more Word documents into a base Word document.
+
+## SYNTAX
+### Path (Default)
+```powershell
+Join-OfficeWordDocument [-InputPath] <string> [-AppendPath] <string[]> [-OutputPath <string>] [-Show] [-PassThru] [<CommonParameters>]
+```
+
+### Document
+```powershell
+Join-OfficeWordDocument [-AppendPath] <string[]> -Document <WordDocument> [-OutputPath <string>] [-Show] [-PassThru] [<CommonParameters>]
+```
+
+## DESCRIPTION
+Uses OfficeIMO.Word document append support and preserves the wrapper as an operator-friendly merge command.
+
+## EXAMPLES
+
+### EXAMPLE 1
+```powershell
+Join-OfficeWordDocument -AppendPath @('C:\Path')
+```
+
+
+### EXAMPLE 2
+```powershell
+Join-OfficeWordDocument -Document 'Value'
+```
+
+
+## PARAMETERS
+
+### -AppendPath
+Documents to append to the base document.
+
+```yaml
+Type: String[]
+Parameter Sets: Path, Document
+Aliases: SourcePath
+Possible values:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Document
+Base document object.
+
+```yaml
+Type: WordDocument
+Parameter Sets: Document
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -InputPath
+Base document path.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: Path, BasePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutputPath
+Optional output path. When omitted for path input, the base document is updated in place.
+
+```yaml
+Type: String
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThru
+Emit the merged Word document instead of disposing it.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Show
+Open the saved output with the shell.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+- `OfficeIMO.Word.WordDocument`
+
+## OUTPUTS
+
+- `OfficeIMO.Word.WordDocument`
+
+## RELATED LINKS
+
+- None

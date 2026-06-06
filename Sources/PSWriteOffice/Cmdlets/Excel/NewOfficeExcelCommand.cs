@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
+using OfficeIMO.Excel.Pdf;
 using PSWriteOffice.Services.Excel;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -54,6 +56,10 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter ValidateOpenXml { get; set; }
 
+    /// <summary>Optional PDF path to create from the same workbook before closing it.</summary>
+    [Parameter]
+    public string? PdfPath { get; set; }
+
     /// <summary>Emit a <see cref="FileInfo"/> for convenience.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -86,6 +92,7 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
                     SafePreflight.IsPresent,
                     SafeRepairDefinedNames.IsPresent,
                     ValidateOpenXml.IsPresent);
+                SavePdfIfRequested(document);
                 ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, Password, saveOptions);
             }
             else
@@ -103,5 +110,17 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
         {
             WriteObject(new FileInfo(resolvedPath));
         }
+    }
+
+    private void SavePdfIfRequested(ExcelDocument document)
+    {
+        if (string.IsNullOrWhiteSpace(PdfPath))
+        {
+            return;
+        }
+
+        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        PdfCommandUtilities.EnsureDirectory(pdfPath);
+        document.SaveAsPdf(pdfPath);
     }
 }

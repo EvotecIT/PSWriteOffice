@@ -40,7 +40,7 @@ Document to inspect.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -56,7 +56,7 @@ Optional 0-based section index filter.
 Type: Int32[]
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Path to the document.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -95,4 +95,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

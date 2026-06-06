@@ -35,7 +35,7 @@ Slide master index to inspect.
 Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -51,7 +51,7 @@ Presentation to inspect (optional inside New-OfficePowerPoint).
 Type: PowerPointPresentation
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -74,4 +74,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

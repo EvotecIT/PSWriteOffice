@@ -9,14 +9,14 @@ schema: 2.0.0
 Updates the table of contents in a Word document.
 
 ## SYNTAX
+### Document (Default)
+```powershell
+Update-OfficeWordTableOfContent [-Document <WordDocument>] [-Regenerate] [-PassThru] [<CommonParameters>]
+```
+
 ### TableOfContent
 ```powershell
 Update-OfficeWordTableOfContent [-TableOfContent <WordTableOfContent>] [-Regenerate] [-PassThru] [<CommonParameters>]
-```
-
-### Document
-```powershell
-Update-OfficeWordTableOfContent [-Document <WordDocument>] [-Regenerate] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -40,7 +40,7 @@ Document to update when provided explicitly.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -54,9 +54,9 @@ Emit the updated table of contents.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: TableOfContent, Document
+Parameter Sets: Document, TableOfContent
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -70,9 +70,9 @@ Rebuild the table of contents before updating.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: TableOfContent, Document
+Parameter Sets: Document, TableOfContent
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Table of contents to update.
 Type: WordTableOfContent
 Parameter Sets: TableOfContent
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -112,4 +112,3 @@ OfficeIMO.Word.WordDocument`
 ## RELATED LINKS
 
 - None
-

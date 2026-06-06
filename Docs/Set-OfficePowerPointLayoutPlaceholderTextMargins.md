@@ -45,7 +45,7 @@ Bottom margin in points.
 Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -61,7 +61,7 @@ Create the placeholder if it is missing.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -77,7 +77,7 @@ Optional placeholder index.
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -93,7 +93,7 @@ Layout index within the master.
 Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -109,7 +109,7 @@ Left margin in points.
 Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -125,7 +125,7 @@ Slide master index.
 Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -141,7 +141,7 @@ Emit the placeholder textbox after update.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -157,7 +157,7 @@ Placeholder type to target.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Type
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -173,7 +173,7 @@ Presentation to update (optional inside DSL).
 Type: PowerPointPresentation
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -189,7 +189,7 @@ Right margin in points.
 Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -205,7 +205,7 @@ Top margin in points.
 Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -228,4 +228,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

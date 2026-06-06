@@ -1,0 +1,66 @@
+using System.IO;
+using System.Management.Automation;
+using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
+
+namespace PSWriteOffice.Cmdlets.Pdf;
+
+/// <summary>Gets or extracts embedded file attachments from a PDF.</summary>
+[Cmdlet(VerbsCommon.Get, "OfficePdfAttachment")]
+[OutputType(typeof(PdfExtractedAttachment), typeof(FileInfo))]
+public sealed class GetOfficePdfAttachmentCommand : PSCmdlet
+{
+    /// <summary>PDF file path.</summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
+
+    /// <summary>Optional attachment name or file name filter.</summary>
+    [Parameter]
+    public string? Name { get; set; }
+
+    /// <summary>Optional directory where attachments should be written.</summary>
+    [Parameter]
+    public string? OutputDirectory { get; set; }
+
+    /// <inheritdoc />
+    protected override void ProcessRecord()
+    {
+        var attachments = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Read.Attachments();
+        string? outputDirectory = null;
+        if (!string.IsNullOrWhiteSpace(OutputDirectory))
+        {
+            outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory!);
+            PdfCommandUtilities.EnsureOutputDirectory(outputDirectory);
+        }
+
+        foreach (var attachment in attachments)
+        {
+            if (!Matches(attachment))
+            {
+                continue;
+            }
+
+            if (outputDirectory == null)
+            {
+                WriteObject(attachment);
+                continue;
+            }
+
+            var fileName = !string.IsNullOrWhiteSpace(attachment.UnicodeFileName)
+                ? attachment.UnicodeFileName!
+                : attachment.FileName;
+            var outputPath = PdfCommandUtilities.GetUniquePath(outputDirectory, fileName);
+            File.WriteAllBytes(outputPath, attachment.Bytes);
+            WriteObject(new FileInfo(outputPath));
+        }
+    }
+
+    private bool Matches(PdfExtractedAttachment attachment)
+    {
+        return string.IsNullOrWhiteSpace(Name) ||
+            string.Equals(attachment.Name, Name, System.StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(attachment.FileName, Name, System.StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(attachment.UnicodeFileName, Name, System.StringComparison.OrdinalIgnoreCase);
+    }
+}

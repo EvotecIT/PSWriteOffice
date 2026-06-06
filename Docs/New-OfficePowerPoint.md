@@ -11,7 +11,7 @@ Creates a PowerPoint presentation using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficePowerPoint [-FilePath] <string> [[-Content] <scriptblock>] [-Open] [-NoSave] [-PassThru] [<CommonParameters>]
+New-OfficePowerPoint [-FilePath] <string> [[-Content] <scriptblock>] [-Open] [-NoSave] [-PassThru] [-Password <string>] [-PdfPath <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,7 +42,7 @@ DSL scriptblock describing presentation content.
 Type: ScriptBlock
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 1
@@ -58,7 +58,7 @@ Destination path for the new .pptx.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -74,7 +74,7 @@ Skip saving after executing the DSL.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -90,7 +90,7 @@ Open the presentation after saving.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -106,7 +106,39 @@ Emit a FileInfo for chaining.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to save the presentation as an encrypted package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PdfPath
+Optional PDF path to create from the same presentation before closing it.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -129,4 +161,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

@@ -40,7 +40,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -56,7 +56,7 @@ Hide gridlines.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Emit the worksheet after applying gridline settings.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -120,7 +120,7 @@ Show gridlines.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,4 +143,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

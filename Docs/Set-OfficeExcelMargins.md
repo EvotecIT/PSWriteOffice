@@ -47,7 +47,7 @@ Bottom margin in inches.
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -63,7 +63,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -79,7 +79,7 @@ Footer margin in inches.
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -95,7 +95,7 @@ Header margin in inches.
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -111,7 +111,7 @@ Left margin in inches.
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -127,7 +127,7 @@ Emit the worksheet after applying margins.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,7 +143,7 @@ Margin preset to apply.
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -159,7 +159,7 @@ Right margin in inches.
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -175,7 +175,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -191,7 +191,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -207,7 +207,7 @@ Top margin in inches.
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -230,4 +230,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

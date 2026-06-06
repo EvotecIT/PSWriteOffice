@@ -14,6 +14,11 @@ Gets Excel tables defined in a workbook.
 Get-OfficeExcelTable [-InputPath] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
 ```
 
+### Uri
+```powershell
+Get-OfficeExcelTable [-Uri] <uri> [-AllowHttp] [-Name <string>] [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+```
+
 ### Document
 ```powershell
 Get-OfficeExcelTable -Document <ExcelDocument> [-Name <string>] [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
@@ -33,6 +38,22 @@ Returns table metadata (name, range, sheet).
 
 ## PARAMETERS
 
+### -AllowHttp
+Allow HTTP workbook downloads in addition to HTTPS.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Uri
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Document
 Workbook to inspect.
 
@@ -40,7 +61,7 @@ Workbook to inspect.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -56,7 +77,7 @@ Path to the workbook.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -70,9 +91,9 @@ Optional table name filter.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -86,9 +107,9 @@ Optional sheet name filter.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -102,12 +123,28 @@ Optional sheet index (0-based) filter.
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Uri
+Remote workbook URI to inspect.
+
+```yaml
+Type: Uri
+Parameter Sets: Uri
+Aliases: Url
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -127,4 +164,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

@@ -57,7 +57,7 @@ A1-style cell address (e.g., A1, C5).
 Type: String
 Parameter Sets: ContextExternal, DocumentExternal, DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -73,7 +73,7 @@ Accept wildcard characters: True
 Type: Nullable`1
 Parameter Sets: ContextExternal, DocumentExternal, DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -89,7 +89,7 @@ Optional display text.
 Type: String
 Parameter Sets: ContextExternal, DocumentExternal, DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -105,7 +105,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: DocumentExternal, DocumentInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -121,7 +121,7 @@ Internal location to link to (e.g., "'Summary'!A1").
 Type: String
 Parameter Sets: DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -137,7 +137,7 @@ Skip hyperlink styling (blue + underline).
 Type: SwitchParameter
 Parameter Sets: ContextExternal, DocumentExternal, DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -153,7 +153,7 @@ Emit the worksheet after setting the link.
 Type: SwitchParameter
 Parameter Sets: ContextExternal, DocumentExternal, DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -169,7 +169,7 @@ Accept wildcard characters: True
 Type: Nullable`1
 Parameter Sets: ContextExternal, DocumentExternal, DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -185,7 +185,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: DocumentExternal, DocumentInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -201,7 +201,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: DocumentExternal, DocumentInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -217,7 +217,7 @@ Target A1 address for internal links.
 Type: String
 Parameter Sets: DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -233,7 +233,7 @@ Target worksheet name for internal links.
 Type: String
 Parameter Sets: DocumentInternal, ContextInternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -249,7 +249,7 @@ External URL to link to.
 Type: String
 Parameter Sets: ContextExternal, DocumentExternal
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -272,4 +272,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

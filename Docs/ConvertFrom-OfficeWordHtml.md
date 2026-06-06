@@ -47,7 +47,7 @@ Base path used to resolve relative resources (for example images).
 Type: String
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -63,7 +63,7 @@ Continue numbering across separate ordered lists.
 Type: SwitchParameter
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -79,7 +79,7 @@ Path to an HTML file.
 Type: String
 Parameter Sets: Path
 Aliases: Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -95,7 +95,7 @@ Optional font family to apply during conversion.
 Type: String
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -111,7 +111,7 @@ HTML markup to convert.
 Type: String
 Parameter Sets: Html
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -127,7 +127,7 @@ Include list style metadata.
 Type: SwitchParameter
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,7 +143,7 @@ Open the document after saving.
 Type: SwitchParameter
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -159,7 +159,7 @@ Optional output path for the .docx file.
 Type: String
 Parameter Sets: Html, Path
 Aliases: OutPath
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -175,7 +175,7 @@ Emit a FileInfo when saving to disk.
 Type: SwitchParameter
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -191,7 +191,7 @@ Render <pre> elements as single-cell tables.
 Type: SwitchParameter
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -207,7 +207,7 @@ Controls how <section> tags are mapped into Word.
 Type: Nullable`1
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -223,7 +223,7 @@ Inline CSS stylesheets to apply during conversion.
 Type: String[]
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -239,7 +239,7 @@ Paths to CSS stylesheets to apply during conversion.
 Type: String[]
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -255,7 +255,7 @@ Convert headings into a numbered list.
 Type: SwitchParameter
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -271,7 +271,7 @@ Controls where table captions are emitted.
 Type: Nullable`1
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -295,4 +295,3 @@ System.IO.FileInfo`
 ## RELATED LINKS
 
 - None
-

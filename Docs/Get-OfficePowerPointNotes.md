@@ -47,7 +47,7 @@ Include slides that do not currently have speaker notes.
 Type: SwitchParameter
 Parameter Sets: Slide, Presentation
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -63,7 +63,7 @@ Optional zero-based slide index when reading from a presentation.
 Type: Nullable`1
 Parameter Sets: Presentation
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -79,7 +79,7 @@ Presentation whose slides should be inspected.
 Type: PowerPointPresentation
 Parameter Sets: Presentation
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -95,7 +95,7 @@ Slide to inspect (optional inside the DSL).
 Type: PowerPointSlide
 Parameter Sets: Slide
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -119,4 +119,3 @@ OfficeIMO.PowerPoint.PowerPointPresentation`
 ## RELATED LINKS
 
 - None
-

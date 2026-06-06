@@ -52,7 +52,7 @@ Use case-sensitive matching.
 Type: SwitchParameter
 Parameter Sets: Auto, Document, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -68,7 +68,7 @@ Document to update.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -84,7 +84,7 @@ Also replace hyperlink anchors.
 Type: SwitchParameter
 Parameter Sets: Auto, Document, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -100,7 +100,7 @@ Also replace hyperlink display text.
 Type: SwitchParameter
 Parameter Sets: Auto, Document, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -116,7 +116,7 @@ Also replace hyperlink tooltips.
 Type: SwitchParameter
 Parameter Sets: Auto, Document, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -132,7 +132,7 @@ Also replace hyperlink URIs.
 Type: SwitchParameter
 Parameter Sets: Auto, Document, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -148,7 +148,7 @@ Path to the .docx file to update in place.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -164,7 +164,7 @@ Replacement text.
 Type: String
 Parameter Sets: Auto, Document, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -180,7 +180,7 @@ Text to find.
 Type: String
 Parameter Sets: Auto, Document, Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -196,7 +196,7 @@ Open the file after saving when using -Path.
 Type: SwitchParameter
 Parameter Sets: Path
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -219,4 +219,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

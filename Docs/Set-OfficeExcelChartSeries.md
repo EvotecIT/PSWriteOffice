@@ -40,7 +40,7 @@ Chart to update.
 Type: ExcelChart
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -56,7 +56,7 @@ Series fill color in hex format.
 Type: String
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Ignore case when matching series name.
 Type: Boolean
 Parameter Sets: Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Series line color in hex format.
 Type: String
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Series line width in points.
 Type: Nullable`1
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -120,7 +120,7 @@ Marker fill color in hex format.
 Type: String
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -136,7 +136,7 @@ Marker line color in hex format.
 Type: String
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -152,7 +152,7 @@ Marker line width in points.
 Type: Nullable`1
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -168,7 +168,7 @@ Marker size.
 Type: Nullable`1
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -184,7 +184,7 @@ Marker style name.
 Type: String
 Parameter Sets: Index, Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -200,7 +200,7 @@ Zero-based series index.
 Type: Int32
 Parameter Sets: Index
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -216,7 +216,7 @@ Series name.
 Type: String
 Parameter Sets: Name
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -239,4 +239,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

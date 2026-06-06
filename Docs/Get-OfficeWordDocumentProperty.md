@@ -40,7 +40,7 @@ Only return built-in document properties.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Only return custom document properties.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Document to inspect.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -88,7 +88,7 @@ Path to the document.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -104,7 +104,7 @@ Property name filter (wildcards supported).
 Type: String[]
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -127,4 +127,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

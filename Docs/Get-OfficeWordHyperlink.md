@@ -50,7 +50,7 @@ Filter by bookmark anchor (wildcards supported).
 Type: String[]
 Parameter Sets: Path, Document, Section, Paragraph
 Aliases: Bookmark
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -66,7 +66,7 @@ Document to inspect.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -82,7 +82,7 @@ Path to the document.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -98,7 +98,7 @@ Paragraph to inspect.
 Type: WordParagraph
 Parameter Sets: Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -114,7 +114,7 @@ Section to inspect.
 Type: WordSection
 Parameter Sets: Section
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -130,7 +130,7 @@ Filter by hyperlink text (wildcards supported).
 Type: String[]
 Parameter Sets: Path, Document, Section, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -146,7 +146,7 @@ Filter by external URL (wildcards supported).
 Type: String[]
 Parameter Sets: Path, Document, Section, Paragraph
 Aliases: Uri
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -171,4 +171,3 @@ OfficeIMO.Word.WordParagraph`
 ## RELATED LINKS
 
 - None
-

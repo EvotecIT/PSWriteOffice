@@ -40,7 +40,7 @@ Mark every task as completed.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Zero-based item indexes that should be marked complete.
 Type: Int32[]
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Markdown document to update outside the DSL context.
 Type: MarkdownDoc
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -88,7 +88,7 @@ Task text entries to include in the checklist.
 Type: String[]
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -104,7 +104,7 @@ Emit the updated Markdown document.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -127,4 +127,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

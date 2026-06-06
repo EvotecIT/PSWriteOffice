@@ -1,0 +1,58 @@
+using System.Management.Automation;
+using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
+
+namespace PSWriteOffice.Cmdlets.Pdf;
+
+/// <summary>Adds a bullet or numbered list to a PDF document.</summary>
+[Cmdlet(VerbsCommon.Add, "OfficePdfList", DefaultParameterSetName = ParameterSetContext)]
+[Alias("PdfList")]
+[OutputType(typeof(PdfDocument))]
+public sealed class AddOfficePdfListCommand : PSCmdlet
+{
+    private const string ParameterSetContext = "Context";
+    private const string ParameterSetDocument = "Document";
+
+    /// <summary>PDF document to update outside the DSL context.</summary>
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    public PdfDocument Document { get; set; } = null!;
+
+    /// <summary>List item text.</summary>
+    [Parameter(Mandatory = true, Position = 0)]
+    public string[] Items { get; set; } = System.Array.Empty<string>();
+
+    /// <summary>Create a numbered list instead of a bullet list.</summary>
+    [Parameter]
+    public SwitchParameter Numbered { get; set; }
+
+    /// <summary>Number to use for the first numbered item.</summary>
+    [Parameter]
+    public int StartNumber { get; set; } = 1;
+
+    /// <summary>List alignment.</summary>
+    [Parameter]
+    public PdfAlign Align { get; set; } = PdfAlign.Left;
+
+    /// <summary>Emit the updated document.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
+    /// <inheritdoc />
+    protected override void ProcessRecord()
+    {
+        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
+        if (Numbered.IsPresent)
+        {
+            document.Numbered(Items, Align, startNumber: StartNumber);
+        }
+        else
+        {
+            document.Bullets(Items, Align);
+        }
+
+        if (PassThru.IsPresent)
+        {
+            WriteObject(document);
+        }
+    }
+}

@@ -11,7 +11,7 @@ Creates a Word document using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeWord [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru] [-Open] [-NoSave] [-AutoSave] [<CommonParameters>]
+New-OfficeWord [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru] [-Open] [-NoSave] [-AutoSave] [-Password <string>] [-PdfPath <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,7 +35,7 @@ Enable OfficeIMO AutoSave mode.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -51,7 +51,7 @@ DSL scriptblock describing document content.
 Type: ScriptBlock
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 1
@@ -67,7 +67,7 @@ Skip saving after executing the DSL.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -83,7 +83,7 @@ Open the document after saving.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -99,7 +99,7 @@ Destination path for the document.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -115,7 +115,39 @@ Emit a FileInfo for chaining.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to save the document as an encrypted package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PdfPath
+Optional PDF path to create from the same Word document before closing it.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -138,4 +170,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

@@ -11,7 +11,7 @@ Creates a Markdown document using a DSL scriptblock.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeMarkdown [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru] [-NoSave] [<CommonParameters>]
+New-OfficeMarkdown [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-PdfPath <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -47,7 +47,7 @@ DSL scriptblock describing Markdown content.
 Type: ScriptBlock
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 1
@@ -63,7 +63,7 @@ Skip saving after executing the DSL.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -79,7 +79,7 @@ Destination path for the Markdown file.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -95,7 +95,23 @@ Emit a FileInfo for chaining.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PdfPath
+Optional PDF path to create from the same Markdown document.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -119,4 +135,3 @@ OfficeIMO.Markdown.MarkdownDoc`
 ## RELATED LINKS
 
 - None
-

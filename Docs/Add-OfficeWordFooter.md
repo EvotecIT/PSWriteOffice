@@ -35,7 +35,7 @@ DSL scriptblock executed within the footer context.
 Type: ScriptBlock
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 0
@@ -51,7 +51,7 @@ The footer kind (Default/First/Even).
 Type: HeaderFooterValues
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -74,4 +74,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

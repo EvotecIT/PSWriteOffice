@@ -11,7 +11,7 @@ Loads an existing PowerPoint presentation.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePowerPoint -FilePath <string> [<CommonParameters>]
+Get-OfficePowerPoint -FilePath <string> [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,9 +35,25 @@ Path to the .pptx file.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to open an encrypted presentation package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -58,4 +74,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

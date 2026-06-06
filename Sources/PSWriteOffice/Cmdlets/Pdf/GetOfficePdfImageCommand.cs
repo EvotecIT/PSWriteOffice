@@ -1,0 +1,58 @@
+using System.IO;
+using System.Management.Automation;
+using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
+
+namespace PSWriteOffice.Cmdlets.Pdf;
+
+/// <summary>Gets or extracts image resources from a PDF.</summary>
+[Cmdlet(VerbsCommon.Get, "OfficePdfImage")]
+[OutputType(typeof(PdfExtractedImage), typeof(FileInfo))]
+public sealed class GetOfficePdfImageCommand : PSCmdlet
+{
+    /// <summary>PDF file path.</summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
+
+    /// <summary>Optional page ranges such as 1-3,5.</summary>
+    [Parameter]
+    public string? PageRange { get; set; }
+
+    /// <summary>Optional directory where images should be written.</summary>
+    [Parameter]
+    public string? OutputDirectory { get; set; }
+
+    /// <summary>Base file name used when extracting images to disk.</summary>
+    [Parameter]
+    public string BaseName { get; set; } = "image";
+
+    /// <inheritdoc />
+    protected override void ProcessRecord()
+    {
+        var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        if (!string.IsNullOrWhiteSpace(OutputDirectory))
+        {
+            var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory!);
+            PdfCommandUtilities.EnsureOutputDirectory(outputDirectory);
+            var bytes = File.ReadAllBytes(inputPath);
+            var paths = string.IsNullOrWhiteSpace(PageRange)
+                ? PdfImageExtractor.ExtractImages(bytes, outputDirectory, BaseName)
+                : PdfImageExtractor.ExtractImagesByPageRanges(bytes, outputDirectory, BaseName, PdfPageRange.ParseMany(PageRange!));
+            foreach (var path in paths)
+            {
+                WriteObject(new FileInfo(path));
+            }
+
+            return;
+        }
+
+        var images = string.IsNullOrWhiteSpace(PageRange)
+            ? PdfImageExtractor.ExtractImages(inputPath)
+            : PdfImageExtractor.ExtractImagesByPageRanges(inputPath, PdfPageRange.ParseMany(PageRange!));
+        foreach (var image in images)
+        {
+            WriteObject(image);
+        }
+    }
+}

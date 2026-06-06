@@ -1,6 +1,8 @@
 using System;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
+using OfficeIMO.PowerPoint.Pdf;
+using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
@@ -29,6 +31,10 @@ public class SaveOfficePowerPointCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>Optional PDF path to create from the same presentation.</summary>
+    [Parameter]
+    public string? PdfPath { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -42,6 +48,7 @@ public class SaveOfficePowerPointCommand : PSCmdlet
         {
             if (ShouldProcess("PowerPoint presentation", "Save"))
             {
+                SavePdfIfRequested();
                 PowerPointDocumentService.SavePresentation(Presentation, Show.IsPresent, Password);
             }
         }
@@ -49,5 +56,17 @@ public class SaveOfficePowerPointCommand : PSCmdlet
         {
             WriteError(new ErrorRecord(ex, "PowerPointSaveFailed", ErrorCategory.InvalidOperation, null));
         }
+    }
+
+    private void SavePdfIfRequested()
+    {
+        if (string.IsNullOrWhiteSpace(PdfPath))
+        {
+            return;
+        }
+
+        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        PdfCommandUtilities.EnsureDirectory(pdfPath);
+        Presentation.SaveAsPdf(pdfPath);
     }
 }

@@ -62,7 +62,7 @@ Custom slide height in centimeters.
 Type: Double
 Parameter Sets: Centimeters
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -78,7 +78,7 @@ Custom slide height in EMUs.
 Type: Int64
 Parameter Sets: Emus
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -94,7 +94,7 @@ Custom slide height in inches.
 Type: Double
 Parameter Sets: Inches
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -110,7 +110,7 @@ Custom slide height in points.
 Type: Double
 Parameter Sets: Points
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -126,7 +126,7 @@ Apply the preset in portrait orientation.
 Type: SwitchParameter
 Parameter Sets: Preset
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -142,7 +142,7 @@ Presentation to update (optional inside New-OfficePowerPoint).
 Type: PowerPointPresentation
 Parameter Sets: Preset, Centimeters, Inches, Points, Emus
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -174,7 +174,7 @@ Custom slide width in centimeters.
 Type: Double
 Parameter Sets: Centimeters
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -190,7 +190,7 @@ Custom slide width in EMUs.
 Type: Int64
 Parameter Sets: Emus
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -206,7 +206,7 @@ Custom slide width in inches.
 Type: Double
 Parameter Sets: Inches
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -222,7 +222,7 @@ Custom slide width in points.
 Type: Double
 Parameter Sets: Points
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -245,4 +245,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

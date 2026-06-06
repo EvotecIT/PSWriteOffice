@@ -45,7 +45,7 @@ Add a quick link back to the TOC on each worksheet.
 Type: SwitchParameter
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -61,7 +61,7 @@ Column for the back link when AddBackLinks is used.
 Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -77,7 +77,7 @@ Row for the back link when AddBackLinks is used.
 Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -93,7 +93,7 @@ Text used for back links.
 Type: String
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -109,7 +109,7 @@ Workbook to update.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -125,7 +125,7 @@ Keep the TOC sheet in its current position instead of moving it first.
 Type: SwitchParameter
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -141,7 +141,7 @@ Include hidden named ranges when listing named ranges.
 Type: SwitchParameter
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -157,7 +157,7 @@ Include named ranges in the TOC.
 Type: SwitchParameter
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -173,7 +173,7 @@ Path to the workbook to update in place.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -189,7 +189,7 @@ Disable internal hyperlinks in the TOC sheet.
 Type: SwitchParameter
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -205,7 +205,7 @@ Disable formatted TOC styling.
 Type: SwitchParameter
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -221,7 +221,7 @@ Open the workbook after saving when InputPath is used.
 Type: SwitchParameter
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -237,7 +237,7 @@ Emit the updated document or file info.
 Type: SwitchParameter
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -253,7 +253,7 @@ Name of the TOC sheet.
 Type: String
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -277,4 +277,3 @@ System.IO.FileInfo`
 ## RELATED LINKS
 
 - None
-

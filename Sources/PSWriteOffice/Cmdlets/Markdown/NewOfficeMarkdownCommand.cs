@@ -3,7 +3,9 @@ using System.IO;
 using System.Management.Automation;
 using System.Text;
 using OfficeIMO.Markdown;
+using OfficeIMO.Markdown.Pdf;
 using PSWriteOffice.Services.Markdown;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Markdown;
 
@@ -47,6 +49,10 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
     [Parameter]
     public SwitchParameter NoSave { get; set; }
 
+    /// <summary>Optional PDF path to create from the same Markdown document.</summary>
+    [Parameter]
+    public string? PdfPath { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -72,6 +78,7 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
         if (!NoSave.IsPresent)
         {
             File.WriteAllText(fullPath, document.ToMarkdown(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+            SavePdfIfRequested(document);
         }
 
         if (PassThru.IsPresent)
@@ -86,5 +93,17 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
         return Path.IsPathRooted(providerPath)
             ? providerPath
             : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
+    }
+
+    private void SavePdfIfRequested(MarkdownDoc document)
+    {
+        if (string.IsNullOrWhiteSpace(PdfPath))
+        {
+            return;
+        }
+
+        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        PdfCommandUtilities.EnsureDirectory(pdfPath);
+        document.SaveAsPdf(pdfPath);
     }
 }

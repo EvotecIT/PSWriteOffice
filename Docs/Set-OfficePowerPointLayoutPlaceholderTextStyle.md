@@ -45,7 +45,7 @@ Apply bold formatting.
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -61,7 +61,7 @@ Optional bullet character (ignored when -Numbering is supplied).
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -77,7 +77,7 @@ Text color in hex (e.g. 1F4E79).
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -93,7 +93,7 @@ Create the placeholder if it is missing.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -109,7 +109,7 @@ Font name (Latin).
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -125,7 +125,7 @@ Font size in points.
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -141,7 +141,7 @@ Highlight color in hex (e.g. FFF59D).
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -157,7 +157,7 @@ Optional placeholder index.
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -173,7 +173,7 @@ Apply italic formatting.
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -189,7 +189,7 @@ Layout index within the master.
 Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -205,7 +205,7 @@ Paragraph level (0-8) to set before applying style.
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -221,7 +221,7 @@ Slide master index.
 Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -237,7 +237,7 @@ Optional numbering scheme name (e.g. ArabicPeriod, RomanUpper).
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -253,7 +253,7 @@ Emit the placeholder textbox after update.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -269,7 +269,7 @@ Placeholder type to target.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Type
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -285,7 +285,7 @@ Presentation to update (optional inside DSL).
 Type: PowerPointPresentation
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -301,7 +301,7 @@ Named style preset (Title, Subtitle, Body, Caption, Emphasis).
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -317,7 +317,7 @@ Apply underline formatting.
 Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -340,4 +340,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

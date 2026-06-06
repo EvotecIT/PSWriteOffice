@@ -57,7 +57,7 @@ Top-left column (1-based) where the chart should be placed.
 Type: Int32
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -73,7 +73,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: DocumentRange, DocumentTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -89,7 +89,7 @@ Whether the range includes headers.
 Type: Boolean
 Parameter Sets: ContextRange, DocumentRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -105,7 +105,7 @@ Chart height in pixels.
 Type: Int32
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -121,7 +121,7 @@ Include cached data in the chart for portability.
 Type: Boolean
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -137,7 +137,7 @@ Emit the created chart.
 Type: SwitchParameter
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -153,7 +153,7 @@ A1 range containing chart data.
 Type: String
 Parameter Sets: ContextRange, DocumentRange
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -169,7 +169,7 @@ Top-left row (1-based) where the chart should be placed.
 Type: Int32
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -185,7 +185,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: DocumentRange, DocumentTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -201,7 +201,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: DocumentRange, DocumentTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -217,7 +217,7 @@ Table name containing chart data.
 Type: String
 Parameter Sets: DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -233,7 +233,7 @@ Chart title.
 Type: String
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -249,7 +249,7 @@ Chart type.
 Type: ExcelChartType
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values: ColumnClustered, ColumnStacked, BarClustered, BarStacked, Line, Area, Pie, Doughnut, Scatter, Bubble
+Possible values: ColumnClustered, ColumnStacked, ColumnStacked100, Column3DClustered, Column3DStacked, Column3DStacked100, BarClustered, BarStacked, BarStacked100, Bar3DClustered, Bar3DStacked, Bar3DStacked100, Line, LineStacked, LineStacked100, Line3D, Area, AreaStacked, AreaStacked100, Area3D, Area3DStacked, Area3DStacked100, Pie, Pie3D, PieOfPie, BarOfPie, Doughnut, Scatter, Bubble, Radar, Stock, Surface, SurfaceWireframe, SurfaceContour, SurfaceContourWireframe
 
 Required: False
 Position: named
@@ -265,7 +265,7 @@ Chart width in pixels.
 Type: Int32
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -288,4 +288,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

@@ -40,7 +40,7 @@ Nested Markdown content rendered inside the details block.
 Type: ScriptBlock
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 1
@@ -56,7 +56,7 @@ Markdown document to update outside the DSL context.
 Type: MarkdownDoc
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -72,7 +72,7 @@ Render the details block as open by default.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Emit the updated Markdown document.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Summary text displayed by the details block.
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -127,4 +127,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

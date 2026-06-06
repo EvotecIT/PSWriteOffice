@@ -40,7 +40,7 @@ Callout body text.
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 2
@@ -56,7 +56,7 @@ Markdown document to update outside the DSL context.
 Type: MarkdownDoc
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -72,7 +72,7 @@ Callout kind (e.g. note, tip, warning).
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -88,7 +88,7 @@ Emit the Markdown document after appending the callout.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Callout title.
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 1
@@ -127,4 +127,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

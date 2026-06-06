@@ -40,7 +40,7 @@ Allow blank values.
 Type: Boolean
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -72,7 +72,7 @@ Error message shown to the user.
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Error title shown to the user.
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Primary length bound.
 Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 2
@@ -120,7 +120,7 @@ Optional secondary length bound.
 Type: Nullable`1
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -136,7 +136,7 @@ Validation operator.
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 1
@@ -152,7 +152,7 @@ Emit the range string after applying validation.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -168,7 +168,7 @@ Target range in A1 notation.
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -184,7 +184,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -200,7 +200,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -223,4 +223,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

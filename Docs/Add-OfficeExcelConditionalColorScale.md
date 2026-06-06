@@ -40,7 +40,7 @@ Workbook to operate on outside the DSL context.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -56,7 +56,7 @@ End color in hex (#RRGGBB or FFRRGGBB).
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 2
@@ -72,7 +72,7 @@ Emit the range after applying the format.
 Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ A1 range to format.
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -104,7 +104,7 @@ Worksheet name when using Document.
 Type: String
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -120,7 +120,7 @@ Worksheet index (0-based) when using Document.
 Type: Nullable`1
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -136,7 +136,7 @@ Start color in hex (#RRGGBB or FFRRGGBB).
 Type: String
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 1
@@ -159,4 +159,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

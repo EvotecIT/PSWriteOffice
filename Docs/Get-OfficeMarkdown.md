@@ -47,7 +47,7 @@ Path to the Markdown file.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -63,7 +63,7 @@ Optional reader options.
 Type: MarkdownReaderOptions
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -79,7 +79,7 @@ Named reader profile used when Options is not supplied.
 Type: Nullable`1
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -95,7 +95,7 @@ Markdown text to parse.
 Type: String
 Parameter Sets: Text
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -118,4 +118,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

@@ -35,7 +35,7 @@ DSL content executed inside the table.
 Type: ScriptBlock
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 1
@@ -51,7 +51,7 @@ Input data (array, list, DataTable, etc.).
 Type: Object
 Parameter Sets: __AllParameterSets
 Aliases: Data
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -83,7 +83,7 @@ Emit the created WordTable.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -99,7 +99,7 @@ Skip writing header row.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -131,7 +131,7 @@ Transpose rows into property-oriented output.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -154,4 +154,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

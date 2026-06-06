@@ -40,7 +40,7 @@ Filter by checkbox alias (wildcards supported).
 Type: String[]
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Only return checked checkboxes.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Word document to read.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -88,7 +88,7 @@ Path to the .docx file.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -104,7 +104,7 @@ Filter by checkbox tag (wildcards supported).
 Type: String[]
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -120,7 +120,7 @@ Only return unchecked checkboxes.
 Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -143,4 +143,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

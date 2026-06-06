@@ -11,7 +11,7 @@ Saves a presentation to disk.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficePowerPoint -Presentation <PowerPointPresentation> [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficePowerPoint -Presentation <PowerPointPresentation> [-Show] [-Password <string>] [-PdfPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,6 +28,38 @@ Saves the current presentation and opens it in PowerPoint.
 
 ## PARAMETERS
 
+### -Password
+Password used to save the presentation as an encrypted package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PdfPath
+Optional PDF path to create from the same presentation.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Presentation
 Presentation instance to save.
 
@@ -35,7 +67,7 @@ Presentation instance to save.
 Type: PowerPointPresentation
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -51,7 +83,7 @@ Launch the saved file in the default viewer.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -74,4 +106,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

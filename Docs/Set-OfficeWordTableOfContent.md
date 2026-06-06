@@ -40,7 +40,7 @@ Document to update when provided explicitly.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Emit the updated table of contents.
 Type: SwitchParameter
 Parameter Sets: TableOfContent, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Table of contents to update.
 Type: WordTableOfContent
 Parameter Sets: TableOfContent
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -88,7 +88,7 @@ Heading text for the table of contents.
 Type: String
 Parameter Sets: TableOfContent, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +104,7 @@ Text shown when the table of contents has no entries.
 Type: String
 Parameter Sets: TableOfContent, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -128,4 +128,3 @@ OfficeIMO.Word.WordDocument`
 ## RELATED LINKS
 
 - None
-

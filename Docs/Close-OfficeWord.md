@@ -11,17 +11,17 @@ Closes one or more tracked Word documents, optionally saving them.
 ## SYNTAX
 ### Current (Default)
 ```powershell
-Close-OfficeWord [-Current] [-Save] [-Path <string>] [-Show] [<CommonParameters>]
+Close-OfficeWord [-Current] [-Save] [-Path <string>] [-Show] [-Password <string>] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Close-OfficeWord [-Document] <WordDocument> [-Save] [-Path <string>] [-Show] [<CommonParameters>]
+Close-OfficeWord [-Document] <WordDocument> [-Save] [-Path <string>] [-Show] [-Password <string>] [<CommonParameters>]
 ```
 
 ### All
 ```powershell
-Close-OfficeWord -All [-Save] [-Show] [<CommonParameters>]
+Close-OfficeWord -All [-Save] [-Show] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -59,7 +59,7 @@ Close all tracked documents for the current runspace.
 Type: SwitchParameter
 Parameter Sets: All
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -75,7 +75,7 @@ Close the most recently tracked document.
 Type: SwitchParameter
 Parameter Sets: Current
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -91,12 +91,28 @@ Word document to close.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to save the document as an encrypted package.
+
+```yaml
+Type: String
+Parameter Sets: Current, Document, All
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -107,7 +123,7 @@ Optional target path when saving.
 Type: String
 Parameter Sets: Current, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -123,7 +139,7 @@ Persist changes before closing.
 Type: SwitchParameter
 Parameter Sets: Current, Document, All
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -139,7 +155,7 @@ Open the file after saving.
 Type: SwitchParameter
 Parameter Sets: Current, Document, All
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -162,4 +178,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

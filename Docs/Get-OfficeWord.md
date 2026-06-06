@@ -11,7 +11,7 @@ Opens an existing Word document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeWord [-InputPath] <string> [-ReadOnly] [-AutoSave] [<CommonParameters>]
+Get-OfficeWord [-InputPath] <string> [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,7 +35,7 @@ Enable AutoSave when editing.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -51,10 +51,26 @@ Path to the .docx. Accepts PS paths.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to open an encrypted document package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -67,7 +83,7 @@ Open in read-only mode.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -90,4 +106,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

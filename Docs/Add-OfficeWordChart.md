@@ -52,7 +52,7 @@ Property name used for category labels.
 Type: String
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -68,7 +68,7 @@ Source objects used to build chart data.
 Type: Object[]
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -84,7 +84,7 @@ Target document that will receive the chart.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -100,7 +100,7 @@ Scale the chart width to the page content width.
 Type: SwitchParameter
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -116,7 +116,7 @@ Chart height in pixels.
 Type: Int32
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -132,7 +132,7 @@ Add a legend to the chart.
 Type: SwitchParameter
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -164,7 +164,7 @@ Target paragraph used as the chart anchor.
 Type: WordParagraph
 Parameter Sets: Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -180,7 +180,7 @@ Emit the created chart.
 Type: SwitchParameter
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -196,7 +196,7 @@ Color values applied to the series in order.
 Type: String[]
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -212,7 +212,7 @@ Property names used as numeric series.
 Type: String[]
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -228,7 +228,7 @@ Optional chart title.
 Type: String
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -260,7 +260,7 @@ Fraction of the page content width to use when -FitToPageWidth is specified.
 Type: Double
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -276,7 +276,7 @@ Chart width in pixels.
 Type: Int32
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -292,7 +292,7 @@ Optional X axis title for non-pie charts.
 Type: String
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -308,7 +308,7 @@ Optional Y axis title for non-pie charts.
 Type: String
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -332,4 +332,3 @@ OfficeIMO.Word.WordParagraph`
 ## RELATED LINKS
 
 - None
-

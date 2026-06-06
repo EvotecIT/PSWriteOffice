@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
+using OfficeIMO.PowerPoint.Pdf;
+using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
@@ -48,6 +50,10 @@ public class NewOfficePowerPointCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>Optional PDF path to create from the same presentation before closing it.</summary>
+    [Parameter]
+    public string? PdfPath { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -87,6 +93,7 @@ public class NewOfficePowerPointCommand : PSCmdlet
                 return;
             }
 
+            SavePdfIfRequested(presentation);
             PowerPointDocumentService.SavePresentation(presentation, Open.IsPresent, Password);
 
             if (PassThru.IsPresent)
@@ -104,5 +111,17 @@ public class NewOfficePowerPointCommand : PSCmdlet
     private static bool IsStopUpstream(Exception ex)
     {
         return ex.GetType().Name == "StopUpstreamCommandsException";
+    }
+
+    private void SavePdfIfRequested(PowerPointPresentation presentation)
+    {
+        if (string.IsNullOrWhiteSpace(PdfPath))
+        {
+            return;
+        }
+
+        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        PdfCommandUtilities.EnsureDirectory(pdfPath);
+        presentation.SaveAsPdf(pdfPath);
     }
 }

@@ -11,7 +11,7 @@ Creates a new Excel workbook using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeExcel [-FilePath] <string> [[-Content] <scriptblock>] [-AutoSave] [-NoSave] [-Open] [-PassThru] [<CommonParameters>]
+New-OfficeExcel [-FilePath] <string> [[-Content] <scriptblock>] [-AutoSave] [-NoSave] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-PdfPath <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,7 +35,7 @@ Opt into OfficeIMO automatic saves during operations.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -51,7 +51,7 @@ DSL scriptblock describing workbook content.
 Type: ScriptBlock
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: 1
@@ -67,7 +67,7 @@ Destination path for the workbook.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -83,7 +83,7 @@ Skip saving the workbook after running the DSL.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -99,7 +99,7 @@ Open the workbook in Excel after saving.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -115,7 +115,87 @@ Emit a FileInfo for convenience.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: 
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to save the workbook as an encrypted package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PdfPath
+Optional PDF path to create from the same workbook before closing it.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SafePreflight
+Run OfficeIMO worksheet preflight cleanup before saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SafeRepairDefinedNames
+Repair common defined-name issues before saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ValidateOpenXml
+Validate the saved package with OpenXmlValidator and throw on errors.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -138,4 +218,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

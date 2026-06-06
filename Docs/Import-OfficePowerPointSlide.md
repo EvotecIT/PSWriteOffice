@@ -40,7 +40,7 @@ Optional target insertion index; omit to append.
 Type: Nullable`1
 Parameter Sets: SourcePresentation, SourcePath
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -56,7 +56,7 @@ Target presentation to update (optional inside DSL).
 Type: PowerPointPresentation
 Parameter Sets: SourcePresentation, SourcePath
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +72,7 @@ Zero-based slide index in the source presentation.
 Type: Int32
 Parameter Sets: SourcePresentation, SourcePath
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -88,7 +88,7 @@ Path to the source presentation.
 Type: String
 Parameter Sets: SourcePath
 Aliases: Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -104,7 +104,7 @@ Source presentation to import from.
 Type: PowerPointPresentation
 Parameter Sets: SourcePresentation
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -127,4 +127,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## RELATED LINKS
 
 - None
-

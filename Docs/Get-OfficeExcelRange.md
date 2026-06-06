@@ -14,6 +14,11 @@ Reads an explicit A1 range from an Excel workbook.
 Get-OfficeExcelRange [-InputPath] <string> -Range <string> [-Sheet <string>] [-SheetIndex <int>] [-HeadersInFirstRow <bool>] [-NumericAsDecimal] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
 ```
 
+### Uri
+```powershell
+Get-OfficeExcelRange [-Uri] <uri> -Range <string> [-AllowHttp] [-Sheet <string>] [-SheetIndex <int>] [-HeadersInFirstRow <bool>] [-NumericAsDecimal] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+```
+
 ### Document
 ```powershell
 Get-OfficeExcelRange -Document <ExcelDocument> -Range <string> [-Sheet <string>] [-SheetIndex <int>] [-HeadersInFirstRow <bool>] [-NumericAsDecimal] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
@@ -33,14 +38,30 @@ Uses the first row as headers and returns each remaining row as a PSCustomObject
 
 ## PARAMETERS
 
+### -AllowHttp
+Allow HTTP workbook downloads in addition to HTTPS.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Uri
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -AsDataTable
 Emit the raw DataTable instead of row objects.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -54,9 +75,9 @@ Emit rows as hashtables instead of PSCustomObjects.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -72,7 +93,7 @@ Workbook to inspect.
 Type: ExcelDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -86,9 +107,9 @@ Use the first row as column headers.
 
 ```yaml
 Type: Boolean
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -104,7 +125,7 @@ Path to the workbook.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -118,9 +139,9 @@ Prefer decimals instead of doubles for numeric values.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -134,9 +155,9 @@ A1 range to read.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -150,9 +171,9 @@ Worksheet name to read; defaults to the first sheet.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
@@ -166,12 +187,28 @@ Zero-based worksheet index to read; defaults to the first sheet.
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document
+Parameter Sets: Path, Uri, Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Uri
+Remote workbook URI to read.
+
+```yaml
+Type: Uri
+Parameter Sets: Uri
+Aliases: Url
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -193,4 +230,3 @@ System.Data.DataTable`
 ## RELATED LINKS
 
 - None
-

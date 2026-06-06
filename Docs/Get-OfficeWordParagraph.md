@@ -45,7 +45,7 @@ Document to inspect.
 Type: WordDocument
 Parameter Sets: Document
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -61,7 +61,7 @@ Path to the document.
 Type: String
 Parameter Sets: Path
 Aliases: FilePath, Path
-Possible values: 
+Possible values:
 
 Required: True
 Position: 0
@@ -77,7 +77,7 @@ Section to enumerate.
 Type: WordSection
 Parameter Sets: Section
 Aliases: None
-Possible values: 
+Possible values:
 
 Required: True
 Position: named
@@ -101,4 +101,3 @@ OfficeIMO.Word.WordSection`
 ## RELATED LINKS
 
 - None
-
