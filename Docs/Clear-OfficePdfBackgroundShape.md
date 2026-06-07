@@ -30,7 +30,7 @@ PS> $pdf = New-OfficePdf {
     Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120
     Add-OfficePdfHeading -Text 'Clean variant'
 } -NoSave
-$pdf | Clear-OfficePdfBackgroundShape | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf
+$pdf | Clear-OfficePdfBackgroundShape -PassThru | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf
 ```
 
 Clears generated page background shapes on an in-memory PDF.
