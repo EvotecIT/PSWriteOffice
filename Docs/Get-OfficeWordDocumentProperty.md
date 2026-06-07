@@ -27,9 +27,9 @@ Gets built-in and custom document properties from a Word document.
 ### EXAMPLE 1
 ```powershell
 PS> $properties = Get-OfficeWordDocumentProperty -Path .\Report.docx -Name Title, Subject, ReleaseStatus
-            $properties |
-                Select-Object -Property Name, Value, IsCustom |
-                Format-Table -AutoSize
+$properties |
+    Select-Object -Property Name, Value, IsCustom |
+    Format-Table -AutoSize
 ```
 
 Returns selected built-in and custom properties for a document metadata check.

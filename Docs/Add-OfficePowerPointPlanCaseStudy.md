@@ -22,16 +22,16 @@ Adds a semantic case-study slide to a PowerPoint deck plan.
 ### EXAMPLE 1
 ```powershell
 PS> $sections = @(
-                @{ Heading = 'Challenge'; Body = 'Manual reports took too long to produce.' }
-                @{ Heading = 'Outcome'; Body = 'Automated generation made the review repeatable.' }
-            )
-            $metrics = @(
-                @{ Value = '4h'; Label = 'saved each cycle' }
-                @{ Value = '0'; Label = 'manual copy steps' }
-            )
-            New-OfficePowerPointDeckPlan {
-                Add-OfficePowerPointPlanCaseStudy -Title 'Automation impact' -Sections $sections -Metrics $metrics
-            }
+    @{ Heading = 'Challenge'; Body = 'Manual reports took too long to produce.' }
+    @{ Heading = 'Outcome'; Body = 'Automated generation made the review repeatable.' }
+)
+$metrics = @(
+    @{ Value = '4h'; Label = 'saved each cycle' }
+    @{ Value = '0'; Label = 'manual copy steps' }
+)
+New-OfficePowerPointDeckPlan {
+    Add-OfficePowerPointPlanCaseStudy -Title 'Automation impact' -Sections $sections -Metrics $metrics
+}
 ```
 
 Adds a proof-oriented case-study slide to the plan.

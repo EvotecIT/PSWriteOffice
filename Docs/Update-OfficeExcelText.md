@@ -27,10 +27,10 @@ Replaces text in worksheet values.
 ### EXAMPLE 1
 ```powershell
 PS> $count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready
-            [pscustomobject]@{
-                Path = '.\Report.xlsx'
-                Replacements = $count
-            }
+[pscustomobject]@{
+    Path = '.\Report.xlsx'
+    Replacements = $count
+}
 ```
 
 Updates matching text cells on a sheet, saves the workbook, and returns the replacement count.

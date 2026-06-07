@@ -27,10 +27,10 @@ Gets a generated PDF document compliance readiness report.
 ### EXAMPLE 1
 ```powershell
 PS> $pdf = New-OfficePdf {
-                Set-OfficePdfCompliance -Profile PdfA3B -Groundwork
-                Add-OfficePdfHeading -Text 'Compliance readiness'
-            } -NoSave
-            $pdf | Get-OfficePdfCompliance -Profile PdfA3B
+    Set-OfficePdfCompliance -Profile PdfA3B -Groundwork
+    Add-OfficePdfHeading -Text 'Compliance readiness'
+} -NoSave
+$pdf | Get-OfficePdfCompliance -Profile PdfA3B
 ```
 
 Returns the OfficeIMO.Pdf readiness report before saving.

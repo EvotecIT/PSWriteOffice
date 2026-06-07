@@ -27,9 +27,9 @@ Returns WordBookmark objects, optionally filtered by name.
 ### EXAMPLE 1
 ```powershell
 PS> $bookmarks = Get-OfficeWordBookmark -Path .\Report.docx -Name 'Appendix*', 'ExecutiveSummary'
-            $bookmarks |
-                Select-Object -Property Name |
-                Format-Table -AutoSize
+$bookmarks |
+    Select-Object -Property Name |
+    Format-Table -AutoSize
 ```
 
 Loads the document read-only, filters bookmark names with wildcards, and displays the matching navigation targets.

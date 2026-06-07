@@ -29,7 +29,7 @@ Generates Markdown table text from the input objects.
 ### EXAMPLE 2
 ```powershell
 PS> $doc = $data | ConvertTo-OfficeMarkdown -PassThru
-              $doc.P('Totals above'); $doc.ToMarkdown()
+$doc.P('Totals above'); $doc.ToMarkdown()
 ```
 
 Builds a table and appends more content using the MarkdownDoc API.

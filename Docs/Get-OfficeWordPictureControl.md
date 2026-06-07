@@ -27,9 +27,9 @@ Gets picture content controls from a Word document.
 ### EXAMPLE 1
 ```powershell
 PS> $pictures = Get-OfficeWordPictureControl -Path .\Template.docx -Tag 'logo-*'
-            $pictures |
-                Select-Object -Property Alias, Tag |
-                Format-Table -AutoSize
+$pictures |
+    Select-Object -Property Alias, Tag |
+    Format-Table -AutoSize
 ```
 
 Filters picture content controls used as image placeholders in a Word template.

@@ -22,14 +22,14 @@ Adds a legend table to the current Excel report sheet.
 ### EXAMPLE 1
 ```powershell
 PS> $legendRows = @(
-                [pscustomobject]@{ Status = 'Ready'; Meaning = 'Validated and ready' }
-                [pscustomobject]@{ Status = 'Review'; Meaning = 'Needs owner review' }
-            )
-            New-OfficeExcel -Path .\Operations.xlsx {
-                Add-OfficeExcelReportSheet -Name Summary {
-                    Add-OfficeExcelReportLegend -Title 'Status legend' -Headers Status, Meaning -Rows $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }
-                }
-            }
+    [pscustomobject]@{ Status = 'Ready'; Meaning = 'Validated and ready' }
+    [pscustomobject]@{ Status = 'Review'; Meaning = 'Needs owner review' }
+)
+New-OfficeExcel -Path .\Operations.xlsx {
+    Add-OfficeExcelReportSheet -Name Summary {
+        Add-OfficeExcelReportLegend -Title 'Status legend' -Headers Status, Meaning -Rows $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }
+    }
+}
 ```
 
 Renders legend rows and applies optional fill colors keyed by the first column.

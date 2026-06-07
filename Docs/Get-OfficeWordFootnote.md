@@ -32,9 +32,9 @@ Gets footnotes from a Word document or section.
 ### EXAMPLE 1
 ```powershell
 PS> $footnotes = Get-OfficeWordFootnote -Path .\PolicyReport.docx
-            $footnotes |
-                Select-Object -Property Kind, ReferenceId, ParentText, Text |
-                Export-Csv -Path .\Footnotes.csv -NoTypeInformation
+$footnotes |
+    Select-Object -Property Kind, ReferenceId, ParentText, Text |
+    Export-Csv -Path .\Footnotes.csv -NoTypeInformation
 ```
 
 Reads footnotes from the document and exports the PowerShell-friendly note snapshot.

@@ -27,9 +27,9 @@ Gets dropdown list content controls from a Word document.
 ### EXAMPLE 1
 ```powershell
 PS> $statusControls = Get-OfficeWordDropDownList -Path .\StatusForm.docx -Tag 'status-*'
-            $statusControls |
-                Select-Object -Property Alias, Tag |
-                Format-Table -AutoSize
+$statusControls |
+    Select-Object -Property Alias, Tag |
+    Format-Table -AutoSize
 ```
 
 Finds dropdown list content controls used for status capture in a Word form.

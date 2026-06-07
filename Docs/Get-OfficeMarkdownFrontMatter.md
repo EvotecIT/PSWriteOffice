@@ -32,9 +32,9 @@ Gets YAML front matter entries from a Markdown document.
 ### EXAMPLE 1
 ```powershell
 PS> $metadata = Get-OfficeMarkdownFrontMatter -Path .\Report.md -Key 'title'
-            $metadata |
-                Select-Object -Property Key, Value |
-                Format-Table -AutoSize
+$metadata |
+    Select-Object -Property Key, Value |
+    Format-Table -AutoSize
 ```
 
 Parses a Markdown file and returns matching front matter entries for metadata proof.
@@ -42,8 +42,8 @@ Parses a Markdown file and returns matching front matter entries for metadata pr
 ### EXAMPLE 2
 ```powershell
 PS> $markdown = "---`ntitle: Report`nstatus: Ready`n---`n# Report"
-            Get-OfficeMarkdownFrontMatter -Text $markdown |
-                Select-Object -Property Key, Value
+Get-OfficeMarkdownFrontMatter -Text $markdown |
+    Select-Object -Property Key, Value
 ```
 
 Parses Markdown text directly when the document has not been saved yet.

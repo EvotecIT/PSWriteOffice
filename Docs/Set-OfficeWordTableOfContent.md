@@ -39,10 +39,10 @@ Updates TOC display text, adds heading content, and marks the TOC for refresh.
 ### EXAMPLE 2
 ```powershell
 PS> $doc = Get-OfficeWord -Path .\Report.docx
-            $doc |
-                Get-OfficeWordTableOfContent |
-                Set-OfficeWordTableOfContent -Text 'Report contents'
-            $doc | Save-OfficeWord -Path .\Report-Toc.docx
+$doc |
+    Get-OfficeWordTableOfContent |
+    Set-OfficeWordTableOfContent -Text 'Report contents'
+$doc | Save-OfficeWord -Path .\Report-Toc.docx
 ```
 
 Pipes the OfficeIMO TOC object into the thin setter and saves the document.

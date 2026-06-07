@@ -34,10 +34,10 @@ Generates CSV text from the input objects.
 ### EXAMPLE 2
 ```powershell
 PS> $rows = @(
-                [ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
-                [ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
-              )
-              $rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'
+  [ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
+  [ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
+)
+$rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'
 ```
 
 Uses ordered dictionaries to enforce column order and a custom delimiter.

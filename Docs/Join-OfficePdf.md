@@ -22,9 +22,9 @@ Joins multiple PDF files into a single PDF.
 ### EXAMPLE 1
 ```powershell
 PS> $cover = '.\Examples\Documents\Cover.pdf'
-            $report = '.\Examples\Documents\Report.pdf'
-            Join-OfficePdf -Path $cover, $report -OutputPath .\Examples\Documents\Combined.pdf -PassThru
-            Get-OfficePdfInfo -Path .\Examples\Documents\Combined.pdf | Select-Object PageCount
+$report = '.\Examples\Documents\Report.pdf'
+Join-OfficePdf -Path $cover, $report -OutputPath .\Examples\Documents\Combined.pdf -PassThru
+Get-OfficePdfInfo -Path .\Examples\Documents\Combined.pdf | Select-Object PageCount
 ```
 
 Writes a single PDF containing the input documents in the requested order, then checks the result.

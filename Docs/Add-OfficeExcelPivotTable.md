@@ -27,16 +27,16 @@ Adds a pivot table to a worksheet.
 ### EXAMPLE 1
 ```powershell
 PS> $rows = @(
-                [pscustomobject]@{ Region = 'North America'; Product = 'Standard'; Sales = 125000 }
-                [pscustomobject]@{ Region = 'EMEA'; Product = 'Standard'; Sales = 98000 }
-                [pscustomobject]@{ Region = 'APAC'; Product = 'Premium'; Sales = 143000 }
-            )
-            New-OfficeExcel -Path .\SalesPivot.xlsx {
-                Add-OfficeExcelSheet -Name Data {
-                    Add-OfficeExcelTable -Data $rows -TableName Sales -AutoFit
-                    Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E2' -Name 'SalesByRegion' -RowField Region -ColumnField Product -DataField Sales -DataFunction Sum -PivotStyle PivotStyleMedium9
-                }
-            }
+    [pscustomobject]@{ Region = 'North America'; Product = 'Standard'; Sales = 125000 }
+    [pscustomobject]@{ Region = 'EMEA'; Product = 'Standard'; Sales = 98000 }
+    [pscustomobject]@{ Region = 'APAC'; Product = 'Premium'; Sales = 143000 }
+)
+New-OfficeExcel -Path .\SalesPivot.xlsx {
+    Add-OfficeExcelSheet -Name Data {
+        Add-OfficeExcelTable -Data $rows -TableName Sales -AutoFit
+        Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E2' -Name 'SalesByRegion' -RowField Region -ColumnField Product -DataField Sales -DataFunction Sum -PivotStyle PivotStyleMedium9
+    }
+}
 ```
 
 Writes source rows to a worksheet and creates a pivot table using the existing OfficeIMO pivot support.

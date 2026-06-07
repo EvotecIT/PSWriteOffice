@@ -27,9 +27,9 @@ Gets pivot tables defined in a workbook.
 ### EXAMPLE 1
 ```powershell
 PS> $pivots = Get-OfficeExcelPivotTable -Path .\report.xlsx -Sheet Summary
-            $pivots |
-                Select-Object -Property Name, Sheet, SourceRange, RowFields, DataFields |
-                Format-List
+$pivots |
+    Select-Object -Property Name, Sheet, SourceRange, RowFields, DataFields |
+    Format-List
 ```
 
 Returns pivot table metadata so generated reports can prove the pivot source and layout.

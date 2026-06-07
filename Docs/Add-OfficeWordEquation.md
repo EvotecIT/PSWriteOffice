@@ -22,10 +22,10 @@ Accepts OMML and keeps conversion/parsing outside the cmdlet.
 ### EXAMPLE 1
 ```powershell
 PS> $omml = '<m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"><m:r><m:t>x+1</m:t></m:r></m:oMath>'
-            New-OfficeWord -Path .\Formula.docx {
-                Add-OfficeWordParagraph -Text 'The following expression is stored as Office Math.'
-                Add-OfficeWordEquation -Omml $omml
-            }
+New-OfficeWord -Path .\Formula.docx {
+    Add-OfficeWordParagraph -Text 'The following expression is stored as Office Math.'
+    Add-OfficeWordEquation -Omml $omml
+}
 ```
 
 Inserts prebuilt OMML into the current document; conversion to OMML is intentionally outside the cmdlet.

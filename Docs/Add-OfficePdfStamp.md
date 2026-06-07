@@ -36,7 +36,7 @@ Adds a text stamp to the first two pages and preflights the result.
 ### EXAMPLE 2
 ```powershell
 PS> $logo = '.\Tests\Assets\CellImage.png'
-            Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Watermarked.pdf -Image $logo -Width 160 -Watermark
+Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Watermarked.pdf -Image $logo -Width 160 -Watermark
 ```
 
 Adds a logo behind existing content as a watermark.

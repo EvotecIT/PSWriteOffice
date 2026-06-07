@@ -23,8 +23,8 @@ and existing PDFs before follow-up operations such as splitting, stamping, or me
 ### EXAMPLE 1
 ```powershell
 PS> $info = Get-OfficePdfInfo -Path .\Report.pdf
-            $info.PageCount
-            $info.LinkUris
+$info.PageCount
+$info.LinkUris
 ```
 
 Reads page count and link information from the PDF.

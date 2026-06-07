@@ -32,9 +32,9 @@ Gets defined names (named ranges) from an Excel workbook.
 ### EXAMPLE 1
 ```powershell
 PS> $ranges = Get-OfficeExcelNamedRange -Path .\report.xlsx
-            $ranges |
-                Select-Object -Property Name, Scope, Range |
-                Format-Table -AutoSize
+$ranges |
+    Select-Object -Property Name, Scope, Range |
+    Format-Table -AutoSize
 ```
 
 Returns named ranges so workbook navigation and formulas can be reviewed.

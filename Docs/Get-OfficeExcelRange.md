@@ -32,9 +32,9 @@ Returns rows as PSCustomObjects by default, with optional hashtable or DataTable
 ### EXAMPLE 1
 ```powershell
 PS> $rows = Get-OfficeExcelRange -Path .\report.xlsx -Sheet Data -Range A1:C10 -NumericAsDecimal
-            $rows |
-                Group-Object -Property Region |
-                Select-Object Name, Count
+$rows |
+    Group-Object -Property Region |
+    Select-Object Name, Count
 ```
 
 Uses the first row as headers, returns row objects, and keeps numeric values decimal-friendly.

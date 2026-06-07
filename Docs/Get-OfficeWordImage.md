@@ -37,9 +37,9 @@ Gets images from a Word document, section, or paragraph.
 ### EXAMPLE 1
 ```powershell
 PS> $images = Get-OfficeWordImage -Path .\Report.docx
-            $images |
-                Select-Object -Property Title, Description, Width, Height |
-                Format-Table -AutoSize
+$images |
+    Select-Object -Property Title, Description, Width, Height |
+    Format-Table -AutoSize
 ```
 
 Reads images from a document so metadata and sizing can be reviewed before publication.

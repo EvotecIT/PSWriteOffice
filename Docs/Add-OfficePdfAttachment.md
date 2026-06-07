@@ -27,11 +27,11 @@ Adds an embedded file attachment to a generated PDF document.
 ### EXAMPLE 1
 ```powershell
 PS> $dataPath = '.\Examples\Documents\ServiceData.json'
-            Set-Content -Path $dataPath -Value '{ "service": "Directory", "status": "Healthy" }'
-            New-OfficePdf -Path .\Examples\Documents\PdfWithAttachment.pdf {
-                Add-OfficePdfHeading -Text 'Service report'
-                Add-OfficePdfAttachment -Path $dataPath -Name 'service-data.json' -MimeType 'application/json' -Description 'Source data used by the report.'
-            }
+Set-Content -Path $dataPath -Value '{ "service": "Directory", "status": "Healthy" }'
+New-OfficePdf -Path .\Examples\Documents\PdfWithAttachment.pdf {
+    Add-OfficePdfHeading -Text 'Service report'
+    Add-OfficePdfAttachment -Path $dataPath -Name 'service-data.json' -MimeType 'application/json' -Description 'Source data used by the report.'
+}
 ```
 
 Embeds a supporting JSON file in the generated PDF.

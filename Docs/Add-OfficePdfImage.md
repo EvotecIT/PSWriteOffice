@@ -27,10 +27,10 @@ Adds an image to a PDF document.
 ### EXAMPLE 1
 ```powershell
 PS> $image = '.\Tests\Assets\CellImage.png'
-            New-OfficePdf -Path .\Examples\Documents\PdfImage.pdf {
-                Add-OfficePdfHeading -Text 'Visual evidence'
-                Add-OfficePdfImage -Path $image -Width 120 -Height 80 -Align Center -AlternativeText 'Sample chart image'
-            }
+New-OfficePdf -Path .\Examples\Documents\PdfImage.pdf {
+    Add-OfficePdfHeading -Text 'Visual evidence'
+    Add-OfficePdfImage -Path $image -Width 120 -Height 80 -Align Center -AlternativeText 'Sample chart image'
+}
 ```
 
 Embeds an image with alternative text in the generated PDF.

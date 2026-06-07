@@ -32,15 +32,15 @@ Creates a Word chart from object data using one category property and one or mor
 ### EXAMPLE 1
 ```powershell
 PS> $rows = @(
-                [pscustomobject]@{ Region = 'North America'; Revenue = 125000; Profit = 42000 }
-                [pscustomobject]@{ Region = 'EMEA'; Revenue = 98000; Profit = 31000 }
-                [pscustomobject]@{ Region = 'APAC'; Revenue = 143000; Profit = 52000 }
-            )
-            New-OfficeWord -Path .\RegionalReport.docx {
-                Add-OfficeWordParagraph -Text 'Regional revenue'
-                Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix' -FitToPageWidth -WidthFraction 0.75
-                Add-OfficeWordChart -Type Bar -Data $rows -CategoryProperty Region -SeriesProperty Revenue, Profit -Legend -XAxisTitle 'Region' -YAxisTitle 'Amount'
-            }
+    [pscustomobject]@{ Region = 'North America'; Revenue = 125000; Profit = 42000 }
+    [pscustomobject]@{ Region = 'EMEA'; Revenue = 98000; Profit = 31000 }
+    [pscustomobject]@{ Region = 'APAC'; Revenue = 143000; Profit = 52000 }
+)
+New-OfficeWord -Path .\RegionalReport.docx {
+    Add-OfficeWordParagraph -Text 'Regional revenue'
+    Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix' -FitToPageWidth -WidthFraction 0.75
+    Add-OfficeWordChart -Type Bar -Data $rows -CategoryProperty Region -SeriesProperty Revenue, Profit -Legend -XAxisTitle 'Region' -YAxisTitle 'Amount'
+}
 ```
 
 Creates a report with a pie chart and a multi-series bar chart from PowerShell objects.
@@ -48,13 +48,13 @@ Creates a report with a pie chart and a multi-series bar chart from PowerShell o
 ### EXAMPLE 2
 ```powershell
 PS> $trend = @(
-                [pscustomobject]@{ Month = 'Jan'; Sales = 10; Profit = 4 }
-                [pscustomobject]@{ Month = 'Feb'; Sales = 12; Profit = 5 }
-                [pscustomobject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }
-            )
-            $doc = New-OfficeWord -Path .\Trend.docx -PassThru
-            Add-OfficeWordChart -Document $doc -Type Line -Data $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'
-            Save-OfficeWord -Document $doc
+    [pscustomobject]@{ Month = 'Jan'; Sales = 10; Profit = 4 }
+    [pscustomobject]@{ Month = 'Feb'; Sales = 12; Profit = 5 }
+    [pscustomobject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }
+)
+$doc = New-OfficeWord -Path .\Trend.docx -PassThru
+Add-OfficeWordChart -Document $doc -Type Line -Data $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'
+Save-OfficeWord -Document $doc
 ```
 
 Creates a multi-series line chart on the document and shows a legend.

@@ -36,8 +36,8 @@ Appends the source documents with OfficeIMO.Word and then reads back basic struc
 ### EXAMPLE 2
 ```powershell
 PS> $doc = Get-OfficeWord -Path .\Base.docx
-            $doc | Join-OfficeWordDocument -AppendPath .\Section1.docx, .\Section2.docx -PassThru |
-                Save-OfficeWord -Path .\Combined.docx
+$doc | Join-OfficeWordDocument -AppendPath .\Section1.docx, .\Section2.docx -PassThru |
+    Save-OfficeWord -Path .\Combined.docx
 ```
 
 Keeps the wrapper thin by piping the OfficeIMO document object through append and save commands.

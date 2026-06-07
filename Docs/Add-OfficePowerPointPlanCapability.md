@@ -22,12 +22,12 @@ Adds a semantic capability/content slide to a PowerPoint deck plan.
 ### EXAMPLE 1
 ```powershell
 PS> $sections = @(
-                @{ Heading = 'Monitoring'; Body = 'Signals and ownership'; Items = @('Alerts', 'Dashboards') }
-                @{ Heading = 'Reporting'; Body = 'Executive-ready output'; Items = @('Summary', 'Appendix') }
-            )
-            New-OfficePowerPointDeckPlan {
-                Add-OfficePowerPointPlanCapability -Title 'Capabilities' -Subtitle 'What the team provides' -Sections $sections
-            }
+    @{ Heading = 'Monitoring'; Body = 'Signals and ownership'; Items = @('Alerts', 'Dashboards') }
+    @{ Heading = 'Reporting'; Body = 'Executive-ready output'; Items = @('Summary', 'Appendix') }
+)
+New-OfficePowerPointDeckPlan {
+    Add-OfficePowerPointPlanCapability -Title 'Capabilities' -Subtitle 'What the team provides' -Sections $sections
+}
 ```
 
 Adds a semantic capability/content slide to the plan.

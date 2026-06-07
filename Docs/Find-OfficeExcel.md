@@ -27,9 +27,9 @@ Finds text in worksheet values.
 ### EXAMPLE 1
 ```powershell
 PS> $matches = Find-OfficeExcel -Path .\Report.xlsx -Text Ready -Sheet Summary
-            $matches |
-                Select-Object -Property Sheet, Address, Value |
-                Export-Csv -Path .\ReadyCells.csv -NoTypeInformation
+$matches |
+    Select-Object -Property Sheet, Address, Value |
+    Export-Csv -Path .\ReadyCells.csv -NoTypeInformation
 ```
 
 Returns matching cells with sheet, address, row, column, and value metadata for review or proof.

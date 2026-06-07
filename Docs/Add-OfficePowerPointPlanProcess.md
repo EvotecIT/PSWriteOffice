@@ -22,13 +22,13 @@ Adds a semantic process/timeline slide to a PowerPoint deck plan.
 ### EXAMPLE 1
 ```powershell
 PS> $steps = @(
-                @{ Title = 'Collect'; Body = 'Gather health and delivery signals' }
-                @{ Title = 'Review'; Body = 'Confirm decisions with owners' }
-                @{ Title = 'Publish'; Body = 'Send the service brief' }
-            )
-            New-OfficePowerPointDeckPlan {
-                Add-OfficePowerPointPlanProcess -Title 'Operating rhythm' -Subtitle 'How the review is produced' -Steps $steps
-            }
+    @{ Title = 'Collect'; Body = 'Gather health and delivery signals' }
+    @{ Title = 'Review'; Body = 'Confirm decisions with owners' }
+    @{ Title = 'Publish'; Body = 'Send the service brief' }
+)
+New-OfficePowerPointDeckPlan {
+    Add-OfficePowerPointPlanProcess -Title 'Operating rhythm' -Subtitle 'How the review is produced' -Steps $steps
+}
 ```
 
 Adds a semantic timeline/process slide to the plan.

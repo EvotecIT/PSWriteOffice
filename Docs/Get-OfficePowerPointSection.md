@@ -22,9 +22,9 @@ Returns OfficeIMO section metadata so scripts can inspect section names and slid
 ### EXAMPLE 1
 ```powershell
 PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointSectionsRead.pptx
-            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
-            Add-OfficePowerPointSection -Presentation $ppt -Name 'Appendix' -StartSlideIndex 0 | Out-Null
-            Get-OfficePowerPointSection -Presentation $ppt | Select-Object Name, FirstSlideIndex, SlideCount
+Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
+Add-OfficePowerPointSection -Presentation $ppt -Name 'Appendix' -StartSlideIndex 0 | Out-Null
+Get-OfficePowerPointSection -Presentation $ppt | Select-Object Name, FirstSlideIndex, SlideCount
 ```
 
 Returns section information including section names and slide indexes.

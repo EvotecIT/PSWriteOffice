@@ -22,9 +22,9 @@ Gets theme information for a PowerPoint presentation master.
 ### EXAMPLE 1
 ```powershell
 PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointThemeRead.pptx
-            Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Service Brief'
-            Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos Display' -MinorLatin 'Aptos'
-            Get-OfficePowerPointTheme -Presentation $ppt | Select-Object Name, Master
+Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Service Brief'
+Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos Display' -MinorLatin 'Aptos'
+Get-OfficePowerPointTheme -Presentation $ppt | Select-Object Name, Master
 ```
 
 Returns theme information after updating the deck theme metadata.

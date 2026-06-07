@@ -27,9 +27,9 @@ Gets the table of contents from a Word document.
 ### EXAMPLE 1
 ```powershell
 PS> $toc = Get-OfficeWordTableOfContent -Path .\Report.docx
-            if ($toc) {
-                $toc | Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries' -PassThru
-            }
+if ($toc) {
+    $toc | Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries' -PassThru
+}
 ```
 
 Returns the TOC object when present and pipes it to the thin TOC update cmdlet.

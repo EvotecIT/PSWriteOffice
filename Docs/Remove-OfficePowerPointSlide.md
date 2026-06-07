@@ -22,10 +22,10 @@ Supports -WhatIf/-Confirm thanks to SupportsShouldProcess.
 ### EXAMPLE 1
 ```powershell
 PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointRemoveSlide.pptx
-            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
-            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
-            Remove-OfficePowerPointSlide -Presentation $ppt -Index 0 -Confirm:$false
-            Save-OfficePowerPoint -Presentation $ppt
+Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
+Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
+Remove-OfficePowerPointSlide -Presentation $ppt -Index 0 -Confirm:$false
+Save-OfficePowerPoint -Presentation $ppt
 ```
 
 Removes the first slide and saves the updated deck.

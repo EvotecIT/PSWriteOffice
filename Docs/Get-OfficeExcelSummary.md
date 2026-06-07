@@ -27,10 +27,10 @@ Gets a compact structural summary of an Excel workbook.
 ### EXAMPLE 1
 ```powershell
 PS> $summary = Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets
-            $summary |
-                Select-Object -Property SheetCount, TableCount, ChartCount, PivotTableCount
-            $summary.Sheets |
-                Select-Object -Property Name, State, UsedRange
+$summary |
+    Select-Object -Property SheetCount, TableCount, ChartCount, PivotTableCount
+$summary.Sheets |
+    Select-Object -Property Name, State, UsedRange
 ```
 
 Returns workbook-level counts plus per-sheet tables, charts, pivots, links, comments, and used ranges.

@@ -37,8 +37,8 @@ Sets the document background to the provided hex color and continues normal docu
 ### EXAMPLE 2
 ```powershell
 PS> $doc = Get-OfficeWord -Path .\Draft.docx
-            $doc | Set-OfficeWordBackground -ImagePath .\Assets\Background.png -Width 600 -Height 800 -PassThru |
-                Save-OfficeWord -Path .\Draft-Branded.docx
+$doc | Set-OfficeWordBackground -ImagePath .\Assets\Background.png -Width 600 -Height 800 -PassThru |
+    Save-OfficeWord -Path .\Draft-Branded.docx
 ```
 
 Uses OfficeIMO.Word background image support and saves the updated document through the standard save cmdlet.

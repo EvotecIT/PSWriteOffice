@@ -32,10 +32,10 @@ Gets paragraphs from a Word document or section.
 ### EXAMPLE 1
 ```powershell
 PS> $paragraphs = Get-OfficeWordParagraph -Path .\Report.docx
-            $paragraphs |
-                Where-Object { $_.Text } |
-                Select-Object -Property Text |
-                Set-Content -Path .\ReportParagraphs.txt
+$paragraphs |
+    Where-Object { $_.Text } |
+    Select-Object -Property Text |
+    Set-Content -Path .\ReportParagraphs.txt
 ```
 
 Enumerates document paragraphs and writes their text for a lightweight review workflow.
