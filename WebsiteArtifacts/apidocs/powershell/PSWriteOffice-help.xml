@@ -51174,12 +51174,14 @@ OfficeIMO.Word.WordSection</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$toc = Get-OfficeWordTableOfContent -Path .\Report.docx&#xD;
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $toc = $doc | Get-OfficeWordTableOfContent&#xD;
             if ($toc) {&#xD;
                 $toc | Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries' -PassThru&#xD;
+                $doc | Save-OfficeWord -Path .\Report-Toc.docx&#xD;
             }</dev:code>
         <dev:remarks>
-          <maml:para>Returns the TOC object when present and pipes it to the thin TOC update cmdlet.</maml:para>
+          <maml:para>Gets the TOC from an open document, updates it, and saves a variant.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

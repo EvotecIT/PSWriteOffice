@@ -26,13 +26,15 @@ Gets the table of contents from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> $toc = Get-OfficeWordTableOfContent -Path .\Report.docx
+PS> $doc = Get-OfficeWord -Path .\Report.docx
+$toc = $doc | Get-OfficeWordTableOfContent
 if ($toc) {
     $toc | Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries' -PassThru
+    $doc | Save-OfficeWord -Path .\Report-Toc.docx
 }
 ```
 
-Returns the TOC object when present and pipes it to the thin TOC update cmdlet.
+Gets the TOC from an open document, updates it, and saves a variant.
 
 ## PARAMETERS
 
