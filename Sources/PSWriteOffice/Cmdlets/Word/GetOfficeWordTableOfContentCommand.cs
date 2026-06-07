@@ -10,11 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Read a table of contents before updating it.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$toc = Get-OfficeWordTableOfContent -Path .\Report.docx
+///   <code>$doc = Get-OfficeWord -Path .\Report.docx
+/// $toc = $doc | Get-OfficeWordTableOfContent
 /// if ($toc) {
 ///     $toc | Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries' -PassThru
+///     $doc | Save-OfficeWord -Path .\Report-Toc.docx
 /// }</code>
-///   <para>Returns the TOC object when present and pipes it to the thin TOC update cmdlet.</para>
+///   <para>Gets the TOC from an open document, updates it, and saves a variant.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordTableOfContent", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordTableOfContents")]
