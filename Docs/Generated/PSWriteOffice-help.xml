@@ -12548,10 +12548,10 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$script = @'&#xD;
-            Import-Module PSWriteOffice&#xD;
-            Get-OfficeExcelSummary -Path .\report.xlsx&#xD;
-            '@&#xD;
+        <dev:code>$script = @(&#xD;
+                'Import-Module PSWriteOffice'&#xD;
+                'Get-OfficeExcelSummary -Path .\report.xlsx'&#xD;
+            ) -join [Environment]::NewLine&#xD;
             New-OfficeMarkdown -Path .\Cookbook.md {&#xD;
                 Add-OfficeMarkdownHeading -Level 2 -Text 'Workbook summary'&#xD;
                 Add-OfficeMarkdownCode -Language 'powershell' -Content $script&#xD;

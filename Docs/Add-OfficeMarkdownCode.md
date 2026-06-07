@@ -26,14 +26,14 @@ Adds a Markdown code block.
 
 ### EXAMPLE 1
 ```powershell
-PS> $script = @'
-            Import-Module PSWriteOffice
-            Get-OfficeExcelSummary -Path .\report.xlsx
-            '@
-            New-OfficeMarkdown -Path .\Cookbook.md {
-                Add-OfficeMarkdownHeading -Level 2 -Text 'Workbook summary'
-                Add-OfficeMarkdownCode -Language 'powershell' -Content $script
-            }
+PS> $script = @(
+    'Import-Module PSWriteOffice'
+    'Get-OfficeExcelSummary -Path .\report.xlsx'
+) -join [Environment]::NewLine
+New-OfficeMarkdown -Path .\Cookbook.md {
+    Add-OfficeMarkdownHeading -Level 2 -Text 'Workbook summary'
+    Add-OfficeMarkdownCode -Language 'powershell' -Content $script
+}
 ```
 
 Appends a fenced code block with a language identifier.

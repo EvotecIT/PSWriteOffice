@@ -8,10 +8,10 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 /// <example>
 ///   <summary>Add a PowerShell command block to documentation.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$script = @'
-/// Import-Module PSWriteOffice
-/// Get-OfficeExcelSummary -Path .\report.xlsx
-/// '@
+///   <code>$script = @(
+///     'Import-Module PSWriteOffice'
+///     'Get-OfficeExcelSummary -Path .\report.xlsx'
+/// ) -join [Environment]::NewLine
 /// New-OfficeMarkdown -Path .\Cookbook.md {
 ///     Add-OfficeMarkdownHeading -Level 2 -Text 'Workbook summary'
 ///     Add-OfficeMarkdownCode -Language 'powershell' -Content $script
