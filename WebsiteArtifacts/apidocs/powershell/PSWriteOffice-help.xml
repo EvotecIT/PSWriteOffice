@@ -6157,13 +6157,23 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Create a basic pivot table.</maml:title>
+        <maml:title>Create a pivot table from a report data sheet.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficeExcelPivotTable -SourceRange 'A1:D200' -DestinationCell 'F2' -RowField 'Region' -DataField 'Sales'</dev:code>
+        <dev:code>$rows = @(&#xD;
+                [pscustomobject]@{ Region = 'North America'; Product = 'Standard'; Sales = 125000 }&#xD;
+                [pscustomobject]@{ Region = 'EMEA'; Product = 'Standard'; Sales = 98000 }&#xD;
+                [pscustomobject]@{ Region = 'APAC'; Product = 'Premium'; Sales = 143000 }&#xD;
+            )&#xD;
+            New-OfficeExcel -Path .\SalesPivot.xlsx {&#xD;
+                Add-OfficeExcelSheet -Name Data {&#xD;
+                    Add-OfficeExcelTable -Data $rows -TableName Sales -AutoFit&#xD;
+                    Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E2' -Name 'SalesByRegion' -RowField Region -ColumnField Product -DataField Sales -DataFunction Sum -PivotStyle PivotStyleMedium9&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Creates a pivot table in F2 using Region as rows and Sales as the data field.</maml:para>
+          <maml:para>Writes source rows to a worksheet and creates a pivot table using the existing OfficeIMO pivot support.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6319,10 +6329,17 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportCallout -Body 'Value'</dev:code>
+        <maml:title>Add a warning callout to a report sheet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportCallout -Kind Warning -Title 'Manual validation' -Body 'Open the workbook in desktop Excel before publishing pivot-heavy reports.'&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Renders a composer callout block using the current report theme.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6440,10 +6457,17 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportKpiRow -Data 'Value'</dev:code>
+        <maml:title>Add three KPI values to a summary sheet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Renders PowerShell key/value data as a KPI row through the OfficeIMO sheet composer.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6633,10 +6657,21 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportLegend -Headers @('Value') -Rows @('Value')</dev:code>
+        <maml:title>Add a status legend with colored first-column values.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$legendRows = @(&#xD;
+                [pscustomobject]@{ Status = 'Ready'; Meaning = 'Validated and ready' }&#xD;
+                [pscustomobject]@{ Status = 'Review'; Meaning = 'Needs owner review' }&#xD;
+            )&#xD;
+            New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportLegend -Title 'Status legend' -Headers Status, Meaning -Rows $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Renders legend rows and applies optional fill colors keyed by the first column.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6706,10 +6741,18 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportParagraph -Text 'Value'</dev:code>
+        <maml:title>Add narrative text below a title block.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportTitle -Title 'Operational Summary'&#xD;
+                    Add-OfficeExcelReportParagraph -Text 'This workbook was generated from the validated source data.'&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds prose to an OfficeIMO-composed Excel report sheet.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6779,10 +6822,18 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportSection -Text 'Value'</dev:code>
+        <maml:title>Add a section and paragraph to a report sheet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportSection -Text 'Service health'&#xD;
+                    Add-OfficeExcelReportParagraph -Text 'All monitored services are reporting.'&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Uses the report composer to add a section heading and narrative text.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -7077,10 +7128,19 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportSpacer -Rows 1</dev:code>
+        <maml:title>Add spacing between report blocks.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportTitle -Title 'Operational Summary'&#xD;
+                    Add-OfficeExcelReportSpacer -Rows 2&#xD;
+                    Add-OfficeExcelReportSection -Text 'Details'&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Advances the composer cursor before adding the next report block.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -7294,10 +7354,21 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportTable -Data @('Value')</dev:code>
+        <maml:title>Add a styled report table from objects.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$rows = @(&#xD;
+                [pscustomobject]@{ Area = 'PDF'; Status = 'Ready' }&#xD;
+                [pscustomobject]@{ Area = 'Word'; Status = 'Review' }&#xD;
+            )&#xD;
+            New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportTable -Data $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Renders object rows as a formatted Excel table through the sheet composer.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -7391,10 +7462,18 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeExcelReportTitle -Subtitle 'Value'</dev:code>
+        <maml:title>Add a polished title to a report sheet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
+                Add-OfficeExcelReportSheet -Name Summary {&#xD;
+                    Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current month'&#xD;
+                    Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }&#xD;
+                }&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Uses the OfficeIMO sheet composer through PSWriteOffice's thin report-block wrapper.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -9360,13 +9439,18 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a TOC sheet to an existing workbook.</maml:title>
+        <maml:title>Add a TOC sheet and verify workbook structure.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks -PassThru&#xD;
+                Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets |&#xD;
+                    Select-Object -Property SheetCount, NamedRangeCount, Sheets&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para>Creates or refreshes a TOC sheet, lists named ranges, and adds back links on other sheets.</maml:para>
+          <maml:para>Creates or refreshes a TOC sheet, adds back links, and reads back workbook navigation metadata.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -12272,13 +12356,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a note callout.</maml:title>
+        <maml:title>Add release callouts to a Markdown report.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownCallout -Kind 'note' -Title 'Remember' -Body 'Update the metrics.'</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\ReleaseNotes.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 1 -Text 'Release notes'&#xD;
+                Add-OfficeMarkdownCallout -Kind 'note' -Title 'Validation' -Body 'Artifacts were generated from deterministic example data.'&#xD;
+                Add-OfficeMarkdownCallout -Kind 'warning' -Title 'Manual step' -Body 'Open the workbook in desktop Excel before publishing pivots.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends a callout block to the document.</maml:para>
+          <maml:para>Appends callout blocks while composing a Markdown report.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -12459,13 +12547,20 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a PowerShell code block.</maml:title>
+        <maml:title>Add a PowerShell command block to documentation.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownCode -Language 'powershell' -Content 'Get-Process'</dev:code>
+        <dev:code>$script = @(&#xD;
+                'Import-Module PSWriteOffice'&#xD;
+                'Get-OfficeExcelSummary -Path .\report.xlsx'&#xD;
+            ) -join [Environment]::NewLine&#xD;
+            New-OfficeMarkdown -Path .\Cookbook.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Workbook summary'&#xD;
+                Add-OfficeMarkdownCode -Language 'powershell' -Content $script&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends a fenced code block to the document.</maml:para>
+          <maml:para>Appends a fenced code block with a language identifier.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -13171,13 +13266,18 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a second-level heading.</maml:title>
+        <maml:title>Add headings that feed the Markdown table of contents.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownHeading -Level 2 -Text 'Overview'</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\Report.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 1 -Text 'Operational Report'&#xD;
+                Add-OfficeMarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Overview'&#xD;
+                Add-OfficeMarkdownParagraph -Text 'Current operational state.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends a level-2 heading to the current Markdown document.</maml:para>
+          <maml:para>Appends headings that can be included in a generated table of contents.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -13286,13 +13386,18 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a horizontal rule.</maml:title>
+        <maml:title>Separate summary and appendix sections.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownHorizontalRule</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\Report.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Summary'&#xD;
+                Add-OfficeMarkdownParagraph -Text 'Key decisions and status.'&#xD;
+                Add-OfficeMarkdownHorizontalRule&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Appendix'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends a horizontal rule to the document.</maml:para>
+          <maml:para>Appends a horizontal rule between sections of the current Markdown document.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -13581,13 +13686,16 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add an image with alt text.</maml:title>
+        <maml:title>Add a report image with alt text and sizing.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownImage -Path '.\logo.png' -Alt 'Logo'</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\Report.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Architecture'&#xD;
+                Add-OfficeMarkdownImage -Path '.\Assets\architecture.png' -Alt 'Architecture diagram' -Title 'Current architecture' -Width 640&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends an image block to the document.</maml:para>
+          <maml:para>Appends an image block with accessibility text and optional presentation metadata.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -13804,13 +13912,18 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a bullet list.</maml:title>
+        <maml:title>Add ordered and unordered lists to a report.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownList -Items 'Alpha','Beta','Gamma'</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\Plan.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Priorities'&#xD;
+                Add-OfficeMarkdownList -Items 'PDF examples', 'PowerPoint layout', 'Word report polish'&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Release order'&#xD;
+                Add-OfficeMarkdownList -Items 'Validate artifacts', 'Generate docs', 'Publish release' -Ordered -Start 1&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends an unordered list to the document.</maml:para>
+          <maml:para>Appends bullet and ordered lists to the current Markdown document.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -13955,13 +14068,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a paragraph.</maml:title>
+        <maml:title>Add narrative text between generated sections.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownParagraph -Text 'This report is generated automatically.'</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\Report.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 1 -Text 'Operational Report'&#xD;
+                Add-OfficeMarkdownParagraph -Text 'This report is generated automatically from validated source data.'&#xD;
+                Add-OfficeMarkdownParagraph -Text 'Use the linked artifacts for workbook, PDF, and presentation proof.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends a paragraph to the current Markdown document.</maml:para>
+          <maml:para>Appends paragraph text to the current Markdown document.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -14106,13 +14223,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a quote block.</maml:title>
+        <maml:title>Add an executive takeaway quote.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownQuote -Text 'Key takeaway goes here.'</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\ExecutiveSummary.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 1 -Text 'Executive summary'&#xD;
+                Add-OfficeMarkdownQuote -Text 'The release is ready when examples, generated docs, and artifact readback all agree.'&#xD;
+                Add-OfficeMarkdownParagraph -Text 'Detailed validation follows.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends a quote block to the document.</maml:para>
+          <maml:para>Appends a quote block to the current Markdown document.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -14708,11 +14829,18 @@ System.Object</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a TOC at the top of the document.</maml:title>
+        <maml:title>Add a TOC at the top of a generated report.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\Report.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 1 -Text 'Release Report'&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Summary'&#xD;
+                Add-OfficeMarkdownParagraph -Text 'Current state and risks.'&#xD;
+                Add-OfficeMarkdownHeading -Level 2 -Text 'Appendix'&#xD;
+                Add-OfficeMarkdownParagraph -Text 'Supporting evidence.'&#xD;
+                Add-OfficeMarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop&#xD;
+            }</dev:code>
         <dev:remarks>
           <maml:para>Inserts a generated table of contents for headings in the document.</maml:para>
         </dev:remarks>
@@ -14931,13 +15059,16 @@ System.Object</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a checklist.</maml:title>
+        <maml:title>Add a release checklist.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownTaskList -Items 'Draft','Review','Ship' -Completed 1</dev:code>
+        <dev:code>New-OfficeMarkdown -Path .\ReleaseChecklist.md {&#xD;
+                Add-OfficeMarkdownHeading -Level 1 -Text 'Release checklist'&#xD;
+                Add-OfficeMarkdownTaskList -Items 'Generate examples', 'Refresh docs', 'Validate artifacts', 'Publish release' -Completed 0, 1&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Appends an unordered task list and marks the selected items as completed.</maml:para>
+          <maml:para>Appends an unordered task list and marks selected zero-based items as completed.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -15247,17 +15378,18 @@ System.Object</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfAttachment -Path 'C:\Path'</dev:code>
+        <maml:title>Embed source data in a generated PDF.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$dataPath = '.\Examples\Documents\ServiceData.json'&#xD;
+            Set-Content -Path $dataPath -Value '{ "service": "Directory", "status": "Healthy" }'&#xD;
+            New-OfficePdf -Path .\Examples\Documents\PdfWithAttachment.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Service report'&#xD;
+                Add-OfficePdfAttachment -Path $dataPath -Name 'service-data.json' -MimeType 'application/json' -Description 'Source data used by the report.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfAttachment -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Embeds a supporting JSON file in the generated PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -16089,17 +16221,20 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfBookmark -Name 'Name'</dev:code>
+        <maml:title>Add a bookmark target and link to it.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfBookmarks.pdf {&#xD;
+                Add-OfficePdfText -Run @(&#xD;
+                  @{ Text = 'Jump to details'; LinkDestinationName = 'details'; Color = '#2563EB'; Underline = $true }&#xD;
+                )&#xD;
+                Add-OfficePdfPageBreak&#xD;
+                Add-OfficePdfBookmark -Name 'details'&#xD;
+                Add-OfficePdfHeading -Text 'Details' -Level 2&#xD;
+              }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfBookmark -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Creates an internal link target inside the generated PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -16571,17 +16706,20 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfFormField -Name 'Name'</dev:code>
+        <maml:title>Create a simple PDF form.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfForm.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Access request'&#xD;
+                Add-OfficePdfParagraph -Text 'Requester'&#xD;
+                Add-OfficePdfFormField -Name 'Requester' -Type Text -Width 240&#xD;
+                Add-OfficePdfParagraph -Text 'Priority'&#xD;
+                Add-OfficePdfFormField -Name 'Priority' -Type Choice -Options 'Low','Normal','High' -Value 'Normal'&#xD;
+                Add-OfficePdfFormField -Name 'Approved' -Type CheckBox&#xD;
+              }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfFormField -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds text, choice, and checkbox form fields to a generated PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -16852,17 +16990,17 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfHeading -Align 'Value'</dev:code>
+        <maml:title>Create heading levels in a PDF report.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfHeadings.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Service Review' -Level 1 -Color '#1D4ED8'&#xD;
+                Add-OfficePdfHeading -Text 'Open risks' -Level 2&#xD;
+                Add-OfficePdfParagraph -Text 'Heading levels create the report structure.'&#xD;
+              }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfHeading -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds report headings before body content.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -17115,17 +17253,18 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfHorizontalRule -Color 'Value'</dev:code>
+        <maml:title>Separate report sections with a divider.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfDivider.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Executive summary'&#xD;
+                Add-OfficePdfParagraph -Text 'The service is healthy.'&#xD;
+                Add-OfficePdfHorizontalRule -Color '#CBD5E1' -Thickness 0.75 -SpacingBefore 10 -SpacingAfter 10&#xD;
+                Add-OfficePdfHeading -Text 'Signals' -Level 2&#xD;
+              }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfHorizontalRule -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a visual divider between generated PDF sections.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -17432,17 +17571,17 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfImage -Width 1 -Height 1</dev:code>
+        <maml:title>Add a logo or chart image to a PDF.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$image = '.\Tests\Assets\CellImage.png'&#xD;
+            New-OfficePdf -Path .\Examples\Documents\PdfImage.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Visual evidence'&#xD;
+                Add-OfficePdfImage -Path $image -Width 120 -Height 80 -Align Center -AlternativeText 'Sample chart image'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfImage -Document 'Value' -Width 1 -Height 1</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Embeds an image with alternative text in the generated PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -17713,17 +17852,16 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfList -Align 'Value'</dev:code>
+        <maml:title>Add action items to a report.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfList.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Next actions'&#xD;
+                Add-OfficePdfList -Items 'Confirm owner','Publish summary','Schedule review' -Numbered&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfList -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a numbered list in the generated PDF flow.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -17832,10 +17970,18 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfPageBreak -Document 'Value'</dev:code>
+        <maml:title>Start an appendix on a new page.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfPageBreak.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Service review'&#xD;
+                Add-OfficePdfParagraph -Text 'Summary content stays on the first page.'&#xD;
+                Add-OfficePdfPageBreak&#xD;
+                Add-OfficePdfHeading -Text 'Appendix' -Level 2&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Forces the appendix section to begin on the next page.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -18034,17 +18180,16 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfPanel -Align 'Value'</dev:code>
+        <maml:title>Add a callout panel to a report.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfPanel.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Executive summary'&#xD;
+                Add-OfficePdfPanel -Text 'No critical incidents were detected in the current reporting window.' -Align Center&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfPanel -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a highlighted panel paragraph to the generated PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -18279,17 +18424,16 @@ They are rendered behind generated content and should usually use restrained opa
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfParagraph -Align 'Value'</dev:code>
+        <maml:title>Add body text to a generated PDF.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfParagraph.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Status'&#xD;
+                Add-OfficePdfParagraph -Text 'All monitored services are currently healthy.' -Color '#166534'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfParagraph -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a colored body paragraph after a heading.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -18869,10 +19013,18 @@ horizontal rules, spacers, bookmarks, or rich Run/Runs text specifications.</mam
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfSpacer -Document 'Value'</dev:code>
+        <maml:title>Add vertical rhythm between sections.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfSpacer.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Summary'&#xD;
+                Add-OfficePdfParagraph -Text 'First block.'&#xD;
+                Add-OfficePdfSpacer -Height 18&#xD;
+                Add-OfficePdfParagraph -Text 'Second block after additional spacing.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds whitespace without adding visible content.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -19322,9 +19474,13 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePdfStamp -Path .\Report.pdf -OutputPath .\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'&#xD;
+                Get-OfficePdfPreflight -Path .\Examples\Documents\Stamped.pdf&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para>Adds a text stamp to the first two pages.</maml:para>
+          <maml:para>Adds a text stamp to the first two pages and preflights the result.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
@@ -19332,9 +19488,10 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePdfStamp -Path .\Report.pdf -OutputPath .\Watermarked.pdf -Image .\logo.png -Width 160 -Watermark</dev:code>
+        <dev:code>$logo = '.\Tests\Assets\CellImage.png'&#xD;
+            Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Watermarked.pdf -Image $logo -Width 160 -Watermark</dev:code>
         <dev:remarks>
-          <maml:para>Adds a logo behind existing content.</maml:para>
+          <maml:para>Adds a logo behind existing content as a watermark.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -19605,17 +19762,20 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfTable -Align 'Value'</dev:code>
+        <maml:title>Add object data as a PDF table.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$services = @(&#xD;
+                [pscustomobject]@{ Name = 'Directory'; Status = 'Healthy'; Incidents = 0 }&#xD;
+                [pscustomobject]@{ Name = 'Mail'; Status = 'Watch'; Incidents = 2 }&#xD;
+            )&#xD;
+            New-OfficePdf -Path .\Examples\Documents\PdfTable.pdf {&#xD;
+                Add-OfficePdfHeading -Text 'Service status'&#xD;
+                Add-OfficePdfTable -InputObject $services -Property Name,Status,Incidents -Header 'Service','Status','Incidents'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfTable -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Converts PowerShell objects into a table using selected properties and friendly headers.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -20613,17 +20773,17 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePdfWatermark -Color 'Value'</dev:code>
+        <maml:title>Add a draft watermark to every generated page.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfWatermark.pdf {&#xD;
+                Add-OfficePdfWatermark -Text 'DRAFT' -FontSize 72 -Opacity 0.12 -RotationAngle -35 -Color '#64748B'&#xD;
+                Add-OfficePdfHeading -Text 'Draft service review'&#xD;
+                Add-OfficePdfParagraph -Text 'This copy is not final.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Add-OfficePdfWatermark -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a text watermark while generating the PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -20865,9 +21025,13 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 60 -Y 120 -Width 400 -Height 200</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointBullets.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Delivery update'&#xD;
+                Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next steps' -X 60 -Y 120 -Width 420 -Height 180&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Creates a bullet list textbox.</maml:para>
+          <maml:para>Creates a slide with a titled bullet list.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -21419,7 +21583,14 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'</dev:code>
+        <dev:code>$rows = @(&#xD;
+                [pscustomobject]@{ Month = 'Jan'; Sales = 42; Profit = 9 }&#xD;
+                [pscustomobject]@{ Month = 'Feb'; Sales = 55; Profit = 13 }&#xD;
+            )&#xD;
+            New-OfficePowerPoint -Path .\Examples\Documents\PowerPointChart.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'&#xD;
+            }</dev:code>
         <dev:remarks>
           <maml:para>Creates a clustered column chart using Month for categories and Sales/Profit as series.</maml:para>
         </dev:remarks>
@@ -21429,7 +21600,14 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'</dev:code>
+        <dev:code>$rows = @(&#xD;
+                [pscustomobject]@{ Quarter = 1; Revenue = 20 }&#xD;
+                [pscustomobject]@{ Quarter = 2; Revenue = 34 }&#xD;
+            )&#xD;
+            New-OfficePowerPoint -Path .\Examples\Documents\PowerPointScatter.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'&#xD;
+            }</dev:code>
         <dev:remarks>
           <maml:para>Creates a scatter chart using Quarter on the X axis and Revenue on the Y axis.</maml:para>
         </dev:remarks>
@@ -21838,10 +22016,22 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePowerPointDesignerDeck -Plan 'Value'</dev:code>
+        <maml:title>Render a designer deck from a semantic plan.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$plan = New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanSection -Title 'Service Review'&#xD;
+                Add-OfficePowerPointPlanCardGrid -Title 'Current signals' -Cards @(&#xD;
+                  @{ Title = 'Availability'; Items = @('Healthy', 'No critical incidents') }&#xD;
+                  @{ Title = 'Risk'; Items = @('One dependency on watch') }&#xD;
+                )&#xD;
+            }&#xD;
+            New-OfficePowerPoint -Path .\Examples\Documents\DesignerDeck.pptx {&#xD;
+                Add-OfficePowerPointDesignerDeck -Plan $plan -AccentColor '#0F766E' -Purpose 'monthly service brief'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Uses OfficeIMO design selection to turn semantic content into slides.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -22035,9 +22225,14 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePowerPointImage -Slide $slide -Path .\logo.png -X 40 -Y 60 -Width 200 -Height 120</dev:code>
+        <dev:code>$image = '.\Tests\Assets\CellImage.png'&#xD;
+            New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImage.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Evidence'&#xD;
+                Add-OfficePowerPointImage -Slide $slide -Path $image -X 60 -Y 130 -Width 180 -Height 120&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Adds a picture to the slide.</maml:para>
+          <maml:para>Adds a picture to a generated slide.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -22227,10 +22422,19 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePowerPointPlanCapability -Sections @('Value')</dev:code>
+        <maml:title>Add capability sections to a deck plan.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$sections = @(&#xD;
+                @{ Heading = 'Monitoring'; Body = 'Signals and ownership'; Items = @('Alerts', 'Dashboards') }&#xD;
+                @{ Heading = 'Reporting'; Body = 'Executive-ready output'; Items = @('Summary', 'Appendix') }&#xD;
+            )&#xD;
+            New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanCapability -Title 'Capabilities' -Subtitle 'What the team provides' -Sections $sections&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a semantic capability/content slide to the plan.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -22420,10 +22624,19 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePowerPointPlanCardGrid -Cards @('Value')</dev:code>
+        <maml:title>Add status cards to a deck plan.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$cards = @(&#xD;
+                @{ Title = 'Availability'; Items = @('99.98%', 'No major incidents'); AccentColor = '#16A34A' }&#xD;
+                @{ Title = 'Risk'; Items = @('One dependency on watch'); AccentColor = '#F59E0B' }&#xD;
+            )&#xD;
+            New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanCardGrid -Title 'Current signals' -Cards $cards&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a card grid slide to the semantic deck plan.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -22613,10 +22826,23 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePowerPointPlanCaseStudy -Sections @('Value')</dev:code>
+        <maml:title>Add a case-study slide with metrics.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$sections = @(&#xD;
+                @{ Heading = 'Challenge'; Body = 'Manual reports took too long to produce.' }&#xD;
+                @{ Heading = 'Outcome'; Body = 'Automated generation made the review repeatable.' }&#xD;
+            )&#xD;
+            $metrics = @(&#xD;
+                @{ Value = '4h'; Label = 'saved each cycle' }&#xD;
+                @{ Value = '0'; Label = 'manual copy steps' }&#xD;
+            )&#xD;
+            New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanCaseStudy -Title 'Automation impact' -Sections $sections -Metrics $metrics&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a proof-oriented case-study slide to the plan.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -22806,10 +23032,19 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePowerPointPlanCoverage -Locations @('Value')</dev:code>
+        <maml:title>Add normalized coverage points to a deck plan.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$locations = @(&#xD;
+                @{ Name = 'EMEA'; X = 0.45; Y = 0.35; Detail = 'Primary operations' }&#xD;
+                @{ Name = 'AMER'; X = 0.22; Y = 0.42; Detail = 'Support window' }&#xD;
+            )&#xD;
+            New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanCoverage -Title 'Regional coverage' -Subtitle 'Operational footprint' -Locations $locations&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a semantic location/coverage slide using normalized 0..1 coordinates.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -22999,10 +23234,19 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePowerPointPlanLogoWall -Logos @('Value')</dev:code>
+        <maml:title>Add a proof wall to a deck plan.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$logos = @(&#xD;
+                @{ Name = 'Directory'; Subtitle = 'Identity platform'; AccentColor = '#2563EB' }&#xD;
+                @{ Name = 'Mail'; Subtitle = 'Messaging platform'; AccentColor = '#0F766E' }&#xD;
+            )&#xD;
+            New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanLogoWall -Title 'Systems covered' -Subtitle 'Representative services' -Logos $logos&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a semantic logo/proof-wall slide to the plan.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -23192,10 +23436,20 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePowerPointPlanProcess -Steps @('Value')</dev:code>
+        <maml:title>Add a process slide to a deck plan.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$steps = @(&#xD;
+                @{ Title = 'Collect'; Body = 'Gather health and delivery signals' }&#xD;
+                @{ Title = 'Review'; Body = 'Confirm decisions with owners' }&#xD;
+                @{ Title = 'Publish'; Body = 'Send the service brief' }&#xD;
+            )&#xD;
+            New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanProcess -Title 'Operating rhythm' -Subtitle 'How the review is produced' -Steps $steps&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a semantic timeline/process slide to the plan.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -23361,10 +23615,18 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficePowerPointPlanSection -PassThru</dev:code>
+        <maml:title>Add a title section to a deck plan.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$plan = New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanSection -Title 'Service Review' -Subtitle 'Monthly operating brief' -Seed 'service-review'&#xD;
+                Add-OfficePowerPointPlanCardGrid -Title 'Signals' -Cards @(&#xD;
+                  @{ Title = 'Health'; Items = @('Green', 'No blockers') }&#xD;
+                )&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Adds a semantic opening section slide to the plan.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -23486,9 +23748,13 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 2</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSections.pptx {&#xD;
+                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Overview'&#xD;
+                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Results'&#xD;
+                Add-OfficePowerPointSection -Name 'Results' -StartSlideIndex 1&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Creates a section named Results starting at the third slide.</maml:para>
+          <maml:para>Creates a section named Results starting at the second slide.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -23778,9 +24044,13 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 80 -Width 220 -Height 120 -FillColor '#DDEEFF'</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointShape.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 120 -Width 220 -Height 90 -FillColor '#DDEEFF' -OutlineColor '#2563EB' -OutlineWidth 1&#xD;
+                Add-OfficePowerPointTextBox -Slide $slide -Text 'Highlighted status' -X 80 -Y 145 -Width 180 -Height 32&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Creates a rectangle with a custom fill color.</maml:para>
+          <maml:para>Creates a styled rectangle and overlays a text box.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -24674,9 +24944,13 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePowerPointTextBox -Slide $slide -Text 'Quarterly Overview' -X 80 -Y 150</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointTextBox.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Add-OfficePowerPointTextBox -Slide $slide -Text 'Quarterly overview' -X 80 -Y 150 -Width 320 -Height 50&#xD;
+                Add-OfficePowerPointTextBox -Slide $slide -Text 'Generated by PSWriteOffice' -X 80 -Y 210 -Width 320 -Height 35&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Places a text box mid-slide with the provided caption.</maml:para>
+          <maml:para>Places two text boxes on a generated slide.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -25821,13 +26095,22 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a pie chart from object data.</maml:title>
+        <maml:title>Add pie and line charts to a report.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix'</dev:code>
+        <dev:code>$rows = @(&#xD;
+                [pscustomobject]@{ Region = 'North America'; Revenue = 125000; Profit = 42000 }&#xD;
+                [pscustomobject]@{ Region = 'EMEA'; Revenue = 98000; Profit = 31000 }&#xD;
+                [pscustomobject]@{ Region = 'APAC'; Revenue = 143000; Profit = 52000 }&#xD;
+            )&#xD;
+            New-OfficeWord -Path .\RegionalReport.docx {&#xD;
+                Add-OfficeWordParagraph -Text 'Regional revenue'&#xD;
+                Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix' -FitToPageWidth -WidthFraction 0.75&#xD;
+                Add-OfficeWordChart -Type Bar -Data $rows -CategoryProperty Region -SeriesProperty Revenue, Profit -Legend -XAxisTitle 'Region' -YAxisTitle 'Amount'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Creates a pie chart using Region labels and Revenue as the slice values.</maml:para>
+          <maml:para>Creates a report with a pie chart and a multi-series bar chart from PowerShell objects.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
@@ -25835,7 +26118,14 @@ OfficeIMO.Word.WordParagraph</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficeWordChart -Document $doc -Type Line -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Legend</dev:code>
+        <dev:code>$trend = @(&#xD;
+                [pscustomobject]@{ Month = 'Jan'; Sales = 10; Profit = 4 }&#xD;
+                [pscustomobject]@{ Month = 'Feb'; Sales = 12; Profit = 5 }&#xD;
+                [pscustomobject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }&#xD;
+            )&#xD;
+            $doc = New-OfficeWord -Path .\Trend.docx -PassThru&#xD;
+            Add-OfficeWordChart -Document $doc -Type Line -Data $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'&#xD;
+            Save-OfficeWord -Document $doc</dev:code>
         <dev:remarks>
           <maml:para>Creates a multi-series line chart on the document and shows a legend.</maml:para>
         </dev:remarks>
@@ -27239,13 +27529,17 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a simple equation.</maml:title>
+        <maml:title>Add an equation to a generated report.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficeWordEquation -Omml '&lt;m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"&gt;&lt;m:r&gt;&lt;m:t&gt;x+1&lt;/m:t&gt;&lt;/m:r&gt;&lt;/m:oMath&gt;'</dev:code>
+        <dev:code>$omml = '&lt;m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"&gt;&lt;m:r&gt;&lt;m:t&gt;x+1&lt;/m:t&gt;&lt;/m:r&gt;&lt;/m:oMath&gt;'&#xD;
+            New-OfficeWord -Path .\Formula.docx {&#xD;
+                Add-OfficeWordParagraph -Text 'The following expression is stored as Office Math.'&#xD;
+                Add-OfficeWordEquation -Omml $omml&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Inserts the OMML equation into the current document.</maml:para>
+          <maml:para>Inserts prebuilt OMML into the current document; conversion to OMML is intentionally outside the cmdlet.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -30039,10 +30333,29 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Add-OfficeWordShape -Description 'Value'</dev:code>
+        <maml:title>Add a callout shape to a report section.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeWord -Path .\StatusReport.docx {&#xD;
+                Add-OfficeWordParagraph -Text 'Release readiness'&#xD;
+                Add-OfficeWordShape -Type Rectangle -Width 220 -Height 56 -FillColor '#e6fffb' -StrokeColor '#08979c' -StrokeWidth 1.5 -Title 'Status callout' -Description 'Release readiness callout'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Creates an OfficeIMO Word shape in the current paragraph and sets basic visual and accessibility metadata.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Add an anchored background shape.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeWord -Path .\Appendix.docx {&#xD;
+                Add-OfficeWordParagraph -Text 'Appendix A'&#xD;
+                Add-OfficeWordShape -Type Rectangle -Width 480 -Height 36 -Left 36 -Top 72 -FillColor '#f0f5ff' -StrokeColor '#adc6ff'&#xD;
+            }</dev:code>
+        <dev:remarks>
+          <maml:para>Positions a shape with explicit offsets when the OfficeIMO anchored-shape API is desired.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -30961,13 +31274,20 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a default table of contents.</maml:title>
+        <maml:title>Add a table of contents before report sections.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficeWordTableOfContent</dev:code>
+        <dev:code>New-OfficeWord -Path .\ExecutiveReport.docx {&#xD;
+                Add-OfficeWordTableOfContent -Style Template1&#xD;
+                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1&#xD;
+                Add-OfficeWordParagraph -Text 'Summary text'&#xD;
+                Add-OfficeWordParagraph -Text 'Appendix' -Style Heading1&#xD;
+                Add-OfficeWordParagraph -Text 'Supporting details'&#xD;
+                Update-OfficeWordTableOfContent&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Inserts a table of contents using the default template.</maml:para>
+          <maml:para>Creates a navigable report outline and marks the TOC for refresh when the document opens.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -31584,13 +31904,30 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Add a text watermark.</maml:title>
+        <maml:title>Add a confidentiality watermark while composing a document.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficeWordWatermark -Text 'CONFIDENTIAL'</dev:code>
+        <dev:code>New-OfficeWord -Path .\ProtectedReport.docx {&#xD;
+                Add-OfficeWordParagraph -Text 'Confidential report'&#xD;
+                Add-OfficeWordWatermark -Text 'CONFIDENTIAL' -Scale 1.2&#xD;
+                Protect-OfficeWordDocument -Password 'secret'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Inserts a text watermark into the current section.</maml:para>
+          <maml:para>Applies a text watermark to the current section and then protects the document through OfficeIMO settings.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Add an image watermark.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficeWord -Path .\DraftReport.docx {&#xD;
+                Add-OfficeWordParagraph -Text 'Draft report'&#xD;
+                Add-OfficeWordWatermark -ImagePath .\Assets\Draft.png -Scale 0.6 -HorizontalOffset 20 -VerticalOffset 40&#xD;
+            }</dev:code>
+        <dev:remarks>
+          <maml:para>Uses the image watermark path and placement parameters exposed by OfficeIMO.Word.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -31826,10 +32163,17 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Clear-OfficePdfBackgroundShape -Document 'Value'</dev:code>
+        <maml:title>Remove background shapes before saving a variant.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$pdf = New-OfficePdf {&#xD;
+                Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120&#xD;
+                Add-OfficePdfHeading -Text 'Clean variant'&#xD;
+            } -NoSave&#xD;
+            $pdf | Clear-OfficePdfBackgroundShape -PassThru | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Clears generated page background shapes on an in-memory PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -32067,13 +32411,20 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Save to a new path and open the file.</maml:title>
+        <maml:title>Save, validate, and close an open workbook.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Close-OfficeExcel -Document $workbook -Save -Path .\report-final.xlsx -Show</dev:code>
+        <dev:code>New-OfficeExcel -Path .\report.xlsx {&#xD;
+                Add-OfficeExcelSheet -Name Data {&#xD;
+                    Set-OfficeExcelRow -Row 1 -Values 'Region', 'Revenue'&#xD;
+                    Set-OfficeExcelRow -Row 2 -Values 'EMEA', 98000&#xD;
+                }&#xD;
+            }&#xD;
+            $workbook = Get-OfficeExcel -Path .\report.xlsx&#xD;
+            $workbook | Close-OfficeExcel -Save -Path .\report-final.xlsx -SafePreflight -ValidateOpenXml</dev:code>
         <dev:remarks>
-          <maml:para>Saves pending changes to a new file, launches Excel, and releases the workbook.</maml:para>
+          <maml:para>Saves pending changes through OfficeIMO's normal save path, validates the package, and releases the workbook.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -33153,13 +33504,16 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Compare two sheets in the same workbook.</maml:title>
+        <maml:title>Compare current and expected ranges before publishing.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Compare-OfficeExcelRange -Path .\Report.xlsx -LeftSheet Current -RightSheet Expected</dev:code>
+        <dev:code>$differences = Compare-OfficeExcelRange -Path .\Report.xlsx -LeftSheet Current -RightSheet Expected -LeftRange A1:D20 -RightRange A1:D20 -TrimStrings -IgnoreCase&#xD;
+            if ($differences) {&#xD;
+                $differences | Export-Csv -Path .\RangeDifferences.csv -NoTypeInformation&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Compares the used ranges of the two worksheets.</maml:para>
+          <maml:para>Compares two ranges and exports cell-level differences when the workbook does not match the expected sheet.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -36344,10 +36698,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>ConvertTo-OfficePdfFlatForm -Path 'C:\Path'</dev:code>
+        <maml:title>Flatten a filled PDF form.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Set-OfficePdfForm -Path .\Examples\Documents\Request.pdf -OutputPath .\Examples\Documents\Request-Filled.pdf -Field @{&#xD;
+                Requester = 'Ada Lovelace'&#xD;
+                Priority = 'High'&#xD;
+            }&#xD;
+            ConvertTo-OfficePdfFlatForm -Path .\Examples\Documents\Request-Filled.pdf -OutputPath .\Examples\Documents\Request-Flat.pdf</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Turns simple form fields into static page content.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -36466,10 +36827,15 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>ConvertTo-OfficePdfMarkdown -Path 'C:\Path'</dev:code>
+        <maml:title>Export logical PDF text as Markdown.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$markdownPath = '.\Examples\Documents\Report.md'&#xD;
+            ConvertTo-OfficePdfMarkdown -Path .\Examples\Documents\Report.pdf -PageRange '1-3' -OutputPath $markdownPath&#xD;
+            Get-Content $markdownPath -TotalCount 20</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Writes Markdown readback for selected pages to a file.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -37681,13 +38047,19 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Copy a worksheet in the current workbook.</maml:title>
+        <maml:title>Copy a worksheet and confirm it exists.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Copy-OfficeExcelSheet -Path .\Report.xlsx -SourceSheet Data -NewName DataCopy</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Copy-OfficeExcelSheet -Path .\Report.xlsx -SourceSheet Data -NewName DataCopy&#xD;
+                Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |&#xD;
+                    Select-Object -ExpandProperty Sheets |&#xD;
+                    Where-Object Name -eq 'DataCopy'&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para>Creates a copy of the Data worksheet.</maml:para>
+          <maml:para>Creates a copy of the Data worksheet and reads the workbook summary to verify the new tab.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -37805,10 +38177,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Copy-OfficePdfPage -Path 'C:\Path' -PageRange 'Value' -OutputPath 'C:\Path'</dev:code>
+        <maml:title>Extract a page range into a new PDF.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$proof = @(&#xD;
+                Copy-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '1-2,5' -OutputPath .\Examples\Documents\ExecutivePages.pdf&#xD;
+                Get-OfficePdfInfo -Path .\Examples\Documents\ExecutivePages.pdf | Select-Object PageCount&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Copies selected pages and inspects the resulting PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -37930,9 +38309,14 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Copy-OfficePowerPointSlide -Presentation $ppt -Index 0</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCopySlide.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Original'&#xD;
+                $copy = Copy-OfficePowerPointSlide -Index 0&#xD;
+                Set-OfficePowerPointSlideTitle -Slide $copy -Title 'Copied appendix'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Creates a duplicate of slide 1 and inserts it at position 2.</maml:para>
+          <maml:para>Duplicates a slide and updates the copied slide title.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -39156,13 +39540,16 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Find values in a workbook.</maml:title>
+        <maml:title>Find status values and export their addresses.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Find-OfficeExcel -Path .\Report.xlsx -Text Ready</dev:code>
+        <dev:code>$matches = Find-OfficeExcel -Path .\Report.xlsx -Text Ready -Sheet Summary&#xD;
+            $matches |&#xD;
+                Select-Object -Property Sheet, Address, Value |&#xD;
+                Export-Csv -Path .\ReadyCells.csv -NoTypeInformation</dev:code>
         <dev:remarks>
-          <maml:para>Returns matching cells with sheet, address, row, column, and value metadata.</maml:para>
+          <maml:para>Returns matching cells with sheet, address, row, column, and value metadata for review or proof.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -39458,13 +39845,28 @@ OfficeIMO.Word.WordFind</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Find text in a document.</maml:title>
+        <maml:title>Find matching paragraphs and export a review list.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Find-OfficeWord -Path .\Report.docx -Text 'Quarter'</dev:code>
+        <dev:code>$matches = Find-OfficeWord -Path .\Report.docx -Text 'Quarter'&#xD;
+            $matches |&#xD;
+                Select-Object -Property Text |&#xD;
+                Export-Csv -Path .\ReviewMatches.csv -NoTypeInformation</dev:code>
         <dev:remarks>
-          <maml:para>Returns paragraphs that contain the search text.</maml:para>
+          <maml:para>Finds paragraphs containing the search text and writes a lightweight review CSV.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Use regex and keep the grouped WordFind result.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$result = Find-OfficeWord -Path .\Report.docx -Pattern 'FY\d{4}' -AsResult&#xD;
+            $result.Paragraphs |&#xD;
+                Select-Object -Property Text</dev:code>
+        <dev:remarks>
+          <maml:para>Returns the full regex result so paragraphs, table matches, headers, and footers can be inspected separately.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -40894,13 +41296,16 @@ OfficeIMO.Word.WordFind</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List named ranges.</maml:title>
+        <maml:title>List workbook and sheet-scoped names.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeExcelNamedRange -Path .\report.xlsx</dev:code>
+        <dev:code>$ranges = Get-OfficeExcelNamedRange -Path .\report.xlsx&#xD;
+            $ranges |&#xD;
+                Select-Object -Property Name, Scope, Range |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns workbook-level named ranges.</maml:para>
+          <maml:para>Returns named ranges so workbook navigation and formulas can be reviewed.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -41105,13 +41510,16 @@ OfficeIMO.Word.WordFind</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List pivot tables in a workbook.</maml:title>
+        <maml:title>Read pivot table metadata from a workbook.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeExcelPivotTable -Path .\report.xlsx</dev:code>
+        <dev:code>$pivots = Get-OfficeExcelPivotTable -Path .\report.xlsx -Sheet Summary&#xD;
+            $pivots |&#xD;
+                Select-Object -Property Name, Sheet, SourceRange, RowFields, DataFields |&#xD;
+                Format-List</dev:code>
         <dev:remarks>
-          <maml:para>Returns pivot table metadata (name, sheet, source range).</maml:para>
+          <maml:para>Returns pivot table metadata so generated reports can prove the pivot source and layout.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -41597,13 +42005,16 @@ System.Data.DataTable</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Read a rectangular range as objects.</maml:title>
+        <maml:title>Read a rectangular range and summarize revenue.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeExcelRange -Path .\report.xlsx -Sheet 'Data' -Range 'A1:C10'</dev:code>
+        <dev:code>$rows = Get-OfficeExcelRange -Path .\report.xlsx -Sheet Data -Range A1:C10 -NumericAsDecimal&#xD;
+            $rows |&#xD;
+                Group-Object -Property Region |&#xD;
+                Select-Object Name, Count</dev:code>
         <dev:remarks>
-          <maml:para>Uses the first row as headers and returns each remaining row as a PSCustomObject.</maml:para>
+          <maml:para>Uses the first row as headers, returns row objects, and keeps numeric values decimal-friendly.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -41736,11 +42147,15 @@ System.Data.DataTable</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Summarize workbook contents.</maml:title>
+        <maml:title>Summarize workbook contents before release.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeExcelSummary -Path .\report.xlsx</dev:code>
+        <dev:code>$summary = Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets&#xD;
+            $summary |&#xD;
+                Select-Object -Property SheetCount, TableCount, ChartCount, PivotTableCount&#xD;
+            $summary.Sheets |&#xD;
+                Select-Object -Property Name, State, UsedRange</dev:code>
         <dev:remarks>
           <maml:para>Returns workbook-level counts plus per-sheet tables, charts, pivots, links, comments, and used ranges.</maml:para>
         </dev:remarks>
@@ -42034,13 +42449,16 @@ System.Data.DataTable</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List tables in a workbook.</maml:title>
+        <maml:title>List tables and export table metadata.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeExcelTable -Path .\report.xlsx</dev:code>
+        <dev:code>$tables = Get-OfficeExcelTable -Path .\report.xlsx -Sheet Data&#xD;
+            $tables |&#xD;
+                Select-Object -Property Name, Sheet, Range |&#xD;
+                Export-Csv -Path .\ExcelTables.csv -NoTypeInformation</dev:code>
         <dev:remarks>
-          <maml:para>Returns table metadata (name, range, sheet).</maml:para>
+          <maml:para>Returns table metadata for workbook documentation or generated-artifact proof.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -42478,13 +42896,16 @@ System.Data.DataTable</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Read the used range from a sheet.</maml:title>
+        <maml:title>Read the used range and produce a quick status count.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet 'Data'</dev:code>
+        <dev:code>$rows = Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet Data&#xD;
+            $rows |&#xD;
+                Group-Object -Property Status |&#xD;
+                Select-Object -Property Name, Count</dev:code>
         <dev:remarks>
-          <maml:para>Reads the sheet's used range, treating the first row as headers.</maml:para>
+          <maml:para>Reads the sheet's used range, treats the first row as headers, and summarizes a status column.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -42985,13 +43406,28 @@ System.Data.DataTable</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Read Markdown front matter.</maml:title>
+        <maml:title>Read selected front matter from a Markdown file.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeMarkdownFrontMatter -Text "---`ntitle: Report`n---`n# Report"</dev:code>
+        <dev:code>$metadata = Get-OfficeMarkdownFrontMatter -Path .\Report.md -Key 'title'&#xD;
+            $metadata |&#xD;
+                Select-Object -Property Key, Value |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Parses Markdown text and returns front matter entries.</maml:para>
+          <maml:para>Parses a Markdown file and returns matching front matter entries for metadata proof.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Parse front matter from generated text.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$markdown = "---`ntitle: Report`nstatus: Ready`n---`n# Report"&#xD;
+            Get-OfficeMarkdownFrontMatter -Text $markdown |&#xD;
+                Select-Object -Property Key, Value</dev:code>
+        <dev:remarks>
+          <maml:para>Parses Markdown text directly when the document has not been saved yet.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -44241,10 +44677,14 @@ System.Management.Automation.PSObject</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficePdf -Path 'C:\Path'</dev:code>
+        <maml:title>Open a PDF for OfficeIMO.Pdf operations.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$pdf = Get-OfficePdf -Path .\Examples\Documents\Report.pdf&#xD;
+            $pdf.Read.Text() | Select-Object -First 1</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Returns the OfficeIMO.Pdf document object for advanced readback or operations.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -44363,10 +44803,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficePdfAttachment -Path 'C:\Path'</dev:code>
+        <maml:title>List and extract embedded PDF attachments.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$proof = @(&#xD;
+                Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf&#xD;
+                Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf -OutputDirectory .\Examples\Documents\Attachments&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>First returns attachment metadata, then writes embedded files to disk.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -44475,10 +44922,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficePdfCompliance -Document 'Value'</dev:code>
+        <maml:title>Check generated PDF compliance readiness.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$pdf = New-OfficePdf {&#xD;
+                Set-OfficePdfCompliance -Profile PdfA3B -Groundwork&#xD;
+                Add-OfficePdfHeading -Text 'Compliance readiness'&#xD;
+            } -NoSave&#xD;
+            $pdf | Get-OfficePdfCompliance -Profile PdfA3B</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Returns the OfficeIMO.Pdf readiness report before saving.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -44572,10 +45026,15 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficePdfFormField -Path 'C:\Path'</dev:code>
+        <maml:title>Inspect fields before filling a form.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePdfFormField -Path .\Examples\Documents\Request.pdf |&#xD;
+                Select-Object Name, FieldType, Value&#xD;
+            Set-OfficePdfForm -Path .\Examples\Documents\Request.pdf -OutputPath .\Examples\Documents\Request-Filled.pdf -Field @{ Requester = 'Ada Lovelace' }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Reads form field names so the fill hashtable can use the right keys.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -44718,10 +45177,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficePdfImage -Path 'C:\Path'</dev:code>
+        <maml:title>Extract images from selected pages.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$proof = @(&#xD;
+                Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -PageRange '1-2'&#xD;
+                Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -OutputDirectory .\Examples\Documents\PdfImages -BaseName 'report-image'&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Returns image metadata or writes extracted images to disk.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -44870,10 +45336,15 @@ and existing PDFs before follow-up operations such as splitting, stamping, or me
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficePdfPreflight -Path 'C:\Path'</dev:code>
+        <maml:title>Preflight a PDF before migration operations.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$preflight = Get-OfficePdfPreflight -Path .\Examples\Documents\Report.pdf&#xD;
+            $preflight.HasReadBlockers&#xD;
+            $preflight.HasRewriteBlockers</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Checks whether OfficeIMO.Pdf can read or rewrite the PDF safely.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -45015,10 +45486,17 @@ and existing PDFs before follow-up operations such as splitting, stamping, or me
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficePdfText -Path 'C:\Path'</dev:code>
+        <maml:title>Extract text and Markdown from a PDF.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$proof = @(&#xD;
+                Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -PageRange '1'&#xD;
+                Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -AsMarkdown -OutputPath .\Examples\Documents\ReportText.md&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Reads plain text directly and writes Markdown readback to a file.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -45464,9 +45942,13 @@ and existing PDFs before follow-up operations such as splitting, stamping, or me
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficePowerPointLayoutBox -Presentation $ppt -MarginCm 1.5</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointLayoutBox.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $box = Get-OfficePowerPointLayoutBox -MarginCm 1.5&#xD;
+                Add-OfficePowerPointTextBox -Slide $slide -Text 'Inside the content box' -X ($box.LeftPoints) -Y ($box.TopPoints) -Width ($box.WidthPoints) -Height 60&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Returns a single layout box representing the usable slide area.</maml:para>
+          <maml:para>Returns a content box and uses it to position slide text.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
@@ -45474,9 +45956,14 @@ and existing PDFs before follow-up operations such as splitting, stamping, or me
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficePowerPointLayoutBox -Presentation $ppt -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointColumns.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $columns = Get-OfficePowerPointLayoutBox -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0&#xD;
+                Add-OfficePowerPointTextBox -Slide $slide -Text 'Left column' -X ($columns[0].LeftPoints) -Y ($columns[0].TopPoints) -Width ($columns[0].WidthPoints) -Height 80&#xD;
+                Add-OfficePowerPointTextBox -Slide $slide -Text 'Right column' -X ($columns[1].LeftPoints) -Y ($columns[1].TopPoints) -Width ($columns[1].WidthPoints) -Height 80&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Returns one layout box per column.</maml:para>
+          <maml:para>Uses two layout boxes to place text in columns.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -46043,7 +46530,10 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficePowerPointSection -Presentation $ppt</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointSectionsRead.pptx&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null&#xD;
+            Add-OfficePowerPointSection -Presentation $ppt -Name 'Appendix' -StartSlideIndex 0 | Out-Null&#xD;
+            Get-OfficePowerPointSection -Presentation $ppt | Select-Object Name, FirstSlideIndex, SlideCount</dev:code>
         <dev:remarks>
           <maml:para>Returns section information including section names and slide indexes.</maml:para>
         </dev:remarks>
@@ -46670,9 +47160,12 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficePowerPointTheme -Presentation $ppt</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointThemeRead.pptx&#xD;
+            Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Service Brief'&#xD;
+            Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos Display' -MinorLatin 'Aptos'&#xD;
+            Get-OfficePowerPointTheme -Presentation $ppt | Select-Object Name, Master</dev:code>
         <dev:remarks>
-          <maml:para>Returns the theme name, theme colors, and configured fonts for master 0.</maml:para>
+          <maml:para>Returns theme information after updating the deck theme metadata.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -46953,13 +47446,16 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List all bookmarks.</maml:title>
+        <maml:title>List report bookmarks by name pattern.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordBookmark -Path .\Report.docx</dev:code>
+        <dev:code>$bookmarks = Get-OfficeWordBookmark -Path .\Report.docx -Name 'Appendix*', 'ExecutiveSummary'&#xD;
+            $bookmarks |&#xD;
+                Select-Object -Property Name |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns all bookmarks in the document.</maml:para>
+          <maml:para>Loads the document read-only, filters bookmark names with wildcards, and displays the matching navigation targets.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -47200,13 +47696,16 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List all checkboxes.</maml:title>
+        <maml:title>Review unchecked approval boxes.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordCheckBox -Path .\Report.docx</dev:code>
+        <dev:code>$openItems = Get-OfficeWordCheckBox -Path .\Report.docx -Tag 'approval-*' -Unchecked&#xD;
+            $openItems |&#xD;
+                Select-Object -Property Alias, Tag, IsChecked |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns all checkbox content controls in the document.</maml:para>
+          <maml:para>Finds unchecked approval checkboxes by tag so a review workflow can show what is still pending.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -47375,13 +47874,16 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List combo box controls.</maml:title>
+        <maml:title>Audit combo box controls in a template.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordComboBox -Path .\Report.docx</dev:code>
+        <dev:code>$controls = Get-OfficeWordComboBox -Path .\Template.docx -Alias 'Owner*'&#xD;
+            $controls |&#xD;
+                Select-Object -Property Alias, Tag |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns all combo box controls in the document.</maml:para>
+          <maml:para>Filters combo box content controls so template owners can verify the expected owner fields exist.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -47586,13 +48088,16 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List all content controls.</maml:title>
+        <maml:title>Inventory content controls by tag.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordContentControl -Path .\Report.docx</dev:code>
+        <dev:code>$controls = Get-OfficeWordContentControl -Path .\Template.docx -Tag 'report-*'&#xD;
+            $controls |&#xD;
+                Group-Object -Property Tag |&#xD;
+                Select-Object -Property Name, Count</dev:code>
         <dev:remarks>
-          <maml:para>Returns all structured document tags in the document.</maml:para>
+          <maml:para>Returns structured document tags matching the template tag convention and summarizes their counts.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -47761,13 +48266,16 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List date picker controls.</maml:title>
+        <maml:title>Find date picker controls used by a form.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordDatePicker -Path .\Report.docx</dev:code>
+        <dev:code>$dates = Get-OfficeWordDatePicker -Path .\IntakeForm.docx -Tag 'deadline-*'&#xD;
+            $dates |&#xD;
+                Select-Object -Property Alias, Tag |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns all date picker controls in the document.</maml:para>
+          <maml:para>Filters date picker content controls by tag before a form validation pass.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -47975,13 +48483,16 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List document properties.</maml:title>
+        <maml:title>Read release metadata from a document.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordDocumentProperty -Path .\Report.docx</dev:code>
+        <dev:code>$properties = Get-OfficeWordDocumentProperty -Path .\Report.docx -Name Title, Subject, ReleaseStatus&#xD;
+            $properties |&#xD;
+                Select-Object -Property Name, Value, IsCustom |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns built-in and custom Word document properties.</maml:para>
+          <maml:para>Returns selected built-in and custom properties for a document metadata check.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -48150,13 +48661,16 @@ OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List dropdown list controls.</maml:title>
+        <maml:title>Check status dropdown controls.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordDropDownList -Path .\Report.docx</dev:code>
+        <dev:code>$statusControls = Get-OfficeWordDropDownList -Path .\StatusForm.docx -Tag 'status-*'&#xD;
+            $statusControls |&#xD;
+                Select-Object -Property Alias, Tag |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns all dropdown list controls in the document.</maml:para>
+          <maml:para>Finds dropdown list content controls used for status capture in a Word form.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -48284,24 +48798,16 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficeWordEndnote -InputPath 'C:\Path'</dev:code>
+        <maml:title>Export endnotes for editorial review.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$endnotes = Get-OfficeWordEndnote -Path .\ResearchReport.docx&#xD;
+            $endnotes |&#xD;
+                Select-Object -Property Kind, ReferenceId, ParentText, Text |&#xD;
+                Export-Csv -Path .\Endnotes.csv -NoTypeInformation</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Get-OfficeWordEndnote -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 3</maml:title>
-        <dev:code>Get-OfficeWordEndnote -Section 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Reads endnotes from the document and exports the PowerShell-friendly note snapshot.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -48725,13 +49231,16 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List all fields.</maml:title>
+        <maml:title>Find TOC and page fields before refresh.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordField -Path .\Report.docx</dev:code>
+        <dev:code>$fields = Get-OfficeWordField -Path .\Report.docx -Contains 'TOC'&#xD;
+            $fields |&#xD;
+                Select-Object -Property FieldType, Field |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns all fields in the document.</maml:para>
+          <maml:para>Filters Word fields by field-code text before running a field or table-of-contents refresh.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -48859,24 +49368,16 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficeWordFootnote -InputPath 'C:\Path'</dev:code>
+        <maml:title>Export footnotes for review.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$footnotes = Get-OfficeWordFootnote -Path .\PolicyReport.docx&#xD;
+            $footnotes |&#xD;
+                Select-Object -Property Kind, ReferenceId, ParentText, Text |&#xD;
+                Export-Csv -Path .\Footnotes.csv -NoTypeInformation</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Get-OfficeWordFootnote -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 3</maml:title>
-        <dev:code>Get-OfficeWordFootnote -Section 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Reads footnotes from the document and exports the PowerShell-friendly note snapshot.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -49209,13 +49710,16 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List hyperlinks from a document.</maml:title>
+        <maml:title>Audit external hyperlinks in a report.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordHyperlink -Path .\Report.docx</dev:code>
+        <dev:code>$links = Get-OfficeWordHyperlink -Path .\Report.docx -Url 'https://*'&#xD;
+            $links |&#xD;
+                Select-Object -Property Text, Uri |&#xD;
+                Export-Csv -Path .\ReportLinks.csv -NoTypeInformation</dev:code>
         <dev:remarks>
-          <maml:para>Returns hyperlinks found in the document.</maml:para>
+          <maml:para>Filters external hyperlinks and exports them for link validation or review.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -49368,24 +49872,16 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficeWordImage -InputPath 'C:\Path'</dev:code>
+        <maml:title>List images and their accessibility metadata.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$images = Get-OfficeWordImage -Path .\Report.docx&#xD;
+            $images |&#xD;
+                Select-Object -Property Title, Description, Width, Height |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Get-OfficeWordImage -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 3</maml:title>
-        <dev:code>Get-OfficeWordImage -Paragraph 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Reads images from a document so metadata and sizing can be reviewed before publication.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -49510,13 +50006,17 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Enumerate paragraphs from a document.</maml:title>
+        <maml:title>Extract visible paragraph text.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordParagraph -Path .\Report.docx</dev:code>
+        <dev:code>$paragraphs = Get-OfficeWordParagraph -Path .\Report.docx&#xD;
+            $paragraphs |&#xD;
+                Where-Object { $_.Text } |&#xD;
+                Select-Object -Property Text |&#xD;
+                Set-Content -Path .\ReportParagraphs.txt</dev:code>
         <dev:remarks>
-          <maml:para>Returns all paragraphs in the document.</maml:para>
+          <maml:para>Enumerates document paragraphs and writes their text for a lightweight review workflow.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -49685,13 +50185,16 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List picture controls.</maml:title>
+        <maml:title>Find picture placeholder controls.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordPictureControl -Path .\Report.docx</dev:code>
+        <dev:code>$pictures = Get-OfficeWordPictureControl -Path .\Template.docx -Tag 'logo-*'&#xD;
+            $pictures |&#xD;
+                Select-Object -Property Alias, Tag |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns all picture content controls in the document.</maml:para>
+          <maml:para>Filters picture content controls used as image placeholders in a Word template.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -49860,13 +50363,16 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List repeating section controls.</maml:title>
+        <maml:title>Audit repeating section controls in a template.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordRepeatingSection -Path .\Report.docx</dev:code>
+        <dev:code>$sections = Get-OfficeWordRepeatingSection -Path .\Template.docx -Tag 'risk-row-*'&#xD;
+            $sections |&#xD;
+                Select-Object -Property Alias, Tag |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para>Returns all repeating section controls in the document.</maml:para>
+          <maml:para>Finds repeating sections used for repeatable rows in a document template.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -49999,13 +50505,16 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List sections from a file.</maml:title>
+        <maml:title>Inspect the first section before section-level reads.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordSection -Path .\Report.docx</dev:code>
+        <dev:code>$section = Get-OfficeWordSection -Path .\Report.docx -Index 0&#xD;
+            $section |&#xD;
+                Get-OfficeWordParagraph |&#xD;
+                Select-Object -First 5 -Property Text</dev:code>
         <dev:remarks>
-          <maml:para>Returns the sections contained in the document.</maml:para>
+          <maml:para>Gets a specific section by zero-based index and pipes it to another thin Word reader.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -50158,24 +50667,16 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficeWordShape -InputPath 'C:\Path'</dev:code>
+        <maml:title>List shapes and metadata.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$shapes = Get-OfficeWordShape -Path .\Report.docx&#xD;
+            $shapes |&#xD;
+                Select-Object -Property Title, Description, Width, Height, FillColorHex |&#xD;
+                Format-Table -AutoSize</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Get-OfficeWordShape -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 3</maml:title>
-        <dev:code>Get-OfficeWordShape -Paragraph 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Reads OfficeIMO Word shapes from the document so styling and alternate text can be audited.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -50275,17 +50776,16 @@ OfficeIMO.Word.WordParagraph</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficeWordStatistics -InputPath 'C:\Path'</dev:code>
+        <maml:title>Check document complexity before publishing.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$stats = Get-OfficeWordStatistics -Path .\Report.docx&#xD;
+            $stats |&#xD;
+                Select-Object -Property Paragraphs, Tables, Images, Charts |&#xD;
+                Format-List</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Get-OfficeWordStatistics -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Reads OfficeIMO.Word statistics and displays the structural counts that matter for a release artifact.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -50458,13 +50958,17 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>List tables in a document.</maml:title>
+        <maml:title>Count top-level and nested tables.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordTable -Path .\Report.docx</dev:code>
+        <dev:code>$tables = Get-OfficeWordTable -Path .\Report.docx -IncludeNested&#xD;
+            [pscustomobject]@{&#xD;
+                Path = '.\Report.docx'&#xD;
+                TableCount = @($tables).Count&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Returns the tables found in the document.</maml:para>
+          <maml:para>Reads tables from the document and includes nested tables when validating a composed report.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -50582,10 +51086,16 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Get-OfficeWordTableCell -Column 'Value'</dev:code>
+        <maml:title>Read a specific status cell from the first table.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$table = Get-OfficeWordTable -Path .\Report.docx | Select-Object -First 1&#xD;
+            $cell = $table | Get-OfficeWordTableCell -Row 1 -Column 2&#xD;
+            $cell.Paragraphs |&#xD;
+                Select-Object -Property Text</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Gets a zero-based table cell from an OfficeIMO table object and inspects its paragraphs.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -50682,13 +51192,18 @@ OfficeIMO.Word.WordSection</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Retrieve the table of contents if present.</maml:title>
+        <maml:title>Read a table of contents before updating it.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeWordTableOfContent -Path .\Report.docx</dev:code>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $toc = $doc | Get-OfficeWordTableOfContent&#xD;
+            if ($toc) {&#xD;
+                $toc | Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries' -PassThru&#xD;
+                $doc | Save-OfficeWord -Path .\Report-Toc.docx&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Returns the table of contents when one exists.</maml:para>
+          <maml:para>Gets the TOC from an open document, updates it, and saves a variant.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -51508,7 +52023,7 @@ OfficeIMO.Word.WordDocument</maml:name>
           <maml:name>System.String&#xD;
 System.Uri&#xD;
 OfficeIMO.Excel.ExcelDocument&#xD;
-System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]</maml:name>
+System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -51526,13 +52041,16 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Import worksheet rows.</maml:title>
+        <maml:title>Import worksheet rows and filter pending items.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data</dev:code>
+        <dev:code>$rows = Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -NumericAsDecimal&#xD;
+            $rows |&#xD;
+                Where-Object Status -eq 'Pending' |&#xD;
+                Export-Csv -Path .\PendingRows.csv -NoTypeInformation</dev:code>
         <dev:remarks>
-          <maml:para>Reads the used range on the Data worksheet and emits PSCustomObjects.</maml:para>
+          <maml:para>Reads the used range on the Data worksheet, emits PSCustomObjects, and filters them in PowerShell.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -51741,9 +52259,12 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Import-OfficePowerPointSlide -Presentation $target -SourcePath .\source.pptx -SourceIndex 0</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImportTarget.pptx {&#xD;
+                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Target deck'&#xD;
+                Import-OfficePowerPointSlide -SourcePath .\Examples\Documents\SourceDeck.pptx -SourceIndex 0 -InsertAt 1&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Copies the first slide from source.pptx into the target presentation.</maml:para>
+          <maml:para>Imports the first slide from another deck into the target presentation.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -53317,13 +53838,15 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Append source rows below a target sheet.</maml:title>
+        <maml:title>Append source rows below a combined sheet.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Join-OfficeExcelSheet -Path .\Report.xlsx -TargetSheet Combined -SourceSheet Data</dev:code>
+        <dev:code>$result = Join-OfficeExcelSheet -Path .\Report.xlsx -TargetSheet Combined -SourceSheet Data -MatchColumnsByHeader -BlankRowsBefore 1&#xD;
+            $result |&#xD;
+                Select-Object -Property SourceSheet, TargetSheet, RowsCopied, ColumnsCopied</dev:code>
         <dev:remarks>
-          <maml:para>Copies rows from Data into Combined, skipping the source header row by default.</maml:para>
+          <maml:para>Copies rows from Data into Combined, aligns columns by header, and returns the merge result.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -53445,9 +53968,12 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Join-OfficePdf -Path .\Cover.pdf, .\Report.pdf -OutputPath .\Combined.pdf -PassThru</dev:code>
+        <dev:code>$cover = '.\Examples\Documents\Cover.pdf'&#xD;
+            $report = '.\Examples\Documents\Report.pdf'&#xD;
+            Join-OfficePdf -Path $cover, $report -OutputPath .\Examples\Documents\Combined.pdf -PassThru&#xD;
+            Get-OfficePdfInfo -Path .\Examples\Documents\Combined.pdf | Select-Object PageCount</dev:code>
         <dev:remarks>
-          <maml:para>Writes a single PDF containing the input documents in the requested order.</maml:para>
+          <maml:para>Writes a single PDF containing the input documents in the requested order, then checks the result.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -53688,17 +54214,30 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Join-OfficeWordDocument -AppendPath @('C:\Path')</dev:code>
+        <maml:title>Merge a cover, body, and appendix into a release packet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$proof = @(&#xD;
+                Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx&#xD;
+                Get-OfficeWordStatistics -Path .\ReleasePacket.docx |&#xD;
+                    Select-Object -Property Paragraphs, Tables, Images&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Appends the source documents with OfficeIMO.Word and then reads back basic structure from the merged output.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Join-OfficeWordDocument -Document 'Value'</dev:code>
+        <maml:title>Append into an already-open document object.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Base.docx&#xD;
+            $doc | Join-OfficeWordDocument -AppendPath .\Section1.docx, .\Section2.docx -PassThru |&#xD;
+                Save-OfficeWord -Path .\Combined.docx</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Keeps the wrapper thin by piping the OfficeIMO document object through append and save commands.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -53990,13 +54529,19 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Move a sheet to the front.</maml:title>
+        <maml:title>Move the summary sheet to the front and verify order.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0&#xD;
+                Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |&#xD;
+                    Select-Object -ExpandProperty Sheets |&#xD;
+                    Select-Object -First 3 -Property Index, Name&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para>Moves Summary to the first worksheet tab.</maml:para>
+          <maml:para>Moves Summary to the first worksheet tab and reads back the first sheets from workbook summary.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -54138,10 +54683,17 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Move-OfficePdfPage -Path 'C:\Path' -PageRange 'Value' -BeforePage 1 -OutputPath 'C:\Path'</dev:code>
+        <maml:title>Move appendix pages to the end.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$proof = @(&#xD;
+                Move-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '2-3' -BeforePage 6 -OutputPath .\Examples\Documents\Report-Reordered.pdf&#xD;
+                Get-OfficePdfInfo -Path .\Examples\Documents\Report-Reordered.pdf | Select-Object PageCount&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Moves selected pages before a target one-based page number and writes a new PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -55450,10 +56002,23 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>New-OfficePowerPointDeckPlan -Content { }</dev:code>
+        <maml:title>Create a semantic service brief plan.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$plan = New-OfficePowerPointDeckPlan {&#xD;
+                Add-OfficePowerPointPlanSection -Title 'Service Review' -Subtitle 'Monthly operating brief'&#xD;
+                Add-OfficePowerPointPlanProcess -Title 'Operating rhythm' -Steps @(&#xD;
+                  @{ Title = 'Collect'; Body = 'Gather health signals' }&#xD;
+                  @{ Title = 'Review'; Body = 'Confirm owner decisions' }&#xD;
+                  @{ Title = 'Publish'; Body = 'Share the final brief' }&#xD;
+                )&#xD;
+            }&#xD;
+            New-OfficePowerPoint -Path .\Examples\Documents\DesignerDeck.pptx {&#xD;
+                Add-OfficePowerPointDesignerDeck -Plan $plan&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Builds a deck plan and renders it through the OfficeIMO designer helpers.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -56470,13 +57035,16 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Protect a document as read-only.</maml:title>
+        <maml:title>Protect a generated document as read-only.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Protect-OfficeWordDocument -Password 'secret'</dev:code>
+        <dev:code>New-OfficeWord -Path .\ProtectedReport.docx {&#xD;
+                Add-OfficeWordParagraph -Text 'Confidential report'&#xD;
+                Protect-OfficeWordDocument -Password 'secret' -ProtectionType ReadOnly&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Applies read-only protection to the current document.</maml:para>
+          <maml:para>Sets OfficeIMO.Word document protection while the document is being composed.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -56865,10 +57433,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Remove-OfficePdfPage -Path 'C:\Path' -PageRange 'Value' -OutputPath 'C:\Path'</dev:code>
+        <maml:title>Remove draft pages from a PDF.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$proof = @(&#xD;
+                Remove-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '4-5' -OutputPath .\Examples\Documents\Report-Clean.pdf&#xD;
+                Get-OfficePdfPreflight -Path .\Examples\Documents\Report-Clean.pdf&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Deletes selected pages and preflights the rewritten PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -56966,9 +57541,13 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Remove-OfficePowerPointSlide -Presentation $ppt -Index 0</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointRemoveSlide.pptx&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null&#xD;
+            Remove-OfficePowerPointSlide -Presentation $ppt -Index 0 -Confirm:$false&#xD;
+            Save-OfficePowerPoint -Presentation $ppt</dev:code>
         <dev:remarks>
-          <maml:para>Removes slide 1 from the deck.</maml:para>
+          <maml:para>Removes the first slide and saves the updated deck.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -57062,13 +57641,15 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Remove the table of contents.</maml:title>
+        <maml:title>Remove a table of contents from an opened document.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Remove-OfficeWordTableOfContent</dev:code>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $doc | Remove-OfficeWordTableOfContent -PassThru |&#xD;
+                Save-OfficeWord -Path .\Report-NoToc.docx</dev:code>
         <dev:remarks>
-          <maml:para>Deletes the table of contents if one exists.</maml:para>
+          <maml:para>Removes the TOC from an OfficeIMO document object and saves the changed document to a new file.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -57239,9 +57820,12 @@ System.Boolean</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive'</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointRenameSection.pptx&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null&#xD;
+            Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 0 | Out-Null&#xD;
+            Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive' -PassThru</dev:code>
         <dev:remarks>
-          <maml:para>Renames the first matching section from Results to Deep Dive.</maml:para>
+          <maml:para>Renames the first matching section and returns the updated section metadata.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -57955,9 +58539,12 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Save-OfficePowerPoint -Presentation $ppt -Show</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointSave.pptx&#xD;
+            $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1&#xD;
+            Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Saved later'&#xD;
+            Save-OfficePowerPoint -Presentation $ppt -PdfPath .\Examples\Documents\PowerPointSave.pdf</dev:code>
         <dev:remarks>
-          <maml:para>Saves the current presentation and opens it in PowerPoint.</maml:para>
+          <maml:para>Saves the current presentation and exports a PDF sidecar.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -67385,13 +67972,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Set a sheet print area.</maml:title>
+        <maml:title>Set a print area and keep the workbook printable.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Data -Range A1:H100</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Summary -Range A1:H40&#xD;
+                Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Summary -FirstRow 1 -LastRow 2&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para>Stores the worksheet-local Excel print area definition.</maml:para>
+          <maml:para>Stores the worksheet-local Excel print area and repeats the report header rows for printing.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -67875,13 +68466,18 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Repeat the header row on every printed page.</maml:title>
+        <maml:title>Repeat report headers on every printed page.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Data -FirstRow 1 -LastRow 1</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Data -FirstRow 1 -LastRow 1 -FirstColumn 1 -LastColumn 1&#xD;
+                Get-OfficeExcelSummary -Path .\Report.xlsx |&#xD;
+                    Select-Object -Property SheetCount, TableCount&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para>Stores Excel print titles for the Data worksheet.</maml:para>
+          <maml:para>Stores Excel print titles for the Data worksheet and then reads back workbook structure as a quick proof step.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -69810,17 +70406,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficePdfBackground -Clear</dev:code>
+        <maml:title>Set a generated PDF page background.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfBackground.pdf {&#xD;
+                Set-OfficePdfBackground -Color '#F8FAFC'&#xD;
+                Add-OfficePdfHeading -Text 'Report on a soft background'&#xD;
+                Add-OfficePdfParagraph -Text 'The background color applies to generated pages.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Set-OfficePdfBackground -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Applies a page background color before adding content.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -70351,17 +70947,17 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficePdfCompliance -Profile 'Value'</dev:code>
+        <maml:title>Configure PDF/A groundwork before saving.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {&#xD;
+                Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'&#xD;
+                Add-OfficePdfHeading -Text 'Compliance-ready report'&#xD;
+                Get-OfficePdfCompliance -Profile PdfA3B&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Set-OfficePdfCompliance -Document 'Value' -Profile 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Applies OfficeIMO.Pdf compliance groundwork and emits a readiness report inside the DSL.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -70596,17 +71192,18 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficePdfFooter -Align 'Value'</dev:code>
+        <maml:title>Add page numbers to a generated PDF.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfFooter.pdf {&#xD;
+                Set-OfficePdfFooter -Text 'Page {page} of {pages}' -Align Center -FontSize 8&#xD;
+                Add-OfficePdfHeading -Text 'Report with footer'&#xD;
+                Add-OfficePdfPageBreak&#xD;
+                Add-OfficePdfParagraph -Text 'The footer includes generated page numbers.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Set-OfficePdfFooter -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Uses page placeholders in a running footer.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -70748,10 +71345,18 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficePdfForm -Path 'C:\Path' -OutputPath 'C:\Path'</dev:code>
+        <maml:title>Fill and flatten a PDF form.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$fields = @{&#xD;
+                Requester = 'Ada Lovelace'&#xD;
+                Priority = 'High'&#xD;
+                Approved = $true&#xD;
+            }&#xD;
+            Set-OfficePdfForm -Path .\Examples\Documents\Request.pdf -OutputPath .\Examples\Documents\Request-FilledFlat.pdf -Field $fields -Flatten</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Fills simple AcroForm fields and writes a flattened PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -70986,17 +71591,17 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficePdfHeader -Align 'Value'</dev:code>
+        <maml:title>Add a running report header.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfHeader.pdf {&#xD;
+                Set-OfficePdfHeader -Text 'Service Review' -Align Right -FontSize 9&#xD;
+                Add-OfficePdfHeading -Text 'Service Review'&#xD;
+                Add-OfficePdfParagraph -Text 'The header repeats on generated pages.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Set-OfficePdfHeader -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Sets header text for the generated PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -71535,10 +72140,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficePdfPage -Path 'C:\Path' -Rotation 1 -OutputPath 'C:\Path'</dev:code>
+        <maml:title>Rotate selected PDF pages.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$proof = @(&#xD;
+                Set-OfficePdfPage -Path .\Examples\Documents\Scanned.pdf -PageRange '2,4' -Rotation 90 -OutputPath .\Examples\Documents\Scanned-Rotated.pdf&#xD;
+                Get-OfficePdfInfo -Path .\Examples\Documents\Scanned-Rotated.pdf | Select-Object PageCount&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Rotates selected pages and writes a new PDF.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -71881,17 +72493,16 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficePdfPageBorder -Clear</dev:code>
+        <maml:title>Add a subtle page border.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfPageBorder.pdf {&#xD;
+                Set-OfficePdfPageBorder -Color '#CBD5E1' -Width 0.75 -Inset 24 -Opacity 0.8&#xD;
+                Add-OfficePdfHeading -Text 'Bordered report'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Set-OfficePdfPageBorder -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Decorates generated pages with an OfficeIMO.Pdf page border.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -72324,17 +72935,17 @@ System.IO.FileInfo</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficePdfPageSetup -Bottom 'Value'</dev:code>
+        <maml:title>Set page size and margins for a generated report.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfPageSetup.pdf {&#xD;
+                Set-OfficePdfPageSetup -PageSize A4 -Margin 42&#xD;
+                Add-OfficePdfHeading -Text 'A4 report'&#xD;
+                Add-OfficePdfParagraph -Text 'The report uses custom margins.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>EXAMPLE 2</maml:title>
-        <dev:code>Set-OfficePdfPageSetup -Document 'Value'</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Applies page setup before adding generated PDF content.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -73949,9 +74560,13 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this under five minutes.'</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointNotes.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Executive summary'&#xD;
+                Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this slide under five minutes and focus on decisions.'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Writes notes to the slide.</maml:para>
+          <maml:para>Writes speaker notes to a generated slide.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -74145,9 +74760,13 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointPlaceholderText.pptx {&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'&#xD;
+                Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Body -Text 'Review signals and decisions' -IgnoreMissing&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Updates the Title placeholder on the slide.</maml:para>
+          <maml:para>Updates placeholder text when the selected layout exposes matching placeholders.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -74781,9 +75400,12 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficePowerPointSlideSize -Presentation $ppt -Preset Screen16x9</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointWidescreen.pptx {&#xD;
+                Set-OfficePowerPointSlideSize -Preset Screen16x9&#xD;
+                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Widescreen deck'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Applies the 16:9 widescreen preset to the presentation.</maml:para>
+          <maml:para>Applies the 16:9 widescreen preset before adding slides.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
@@ -74791,7 +75413,9 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointCustomSize.pptx&#xD;
+            Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Custom size'</dev:code>
         <dev:remarks>
           <maml:para>Sets the presentation slide size to a custom 25.4 x 14.0 cm layout.</maml:para>
         </dev:remarks>
@@ -75658,9 +76282,12 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLatin 'Calibri'</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeFonts.pptx {&#xD;
+                Set-OfficePowerPointThemeFonts -MajorLatin 'Aptos Display' -MinorLatin 'Aptos' -AllMasters&#xD;
+                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Theme fonts'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Updates the default master theme fonts.</maml:para>
+          <maml:para>Updates theme fonts before creating slides.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -75806,9 +76433,12 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Contoso Theme' -AllMasters</dev:code>
+        <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeName.pptx {&#xD;
+                Set-OfficePowerPointThemeName -Name 'Service Brief' -AllMasters&#xD;
+                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Named theme'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Applies a friendly theme name across every master.</maml:para>
+          <maml:para>Applies a friendly theme name across every master before saving.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -76025,13 +76655,28 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Apply a solid background color.</maml:title>
+        <maml:title>Apply a solid background color while composing a report.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficeWordBackground -Color '#f4f7fb'</dev:code>
+        <dev:code>New-OfficeWord -Path .\BrandedReport.docx {&#xD;
+                Set-OfficeWordBackground -Color '#f4f7fb'&#xD;
+                Add-OfficeWordParagraph -Text 'Executive summary'&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Sets the document background to the provided hex color.</maml:para>
+          <maml:para>Sets the document background to the provided hex color and continues normal document composition.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Apply an image background to an existing document.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Draft.docx&#xD;
+            $doc | Set-OfficeWordBackground -ImagePath .\Assets\Background.png -Width 600 -Height 800 -PassThru |&#xD;
+                Save-OfficeWord -Path .\Draft-Branded.docx</dev:code>
+        <dev:remarks>
+          <maml:para>Uses OfficeIMO.Word background image support and saves the updated document through the standard save cmdlet.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -76197,13 +76842,18 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Set the document title.</maml:title>
+        <maml:title>Set built-in and custom release metadata.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'</dev:code>
+        <dev:code>New-OfficeWord -Path .\QuarterlyReport.docx {&#xD;
+                Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'&#xD;
+                Set-OfficeWordDocumentProperty -Name ReleaseStatus -Value 'Approved' -Custom&#xD;
+                Add-OfficeWordParagraph -Text 'Approved quarterly report'&#xD;
+            }&#xD;
+            Get-OfficeWordDocumentProperty -Path .\QuarterlyReport.docx -Name Title, ReleaseStatus</dev:code>
         <dev:remarks>
-          <maml:para>Updates the built-in Title property on the active Word document.</maml:para>
+          <maml:para>Writes document metadata during composition and reads it back for proof.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -76633,10 +77283,17 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficeWordImage -CropBottom 'Value'</dev:code>
+        <maml:title>Resize and describe all report images.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $doc |&#xD;
+                Get-OfficeWordImage |&#xD;
+                Set-OfficeWordImage -Width 320 -Wrap Square -Title 'Report image' -Description 'Image used in the report'&#xD;
+            $doc | Save-OfficeWord -Path .\Report-Images.docx</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Gets OfficeIMO image objects from an open document, applies thin image metadata and layout updates, and saves the document.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -78393,10 +79050,17 @@ OfficeIMO.Word.WordDocument</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficeWordShape -Description 'Value'</dev:code>
+        <maml:title>Restyle callout shapes in an opened report.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $doc |&#xD;
+                Get-OfficeWordShape |&#xD;
+                Set-OfficeWordShape -FillColor '#fff7e6' -StrokeColor '#fa8c16' -StrokeWidth 1.25 -Description 'Highlighted callout'&#xD;
+            $doc | Save-OfficeWord -Path .\Report-Shapes.docx</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Updates OfficeIMO shape objects through the pipeline and persists the document with the standard save command.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -78870,10 +79534,33 @@ OfficeIMO.Word.WordDocument</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>EXAMPLE 1</maml:title>
-        <dev:code>Set-OfficeWordTableCell -Cell 'Value'</dev:code>
+        <maml:title>Highlight a status column in the first report table.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $table = $doc | Get-OfficeWordTable | Select-Object -First 1&#xD;
+            $table |&#xD;
+                Get-OfficeWordTableCell -Column 2 |&#xD;
+                Set-OfficeWordTableCell -ShadingFillColor '#fff1f0' -ShadingPattern Clear -Width 2400 -WidthType Dxa&#xD;
+            $doc | Save-OfficeWord -Path .\Report-StatusCells.docx</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Reads cells from an OfficeIMO table object, applies cell shading and width, and saves the updated document.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Merge a heading row across columns.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $table = $doc | Get-OfficeWordTable | Select-Object -First 1&#xD;
+            $table |&#xD;
+                Get-OfficeWordTableCell -Row 0 -Column 0 |&#xD;
+                Set-OfficeWordTableCell -MergeRight 2 -CopyParagraphs&#xD;
+            $doc | Save-OfficeWord -Path .\Report-MergedHeader.docx</dev:code>
+        <dev:remarks>
+          <maml:para>Uses the OfficeIMO merge operation exposed by the thin table-cell wrapper.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -79079,13 +79766,32 @@ OfficeIMO.Word.WordDocument</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Update the table of contents headings.</maml:title>
+        <maml:title>Customize table of contents text during composition.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries'</dev:code>
+        <dev:code>New-OfficeWord -Path .\Report.docx {&#xD;
+                Add-OfficeWordTableOfContent&#xD;
+                Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries yet'&#xD;
+                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1&#xD;
+                Update-OfficeWordTableOfContent&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Updates the table of contents display text.</maml:para>
+          <maml:para>Updates TOC display text, adds heading content, and marks the TOC for refresh.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Update an existing TOC object from a document.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $doc |&#xD;
+                Get-OfficeWordTableOfContent |&#xD;
+                Set-OfficeWordTableOfContent -Text 'Report contents'&#xD;
+            $doc | Save-OfficeWord -Path .\Report-Toc.docx</dev:code>
+        <dev:remarks>
+          <maml:para>Pipes the OfficeIMO TOC object into the thin setter and saves the document.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -79715,9 +80421,10 @@ OfficeIMO.Word.WordDocument</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Split-OfficePdf -Path .\Combined.pdf -OutputDirectory .\Pages -Prefix 'page'</dev:code>
+        <dev:code>$pages = Split-OfficePdf -Path .\Examples\Documents\Combined.pdf -OutputDirectory .\Examples\Documents\Pages -Prefix 'combined-page'&#xD;
+            $pages | Select-Object Name, Length</dev:code>
         <dev:remarks>
-          <maml:para>Creates one output PDF for each page.</maml:para>
+          <maml:para>Creates one output PDF for each page and returns the written files.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -80253,13 +80960,17 @@ OfficeIMO.Word.WordDocument</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Replace status text in a workbook.</maml:title>
+        <maml:title>Replace status text and verify the update count.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Update-OfficeExcelText -Path .\Report.xlsx -OldValue Draft -NewValue Ready</dev:code>
+        <dev:code>$count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready&#xD;
+            [pscustomobject]@{&#xD;
+                Path = '.\Report.xlsx'&#xD;
+                Replacements = $count&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Updates matching text cells and returns the replacement count.</maml:para>
+          <maml:para>Updates matching text cells on a sheet, saves the workbook, and returns the replacement count.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -80556,9 +81267,13 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointUpdateText.pptx&#xD;
+            $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1&#xD;
+            Add-OfficePowerPointTextBox -Slide $slide -Text 'FY24 summary' | Out-Null&#xD;
+            Set-OfficePowerPointNotes -Slide $slide -Text 'Mention FY24 assumptions.' | Out-Null&#xD;
+            Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes</dev:code>
         <dev:remarks>
-          <maml:para>Replaces matching text throughout the presentation and notes.</maml:para>
+          <maml:para>Replaces matching text throughout the presentation and notes, returning the replacement count.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -80652,13 +81367,17 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Update fields.</maml:title>
+        <maml:title>Update fields before saving a generated report.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Update-OfficeWordFields</dev:code>
+        <dev:code>New-OfficeWord -Path .\Report.docx {&#xD;
+                Add-OfficeWordParagraph -Text 'Release report'&#xD;
+                Add-OfficeWordTableOfContent&#xD;
+                Update-OfficeWordFields&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Updates PAGE/NUMPAGES fields and marks TOC fields as dirty.</maml:para>
+          <maml:para>Updates PAGE and NUMPAGES fields and marks TOC fields as dirty before saving.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -80832,9 +81551,26 @@ OfficeIMO.Word.WordDocument</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Update-OfficeWordTableOfContent</dev:code>
+        <dev:code>New-OfficeWord -Path .\ExecutiveReport.docx {&#xD;
+                Add-OfficeWordTableOfContent&#xD;
+                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1&#xD;
+                Add-OfficeWordParagraph -Text 'Summary text'&#xD;
+                Update-OfficeWordTableOfContent&#xD;
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Marks TOC fields as dirty and updates the document settings.</maml:para>
+          <maml:para>Marks TOC fields as dirty and updates the document settings so Word refreshes the TOC when opened.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Regenerate a TOC in an existing document object.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$doc = Get-OfficeWord -Path .\Report.docx&#xD;
+            $doc | Update-OfficeWordTableOfContent -Regenerate&#xD;
+            $doc | Save-OfficeWord -Path .\Report-RegeneratedToc.docx</dev:code>
+        <dev:remarks>
+          <maml:para>Uses OfficeIMO's regenerate path, then saves the updated document.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

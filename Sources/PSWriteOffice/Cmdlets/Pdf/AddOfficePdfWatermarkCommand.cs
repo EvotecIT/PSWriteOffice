@@ -5,6 +5,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a generated-document text watermark.</summary>
+/// <example>
+///   <summary>Add a draft watermark to every generated page.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfWatermark.pdf {
+///     Add-OfficePdfWatermark -Text 'DRAFT' -FontSize 72 -Opacity 0.12 -RotationAngle -35 -Color '#64748B'
+///     Add-OfficePdfHeading -Text 'Draft service review'
+///     Add-OfficePdfParagraph -Text 'This copy is not final.'
+/// }</code>
+///   <para>Adds a text watermark while generating the PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfWatermark", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfWatermark")]
 [OutputType(typeof(PdfDocument))]

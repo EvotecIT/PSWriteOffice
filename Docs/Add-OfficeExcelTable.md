@@ -27,7 +27,7 @@ Accepts objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow
 ### EXAMPLE 1
 ```powershell
 PS> $data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })
-              ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }
+ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }
 ```
 
 Writes two rows and formats them as a styled Excel table.

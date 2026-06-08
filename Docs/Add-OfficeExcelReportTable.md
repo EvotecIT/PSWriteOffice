@@ -21,9 +21,18 @@ Adds an object table to the current Excel report sheet using the OfficeIMO sheet
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficeExcelReportTable -Data @('Value')
+PS> $rows = @(
+    [pscustomobject]@{ Area = 'PDF'; Status = 'Ready' }
+    [pscustomobject]@{ Area = 'Word'; Status = 'Review' }
+)
+New-OfficeExcel -Path .\Operations.xlsx {
+    Add-OfficeExcelReportSheet -Name Summary {
+        Add-OfficeExcelReportTable -Data $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9
+    }
+}
 ```
 
+Renders object rows as a formatted Excel table through the sheet composer.
 
 ## PARAMETERS
 

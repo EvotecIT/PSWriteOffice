@@ -8,10 +8,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <summary>Adds an Office Math equation to a Word document or paragraph.</summary>
 /// <para>Accepts OMML and keeps conversion/parsing outside the cmdlet.</para>
 /// <example>
-///   <summary>Add a simple equation.</summary>
+///   <summary>Add an equation to a generated report.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficeWordEquation -Omml '&lt;m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"&gt;&lt;m:r&gt;&lt;m:t&gt;x+1&lt;/m:t&gt;&lt;/m:r&gt;&lt;/m:oMath&gt;'</code>
-///   <para>Inserts the OMML equation into the current document.</para>
+///   <code>$omml = '&lt;m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"&gt;&lt;m:r&gt;&lt;m:t&gt;x+1&lt;/m:t&gt;&lt;/m:r&gt;&lt;/m:oMath&gt;'
+/// New-OfficeWord -Path .\Formula.docx {
+///     Add-OfficeWordParagraph -Text 'The following expression is stored as Office Math.'
+///     Add-OfficeWordEquation -Omml $omml
+/// }</code>
+///   <para>Inserts prebuilt OMML into the current document; conversion to OMML is intentionally outside the cmdlet.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordEquation")]
 [Alias("WordEquation")]

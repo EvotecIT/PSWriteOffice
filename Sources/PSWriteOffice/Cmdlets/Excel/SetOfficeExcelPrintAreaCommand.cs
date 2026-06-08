@@ -6,10 +6,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Sets the print area for a worksheet.</summary>
 /// <example>
-///   <summary>Set a sheet print area.</summary>
+///   <summary>Set a print area and keep the workbook printable.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Data -Range A1:H100</code>
-///   <para>Stores the worksheet-local Excel print area definition.</para>
+///   <code>$proof = @(
+///     Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Summary -Range A1:H40
+///     Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Summary -FirstRow 1 -LastRow 2
+/// )
+/// $proof</code>
+///   <para>Stores the worksheet-local Excel print area and repeats the report header rows for printing.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelPrintArea", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelPrintArea")]

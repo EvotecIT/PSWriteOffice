@@ -21,9 +21,23 @@ Adds a basic OfficeIMO Word shape to the current paragraph.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficeWordShape -Description 'Value'
+PS> New-OfficeWord -Path .\StatusReport.docx {
+    Add-OfficeWordParagraph -Text 'Release readiness'
+    Add-OfficeWordShape -Type Rectangle -Width 220 -Height 56 -FillColor '#e6fffb' -StrokeColor '#08979c' -StrokeWidth 1.5 -Title 'Status callout' -Description 'Release readiness callout'
+}
 ```
 
+Creates an OfficeIMO Word shape in the current paragraph and sets basic visual and accessibility metadata.
+
+### EXAMPLE 2
+```powershell
+PS> New-OfficeWord -Path .\Appendix.docx {
+    Add-OfficeWordParagraph -Text 'Appendix A'
+    Add-OfficeWordShape -Type Rectangle -Width 480 -Height 36 -Left 36 -Top 72 -FillColor '#f0f5ff' -StrokeColor '#adc6ff'
+}
+```
+
+Positions a shape with explicit offsets when the OfficeIMO anchored-shape API is desired.
 
 ## PARAMETERS
 

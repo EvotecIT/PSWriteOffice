@@ -9,8 +9,11 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Set theme Latin fonts.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLatin 'Calibri'</code>
-///   <para>Updates the default master theme fonts.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeFonts.pptx {
+///     Set-OfficePowerPointThemeFonts -MajorLatin 'Aptos Display' -MinorLatin 'Aptos' -AllMasters
+///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Theme fonts'
+/// }</code>
+///   <para>Updates theme fonts before creating slides.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointThemeFonts")]
 [Alias("PptThemeFonts")]

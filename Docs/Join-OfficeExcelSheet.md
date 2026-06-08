@@ -31,10 +31,12 @@ Appends or merges rows from one worksheet into another.
 
 ### EXAMPLE 1
 ```powershell
-PS> Join-OfficeExcelSheet -Path .\Report.xlsx -TargetSheet Combined -SourceSheet Data
+PS> $result = Join-OfficeExcelSheet -Path .\Report.xlsx -TargetSheet Combined -SourceSheet Data -MatchColumnsByHeader -BlankRowsBefore 1
+$result |
+    Select-Object -Property SourceSheet, TargetSheet, RowsCopied, ColumnsCopied
 ```
 
-Copies rows from Data into Combined, skipping the source header row by default.
+Copies rows from Data into Combined, aligns columns by header, and returns the merge result.
 
 ## PARAMETERS
 

@@ -9,8 +9,11 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Rename the theme across the presentation.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Contoso Theme' -AllMasters</code>
-///   <para>Applies a friendly theme name across every master.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeName.pptx {
+///     Set-OfficePowerPointThemeName -Name 'Service Brief' -AllMasters
+///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Named theme'
+/// }</code>
+///   <para>Applies a friendly theme name across every master before saving.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointThemeName")]
 [Alias("PptThemeName")]

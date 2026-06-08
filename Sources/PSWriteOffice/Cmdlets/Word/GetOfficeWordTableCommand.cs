@@ -9,10 +9,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets tables from a Word document or section.</summary>
 /// <example>
-///   <summary>List tables in a document.</summary>
+///   <summary>Count top-level and nested tables.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordTable -Path .\Report.docx</code>
-///   <para>Returns the tables found in the document.</para>
+///   <code>$tables = Get-OfficeWordTable -Path .\Report.docx -IncludeNested
+/// [pscustomobject]@{
+///     Path = '.\Report.docx'
+///     TableCount = @($tables).Count
+/// }</code>
+///   <para>Reads tables from the document and includes nested tables when validating a composed report.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordTable", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordTable))]

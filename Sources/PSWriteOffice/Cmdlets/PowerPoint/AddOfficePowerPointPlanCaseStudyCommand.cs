@@ -5,6 +5,22 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Adds a semantic case-study slide to a PowerPoint deck plan.</summary>
+/// <example>
+///   <summary>Add a case-study slide with metrics.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$sections = @(
+///     @{ Heading = 'Challenge'; Body = 'Manual reports took too long to produce.' }
+///     @{ Heading = 'Outcome'; Body = 'Automated generation made the review repeatable.' }
+/// )
+/// $metrics = @(
+///     @{ Value = '4h'; Label = 'saved each cycle' }
+///     @{ Value = '0'; Label = 'manual copy steps' }
+/// )
+/// New-OfficePowerPointDeckPlan {
+///     Add-OfficePowerPointPlanCaseStudy -Title 'Automation impact' -Sections $sections -Metrics $metrics
+/// }</code>
+///   <para>Adds a proof-oriented case-study slide to the plan.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointPlanCaseStudy")]
 [Alias("PptPlanCaseStudy")]
 [OutputType(typeof(PowerPointDeckPlan))]

@@ -31,10 +31,14 @@ Sets the print area for a worksheet.
 
 ### EXAMPLE 1
 ```powershell
-PS> Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Data -Range A1:H100
+PS> $proof = @(
+    Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Summary -Range A1:H40
+    Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Summary -FirstRow 1 -LastRow 2
+)
+$proof
 ```
 
-Stores the worksheet-local Excel print area definition.
+Stores the worksheet-local Excel print area and repeats the report header rows for printing.
 
 ## PARAMETERS
 

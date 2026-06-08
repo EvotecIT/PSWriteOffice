@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets built-in and custom document properties from a Word document.</summary>
 /// <example>
-///   <summary>List document properties.</summary>
+///   <summary>Read release metadata from a document.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordDocumentProperty -Path .\Report.docx</code>
-///   <para>Returns built-in and custom Word document properties.</para>
+///   <code>$properties = Get-OfficeWordDocumentProperty -Path .\Report.docx -Name Title, Subject, ReleaseStatus
+/// $properties |
+///     Select-Object -Property Name, Value, IsCustom |
+///     Format-Table -AutoSize</code>
+///   <para>Returns selected built-in and custom properties for a document metadata check.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordDocumentProperty", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordDocumentPropertyInfo))]

@@ -21,9 +21,14 @@ Updates OfficeIMO Word image sizing, wrapping, crop, and metadata.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficeWordImage -CropBottom 'Value'
+PS> $doc = Get-OfficeWord -Path .\Report.docx
+$doc |
+    Get-OfficeWordImage |
+    Set-OfficeWordImage -Width 320 -Wrap Square -Title 'Report image' -Description 'Image used in the report'
+$doc | Save-OfficeWord -Path .\Report-Images.docx
 ```
 
+Gets OfficeIMO image objects from an open document, applies thin image metadata and layout updates, and saves the document.
 
 ## PARAMETERS
 

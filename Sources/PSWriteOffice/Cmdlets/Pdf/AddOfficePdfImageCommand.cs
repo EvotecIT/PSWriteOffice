@@ -6,6 +6,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds an image to a PDF document.</summary>
+/// <example>
+///   <summary>Add a logo or chart image to a PDF.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$image = '.\Tests\Assets\CellImage.png'
+/// New-OfficePdf -Path .\Examples\Documents\PdfImage.pdf {
+///     Add-OfficePdfHeading -Text 'Visual evidence'
+///     Add-OfficePdfImage -Path $image -Width 120 -Height 80 -Align Center -AlternativeText 'Sample chart image'
+/// }</code>
+///   <para>Embeds an image with alternative text in the generated PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfImage", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfImage")]
 [OutputType(typeof(PdfDocument))]

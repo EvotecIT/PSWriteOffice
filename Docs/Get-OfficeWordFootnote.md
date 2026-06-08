@@ -31,21 +31,13 @@ Gets footnotes from a Word document or section.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficeWordFootnote -InputPath 'C:\Path'
+PS> $footnotes = Get-OfficeWordFootnote -Path .\PolicyReport.docx
+$footnotes |
+    Select-Object -Property Kind, ReferenceId, ParentText, Text |
+    Export-Csv -Path .\Footnotes.csv -NoTypeInformation
 ```
 
-
-### EXAMPLE 2
-```powershell
-Get-OfficeWordFootnote -Document 'Value'
-```
-
-
-### EXAMPLE 3
-```powershell
-Get-OfficeWordFootnote -Section 'Value'
-```
-
+Reads footnotes from the document and exports the PowerShell-friendly note snapshot.
 
 ## PARAMETERS
 

@@ -5,6 +5,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Clears generated PDF page background shapes.</summary>
+/// <example>
+///   <summary>Remove background shapes before saving a variant.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$pdf = New-OfficePdf {
+///     Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120
+///     Add-OfficePdfHeading -Text 'Clean variant'
+/// } -NoSave
+/// $pdf | Clear-OfficePdfBackgroundShape -PassThru | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf</code>
+///   <para>Clears generated page background shapes on an in-memory PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Clear, "OfficePdfBackgroundShape", DefaultParameterSetName = ParameterSetContext)]
 [OutputType(typeof(PdfDocument))]
 public sealed class ClearOfficePdfBackgroundShapeCommand : PSCmdlet

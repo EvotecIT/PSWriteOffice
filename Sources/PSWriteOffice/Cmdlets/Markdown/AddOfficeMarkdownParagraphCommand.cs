@@ -6,10 +6,14 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown paragraph.</summary>
 /// <example>
-///   <summary>Add a paragraph.</summary>
+///   <summary>Add narrative text between generated sections.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownParagraph -Text 'This report is generated automatically.'</code>
-///   <para>Appends a paragraph to the current Markdown document.</para>
+///   <code>New-OfficeMarkdown -Path .\Report.md {
+///     Add-OfficeMarkdownHeading -Level 1 -Text 'Operational Report'
+///     Add-OfficeMarkdownParagraph -Text 'This report is generated automatically from validated source data.'
+///     Add-OfficeMarkdownParagraph -Text 'Use the linked artifacts for workbook, PDF, and presentation proof.'
+/// }</code>
+///   <para>Appends paragraph text to the current Markdown document.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownParagraph", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownParagraph")]

@@ -5,6 +5,18 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Adds a semantic logo/proof-wall slide to a PowerPoint deck plan.</summary>
+/// <example>
+///   <summary>Add a proof wall to a deck plan.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$logos = @(
+///     @{ Name = 'Directory'; Subtitle = 'Identity platform'; AccentColor = '#2563EB' }
+///     @{ Name = 'Mail'; Subtitle = 'Messaging platform'; AccentColor = '#0F766E' }
+/// )
+/// New-OfficePowerPointDeckPlan {
+///     Add-OfficePowerPointPlanLogoWall -Title 'Systems covered' -Subtitle 'Representative services' -Logos $logos
+/// }</code>
+///   <para>Adds a semantic logo/proof-wall slide to the plan.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointPlanLogoWall")]
 [Alias("PptPlanLogoWall")]
 [OutputType(typeof(PowerPointDeckPlan))]

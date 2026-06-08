@@ -6,6 +6,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Gets or extracts embedded file attachments from a PDF.</summary>
+/// <example>
+///   <summary>List and extract embedded PDF attachments.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$proof = @(
+///     Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf
+///     Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf -OutputDirectory .\Examples\Documents\Attachments
+/// )
+/// $proof</code>
+///   <para>First returns attachment metadata, then writes embedded files to disk.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdfAttachment")]
 [OutputType(typeof(PdfExtractedAttachment), typeof(FileInfo))]
 public sealed class GetOfficePdfAttachmentCommand : PSCmdlet

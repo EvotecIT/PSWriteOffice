@@ -10,8 +10,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Replace fiscal year text across the whole deck.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes</code>
-///   <para>Replaces matching text throughout the presentation and notes.</para>
+///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointUpdateText.pptx
+/// $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+/// Add-OfficePowerPointTextBox -Slide $slide -Text 'FY24 summary' | Out-Null
+/// Set-OfficePowerPointNotes -Slide $slide -Text 'Mention FY24 assumptions.' | Out-Null
+/// Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes</code>
+///   <para>Replaces matching text throughout the presentation and notes, returning the replacement count.</para>
 /// </example>
 [Cmdlet(VerbsData.Update, "OfficePowerPointText", DefaultParameterSetName = ParameterSetAuto)]
 [Alias("Replace-OfficePowerPointText")]

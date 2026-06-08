@@ -6,10 +6,16 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Moves a worksheet to a new workbook position.</summary>
 /// <example>
-///   <summary>Move a sheet to the front.</summary>
+///   <summary>Move the summary sheet to the front and verify order.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0</code>
-///   <para>Moves Summary to the first worksheet tab.</para>
+///   <code>$proof = @(
+///     Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0
+///     Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |
+///         Select-Object -ExpandProperty Sheets |
+///         Select-Object -First 3 -Property Index, Name
+/// )
+/// $proof</code>
+///   <para>Moves Summary to the first worksheet tab and reads back the first sheets from workbook summary.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Move, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext)]
 [Alias("Set-OfficeExcelSheetOrder", "ExcelSheetOrder")]

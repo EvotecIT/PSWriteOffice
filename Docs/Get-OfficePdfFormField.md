@@ -21,9 +21,12 @@ Gets simple AcroForm fields from a PDF.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficePdfFormField -Path 'C:\Path'
+PS> Get-OfficePdfFormField -Path .\Examples\Documents\Request.pdf |
+    Select-Object Name, FieldType, Value
+Set-OfficePdfForm -Path .\Examples\Documents\Request.pdf -OutputPath .\Examples\Documents\Request-Filled.pdf -Field @{ Requester = 'Ada Lovelace' }
 ```
 
+Reads form field names so the fill hashtable can use the right keys.
 
 ## PARAMETERS
 

@@ -15,9 +15,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Gets a compact structural summary of an Excel workbook.</summary>
 /// <example>
-///   <summary>Summarize workbook contents.</summary>
+///   <summary>Summarize workbook contents before release.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeExcelSummary -Path .\report.xlsx</code>
+///   <code>$summary = Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets
+/// $summary |
+///     Select-Object -Property SheetCount, TableCount, ChartCount, PivotTableCount
+/// $summary.Sheets |
+///     Select-Object -Property Name, State, UsedRange</code>
 ///   <para>Returns workbook-level counts plus per-sheet tables, charts, pivots, links, comments, and used ranges.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelSummary", DefaultParameterSetName = ParameterSetPath)]

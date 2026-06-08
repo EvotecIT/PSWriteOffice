@@ -26,15 +26,14 @@ Sets running PDF header text.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficePdfHeader -Align 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfHeader.pdf {
+    Set-OfficePdfHeader -Text 'Service Review' -Align Right -FontSize 9
+    Add-OfficePdfHeading -Text 'Service Review'
+    Add-OfficePdfParagraph -Text 'The header repeats on generated pages.'
+}
 ```
 
-
-### EXAMPLE 2
-```powershell
-Set-OfficePdfHeader -Document 'Value'
-```
-
+Sets header text for the generated PDF.
 
 ## PARAMETERS
 

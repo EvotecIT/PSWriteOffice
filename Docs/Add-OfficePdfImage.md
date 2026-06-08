@@ -26,15 +26,14 @@ Adds an image to a PDF document.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfImage -Width 1 -Height 1
+PS> $image = '.\Tests\Assets\CellImage.png'
+New-OfficePdf -Path .\Examples\Documents\PdfImage.pdf {
+    Add-OfficePdfHeading -Text 'Visual evidence'
+    Add-OfficePdfImage -Path $image -Width 120 -Height 80 -Align Center -AlternativeText 'Sample chart image'
+}
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfImage -Document 'Value' -Width 1 -Height 1
-```
-
+Embeds an image with alternative text in the generated PDF.
 
 ## PARAMETERS
 

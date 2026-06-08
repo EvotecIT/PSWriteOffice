@@ -6,10 +6,16 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Copies a worksheet within a workbook or from another workbook.</summary>
 /// <example>
-///   <summary>Copy a worksheet in the current workbook.</summary>
+///   <summary>Copy a worksheet and confirm it exists.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Copy-OfficeExcelSheet -Path .\Report.xlsx -SourceSheet Data -NewName DataCopy</code>
-///   <para>Creates a copy of the Data worksheet.</para>
+///   <code>$proof = @(
+///     Copy-OfficeExcelSheet -Path .\Report.xlsx -SourceSheet Data -NewName DataCopy
+///     Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |
+///         Select-Object -ExpandProperty Sheets |
+///         Where-Object Name -eq 'DataCopy'
+/// )
+/// $proof</code>
+///   <para>Creates a copy of the Data worksheet and reads the workbook summary to verify the new tab.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Copy, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelSheetCopy")]

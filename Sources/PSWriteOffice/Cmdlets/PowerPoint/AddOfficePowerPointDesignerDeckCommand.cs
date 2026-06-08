@@ -7,6 +7,21 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Renders a semantic deck plan through OfficeIMO PowerPoint designer helpers.</summary>
+/// <example>
+///   <summary>Render a designer deck from a semantic plan.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$plan = New-OfficePowerPointDeckPlan {
+///     Add-OfficePowerPointPlanSection -Title 'Service Review'
+///     Add-OfficePowerPointPlanCardGrid -Title 'Current signals' -Cards @(
+///       @{ Title = 'Availability'; Items = @('Healthy', 'No critical incidents') }
+///       @{ Title = 'Risk'; Items = @('One dependency on watch') }
+///     )
+/// }
+/// New-OfficePowerPoint -Path .\Examples\Documents\DesignerDeck.pptx {
+///     Add-OfficePowerPointDesignerDeck -Plan $plan -AccentColor '#0F766E' -Purpose 'monthly service brief'
+/// }</code>
+///   <para>Uses OfficeIMO design selection to turn semantic content into slides.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointDesignerDeck")]
 [Alias("PptDesignerDeck")]
 [OutputType(typeof(PowerPointDeckPlanSlideRenderSummary), typeof(PowerPointSlide))]

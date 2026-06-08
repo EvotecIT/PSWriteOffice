@@ -26,15 +26,15 @@ Adds a horizontal rule divider to a generated PDF document.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfHorizontalRule -Color 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfDivider.pdf {
+  Add-OfficePdfHeading -Text 'Executive summary'
+  Add-OfficePdfParagraph -Text 'The service is healthy.'
+  Add-OfficePdfHorizontalRule -Color '#CBD5E1' -Thickness 0.75 -SpacingBefore 10 -SpacingAfter 10
+  Add-OfficePdfHeading -Text 'Signals' -Level 2
+}
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfHorizontalRule -Document 'Value'
-```
-
+Adds a visual divider between generated PDF sections.
 
 ## PARAMETERS
 

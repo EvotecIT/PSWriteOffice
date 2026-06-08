@@ -33,9 +33,9 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Report.pdf {
-                PdfMetadata -Title 'Service Review' -Author 'PSWriteOffice' -Subject 'Operations'
-                PdfHeading 'Service Review'
-              }
+  PdfMetadata -Title 'Service Review' -Author 'PSWriteOffice' -Subject 'Operations'
+  PdfHeading 'Service Review'
+}
 ```
 
 Stores metadata on a newly generated PDF.

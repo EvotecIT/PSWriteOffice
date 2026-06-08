@@ -26,15 +26,17 @@ Adds a table to a PDF document.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfTable -Align 'Value'
+PS> $services = @(
+    [pscustomobject]@{ Name = 'Directory'; Status = 'Healthy'; Incidents = 0 }
+    [pscustomobject]@{ Name = 'Mail'; Status = 'Watch'; Incidents = 2 }
+)
+New-OfficePdf -Path .\Examples\Documents\PdfTable.pdf {
+    Add-OfficePdfHeading -Text 'Service status'
+    Add-OfficePdfTable -InputObject $services -Property Name,Status,Incidents -Header 'Service','Status','Incidents'
+}
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfTable -Document 'Value'
-```
-
+Converts PowerShell objects into a table using selected properties and friendly headers.
 
 ## PARAMETERS
 

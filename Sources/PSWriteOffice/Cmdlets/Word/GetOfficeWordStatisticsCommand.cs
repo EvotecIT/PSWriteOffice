@@ -9,6 +9,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets document statistics from a Word document.</summary>
 /// <para>Returns a PowerShell-friendly snapshot of OfficeIMO.Word statistics for quick reporting and validation.</para>
+/// <example>
+///   <summary>Check document complexity before publishing.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$stats = Get-OfficeWordStatistics -Path .\Report.docx
+/// $stats |
+///     Select-Object -Property Paragraphs, Tables, Images, Charts |
+///     Format-List</code>
+///   <para>Reads OfficeIMO.Word statistics and displays the structural counts that matter for a release artifact.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordStatistics", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordStatistics")]
 [OutputType(typeof(WordDocumentStatisticsInfo))]

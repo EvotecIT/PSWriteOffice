@@ -12,8 +12,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Add a bullet list.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 60 -Y 120 -Width 400 -Height 200</code>
-///   <para>Creates a bullet list textbox.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointBullets.pptx {
+///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Delivery update'
+///     Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next steps' -X 60 -Y 120 -Width 420 -Height 180
+/// }</code>
+///   <para>Creates a slide with a titled bullet list.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointBullets")]
 [Alias("PptBullets")]

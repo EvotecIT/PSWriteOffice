@@ -6,6 +6,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Moves selected pages before another page and writes a new PDF.</summary>
+/// <example>
+///   <summary>Move appendix pages to the end.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$proof = @(
+///     Move-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '2-3' -BeforePage 6 -OutputPath .\Examples\Documents\Report-Reordered.pdf
+///     Get-OfficePdfInfo -Path .\Examples\Documents\Report-Reordered.pdf | Select-Object PageCount
+/// )
+/// $proof</code>
+///   <para>Moves selected pages before a target one-based page number and writes a new PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Move, "OfficePdfPage")]
 [OutputType(typeof(FileInfo))]
 public sealed class MoveOfficePdfPageCommand : PSCmdlet

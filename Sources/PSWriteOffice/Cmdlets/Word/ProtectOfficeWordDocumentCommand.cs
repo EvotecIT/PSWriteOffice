@@ -9,10 +9,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <summary>Protects a Word document with a password.</summary>
 /// <para>Sets the protection password and the protection type (default: ReadOnly).</para>
 /// <example>
-///   <summary>Protect a document as read-only.</summary>
+///   <summary>Protect a generated document as read-only.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Protect-OfficeWordDocument -Password 'secret'</code>
-///   <para>Applies read-only protection to the current document.</para>
+///   <code>New-OfficeWord -Path .\ProtectedReport.docx {
+///     Add-OfficeWordParagraph -Text 'Confidential report'
+///     Protect-OfficeWordDocument -Password 'secret' -ProtectionType ReadOnly
+/// }</code>
+///   <para>Sets OfficeIMO.Word document protection while the document is being composed.</para>
 /// </example>
 [Cmdlet(VerbsSecurity.Protect, "OfficeWordDocument")]
 public sealed class ProtectOfficeWordDocumentCommand : PSCmdlet

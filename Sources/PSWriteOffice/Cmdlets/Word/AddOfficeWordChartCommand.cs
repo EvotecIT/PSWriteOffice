@@ -27,15 +27,31 @@ public enum WordChartType
 /// <summary>Adds a chart to a Word document.</summary>
 /// <para>Creates a Word chart from object data using one category property and one or more numeric series properties.</para>
 /// <example>
-///   <summary>Add a pie chart from object data.</summary>
+///   <summary>Add pie and line charts to a report.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix'</code>
-///   <para>Creates a pie chart using Region labels and Revenue as the slice values.</para>
+///   <code>$rows = @(
+///     [pscustomobject]@{ Region = 'North America'; Revenue = 125000; Profit = 42000 }
+///     [pscustomobject]@{ Region = 'EMEA'; Revenue = 98000; Profit = 31000 }
+///     [pscustomobject]@{ Region = 'APAC'; Revenue = 143000; Profit = 52000 }
+/// )
+/// New-OfficeWord -Path .\RegionalReport.docx {
+///     Add-OfficeWordParagraph -Text 'Regional revenue'
+///     Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix' -FitToPageWidth -WidthFraction 0.75
+///     Add-OfficeWordChart -Type Bar -Data $rows -CategoryProperty Region -SeriesProperty Revenue, Profit -Legend -XAxisTitle 'Region' -YAxisTitle 'Amount'
+/// }</code>
+///   <para>Creates a report with a pie chart and a multi-series bar chart from PowerShell objects.</para>
 /// </example>
 /// <example>
 ///   <summary>Add a line chart to an open document.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficeWordChart -Document $doc -Type Line -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Legend</code>
+///   <code>$trend = @(
+///     [pscustomobject]@{ Month = 'Jan'; Sales = 10; Profit = 4 }
+///     [pscustomobject]@{ Month = 'Feb'; Sales = 12; Profit = 5 }
+///     [pscustomobject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }
+/// )
+/// $doc = New-OfficeWord -Path .\Trend.docx -PassThru
+/// Add-OfficeWordChart -Document $doc -Type Line -Data $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'
+/// Save-OfficeWord -Document $doc</code>
 ///   <para>Creates a multi-series line chart on the document and shows a legend.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordChart", DefaultParameterSetName = ParameterSetContext)]

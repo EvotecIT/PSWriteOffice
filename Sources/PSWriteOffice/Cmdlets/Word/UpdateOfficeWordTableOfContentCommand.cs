@@ -9,8 +9,21 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Mark table of contents for refresh on open.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Update-OfficeWordTableOfContent</code>
-///   <para>Marks TOC fields as dirty and updates the document settings.</para>
+///   <code>New-OfficeWord -Path .\ExecutiveReport.docx {
+///     Add-OfficeWordTableOfContent
+///     Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
+///     Add-OfficeWordParagraph -Text 'Summary text'
+///     Update-OfficeWordTableOfContent
+/// }</code>
+///   <para>Marks TOC fields as dirty and updates the document settings so Word refreshes the TOC when opened.</para>
+/// </example>
+/// <example>
+///   <summary>Regenerate a TOC in an existing document object.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$doc = Get-OfficeWord -Path .\Report.docx
+/// $doc | Update-OfficeWordTableOfContent -Regenerate
+/// $doc | Save-OfficeWord -Path .\Report-RegeneratedToc.docx</code>
+///   <para>Uses OfficeIMO's regenerate path, then saves the updated document.</para>
 /// </example>
 [Cmdlet(VerbsData.Update, "OfficeWordTableOfContent", DefaultParameterSetName = ParameterSetDocument)]
 [OutputType(typeof(WordTableOfContent))]

@@ -5,6 +5,15 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a bullet or numbered list to a PDF document.</summary>
+/// <example>
+///   <summary>Add action items to a report.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfList.pdf {
+///     Add-OfficePdfHeading -Text 'Next actions'
+///     Add-OfficePdfList -Items 'Confirm owner','Publish summary','Schedule review' -Numbered
+/// }</code>
+///   <para>Adds a numbered list in the generated PDF flow.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfList", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfList")]
 [OutputType(typeof(PdfDocument))]

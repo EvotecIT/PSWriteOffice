@@ -5,6 +5,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a heading to a PDF document.</summary>
+/// <example>
+///   <summary>Create heading levels in a PDF report.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfHeadings.pdf {
+///     Add-OfficePdfHeading -Text 'Service Review' -Level 1 -Color '#1D4ED8'
+///     Add-OfficePdfHeading -Text 'Open risks' -Level 2
+///     Add-OfficePdfParagraph -Text 'Heading levels create the report structure.'
+///   }</code>
+///   <para>Adds report headings before body content.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfHeading", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfHeading")]
 [OutputType(typeof(PdfDocument))]

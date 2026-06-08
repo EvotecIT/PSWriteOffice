@@ -5,6 +5,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Sets generated PDF compliance profile and readiness groundwork.</summary>
+/// <example>
+///   <summary>Configure PDF/A groundwork before saving.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {
+///     Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'
+///     Add-OfficePdfHeading -Text 'Compliance-ready report'
+///     Get-OfficePdfCompliance -Profile PdfA3B
+/// }</code>
+///   <para>Applies OfficeIMO.Pdf compliance groundwork and emits a readiness report inside the DSL.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfCompliance", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfCompliance")]
 [OutputType(typeof(PdfDocument))]

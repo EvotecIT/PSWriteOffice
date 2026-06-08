@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets sections from a Word document.</summary>
 /// <example>
-///   <summary>List sections from a file.</summary>
+///   <summary>Inspect the first section before section-level reads.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordSection -Path .\Report.docx</code>
-///   <para>Returns the sections contained in the document.</para>
+///   <code>$section = Get-OfficeWordSection -Path .\Report.docx -Index 0
+/// $section |
+///     Get-OfficeWordParagraph |
+///     Select-Object -First 5 -Property Text</code>
+///   <para>Gets a specific section by zero-based index and pipes it to another thin Word reader.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordSection", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordSection))]

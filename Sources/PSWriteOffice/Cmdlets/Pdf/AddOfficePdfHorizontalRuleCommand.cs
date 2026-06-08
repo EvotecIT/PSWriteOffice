@@ -5,6 +5,17 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a horizontal rule divider to a generated PDF document.</summary>
+/// <example>
+///   <summary>Separate report sections with a divider.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfDivider.pdf {
+///     Add-OfficePdfHeading -Text 'Executive summary'
+///     Add-OfficePdfParagraph -Text 'The service is healthy.'
+///     Add-OfficePdfHorizontalRule -Color '#CBD5E1' -Thickness 0.75 -SpacingBefore 10 -SpacingAfter 10
+///     Add-OfficePdfHeading -Text 'Signals' -Level 2
+///   }</code>
+///   <para>Adds a visual divider between generated PDF sections.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfHorizontalRule", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfHorizontalRule", "PdfHr")]
 [OutputType(typeof(PdfDocument))]

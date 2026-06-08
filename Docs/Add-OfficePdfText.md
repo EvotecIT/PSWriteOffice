@@ -36,15 +36,15 @@ Creates a PDF with one styled paragraph.
 ### EXAMPLE 2
 ```powershell
 PS> New-OfficePdf -Path .\Report.pdf {
-                PdfBookmark 'summary'
-                PdfText -Run @(
-                  @{ Text = 'Read the ' }
-                  @{ Text = 'website'; LinkUri = 'https://evotec.xyz'; Color = '#2563EB' }
-                  @{ Text = ' or jump to ' }
-                  @{ Text = 'summary'; LinkDestinationName = 'summary'; Color = '#7C3AED' }
-                  @{ Text = '.' }
-                )
-              }
+  PdfBookmark 'summary'
+  PdfText -Run @(
+    @{ Text = 'Read the ' }
+    @{ Text = 'website'; LinkUri = 'https://evotec.xyz'; Color = '#2563EB' }
+    @{ Text = ' or jump to ' }
+    @{ Text = 'summary'; LinkDestinationName = 'summary'; Color = '#7C3AED' }
+    @{ Text = '.' }
+  )
+}
 ```
 
 Creates one paragraph with an external link and an internal named-destination link.

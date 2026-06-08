@@ -26,10 +26,15 @@ Adds a Markdown horizontal rule.
 
 ### EXAMPLE 1
 ```powershell
-PS> MarkdownHorizontalRule
+PS> New-OfficeMarkdown -Path .\Report.md {
+    Add-OfficeMarkdownHeading -Level 2 -Text 'Summary'
+    Add-OfficeMarkdownParagraph -Text 'Key decisions and status.'
+    Add-OfficeMarkdownHorizontalRule
+    Add-OfficeMarkdownHeading -Level 2 -Text 'Appendix'
+}
 ```
 
-Appends a horizontal rule to the document.
+Appends a horizontal rule between sections of the current Markdown document.
 
 ## PARAMETERS
 

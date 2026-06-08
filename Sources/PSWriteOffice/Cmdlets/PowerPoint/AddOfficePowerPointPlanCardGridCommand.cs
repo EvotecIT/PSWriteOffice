@@ -5,6 +5,18 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Adds a semantic card-grid slide to a PowerPoint deck plan.</summary>
+/// <example>
+///   <summary>Add status cards to a deck plan.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$cards = @(
+///     @{ Title = 'Availability'; Items = @('99.98%', 'No major incidents'); AccentColor = '#16A34A' }
+///     @{ Title = 'Risk'; Items = @('One dependency on watch'); AccentColor = '#F59E0B' }
+/// )
+/// New-OfficePowerPointDeckPlan {
+///     Add-OfficePowerPointPlanCardGrid -Title 'Current signals' -Cards $cards
+/// }</code>
+///   <para>Adds a card grid slide to the semantic deck plan.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointPlanCardGrid")]
 [Alias("PptPlanCardGrid")]
 [OutputType(typeof(PowerPointDeckPlan))]

@@ -6,10 +6,21 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Gets YAML front matter entries from a Markdown document.</summary>
 /// <example>
-///   <summary>Read Markdown front matter.</summary>
+///   <summary>Read selected front matter from a Markdown file.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeMarkdownFrontMatter -Text "---`ntitle: Report`n---`n# Report"</code>
-///   <para>Parses Markdown text and returns front matter entries.</para>
+///   <code>$metadata = Get-OfficeMarkdownFrontMatter -Path .\Report.md -Key 'title'
+/// $metadata |
+///     Select-Object -Property Key, Value |
+///     Format-Table -AutoSize</code>
+///   <para>Parses a Markdown file and returns matching front matter entries for metadata proof.</para>
+/// </example>
+/// <example>
+///   <summary>Parse front matter from generated text.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$markdown = "---`ntitle: Report`nstatus: Ready`n---`n# Report"
+/// Get-OfficeMarkdownFrontMatter -Text $markdown |
+///     Select-Object -Property Key, Value</code>
+///   <para>Parses Markdown text directly when the document has not been saved yet.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdownFrontMatter", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(FrontMatterBlock.Entry))]

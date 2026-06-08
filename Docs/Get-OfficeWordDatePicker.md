@@ -26,10 +26,13 @@ Gets date picker content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordDatePicker -Path .\Report.docx
+PS> $dates = Get-OfficeWordDatePicker -Path .\IntakeForm.docx -Tag 'deadline-*'
+$dates |
+    Select-Object -Property Alias, Tag |
+    Format-Table -AutoSize
 ```
 
-Returns all date picker controls in the document.
+Filters date picker content controls by tag before a form validation pass.
 
 ## PARAMETERS
 

@@ -11,10 +11,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <summary>Gets fields from a Word document.</summary>
 /// <para>Returns <see cref="WordField"/> objects, optionally filtered by type or field code.</para>
 /// <example>
-///   <summary>List all fields.</summary>
+///   <summary>Find TOC and page fields before refresh.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordField -Path .\Report.docx</code>
-///   <para>Returns all fields in the document.</para>
+///   <code>$fields = Get-OfficeWordField -Path .\Report.docx -Contains 'TOC'
+/// $fields |
+///     Select-Object -Property FieldType, Field |
+///     Format-Table -AutoSize</code>
+///   <para>Filters Word fields by field-code text before running a field or table-of-contents refresh.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordField", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordField))]

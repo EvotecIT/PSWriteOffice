@@ -21,9 +21,11 @@ Opens an existing PDF as an OfficeIMO.Pdf document.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficePdf -Path 'C:\Path'
+PS> $pdf = Get-OfficePdf -Path .\Examples\Documents\Report.pdf
+$pdf.Read.Text() | Select-Object -First 1
 ```
 
+Returns the OfficeIMO.Pdf document object for advanced readback or operations.
 
 ## PARAMETERS
 

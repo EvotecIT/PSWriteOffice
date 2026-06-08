@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <summary>Reads the used range from an Excel workbook.</summary>
 /// <para>Returns rows as PSCustomObjects by default, with optional hashtable or DataTable output for scripting and interoperability.</para>
 /// <example>
-///   <summary>Read the used range from a sheet.</summary>
+///   <summary>Read the used range and produce a quick status count.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet 'Data'</code>
-///   <para>Reads the sheet's used range, treating the first row as headers.</para>
+///   <code>$rows = Get-OfficeExcelUsedRange -Path .\report.xlsx -Sheet Data
+/// $rows |
+///     Group-Object -Property Status |
+///     Select-Object -Property Name, Count</code>
+///   <para>Reads the sheet's used range, treats the first row as headers, and summarizes a status column.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelUsedRange", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject), typeof(System.Collections.Hashtable), typeof(DataTable))]

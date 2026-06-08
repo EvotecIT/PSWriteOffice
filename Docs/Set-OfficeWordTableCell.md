@@ -21,9 +21,27 @@ Updates OfficeIMO Word table-cell layout and merge settings.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficeWordTableCell -Cell 'Value'
+PS> $doc = Get-OfficeWord -Path .\Report.docx
+$table = $doc | Get-OfficeWordTable | Select-Object -First 1
+$table |
+    Get-OfficeWordTableCell -Column 2 |
+    Set-OfficeWordTableCell -ShadingFillColor '#fff1f0' -ShadingPattern Clear -Width 2400 -WidthType Dxa
+$doc | Save-OfficeWord -Path .\Report-StatusCells.docx
 ```
 
+Reads cells from an OfficeIMO table object, applies cell shading and width, and saves the updated document.
+
+### EXAMPLE 2
+```powershell
+PS> $doc = Get-OfficeWord -Path .\Report.docx
+$table = $doc | Get-OfficeWordTable | Select-Object -First 1
+$table |
+    Get-OfficeWordTableCell -Row 0 -Column 0 |
+    Set-OfficeWordTableCell -MergeRight 2 -CopyParagraphs
+$doc | Save-OfficeWord -Path .\Report-MergedHeader.docx
+```
+
+Uses the OfficeIMO merge operation exposed by the thin table-cell wrapper.
 
 ## PARAMETERS
 

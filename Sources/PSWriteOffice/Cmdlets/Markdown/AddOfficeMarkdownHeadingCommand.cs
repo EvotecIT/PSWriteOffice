@@ -7,10 +7,15 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown heading.</summary>
 /// <example>
-///   <summary>Add a second-level heading.</summary>
+///   <summary>Add headings that feed the Markdown table of contents.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownHeading -Level 2 -Text 'Overview'</code>
-///   <para>Appends a level-2 heading to the current Markdown document.</para>
+///   <code>New-OfficeMarkdown -Path .\Report.md {
+///     Add-OfficeMarkdownHeading -Level 1 -Text 'Operational Report'
+///     Add-OfficeMarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Overview'
+///     Add-OfficeMarkdownParagraph -Text 'Current operational state.'
+/// }</code>
+///   <para>Appends headings that can be included in a generated table of contents.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownHeading", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownHeading")]

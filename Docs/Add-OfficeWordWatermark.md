@@ -26,10 +26,24 @@ Supports text or image watermarks using OfficeIMO.Word.
 
 ### EXAMPLE 1
 ```powershell
-PS> Add-OfficeWordWatermark -Text 'CONFIDENTIAL'
+PS> New-OfficeWord -Path .\ProtectedReport.docx {
+    Add-OfficeWordParagraph -Text 'Confidential report'
+    Add-OfficeWordWatermark -Text 'CONFIDENTIAL' -Scale 1.2
+    Protect-OfficeWordDocument -Password 'secret'
+}
 ```
 
-Inserts a text watermark into the current section.
+Applies a text watermark to the current section and then protects the document through OfficeIMO settings.
+
+### EXAMPLE 2
+```powershell
+PS> New-OfficeWord -Path .\DraftReport.docx {
+    Add-OfficeWordParagraph -Text 'Draft report'
+    Add-OfficeWordWatermark -ImagePath .\Assets\Draft.png -Scale 0.6 -HorizontalOffset 20 -VerticalOffset 40
+}
+```
+
+Uses the image watermark path and placement parameters exposed by OfficeIMO.Word.
 
 ## PARAMETERS
 

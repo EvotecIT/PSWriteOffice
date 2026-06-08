@@ -8,10 +8,23 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <summary>Adds a watermark to the current section or header.</summary>
 /// <para>Supports text or image watermarks using OfficeIMO.Word.</para>
 /// <example>
-///   <summary>Add a text watermark.</summary>
+///   <summary>Add a confidentiality watermark while composing a document.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficeWordWatermark -Text 'CONFIDENTIAL'</code>
-///   <para>Inserts a text watermark into the current section.</para>
+///   <code>New-OfficeWord -Path .\ProtectedReport.docx {
+///     Add-OfficeWordParagraph -Text 'Confidential report'
+///     Add-OfficeWordWatermark -Text 'CONFIDENTIAL' -Scale 1.2
+///     Protect-OfficeWordDocument -Password 'secret'
+/// }</code>
+///   <para>Applies a text watermark to the current section and then protects the document through OfficeIMO settings.</para>
+/// </example>
+/// <example>
+///   <summary>Add an image watermark.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeWord -Path .\DraftReport.docx {
+///     Add-OfficeWordParagraph -Text 'Draft report'
+///     Add-OfficeWordWatermark -ImagePath .\Assets\Draft.png -Scale 0.6 -HorizontalOffset 20 -VerticalOffset 40
+/// }</code>
+///   <para>Uses the image watermark path and placement parameters exposed by OfficeIMO.Word.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordWatermark", DefaultParameterSetName = ParameterSetText)]
 [Alias("WordWatermark")]

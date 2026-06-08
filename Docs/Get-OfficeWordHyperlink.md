@@ -36,10 +36,13 @@ Gets hyperlinks from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordHyperlink -Path .\Report.docx
+PS> $links = Get-OfficeWordHyperlink -Path .\Report.docx -Url 'https://*'
+$links |
+    Select-Object -Property Text, Uri |
+    Export-Csv -Path .\ReportLinks.csv -NoTypeInformation
 ```
 
-Returns hyperlinks found in the document.
+Filters external hyperlinks and exports them for link validation or review.
 
 ## PARAMETERS
 

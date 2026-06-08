@@ -13,8 +13,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Create a rectangle highlight.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 80 -Width 220 -Height 120 -FillColor '#DDEEFF'</code>
-///   <para>Creates a rectangle with a custom fill color.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointShape.pptx {
+///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 120 -Width 220 -Height 90 -FillColor '#DDEEFF' -OutlineColor '#2563EB' -OutlineWidth 1
+///     Add-OfficePowerPointTextBox -Slide $slide -Text 'Highlighted status' -X 80 -Y 145 -Width 180 -Height 32
+/// }</code>
+///   <para>Creates a styled rectangle and overlays a text box.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointShape")]
 [Alias("PptShape")]

@@ -21,10 +21,15 @@ Sets a built-in or custom document property on a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'
+PS> New-OfficeWord -Path .\QuarterlyReport.docx {
+    Set-OfficeWordDocumentProperty -Name Title -Value 'Quarterly Report'
+    Set-OfficeWordDocumentProperty -Name ReleaseStatus -Value 'Approved' -Custom
+    Add-OfficeWordParagraph -Text 'Approved quarterly report'
+}
+Get-OfficeWordDocumentProperty -Path .\QuarterlyReport.docx -Name Title, ReleaseStatus
 ```
 
-Updates the built-in Title property on the active Word document.
+Writes document metadata during composition and reads it back for proof.
 
 ## PARAMETERS
 

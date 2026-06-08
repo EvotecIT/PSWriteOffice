@@ -11,10 +11,21 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <summary>Finds text matches inside a Word document.</summary>
 /// <para>Returns matching paragraphs or a WordFind result when using regex with <c>-AsResult</c>.</para>
 /// <example>
-///   <summary>Find text in a document.</summary>
+///   <summary>Find matching paragraphs and export a review list.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Find-OfficeWord -Path .\Report.docx -Text 'Quarter'</code>
-///   <para>Returns paragraphs that contain the search text.</para>
+///   <code>$matches = Find-OfficeWord -Path .\Report.docx -Text 'Quarter'
+/// $matches |
+///     Select-Object -Property Text |
+///     Export-Csv -Path .\ReviewMatches.csv -NoTypeInformation</code>
+///   <para>Finds paragraphs containing the search text and writes a lightweight review CSV.</para>
+/// </example>
+/// <example>
+///   <summary>Use regex and keep the grouped WordFind result.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$result = Find-OfficeWord -Path .\Report.docx -Pattern 'FY\d{4}' -AsResult
+/// $result.Paragraphs |
+///     Select-Object -Property Text</code>
+///   <para>Returns the full regex result so paragraphs, table matches, headers, and footers can be inspected separately.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Find, "OfficeWord", DefaultParameterSetName = ParameterSetPathText)]
 [OutputType(typeof(WordParagraph), typeof(WordFind))]

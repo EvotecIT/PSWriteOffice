@@ -7,6 +7,19 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a table to a PDF document.</summary>
+/// <example>
+///   <summary>Add object data as a PDF table.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$services = @(
+///     [pscustomobject]@{ Name = 'Directory'; Status = 'Healthy'; Incidents = 0 }
+///     [pscustomobject]@{ Name = 'Mail'; Status = 'Watch'; Incidents = 2 }
+/// )
+/// New-OfficePdf -Path .\Examples\Documents\PdfTable.pdf {
+///     Add-OfficePdfHeading -Text 'Service status'
+///     Add-OfficePdfTable -InputObject $services -Property Name,Status,Incidents -Header 'Service','Status','Incidents'
+/// }</code>
+///   <para>Converts PowerShell objects into a table using selected properties and friendly headers.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfTable", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfTable")]
 [OutputType(typeof(PdfDocument))]

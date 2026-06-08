@@ -6,10 +6,17 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown code block.</summary>
 /// <example>
-///   <summary>Add a PowerShell code block.</summary>
+///   <summary>Add a PowerShell command block to documentation.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownCode -Language 'powershell' -Content 'Get-Process'</code>
-///   <para>Appends a fenced code block to the document.</para>
+///   <code>$script = @(
+///     'Import-Module PSWriteOffice'
+///     'Get-OfficeExcelSummary -Path .\report.xlsx'
+/// ) -join [Environment]::NewLine
+/// New-OfficeMarkdown -Path .\Cookbook.md {
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Workbook summary'
+///     Add-OfficeMarkdownCode -Language 'powershell' -Content $script
+/// }</code>
+///   <para>Appends a fenced code block with a language identifier.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownCode", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownCode")]

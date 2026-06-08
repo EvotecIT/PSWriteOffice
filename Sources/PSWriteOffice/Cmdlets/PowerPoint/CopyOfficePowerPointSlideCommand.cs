@@ -10,8 +10,13 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Duplicate the first slide and insert the copy after it.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Copy-OfficePowerPointSlide -Presentation $ppt -Index 0</code>
-///   <para>Creates a duplicate of slide 1 and inserts it at position 2.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCopySlide.pptx {
+///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Original'
+///     $copy = Copy-OfficePowerPointSlide -Index 0
+///     Set-OfficePowerPointSlideTitle -Slide $copy -Title 'Copied appendix'
+/// }</code>
+///   <para>Duplicates a slide and updates the copied slide title.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Copy, "OfficePowerPointSlide")]
 [OutputType(typeof(PowerPointSlide))]

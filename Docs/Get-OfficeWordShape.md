@@ -36,21 +36,13 @@ Gets shapes from a Word document, section, or paragraph.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficeWordShape -InputPath 'C:\Path'
+PS> $shapes = Get-OfficeWordShape -Path .\Report.docx
+$shapes |
+    Select-Object -Property Title, Description, Width, Height, FillColorHex |
+    Format-Table -AutoSize
 ```
 
-
-### EXAMPLE 2
-```powershell
-Get-OfficeWordShape -Document 'Value'
-```
-
-
-### EXAMPLE 3
-```powershell
-Get-OfficeWordShape -Paragraph 'Value'
-```
-
+Reads OfficeIMO Word shapes from the document so styling and alternate text can be audited.
 
 ## PARAMETERS
 

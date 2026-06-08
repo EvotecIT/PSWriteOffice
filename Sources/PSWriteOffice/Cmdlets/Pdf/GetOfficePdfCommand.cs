@@ -5,6 +5,13 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Opens an existing PDF as an OfficeIMO.Pdf document.</summary>
+/// <example>
+///   <summary>Open a PDF for OfficeIMO.Pdf operations.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$pdf = Get-OfficePdf -Path .\Examples\Documents\Report.pdf
+/// $pdf.Read.Text() | Select-Object -First 1</code>
+///   <para>Returns the OfficeIMO.Pdf document object for advanced readback or operations.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdf")]
 [OutputType(typeof(PdfDocument))]
 public sealed class GetOfficePdfCommand : PSCmdlet

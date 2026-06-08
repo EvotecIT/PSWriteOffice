@@ -9,10 +9,13 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown task list.</summary>
 /// <example>
-///   <summary>Add a checklist.</summary>
+///   <summary>Add a release checklist.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownTaskList -Items 'Draft','Review','Ship' -Completed 1</code>
-///   <para>Appends an unordered task list and marks the selected items as completed.</para>
+///   <code>New-OfficeMarkdown -Path .\ReleaseChecklist.md {
+///     Add-OfficeMarkdownHeading -Level 1 -Text 'Release checklist'
+///     Add-OfficeMarkdownTaskList -Items 'Generate examples', 'Refresh docs', 'Validate artifacts', 'Publish release' -Completed 0, 1
+/// }</code>
+///   <para>Appends an unordered task list and marks selected zero-based items as completed.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownTaskList", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownTaskList")]

@@ -26,10 +26,13 @@ Gets repeating section content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordRepeatingSection -Path .\Report.docx
+PS> $sections = Get-OfficeWordRepeatingSection -Path .\Template.docx -Tag 'risk-row-*'
+$sections |
+    Select-Object -Property Alias, Tag |
+    Format-Table -AutoSize
 ```
 
-Returns all repeating section controls in the document.
+Finds repeating sections used for repeatable rows in a document template.
 
 ## PARAMETERS
 

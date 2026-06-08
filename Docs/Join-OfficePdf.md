@@ -21,10 +21,13 @@ Joins multiple PDF files into a single PDF.
 
 ### EXAMPLE 1
 ```powershell
-PS> Join-OfficePdf -Path .\Cover.pdf, .\Report.pdf -OutputPath .\Combined.pdf -PassThru
+PS> $cover = '.\Examples\Documents\Cover.pdf'
+$report = '.\Examples\Documents\Report.pdf'
+Join-OfficePdf -Path $cover, $report -OutputPath .\Examples\Documents\Combined.pdf -PassThru
+Get-OfficePdfInfo -Path .\Examples\Documents\Combined.pdf | Select-Object PageCount
 ```
 
-Writes a single PDF containing the input documents in the requested order.
+Writes a single PDF containing the input documents in the requested order, then checks the result.
 
 ## PARAMETERS
 

@@ -7,10 +7,12 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Removes the table of contents from a Word document.</summary>
 /// <example>
-///   <summary>Remove the table of contents.</summary>
+///   <summary>Remove a table of contents from an opened document.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Remove-OfficeWordTableOfContent</code>
-///   <para>Deletes the table of contents if one exists.</para>
+///   <code>$doc = Get-OfficeWord -Path .\Report.docx
+/// $doc | Remove-OfficeWordTableOfContent -PassThru |
+///     Save-OfficeWord -Path .\Report-NoToc.docx</code>
+///   <para>Removes the TOC from an OfficeIMO document object and saves the changed document to a new file.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Remove, "OfficeWordTableOfContent")]
 public sealed class RemoveOfficeWordTableOfContentCommand : PSCmdlet

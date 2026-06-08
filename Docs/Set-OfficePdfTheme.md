@@ -28,10 +28,10 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Report.pdf {
-                PdfTheme Report
-                PdfHeading 'Service Review'
-                PdfParagraph 'The report theme defines a polished baseline.'
-              }
+  PdfTheme Report
+  PdfHeading 'Service Review'
+  PdfParagraph 'The report theme defines a polished baseline.'
+}
 ```
 
 Uses the PDF report theme for generated content.

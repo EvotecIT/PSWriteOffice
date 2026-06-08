@@ -6,10 +6,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Compares two Excel worksheets or ranges and returns cell-level differences.</summary>
 /// <example>
-///   <summary>Compare two sheets in the same workbook.</summary>
+///   <summary>Compare current and expected ranges before publishing.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Compare-OfficeExcelRange -Path .\Report.xlsx -LeftSheet Current -RightSheet Expected</code>
-///   <para>Compares the used ranges of the two worksheets.</para>
+///   <code>$differences = Compare-OfficeExcelRange -Path .\Report.xlsx -LeftSheet Current -RightSheet Expected -LeftRange A1:D20 -RightRange A1:D20 -TrimStrings -IgnoreCase
+/// if ($differences) {
+///     $differences | Export-Csv -Path .\RangeDifferences.csv -NoTypeInformation
+/// }</code>
+///   <para>Compares two ranges and exports cell-level differences when the workbook does not match the expected sheet.</para>
 /// </example>
 [Cmdlet(VerbsData.Compare, "OfficeExcelRange", DefaultParameterSetName = ParameterSetPath)]
 [Alias("Compare-OfficeExcelSheet", "ExcelCompare")]

@@ -6,6 +6,24 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Adds a basic OfficeIMO Word shape to the current paragraph.</summary>
+/// <example>
+///   <summary>Add a callout shape to a report section.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeWord -Path .\StatusReport.docx {
+///     Add-OfficeWordParagraph -Text 'Release readiness'
+///     Add-OfficeWordShape -Type Rectangle -Width 220 -Height 56 -FillColor '#e6fffb' -StrokeColor '#08979c' -StrokeWidth 1.5 -Title 'Status callout' -Description 'Release readiness callout'
+/// }</code>
+///   <para>Creates an OfficeIMO Word shape in the current paragraph and sets basic visual and accessibility metadata.</para>
+/// </example>
+/// <example>
+///   <summary>Add an anchored background shape.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeWord -Path .\Appendix.docx {
+///     Add-OfficeWordParagraph -Text 'Appendix A'
+///     Add-OfficeWordShape -Type Rectangle -Width 480 -Height 36 -Left 36 -Top 72 -FillColor '#f0f5ff' -StrokeColor '#adc6ff'
+/// }</code>
+///   <para>Positions a shape with explicit offsets when the OfficeIMO anchored-shape API is desired.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordShape")]
 [Alias("WordShape")]
 [OutputType(typeof(WordShape))]

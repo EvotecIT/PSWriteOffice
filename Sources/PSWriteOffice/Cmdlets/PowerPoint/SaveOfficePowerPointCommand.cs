@@ -12,8 +12,11 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Save and open the deck.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Save-OfficePowerPoint -Presentation $ppt -Show</code>
-///   <para>Saves the current presentation and opens it in PowerPoint.</para>
+///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointSave.pptx
+/// $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+/// Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Saved later'
+/// Save-OfficePowerPoint -Presentation $ppt -PdfPath .\Examples\Documents\PowerPointSave.pdf</code>
+///   <para>Saves the current presentation and exports a PDF sidecar.</para>
 /// </example>
 [Cmdlet(VerbsData.Save, "OfficePowerPoint", SupportsShouldProcess = true)]
 public class SaveOfficePowerPointCommand : PSCmdlet

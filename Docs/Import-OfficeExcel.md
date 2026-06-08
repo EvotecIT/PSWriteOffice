@@ -31,10 +31,13 @@ Provides an ImportExcel-style read command over the OfficeIMO reader pipeline.
 
 ### EXAMPLE 1
 ```powershell
-PS> Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data
+PS> $rows = Import-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -NumericAsDecimal
+$rows |
+    Where-Object Status -eq 'Pending' |
+    Export-Csv -Path .\PendingRows.csv -NoTypeInformation
 ```
 
-Reads the used range on the Data worksheet and emits PSCustomObjects.
+Reads the used range on the Data worksheet, emits PSCustomObjects, and filters them in PowerShell.
 
 ## PARAMETERS
 

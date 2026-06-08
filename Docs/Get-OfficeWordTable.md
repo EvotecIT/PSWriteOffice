@@ -31,10 +31,14 @@ Gets tables from a Word document or section.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordTable -Path .\Report.docx
+PS> $tables = Get-OfficeWordTable -Path .\Report.docx -IncludeNested
+[pscustomobject]@{
+    Path = '.\Report.docx'
+    TableCount = @($tables).Count
+}
 ```
 
-Returns the tables found in the document.
+Reads tables from the document and includes nested tables when validating a composed report.
 
 ## PARAMETERS
 

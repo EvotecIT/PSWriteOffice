@@ -26,10 +26,13 @@ Gets combo box content controls from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordComboBox -Path .\Report.docx
+PS> $controls = Get-OfficeWordComboBox -Path .\Template.docx -Alias 'Owner*'
+$controls |
+    Select-Object -Property Alias, Tag |
+    Format-Table -AutoSize
 ```
 
-Returns all combo box controls in the document.
+Filters combo box content controls so template owners can verify the expected owner fields exist.
 
 ## PARAMETERS
 

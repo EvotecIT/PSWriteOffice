@@ -26,10 +26,26 @@ Sets properties on a table of contents in a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries'
+PS> New-OfficeWord -Path .\Report.docx {
+    Add-OfficeWordTableOfContent
+    Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries yet'
+    Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
+    Update-OfficeWordTableOfContent
+}
 ```
 
-Updates the table of contents display text.
+Updates TOC display text, adds heading content, and marks the TOC for refresh.
+
+### EXAMPLE 2
+```powershell
+PS> $doc = Get-OfficeWord -Path .\Report.docx
+$doc |
+    Get-OfficeWordTableOfContent |
+    Set-OfficeWordTableOfContent -Text 'Report contents'
+$doc | Save-OfficeWord -Path .\Report-Toc.docx
+```
+
+Pipes the OfficeIMO TOC object into the thin setter and saves the document.
 
 ## PARAMETERS
 

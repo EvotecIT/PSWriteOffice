@@ -7,10 +7,17 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Adds a table of contents to a Word document.</summary>
 /// <example>
-///   <summary>Add a default table of contents.</summary>
+///   <summary>Add a table of contents before report sections.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficeWordTableOfContent</code>
-///   <para>Inserts a table of contents using the default template.</para>
+///   <code>New-OfficeWord -Path .\ExecutiveReport.docx {
+///     Add-OfficeWordTableOfContent -Style Template1
+///     Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
+///     Add-OfficeWordParagraph -Text 'Summary text'
+///     Add-OfficeWordParagraph -Text 'Appendix' -Style Heading1
+///     Add-OfficeWordParagraph -Text 'Supporting details'
+///     Update-OfficeWordTableOfContent
+/// }</code>
+///   <para>Creates a navigable report outline and marks the TOC for refresh when the document opens.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordTableOfContent")]
 [Alias("WordTableOfContent")]

@@ -27,7 +27,7 @@ Builds a table from data rows or creates a blank grid with a fixed size.
 ### EXAMPLE 1
 ```powershell
 PS> $rows = @([pscustomobject]@{ Item='Alpha'; Qty=2 }, [pscustomobject]@{ Item='Beta'; Qty=4 })
-              Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Height 200
+Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Height 200
 ```
 
 Creates a table with headers and two data rows.

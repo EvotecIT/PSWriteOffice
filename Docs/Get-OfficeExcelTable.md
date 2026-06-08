@@ -31,10 +31,13 @@ Gets Excel tables defined in a workbook.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeExcelTable -Path .\report.xlsx
+PS> $tables = Get-OfficeExcelTable -Path .\report.xlsx -Sheet Data
+$tables |
+    Select-Object -Property Name, Sheet, Range |
+    Export-Csv -Path .\ExcelTables.csv -NoTypeInformation
 ```
 
-Returns table metadata (name, range, sheet).
+Returns table metadata for workbook documentation or generated-artifact proof.
 
 ## PARAMETERS
 

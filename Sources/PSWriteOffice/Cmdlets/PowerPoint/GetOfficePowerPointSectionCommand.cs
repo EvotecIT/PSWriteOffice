@@ -10,7 +10,10 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>List all sections in a deck.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficePowerPointSection -Presentation $ppt</code>
+///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointSectionsRead.pptx
+/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
+/// Add-OfficePowerPointSection -Presentation $ppt -Name 'Appendix' -StartSlideIndex 0 | Out-Null
+/// Get-OfficePowerPointSection -Presentation $ppt | Select-Object Name, FirstSlideIndex, SlideCount</code>
 ///   <para>Returns section information including section names and slide indexes.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePowerPointSection")]

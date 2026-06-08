@@ -29,11 +29,11 @@ Creates a README file with a heading and table content.
 ### EXAMPLE 2
 ```powershell
 PS> New-OfficeMarkdown -Path .\Report.md {
-                MarkdownHeading -Level 1 -Text 'Summary'
-                MarkdownTable -InputObject $summary
-                MarkdownHeading -Level 2 -Text 'Details'
-                MarkdownTable -InputObject $details
-              }
+  MarkdownHeading -Level 1 -Text 'Summary'
+  MarkdownTable -InputObject $summary
+  MarkdownHeading -Level 2 -Text 'Details'
+  MarkdownTable -InputObject $details
+}
 ```
 
 Creates a report with two tables separated by headings.

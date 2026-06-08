@@ -21,9 +21,14 @@ Adds a colored callout block to the current Excel report sheet.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficeExcelReportCallout -Body 'Value'
+PS> New-OfficeExcel -Path .\Operations.xlsx {
+    Add-OfficeExcelReportSheet -Name Summary {
+        Add-OfficeExcelReportCallout -Kind Warning -Title 'Manual validation' -Body 'Open the workbook in desktop Excel before publishing pivot-heavy reports.'
+    }
+}
 ```
 
+Renders a composer callout block using the current report theme.
 
 ## PARAMETERS
 

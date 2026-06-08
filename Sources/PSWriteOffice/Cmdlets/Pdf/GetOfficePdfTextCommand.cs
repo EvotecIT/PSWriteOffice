@@ -6,6 +6,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Extracts text or Markdown from a PDF.</summary>
+/// <example>
+///   <summary>Extract text and Markdown from a PDF.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$proof = @(
+///     Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -PageRange '1'
+///     Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -AsMarkdown -OutputPath .\Examples\Documents\ReportText.md
+/// )
+/// $proof</code>
+///   <para>Reads plain text directly and writes Markdown readback to a file.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdfText")]
 public sealed class GetOfficePdfTextCommand : PSCmdlet
 {

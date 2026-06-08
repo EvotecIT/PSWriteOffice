@@ -9,8 +9,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Attach speaker notes.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this under five minutes.'</code>
-///   <para>Writes notes to the slide.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointNotes.pptx {
+///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Executive summary'
+///     Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this slide under five minutes and focus on decisions.'
+/// }</code>
+///   <para>Writes speaker notes to a generated slide.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointNotes")]
 [Alias("PptNotes")]

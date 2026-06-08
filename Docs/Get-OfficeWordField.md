@@ -26,10 +26,13 @@ Returns WordField objects, optionally filtered by type or field code.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordField -Path .\Report.docx
+PS> $fields = Get-OfficeWordField -Path .\Report.docx -Contains 'TOC'
+$fields |
+    Select-Object -Property FieldType, Field |
+    Format-Table -AutoSize
 ```
 
-Returns all fields in the document.
+Filters Word fields by field-code text before running a field or table-of-contents refresh.
 
 ## PARAMETERS
 

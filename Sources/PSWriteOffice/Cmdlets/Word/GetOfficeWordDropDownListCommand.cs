@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets dropdown list content controls from a Word document.</summary>
 /// <example>
-///   <summary>List dropdown list controls.</summary>
+///   <summary>Check status dropdown controls.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordDropDownList -Path .\Report.docx</code>
-///   <para>Returns all dropdown list controls in the document.</para>
+///   <code>$statusControls = Get-OfficeWordDropDownList -Path .\StatusForm.docx -Tag 'status-*'
+/// $statusControls |
+///     Select-Object -Property Alias, Tag |
+///     Format-Table -AutoSize</code>
+///   <para>Finds dropdown list content controls used for status capture in a Word form.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordDropDownList", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordDropDownLists")]

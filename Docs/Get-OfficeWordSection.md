@@ -26,10 +26,13 @@ Gets sections from a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordSection -Path .\Report.docx
+PS> $section = Get-OfficeWordSection -Path .\Report.docx -Index 0
+$section |
+    Get-OfficeWordParagraph |
+    Select-Object -First 5 -Property Text
 ```
 
-Returns the sections contained in the document.
+Gets a specific section by zero-based index and pipes it to another thin Word reader.
 
 ## PARAMETERS
 

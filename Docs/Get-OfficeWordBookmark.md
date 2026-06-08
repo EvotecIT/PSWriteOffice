@@ -26,10 +26,13 @@ Returns WordBookmark objects, optionally filtered by name.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeWordBookmark -Path .\Report.docx
+PS> $bookmarks = Get-OfficeWordBookmark -Path .\Report.docx -Name 'Appendix*', 'ExecutiveSummary'
+$bookmarks |
+    Select-Object -Property Name |
+    Format-Table -AutoSize
 ```
 
-Returns all bookmarks in the document.
+Loads the document read-only, filters bookmark names with wildcards, and displays the matching navigation targets.
 
 ## PARAMETERS
 

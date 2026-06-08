@@ -21,9 +21,12 @@ Reports whether OfficeIMO.Pdf can read or rewrite a PDF safely.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficePdfPreflight -Path 'C:\Path'
+PS> $preflight = Get-OfficePdfPreflight -Path .\Examples\Documents\Report.pdf
+$preflight.HasReadBlockers
+$preflight.HasRewriteBlockers
 ```
 
+Checks whether OfficeIMO.Pdf can read or rewrite the PDF safely.
 
 ## PARAMETERS
 

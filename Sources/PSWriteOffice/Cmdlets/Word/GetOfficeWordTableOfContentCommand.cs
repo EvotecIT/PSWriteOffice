@@ -8,10 +8,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets the table of contents from a Word document.</summary>
 /// <example>
-///   <summary>Retrieve the table of contents if present.</summary>
+///   <summary>Read a table of contents before updating it.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordTableOfContent -Path .\Report.docx</code>
-///   <para>Returns the table of contents when one exists.</para>
+///   <code>$doc = Get-OfficeWord -Path .\Report.docx
+/// $toc = $doc | Get-OfficeWordTableOfContent
+/// if ($toc) {
+///     $toc | Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries' -PassThru
+///     $doc | Save-OfficeWord -Path .\Report-Toc.docx
+/// }</code>
+///   <para>Gets the TOC from an open document, updates it, and saves a variant.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordTableOfContent", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordTableOfContents")]

@@ -9,10 +9,15 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 
 /// <summary>Adds a Markdown list.</summary>
 /// <example>
-///   <summary>Add a bullet list.</summary>
+///   <summary>Add ordered and unordered lists to a report.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownList -Items 'Alpha','Beta','Gamma'</code>
-///   <para>Appends an unordered list to the document.</para>
+///   <code>New-OfficeMarkdown -Path .\Plan.md {
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Priorities'
+///     Add-OfficeMarkdownList -Items 'PDF examples', 'PowerPoint layout', 'Word report polish'
+///     Add-OfficeMarkdownHeading -Level 2 -Text 'Release order'
+///     Add-OfficeMarkdownList -Items 'Validate artifacts', 'Generate docs', 'Publish release' -Ordered -Start 1
+/// }</code>
+///   <para>Appends bullet and ordered lists to the current Markdown document.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownList", DefaultParameterSetName = ParameterSetContext)]
 [Alias("MarkdownList")]

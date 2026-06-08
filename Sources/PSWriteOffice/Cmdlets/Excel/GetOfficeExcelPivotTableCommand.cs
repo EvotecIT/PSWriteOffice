@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Gets pivot tables defined in a workbook.</summary>
 /// <example>
-///   <summary>List pivot tables in a workbook.</summary>
+///   <summary>Read pivot table metadata from a workbook.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeExcelPivotTable -Path .\report.xlsx</code>
-///   <para>Returns pivot table metadata (name, sheet, source range).</para>
+///   <code>$pivots = Get-OfficeExcelPivotTable -Path .\report.xlsx -Sheet Summary
+/// $pivots |
+///     Select-Object -Property Name, Sheet, SourceRange, RowFields, DataFields |
+///     Format-List</code>
+///   <para>Returns pivot table metadata so generated reports can prove the pivot source and layout.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelPivotTable", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelPivotTables")]

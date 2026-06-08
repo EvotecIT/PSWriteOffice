@@ -10,10 +10,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <summary>Gets bookmarks from a Word document.</summary>
 /// <para>Returns <see cref="WordBookmark"/> objects, optionally filtered by name.</para>
 /// <example>
-///   <summary>List all bookmarks.</summary>
+///   <summary>List report bookmarks by name pattern.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordBookmark -Path .\Report.docx</code>
-///   <para>Returns all bookmarks in the document.</para>
+///   <code>$bookmarks = Get-OfficeWordBookmark -Path .\Report.docx -Name 'Appendix*', 'ExecutiveSummary'
+/// $bookmarks |
+///     Select-Object -Property Name |
+///     Format-Table -AutoSize</code>
+///   <para>Loads the document read-only, filters bookmark names with wildcards, and displays the matching navigation targets.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordBookmark", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordBookmark))]

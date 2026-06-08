@@ -6,6 +6,17 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds an embedded file attachment to a generated PDF document.</summary>
+/// <example>
+///   <summary>Embed source data in a generated PDF.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$dataPath = '.\Examples\Documents\ServiceData.json'
+/// Set-Content -Path $dataPath -Value '{ "service": "Directory", "status": "Healthy" }'
+/// New-OfficePdf -Path .\Examples\Documents\PdfWithAttachment.pdf {
+///     Add-OfficePdfHeading -Text 'Service report'
+///     Add-OfficePdfAttachment -Path $dataPath -Name 'service-data.json' -MimeType 'application/json' -Description 'Source data used by the report.'
+/// }</code>
+///   <para>Embeds a supporting JSON file in the generated PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfAttachment", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfAttachment")]
 [OutputType(typeof(PdfDocument))]

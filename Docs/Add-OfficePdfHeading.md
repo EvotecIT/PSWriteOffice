@@ -26,15 +26,14 @@ Adds a heading to a PDF document.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfHeading -Align 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfHeadings.pdf {
+  Add-OfficePdfHeading -Text 'Service Review' -Level 1 -Color '#1D4ED8'
+  Add-OfficePdfHeading -Text 'Open risks' -Level 2
+  Add-OfficePdfParagraph -Text 'Heading levels create the report structure.'
+}
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfHeading -Document 'Value'
-```
-
+Adds report headings before body content.
 
 ## PARAMETERS
 

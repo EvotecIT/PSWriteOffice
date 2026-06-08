@@ -26,10 +26,24 @@ Updates the table of contents in a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Update-OfficeWordTableOfContent
+PS> New-OfficeWord -Path .\ExecutiveReport.docx {
+    Add-OfficeWordTableOfContent
+    Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
+    Add-OfficeWordParagraph -Text 'Summary text'
+    Update-OfficeWordTableOfContent
+}
 ```
 
-Marks TOC fields as dirty and updates the document settings.
+Marks TOC fields as dirty and updates the document settings so Word refreshes the TOC when opened.
+
+### EXAMPLE 2
+```powershell
+PS> $doc = Get-OfficeWord -Path .\Report.docx
+$doc | Update-OfficeWordTableOfContent -Regenerate
+$doc | Save-OfficeWord -Path .\Report-RegeneratedToc.docx
+```
+
+Uses OfficeIMO's regenerate path, then saves the updated document.
 
 ## PARAMETERS
 

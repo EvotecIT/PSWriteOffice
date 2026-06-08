@@ -26,15 +26,13 @@ Returns a PowerShell-friendly snapshot of OfficeIMO.Word statistics for quick re
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficeWordStatistics -InputPath 'C:\Path'
+PS> $stats = Get-OfficeWordStatistics -Path .\Report.docx
+$stats |
+    Select-Object -Property Paragraphs, Tables, Images, Charts |
+    Format-List
 ```
 
-
-### EXAMPLE 2
-```powershell
-Get-OfficeWordStatistics -Document 'Value'
-```
-
+Reads OfficeIMO.Word statistics and displays the structural counts that matter for a release artifact.
 
 ## PARAMETERS
 

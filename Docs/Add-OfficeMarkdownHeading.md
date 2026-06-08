@@ -26,10 +26,15 @@ Adds a Markdown heading.
 
 ### EXAMPLE 1
 ```powershell
-PS> MarkdownHeading -Level 2 -Text 'Overview'
+PS> New-OfficeMarkdown -Path .\Report.md {
+    Add-OfficeMarkdownHeading -Level 1 -Text 'Operational Report'
+    Add-OfficeMarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop
+    Add-OfficeMarkdownHeading -Level 2 -Text 'Overview'
+    Add-OfficeMarkdownParagraph -Text 'Current operational state.'
+}
 ```
 
-Appends a level-2 heading to the current Markdown document.
+Appends headings that can be included in a generated table of contents.
 
 ## PARAMETERS
 

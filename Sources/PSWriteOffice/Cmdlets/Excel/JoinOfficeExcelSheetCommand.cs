@@ -6,10 +6,12 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Appends or merges rows from one worksheet into another.</summary>
 /// <example>
-///   <summary>Append source rows below a target sheet.</summary>
+///   <summary>Append source rows below a combined sheet.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Join-OfficeExcelSheet -Path .\Report.xlsx -TargetSheet Combined -SourceSheet Data</code>
-///   <para>Copies rows from Data into Combined, skipping the source header row by default.</para>
+///   <code>$result = Join-OfficeExcelSheet -Path .\Report.xlsx -TargetSheet Combined -SourceSheet Data -MatchColumnsByHeader -BlankRowsBefore 1
+/// $result |
+///     Select-Object -Property SourceSheet, TargetSheet, RowsCopied, ColumnsCopied</code>
+///   <para>Copies rows from Data into Combined, aligns columns by header, and returns the merge result.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Join, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext)]
 [Alias("Merge-OfficeExcelSheet", "ExcelSheetJoin", "ExcelSheetMerge")]

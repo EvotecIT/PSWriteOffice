@@ -21,9 +21,15 @@ Fills and optionally flattens simple AcroForm fields in an existing PDF.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficePdfForm -Path 'C:\Path' -OutputPath 'C:\Path'
+PS> $fields = @{
+    Requester = 'Ada Lovelace'
+    Priority = 'High'
+    Approved = $true
+}
+Set-OfficePdfForm -Path .\Examples\Documents\Request.pdf -OutputPath .\Examples\Documents\Request-FilledFlat.pdf -Field $fields -Flatten
 ```
 
+Fills simple AcroForm fields and writes a flattened PDF.
 
 ## PARAMETERS
 

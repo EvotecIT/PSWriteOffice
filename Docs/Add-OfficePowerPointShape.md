@@ -21,10 +21,14 @@ Creates an auto shape at the requested coordinates and applies optional fill and
 
 ### EXAMPLE 1
 ```powershell
-PS> Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 80 -Width 220 -Height 120 -FillColor '#DDEEFF'
+PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointShape.pptx {
+    $slide = Add-OfficePowerPointSlide -Layout 1
+    Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 120 -Width 220 -Height 90 -FillColor '#DDEEFF' -OutlineColor '#2563EB' -OutlineWidth 1
+    Add-OfficePowerPointTextBox -Slide $slide -Text 'Highlighted status' -X 80 -Y 145 -Width 180 -Height 32
+}
 ```
 
-Creates a rectangle with a custom fill color.
+Creates a styled rectangle and overlays a text box.
 
 ## PARAMETERS
 

@@ -7,8 +7,8 @@
   "status": "active",
   "listed": false,
   "version": "1.0.3",
-  "generatedAt": "2026-06-06T06:49:08.7308602+00:00",
-  "commit": "f332d262639a6e9b9b3f015b11044629fa4f4488",
+  "generatedAt": "2026-06-08T09:21:43.8975636+02:00",
+  "sourceRef": "codex/pswriteoffice-roadmap-cmdlet-examples",
   "links": {
     "source": "https://github.com/EvotecIT/PSWriteOffice"
   },

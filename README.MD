@@ -1,6 +1,6 @@
 # PSWriteOffice
 
-PowerShell-first document automation for Word, Excel, PowerPoint, Markdown, and CSV, built on top of `OfficeIMO.*`.
+PowerShell-first document automation for Word, Excel, PowerPoint, PDF, Markdown, and CSV, built on top of `OfficeIMO.*`.
 
 📦 PowerShell Gallery
 
@@ -30,6 +30,7 @@ PowerShell-first document automation for Word, Excel, PowerPoint, Markdown, and 
 | Word | Mature | Document creation, readers, bookmarks, content controls, fields, HTML conversion, Markdown conversion |
 | Excel | Advanced | Sheets, tables, named ranges, formulas, validation, charts, pivots, comments, TOC/navigation, explicit range readers, chart formatting, smarter links, URL images, summary-sheet linking |
 | PowerPoint | Experimental but useful | Slides, titles, text boxes, bullets, notes, layouts, placeholders, sections, text replacement, slide import, slide copy, transitions, sizing |
+| PDF | Advanced | New PDFs, text, headings, images, tables, panels, bookmarks, metadata, attachments, stamps, watermarks, forms, merge/split/copy/move pages, text/image/attachment extraction, compliance inspection |
 | Markdown | Solid | Read Markdown, inspect full object trees/headings/front matter/tables, build Markdown with a DSL, render HTML, convert HTML |
 | CSV | Solid | Read CSV, emit CSV, object-focused data workflows |
 
@@ -116,6 +117,29 @@ Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLati
 Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Contoso Theme' -AllMasters
 Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideLayout -LayoutName 'Title and Content'
 Get-OfficePowerPointTheme -Presentation $ppt
+```
+
+### PDF
+
+```powershell
+$rows = @(
+    [PSCustomObject]@{ Area = 'Word'; Status = 'Ready'; Owner = 'Docs' }
+    [PSCustomObject]@{ Area = 'PDF'; Status = 'Review'; Owner = 'Adapters' }
+)
+
+New-OfficePdf -Path .\Status.pdf {
+    Add-OfficePdfHeading -Text 'Documentation Status' -Level 1
+    Add-OfficePdfParagraph -Text 'Generated with PSWriteOffice through OfficeIMO.Pdf.'
+    Add-OfficePdfTable -InputObject $rows -Property Area,Status,Owner -Header 'Area','Status','Owner' -Align Center
+    Add-OfficePdfBookmark -Name 'Status table'
+    Set-OfficePdfMetadata -Title 'Documentation Status' -Author 'PSWriteOffice'
+}
+```
+
+```powershell
+Join-OfficePdf -Path .\Cover.pdf, .\Status.pdf -OutputPath .\Report.pdf
+Split-OfficePdf -Path .\Report.pdf -OutputDirectory .\Pages
+Get-OfficePdfText -Path .\Report.pdf
 ```
 
 ### Excel chart finishing
@@ -233,6 +257,7 @@ Get-OfficePowerPointShape -Presentation $ppt -Index 0
 ## Recent Highlights 🆕
 
 - Word to Markdown and Markdown to Word are now surfaced directly through `OfficeIMO.Word.Markdown`.
+- PDF now has first-class creation, composition, merge/split, page movement, metadata, forms, stamping, attachment, extraction, and compliance inspection cmdlets. Deeper PDF engine features still belong in `OfficeIMO.Pdf` first.
 - Excel now has `Add-OfficeExcelTableOfContents`, `Get-OfficeExcelRange`, and `Get-OfficeExcelUsedRange`.
 - PowerPoint now has section cmdlets, deck-wide text replacement, slide import helpers, slide copy, transitions, slide sizing, theme inspection, theme updates, and layout switching.
 - Excel charts can now be finished with `Set-OfficeExcelChartLegend`, `Set-OfficeExcelChartDataLabels`, and `Set-OfficeExcelChartStyle`.
@@ -248,6 +273,9 @@ Use the examples in this README for the first pass, then move to the generated c
 - [Docs/Readme.md](Docs/Readme.md) is the generated cmdlet index.
 - [Docs](Docs) contains one generated page per command.
 - [Examples](Examples) contains runnable scripts grouped by Word, Excel, PowerPoint, Markdown, CSV, and shared samples.
+- [Roadmap/PSWriteOffice-CmdletExamplesAndPolishPlan.md](Roadmap/PSWriteOffice-CmdletExamplesAndPolishPlan.md) tracks the documentation quality bar and the next wrapper-polish priorities.
+
+The generated command pages are built from XML comments in the cmdlet source. Prefer contextual examples there too: small workflow snippets with real input data, generated artifacts, readback/validation where useful, and no fake PowerShell compatibility aliases.
 
 ## Build and Test 🧪
 
@@ -255,6 +283,14 @@ Use the examples in this README for the first pass, then move to the generated c
 dotnet build .\Sources\PSWriteOffice.sln -c Debug
 pwsh -NoLogo -NoProfile -File .\PSWriteOffice.Tests.ps1
 pwsh -NoLogo -NoProfile -File .\Build\Validate-PackagedArtefact.ps1
+```
+
+Regenerate the module manifest, generated help, packed artifacts, and website API payloads through the build-module lane:
+
+```powershell
+pwsh -NoLogo -NoProfile -File .\Build\Manage-PSWriteOffice.ps1
+pwsh -NoLogo -NoProfile -File .\Build\Export-ApiDocsSnapshot.ps1
+pwsh -NoLogo -NoProfile -File .\Build\Measure-CmdletXmlExamples.ps1 -RequireExamples
 ```
 
 Development loading is handled through [PSWriteOffice.psm1](PSWriteOffice.psm1), which prefers the local debug build in `Sources\PSWriteOffice\bin\Debug\`.

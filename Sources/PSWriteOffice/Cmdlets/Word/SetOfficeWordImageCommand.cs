@@ -4,6 +4,16 @@ using OfficeIMO.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Updates OfficeIMO Word image sizing, wrapping, crop, and metadata.</summary>
+/// <example>
+///   <summary>Resize and describe all report images.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$doc = Get-OfficeWord -Path .\Report.docx
+/// $doc |
+///     Get-OfficeWordImage |
+///     Set-OfficeWordImage -Width 320 -Wrap Square -Title 'Report image' -Description 'Image used in the report'
+/// $doc | Save-OfficeWord -Path .\Report-Images.docx</code>
+///   <para>Gets OfficeIMO image objects from an open document, applies thin image metadata and layout updates, and saves the document.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeWordImage")]
 [Alias("WordImageStyle")]
 [OutputType(typeof(WordImage))]

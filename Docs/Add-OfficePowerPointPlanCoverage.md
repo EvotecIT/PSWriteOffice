@@ -21,9 +21,16 @@ Adds a semantic coverage/location slide to a PowerPoint deck plan.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePowerPointPlanCoverage -Locations @('Value')
+PS> $locations = @(
+    @{ Name = 'EMEA'; X = 0.45; Y = 0.35; Detail = 'Primary operations' }
+    @{ Name = 'AMER'; X = 0.22; Y = 0.42; Detail = 'Support window' }
+)
+New-OfficePowerPointDeckPlan {
+    Add-OfficePowerPointPlanCoverage -Title 'Regional coverage' -Subtitle 'Operational footprint' -Locations $locations
+}
 ```
 
+Adds a semantic location/coverage slide using normalized 0..1 coordinates.
 
 ## PARAMETERS
 

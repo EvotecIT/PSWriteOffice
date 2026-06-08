@@ -5,6 +5,15 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Adds a paragraph to a PDF document.</summary>
+/// <example>
+///   <summary>Add body text to a generated PDF.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfParagraph.pdf {
+///     Add-OfficePdfHeading -Text 'Status'
+///     Add-OfficePdfParagraph -Text 'All monitored services are currently healthy.' -Color '#166534'
+/// }</code>
+///   <para>Adds a colored body paragraph after a heading.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfParagraph", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfParagraph")]
 [OutputType(typeof(PdfDocument))]

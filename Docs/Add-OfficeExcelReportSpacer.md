@@ -21,9 +21,16 @@ Adds vertical spacing to the current Excel report sheet.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficeExcelReportSpacer -Rows 1
+PS> New-OfficeExcel -Path .\Operations.xlsx {
+    Add-OfficeExcelReportSheet -Name Summary {
+        Add-OfficeExcelReportTitle -Title 'Operational Summary'
+        Add-OfficeExcelReportSpacer -Rows 2
+        Add-OfficeExcelReportSection -Text 'Details'
+    }
+}
 ```
 
+Advances the composer cursor before adding the next report block.
 
 ## PARAMETERS
 

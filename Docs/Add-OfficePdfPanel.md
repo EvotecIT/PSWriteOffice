@@ -26,15 +26,13 @@ Adds a visually separated panel paragraph to a PDF document.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfPanel -Align 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfPanel.pdf {
+    Add-OfficePdfHeading -Text 'Executive summary'
+    Add-OfficePdfPanel -Text 'No critical incidents were detected in the current reporting window.' -Align Center
+}
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfPanel -Document 'Value'
-```
-
+Adds a highlighted panel paragraph to the generated PDF.
 
 ## PARAMETERS
 

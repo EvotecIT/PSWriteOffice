@@ -6,6 +6,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Copies selected PDF pages into a new PDF.</summary>
+/// <example>
+///   <summary>Extract a page range into a new PDF.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$proof = @(
+///     Copy-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '1-2,5' -OutputPath .\Examples\Documents\ExecutivePages.pdf
+///     Get-OfficePdfInfo -Path .\Examples\Documents\ExecutivePages.pdf | Select-Object PageCount
+/// )
+/// $proof</code>
+///   <para>Copies selected pages and inspects the resulting PDF.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Copy, "OfficePdfPage")]
 [OutputType(typeof(FileInfo))]
 public sealed class CopyOfficePdfPageCommand : PSCmdlet

@@ -10,6 +10,17 @@ using PSWriteOffice.Services.Excel;
 namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Adds a title block to the current Excel report sheet.</summary>
+/// <example>
+///   <summary>Add a polished title to a report sheet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current month'
+///         Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }
+///     }
+/// }</code>
+///   <para>Uses the OfficeIMO sheet composer through PSWriteOffice's thin report-block wrapper.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportTitle")]
 [Alias("ExcelReportTitle")]
 public sealed class AddOfficeExcelReportTitleCommand : PSCmdlet
@@ -30,6 +41,17 @@ public sealed class AddOfficeExcelReportTitleCommand : PSCmdlet
 }
 
 /// <summary>Adds a section heading to the current Excel report sheet.</summary>
+/// <example>
+///   <summary>Add a section and paragraph to a report sheet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportSection -Text 'Service health'
+///         Add-OfficeExcelReportParagraph -Text 'All monitored services are reporting.'
+///     }
+/// }</code>
+///   <para>Uses the report composer to add a section heading and narrative text.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportSection")]
 [Alias("ExcelReportSection")]
 public sealed class AddOfficeExcelReportSectionCommand : PSCmdlet
@@ -46,6 +68,17 @@ public sealed class AddOfficeExcelReportSectionCommand : PSCmdlet
 }
 
 /// <summary>Adds a paragraph line to the current Excel report sheet.</summary>
+/// <example>
+///   <summary>Add narrative text below a title block.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportTitle -Title 'Operational Summary'
+///         Add-OfficeExcelReportParagraph -Text 'This workbook was generated from the validated source data.'
+///     }
+/// }</code>
+///   <para>Adds prose to an OfficeIMO-composed Excel report sheet.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportParagraph")]
 [Alias("ExcelReportParagraph")]
 public sealed class AddOfficeExcelReportParagraphCommand : PSCmdlet
@@ -62,6 +95,18 @@ public sealed class AddOfficeExcelReportParagraphCommand : PSCmdlet
 }
 
 /// <summary>Adds vertical spacing to the current Excel report sheet.</summary>
+/// <example>
+///   <summary>Add spacing between report blocks.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportTitle -Title 'Operational Summary'
+///         Add-OfficeExcelReportSpacer -Rows 2
+///         Add-OfficeExcelReportSection -Text 'Details'
+///     }
+/// }</code>
+///   <para>Advances the composer cursor before adding the next report block.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportSpacer")]
 [Alias("ExcelReportSpacer")]
 public sealed class AddOfficeExcelReportSpacerCommand : PSCmdlet
@@ -78,6 +123,16 @@ public sealed class AddOfficeExcelReportSpacerCommand : PSCmdlet
 }
 
 /// <summary>Adds a colored callout block to the current Excel report sheet.</summary>
+/// <example>
+///   <summary>Add a warning callout to a report sheet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportCallout -Kind Warning -Title 'Manual validation' -Body 'Open the workbook in desktop Excel before publishing pivot-heavy reports.'
+///     }
+/// }</code>
+///   <para>Renders a composer callout block using the current report theme.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportCallout")]
 [Alias("ExcelReportCallout")]
 public sealed class AddOfficeExcelReportCalloutCommand : PSCmdlet
@@ -107,6 +162,16 @@ public sealed class AddOfficeExcelReportCalloutCommand : PSCmdlet
 }
 
 /// <summary>Adds a KPI row to the current Excel report sheet.</summary>
+/// <example>
+///   <summary>Add three KPI values to a summary sheet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3
+///     }
+/// }</code>
+///   <para>Renders PowerShell key/value data as a KPI row through the OfficeIMO sheet composer.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportKpiRow")]
 [Alias("ExcelReportKpiRow")]
 public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
@@ -131,6 +196,20 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
 }
 
 /// <summary>Adds a legend table to the current Excel report sheet.</summary>
+/// <example>
+///   <summary>Add a status legend with colored first-column values.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$legendRows = @(
+///     [pscustomobject]@{ Status = 'Ready'; Meaning = 'Validated and ready' }
+///     [pscustomobject]@{ Status = 'Review'; Meaning = 'Needs owner review' }
+/// )
+/// New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportLegend -Title 'Status legend' -Headers Status, Meaning -Rows $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }
+///     }
+/// }</code>
+///   <para>Renders legend rows and applies optional fill colors keyed by the first column.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportLegend")]
 [Alias("ExcelReportLegend")]
 public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
@@ -172,6 +251,20 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
 }
 
 /// <summary>Adds an object table to the current Excel report sheet using the OfficeIMO sheet composer.</summary>
+/// <example>
+///   <summary>Add a styled report table from objects.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$rows = @(
+///     [pscustomobject]@{ Area = 'PDF'; Status = 'Ready' }
+///     [pscustomobject]@{ Area = 'Word'; Status = 'Review' }
+/// )
+/// New-OfficeExcel -Path .\Operations.xlsx {
+///     Add-OfficeExcelReportSheet -Name Summary {
+///         Add-OfficeExcelReportTable -Data $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9
+///     }
+/// }</code>
+///   <para>Renders object rows as a formatted Excel table through the sheet composer.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportTable")]
 [Alias("ExcelReportTable")]
 public sealed class AddOfficeExcelReportTableCommand : PSCmdlet

@@ -26,15 +26,13 @@ Adds a bullet or numbered list to a PDF document.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfList -Align 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfList.pdf {
+    Add-OfficePdfHeading -Text 'Next actions'
+    Add-OfficePdfList -Items 'Confirm owner','Publish summary','Schedule review' -Numbered
+}
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfList -Document 'Value'
-```
-
+Adds a numbered list in the generated PDF flow.
 
 ## PARAMETERS
 

@@ -31,10 +31,13 @@ Gets defined names (named ranges) from an Excel workbook.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeExcelNamedRange -Path .\report.xlsx
+PS> $ranges = Get-OfficeExcelNamedRange -Path .\report.xlsx
+$ranges |
+    Select-Object -Property Name, Scope, Range |
+    Format-Table -AutoSize
 ```
 
-Returns workbook-level named ranges.
+Returns named ranges so workbook navigation and formulas can be reviewed.
 
 ## PARAMETERS
 

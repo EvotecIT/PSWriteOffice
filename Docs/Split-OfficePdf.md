@@ -21,10 +21,11 @@ Splits a PDF into one file per page.
 
 ### EXAMPLE 1
 ```powershell
-PS> Split-OfficePdf -Path .\Combined.pdf -OutputDirectory .\Pages -Prefix 'page'
+PS> $pages = Split-OfficePdf -Path .\Examples\Documents\Combined.pdf -OutputDirectory .\Examples\Documents\Pages -Prefix 'combined-page'
+$pages | Select-Object Name, Length
 ```
 
-Creates one output PDF for each page.
+Creates one output PDF for each page and returns the written files.
 
 ## PARAMETERS
 

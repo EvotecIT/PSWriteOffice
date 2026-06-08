@@ -8,10 +8,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Finds text in worksheet values.</summary>
 /// <example>
-///   <summary>Find values in a workbook.</summary>
+///   <summary>Find status values and export their addresses.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Find-OfficeExcel -Path .\Report.xlsx -Text Ready</code>
-///   <para>Returns matching cells with sheet, address, row, column, and value metadata.</para>
+///   <code>$matches = Find-OfficeExcel -Path .\Report.xlsx -Text Ready -Sheet Summary
+/// $matches |
+///     Select-Object -Property Sheet, Address, Value |
+///     Export-Csv -Path .\ReadyCells.csv -NoTypeInformation</code>
+///   <para>Returns matching cells with sheet, address, row, column, and value metadata for review or proof.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Find, "OfficeExcel", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject))]

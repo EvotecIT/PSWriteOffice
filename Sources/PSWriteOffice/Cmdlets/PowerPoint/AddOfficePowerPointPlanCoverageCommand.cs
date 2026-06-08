@@ -5,6 +5,18 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Adds a semantic coverage/location slide to a PowerPoint deck plan.</summary>
+/// <example>
+///   <summary>Add normalized coverage points to a deck plan.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$locations = @(
+///     @{ Name = 'EMEA'; X = 0.45; Y = 0.35; Detail = 'Primary operations' }
+///     @{ Name = 'AMER'; X = 0.22; Y = 0.42; Detail = 'Support window' }
+/// )
+/// New-OfficePowerPointDeckPlan {
+///     Add-OfficePowerPointPlanCoverage -Title 'Regional coverage' -Subtitle 'Operational footprint' -Locations $locations
+/// }</code>
+///   <para>Adds a semantic location/coverage slide using normalized 0..1 coordinates.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointPlanCoverage")]
 [Alias("PptPlanCoverage")]
 [OutputType(typeof(PowerPointDeckPlan))]

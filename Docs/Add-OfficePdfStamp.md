@@ -27,17 +27,22 @@ Use -Watermark when the stamp should be placed behind existing page content.
 
 ### EXAMPLE 1
 ```powershell
-PS> Add-OfficePdfStamp -Path .\Report.pdf -OutputPath .\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'
+PS> $proof = @(
+    Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'
+    Get-OfficePdfPreflight -Path .\Examples\Documents\Stamped.pdf
+)
+$proof
 ```
 
-Adds a text stamp to the first two pages.
+Adds a text stamp to the first two pages and preflights the result.
 
 ### EXAMPLE 2
 ```powershell
-PS> Add-OfficePdfStamp -Path .\Report.pdf -OutputPath .\Watermarked.pdf -Image .\logo.png -Width 160 -Watermark
+PS> $logo = '.\Tests\Assets\CellImage.png'
+Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Watermarked.pdf -Image $logo -Width 160 -Watermark
 ```
 
-Adds a logo behind existing content.
+Adds a logo behind existing content as a watermark.
 
 ## PARAMETERS
 

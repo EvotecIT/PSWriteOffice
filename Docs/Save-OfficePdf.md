@@ -23,7 +23,7 @@ The document is saved through the normal OfficeIMO.Pdf save path.
 ### EXAMPLE 1
 ```powershell
 PS> $pdf = New-OfficePdf { PdfHeading 'Queued report'; PdfParagraph 'Generated in memory.' }
-            $pdf | Save-OfficePdf -Path .\QueuedReport.pdf
+$pdf | Save-OfficePdf -Path .\QueuedReport.pdf
 ```
 
 Creates a PDF document object first, then saves it to disk.

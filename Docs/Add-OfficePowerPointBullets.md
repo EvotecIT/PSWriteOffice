@@ -21,10 +21,14 @@ Creates a textbox and populates it with bullet paragraphs.
 
 ### EXAMPLE 1
 ```powershell
-PS> Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 60 -Y 120 -Width 400 -Height 200
+PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointBullets.pptx {
+    $slide = Add-OfficePowerPointSlide -Layout 1
+    Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Delivery update'
+    Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next steps' -X 60 -Y 120 -Width 420 -Height 180
+}
 ```
 
-Creates a bullet list textbox.
+Creates a slide with a titled bullet list.
 
 ## PARAMETERS
 

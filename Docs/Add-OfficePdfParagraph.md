@@ -26,15 +26,13 @@ Adds a paragraph to a PDF document.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfParagraph -Align 'Value'
+PS> New-OfficePdf -Path .\Examples\Documents\PdfParagraph.pdf {
+    Add-OfficePdfHeading -Text 'Status'
+    Add-OfficePdfParagraph -Text 'All monitored services are currently healthy.' -Color '#166534'
+}
 ```
 
-
-### EXAMPLE 2
-```powershell
-Add-OfficePdfParagraph -Document 'Value'
-```
-
+Adds a colored body paragraph after a heading.
 
 ## PARAMETERS
 

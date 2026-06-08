@@ -10,13 +10,18 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Set a standard widescreen presentation size.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficePowerPointSlideSize -Presentation $ppt -Preset Screen16x9</code>
-///   <para>Applies the 16:9 widescreen preset to the presentation.</para>
+///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointWidescreen.pptx {
+///     Set-OfficePowerPointSlideSize -Preset Screen16x9
+///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Widescreen deck'
+/// }</code>
+///   <para>Applies the 16:9 widescreen preset before adding slides.</para>
 /// </example>
 /// <example>
 ///   <summary>Set a custom size in centimeters.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0</code>
+///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointCustomSize.pptx
+/// Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0
+/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Custom size'</code>
 ///   <para>Sets the presentation slide size to a custom 25.4 x 14.0 cm layout.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointSlideSize", DefaultParameterSetName = ParameterSetPreset)]

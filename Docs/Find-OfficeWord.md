@@ -36,10 +36,22 @@ Returns matching paragraphs or a WordFind result when using regex with -AsResult
 
 ### EXAMPLE 1
 ```powershell
-PS> Find-OfficeWord -Path .\Report.docx -Text 'Quarter'
+PS> $matches = Find-OfficeWord -Path .\Report.docx -Text 'Quarter'
+$matches |
+    Select-Object -Property Text |
+    Export-Csv -Path .\ReviewMatches.csv -NoTypeInformation
 ```
 
-Returns paragraphs that contain the search text.
+Finds paragraphs containing the search text and writes a lightweight review CSV.
+
+### EXAMPLE 2
+```powershell
+PS> $result = Find-OfficeWord -Path .\Report.docx -Pattern 'FY\d{4}' -AsResult
+$result.Paragraphs |
+    Select-Object -Property Text
+```
+
+Returns the full regex result so paragraphs, table matches, headers, and footers can be inspected separately.
 
 ## PARAMETERS
 

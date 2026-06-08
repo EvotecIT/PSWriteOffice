@@ -8,10 +8,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Gets Excel tables defined in a workbook.</summary>
 /// <example>
-///   <summary>List tables in a workbook.</summary>
+///   <summary>List tables and export table metadata.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeExcelTable -Path .\report.xlsx</code>
-///   <para>Returns table metadata (name, range, sheet).</para>
+///   <code>$tables = Get-OfficeExcelTable -Path .\report.xlsx -Sheet Data
+/// $tables |
+///     Select-Object -Property Name, Sheet, Range |
+///     Export-Csv -Path .\ExcelTables.csv -NoTypeInformation</code>
+///   <para>Returns table metadata for workbook documentation or generated-artifact proof.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelTable", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject))]

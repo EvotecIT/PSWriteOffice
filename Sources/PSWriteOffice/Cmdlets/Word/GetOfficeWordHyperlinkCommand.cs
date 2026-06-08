@@ -9,10 +9,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets hyperlinks from a Word document.</summary>
 /// <example>
-///   <summary>List hyperlinks from a document.</summary>
+///   <summary>Audit external hyperlinks in a report.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeWordHyperlink -Path .\Report.docx</code>
-///   <para>Returns hyperlinks found in the document.</para>
+///   <code>$links = Get-OfficeWordHyperlink -Path .\Report.docx -Url 'https://*'
+/// $links |
+///     Select-Object -Property Text, Uri |
+///     Export-Csv -Path .\ReportLinks.csv -NoTypeInformation</code>
+///   <para>Filters external hyperlinks and exports them for link validation or review.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordHyperlink", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordHyperLink))]

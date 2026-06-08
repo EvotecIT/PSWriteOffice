@@ -2,6 +2,7 @@ param(
     [string] $ModuleRoot = "$PSScriptRoot\..\Artefacts\Unpacked\Modules\PSWriteOffice",
     [string] $OutputRoot = "$PSScriptRoot\..\Docs\Generated",
     [string] $ArtifactsRoot = "$PSScriptRoot\..\WebsiteArtifacts",
+    [string] $RepoRevision,
     [switch] $SkipBuild
 )
 
@@ -29,6 +30,32 @@ function Resolve-AbsolutePath {
     }
 
     return [System.IO.Path]::GetFullPath((Join-Path $BasePath $Path))
+}
+
+function Resolve-RepositoryRevision {
+    param(
+        [string] $Revision,
+        [string] $RepositoryRoot
+    )
+
+    if (-not [string]::IsNullOrWhiteSpace($Revision)) {
+        return $Revision.Trim()
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_HEAD_REF)) {
+        return $env:GITHUB_HEAD_REF.Trim()
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_REF_NAME)) {
+        return $env:GITHUB_REF_NAME.Trim()
+    }
+
+    $branch = (& git -C $RepositoryRoot rev-parse --abbrev-ref HEAD).Trim()
+    if (-not [string]::IsNullOrWhiteSpace($branch) -and $branch -ne 'HEAD') {
+        return $branch
+    }
+
+    return (& git -C $RepositoryRoot rev-parse HEAD).Trim()
 }
 
 function Write-CommandMetadata {
@@ -237,7 +264,7 @@ $resolvedArtifactsRoot = Resolve-AbsolutePath -Path $ArtifactsRoot -BasePath $re
 New-Item -ItemType Directory -Path $resolvedOutputRoot -Force | Out-Null
 New-Item -ItemType Directory -Path $resolvedArtifactsRoot -Force | Out-Null
 
-$commit = (& git -C $repoRoot rev-parse HEAD).Trim()
+$sourceRevision = Resolve-RepositoryRevision -Revision $RepoRevision -RepositoryRoot $repoRoot
 
 $outputHelpPath = Join-Path $resolvedOutputRoot "$moduleName-help.xml"
 Copy-Item -LiteralPath $helpPath -Destination $outputHelpPath -Force
@@ -251,7 +278,7 @@ if (Test-Path -LiteralPath $apiRoot) {
 New-Item -ItemType Directory -Path $apiRoot -Force | Out-Null
 Copy-Item -LiteralPath $helpPath -Destination (Join-Path $apiRoot "$moduleName-help.xml") -Force
 Copy-Item -LiteralPath $moduleManifestPath -Destination (Join-Path $apiRoot "$moduleName.psd1") -Force
-Write-CommandMetadata -ModuleManifestPath $moduleManifestPath -RepoRoot $repoRoot -RepoRevision $commit -OutputPath (Join-Path $apiRoot 'command-metadata.json')
+Write-CommandMetadata -ModuleManifestPath $moduleManifestPath -RepoRoot $repoRoot -RepoRevision $sourceRevision -OutputPath (Join-Path $apiRoot 'command-metadata.json')
 
 if (Test-Path -LiteralPath $examplesSource -PathType Container) {
     Copy-Item -LiteralPath $examplesSource -Destination $examplesTarget -Recurse -Force
@@ -268,7 +295,7 @@ $manifest = [ordered]@{
     listed      = $false
     version     = $version
     generatedAt = (Get-Date).ToString('o')
-    commit      = $commit
+    sourceRef   = $sourceRevision
     links       = [ordered]@{
         source = 'https://github.com/EvotecIT/PSWriteOffice'
     }

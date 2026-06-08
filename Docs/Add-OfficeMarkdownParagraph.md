@@ -26,10 +26,14 @@ Adds a Markdown paragraph.
 
 ### EXAMPLE 1
 ```powershell
-PS> MarkdownParagraph -Text 'This report is generated automatically.'
+PS> New-OfficeMarkdown -Path .\Report.md {
+    Add-OfficeMarkdownHeading -Level 1 -Text 'Operational Report'
+    Add-OfficeMarkdownParagraph -Text 'This report is generated automatically from validated source data.'
+    Add-OfficeMarkdownParagraph -Text 'Use the linked artifacts for workbook, PDF, and presentation proof.'
+}
 ```
 
-Appends a paragraph to the current Markdown document.
+Appends paragraph text to the current Markdown document.
 
 ## PARAMETERS
 

@@ -9,6 +9,15 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Gets footnotes from a Word document or section.</summary>
+/// <example>
+///   <summary>Export footnotes for review.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$footnotes = Get-OfficeWordFootnote -Path .\PolicyReport.docx
+/// $footnotes |
+///     Select-Object -Property Kind, ReferenceId, ParentText, Text |
+///     Export-Csv -Path .\Footnotes.csv -NoTypeInformation</code>
+///   <para>Reads footnotes from the document and exports the PowerShell-friendly note snapshot.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordFootnote", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordFootnotes")]
 [OutputType(typeof(WordNoteInfo))]

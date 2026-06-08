@@ -6,6 +6,16 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Gets or extracts image resources from a PDF.</summary>
+/// <example>
+///   <summary>Extract images from selected pages.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$proof = @(
+///     Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -PageRange '1-2'
+///     Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -OutputDirectory .\Examples\Documents\PdfImages -BaseName 'report-image'
+/// )
+/// $proof</code>
+///   <para>Returns image metadata or writes extracted images to disk.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdfImage")]
 [OutputType(typeof(PdfExtractedImage), typeof(FileInfo))]
 public sealed class GetOfficePdfImageCommand : PSCmdlet

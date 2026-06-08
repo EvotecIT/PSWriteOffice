@@ -8,10 +8,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <summary>Updates fields in a Word document.</summary>
 /// <para>Refreshes page number fields and queues table-of-contents updates.</para>
 /// <example>
-///   <summary>Update fields.</summary>
+///   <summary>Update fields before saving a generated report.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Update-OfficeWordFields</code>
-///   <para>Updates PAGE/NUMPAGES fields and marks TOC fields as dirty.</para>
+///   <code>New-OfficeWord -Path .\Report.docx {
+///     Add-OfficeWordParagraph -Text 'Release report'
+///     Add-OfficeWordTableOfContent
+///     Update-OfficeWordFields
+/// }</code>
+///   <para>Updates PAGE and NUMPAGES fields and marks TOC fields as dirty before saving.</para>
 /// </example>
 [Cmdlet(VerbsData.Update, "OfficeWordFields")]
 public sealed class UpdateOfficeWordFieldsCommand : PSCmdlet
