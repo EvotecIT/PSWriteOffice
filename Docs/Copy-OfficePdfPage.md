@@ -21,8 +21,11 @@ Copies selected PDF pages into a new PDF.
 
 ### EXAMPLE 1
 ```powershell
-PS> Copy-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '1-2,5' -OutputPath .\Examples\Documents\ExecutivePages.pdf
-            Get-OfficePdfInfo -Path .\Examples\Documents\ExecutivePages.pdf | Select-Object PageCount
+PS> $proof = @(
+    Copy-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '1-2,5' -OutputPath .\Examples\Documents\ExecutivePages.pdf
+    Get-OfficePdfInfo -Path .\Examples\Documents\ExecutivePages.pdf | Select-Object PageCount
+)
+$proof
 ```
 
 Copies selected pages and inspects the resulting PDF.

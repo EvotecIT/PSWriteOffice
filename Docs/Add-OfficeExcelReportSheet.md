@@ -22,11 +22,11 @@ Creates a worksheet through the OfficeIMO sheet composer and runs report-block c
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeExcel -Path .\report.xlsx {
-                Add-OfficeExcelReportSheet -Name Summary {
-                  Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current view'
-                  Add-OfficeExcelReportKpiRow -Data @{ Ready = 12; Blocked = 2 }
-                }
-              }
+  Add-OfficeExcelReportSheet -Name Summary {
+    Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current view'
+    Add-OfficeExcelReportKpiRow -Data @{ Ready = 12; Blocked = 2 }
+  }
+}
 ```
 
 Creates a report-oriented worksheet with title and KPI blocks.

@@ -13,8 +13,11 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Add a review stamp to selected pages.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'
-/// Get-OfficePdfPreflight -Path .\Examples\Documents\Stamped.pdf</code>
+///   <code>$proof = @(
+///     Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'
+///     Get-OfficePdfPreflight -Path .\Examples\Documents\Stamped.pdf
+/// )
+/// $proof</code>
 ///   <para>Adds a text stamp to the first two pages and preflights the result.</para>
 /// </example>
 /// <example>

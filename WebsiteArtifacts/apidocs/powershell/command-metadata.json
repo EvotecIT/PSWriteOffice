@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-07T21:47:40.5342979+02:00",
+  "generatedAt": "2026-06-08T09:21:43.7833111+02:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -167,8 +167,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableOfContentsCommand.cs",
-      "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableOfContentsCommand.cs#L21"
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableOfContentsCommand.cs#L24"
     },
     {
       "name": "Add-OfficeExcelValidationCustomFormula",
@@ -447,8 +447,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfStampCommand.cs",
-      "sourceLine": 30,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfStampCommand.cs#L30"
+      "sourceLine": 33,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfStampCommand.cs#L33"
     },
     {
       "name": "Add-OfficePdfTable",
@@ -977,8 +977,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfMarkdownCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfMarkdownCommand.cs#L18"
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfMarkdownCommand.cs#L19"
     },
     {
       "name": "ConvertTo-OfficeWordHtml",
@@ -1005,16 +1005,16 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelSheetCommand.cs",
-      "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelSheetCommand.cs#L20"
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelSheetCommand.cs#L23"
     },
     {
       "name": "Copy-OfficePdfPage",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/CopyOfficePdfPageCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/CopyOfficePdfPageCommand.cs#L18"
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/CopyOfficePdfPageCommand.cs#L21"
     },
     {
       "name": "Copy-OfficePowerPointSlide",
@@ -1191,8 +1191,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfAttachmentCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfAttachmentCommand.cs#L18"
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfAttachmentCommand.cs#L21"
     },
     {
       "name": "Get-OfficePdfCompliance",
@@ -1215,8 +1215,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfImageCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfImageCommand.cs#L18"
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfImageCommand.cs#L21"
     },
     {
       "name": "Get-OfficePdfInfo",
@@ -1239,8 +1239,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfTextCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfTextCommand.cs#L17"
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfTextCommand.cs#L20"
     },
     {
       "name": "Get-OfficePowerPoint",
@@ -1579,8 +1579,8 @@
         "Merge-OfficeWordDocument"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/JoinOfficeWordDocumentCommand.cs",
-      "sourceLine": 31,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Word/JoinOfficeWordDocumentCommand.cs#L31"
+      "sourceLine": 34,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Word/JoinOfficeWordDocumentCommand.cs#L34"
     },
     {
       "name": "Move-OfficeExcelSheet",
@@ -1589,16 +1589,16 @@
         "Set-OfficeExcelSheetOrder"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/MoveOfficeExcelSheetCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/MoveOfficeExcelSheetCommand.cs#L19"
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/MoveOfficeExcelSheetCommand.cs#L22"
     },
     {
       "name": "Move-OfficePdfPage",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/MoveOfficePdfPageCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/MoveOfficePdfPageCommand.cs#L18"
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/MoveOfficePdfPageCommand.cs#L21"
     },
     {
       "name": "New-OfficeExcel",
@@ -1677,8 +1677,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/RemoveOfficePdfPageCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/RemoveOfficePdfPageCommand.cs#L18"
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/RemoveOfficePdfPageCommand.cs#L21"
     },
     {
       "name": "Remove-OfficePowerPointSlide",
@@ -1925,16 +1925,16 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintAreaCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintAreaCommand.cs#L17"
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintAreaCommand.cs#L20"
     },
     {
       "name": "Set-OfficeExcelPrintTitles",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintTitlesCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintTitlesCommand.cs#L18"
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintTitlesCommand.cs#L21"
     },
     {
       "name": "Set-OfficeExcelRow",
@@ -2037,8 +2037,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfPageCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfPageCommand.cs#L18"
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/codex/pswriteoffice-roadmap-cmdlet-examples/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfPageCommand.cs#L21"
     },
     {
       "name": "Set-OfficePdfPageBorder",

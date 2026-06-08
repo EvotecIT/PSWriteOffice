@@ -27,13 +27,13 @@ Adds a Markdown table of contents placeholder.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeMarkdown -Path .\Report.md {
-                Add-OfficeMarkdownHeading -Level 1 -Text 'Release Report'
-                Add-OfficeMarkdownHeading -Level 2 -Text 'Summary'
-                Add-OfficeMarkdownParagraph -Text 'Current state and risks.'
-                Add-OfficeMarkdownHeading -Level 2 -Text 'Appendix'
-                Add-OfficeMarkdownParagraph -Text 'Supporting evidence.'
-                Add-OfficeMarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop
-            }
+    Add-OfficeMarkdownHeading -Level 1 -Text 'Release Report'
+    Add-OfficeMarkdownHeading -Level 2 -Text 'Summary'
+    Add-OfficeMarkdownParagraph -Text 'Current state and risks.'
+    Add-OfficeMarkdownHeading -Level 2 -Text 'Appendix'
+    Add-OfficeMarkdownParagraph -Text 'Supporting evidence.'
+    Add-OfficeMarkdownTableOfContents -Title 'Contents' -MinLevel 2 -MaxLevel 3 -PlaceAtTop
+}
 ```
 
 Inserts a generated table of contents for headings in the document.

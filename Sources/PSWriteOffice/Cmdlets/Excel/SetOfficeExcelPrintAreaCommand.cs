@@ -8,8 +8,11 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <example>
 ///   <summary>Set a print area and keep the workbook printable.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Summary -Range A1:H40
-/// Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Summary -FirstRow 1 -LastRow 2</code>
+///   <code>$proof = @(
+///     Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Summary -Range A1:H40
+///     Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Summary -FirstRow 1 -LastRow 2
+/// )
+/// $proof</code>
 ///   <para>Stores the worksheet-local Excel print area and repeats the report header rows for printing.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelPrintArea", DefaultParameterSetName = ParameterSetContext)]

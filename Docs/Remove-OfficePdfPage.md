@@ -21,8 +21,11 @@ Removes selected pages from a PDF and writes a new PDF.
 
 ### EXAMPLE 1
 ```powershell
-PS> Remove-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '4-5' -OutputPath .\Examples\Documents\Report-Clean.pdf
-            Get-OfficePdfPreflight -Path .\Examples\Documents\Report-Clean.pdf
+PS> $proof = @(
+    Remove-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '4-5' -OutputPath .\Examples\Documents\Report-Clean.pdf
+    Get-OfficePdfPreflight -Path .\Examples\Documents\Report-Clean.pdf
+)
+$proof
 ```
 
 Deletes selected pages and preflights the rewritten PDF.

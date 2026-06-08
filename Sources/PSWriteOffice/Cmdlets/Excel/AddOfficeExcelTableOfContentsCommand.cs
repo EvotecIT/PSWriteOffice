@@ -10,9 +10,12 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <example>
 ///   <summary>Add a TOC sheet and verify workbook structure.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks -PassThru
-/// Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets |
-///     Select-Object -Property SheetCount, NamedRangeCount, Sheets</code>
+///   <code>$proof = @(
+///     Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks -PassThru
+///     Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets |
+///         Select-Object -Property SheetCount, NamedRangeCount, Sheets
+/// )
+/// $proof</code>
 ///   <para>Creates or refreshes a TOC sheet, adds back links, and reads back workbook navigation metadata.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelTableOfContents", DefaultParameterSetName = ParameterSetContext)]

@@ -28,10 +28,10 @@ They are rendered behind generated content and should usually use restrained opa
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Report.pdf {
-                PdfBackgroundShape -Shape TopBand -Height 86 -FillColor '#DBEAFE' -FillOpacity 0.75
-                PdfBackgroundShape -Shape Ellipse -X 420 -Y 650 -Width 96 -Height 72 -FillColor '#99F6E4' -FillOpacity 0.35
-                PdfHeading 'Styled report'
-              }
+  PdfBackgroundShape -Shape TopBand -Height 86 -FillColor '#DBEAFE' -FillOpacity 0.75
+  PdfBackgroundShape -Shape Ellipse -X 420 -Y 650 -Width 96 -Height 72 -FillColor '#99F6E4' -FillOpacity 0.35
+  PdfHeading 'Styled report'
+}
 ```
 
 Creates a polished generated page background without hand-drawing PDF primitives.

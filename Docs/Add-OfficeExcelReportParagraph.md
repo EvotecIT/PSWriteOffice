@@ -22,11 +22,11 @@ Adds a paragraph line to the current Excel report sheet.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeExcel -Path .\Operations.xlsx {
-                Add-OfficeExcelReportSheet -Name Summary {
-                    Add-OfficeExcelReportTitle -Title 'Operational Summary'
-                    Add-OfficeExcelReportParagraph -Text 'This workbook was generated from the validated source data.'
-                }
-            }
+    Add-OfficeExcelReportSheet -Name Summary {
+        Add-OfficeExcelReportTitle -Title 'Operational Summary'
+        Add-OfficeExcelReportParagraph -Text 'This workbook was generated from the validated source data.'
+    }
+}
 ```
 
 Adds prose to an OfficeIMO-composed Excel report sheet.

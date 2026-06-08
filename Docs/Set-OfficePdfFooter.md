@@ -27,11 +27,11 @@ Sets running PDF footer text.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Examples\Documents\PdfFooter.pdf {
-                Set-OfficePdfFooter -Text 'Page {page} of {pages}' -Align Center -FontSize 8
-                Add-OfficePdfHeading -Text 'Report with footer'
-                Add-OfficePdfPageBreak
-                Add-OfficePdfParagraph -Text 'The footer includes generated page numbers.'
-            }
+    Set-OfficePdfFooter -Text 'Page {page} of {pages}' -Align Center -FontSize 8
+    Add-OfficePdfHeading -Text 'Report with footer'
+    Add-OfficePdfPageBreak
+    Add-OfficePdfParagraph -Text 'The footer includes generated page numbers.'
+}
 ```
 
 Uses page placeholders in a running footer.

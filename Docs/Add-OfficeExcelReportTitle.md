@@ -22,11 +22,11 @@ Adds a title block to the current Excel report sheet.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeExcel -Path .\Operations.xlsx {
-                Add-OfficeExcelReportSheet -Name Summary {
-                    Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current month'
-                    Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }
-                }
-            }
+    Add-OfficeExcelReportSheet -Name Summary {
+        Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current month'
+        Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }
+    }
+}
 ```
 
 Uses the OfficeIMO sheet composer through PSWriteOffice's thin report-block wrapper.

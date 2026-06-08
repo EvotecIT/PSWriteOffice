@@ -27,11 +27,11 @@ Sets properties on a table of contents in a Word document.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeWord -Path .\Report.docx {
-                Add-OfficeWordTableOfContent
-                Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries yet'
-                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
-                Update-OfficeWordTableOfContent
-            }
+    Add-OfficeWordTableOfContent
+    Set-OfficeWordTableOfContent -Text 'Contents' -TextNoContent 'No entries yet'
+    Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
+    Update-OfficeWordTableOfContent
+}
 ```
 
 Updates TOC display text, adds heading content, and marks the TOC for refresh.

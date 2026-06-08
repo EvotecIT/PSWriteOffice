@@ -29,16 +29,16 @@ horizontal rules, spacers, bookmarks, or rich Run/Runs text specifications.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Report.pdf {
-                PdfRow -Gap 16 -Column @(
-                  @{ Width = 35; Content = @(
-                    @{ Type = 'Heading'; Level = 2; Text = 'Signals' }
-                    @{ Type = 'List'; Items = @('Healthy', 'Watch', 'Needs action') }
-                  ) }
-                  @{ Width = 65; Content = @(
-                    @{ Type = 'Panel'; Text = 'Right-side callout content.' }
-                  ) }
-                )
-              }
+  PdfRow -Gap 16 -Column @(
+    @{ Width = 35; Content = @(
+      @{ Type = 'Heading'; Level = 2; Text = 'Signals' }
+      @{ Type = 'List'; Items = @('Healthy', 'Watch', 'Needs action') }
+    ) }
+    @{ Width = 65; Content = @(
+      @{ Type = 'Panel'; Text = 'Right-side callout content.' }
+    ) }
+  )
+}
 ```
 
 Adds a row with list content on the left and a panel on the right.
@@ -46,16 +46,16 @@ Adds a row with list content on the left and a panel on the right.
 ### EXAMPLE 2
 ```powershell
 PS> New-OfficePdf -Path .\Report.pdf {
-                PdfBookmark 'details'
-                PdfRow -Column @(
-                  @{ Content = @(
-                    @{ Type = 'Paragraph'; Run = @(
-                      @{ Text = 'Jump to ' }
-                      @{ Text = 'details'; LinkDestinationName = 'details'; Color = '#7C3AED' }
-                    ) }
-                  ) }
-                )
-              }
+  PdfBookmark 'details'
+  PdfRow -Column @(
+    @{ Content = @(
+      @{ Type = 'Paragraph'; Run = @(
+        @{ Text = 'Jump to ' }
+        @{ Text = 'details'; LinkDestinationName = 'details'; Color = '#7C3AED' }
+      ) }
+    ) }
+  )
+}
 ```
 
 Uses the same rich run model as Add-OfficePdfText inside a row layout.

@@ -26,9 +26,12 @@ Uses OfficeIMO.Word document append support and preserves the wrapper as an oper
 
 ### EXAMPLE 1
 ```powershell
-PS> Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx
-            Get-OfficeWordStatistics -Path .\ReleasePacket.docx |
-                Select-Object -Property Paragraphs, Tables, Images
+PS> $proof = @(
+    Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx
+    Get-OfficeWordStatistics -Path .\ReleasePacket.docx |
+        Select-Object -Property Paragraphs, Tables, Images
+)
+$proof
 ```
 
 Appends the source documents with OfficeIMO.Word and then reads back basic structure from the merged output.

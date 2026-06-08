@@ -27,10 +27,10 @@ Adds a Markdown block quote.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeMarkdown -Path .\ExecutiveSummary.md {
-                Add-OfficeMarkdownHeading -Level 1 -Text 'Executive summary'
-                Add-OfficeMarkdownQuote -Text 'The release is ready when examples, generated docs, and artifact readback all agree.'
-                Add-OfficeMarkdownParagraph -Text 'Detailed validation follows.'
-            }
+    Add-OfficeMarkdownHeading -Level 1 -Text 'Executive summary'
+    Add-OfficeMarkdownQuote -Text 'The release is ready when examples, generated docs, and artifact readback all agree.'
+    Add-OfficeMarkdownParagraph -Text 'Detailed validation follows.'
+}
 ```
 
 Appends a quote block to the current Markdown document.

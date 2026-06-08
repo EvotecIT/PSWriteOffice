@@ -22,10 +22,10 @@ Adds a KPI row to the current Excel report sheet.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeExcel -Path .\Operations.xlsx {
-                Add-OfficeExcelReportSheet -Name Summary {
-                    Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3
-                }
-            }
+    Add-OfficeExcelReportSheet -Name Summary {
+        Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3
+    }
+}
 ```
 
 Renders PowerShell key/value data as a KPI row through the OfficeIMO sheet composer.

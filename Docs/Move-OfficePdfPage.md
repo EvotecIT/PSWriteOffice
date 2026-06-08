@@ -21,8 +21,11 @@ Moves selected pages before another page and writes a new PDF.
 
 ### EXAMPLE 1
 ```powershell
-PS> Move-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '2-3' -BeforePage 6 -OutputPath .\Examples\Documents\Report-Reordered.pdf
-            Get-OfficePdfInfo -Path .\Examples\Documents\Report-Reordered.pdf | Select-Object PageCount
+PS> $proof = @(
+    Move-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '2-3' -BeforePage 6 -OutputPath .\Examples\Documents\Report-Reordered.pdf
+    Get-OfficePdfInfo -Path .\Examples\Documents\Report-Reordered.pdf | Select-Object PageCount
+)
+$proof
 ```
 
 Moves selected pages before a target one-based page number and writes a new PDF.

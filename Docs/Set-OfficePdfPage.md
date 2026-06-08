@@ -21,8 +21,11 @@ Sets page-level PDF properties and writes a new PDF.
 
 ### EXAMPLE 1
 ```powershell
-PS> Set-OfficePdfPage -Path .\Examples\Documents\Scanned.pdf -PageRange '2,4' -Rotation 90 -OutputPath .\Examples\Documents\Scanned-Rotated.pdf
-            Get-OfficePdfInfo -Path .\Examples\Documents\Scanned-Rotated.pdf | Select-Object PageCount
+PS> $proof = @(
+    Set-OfficePdfPage -Path .\Examples\Documents\Scanned.pdf -PageRange '2,4' -Rotation 90 -OutputPath .\Examples\Documents\Scanned-Rotated.pdf
+    Get-OfficePdfInfo -Path .\Examples\Documents\Scanned-Rotated.pdf | Select-Object PageCount
+)
+$proof
 ```
 
 Rotates selected pages and writes a new PDF.

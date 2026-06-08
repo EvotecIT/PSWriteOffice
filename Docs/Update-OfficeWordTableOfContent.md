@@ -27,11 +27,11 @@ Updates the table of contents in a Word document.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeWord -Path .\ExecutiveReport.docx {
-                Add-OfficeWordTableOfContent
-                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
-                Add-OfficeWordParagraph -Text 'Summary text'
-                Update-OfficeWordTableOfContent
-            }
+    Add-OfficeWordTableOfContent
+    Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
+    Add-OfficeWordParagraph -Text 'Summary text'
+    Update-OfficeWordTableOfContent
+}
 ```
 
 Marks TOC fields as dirty and updates the document settings so Word refreshes the TOC when opened.

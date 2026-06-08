@@ -8,9 +8,12 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <example>
 ///   <summary>Repeat report headers on every printed page.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Data -FirstRow 1 -LastRow 1 -FirstColumn 1 -LastColumn 1
-/// Get-OfficeExcelSummary -Path .\Report.xlsx |
-///     Select-Object -Property SheetCount, TableCount</code>
+///   <code>$proof = @(
+///     Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Data -FirstRow 1 -LastRow 1 -FirstColumn 1 -LastColumn 1
+///     Get-OfficeExcelSummary -Path .\Report.xlsx |
+///         Select-Object -Property SheetCount, TableCount
+/// )
+/// $proof</code>
 ///   <para>Stores Excel print titles for the Data worksheet and then reads back workbook structure as a quick proof step.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelPrintTitles", DefaultParameterSetName = ParameterSetContext)]

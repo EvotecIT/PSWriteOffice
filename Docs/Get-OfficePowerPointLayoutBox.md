@@ -32,10 +32,10 @@ Returns the content box for a slide or equal column/row boxes derived from the c
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointLayoutBox.pptx {
-                $slide = Add-OfficePowerPointSlide -Layout 1
-                $box = Get-OfficePowerPointLayoutBox -MarginCm 1.5
-                Add-OfficePowerPointTextBox -Slide $slide -Text 'Inside the content box' -X ($box.LeftPoints) -Y ($box.TopPoints) -Width ($box.WidthPoints) -Height 60
-            }
+    $slide = Add-OfficePowerPointSlide -Layout 1
+    $box = Get-OfficePowerPointLayoutBox -MarginCm 1.5
+    Add-OfficePowerPointTextBox -Slide $slide -Text 'Inside the content box' -X ($box.LeftPoints) -Y ($box.TopPoints) -Width ($box.WidthPoints) -Height 60
+}
 ```
 
 Returns a content box and uses it to position slide text.
@@ -43,11 +43,11 @@ Returns a content box and uses it to position slide text.
 ### EXAMPLE 2
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointColumns.pptx {
-                $slide = Add-OfficePowerPointSlide -Layout 1
-                $columns = Get-OfficePowerPointLayoutBox -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0
-                Add-OfficePowerPointTextBox -Slide $slide -Text 'Left column' -X ($columns[0].LeftPoints) -Y ($columns[0].TopPoints) -Width ($columns[0].WidthPoints) -Height 80
-                Add-OfficePowerPointTextBox -Slide $slide -Text 'Right column' -X ($columns[1].LeftPoints) -Y ($columns[1].TopPoints) -Width ($columns[1].WidthPoints) -Height 80
-            }
+    $slide = Add-OfficePowerPointSlide -Layout 1
+    $columns = Get-OfficePowerPointLayoutBox -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0
+    Add-OfficePowerPointTextBox -Slide $slide -Text 'Left column' -X ($columns[0].LeftPoints) -Y ($columns[0].TopPoints) -Width ($columns[0].WidthPoints) -Height 80
+    Add-OfficePowerPointTextBox -Slide $slide -Text 'Right column' -X ($columns[1].LeftPoints) -Y ($columns[1].TopPoints) -Width ($columns[1].WidthPoints) -Height 80
+}
 ```
 
 Uses two layout boxes to place text in columns.

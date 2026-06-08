@@ -9,8 +9,11 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Extract images from selected pages.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -PageRange '1-2'
-/// Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -OutputDirectory .\Examples\Documents\PdfImages -BaseName 'report-image'</code>
+///   <code>$proof = @(
+///     Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -PageRange '1-2'
+///     Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -OutputDirectory .\Examples\Documents\PdfImages -BaseName 'report-image'
+/// )
+/// $proof</code>
 ///   <para>Returns image metadata or writes extracted images to disk.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdfImage")]

@@ -9,8 +9,11 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Remove draft pages from a PDF.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Remove-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '4-5' -OutputPath .\Examples\Documents\Report-Clean.pdf
-/// Get-OfficePdfPreflight -Path .\Examples\Documents\Report-Clean.pdf</code>
+///   <code>$proof = @(
+///     Remove-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '4-5' -OutputPath .\Examples\Documents\Report-Clean.pdf
+///     Get-OfficePdfPreflight -Path .\Examples\Documents\Report-Clean.pdf
+/// )
+/// $proof</code>
 ///   <para>Deletes selected pages and preflights the rewritten PDF.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Remove, "OfficePdfPage")]

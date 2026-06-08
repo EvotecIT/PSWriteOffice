@@ -9443,9 +9443,12 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks -PassThru&#xD;
-            Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets |&#xD;
-                Select-Object -Property SheetCount, NamedRangeCount, Sheets</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Add-OfficeExcelTableOfContents -Path .\report.xlsx -IncludeNamedRanges -AddBackLinks -PassThru&#xD;
+                Get-OfficeExcelSummary -Path .\report.xlsx -IncludeSheets |&#xD;
+                    Select-Object -Property SheetCount, NamedRangeCount, Sheets&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Creates or refreshes a TOC sheet, adds back links, and reads back workbook navigation metadata.</maml:para>
         </dev:remarks>
@@ -19471,8 +19474,11 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'&#xD;
-            Get-OfficePdfPreflight -Path .\Examples\Documents\Stamped.pdf</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Stamped.pdf -Text 'REVIEWED' -Color '#0F766E' -FontSize 24 -Rotation 12 -PageRange '1-2'&#xD;
+                Get-OfficePdfPreflight -Path .\Examples\Documents\Stamped.pdf&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Adds a text stamp to the first two pages and preflights the result.</maml:para>
         </dev:remarks>
@@ -36825,8 +36831,9 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>ConvertTo-OfficePdfMarkdown -Path .\Examples\Documents\Report.pdf -PageRange '1-3' -OutputPath .\Examples\Documents\Report.md&#xD;
-            Get-Content .\Examples\Documents\Report.md -TotalCount 20</dev:code>
+        <dev:code>$markdownPath = '.\Examples\Documents\Report.md'&#xD;
+            ConvertTo-OfficePdfMarkdown -Path .\Examples\Documents\Report.pdf -PageRange '1-3' -OutputPath $markdownPath&#xD;
+            Get-Content $markdownPath -TotalCount 20</dev:code>
         <dev:remarks>
           <maml:para>Writes Markdown readback for selected pages to a file.</maml:para>
         </dev:remarks>
@@ -38044,10 +38051,13 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Copy-OfficeExcelSheet -Path .\Report.xlsx -SourceSheet Data -NewName DataCopy&#xD;
-            Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |&#xD;
-                Select-Object -ExpandProperty Sheets |&#xD;
-                Where-Object Name -eq 'DataCopy'</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Copy-OfficeExcelSheet -Path .\Report.xlsx -SourceSheet Data -NewName DataCopy&#xD;
+                Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |&#xD;
+                    Select-Object -ExpandProperty Sheets |&#xD;
+                    Where-Object Name -eq 'DataCopy'&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Creates a copy of the Data worksheet and reads the workbook summary to verify the new tab.</maml:para>
         </dev:remarks>
@@ -38171,8 +38181,11 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Copy-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '1-2,5' -OutputPath .\Examples\Documents\ExecutivePages.pdf&#xD;
-            Get-OfficePdfInfo -Path .\Examples\Documents\ExecutivePages.pdf | Select-Object PageCount</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Copy-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '1-2,5' -OutputPath .\Examples\Documents\ExecutivePages.pdf&#xD;
+                Get-OfficePdfInfo -Path .\Examples\Documents\ExecutivePages.pdf | Select-Object PageCount&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Copies selected pages and inspects the resulting PDF.</maml:para>
         </dev:remarks>
@@ -44794,8 +44807,11 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf&#xD;
-            Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf -OutputDirectory .\Examples\Documents\Attachments</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf&#xD;
+                Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf -OutputDirectory .\Examples\Documents\Attachments&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>First returns attachment metadata, then writes embedded files to disk.</maml:para>
         </dev:remarks>
@@ -45165,8 +45181,11 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -PageRange '1-2'&#xD;
-            Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -OutputDirectory .\Examples\Documents\PdfImages -BaseName 'report-image'</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -PageRange '1-2'&#xD;
+                Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -OutputDirectory .\Examples\Documents\PdfImages -BaseName 'report-image'&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Returns image metadata or writes extracted images to disk.</maml:para>
         </dev:remarks>
@@ -45471,8 +45490,11 @@ and existing PDFs before follow-up operations such as splitting, stamping, or me
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -PageRange '1'&#xD;
-            Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -AsMarkdown -OutputPath .\Examples\Documents\ReportText.md</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -PageRange '1'&#xD;
+                Get-OfficePdfText -Path .\Examples\Documents\Report.pdf -AsMarkdown -OutputPath .\Examples\Documents\ReportText.md&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Reads plain text directly and writes Markdown readback to a file.</maml:para>
         </dev:remarks>
@@ -54196,9 +54218,12 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Cultu
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx&#xD;
-            Get-OfficeWordStatistics -Path .\ReleasePacket.docx |&#xD;
-                Select-Object -Property Paragraphs, Tables, Images</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx&#xD;
+                Get-OfficeWordStatistics -Path .\ReleasePacket.docx |&#xD;
+                    Select-Object -Property Paragraphs, Tables, Images&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Appends the source documents with OfficeIMO.Word and then reads back basic structure from the merged output.</maml:para>
         </dev:remarks>
@@ -54508,10 +54533,13 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Cultu
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0&#xD;
-            Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |&#xD;
-                Select-Object -ExpandProperty Sheets |&#xD;
-                Select-Object -First 3 -Property Index, Name</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0&#xD;
+                Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |&#xD;
+                    Select-Object -ExpandProperty Sheets |&#xD;
+                    Select-Object -First 3 -Property Index, Name&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Moves Summary to the first worksheet tab and reads back the first sheets from workbook summary.</maml:para>
         </dev:remarks>
@@ -54659,8 +54687,11 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Cultu
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Move-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '2-3' -BeforePage 6 -OutputPath .\Examples\Documents\Report-Reordered.pdf&#xD;
-            Get-OfficePdfInfo -Path .\Examples\Documents\Report-Reordered.pdf | Select-Object PageCount</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Move-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '2-3' -BeforePage 6 -OutputPath .\Examples\Documents\Report-Reordered.pdf&#xD;
+                Get-OfficePdfInfo -Path .\Examples\Documents\Report-Reordered.pdf | Select-Object PageCount&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Moves selected pages before a target one-based page number and writes a new PDF.</maml:para>
         </dev:remarks>
@@ -57406,8 +57437,11 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Remove-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '4-5' -OutputPath .\Examples\Documents\Report-Clean.pdf&#xD;
-            Get-OfficePdfPreflight -Path .\Examples\Documents\Report-Clean.pdf</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Remove-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '4-5' -OutputPath .\Examples\Documents\Report-Clean.pdf&#xD;
+                Get-OfficePdfPreflight -Path .\Examples\Documents\Report-Clean.pdf&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Deletes selected pages and preflights the rewritten PDF.</maml:para>
         </dev:remarks>
@@ -67942,8 +67976,11 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Summary -Range A1:H40&#xD;
-            Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Summary -FirstRow 1 -LastRow 2</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Set-OfficeExcelPrintArea -Path .\Report.xlsx -Sheet Summary -Range A1:H40&#xD;
+                Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Summary -FirstRow 1 -LastRow 2&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Stores the worksheet-local Excel print area and repeats the report header rows for printing.</maml:para>
         </dev:remarks>
@@ -68433,9 +68470,12 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Data -FirstRow 1 -LastRow 1 -FirstColumn 1 -LastColumn 1&#xD;
-            Get-OfficeExcelSummary -Path .\Report.xlsx |&#xD;
-                Select-Object -Property SheetCount, TableCount</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Set-OfficeExcelPrintTitles -Path .\Report.xlsx -Sheet Data -FirstRow 1 -LastRow 1 -FirstColumn 1 -LastColumn 1&#xD;
+                Get-OfficeExcelSummary -Path .\Report.xlsx |&#xD;
+                    Select-Object -Property SheetCount, TableCount&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Stores Excel print titles for the Data worksheet and then reads back workbook structure as a quick proof step.</maml:para>
         </dev:remarks>
@@ -72104,8 +72144,11 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Set-OfficePdfPage -Path .\Examples\Documents\Scanned.pdf -PageRange '2,4' -Rotation 90 -OutputPath .\Examples\Documents\Scanned-Rotated.pdf&#xD;
-            Get-OfficePdfInfo -Path .\Examples\Documents\Scanned-Rotated.pdf | Select-Object PageCount</dev:code>
+        <dev:code>$proof = @(&#xD;
+                Set-OfficePdfPage -Path .\Examples\Documents\Scanned.pdf -PageRange '2,4' -Rotation 90 -OutputPath .\Examples\Documents\Scanned-Rotated.pdf&#xD;
+                Get-OfficePdfInfo -Path .\Examples\Documents\Scanned-Rotated.pdf | Select-Object PageCount&#xD;
+            )&#xD;
+            $proof</dev:code>
         <dev:remarks>
           <maml:para>Rotates selected pages and writes a new PDF.</maml:para>
         </dev:remarks>

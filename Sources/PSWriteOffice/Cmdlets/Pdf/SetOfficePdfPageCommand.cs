@@ -9,8 +9,11 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Rotate selected PDF pages.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Set-OfficePdfPage -Path .\Examples\Documents\Scanned.pdf -PageRange '2,4' -Rotation 90 -OutputPath .\Examples\Documents\Scanned-Rotated.pdf
-/// Get-OfficePdfInfo -Path .\Examples\Documents\Scanned-Rotated.pdf | Select-Object PageCount</code>
+///   <code>$proof = @(
+///     Set-OfficePdfPage -Path .\Examples\Documents\Scanned.pdf -PageRange '2,4' -Rotation 90 -OutputPath .\Examples\Documents\Scanned-Rotated.pdf
+///     Get-OfficePdfInfo -Path .\Examples\Documents\Scanned-Rotated.pdf | Select-Object PageCount
+/// )
+/// $proof</code>
 ///   <para>Rotates selected pages and writes a new PDF.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfPage")]

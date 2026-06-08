@@ -22,10 +22,10 @@ Sets text in a slide placeholder.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointPlaceholderText.pptx {
-                $slide = Add-OfficePowerPointSlide -Layout 1
-                Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'
-                Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Body -Text 'Review signals and decisions' -IgnoreMissing
-            }
+    $slide = Add-OfficePowerPointSlide -Layout 1
+    Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'
+    Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Body -Text 'Review signals and decisions' -IgnoreMissing
+}
 ```
 
 Updates placeholder text when the selected layout exposes matching placeholders.

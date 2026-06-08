@@ -21,8 +21,9 @@ Converts PDF logical text readback to Markdown.
 
 ### EXAMPLE 1
 ```powershell
-PS> ConvertTo-OfficePdfMarkdown -Path .\Examples\Documents\Report.pdf -PageRange '1-3' -OutputPath .\Examples\Documents\Report.md
-            Get-Content .\Examples\Documents\Report.md -TotalCount 20
+PS> $markdownPath = '.\Examples\Documents\Report.md'
+ConvertTo-OfficePdfMarkdown -Path .\Examples\Documents\Report.pdf -PageRange '1-3' -OutputPath $markdownPath
+Get-Content $markdownPath -TotalCount 20
 ```
 
 Writes Markdown readback for selected pages to a file.

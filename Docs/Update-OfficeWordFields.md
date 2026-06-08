@@ -22,10 +22,10 @@ Refreshes page number fields and queues table-of-contents updates.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeWord -Path .\Report.docx {
-                Add-OfficeWordParagraph -Text 'Release report'
-                Add-OfficeWordTableOfContent
-                Update-OfficeWordFields
-            }
+    Add-OfficeWordParagraph -Text 'Release report'
+    Add-OfficeWordTableOfContent
+    Update-OfficeWordFields
+}
 ```
 
 Updates PAGE and NUMPAGES fields and marks TOC fields as dirty before saving.

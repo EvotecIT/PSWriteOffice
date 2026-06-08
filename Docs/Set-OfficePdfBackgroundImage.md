@@ -28,9 +28,9 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Report.pdf {
-                PdfBackgroundImage -Path .\letterhead.png -Fit Cover -Opacity 0.08
-                PdfHeading 'Branded report'
-              }
+  PdfBackgroundImage -Path .\letterhead.png -Fit Cover -Opacity 0.08
+  PdfHeading 'Branded report'
+}
 ```
 
 Uses an image as a low-opacity page background.

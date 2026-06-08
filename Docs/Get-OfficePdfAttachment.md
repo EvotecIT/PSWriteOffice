@@ -21,8 +21,11 @@ Gets or extracts embedded file attachments from a PDF.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf
-            Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf -OutputDirectory .\Examples\Documents\Attachments
+PS> $proof = @(
+    Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf
+    Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf -OutputDirectory .\Examples\Documents\Attachments
+)
+$proof
 ```
 
 First returns attachment metadata, then writes embedded files to disk.

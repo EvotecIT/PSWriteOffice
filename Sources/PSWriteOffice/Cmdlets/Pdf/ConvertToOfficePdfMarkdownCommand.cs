@@ -9,8 +9,9 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Export logical PDF text as Markdown.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>ConvertTo-OfficePdfMarkdown -Path .\Examples\Documents\Report.pdf -PageRange '1-3' -OutputPath .\Examples\Documents\Report.md
-/// Get-Content .\Examples\Documents\Report.md -TotalCount 20</code>
+///   <code>$markdownPath = '.\Examples\Documents\Report.md'
+/// ConvertTo-OfficePdfMarkdown -Path .\Examples\Documents\Report.pdf -PageRange '1-3' -OutputPath $markdownPath
+/// Get-Content $markdownPath -TotalCount 20</code>
 ///   <para>Writes Markdown readback for selected pages to a file.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficePdfMarkdown")]

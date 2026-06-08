@@ -27,11 +27,11 @@ Adds a page break to a PDF document.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Examples\Documents\PdfPageBreak.pdf {
-                Add-OfficePdfHeading -Text 'Service review'
-                Add-OfficePdfParagraph -Text 'Summary content stays on the first page.'
-                Add-OfficePdfPageBreak
-                Add-OfficePdfHeading -Text 'Appendix' -Level 2
-            }
+    Add-OfficePdfHeading -Text 'Service review'
+    Add-OfficePdfParagraph -Text 'Summary content stays on the first page.'
+    Add-OfficePdfPageBreak
+    Add-OfficePdfHeading -Text 'Appendix' -Level 2
+}
 ```
 
 Forces the appendix section to begin on the next page.

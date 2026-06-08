@@ -27,10 +27,10 @@ Adds a Markdown callout block.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeMarkdown -Path .\ReleaseNotes.md {
-                Add-OfficeMarkdownHeading -Level 1 -Text 'Release notes'
-                Add-OfficeMarkdownCallout -Kind 'note' -Title 'Validation' -Body 'Artifacts were generated from deterministic example data.'
-                Add-OfficeMarkdownCallout -Kind 'warning' -Title 'Manual step' -Body 'Open the workbook in desktop Excel before publishing pivots.'
-            }
+    Add-OfficeMarkdownHeading -Level 1 -Text 'Release notes'
+    Add-OfficeMarkdownCallout -Kind 'note' -Title 'Validation' -Body 'Artifacts were generated from deterministic example data.'
+    Add-OfficeMarkdownCallout -Kind 'warning' -Title 'Manual step' -Body 'Open the workbook in desktop Excel before publishing pivots.'
+}
 ```
 
 Appends callout blocks while composing a Markdown report.

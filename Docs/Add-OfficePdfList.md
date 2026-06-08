@@ -27,9 +27,9 @@ Adds a bullet or numbered list to a PDF document.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Examples\Documents\PdfList.pdf {
-                Add-OfficePdfHeading -Text 'Next actions'
-                Add-OfficePdfList -Items 'Confirm owner','Publish summary','Schedule review' -Numbered
-            }
+    Add-OfficePdfHeading -Text 'Next actions'
+    Add-OfficePdfList -Items 'Confirm owner','Publish summary','Schedule review' -Numbered
+}
 ```
 
 Adds a numbered list in the generated PDF flow.

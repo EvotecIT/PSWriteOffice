@@ -27,11 +27,11 @@ Adds a Markdown list.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeMarkdown -Path .\Plan.md {
-                Add-OfficeMarkdownHeading -Level 2 -Text 'Priorities'
-                Add-OfficeMarkdownList -Items 'PDF examples', 'PowerPoint layout', 'Word report polish'
-                Add-OfficeMarkdownHeading -Level 2 -Text 'Release order'
-                Add-OfficeMarkdownList -Items 'Validate artifacts', 'Generate docs', 'Publish release' -Ordered -Start 1
-            }
+    Add-OfficeMarkdownHeading -Level 2 -Text 'Priorities'
+    Add-OfficeMarkdownList -Items 'PDF examples', 'PowerPoint layout', 'Word report polish'
+    Add-OfficeMarkdownHeading -Level 2 -Text 'Release order'
+    Add-OfficeMarkdownList -Items 'Validate artifacts', 'Generate docs', 'Publish release' -Ordered -Start 1
+}
 ```
 
 Appends bullet and ordered lists to the current Markdown document.

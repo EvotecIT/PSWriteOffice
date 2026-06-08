@@ -27,13 +27,13 @@ Adds a simple AcroForm field to a generated PDF document.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Examples\Documents\PdfForm.pdf {
-                Add-OfficePdfHeading -Text 'Access request'
-                Add-OfficePdfParagraph -Text 'Requester'
-                Add-OfficePdfFormField -Name 'Requester' -Type Text -Width 240
-                Add-OfficePdfParagraph -Text 'Priority'
-                Add-OfficePdfFormField -Name 'Priority' -Type Choice -Options 'Low','Normal','High' -Value 'Normal'
-                Add-OfficePdfFormField -Name 'Approved' -Type CheckBox
-              }
+  Add-OfficePdfHeading -Text 'Access request'
+  Add-OfficePdfParagraph -Text 'Requester'
+  Add-OfficePdfFormField -Name 'Requester' -Type Text -Width 240
+  Add-OfficePdfParagraph -Text 'Priority'
+  Add-OfficePdfFormField -Name 'Priority' -Type Choice -Options 'Low','Normal','High' -Value 'Normal'
+  Add-OfficePdfFormField -Name 'Approved' -Type CheckBox
+}
 ```
 
 Adds text, choice, and checkbox form fields to a generated PDF.

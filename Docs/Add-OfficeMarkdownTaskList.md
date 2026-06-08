@@ -27,9 +27,9 @@ Adds a Markdown task list.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeMarkdown -Path .\ReleaseChecklist.md {
-                Add-OfficeMarkdownHeading -Level 1 -Text 'Release checklist'
-                Add-OfficeMarkdownTaskList -Items 'Generate examples', 'Refresh docs', 'Validate artifacts', 'Publish release' -Completed 0, 1
-            }
+    Add-OfficeMarkdownHeading -Level 1 -Text 'Release checklist'
+    Add-OfficeMarkdownTaskList -Items 'Generate examples', 'Refresh docs', 'Validate artifacts', 'Publish release' -Completed 0, 1
+}
 ```
 
 Appends an unordered task list and marks selected zero-based items as completed.

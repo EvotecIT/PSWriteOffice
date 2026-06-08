@@ -9,8 +9,11 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Extract a page range into a new PDF.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Copy-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '1-2,5' -OutputPath .\Examples\Documents\ExecutivePages.pdf
-/// Get-OfficePdfInfo -Path .\Examples\Documents\ExecutivePages.pdf | Select-Object PageCount</code>
+///   <code>$proof = @(
+///     Copy-OfficePdfPage -Path .\Examples\Documents\Report.pdf -PageRange '1-2,5' -OutputPath .\Examples\Documents\ExecutivePages.pdf
+///     Get-OfficePdfInfo -Path .\Examples\Documents\ExecutivePages.pdf | Select-Object PageCount
+/// )
+/// $proof</code>
 ///   <para>Copies selected pages and inspects the resulting PDF.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Copy, "OfficePdfPage")]

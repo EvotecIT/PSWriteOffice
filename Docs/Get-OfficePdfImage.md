@@ -21,8 +21,11 @@ Gets or extracts image resources from a PDF.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -PageRange '1-2'
-            Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -OutputDirectory .\Examples\Documents\PdfImages -BaseName 'report-image'
+PS> $proof = @(
+    Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -PageRange '1-2'
+    Get-OfficePdfImage -Path .\Examples\Documents\Report.pdf -OutputDirectory .\Examples\Documents\PdfImages -BaseName 'report-image'
+)
+$proof
 ```
 
 Returns image metadata or writes extracted images to disk.

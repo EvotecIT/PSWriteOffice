@@ -22,10 +22,10 @@ Creates a new section starting at the requested slide index or at the current sl
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSections.pptx {
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Overview'
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Results'
-                Add-OfficePowerPointSection -Name 'Results' -StartSlideIndex 1
-            }
+    Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Overview'
+    Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Results'
+    Add-OfficePowerPointSection -Name 'Results' -StartSlideIndex 1
+}
 ```
 
 Creates a section named Results starting at the second slide.

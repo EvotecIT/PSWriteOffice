@@ -29,9 +29,9 @@ Moves/resizes the Title placeholder on the layout.
 ### EXAMPLE 2
 ```powershell
 PS> New-OfficePowerPoint -Path .\deck.pptx {
-                $layout = Get-OfficePowerPointLayout | Select-Object -First 1
-                Set-OfficePowerPointLayoutPlaceholderBounds -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Left 40 -Top 20 -Width 500 -Height 120
-              }
+  $layout = Get-OfficePowerPointLayout | Select-Object -First 1
+  Set-OfficePowerPointLayoutPlaceholderBounds -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title -Left 40 -Top 20 -Width 500 -Height 120
+}
 ```
 
 Uses the DSL context to resolve the presentation.

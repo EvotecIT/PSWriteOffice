@@ -27,9 +27,9 @@ Sets the background for a Word document.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeWord -Path .\BrandedReport.docx {
-                Set-OfficeWordBackground -Color '#f4f7fb'
-                Add-OfficeWordParagraph -Text 'Executive summary'
-            }
+    Set-OfficeWordBackground -Color '#f4f7fb'
+    Add-OfficeWordParagraph -Text 'Executive summary'
+}
 ```
 
 Sets the document background to the provided hex color and continues normal document composition.

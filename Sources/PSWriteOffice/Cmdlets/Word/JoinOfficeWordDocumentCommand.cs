@@ -12,9 +12,12 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Merge a cover, body, and appendix into a release packet.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx
-/// Get-OfficeWordStatistics -Path .\ReleasePacket.docx |
-///     Select-Object -Property Paragraphs, Tables, Images</code>
+///   <code>$proof = @(
+///     Join-OfficeWordDocument -Path .\Cover.docx -AppendPath .\Body.docx, .\Appendix.docx -OutputPath .\ReleasePacket.docx
+///     Get-OfficeWordStatistics -Path .\ReleasePacket.docx |
+///         Select-Object -Property Paragraphs, Tables, Images
+/// )
+/// $proof</code>
 ///   <para>Appends the source documents with OfficeIMO.Word and then reads back basic structure from the merged output.</para>
 /// </example>
 /// <example>

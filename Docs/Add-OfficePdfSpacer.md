@@ -27,11 +27,11 @@ Adds invisible vertical spacing to a generated PDF document.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Examples\Documents\PdfSpacer.pdf {
-                Add-OfficePdfHeading -Text 'Summary'
-                Add-OfficePdfParagraph -Text 'First block.'
-                Add-OfficePdfSpacer -Height 18
-                Add-OfficePdfParagraph -Text 'Second block after additional spacing.'
-            }
+    Add-OfficePdfHeading -Text 'Summary'
+    Add-OfficePdfParagraph -Text 'First block.'
+    Add-OfficePdfSpacer -Height 18
+    Add-OfficePdfParagraph -Text 'Second block after additional spacing.'
+}
 ```
 
 Adds whitespace without adding visible content.

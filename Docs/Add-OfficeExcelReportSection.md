@@ -22,11 +22,11 @@ Adds a section heading to the current Excel report sheet.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeExcel -Path .\Operations.xlsx {
-                Add-OfficeExcelReportSheet -Name Summary {
-                    Add-OfficeExcelReportSection -Text 'Service health'
-                    Add-OfficeExcelReportParagraph -Text 'All monitored services are reporting.'
-                }
-            }
+    Add-OfficeExcelReportSheet -Name Summary {
+        Add-OfficeExcelReportSection -Text 'Service health'
+        Add-OfficeExcelReportParagraph -Text 'All monitored services are reporting.'
+    }
+}
 ```
 
 Uses the report composer to add a section heading and narrative text.

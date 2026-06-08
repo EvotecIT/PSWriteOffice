@@ -22,13 +22,13 @@ Adds a table of contents to a Word document.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeWord -Path .\ExecutiveReport.docx {
-                Add-OfficeWordTableOfContent -Style Template1
-                Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
-                Add-OfficeWordParagraph -Text 'Summary text'
-                Add-OfficeWordParagraph -Text 'Appendix' -Style Heading1
-                Add-OfficeWordParagraph -Text 'Supporting details'
-                Update-OfficeWordTableOfContent
-            }
+    Add-OfficeWordTableOfContent -Style Template1
+    Add-OfficeWordParagraph -Text 'Executive summary' -Style Heading1
+    Add-OfficeWordParagraph -Text 'Summary text'
+    Add-OfficeWordParagraph -Text 'Appendix' -Style Heading1
+    Add-OfficeWordParagraph -Text 'Supporting details'
+    Update-OfficeWordTableOfContent
+}
 ```
 
 Creates a navigable report outline and marks the TOC for refresh when the document opens.

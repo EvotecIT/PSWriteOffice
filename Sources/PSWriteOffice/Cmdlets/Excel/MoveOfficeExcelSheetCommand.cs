@@ -8,10 +8,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <example>
 ///   <summary>Move the summary sheet to the front and verify order.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0
-/// Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |
-///     Select-Object -ExpandProperty Sheets |
-///     Select-Object -First 3 -Property Index, Name</code>
+///   <code>$proof = @(
+///     Move-OfficeExcelSheet -Path .\Report.xlsx -Sheet Summary -Index 0
+///     Get-OfficeExcelSummary -Path .\Report.xlsx -IncludeSheets |
+///         Select-Object -ExpandProperty Sheets |
+///         Select-Object -First 3 -Property Index, Name
+/// )
+/// $proof</code>
 ///   <para>Moves Summary to the first worksheet tab and reads back the first sheets from workbook summary.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Move, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext)]

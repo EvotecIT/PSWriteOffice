@@ -27,9 +27,9 @@ Uses the OfficeIMO header resolver so scripts can style report columns without c
 ### EXAMPLE 1
 ```powershell
 PS> ExcelSheet 'Data' {
-                Set-OfficeExcelColumnStyleByHeader -Header Revenue -Style Currency -CultureName en-US -AutoFit
-                Set-OfficeExcelColumnStyleByHeader -Header Status -BackgroundByText @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' } -BoldByText Blocked
-              }
+  Set-OfficeExcelColumnStyleByHeader -Header Revenue -Style Currency -CultureName en-US -AutoFit
+  Set-OfficeExcelColumnStyleByHeader -Header Status -BackgroundByText @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' } -BoldByText Blocked
+}
 ```
 
 Styles Revenue as currency and colors Status cells by their text.

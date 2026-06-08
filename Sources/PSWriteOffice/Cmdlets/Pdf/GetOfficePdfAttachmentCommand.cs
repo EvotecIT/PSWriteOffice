@@ -9,8 +9,11 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>List and extract embedded PDF attachments.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf
-/// Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf -OutputDirectory .\Examples\Documents\Attachments</code>
+///   <code>$proof = @(
+///     Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf
+///     Get-OfficePdfAttachment -Path .\Examples\Documents\PdfWithAttachment.pdf -OutputDirectory .\Examples\Documents\Attachments
+/// )
+/// $proof</code>
 ///   <para>First returns attachment metadata, then writes embedded files to disk.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdfAttachment")]

@@ -22,9 +22,9 @@ Sets PowerPoint theme fonts.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeFonts.pptx {
-                Set-OfficePowerPointThemeFonts -MajorLatin 'Aptos Display' -MinorLatin 'Aptos' -AllMasters
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Theme fonts'
-            }
+    Set-OfficePowerPointThemeFonts -MajorLatin 'Aptos Display' -MinorLatin 'Aptos' -AllMasters
+    Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Theme fonts'
+}
 ```
 
 Updates theme fonts before creating slides.

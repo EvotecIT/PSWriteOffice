@@ -37,22 +37,22 @@ Builds a PDF and opens it after saving.
 ### EXAMPLE 2
 ```powershell
 PS> New-OfficePdf -Path .\ServiceReview.pdf {
-                PdfTheme Report
-                PdfMetadata -Title 'Service Review' -Author 'PSWriteOffice'
-                PdfPageSetup -PageSize A4 -Margin 42
-                PdfHeader 'Service Review'
-                PdfFooter 'Page {page}/{pages}'
-                PdfHeading 'Service Review'
-                PdfText -Run @(
-                  @{ Text = 'Generated with ' }
-                  @{ Text = 'rich inline text'; Bold = $true; Color = '#0F766E' }
-                  @{ Text = ' and OfficeIMO.Pdf layout.' }
-                )
-                PdfRow -Column @(
-                  @{ Width = 40; Content = @(@{ Type = 'Panel'; Text = 'Left summary' }) }
-                  @{ Width = 60; Content = @(@{ Type = 'Paragraph'; Text = 'Right details' }) }
-                )
-              }
+  PdfTheme Report
+  PdfMetadata -Title 'Service Review' -Author 'PSWriteOffice'
+  PdfPageSetup -PageSize A4 -Margin 42
+  PdfHeader 'Service Review'
+  PdfFooter 'Page {page}/{pages}'
+  PdfHeading 'Service Review'
+  PdfText -Run @(
+    @{ Text = 'Generated with ' }
+    @{ Text = 'rich inline text'; Bold = $true; Color = '#0F766E' }
+    @{ Text = ' and OfficeIMO.Pdf layout.' }
+  )
+  PdfRow -Column @(
+    @{ Width = 40; Content = @(@{ Type = 'Panel'; Text = 'Left summary' }) }
+    @{ Width = 60; Content = @(@{ Type = 'Paragraph'; Text = 'Right details' }) }
+  )
+}
 ```
 
 Shows the preferred high-level PDF report authoring shape.

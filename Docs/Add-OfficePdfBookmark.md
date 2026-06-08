@@ -27,13 +27,13 @@ Adds a named bookmark at the current generated PDF flow position.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePdf -Path .\Examples\Documents\PdfBookmarks.pdf {
-                Add-OfficePdfText -Run @(
-                  @{ Text = 'Jump to details'; LinkDestinationName = 'details'; Color = '#2563EB'; Underline = $true }
-                )
-                Add-OfficePdfPageBreak
-                Add-OfficePdfBookmark -Name 'details'
-                Add-OfficePdfHeading -Text 'Details' -Level 2
-              }
+  Add-OfficePdfText -Run @(
+    @{ Text = 'Jump to details'; LinkDestinationName = 'details'; Color = '#2563EB'; Underline = $true }
+  )
+  Add-OfficePdfPageBreak
+  Add-OfficePdfBookmark -Name 'details'
+  Add-OfficePdfHeading -Text 'Details' -Level 2
+}
 ```
 
 Creates an internal link target inside the generated PDF.

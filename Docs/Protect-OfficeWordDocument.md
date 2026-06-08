@@ -22,9 +22,9 @@ Sets the protection password and the protection type (default: ReadOnly).
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficeWord -Path .\ProtectedReport.docx {
-                Add-OfficeWordParagraph -Text 'Confidential report'
-                Protect-OfficeWordDocument -Password 'secret' -ProtectionType ReadOnly
-            }
+    Add-OfficeWordParagraph -Text 'Confidential report'
+    Protect-OfficeWordDocument -Password 'secret' -ProtectionType ReadOnly
+}
 ```
 
 Sets OfficeIMO.Word document protection while the document is being composed.

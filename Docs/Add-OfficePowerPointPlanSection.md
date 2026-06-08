@@ -22,11 +22,11 @@ Adds a semantic section/title slide to a PowerPoint deck plan.
 ### EXAMPLE 1
 ```powershell
 PS> $plan = New-OfficePowerPointDeckPlan {
-                Add-OfficePowerPointPlanSection -Title 'Service Review' -Subtitle 'Monthly operating brief' -Seed 'service-review'
-                Add-OfficePowerPointPlanCardGrid -Title 'Signals' -Cards @(
-                  @{ Title = 'Health'; Items = @('Green', 'No blockers') }
-                )
-            }
+    Add-OfficePowerPointPlanSection -Title 'Service Review' -Subtitle 'Monthly operating brief' -Seed 'service-review'
+    Add-OfficePowerPointPlanCardGrid -Title 'Signals' -Cards @(
+      @{ Title = 'Health'; Items = @('Green', 'No blockers') }
+    )
+}
 ```
 
 Adds a semantic opening section slide to the plan.
