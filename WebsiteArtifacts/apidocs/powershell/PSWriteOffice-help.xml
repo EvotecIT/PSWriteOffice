@@ -6168,7 +6168,7 @@
             )&#xD;
             New-OfficeExcel -Path .\SalesPivot.xlsx {&#xD;
                 Add-OfficeExcelSheet -Name Data {&#xD;
-                    Add-OfficeExcelTable -Data $rows -TableName Sales -AutoFit&#xD;
+                    Add-OfficeExcelTable -InputObject $rows -TableName Sales -AutoFit&#xD;
                     Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E2' -Name 'SalesByRegion' -RowField Region -ColumnField Product -DataField Sales -DataFunction Sum -PivotStyle PivotStyleMedium9&#xD;
                 }&#xD;
             }</dev:code>
@@ -6360,8 +6360,8 @@
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeExcelReportKpiRow</maml:name>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
-          <maml:name>Data</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data">
+          <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Hashtable or objects with Label/Value, Key/Value, Name/Value, or Title/Value properties.</maml:para>
           </maml:description>
@@ -6399,8 +6399,8 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
-        <maml:name>Data</maml:name>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data">
+        <maml:name>InputObject</maml:name>
         <maml:description>
           <maml:para>Hashtable or objects with Label/Value, Key/Value, Name/Value, or Title/Value properties.</maml:para>
         </maml:description>
@@ -6463,7 +6463,7 @@
         </maml:introduction>
         <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
                 Add-OfficeExcelReportSheet -Name Summary {&#xD;
-                    Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3&#xD;
+                    Add-OfficeExcelReportKpiRow -InputObject @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3&#xD;
                 }&#xD;
             }</dev:code>
         <dev:remarks>
@@ -6512,6 +6512,18 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Headers">
+          <maml:name>Header</maml:name>
+          <maml:description>
+            <maml:para>Column headers.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>HeaderFillColor</maml:name>
           <maml:description>
@@ -6524,20 +6536,8 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Headers</maml:name>
-          <maml:description>
-            <maml:para>Column headers.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
-          <dev:type>
-            <maml:name>String[]</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Rows</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Rows">
+          <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Rows. Each row may be an array, enumerable, hashtable, or object.</maml:para>
           </maml:description>
@@ -6587,6 +6587,18 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Headers">
+        <maml:name>Header</maml:name>
+        <maml:description>
+          <maml:para>Column headers.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
         <maml:name>HeaderFillColor</maml:name>
         <maml:description>
@@ -6599,20 +6611,8 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Headers</maml:name>
-        <maml:description>
-          <maml:para>Column headers.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
-        <dev:type>
-          <maml:name>String[]</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Rows</maml:name>
+      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Rows">
+        <maml:name>InputObject</maml:name>
         <maml:description>
           <maml:para>Rows. Each row may be an array, enumerable, hashtable, or object.</maml:para>
         </maml:description>
@@ -6667,7 +6667,7 @@
             )&#xD;
             New-OfficeExcel -Path .\Operations.xlsx {&#xD;
                 Add-OfficeExcelReportSheet -Name Summary {&#xD;
-                    Add-OfficeExcelReportLegend -Title 'Status legend' -Headers Status, Meaning -Rows $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }&#xD;
+                    Add-OfficeExcelReportLegend -Title 'Status legend' -Header Status, Meaning -InputObject $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }&#xD;
                 }&#xD;
             }</dev:code>
         <dev:remarks>
@@ -7054,7 +7054,7 @@
         <dev:code>New-OfficeExcel -Path .\report.xlsx {&#xD;
                 Add-OfficeExcelReportSheet -Name Summary {&#xD;
                   Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current view'&#xD;
-                  Add-OfficeExcelReportKpiRow -Data @{ Ready = 12; Blocked = 2 }&#xD;
+                  Add-OfficeExcelReportKpiRow -InputObject @{ Ready = 12; Blocked = 2 }&#xD;
                 }&#xD;
               }</dev:code>
         <dev:remarks>
@@ -7161,8 +7161,8 @@
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeExcelReportTable</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="None">
-          <maml:name>Data</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="Data">
+          <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Objects to flatten and render as a table.</maml:para>
           </maml:description>
@@ -7248,8 +7248,8 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="None">
-        <maml:name>Data</maml:name>
+      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="Data">
+        <maml:name>InputObject</maml:name>
         <maml:description>
           <maml:para>Objects to flatten and render as a table.</maml:para>
         </maml:description>
@@ -7364,7 +7364,7 @@
             )&#xD;
             New-OfficeExcel -Path .\Operations.xlsx {&#xD;
                 Add-OfficeExcelReportSheet -Name Summary {&#xD;
-                    Add-OfficeExcelReportTable -Data $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9&#xD;
+                    Add-OfficeExcelReportTable -InputObject $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9&#xD;
                 }&#xD;
             }</dev:code>
         <dev:remarks>
@@ -7469,7 +7469,7 @@
         <dev:code>New-OfficeExcel -Path .\Operations.xlsx {&#xD;
                 Add-OfficeExcelReportSheet -Name Summary {&#xD;
                     Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current month'&#xD;
-                    Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }&#xD;
+                    Add-OfficeExcelReportKpiRow -InputObject @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }&#xD;
                 }&#xD;
             }</dev:code>
         <dev:remarks>
@@ -8389,7 +8389,7 @@
       <maml:para>Accepts objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences and writes them into an Excel table with optional styling.</maml:para>
     </maml:description>
     <command:syntax>
-      <command:syntaxItem parameterSetName="Objects">
+      <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeExcelTable</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>AutoFit</maml:name>
@@ -8403,14 +8403,14 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Data</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="Data,DataTable">
+          <maml:name>InputObject</maml:name>
           <maml:description>
-            <maml:para>Source objects to convert into table rows.</maml:para>
+            <maml:para>Source objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences to convert into table rows.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
-            <maml:name>Object[]</maml:name>
+            <maml:name>Object</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -8499,113 +8499,18 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-      </command:syntaxItem>
-      <command:syntaxItem parameterSetName="DataTable">
-        <maml:name>Add-OfficeExcelTable</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>AutoFit</maml:name>
+          <maml:name>View</maml:name>
           <maml:description>
-            <maml:para>Auto-fit the table columns after insertion.</maml:para>
+            <maml:para>Projection to apply before writing the table.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
-          <maml:name>DataTable</maml:name>
-          <maml:description>
-            <maml:para>Source DataTable to write directly.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">DataTable</command:parameterValue>
-          <dev:type>
-            <maml:name>DataTable</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>NoAutoFilter</maml:name>
-          <maml:description>
-            <maml:para>Disable AutoFilter dropdowns.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>NoHeader</maml:name>
-          <maml:description>
-            <maml:para>Skip writing headers.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>PassThru</maml:name>
-          <maml:description>
-            <maml:para>Return the created range string.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>StartColumn</maml:name>
-          <maml:description>
-            <maml:para>Starting column for the data (1-based).</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>StartRow</maml:name>
-          <maml:description>
-            <maml:para>Starting row for the data (1-based).</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>TableName</maml:name>
-          <maml:description>
-            <maml:para>Name to assign to the table.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>TableStyle</maml:name>
-          <maml:description>
-            <maml:para>Built-in table style to apply.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>OfficeTableView</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -8625,26 +8530,14 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Data</maml:name>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="Data,DataTable">
+        <maml:name>InputObject</maml:name>
         <maml:description>
-          <maml:para>Source objects to convert into table rows.</maml:para>
+          <maml:para>Source objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences to convert into table rows.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
         <dev:type>
-          <maml:name>Object[]</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
-        <maml:name>DataTable</maml:name>
-        <maml:description>
-          <maml:para>Source DataTable to write directly.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">DataTable</command:parameterValue>
-        <dev:type>
-          <maml:name>DataTable</maml:name>
+          <maml:name>Object</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -8733,11 +8626,27 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>View</maml:name>
+        <maml:description>
+          <maml:para>Projection to apply before writing the table.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeTableView</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>System.Data.DataTable</maml:name>
+          <maml:name>System.Object</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -8760,7 +8669,7 @@
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>$data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })&#xD;
-              ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }</dev:code>
+              ExcelSheet 'Data' { Add-OfficeExcelTable -InputObject $data -TableName 'Sales' }</dev:code>
         <dev:remarks>
           <maml:para>Writes two rows and formats them as a styled Excel table.</maml:para>
         </dev:remarks>
@@ -12955,8 +12864,8 @@ System.IO.FileInfo</maml:name>
     <command:syntax>
       <command:syntaxItem parameterSetName="Context">
         <maml:name>Add-OfficeMarkdownFrontMatter</maml:name>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
-          <maml:name>Data</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data">
+          <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Front matter data expressed as a hashtable or object.</maml:para>
           </maml:description>
@@ -12982,18 +12891,6 @@ System.IO.FileInfo</maml:name>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Document">
         <maml:name>Add-OfficeMarkdownFrontMatter</maml:name>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
-          <maml:name>Data</maml:name>
-          <maml:description>
-            <maml:para>Front matter data expressed as a hashtable or object.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
-          <dev:type>
-            <maml:name>Object</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
@@ -13002,6 +12899,18 @@ System.IO.FileInfo</maml:name>
           <command:parameterValue required="true" variableLength="false">MarkdownDoc</command:parameterValue>
           <dev:type>
             <maml:name>MarkdownDoc</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Front matter data expressed as a hashtable or object.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -13021,18 +12930,6 @@ System.IO.FileInfo</maml:name>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
-        <maml:name>Data</maml:name>
-        <maml:description>
-          <maml:para>Front matter data expressed as a hashtable or object.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
-        <dev:type>
-          <maml:name>Object</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
@@ -13041,6 +12938,18 @@ System.IO.FileInfo</maml:name>
         <command:parameterValue required="true" variableLength="false">MarkdownDoc</command:parameterValue>
         <dev:type>
           <maml:name>MarkdownDoc</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>Front matter data expressed as a hashtable or object.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -13083,7 +12992,7 @@ System.IO.FileInfo</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>MarkdownFrontMatter -Data @{ title = 'Weekly Report'; tags = @('ops','summary') }</dev:code>
+        <dev:code>MarkdownFrontMatter -InputObject @{ title = 'Weekly Report'; tags = @('ops','summary') }</dev:code>
         <dev:remarks>
           <maml:para>Sets the document header using the supplied key/value pairs.</maml:para>
         </dev:remarks>
@@ -14266,12 +14175,12 @@ System.IO.FileInfo</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Objects to convert into a Markdown table.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
             <maml:name>Object</maml:name>
             <maml:uri />
@@ -14286,6 +14195,22 @@ System.IO.FileInfo</maml:name>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>View</maml:name>
+          <maml:description>
+            <maml:para>Projection to apply before writing the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeTableView</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -14317,12 +14242,12 @@ System.IO.FileInfo</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Objects to convert into a Markdown table.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
             <maml:name>Object</maml:name>
             <maml:uri />
@@ -14337,6 +14262,89 @@ System.IO.FileInfo</maml:name>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>View</maml:name>
+          <maml:description>
+            <maml:para>Projection to apply before writing the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeTableView</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="PipelineDocument">
+        <maml:name>Add-OfficeMarkdownTable</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DisableAutoAlign</maml:name>
+          <maml:description>
+            <maml:para>Disable automatic alignment heuristics for tables.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>Document</maml:name>
+          <maml:description>
+            <maml:para>Markdown document to update outside the DSL context.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">MarkdownDoc</command:parameterValue>
+          <dev:type>
+            <maml:name>MarkdownDoc</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Objects to convert into a Markdown table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Emit the Markdown document after appending the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>View</maml:name>
+          <maml:description>
+            <maml:para>Projection to apply before writing the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeTableView</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -14368,12 +14376,12 @@ System.IO.FileInfo</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>InputObject</maml:name>
         <maml:description>
           <maml:para>Objects to convert into a Markdown table.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
         <dev:type>
           <maml:name>Object</maml:name>
           <maml:uri />
@@ -14388,6 +14396,22 @@ System.IO.FileInfo</maml:name>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>View</maml:name>
+        <maml:description>
+          <maml:para>Projection to apply before writing the table.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeTableView</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -19542,14 +19566,14 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Objects or row arrays to render as a table.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
-            <maml:name>Object[]</maml:name>
+            <maml:name>Object</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19574,6 +19598,22 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
           <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
           <dev:type>
             <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>View</maml:name>
+          <maml:description>
+            <maml:para>Projection to apply before writing the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeTableView</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19623,14 +19663,14 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Objects or row arrays to render as a table.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
-            <maml:name>Object[]</maml:name>
+            <maml:name>Object</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19655,6 +19695,119 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
           <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
           <dev:type>
             <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>View</maml:name>
+          <maml:description>
+            <maml:para>Projection to apply before writing the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeTableView</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="PipelineDocument">
+        <maml:name>Add-OfficePdfTable</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Align</maml:name>
+          <maml:description>
+            <maml:para>Table alignment.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfAlign</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Justify</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>PdfAlign</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>Document</maml:name>
+          <maml:description>
+            <maml:para>PDF document to update outside the DSL context.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfDocument</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Header</maml:name>
+          <maml:description>
+            <maml:para>Header labels. Defaults to property names.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Objects or row arrays to render as a table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Emit the updated document.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Property</maml:name>
+          <maml:description>
+            <maml:para>Specific object properties to include.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>View</maml:name>
+          <maml:description>
+            <maml:para>Projection to apply before writing the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeTableView</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -19704,14 +19857,14 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>InputObject</maml:name>
         <maml:description>
           <maml:para>Objects or row arrays to render as a table.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
         <dev:type>
-          <maml:name>Object[]</maml:name>
+          <maml:name>Object</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -19740,11 +19893,28 @@ Use -Watermark when the stamp should be placed behind existing page content.</ma
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>View</maml:name>
+        <maml:description>
+          <maml:para>Projection to apply before writing the table.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeTableView</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>OfficeIMO.Pdf.PdfDocument</maml:name>
+          <maml:name>OfficeIMO.Pdf.PdfDocument&#xD;
+System.Object</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -21158,18 +21328,6 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Data</maml:name>
-          <maml:description>
-            <maml:para>Source objects used to build chart data.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-          <dev:type>
-            <maml:name>Object[]</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
@@ -21178,6 +21336,18 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
             <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Data">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Source objects used to build chart data.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21276,18 +21446,6 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Scatter">
         <maml:name>Add-OfficePowerPointChart</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Data</maml:name>
-          <maml:description>
-            <maml:para>Source objects used to build chart data.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-          <dev:type>
-            <maml:name>Object[]</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>Height</maml:name>
           <maml:description>
@@ -21296,6 +21454,18 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
             <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Data">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Source objects used to build chart data.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -21418,18 +21588,6 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Data</maml:name>
-        <maml:description>
-          <maml:para>Source objects used to build chart data.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-        <dev:type>
-          <maml:name>Object[]</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
         <maml:name>Height</maml:name>
         <maml:description>
@@ -21438,6 +21596,18 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
           <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Data">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>Source objects used to build chart data.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Object[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -21589,7 +21759,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
             )&#xD;
             New-OfficePowerPoint -Path .\Examples\Documents\PowerPointChart.pptx {&#xD;
                 $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
-                Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'&#xD;
+                Add-OfficePowerPointChart -Slide $slide -InputObject $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'&#xD;
             }</dev:code>
         <dev:remarks>
           <maml:para>Creates a clustered column chart using Month for categories and Sales/Profit as series.</maml:para>
@@ -21606,7 +21776,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
             )&#xD;
             New-OfficePowerPoint -Path .\Examples\Documents\PowerPointScatter.pptx {&#xD;
                 $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
-                Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'&#xD;
+                Add-OfficePowerPointChart -Slide $slide -Type Scatter -InputObject $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'&#xD;
             }</dev:code>
         <dev:remarks>
           <maml:para>Creates a scatter chart using Quarter on the X axis and Revenue on the Y axis.</maml:para>
@@ -24377,22 +24547,10 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
       <maml:para>Builds a table from data rows or creates a blank grid with a fixed size.</maml:para>
     </maml:description>
     <command:syntax>
-      <command:syntaxItem parameterSetName="Data">
+      <command:syntaxItem parameterSetName="InputObject">
         <maml:name>Add-OfficePowerPointTable</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Data</maml:name>
-          <maml:description>
-            <maml:para>Source objects to convert into table rows.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-          <dev:type>
-            <maml:name>Object[]</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Headers</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Headers">
+          <maml:name>Header</maml:name>
           <maml:description>
             <maml:para>Optional header order to apply to the table.</maml:para>
           </maml:description>
@@ -24411,6 +24569,18 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
             <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="1" aliases="Data">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Source objects to convert into table rows.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -24447,6 +24617,22 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>View</maml:name>
+          <maml:description>
+            <maml:para>Projection to apply before writing the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeTableView</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -24601,20 +24787,8 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Data</maml:name>
-        <maml:description>
-          <maml:para>Source objects to convert into table rows.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-        <dev:type>
-          <maml:name>Object[]</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Headers</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Headers">
+        <maml:name>Header</maml:name>
         <maml:description>
           <maml:para>Optional header order to apply to the table.</maml:para>
         </maml:description>
@@ -24633,6 +24807,18 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
           <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="1" aliases="Data">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>Source objects to convert into table rows.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -24681,6 +24867,22 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>View</maml:name>
+        <maml:description>
+          <maml:para>Projection to apply before writing the table.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeTableView</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -24748,7 +24950,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>$rows = @([pscustomobject]@{ Item='Alpha'; Qty=2 }, [pscustomobject]@{ Item='Beta'; Qty=4 })&#xD;
-              Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Height 200</dev:code>
+              Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 60 -Y 140 -Width 420 -Height 200</dev:code>
         <dev:remarks>
           <maml:para>Creates a table with headers and two data rows.</maml:para>
         </dev:remarks>
@@ -25255,18 +25457,6 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Data</maml:name>
-          <maml:description>
-            <maml:para>Source objects used to build chart data.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-          <dev:type>
-            <maml:name>Object[]</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>FitToPageWidth</maml:name>
           <maml:description>
@@ -25287,6 +25477,18 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Data">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Source objects used to build chart data.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -25451,18 +25653,6 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Data</maml:name>
-          <maml:description>
-            <maml:para>Source objects used to build chart data.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-          <dev:type>
-            <maml:name>Object[]</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
@@ -25495,6 +25685,18 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Data">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Source objects used to build chart data.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -25659,18 +25861,6 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Data</maml:name>
-          <maml:description>
-            <maml:para>Source objects used to build chart data.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-          <dev:type>
-            <maml:name>Object[]</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>FitToPageWidth</maml:name>
           <maml:description>
@@ -25691,6 +25881,18 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
             <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Data">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Source objects used to build chart data.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -25867,18 +26069,6 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Data</maml:name>
-        <maml:description>
-          <maml:para>Source objects used to build chart data.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
-        <dev:type>
-          <maml:name>Object[]</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
@@ -25911,6 +26101,18 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
           <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Data">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>Source objects used to build chart data.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Object[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -26106,8 +26308,8 @@ OfficeIMO.Word.WordParagraph</maml:name>
             )&#xD;
             New-OfficeWord -Path .\RegionalReport.docx {&#xD;
                 Add-OfficeWordParagraph -Text 'Regional revenue'&#xD;
-                Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix' -FitToPageWidth -WidthFraction 0.75&#xD;
-                Add-OfficeWordChart -Type Bar -Data $rows -CategoryProperty Region -SeriesProperty Revenue, Profit -Legend -XAxisTitle 'Region' -YAxisTitle 'Amount'&#xD;
+                Add-OfficeWordChart -Type Pie -InputObject $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix' -FitToPageWidth -WidthFraction 0.75&#xD;
+                Add-OfficeWordChart -Type Bar -InputObject $rows -CategoryProperty Region -SeriesProperty Revenue, Profit -Legend -XAxisTitle 'Region' -YAxisTitle 'Amount'&#xD;
             }</dev:code>
         <dev:remarks>
           <maml:para>Creates a report with a pie chart and a multi-series bar chart from PowerShell objects.</maml:para>
@@ -26124,7 +26326,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
                 [pscustomobject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }&#xD;
             )&#xD;
             $doc = New-OfficeWord -Path .\Trend.docx -PassThru&#xD;
-            Add-OfficeWordChart -Document $doc -Type Line -Data $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'&#xD;
+            Add-OfficeWordChart -Document $doc -Type Line -InputObject $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'&#xD;
             Save-OfficeWord -Document $doc</dev:code>
         <dev:remarks>
           <maml:para>Creates a multi-series line chart on the document and shows a legend.</maml:para>
@@ -30388,7 +30590,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data">
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="Data">
           <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Input data (array, list, DataTable, etc.).</maml:para>
@@ -30418,10 +30620,10 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>PassThru</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="SkipHeader">
+          <maml:name>NoHeader</maml:name>
           <maml:description>
-            <maml:para>Emit the created WordTable.</maml:para>
+            <maml:para>Skip writing header row.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -30431,9 +30633,9 @@ OfficeIMO.Word.WordParagraph</maml:name>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>SkipHeader</maml:name>
+          <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Skip writing header row.</maml:para>
+            <maml:para>Emit the created WordTable.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -30564,11 +30766,27 @@ OfficeIMO.Word.WordParagraph</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>Transpose</maml:name>
           <maml:description>
-            <maml:para>Transpose rows into property-oriented output.</maml:para>
+            <maml:para>Legacy switch that maps to Transpose.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>View</maml:name>
+          <maml:description>
+            <maml:para>Projection to apply before writing the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeTableView</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -30588,7 +30806,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data">
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="Data">
         <maml:name>InputObject</maml:name>
         <maml:description>
           <maml:para>Input data (array, list, DataTable, etc.).</maml:para>
@@ -30618,10 +30836,10 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>PassThru</maml:name>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="SkipHeader">
+        <maml:name>NoHeader</maml:name>
         <maml:description>
-          <maml:para>Emit the created WordTable.</maml:para>
+          <maml:para>Skip writing header row.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -30631,9 +30849,9 @@ OfficeIMO.Word.WordParagraph</maml:name>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>SkipHeader</maml:name>
+        <maml:name>PassThru</maml:name>
         <maml:description>
-          <maml:para>Skip writing header row.</maml:para>
+          <maml:para>Emit the created WordTable.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -30764,7 +30982,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
         <maml:name>Transpose</maml:name>
         <maml:description>
-          <maml:para>Transpose rows into property-oriented output.</maml:para>
+          <maml:para>Legacy switch that maps to Transpose.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -30773,11 +30991,27 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>View</maml:name>
+        <maml:description>
+          <maml:para>Projection to apply before writing the table.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeTableView</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Transpose</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeTableView</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>None</maml:name>
+          <maml:name>System.Object</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -31022,7 +31256,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>WordTable -Data $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }</dev:code>
+        <dev:code>WordTable -InputObject $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }</dev:code>
         <dev:remarks>
           <maml:para>Targets the data cell at row 1, column 0 and writes text inside it.</maml:para>
         </dev:remarks>
@@ -34676,6 +34910,42 @@ System.IO.FileInfo</maml:name>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>BookmarkName</maml:name>
+          <maml:description>
+            <maml:para>Bookmark name that marks where Markdown content should be inserted in the template.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ContentControlAlias</maml:name>
+          <maml:description>
+            <maml:para>Block content control alias that marks where Markdown content should be inserted in the template.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ContentControlTag</maml:name>
+          <maml:description>
+            <maml:para>Block content control tag that marks where Markdown content should be inserted in the template.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>FitImagesToContextWidth</maml:name>
           <maml:description>
             <maml:para>Fit Markdown images to the current content context width.</maml:para>
@@ -34707,6 +34977,18 @@ System.IO.FileInfo</maml:name>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>KeepPlaceholder</maml:name>
+          <maml:description>
+            <maml:para>Keep the target bookmark or content-control placeholder after inserting Markdown content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -34807,6 +35089,30 @@ System.IO.FileInfo</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RenderFrontMatter</maml:name>
+          <maml:description>
+            <maml:para>Render YAML front matter as visible Word content. Template conversions hide front matter by default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="Template">
+          <maml:name>TemplatePath</maml:name>
+          <maml:description>
+            <maml:para>Optional Word template document to copy before inserting Markdown content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Path">
         <maml:name>ConvertFrom-OfficeWordMarkdown</maml:name>
@@ -34850,6 +35156,42 @@ System.IO.FileInfo</maml:name>
           <maml:name>BaseUri</maml:name>
           <maml:description>
             <maml:para>Base URI used to resolve relative links and images.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>BookmarkName</maml:name>
+          <maml:description>
+            <maml:para>Bookmark name that marks where Markdown content should be inserted in the template.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ContentControlAlias</maml:name>
+          <maml:description>
+            <maml:para>Block content control alias that marks where Markdown content should be inserted in the template.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ContentControlTag</maml:name>
+          <maml:description>
+            <maml:para>Block content control tag that marks where Markdown content should be inserted in the template.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -34907,6 +35249,18 @@ System.IO.FileInfo</maml:name>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>KeepPlaceholder</maml:name>
+          <maml:description>
+            <maml:para>Keep the target bookmark or content-control placeholder after inserting Markdown content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaxImageHeightPixels</maml:name>
           <maml:description>
             <maml:para>Optional hard cap for Markdown image height in pixels.</maml:para>
@@ -34990,6 +35344,30 @@ System.IO.FileInfo</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RenderFrontMatter</maml:name>
+          <maml:description>
+            <maml:para>Render YAML front matter as visible Word content. Template conversions hide front matter by default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="Template">
+          <maml:name>TemplatePath</maml:name>
+          <maml:description>
+            <maml:para>Optional Word template document to copy before inserting Markdown content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Document">
         <maml:name>ConvertFrom-OfficeWordMarkdown</maml:name>
@@ -35033,6 +35411,42 @@ System.IO.FileInfo</maml:name>
           <maml:name>BaseUri</maml:name>
           <maml:description>
             <maml:para>Base URI used to resolve relative links and images.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>BookmarkName</maml:name>
+          <maml:description>
+            <maml:para>Bookmark name that marks where Markdown content should be inserted in the template.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ContentControlAlias</maml:name>
+          <maml:description>
+            <maml:para>Block content control alias that marks where Markdown content should be inserted in the template.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ContentControlTag</maml:name>
+          <maml:description>
+            <maml:para>Block content control tag that marks where Markdown content should be inserted in the template.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -35090,6 +35504,18 @@ System.IO.FileInfo</maml:name>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>KeepPlaceholder</maml:name>
+          <maml:description>
+            <maml:para>Keep the target bookmark or content-control placeholder after inserting Markdown content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaxImageHeightPixels</maml:name>
           <maml:description>
             <maml:para>Optional hard cap for Markdown image height in pixels.</maml:para>
@@ -35173,6 +35599,30 @@ System.IO.FileInfo</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RenderFrontMatter</maml:name>
+          <maml:description>
+            <maml:para>Render YAML front matter as visible Word content. Template conversions hide front matter by default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="Template">
+          <maml:name>TemplatePath</maml:name>
+          <maml:description>
+            <maml:para>Optional Word template document to copy before inserting Markdown content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -35216,6 +35666,42 @@ System.IO.FileInfo</maml:name>
         <maml:name>BaseUri</maml:name>
         <maml:description>
           <maml:para>Base URI used to resolve relative links and images.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>BookmarkName</maml:name>
+        <maml:description>
+          <maml:para>Bookmark name that marks where Markdown content should be inserted in the template.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ContentControlAlias</maml:name>
+        <maml:description>
+          <maml:para>Block content control alias that marks where Markdown content should be inserted in the template.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ContentControlTag</maml:name>
+        <maml:description>
+          <maml:para>Block content control tag that marks where Markdown content should be inserted in the template.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -35280,6 +35766,18 @@ System.IO.FileInfo</maml:name>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>KeepPlaceholder</maml:name>
+        <maml:description>
+          <maml:para>Keep the target bookmark or content-control placeholder after inserting Markdown content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -35380,6 +35878,30 @@ System.IO.FileInfo</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <maml:name>RenderFrontMatter</maml:name>
+        <maml:description>
+          <maml:para>Render YAML front matter as visible Word content. Template conversions hide front matter by default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="Template">
+        <maml:name>TemplatePath</maml:name>
+        <maml:description>
+          <maml:para>Optional Word template document to copy before inserting Markdown content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -35421,6 +35943,16 @@ System.IO.FileInfo</maml:name>
         <dev:code>Get-OfficeMarkdown -Path .\README.md | ConvertFrom-OfficeWordMarkdown</dev:code>
         <dev:remarks>
           <maml:para>Returns a Word document instance for further edits.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Insert Markdown into a Word template bookmark.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertFrom-OfficeWordMarkdown -Path .\SOP.md -TemplatePath .\Template.docx -BookmarkName MainContent -OutputPath .\SOP.docx</dev:code>
+        <dev:remarks>
+          <maml:para>Copies the template and replaces the bookmark paragraph with generated Markdown content.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -52939,18 +53471,6 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Invoke-OfficeWordMailMerge</maml:name>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Values">
-          <maml:name>Data</maml:name>
-          <maml:description>
-            <maml:para>Hashtable or object whose properties map to MERGEFIELD names.</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
-          <dev:type>
-            <maml:name>Object</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
@@ -52959,6 +53479,18 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
           <command:parameterValue required="false" variableLength="false">WordDocument</command:parameterValue>
           <dev:type>
             <maml:name>WordDocument</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data,Values">
+          <maml:name>InputObject</maml:name>
+          <maml:description>
+            <maml:para>Hashtable or object whose properties map to MERGEFIELD names.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -52990,18 +53522,6 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Values">
-        <maml:name>Data</maml:name>
-        <maml:description>
-          <maml:para>Hashtable or object whose properties map to MERGEFIELD names.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
-        <dev:type>
-          <maml:name>Object</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
@@ -53010,6 +53530,18 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
         <command:parameterValue required="false" variableLength="false">WordDocument</command:parameterValue>
         <dev:type>
           <maml:name>WordDocument</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="Data,Values">
+        <maml:name>InputObject</maml:name>
+        <maml:description>
+          <maml:para>Hashtable or object whose properties map to MERGEFIELD names.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -53064,7 +53596,7 @@ System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Cultur
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Invoke-OfficeWordMailMerge -Data @{ FirstName = 'John'; OrderId = 12345 }</dev:code>
+        <dev:code>Invoke-OfficeWordMailMerge -InputObject @{ FirstName = 'John'; OrderId = 12345 }</dev:code>
         <dev:remarks>
           <maml:para>Updates MERGEFIELD values in the active Word document.</maml:para>
         </dev:remarks>

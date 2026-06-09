@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-08T07:38:34.2704949+00:00",
+  "generatedAt": "2026-06-09T13:23:48.9409360+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -159,8 +159,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableCommand.cs",
-      "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableCommand.cs#L23"
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableCommand.cs#L22"
     },
     {
       "name": "Add-OfficeExcelTableOfContents",
@@ -319,8 +319,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableCommand.cs",
-      "sourceLine": 28,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableCommand.cs#L28"
+      "sourceLine": 29,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/AddOfficeMarkdownTableCommand.cs#L29"
     },
     {
       "name": "Add-OfficeMarkdownTableOfContents",
@@ -455,8 +455,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfTableCommand.cs",
-      "sourceLine": 26,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfTableCommand.cs#L26"
+      "sourceLine": 28,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfTableCommand.cs#L28"
     },
     {
       "name": "Add-OfficePdfText",
@@ -591,8 +591,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableCommand.cs",
-      "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableCommand.cs#L24"
+      "sourceLine": 25,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableCommand.cs#L25"
     },
     {
       "name": "Add-OfficePowerPointTextBox",
@@ -807,8 +807,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCommand.cs",
-      "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCommand.cs#L24"
+      "sourceLine": 25,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableCommand.cs#L25"
     },
     {
       "name": "Add-OfficeWordTableCell",
@@ -935,8 +935,8 @@
         "ConvertFrom-WordMarkdown"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordMarkdownCommand.cs",
-      "sourceLine": 30,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordMarkdownCommand.cs#L30"
+      "sourceLine": 36,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/ConvertFromOfficeWordMarkdownCommand.cs#L36"
     },
     {
       "name": "ConvertTo-OfficeCsv",
