@@ -38,7 +38,7 @@ Hashtable or objects with Label/Value, Key/Value, Name/Value, or Title/Value pro
 ```yaml
 Type: Object
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Data
 Possible values:
 
 Required: True

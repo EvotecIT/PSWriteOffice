@@ -97,7 +97,7 @@ Source objects used to build chart data.
 ```yaml
 Type: Object[]
 Parameter Sets: Categorical, Scatter
-Aliases: None
+Aliases: Data
 Possible values:
 
 Required: True

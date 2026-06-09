@@ -55,7 +55,7 @@ Front matter data expressed as a hashtable or object.
 ```yaml
 Type: Object
 Parameter Sets: Context, Document
-Aliases: None
+Aliases: Data
 Possible values:
 
 Required: True

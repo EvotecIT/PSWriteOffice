@@ -223,7 +223,7 @@ Describe 'Markdown cmdlets' {
         $path = Join-Path $TestDrive 'MarkdownAdvancedDsl.md'
 
         New-OfficeMarkdown -Path $path {
-            MarkdownFrontMatter -InputObject @{
+            MarkdownFrontMatter -Data @{
                 title = 'Operations Report'
                 tags  = @('ops', 'weekly')
             }

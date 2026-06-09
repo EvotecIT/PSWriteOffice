@@ -42,7 +42,7 @@ Objects to flatten and render as a table.
 ```yaml
 Type: Object[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Data
 Possible values:
 
 Required: True

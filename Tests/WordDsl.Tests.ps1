@@ -254,7 +254,7 @@ Describe 'Word DSL surface' {
 
         New-OfficeWord -Path $path {
             Add-OfficeWordParagraph -Text 'Revenue mix'
-            Add-OfficeWordChart -Type Pie -InputObject $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix'
+            Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix'
         } | Out-Null
 
         $document = Get-OfficeWord -Path $path -ReadOnly
@@ -303,16 +303,16 @@ Describe 'Word DSL surface' {
         )
 
         New-OfficeWord -Path $path {
-            Add-OfficeWordTable -InputObject $rows -Transpose -Style TableGrid
+            Add-OfficeWordTable -Data $rows -SkipHeader -Transpose -Style TableGrid
         } | Out-Null
 
         $document = Get-OfficeWord -Path $path -ReadOnly
         try {
             $table = $document.Tables[0]
-            $table.RowsCount | Should -Be 3
-            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
-            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'One'
-            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be 'Two'
+            $table.RowsCount | Should -Be 2
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'One'
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Two'
         } finally {
             $document.Dispose()
         }

@@ -50,7 +50,7 @@ Input data (array, list, DataTable, etc.).
 ```yaml
 Type: Object
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Data
 Possible values:
 
 Required: True
@@ -82,7 +82,7 @@ Skip writing header row.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: SkipHeader
 Possible values:
 
 Required: False

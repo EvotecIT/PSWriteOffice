@@ -28,6 +28,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
     /// <summary>Input data (array, list, DataTable, etc.).</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    [Alias("Data")]
     public object? InputObject { get; set; }
 
     /// <summary>Built-in table style.</summary>
@@ -41,6 +42,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
     /// <summary>Skip writing header row.</summary>
     [Parameter]
+    [Alias("SkipHeader")]
     public SwitchParameter NoHeader { get; set; }
 
     /// <summary>Projection to apply before writing the table.</summary>

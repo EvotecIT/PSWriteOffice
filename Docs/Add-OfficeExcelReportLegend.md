@@ -74,7 +74,7 @@ Column headers.
 ```yaml
 Type: String[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Headers
 Possible values:
 
 Required: True
@@ -106,7 +106,7 @@ Rows. Each row may be an array, enumerable, hashtable, or object.
 ```yaml
 Type: Object[]
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Rows
 Possible values:
 
 Required: True

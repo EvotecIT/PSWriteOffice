@@ -1710,10 +1710,10 @@ Describe 'Excel DSL surface' {
         New-OfficeExcel -Path $path {
             Add-OfficeExcelReportSheet -Name 'Summary' {
                 Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current view'
-                Add-OfficeExcelReportKpiRow -InputObject ([ordered] @{ Ready = 1; Blocked = 1 }) -PerRow 2
+                Add-OfficeExcelReportKpiRow -Data ([ordered] @{ Ready = 1; Blocked = 1 }) -PerRow 2
                 Add-OfficeExcelReportCallout -Kind Warning -Title 'Attention' -Body 'One item needs review.'
-                Add-OfficeExcelReportTable -InputObject $rows -Title 'Rows'
-                Add-OfficeExcelReportLegend -Title 'Legend' -Header 'Status','Meaning' -InputObject @(
+                Add-OfficeExcelReportTable -Data $rows -Title 'Rows'
+                Add-OfficeExcelReportLegend -Title 'Legend' -Headers 'Status','Meaning' -Rows @(
                     @('Ready', 'No action'),
                     @('Blocked', 'Needs owner')
                 ) -FirstColumnFillByValue @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' }

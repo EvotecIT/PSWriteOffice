@@ -29,6 +29,7 @@ public sealed class AddOfficeMarkdownFrontMatterCommand : PSCmdlet
 
     /// <summary>Front matter data expressed as a hashtable or object.</summary>
     [Parameter(Mandatory = true, Position = 0)]
+    [Alias("Data")]
     public object InputObject { get; set; } = null!;
 
     /// <summary>Emit the updated Markdown document.</summary>

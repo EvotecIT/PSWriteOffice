@@ -72,6 +72,7 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
     /// <summary>Source objects used to build chart data.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetCategorical)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetScatter)]
+    [Alias("Data")]
     public object[] InputObject { get; set; } = Array.Empty<object>();
 
     /// <summary>Property name used for category labels on standard charts.</summary>

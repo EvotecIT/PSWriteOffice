@@ -33,6 +33,7 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
 
     /// <summary>Source objects to convert into table rows.</summary>
     [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetInputObject)]
+    [Alias("Data")]
     public object? InputObject { get; set; }
 
     /// <summary>Optional header order to apply to the table.</summary>

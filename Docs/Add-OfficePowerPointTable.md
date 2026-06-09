@@ -88,7 +88,7 @@ Source objects to convert into table rows.
 ```yaml
 Type: Object
 Parameter Sets: InputObject
-Aliases: None
+Aliases: Data
 Possible values:
 
 Required: True

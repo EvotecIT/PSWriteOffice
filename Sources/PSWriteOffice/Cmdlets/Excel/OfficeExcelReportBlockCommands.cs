@@ -178,6 +178,7 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
 {
     /// <summary>Hashtable or objects with Label/Value, Key/Value, Name/Value, or Title/Value properties.</summary>
     [Parameter(Mandatory = true, Position = 0)]
+    [Alias("Data")]
     public object InputObject { get; set; } = null!;
 
     /// <summary>Number of KPI cards per rendered row.</summary>
@@ -220,10 +221,12 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
 
     /// <summary>Column headers.</summary>
     [Parameter(Mandatory = true)]
+    [Alias("Headers")]
     public string[] Header { get; set; } = Array.Empty<string>();
 
     /// <summary>Rows. Each row may be an array, enumerable, hashtable, or object.</summary>
     [Parameter(Mandatory = true)]
+    [Alias("Rows")]
     public object[] InputObject { get; set; } = Array.Empty<object>();
 
     /// <summary>Optional first-column fill colors keyed by first-column value.</summary>
@@ -271,6 +274,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
 {
     /// <summary>Objects to flatten and render as a table.</summary>
     [Parameter(Mandatory = true, Position = 0)]
+    [Alias("Data")]
     public object[] InputObject { get; set; } = Array.Empty<object>();
 
     /// <summary>Optional section title displayed above the table.</summary>

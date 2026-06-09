@@ -211,7 +211,7 @@ Describe 'PowerPoint cmdlets' {
                 [PSCustomObject]@{ Item = 'Beta'; Qty = 20 }
             )
 
-            Add-OfficePowerPointTable -Slide $slide -InputObject $rows -Headers Qty, Item -X 40 -Y 120 -Width 420 -Height 160 | Out-Null
+            Add-OfficePowerPointTable -Slide $slide -Data $rows -Headers Qty, Item -X 40 -Y 120 -Width 420 -Height 160 | Out-Null
 
             $shapeInfo = @(Get-OfficePowerPointShape -Slide $slide | Where-Object Kind -eq 'Table')[0]
             $shapeInfo.RowCount | Should -Be 3
@@ -806,7 +806,7 @@ Describe 'PowerPoint cmdlets' {
 
             $slide1 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
             Set-OfficePowerPointSlideTitle -Slide $slide1 -Title 'Column Chart' | Out-Null
-            $columnChart = Add-OfficePowerPointChart -Slide $slide1 -InputObject $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Title 'Sales vs Profit' -X 40 -Y 120 -Width 360 -Height 220
+            $columnChart = Add-OfficePowerPointChart -Slide $slide1 -Data $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Title 'Sales vs Profit' -X 40 -Y 120 -Width 360 -Height 220
             $columnChart | Should -Not -BeNullOrEmpty
             @($slide1.Charts).Count | Should -Be 1
 
@@ -818,7 +818,7 @@ Describe 'PowerPoint cmdlets' {
 
             $slide3 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
             Set-OfficePowerPointSlideTitle -Slide $slide3 -Title 'Scatter Chart' | Out-Null
-            $scatterChart = Add-OfficePowerPointChart -Slide $slide3 -Type Scatter -InputObject $rows -XProperty MonthNumber -YProperty Sales, Profit -Title 'Trend Scatter' -X 40 -Y 120 -Width 360 -Height 220
+            $scatterChart = Add-OfficePowerPointChart -Slide $slide3 -Type Scatter -Data $rows -XProperty MonthNumber -YProperty Sales, Profit -Title 'Trend Scatter' -X 40 -Y 120 -Width 360 -Height 220
             $scatterChart | Should -Not -BeNullOrEmpty
             @($slide3.Charts).Count | Should -Be 1
 

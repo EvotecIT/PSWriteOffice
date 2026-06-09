@@ -87,6 +87,7 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
 
     /// <summary>Source objects used to build chart data.</summary>
     [Parameter(Mandatory = true)]
+    [Alias("Data")]
     public object[] InputObject { get; set; } = Array.Empty<object>();
 
     /// <summary>Property name used for category labels.</summary>

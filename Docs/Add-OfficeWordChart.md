@@ -131,7 +131,7 @@ Source objects used to build chart data.
 ```yaml
 Type: Object[]
 Parameter Sets: Context, Document, Paragraph
-Aliases: None
+Aliases: Data
 Possible values:
 
 Required: True
