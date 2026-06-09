@@ -201,6 +201,26 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'preserves the legacy PowerPoint table headers alias' {
+        $path = Join-Path $TestDrive 'PowerPointHeadersAlias.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+        try {
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $rows = @(
+                [PSCustomObject]@{ Item = 'Alpha'; Qty = 10 }
+                [PSCustomObject]@{ Item = 'Beta'; Qty = 20 }
+            )
+
+            Add-OfficePowerPointTable -Slide $slide -InputObject $rows -Headers Qty, Item -X 40 -Y 120 -Width 420 -Height 160 | Out-Null
+
+            $shapeInfo = @(Get-OfficePowerPointShape -Slide $slide | Where-Object Kind -eq 'Table')[0]
+            $shapeInfo.RowCount | Should -Be 3
+            $shapeInfo.ColumnCount | Should -Be 2
+        } finally {
+            Close-OfficePowerPoint -Presentation $presentation
+        }
+    }
+
     It 'reads notes without creating empty notes parts' {
         $path = Join-Path $TestDrive 'PowerPointNotesRead.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path

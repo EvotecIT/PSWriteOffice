@@ -37,6 +37,7 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
 
     /// <summary>Optional header order to apply to the table.</summary>
     [Parameter(ParameterSetName = ParameterSetInputObject)]
+    [Alias("Headers")]
     public string[]? Header { get; set; }
 
     /// <summary>Skip writing header row.</summary>

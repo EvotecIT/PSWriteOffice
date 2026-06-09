@@ -26,6 +26,7 @@ public sealed class InvokeOfficeWordMailMergeCommand : PSCmdlet
 
     /// <summary>Hashtable or object whose properties map to MERGEFIELD names.</summary>
     [Parameter(Mandatory = true, Position = 0)]
+    [Alias("Data", "Values")]
     public object InputObject { get; set; } = null!;
 
     /// <summary>Preserve field codes and only update displayed field text.</summary>

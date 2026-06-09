@@ -87,6 +87,30 @@ Describe 'Excel DSL surface' {
         $imported[1].Row2 | Should -Be 8774099
     }
 
+    It 'supports transposed Excel tables from IDataReader input' {
+        $path = Join-Path $TestDrive 'TransposedExcelReaderTable.xlsx'
+        $table = [System.Data.DataTable]::new('SqlRows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('One', 1)
+        [void] $table.Rows.Add('Two', 2)
+        $reader = $table.CreateDataReader()
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $reader -View Transpose -TableName 'TransposedReader'
+            }
+        }
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:C3')
+        $imported[0].Property | Should -Be 'Name'
+        $imported[0].Row1 | Should -Be 'One'
+        $imported[0].Row2 | Should -Be 'Two'
+        $imported[1].Property | Should -Be 'Value'
+        $imported[1].Row1 | Should -Be 1
+        $imported[1].Row2 | Should -Be 2
+    }
+
     It 'round-trips encrypted workbooks through lifecycle cmdlets' {
         if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.Excel.ExcelDocument' -MethodName 'LoadEncrypted')) {
             (Get-Command New-OfficeExcel).Parameters.Keys | Should -Contain 'Password'
@@ -155,6 +179,35 @@ Describe 'Excel DSL surface' {
         }
 
         Test-Path $path | Should -BeTrue
+    }
+
+    It 'preserves legacy Excel table data parameter aliases' {
+        $path = Join-Path $TestDrive 'DslExcelTableDataAliases.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Item = 'Laptop'; Qty = 5 }
+            [PSCustomObject]@{ Item = 'Tablet'; Qty = 12 }
+        )
+
+        $table = [System.Data.DataTable]::new('Stock')
+        [void] $table.Columns.Add('Item', [string])
+        [void] $table.Columns.Add('Qty', [int])
+        [void] $table.Rows.Add('Dock', 3)
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'DataAlias' -Content {
+                ExcelTable -Data $rows -TableName 'RowsAlias'
+            }
+            Add-OfficeExcelSheet -Name 'DataTableAlias' -Content {
+                ExcelTable -DataTable $table -TableName 'TableAlias'
+            }
+        }
+
+        $rowsAlias = @(Import-OfficeExcel -Path $path -WorksheetName 'DataAlias' -Range 'A1:B3')
+        $tableAlias = @(Import-OfficeExcel -Path $path -WorksheetName 'DataTableAlias' -Range 'A1:B2')
+        $rowsAlias[0].Item | Should -Be 'Laptop'
+        $rowsAlias[1].Qty | Should -Be 12
+        $tableAlias[0].Item | Should -Be 'Dock'
+        $tableAlias[0].Qty | Should -Be 3
     }
 
     It 'writes a DataTable directly as an Excel table' {

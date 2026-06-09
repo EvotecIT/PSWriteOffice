@@ -32,8 +32,53 @@ internal static class TableViewProjection
         {
             DataTable table => table.Rows.Cast<DataRow>().Cast<object>().ToArray(),
             DataView view => view.Cast<DataRowView>().Cast<object>().ToArray(),
+            IDataReader reader => ReadDataReaderRows(reader),
             _ => rows
         };
+    }
+
+    private static IReadOnlyList<object> ReadDataReaderRows(IDataReader reader)
+    {
+        var rows = new List<object>();
+        var columnNames = ResolveDataReaderColumnNames(reader);
+        while (reader.Read())
+        {
+            var row = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+            for (var index = 0; index < reader.FieldCount; index++)
+            {
+                row[columnNames[index]] = reader.IsDBNull(index) ? null : reader.GetValue(index);
+            }
+
+            rows.Add(row);
+        }
+
+        return rows;
+    }
+
+    private static string[] ResolveDataReaderColumnNames(IDataReader reader)
+    {
+        var columnNames = new string[reader.FieldCount];
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        for (var index = 0; index < reader.FieldCount; index++)
+        {
+            var columnName = reader.GetName(index);
+            if (string.IsNullOrWhiteSpace(columnName))
+            {
+                columnName = "Column" + (index + 1).ToString(CultureInfo.InvariantCulture);
+            }
+
+            var candidate = columnName;
+            var suffix = 2;
+            while (!seen.Add(candidate))
+            {
+                candidate = columnName + suffix.ToString(CultureInfo.InvariantCulture);
+                suffix++;
+            }
+
+            columnNames[index] = candidate;
+        }
+
+        return columnNames;
     }
 
     private static object[] TransposeRows(IReadOnlyList<object> rows)

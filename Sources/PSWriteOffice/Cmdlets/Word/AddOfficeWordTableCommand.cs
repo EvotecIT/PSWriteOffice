@@ -47,6 +47,10 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     [Parameter]
     public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
+    /// <summary>Legacy switch that maps to <see cref="OfficeTableView.Transpose"/>.</summary>
+    [Parameter]
+    public SwitchParameter Transpose { get; set; }
+
     /// <summary>DSL content executed inside the table.</summary>
     [Parameter(Position = 1)]
     public ScriptBlock? Content { get; set; }
@@ -76,7 +80,8 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         var context = WordDslContext.Require(this);
-        var tableRows = TableViewProjection.Project(rows, View);
+        var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
+        var tableRows = TableViewProjection.Project(rows, effectiveView);
         var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(tableRows);
         var legacyLayout = ResolveLegacyLayout(Layout);
         var table = CreateTable(context, normalizedRows, Style, includeHeader: !NoHeader.IsPresent, layout: legacyLayout);

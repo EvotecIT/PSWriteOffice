@@ -50,7 +50,7 @@ Hashtable or object whose properties map to MERGEFIELD names.
 ```yaml
 Type: Object
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Data, Values
 Possible values:
 
 Required: True

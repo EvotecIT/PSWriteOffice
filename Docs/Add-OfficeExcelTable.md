@@ -51,7 +51,7 @@ Source objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow 
 ```yaml
 Type: Object
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Data, DataTable
 Possible values:
 
 Required: True

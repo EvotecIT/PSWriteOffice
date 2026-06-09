@@ -295,6 +295,29 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'preserves the legacy Word table transpose switch' {
+        $path = Join-Path $TestDrive 'DslTableLegacyTranspose.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'One'; Value = 1 }
+            [PSCustomObject]@{ Name = 'Two'; Value = 2 }
+        )
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordTable -InputObject $rows -Transpose -Style TableGrid
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'One'
+            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be 'Two'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'adds Word line charts to an open document' {
         $path = Join-Path $TestDrive 'DslWordLineChart.docx'
         $rows = @(
@@ -561,7 +584,7 @@ Describe 'Word DSL surface' {
                 Add-OfficeWordText -Text ' is ready.'
             }
 
-            Invoke-OfficeWordMailMerge -InputObject @{
+            Invoke-OfficeWordMailMerge -Values @{
                 FirstName = 'Jane'
                 OrderId   = 77
             }
@@ -577,6 +600,22 @@ Describe 'Word DSL surface' {
 
         (Find-OfficeWord -Path $path -Text 'Jane').Count | Should -BeGreaterThan 0
         (Find-OfficeWord -Path $path -Text '77').Count | Should -BeGreaterThan 0
+    }
+
+    It 'preserves the legacy Word mail merge data alias' {
+        $path = Join-Path $TestDrive 'DslMailMergeDataAlias.docx'
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordParagraph {
+                Add-OfficeWordField -Type MergeField -Parameters '"FirstName"'
+            }
+
+            Invoke-OfficeWordMailMerge -Data @{
+                FirstName = 'Ada'
+            }
+        } | Out-Null
+
+        (Find-OfficeWord -Path $path -Text 'Ada').Count | Should -BeGreaterThan 0
     }
 
     It 'updates Word text and hyperlink metadata from a path' {

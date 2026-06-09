@@ -25,6 +25,7 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
 
     /// <summary>Source objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences to convert into table rows.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    [Alias("Data", "DataTable")]
     public object? InputObject { get; set; }
 
     /// <summary>Starting row for the data (1-based).</summary>

@@ -56,7 +56,7 @@ Optional header order to apply to the table.
 ```yaml
 Type: String[]
 Parameter Sets: InputObject
-Aliases: None
+Aliases: Headers
 Possible values:
 
 Required: False
