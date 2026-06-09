@@ -19,6 +19,11 @@ Add-OfficePdfTable [-InputObject] <Object> [-Property <string[]>] [-Header <stri
 Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-PassThru] [<CommonParameters>]
 ```
 
+### PipelineDocument
+```powershell
+Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-PassThru] [<CommonParameters>]
+```
+
 ## DESCRIPTION
 Adds a table to a PDF document.
 
@@ -45,7 +50,7 @@ Table alignment.
 
 ```yaml
 Type: PdfAlign
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values: Left, Center, Right, Justify
 
@@ -61,7 +66,7 @@ PDF document to update outside the DSL context.
 
 ```yaml
 Type: PdfDocument
-Parameter Sets: Document
+Parameter Sets: Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -77,7 +82,7 @@ Header labels. Defaults to property names.
 
 ```yaml
 Type: String[]
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -93,7 +98,7 @@ Objects or row arrays to render as a table.
 
 ```yaml
 Type: Object
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -109,7 +114,7 @@ Emit the updated document.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -125,7 +130,7 @@ Specific object properties to include.
 
 ```yaml
 Type: String[]
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -141,7 +146,7 @@ Projection to apply before writing the table.
 
 ```yaml
 Type: OfficeTableView
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values: Normal, Transpose
 

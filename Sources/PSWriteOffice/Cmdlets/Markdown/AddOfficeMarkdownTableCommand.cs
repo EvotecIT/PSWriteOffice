@@ -30,16 +30,19 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
 {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
+    private const string ParameterSetPipelineDocument = "PipelineDocument";
     private readonly List<object?> _items = new();
     private MarkdownDoc? _document;
 
     /// <summary>Markdown document to update outside the DSL context.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetPipelineDocument)]
     public MarkdownDoc Document { get; set; } = null!;
 
     /// <summary>Objects to convert into a Markdown table.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetContext)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPipelineDocument)]
     public object? InputObject { get; set; }
 
     /// <summary>Projection to apply before writing the table.</summary>
@@ -66,14 +69,38 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (ParameterSetName == ParameterSetPipelineDocument)
+        {
+            RenderTable(Document, BuildRows(InputObject));
+            if (PassThru.IsPresent)
+            {
+                WriteObject(Document);
+            }
+
+            return;
+        }
+
         AddInput(InputObject);
     }
 
     /// <inheritdoc />
     protected override void EndProcessing()
     {
+        if (ParameterSetName == ParameterSetPipelineDocument)
+        {
+            return;
+        }
+
         var doc = _document ?? ResolveDocument();
-        var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
+        RenderTable(doc, TableInputCollector.RequireRows(_items, nameof(InputObject)));
+        if (PassThru.IsPresent)
+        {
+            WriteObject(doc);
+        }
+    }
+
+    private void RenderTable(MarkdownDoc doc, object[] rows)
+    {
         var projectedRows = TableViewProjection.Project(rows, View);
         var normalizedRows = projectedRows.Select(NormalizeItem).ToArray();
         if (DisableAutoAlign.IsPresent)
@@ -84,16 +111,18 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
         {
             doc.TableFromAuto(normalizedRows);
         }
-
-        if (PassThru.IsPresent)
-        {
-            WriteObject(doc);
-        }
     }
 
     private void AddInput(object? value)
     {
         TableInputCollector.AddInput(_items, value);
+    }
+
+    private static object[] BuildRows(object? value)
+    {
+        var items = new List<object?>();
+        TableInputCollector.AddInput(items, value);
+        return TableInputCollector.RequireRows(items, nameof(InputObject));
     }
 
     private static object? NormalizeItem(object? item)

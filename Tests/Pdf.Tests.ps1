@@ -114,6 +114,50 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
+    It 'adds piped PDF table rows to a supplied document' {
+        $path = Join-Path $TestDrive 'piped-rows-supplied-document.pdf'
+        $doc = New-OfficePdf {
+            PdfHeading 'Pipeline rows'
+        }
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        $updated = $rows | PdfTable -Document $doc -PassThru
+        $updated | Save-OfficePdf -Path $path | Out-Null
+
+        $updated | Should -Be $doc
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Alpha'
+        $text | Should -Match 'Beta'
+    }
+
+    It 'adds explicit PDF table rows to each piped document' {
+        $path1 = Join-Path $TestDrive 'piped-document-one.pdf'
+        $path2 = Join-Path $TestDrive 'piped-document-two.pdf'
+        $doc1 = New-OfficePdf {
+            PdfHeading 'First document'
+        }
+        $doc2 = New-OfficePdf {
+            PdfHeading 'Second document'
+        }
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        $updated = @($doc1, $doc2) | PdfTable -InputObject $rows -PassThru
+        $updated[0] | Save-OfficePdf -Path $path1 | Out-Null
+        $updated[1] | Save-OfficePdf -Path $path2 | Out-Null
+
+        $updated.Count | Should -Be 2
+        $updated[0] | Should -Be $doc1
+        $updated[1] | Should -Be $doc2
+        (Get-OfficePdfText -Path $path1) | Should -Match 'Alpha'
+        (Get-OfficePdfText -Path $path2) | Should -Match 'Alpha'
+    }
+
     It 'keeps the current page size when only margins are updated' {
         $path = Join-Path $TestDrive 'page-size-margin.pdf'
 

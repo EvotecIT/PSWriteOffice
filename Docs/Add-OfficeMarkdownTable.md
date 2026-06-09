@@ -19,6 +19,11 @@ Add-OfficeMarkdownTable [-InputObject] <Object> [-View <OfficeTableView>] [-Disa
 Add-OfficeMarkdownTable [-InputObject] <Object> -Document <MarkdownDoc> [-View <OfficeTableView>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
 ```
 
+### PipelineDocument
+```powershell
+Add-OfficeMarkdownTable [-InputObject] <Object> -Document <MarkdownDoc> [-View <OfficeTableView>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
+```
+
 ## DESCRIPTION
 Adds a Markdown table from objects.
 
@@ -46,7 +51,7 @@ Disable automatic alignment heuristics for tables.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -62,7 +67,7 @@ Markdown document to update outside the DSL context.
 
 ```yaml
 Type: MarkdownDoc
-Parameter Sets: Document
+Parameter Sets: Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -78,7 +83,7 @@ Objects to convert into a Markdown table.
 
 ```yaml
 Type: Object
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -94,7 +99,7 @@ Emit the Markdown document after appending the table.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -110,7 +115,7 @@ Projection to apply before writing the table.
 
 ```yaml
 Type: OfficeTableView
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values: Normal, Transpose
 

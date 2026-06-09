@@ -175,6 +175,38 @@ Describe 'Markdown cmdlets' {
         $markdown | Should -Match 'Alpha'
     }
 
+    It 'adds piped Markdown table rows to a supplied document' {
+        $doc = Get-OfficeMarkdown -Text '# Seed'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        $updated = $rows | MarkdownTable -Document $doc -PassThru
+        $markdown = $updated.ToMarkdown()
+
+        $updated | Should -Be $doc
+        $markdown | Should -Match 'Alpha'
+        $markdown | Should -Match 'Beta'
+    }
+
+    It 'adds explicit Markdown table rows to each piped document' {
+        $doc1 = Get-OfficeMarkdown -Text '# First'
+        $doc2 = Get-OfficeMarkdown -Text '# Second'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        $updated = @($doc1, $doc2) | MarkdownTable -InputObject $rows -PassThru
+
+        $updated.Count | Should -Be 2
+        $updated[0] | Should -Be $doc1
+        $updated[1] | Should -Be $doc2
+        ($doc1.ToMarkdown() | Select-String -Pattern 'Alpha' -AllMatches).Matches.Count | Should -Be 1
+        ($doc2.ToMarkdown() | Select-String -Pattern 'Alpha' -AllMatches).Matches.Count | Should -Be 1
+    }
+
     It 'does not save Markdown or PDF sidecars when NoSave is used' {
         $path = Join-Path $TestDrive 'NoSave.md'
         $pdfPath = Join-Path $TestDrive 'NoSave.pdf'
