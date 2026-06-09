@@ -21,7 +21,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// )
 /// New-OfficeExcel -Path .\SalesPivot.xlsx {
 ///     Add-OfficeExcelSheet -Name Data {
-///         Add-OfficeExcelTable -Data $rows -TableName Sales -AutoFit
+///         Add-OfficeExcelTable -InputObject $rows -TableName Sales -AutoFit
 ///         Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E2' -Name 'SalesByRegion' -RowField Region -ColumnField Product -DataField Sales -DataFunction Sum -PivotStyle PivotStyleMedium9
 ///     }
 /// }</code>

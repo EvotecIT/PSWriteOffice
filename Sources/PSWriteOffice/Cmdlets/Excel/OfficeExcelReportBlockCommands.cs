@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>New-OfficeExcel -Path .\Operations.xlsx {
 ///     Add-OfficeExcelReportSheet -Name Summary {
 ///         Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current month'
-///         Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }
+///         Add-OfficeExcelReportKpiRow -InputObject @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }
 ///     }
 /// }</code>
 ///   <para>Uses the OfficeIMO sheet composer through PSWriteOffice's thin report-block wrapper.</para>
@@ -167,7 +167,7 @@ public sealed class AddOfficeExcelReportCalloutCommand : PSCmdlet
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficeExcel -Path .\Operations.xlsx {
 ///     Add-OfficeExcelReportSheet -Name Summary {
-///         Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3
+///         Add-OfficeExcelReportKpiRow -InputObject @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3
 ///     }
 /// }</code>
 ///   <para>Renders PowerShell key/value data as a KPI row through the OfficeIMO sheet composer.</para>
@@ -178,7 +178,7 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
 {
     /// <summary>Hashtable or objects with Label/Value, Key/Value, Name/Value, or Title/Value properties.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public object Data { get; set; } = null!;
+    public object InputObject { get; set; } = null!;
 
     /// <summary>Number of KPI cards per rendered row.</summary>
     [Parameter]
@@ -191,7 +191,7 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        ExcelDslContext.Require(this).RequireComposer().KpiRow(ReportBlockInput.ToPairs(Data), PerRow, LabelFillColor);
+        ExcelDslContext.Require(this).RequireComposer().KpiRow(ReportBlockInput.ToPairs(InputObject), PerRow, LabelFillColor);
     }
 }
 
@@ -205,7 +205,7 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
 /// )
 /// New-OfficeExcel -Path .\Operations.xlsx {
 ///     Add-OfficeExcelReportSheet -Name Summary {
-///         Add-OfficeExcelReportLegend -Title 'Status legend' -Headers Status, Meaning -Rows $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }
+///         Add-OfficeExcelReportLegend -Title 'Status legend' -Header Status, Meaning -InputObject $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }
 ///     }
 /// }</code>
 ///   <para>Renders legend rows and applies optional fill colors keyed by the first column.</para>
@@ -220,11 +220,11 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
 
     /// <summary>Column headers.</summary>
     [Parameter(Mandatory = true)]
-    public string[] Headers { get; set; } = Array.Empty<string>();
+    public string[] Header { get; set; } = Array.Empty<string>();
 
     /// <summary>Rows. Each row may be an array, enumerable, hashtable, or object.</summary>
     [Parameter(Mandatory = true)]
-    public object[] Rows { get; set; } = Array.Empty<object>();
+    public object[] InputObject { get; set; } = Array.Empty<object>();
 
     /// <summary>Optional first-column fill colors keyed by first-column value.</summary>
     [Parameter]
@@ -243,8 +243,8 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
     {
         ExcelDslContext.Require(this).RequireComposer().SectionLegend(
             Title,
-            Headers,
-            Rows.Select(row => ReportBlockInput.ToRow(row, Headers)),
+            Header,
+            InputObject.Select(row => ReportBlockInput.ToRow(row, Header)),
             ReportBlockInput.ToStringMap(FirstColumnFillByValue, CaseSensitive.IsPresent),
             HeaderFillColor);
     }
@@ -260,7 +260,7 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
 /// )
 /// New-OfficeExcel -Path .\Operations.xlsx {
 ///     Add-OfficeExcelReportSheet -Name Summary {
-///         Add-OfficeExcelReportTable -Data $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9
+///         Add-OfficeExcelReportTable -InputObject $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9
 ///     }
 /// }</code>
 ///   <para>Renders object rows as a formatted Excel table through the sheet composer.</para>
@@ -271,7 +271,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
 {
     /// <summary>Objects to flatten and render as a table.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public object[] Data { get; set; } = Array.Empty<object>();
+    public object[] InputObject { get; set; } = Array.Empty<object>();
 
     /// <summary>Optional section title displayed above the table.</summary>
     [Parameter(Position = 1)]
@@ -300,9 +300,9 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (Data.Length == 0)
+        if (InputObject.Length == 0)
         {
-            throw new PSArgumentException("Provide at least one data row.", nameof(Data));
+            throw new PSArgumentException("Provide at least one data row.", nameof(InputObject));
         }
 
         if (!Enum.TryParse(TableStyle, ignoreCase: true, out TableStyle style))
@@ -312,7 +312,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
 
         var composer = ExcelDslContext.Require(this).RequireComposer();
         var range = composer.TableFrom(
-            Data,
+            InputObject,
             Title,
             style: style,
             autoFilter: !NoAutoFilter.IsPresent,

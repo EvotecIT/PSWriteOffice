@@ -10,7 +10,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Add nested content to a table cell.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>WordTable -Data $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }</code>
+///   <code>WordTable -InputObject $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }</code>
 ///   <para>Targets the data cell at row 1, column 0 and writes text inside it.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordTableCell", DefaultParameterSetName = ParameterSetContext)]

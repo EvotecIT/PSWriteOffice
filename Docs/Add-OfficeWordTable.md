@@ -11,7 +11,7 @@ Creates a table from PowerShell objects.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-SkipHeader] [-Transpose] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-NoHeader] [-View <OfficeTableView>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,13 +50,13 @@ Input data (array, list, DataTable, etc.).
 ```yaml
 Type: Object
 Parameter Sets: __AllParameterSets
-Aliases: Data
+Aliases: None
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -76,8 +76,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -PassThru
-Emit the created WordTable.
+### -NoHeader
+Skip writing header row.
 
 ```yaml
 Type: SwitchParameter
@@ -92,8 +92,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -SkipHeader
-Skip writing header row.
+### -PassThru
+Emit the created WordTable.
 
 ```yaml
 Type: SwitchParameter
@@ -124,14 +124,14 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Transpose
-Transpose rows into property-oriented output.
+### -View
+Projection to apply before writing the table.
 
 ```yaml
-Type: SwitchParameter
+Type: OfficeTableView
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Normal, Transpose
 
 Required: False
 Position: named
@@ -145,7 +145,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.Object`
 
 ## OUTPUTS
 

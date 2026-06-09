@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
         $env:PSWRITEOFFICE_MODULE_MANIFEST
     } else {
@@ -141,6 +141,40 @@ Describe 'Markdown cmdlets' {
         $content | Should -Match 'Value'
     }
 
+    It 'supports transposed Markdown tables' {
+        $path = Join-Path $TestDrive 'MarkdownTransposedTable.md'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        New-OfficeMarkdown -Path $path {
+            MarkdownTable -InputObject $rows -View Transpose
+        } | Out-Null
+
+        $content = Get-Content -Path $path -Raw
+        $content | Should -Match 'Property'
+        $content | Should -Match 'Row1'
+        $content | Should -Match 'Row2'
+        $content | Should -Match 'Alpha'
+        $content | Should -Match 'Beta'
+    }
+
+    It 'adds Markdown tables to piped document objects' {
+        $doc = Get-OfficeMarkdown -Text '# Seed'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        $updated = $doc | MarkdownTable -InputObject $rows -PassThru
+        $markdown = $updated.ToMarkdown()
+
+        $updated | Should -Be $doc
+        $markdown | Should -Match 'Name'
+        $markdown | Should -Match 'Alpha'
+    }
+
     It 'does not save Markdown or PDF sidecars when NoSave is used' {
         $path = Join-Path $TestDrive 'NoSave.md'
         $pdfPath = Join-Path $TestDrive 'NoSave.pdf'
@@ -157,7 +191,7 @@ Describe 'Markdown cmdlets' {
         $path = Join-Path $TestDrive 'MarkdownAdvancedDsl.md'
 
         New-OfficeMarkdown -Path $path {
-            MarkdownFrontMatter -Data @{
+            MarkdownFrontMatter -InputObject @{
                 title = 'Operations Report'
                 tags  = @('ops', 'weekly')
             }
@@ -189,7 +223,7 @@ Describe 'Markdown cmdlets' {
         $doc = Get-OfficeMarkdown -Text '# Seed'
 
         $doc |
-            Add-OfficeMarkdownFrontMatter -Data @{ title = 'Doc pipeline' } -PassThru |
+            Add-OfficeMarkdownFrontMatter -InputObject @{ title = 'Doc pipeline' } -PassThru |
             Add-OfficeMarkdownHeading -Level 1 -Text 'Doc pipeline' -PassThru |
             Add-OfficeMarkdownTaskList -Items 'Alpha', 'Beta' -Completed 0 -PassThru |
             Add-OfficeMarkdownDefinitionList -Definition @{ API = 'Application programming interface' } -PassThru |

@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
         $env:PSWRITEOFFICE_MODULE_MANIFEST
     } else {
@@ -51,7 +51,7 @@ Describe 'Excel DSL surface' {
             Add-OfficeExcelSheet -Name 'Data' -Content {
                 Set-OfficeExcelCell -Address 'A1' -Value 'Region'
                 Set-OfficeExcelCell -Address 'B1' -Value 'Revenue'
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
             }
         }
 
@@ -63,6 +63,28 @@ Describe 'Excel DSL surface' {
         } finally {
             Close-OfficeExcel -Document $doc
         }
+    }
+
+    It 'supports transposed Excel tables' {
+        $path = Join-Path $TestDrive 'TransposedExcelTable.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'Europe'; Revenue = 21704714 }
+            [PSCustomObject]@{ Region = 'Asia'; Revenue = 8774099 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -View Transpose -TableName 'TransposedSales'
+            }
+        }
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:C3')
+        $imported[0].Property | Should -Be 'Region'
+        $imported[0].Row1 | Should -Be 'Europe'
+        $imported[0].Row2 | Should -Be 'Asia'
+        $imported[1].Property | Should -Be 'Revenue'
+        $imported[1].Row1 | Should -Be 21704714
+        $imported[1].Row2 | Should -Be 8774099
     }
 
     It 'round-trips encrypted workbooks through lifecycle cmdlets' {
@@ -128,7 +150,7 @@ Describe 'Excel DSL surface' {
             Add-OfficeExcelSheet -Name 'Orders' -Content {
                 ExcelCell -Address 'A1' -Value 'Item'
                 ExcelCell -Address 'B1' -Value 'Qty'
-                ExcelTable -Data $rows -TableName 'OrdersTable'
+                ExcelTable -InputObject $rows -TableName 'OrdersTable'
             }
         }
 
@@ -145,7 +167,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -DataTable $table -TableName 'PeopleTable' -AutoFit
+                Add-OfficeExcelTable -InputObject $table -TableName 'PeopleTable' -AutoFit
             }
         }
 
@@ -679,7 +701,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $table -TableName 'Items' -AutoFit
+                Add-OfficeExcelTable -InputObject $table -TableName 'Items' -AutoFit
             }
         }
 
@@ -697,10 +719,10 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'First' -Content {
-                Add-OfficeExcelTable -Data $rows
+                Add-OfficeExcelTable -InputObject $rows
             }
             Add-OfficeExcelSheet -Name 'Second' -Content {
-                Add-OfficeExcelTable -Data $rows
+                Add-OfficeExcelTable -InputObject $rows
             }
         }
 
@@ -737,7 +759,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Items' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Items' -AutoFit
                 Add-OfficeExcelValidationList -Range 'C2:C3' -Values 'New','In Progress','Done'
                 Invoke-OfficeExcelAutoFit -Columns
             }
@@ -759,7 +781,7 @@ Describe 'Excel DSL surface' {
                 Set-OfficeExcelColumn -Column 1 -StartRow 2 -Values 'Alpha', 'Beta'
                 Set-OfficeExcelColumn -Column 2 -StartRow 2 -Values 10, 20
                 Set-OfficeExcelNamedRange -Name 'ManualRange' -Range 'A1:B3'
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -StartRow 5
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -StartRow 5
             }
         } | Out-Null
 
@@ -878,7 +900,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -AutoFit
                 Add-OfficeExcelAutoFilter -Range 'A1:F4'
                 Invoke-OfficeExcelSort -Header 'Region'
                 Set-OfficeExcelFreeze -TopRows 1
@@ -942,7 +964,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -AutoFit
                 Add-OfficeExcelPivotTable -SourceRange 'A1:F4' -DestinationCell 'J1' -RowField 'Region' -DataField 'Sales' -DataDisplayName 'Total Sales'
                 Add-OfficeExcelValidationWholeNumber -Range 'B2:B4' -Operator Between -Formula1 1 -Formula2 1000 -AllowBlank:$false
                 Add-OfficeExcelValidationDecimal -Range 'C2:C4' -Operator Between -Formula1 0.0 -Formula2 1.0
@@ -988,7 +1010,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
                 Add-OfficeExcelPivotTable -SourceRange 'A1:C4' -DestinationCell 'E1' -RowField 'Region' -PageField 'Product' -DataField 'Sales' -DataNumberFormat '#,##0' -GrandTotalCaption 'Overall' -FieldSort @{ Region = 'Ascending' } -FieldHiddenItems @{ Region = @('APAC') } -PageFieldSelection @{ Product = 'Standard' }
             }
         }
@@ -1006,7 +1028,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -AutoFit
                 Set-OfficeExcelPageSetup -FitToWidth 1 -FitToHeight 0
                 Set-OfficeExcelMargins -Preset Narrow
                 Set-OfficeExcelOrientation -Orientation Landscape
@@ -1053,10 +1075,10 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
             }
             Add-OfficeExcelSheet -Name 'More' -Content {
-                Add-OfficeExcelTable -Data $moreRows -TableName 'MoreSales'
+                Add-OfficeExcelTable -InputObject $moreRows -TableName 'MoreSales'
             }
         }
         New-OfficeExcel -Path $sourcePath {
@@ -1105,7 +1127,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'People'
+                Add-OfficeExcelTable -InputObject $rows -TableName 'People'
             }
         }
 
@@ -1132,7 +1154,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales'
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
             }
         }
 
@@ -1179,7 +1201,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -AutoFit
                 Set-OfficeExcelNamedRange -Name 'SalesData' -Range 'A1:B3'
             }
             Add-OfficeExcelSheet -Name 'Notes' -Content {
@@ -1365,7 +1387,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -AutoFit
                 $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Pie -Title 'Revenue Mix' -PassThru
                 $formattedChart = $chart |
                     Set-OfficeExcelChartLegend -Position Right |
@@ -1406,7 +1428,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'Sales' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -AutoFit
                 $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Line -Title 'Revenue Trend' -PassThru
                 { $chart | Set-OfficeExcelChartSeries -SeriesIndex 0 -LineWidthPoints 1.5 -ErrorAction Stop } |
                     Should -Throw '*LineColor is required*'
@@ -1491,7 +1513,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Summary' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'SummaryTable' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'SummaryTable' -AutoFit
                 Set-OfficeExcelCell -Address 'D1' -Value 'Sheet'
                 Set-OfficeExcelCell -Address 'D2' -Value 'Alpha'
                 Set-OfficeExcelCell -Address 'D3' -Value 'Beta'
@@ -1539,7 +1561,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Summary' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'LinksTable' -AutoFit
+                Add-OfficeExcelTable -InputObject $rows -TableName 'LinksTable' -AutoFit
                 Set-OfficeExcelCell -Address 'D1' -Value 'Spec'
                 Set-OfficeExcelCell -Address 'D2' -Value 'rfc5321'
                 Set-OfficeExcelCell -Address 'D3' -Value 'rfc1035'
@@ -1582,7 +1604,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'ReportRows'
+                Add-OfficeExcelTable -InputObject $rows -TableName 'ReportRows'
                 Set-OfficeExcelColumnStyleByHeader -Header Revenue -Style Currency -CultureName en-US -AutoFit
                 Set-OfficeExcelColumnStyleByHeader -Header Rate -Style Percent -Decimals 1
                 Set-OfficeExcelColumnStyleByHeader -Header Status -BackgroundByText @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' } -BoldByText Blocked
@@ -1611,7 +1633,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Data' -Content {
-                Add-OfficeExcelTable -Data $rows -TableName 'ReportRows'
+                Add-OfficeExcelTable -InputObject $rows -TableName 'ReportRows'
                 Set-OfficeExcelColumnStyleByHeader -Header Status -BackgroundByText $statusColors -CaseSensitive
             }
         }
@@ -1635,10 +1657,10 @@ Describe 'Excel DSL surface' {
         New-OfficeExcel -Path $path {
             Add-OfficeExcelReportSheet -Name 'Summary' {
                 Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current view'
-                Add-OfficeExcelReportKpiRow -Data ([ordered] @{ Ready = 1; Blocked = 1 }) -PerRow 2
+                Add-OfficeExcelReportKpiRow -InputObject ([ordered] @{ Ready = 1; Blocked = 1 }) -PerRow 2
                 Add-OfficeExcelReportCallout -Kind Warning -Title 'Attention' -Body 'One item needs review.'
-                Add-OfficeExcelReportTable -Data $rows -Title 'Rows'
-                Add-OfficeExcelReportLegend -Title 'Legend' -Headers 'Status','Meaning' -Rows @(
+                Add-OfficeExcelReportTable -InputObject $rows -Title 'Rows'
+                Add-OfficeExcelReportLegend -Title 'Legend' -Header 'Status','Meaning' -InputObject @(
                     @('Ready', 'No action'),
                     @('Blocked', 'Needs owner')
                 ) -FirstColumnFillByValue @{ Ready = '#D4EDDA'; Blocked = '#F8D7DA' }
@@ -1675,7 +1697,7 @@ Describe 'Excel DSL surface' {
 
         New-OfficeExcel -Path $path {
             Add-OfficeExcelReportSheet -Name 'Legend' {
-                Add-OfficeExcelReportLegend -Headers 'Status','Meaning' -Rows @(
+                Add-OfficeExcelReportLegend -Header 'Status','Meaning' -InputObject @(
                     @('Ready', 'Upper'),
                     @('ready', 'Lower')
                 ) -FirstColumnFillByValue $statusColors -CaseSensitive

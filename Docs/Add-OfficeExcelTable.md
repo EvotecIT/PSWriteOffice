@@ -9,14 +9,9 @@ schema: 2.0.0
 Writes tabular data to the current worksheet and formats it as an Excel table.
 
 ## SYNTAX
-### Objects (Default)
+### __AllParameterSets
 ```powershell
-Add-OfficeExcelTable -Data <Object[]> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-TableName <string>] [-TableStyle <string>] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
-```
-
-### DataTable
-```powershell
-Add-OfficeExcelTable -DataTable <DataTable> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-TableName <string>] [-TableStyle <string>] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTable [-InputObject] <Object> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-View <OfficeTableView>] [-TableName <string>] [-TableStyle <string>] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,7 +22,7 @@ Accepts objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow
 ### EXAMPLE 1
 ```powershell
 PS> $data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })
-ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }
+ExcelSheet 'Data' { Add-OfficeExcelTable -InputObject $data -TableName 'Sales' }
 ```
 
 Writes two rows and formats them as a styled Excel table.
@@ -39,7 +34,7 @@ Auto-fit the table columns after insertion.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Objects, DataTable
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
@@ -50,33 +45,17 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Data
-Source objects to convert into table rows.
+### -InputObject
+Source objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences to convert into table rows.
 
 ```yaml
-Type: Object[]
-Parameter Sets: Objects
+Type: Object
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
 Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -DataTable
-Source DataTable to write directly.
-
-```yaml
-Type: DataTable
-Parameter Sets: DataTable
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
+Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -87,7 +66,7 @@ Disable AutoFilter dropdowns.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Objects, DataTable
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
@@ -103,7 +82,7 @@ Skip writing headers.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Objects, DataTable
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
@@ -119,7 +98,7 @@ Return the created range string.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Objects, DataTable
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
@@ -135,7 +114,7 @@ Starting column for the data (1-based).
 
 ```yaml
 Type: Int32
-Parameter Sets: Objects, DataTable
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
@@ -151,7 +130,7 @@ Starting row for the data (1-based).
 
 ```yaml
 Type: Int32
-Parameter Sets: Objects, DataTable
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
@@ -167,7 +146,7 @@ Name to assign to the table.
 
 ```yaml
 Type: String
-Parameter Sets: Objects, DataTable
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
@@ -183,9 +162,25 @@ Built-in table style to apply.
 
 ```yaml
 Type: String
-Parameter Sets: Objects, DataTable
+Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -View
+Projection to apply before writing the table.
+
+```yaml
+Type: OfficeTableView
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Normal, Transpose
 
 Required: False
 Position: named
@@ -199,7 +194,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `System.Data.DataTable`
+- `System.Object`
 
 ## OUTPUTS
 

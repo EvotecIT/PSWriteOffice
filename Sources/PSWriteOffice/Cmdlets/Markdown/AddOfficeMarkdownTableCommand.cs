@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Markdown;
 using PSWriteOffice.Services.Markdown;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.Markdown;
 
@@ -37,8 +38,13 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
     public MarkdownDoc Document { get; set; } = null!;
 
     /// <summary>Objects to convert into a Markdown table.</summary>
-    [Parameter(ValueFromPipeline = true)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetContext)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetDocument)]
     public object? InputObject { get; set; }
+
+    /// <summary>Projection to apply before writing the table.</summary>
+    [Parameter]
+    public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
     /// <summary>Disable automatic alignment heuristics for tables.</summary>
     [Parameter]
@@ -51,7 +57,10 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
-        _document = ResolveDocument();
+        if (ParameterSetName == ParameterSetContext)
+        {
+            _document = ResolveDocument();
+        }
     }
 
     /// <inheritdoc />
@@ -63,19 +72,17 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void EndProcessing()
     {
-        if (_items.Count == 0)
-        {
-            return;
-        }
-
         var doc = _document ?? ResolveDocument();
+        var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
+        var projectedRows = TableViewProjection.Project(rows, View);
+        var normalizedRows = projectedRows.Select(NormalizeItem).ToArray();
         if (DisableAutoAlign.IsPresent)
         {
-            doc.TableFrom(_items);
+            doc.TableFrom(normalizedRows);
         }
         else
         {
-            doc.TableFromAuto(_items);
+            doc.TableFromAuto(normalizedRows);
         }
 
         if (PassThru.IsPresent)
@@ -86,16 +93,7 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
 
     private void AddInput(object? value)
     {
-        if (value is IEnumerable enumerable and not string and not IDictionary)
-        {
-            foreach (var entry in enumerable)
-            {
-                _items.Add(NormalizeItem(entry));
-            }
-            return;
-        }
-
-        _items.Add(NormalizeItem(value));
+        TableInputCollector.AddInput(_items, value);
     }
 
     private static object? NormalizeItem(object? item)

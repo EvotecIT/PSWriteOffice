@@ -35,7 +35,7 @@ public enum PowerPointChartType
 /// )
 /// New-OfficePowerPoint -Path .\Examples\Documents\PowerPointChart.pptx {
 ///     $slide = Add-OfficePowerPointSlide -Layout 1
-///     Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
+///     Add-OfficePowerPointChart -Slide $slide -InputObject $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
 /// }</code>
 ///   <para>Creates a clustered column chart using Month for categories and Sales/Profit as series.</para>
 /// </example>
@@ -48,7 +48,7 @@ public enum PowerPointChartType
 /// )
 /// New-OfficePowerPoint -Path .\Examples\Documents\PowerPointScatter.pptx {
 ///     $slide = Add-OfficePowerPointSlide -Layout 1
-///     Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
+///     Add-OfficePowerPointChart -Slide $slide -Type Scatter -InputObject $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
 /// }</code>
 ///   <para>Creates a scatter chart using Quarter on the X axis and Revenue on the Y axis.</para>
 /// </example>
@@ -72,7 +72,7 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
     /// <summary>Source objects used to build chart data.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetCategorical)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetScatter)]
-    public object[] Data { get; set; } = Array.Empty<object>();
+    public object[] InputObject { get; set; } = Array.Empty<object>();
 
     /// <summary>Property name used for category labels on standard charts.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetCategorical)]
@@ -228,12 +228,12 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
 
     private object[] EnsureData()
     {
-        if (Data == null || Data.Length == 0)
+        if (InputObject == null || InputObject.Length == 0)
         {
-            throw new PSArgumentException("Provide at least one data item.", nameof(Data));
+            throw new PSArgumentException("Provide at least one data item.", nameof(InputObject));
         }
 
-        return Data;
+        return InputObject;
     }
 
     private static object? GetPropertyValue(object item, string propertyName)

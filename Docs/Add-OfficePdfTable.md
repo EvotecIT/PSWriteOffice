@@ -11,12 +11,12 @@ Adds a table to a PDF document.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficePdfTable [-InputObject] <Object[]> [-Property <string[]>] [-Header <string[]>] [-Align <PdfAlign>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfTable [-InputObject] <Object> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficePdfTable [-InputObject] <Object[]> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-Align <PdfAlign>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -92,7 +92,7 @@ Accept wildcard characters: True
 Objects or row arrays to render as a table.
 
 ```yaml
-Type: Object[]
+Type: Object
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -100,7 +100,7 @@ Possible values:
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -136,12 +136,29 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -View
+Projection to apply before writing the table.
+
+```yaml
+Type: OfficeTableView
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: Normal, Transpose
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-- `OfficeIMO.Pdf.PdfDocument`
+- `OfficeIMO.Pdf.PdfDocument
+System.Object`
 
 ## OUTPUTS
 

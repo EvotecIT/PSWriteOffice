@@ -11,17 +11,17 @@ Creates a Word document from Markdown.
 ## SYNTAX
 ### Markdown (Default)
 ```powershell
-ConvertFrom-OfficeWordMarkdown [-Markdown] <string> [-OutputPath <string>] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeWordMarkdown [-Markdown] <string> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-ConvertFrom-OfficeWordMarkdown [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeWordMarkdown [-FilePath] <string> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertFrom-OfficeWordMarkdown -Document <MarkdownDoc> [-OutputPath <string>] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeWordMarkdown -Document <MarkdownDoc> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,6 +42,13 @@ PS> Get-OfficeMarkdown -Path .\README.md | ConvertFrom-OfficeWordMarkdown
 ```
 
 Returns a Word document instance for further edits.
+
+### EXAMPLE 3
+```powershell
+PS> ConvertFrom-OfficeWordMarkdown -Path .\SOP.md -TemplatePath .\Template.docx -BookmarkName MainContent -OutputPath .\SOP.docx
+```
+
+Copies the template and replaces the bookmark paragraph with generated Markdown content.
 
 ## PARAMETERS
 
@@ -100,6 +107,54 @@ Base URI used to resolve relative links and images.
 Type: String
 Parameter Sets: Markdown, Path, Document
 Aliases: BasePath
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -BookmarkName
+Bookmark name that marks where Markdown content should be inserted in the template.
+
+```yaml
+Type: String
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ContentControlAlias
+Block content control alias that marks where Markdown content should be inserted in the template.
+
+```yaml
+Type: String
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ContentControlTag
+Block content control tag that marks where Markdown content should be inserted in the template.
+
+```yaml
+Type: String
+Parameter Sets: Markdown, Path, Document
+Aliases: None
 Possible values:
 
 Required: False
@@ -178,6 +233,22 @@ Optional font family applied during conversion.
 
 ```yaml
 Type: String
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -KeepPlaceholder
+Keep the target bookmark or content-control placeholder after inserting Markdown content.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Markdown, Path, Document
 Aliases: None
 Possible values:
@@ -308,6 +379,38 @@ Optional Markdown reader options used before Word conversion.
 Type: MarkdownReaderOptions
 Parameter Sets: Markdown, Path, Document
 Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -RenderFrontMatter
+Render YAML front matter as visible Word content. Template conversions hide front matter by default.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TemplatePath
+Optional Word template document to copy before inserting Markdown content.
+
+```yaml
+Type: String
+Parameter Sets: Markdown, Path, Document
+Aliases: Template
 Possible values:
 
 Required: False

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Excel;
-using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -15,23 +14,18 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <summary>Insert a table starting at A1.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$data = @([pscustomobject]@{ Region='NA'; Revenue=100 }, [pscustomobject]@{ Region='EMEA'; Revenue=150 })
-///   ExcelSheet 'Data' { Add-OfficeExcelTable -Data $data -TableName 'Sales' }</code>
+///   ExcelSheet 'Data' { Add-OfficeExcelTable -InputObject $data -TableName 'Sales' }</code>
 ///   <para>Writes two rows and formats them as a styled Excel table.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelTable", DefaultParameterSetName = ParameterSetObjects)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelTable")]
 [Alias("ExcelTable")]
 public sealed class AddOfficeExcelTableCommand : PSCmdlet
 {
-    private const string ParameterSetObjects = "Objects";
-    private const string ParameterSetDataTable = "DataTable";
+    private readonly List<object?> _items = new();
 
-    /// <summary>Source objects to convert into table rows.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetObjects)]
-    public object[] Data { get; set; } = Array.Empty<object>();
-
-    /// <summary>Source <see cref="DataTable"/> to write directly.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDataTable, ValueFromPipeline = true)]
-    public DataTable? DataTable { get; set; }
+    /// <summary>Source objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences to convert into table rows.</summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    public object? InputObject { get; set; }
 
     /// <summary>Starting row for the data (1-based).</summary>
     [Parameter]
@@ -44,6 +38,10 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
     /// <summary>Skip writing headers.</summary>
     [Parameter]
     public SwitchParameter NoHeader { get; set; }
+
+    /// <summary>Projection to apply before writing the table.</summary>
+    [Parameter]
+    public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
     /// <summary>Name to assign to the table.</summary>
     [Parameter]
@@ -68,10 +66,18 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        TableInputCollector.AddInput(_items, InputObject, preserveTabularInput: true);
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
         var context = ExcelDslContext.Require(this);
         var sheet = context.RequireSheet();
 
-        var table = ExcelTabularInputService.ToDataTable(GetSourceInput(), TableName);
+        var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
+        var projectedRows = TableViewProjection.Project(rows, View);
+        var table = ExcelTabularInputService.ToDataTable(projectedRows, TableName);
         if (table.Columns.Count == 0)
         {
             throw new InvalidOperationException("Unable to infer columns from the supplied data.");
@@ -118,25 +124,5 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
         }
 
         return string.IsNullOrWhiteSpace(table.TableName) ? null : table.TableName;
-    }
-
-    private IEnumerable<object?> GetSourceInput()
-    {
-        if (ParameterSetName == ParameterSetDataTable)
-        {
-            if (DataTable == null)
-            {
-                throw new PSArgumentNullException(nameof(DataTable));
-            }
-
-            return new object?[] { DataTable };
-        }
-
-        if (Data == null || Data.Length == 0)
-        {
-            throw new PSArgumentException("Provide at least one data row.", nameof(Data));
-        }
-
-        return Data;
     }
 }

@@ -24,7 +24,7 @@ Adds a title block to the current Excel report sheet.
 PS> New-OfficeExcel -Path .\Operations.xlsx {
     Add-OfficeExcelReportSheet -Name Summary {
         Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current month'
-        Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }
+        Add-OfficeExcelReportKpiRow -InputObject @{ Revenue = 125000; Incidents = 3; Status = 'Ready' }
     }
 }
 ```

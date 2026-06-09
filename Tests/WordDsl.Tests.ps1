@@ -94,7 +94,7 @@ Describe 'Word DSL surface' {
                     WordListItem 'One'
                     WordListItem 'Two'
                 }
-                WordTable -Data $rows -Style 'GridTable1LightAccent1' {
+                WordTable -InputObject $rows -Style 'GridTable1LightAccent1' {
                     WordTableCondition -FilterScript { $_.Qty -gt 2 } -BackgroundColor '#ffeeee'
                 }
             }
@@ -121,7 +121,7 @@ Describe 'Word DSL surface' {
         Copy-Item -LiteralPath $fixturePath -Destination $imagePath -Force
 
         New-OfficeWord -Path $path {
-            WordTable -Data $rows -Style 'GridTable1LightAccent1' {
+            WordTable -InputObject $rows -Style 'GridTable1LightAccent1' {
                 WordTableCell -Row 1 -Column 0 {
                     WordParagraph { WordText 'Checklist' }
                     WordImage -Path $imagePath -Width 24 -Height 24
@@ -132,7 +132,7 @@ Describe 'Word DSL surface' {
                 }
 
                 WordTableCell -Row 1 -Column 1 {
-                    WordTable -Data $nestedRows -SkipHeader -Style 'TableGrid' {
+                    WordTable -InputObject $nestedRows -NoHeader -Style 'TableGrid' {
                         WordTableCell -Row 0 -Column 0 {
                             WordParagraph { WordText 'Nested detail' }
                         }
@@ -254,7 +254,7 @@ Describe 'Word DSL surface' {
 
         New-OfficeWord -Path $path {
             Add-OfficeWordParagraph -Text 'Revenue mix'
-            Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix'
+            Add-OfficeWordChart -Type Pie -InputObject $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix'
         } | Out-Null
 
         $document = Get-OfficeWord -Path $path -ReadOnly
@@ -274,7 +274,7 @@ Describe 'Word DSL surface' {
         )
 
         New-OfficeWord -Path $path {
-            Add-OfficeWordTable -InputObject $rows -Transpose -Style TableGrid
+            Add-OfficeWordTable -InputObject $rows -View Transpose -Style TableGrid
         } | Out-Null
 
         $document = Get-OfficeWord -Path $path -ReadOnly
@@ -305,7 +305,7 @@ Describe 'Word DSL surface' {
 
         $document = New-OfficeWord -Path $path
         try {
-            $chart = Add-OfficeWordChart -Document $document -Type Line -Data $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -XAxisTitle 'Month' -YAxisTitle 'Value' -Title 'Monthly Trend' -PassThru
+            $chart = Add-OfficeWordChart -Document $document -Type Line -InputObject $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -XAxisTitle 'Month' -YAxisTitle 'Value' -Title 'Monthly Trend' -PassThru
             $chart.Title | Should -Be 'Monthly Trend'
             Save-OfficeWord -Document $document | Out-Null
         } finally {
@@ -397,7 +397,7 @@ Describe 'Word DSL surface' {
             $table = Add-OfficeWordTable -InputObject $tableRows -Style 'GridTable1LightAccent1' -PassThru
             $paragraph = $table.Rows[1].Cells[1].AddParagraph()
 
-            Add-OfficeWordChart -Paragraph $paragraph -Type Pie -Data $chartRows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix'
+            Add-OfficeWordChart -Paragraph $paragraph -Type Pie -InputObject $chartRows -CategoryProperty Region -SeriesProperty Revenue -Title 'Regional Revenue Mix'
         } | Out-Null
 
         $document = Get-OfficeWord -Path $path -ReadOnly
@@ -561,7 +561,7 @@ Describe 'Word DSL surface' {
                 Add-OfficeWordText -Text ' is ready.'
             }
 
-            Invoke-OfficeWordMailMerge -Data @{
+            Invoke-OfficeWordMailMerge -InputObject @{
                 FirstName = 'Jane'
                 OrderId   = 77
             }
@@ -755,7 +755,7 @@ Describe 'Word DSL surface' {
         )
 
         New-OfficeWord -Path $path {
-            $table = WordTable -Data $rows -Style TableGrid -PassThru
+            $table = WordTable -InputObject $rows -Style TableGrid -PassThru
             $cell = $table |
                 Get-OfficeWordTableCell -Row 1 -Column 1 |
                 Set-OfficeWordTableCell -ShadingFillColor '#DDEEFF' -Width 2400 -WidthType Dxa -WrapText $false -FitText $true -PassThru

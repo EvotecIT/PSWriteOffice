@@ -10,6 +10,7 @@
         <Copyright>(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.</Copyright>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -76,8 +77,8 @@
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
         <PackageReference Include="OfficeIMO.Drawing" Version="1.0.14" />
-        <PackageReference Include="OfficeIMO.Word" Version="1.0.60" />
-        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.33" />
+        <PackageReference Include="OfficeIMO.Word" Version="1.0.61" />
+        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.36" />
         <PackageReference Include="OfficeIMO.Excel" Version="0.6.40" />
         <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.35" />
         <PackageReference Include="OfficeIMO.Markdown" Version="0.6.27" />
@@ -88,6 +89,6 @@
         <PackageReference Include="OfficeIMO.Markdown.Pdf" Version="1.0.0" />
         <PackageReference Include="OfficeIMO.PowerPoint.Pdf" Version="1.0.0" />
         <PackageReference Include="OfficeIMO.CSV" Version="0.1.39" />
-        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.33" />
+        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.34" />
     </ItemGroup>
 </Project>

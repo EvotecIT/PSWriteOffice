@@ -11,12 +11,12 @@ Adds YAML front matter to a Markdown document.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeMarkdownFrontMatter [-Data] <Object> [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownFrontMatter [-InputObject] <Object> [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeMarkdownFrontMatter [-Data] <Object> -Document <MarkdownDoc> [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownFrontMatter [-InputObject] <Object> -Document <MarkdownDoc> [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -26,28 +26,12 @@ Adds YAML front matter to a Markdown document.
 
 ### EXAMPLE 1
 ```powershell
-PS> MarkdownFrontMatter -Data @{ title = 'Weekly Report'; tags = @('ops','summary') }
+PS> MarkdownFrontMatter -InputObject @{ title = 'Weekly Report'; tags = @('ops','summary') }
 ```
 
 Sets the document header using the supplied key/value pairs.
 
 ## PARAMETERS
-
-### -Data
-Front matter data expressed as a hashtable or object.
-
-```yaml
-Type: Object
-Parameter Sets: Context, Document
-Aliases: None
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
 
 ### -Document
 Markdown document to update outside the DSL context.
@@ -62,6 +46,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -InputObject
+Front matter data expressed as a hashtable or object.
+
+```yaml
+Type: Object
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

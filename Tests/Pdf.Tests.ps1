@@ -96,6 +96,24 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
+    It 'supports transposed table views' {
+        $path = Join-Path $TestDrive 'transposed-table.pdf'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows -View Transpose
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Property'
+        $text | Should -Match 'Row1'
+        $text | Should -Match 'Alpha'
+        $text | Should -Match 'Beta'
+    }
+
     It 'keeps the current page size when only margins are updated' {
         $path = Join-Path $TestDrive 'page-size-margin.pdf'
 

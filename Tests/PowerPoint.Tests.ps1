@@ -101,7 +101,7 @@ Describe 'PowerPoint cmdlets' {
             [PSCustomObject]@{ Item = 'Alpha'; Qty = 10 }
             [PSCustomObject]@{ Item = 'Beta'; Qty = 20 }
         )
-        $table = Add-OfficePowerPointTable -Slide $slide -Data $rows -X 40 -Y 140 -Width 360 -Height 200
+        $table = Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 40 -Y 140 -Width 360 -Height 200
         $image = Add-OfficePowerPointImage -Slide $slide -Path $imagePath -X 420 -Y 40 -Width 120 -Height 90
         $bullets = Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 420 -Y 150 -Width 250 -Height 200
         Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this under five minutes.'
@@ -178,6 +178,26 @@ Describe 'PowerPoint cmdlets' {
             if ($reloaded) {
                 $reloaded.Dispose()
             }
+        }
+    }
+
+    It 'supports transposed PowerPoint tables' {
+        $path = Join-Path $TestDrive 'PowerPointTransposedTable.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+        try {
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $rows = @(
+                [PSCustomObject]@{ Region = 'Europe'; Revenue = 21704714 }
+                [PSCustomObject]@{ Region = 'Asia'; Revenue = 8774099 }
+            )
+
+            Add-OfficePowerPointTable -Slide $slide -InputObject $rows -View Transpose -X 40 -Y 120 -Width 420 -Height 160 | Out-Null
+
+            $shapeInfo = @(Get-OfficePowerPointShape -Slide $slide | Where-Object Kind -eq 'Table')[0]
+            $shapeInfo.RowCount | Should -Be 3
+            $shapeInfo.ColumnCount | Should -Be 3
+        } finally {
+            Close-OfficePowerPoint -Presentation $presentation
         }
     }
 
@@ -766,19 +786,19 @@ Describe 'PowerPoint cmdlets' {
 
             $slide1 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
             Set-OfficePowerPointSlideTitle -Slide $slide1 -Title 'Column Chart' | Out-Null
-            $columnChart = Add-OfficePowerPointChart -Slide $slide1 -Data $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Title 'Sales vs Profit' -X 40 -Y 120 -Width 360 -Height 220
+            $columnChart = Add-OfficePowerPointChart -Slide $slide1 -InputObject $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Title 'Sales vs Profit' -X 40 -Y 120 -Width 360 -Height 220
             $columnChart | Should -Not -BeNullOrEmpty
             @($slide1.Charts).Count | Should -Be 1
 
             $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
             Set-OfficePowerPointSlideTitle -Slide $slide2 -Title 'Pie Chart' | Out-Null
-            $pieChart = Add-OfficePowerPointChart -Slide $slide2 -Type Pie -Data $rows -CategoryProperty Month -SeriesProperty Sales -Title 'Sales Mix' -X 40 -Y 120 -Width 320 -Height 220
+            $pieChart = Add-OfficePowerPointChart -Slide $slide2 -Type Pie -InputObject $rows -CategoryProperty Month -SeriesProperty Sales -Title 'Sales Mix' -X 40 -Y 120 -Width 320 -Height 220
             $pieChart | Should -Not -BeNullOrEmpty
             @($slide2.Charts).Count | Should -Be 1
 
             $slide3 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
             Set-OfficePowerPointSlideTitle -Slide $slide3 -Title 'Scatter Chart' | Out-Null
-            $scatterChart = Add-OfficePowerPointChart -Slide $slide3 -Type Scatter -Data $rows -XProperty MonthNumber -YProperty Sales, Profit -Title 'Trend Scatter' -X 40 -Y 120 -Width 360 -Height 220
+            $scatterChart = Add-OfficePowerPointChart -Slide $slide3 -Type Scatter -InputObject $rows -XProperty MonthNumber -YProperty Sales, Profit -Title 'Trend Scatter' -X 40 -Y 120 -Width 360 -Height 220
             $scatterChart | Should -Not -BeNullOrEmpty
             @($slide3.Charts).Count | Should -Be 1
 

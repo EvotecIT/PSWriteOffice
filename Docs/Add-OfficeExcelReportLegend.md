@@ -11,7 +11,7 @@ Adds a legend table to the current Excel report sheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportLegend [[-Title] <string>] -Headers <string[]> -Rows <Object[]> [-FirstColumnFillByValue <hashtable>] [-HeaderFillColor <string>] [-CaseSensitive] [<CommonParameters>]
+Add-OfficeExcelReportLegend [[-Title] <string>] -Header <string[]> -InputObject <Object[]> [-FirstColumnFillByValue <hashtable>] [-HeaderFillColor <string>] [-CaseSensitive] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,7 +27,7 @@ PS> $legendRows = @(
 )
 New-OfficeExcel -Path .\Operations.xlsx {
     Add-OfficeExcelReportSheet -Name Summary {
-        Add-OfficeExcelReportLegend -Title 'Status legend' -Headers Status, Meaning -Rows $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }
+        Add-OfficeExcelReportLegend -Title 'Status legend' -Header Status, Meaning -InputObject $legendRows -FirstColumnFillByValue @{ Ready = '#d9f7be'; Review = '#fff7e6' }
     }
 }
 ```
@@ -68,6 +68,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -Header
+Column headers.
+
+```yaml
+Type: String[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -HeaderFillColor
 Optional header fill color.
 
@@ -84,23 +100,7 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Headers
-Column headers.
-
-```yaml
-Type: String[]
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Rows
+### -InputObject
 Rows. Each row may be an array, enumerable, hashtable, or object.
 
 ```yaml

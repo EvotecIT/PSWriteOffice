@@ -11,12 +11,12 @@ Adds a Markdown table from objects.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeMarkdownTable [-InputObject <Object>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownTable [-InputObject] <Object> [-View <OfficeTableView>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeMarkdownTable -Document <MarkdownDoc> [-InputObject <Object>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownTable [-InputObject] <Object> -Document <MarkdownDoc> [-View <OfficeTableView>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -82,8 +82,8 @@ Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
@@ -97,6 +97,22 @@ Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -View
+Projection to apply before writing the table.
+
+```yaml
+Type: OfficeTableView
+Parameter Sets: Context, Document
+Aliases: None
+Possible values: Normal, Transpose
 
 Required: False
 Position: named

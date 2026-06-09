@@ -74,40 +74,42 @@ public sealed class SetOfficeExcelChartSeriesCommand : PSCmdlet
     {
         try
         {
-            if (!string.IsNullOrWhiteSpace(FillColor))
+            var fillColor = FillColor;
+            if (!string.IsNullOrWhiteSpace(fillColor))
             {
                 if (ParameterSetName == ParameterSetSeriesName)
                 {
-                    Chart.SetSeriesFillColor(SeriesName, FillColor, IgnoreCase);
+                    Chart.SetSeriesFillColor(SeriesName, fillColor!, IgnoreCase);
                 }
                 else
                 {
-                    Chart.SetSeriesFillColor(SeriesIndex, FillColor);
+                    Chart.SetSeriesFillColor(SeriesIndex, fillColor!);
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(LineColor) || LineWidthPoints.HasValue)
+            var lineColor = LineColor;
+            if (!string.IsNullOrWhiteSpace(lineColor) || LineWidthPoints.HasValue)
             {
-                if (string.IsNullOrWhiteSpace(LineColor))
+                if (string.IsNullOrWhiteSpace(lineColor))
                 {
                     throw new PSArgumentException("LineColor is required when LineWidthPoints is used because the current OfficeIMO chart API applies series line width together with a line color.");
                 }
 
                 if (ParameterSetName == ParameterSetSeriesName)
                 {
-                    Chart.SetSeriesLineColor(SeriesName, LineColor, LineWidthPoints, IgnoreCase);
+                    Chart.SetSeriesLineColor(SeriesName, lineColor!, LineWidthPoints, IgnoreCase);
                 }
                 else
                 {
-                    Chart.SetSeriesLineColor(SeriesIndex, LineColor, LineWidthPoints);
+                    Chart.SetSeriesLineColor(SeriesIndex, lineColor!, LineWidthPoints);
                 }
             }
 
+            var markerStyleName = string.IsNullOrWhiteSpace(MarkerStyle) ? "Circle" : MarkerStyle!;
             bool markerRequested = !string.IsNullOrWhiteSpace(MarkerStyle) || MarkerSize.HasValue ||
                 !string.IsNullOrWhiteSpace(MarkerFillColor) || !string.IsNullOrWhiteSpace(MarkerLineColor) || MarkerLineWidthPoints.HasValue;
             if (markerRequested)
             {
-                string markerStyleName = string.IsNullOrWhiteSpace(MarkerStyle) ? "Circle" : MarkerStyle;
                 if (!OpenXmlValueParser.TryParse(markerStyleName, out C.MarkerStyleValues markerStyle))
                 {
                     throw new PSArgumentException($"Unknown MarkerStyle '{MarkerStyle}'.");

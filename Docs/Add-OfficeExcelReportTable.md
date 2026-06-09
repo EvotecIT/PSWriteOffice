@@ -11,7 +11,7 @@ Adds an object table to the current Excel report sheet using the OfficeIMO sheet
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportTable [-Data] <Object[]> [[-Title] <string>] [-TableStyle <string>] [-NoAutoFilter] [-NoFreezeHeaderRow] [-NoAutoFormatDynamicCollections] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelReportTable [-InputObject] <Object[]> [[-Title] <string>] [-TableStyle <string>] [-NoAutoFilter] [-NoFreezeHeaderRow] [-NoAutoFormatDynamicCollections] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,7 +27,7 @@ PS> $rows = @(
 )
 New-OfficeExcel -Path .\Operations.xlsx {
     Add-OfficeExcelReportSheet -Name Summary {
-        Add-OfficeExcelReportTable -Data $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9
+        Add-OfficeExcelReportTable -InputObject $rows -Title 'Documentation coverage' -TableStyle TableStyleMedium9
     }
 }
 ```
@@ -36,7 +36,7 @@ Renders object rows as a formatted Excel table through the sheet composer.
 
 ## PARAMETERS
 
-### -Data
+### -InputObject
 Objects to flatten and render as a table.
 
 ```yaml
