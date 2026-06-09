@@ -16,12 +16,12 @@ Add-OfficePowerPointChart [-Slide <PowerPointSlide>] [-Type <PowerPointChartType
 
 ### Categorical
 ```powershell
-Add-OfficePowerPointChart -Data <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [<CommonParameters>]
+Add-OfficePowerPointChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [<CommonParameters>]
 ```
 
 ### Scatter
 ```powershell
-Add-OfficePowerPointChart -Data <Object[]> -XProperty <string> -YProperty <string[]> [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [<CommonParameters>]
+Add-OfficePowerPointChart -InputObject <Object[]> -XProperty <string> -YProperty <string[]> [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,7 +37,7 @@ PS> $rows = @(
 )
 New-OfficePowerPoint -Path .\Examples\Documents\PowerPointChart.pptx {
     $slide = Add-OfficePowerPointSlide -Layout 1
-    Add-OfficePowerPointChart -Slide $slide -Data $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
+    Add-OfficePowerPointChart -Slide $slide -InputObject $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
 }
 ```
 
@@ -51,7 +51,7 @@ PS> $rows = @(
 )
 New-OfficePowerPoint -Path .\Examples\Documents\PowerPointScatter.pptx {
     $slide = Add-OfficePowerPointSlide -Layout 1
-    Add-OfficePowerPointChart -Slide $slide -Type Scatter -Data $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
+    Add-OfficePowerPointChart -Slide $slide -Type Scatter -InputObject $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
 }
 ```
 
@@ -75,22 +75,6 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Data
-Source objects used to build chart data.
-
-```yaml
-Type: Object[]
-Parameter Sets: Categorical, Scatter
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
 ### -Height
 Chart height in points.
 
@@ -101,6 +85,22 @@ Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -InputObject
+Source objects used to build chart data.
+
+```yaml
+Type: Object[]
+Parameter Sets: Categorical, Scatter
+Aliases: Data
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False

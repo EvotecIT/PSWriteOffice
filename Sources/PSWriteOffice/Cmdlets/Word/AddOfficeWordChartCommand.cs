@@ -36,8 +36,8 @@ public enum WordChartType
 /// )
 /// New-OfficeWord -Path .\RegionalReport.docx {
 ///     Add-OfficeWordParagraph -Text 'Regional revenue'
-///     Add-OfficeWordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix' -FitToPageWidth -WidthFraction 0.75
-///     Add-OfficeWordChart -Type Bar -Data $rows -CategoryProperty Region -SeriesProperty Revenue, Profit -Legend -XAxisTitle 'Region' -YAxisTitle 'Amount'
+///     Add-OfficeWordChart -Type Pie -InputObject $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue mix' -FitToPageWidth -WidthFraction 0.75
+///     Add-OfficeWordChart -Type Bar -InputObject $rows -CategoryProperty Region -SeriesProperty Revenue, Profit -Legend -XAxisTitle 'Region' -YAxisTitle 'Amount'
 /// }</code>
 ///   <para>Creates a report with a pie chart and a multi-series bar chart from PowerShell objects.</para>
 /// </example>
@@ -50,7 +50,7 @@ public enum WordChartType
 ///     [pscustomobject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }
 /// )
 /// $doc = New-OfficeWord -Path .\Trend.docx -PassThru
-/// Add-OfficeWordChart -Document $doc -Type Line -Data $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'
+/// Add-OfficeWordChart -Document $doc -Type Line -InputObject $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'
 /// Save-OfficeWord -Document $doc</code>
 ///   <para>Creates a multi-series line chart on the document and shows a legend.</para>
 /// </example>
@@ -87,7 +87,8 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
 
     /// <summary>Source objects used to build chart data.</summary>
     [Parameter(Mandatory = true)]
-    public object[] Data { get; set; } = Array.Empty<object>();
+    [Alias("Data")]
+    public object[] InputObject { get; set; } = Array.Empty<object>();
 
     /// <summary>Property name used for category labels.</summary>
     [Parameter(Mandatory = true)]
@@ -145,9 +146,9 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (Data == null || Data.Length == 0)
+        if (InputObject == null || InputObject.Length == 0)
         {
-            throw new PSArgumentException("Provide at least one data item.", nameof(Data));
+            throw new PSArgumentException("Provide at least one data item.", nameof(InputObject));
         }
 
         if (SeriesProperty == null || SeriesProperty.Length == 0)
@@ -175,10 +176,10 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
             throw new ArgumentOutOfRangeException(nameof(WidthFraction), "WidthFraction must be between 0 and 1 when FitToPageWidth is used.");
         }
 
-        var items = Data.Where(item => item != null).ToArray();
+        var items = InputObject.Where(item => item != null).ToArray();
         if (items.Length == 0)
         {
-            throw new PSArgumentException("Chart data items cannot all be null.", nameof(Data));
+            throw new PSArgumentException("Chart data items cannot all be null.", nameof(InputObject));
         }
 
         var chart = CreateChartTarget();

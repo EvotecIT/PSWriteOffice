@@ -7,6 +7,7 @@ using System.Management.Automation;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.PowerPoint;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -16,14 +17,14 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <summary>Create a table from objects.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$rows = @([pscustomobject]@{ Item='Alpha'; Qty=2 }, [pscustomobject]@{ Item='Beta'; Qty=4 })
-///   Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Height 200</code>
+///   Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 60 -Y 140 -Width 420 -Height 200</code>
 ///   <para>Creates a table with headers and two data rows.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficePowerPointTable", DefaultParameterSetName = ParameterSetData)]
+[Cmdlet(VerbsCommon.Add, "OfficePowerPointTable", DefaultParameterSetName = ParameterSetInputObject)]
 [Alias("PptTable")]
 public sealed class AddOfficePowerPointTableCommand : PSCmdlet
 {
-    private const string ParameterSetData = "Data";
+    private const string ParameterSetInputObject = "InputObject";
     private const string ParameterSetSize = "Size";
 
     /// <summary>Target slide that will receive the table (optional inside DSL).</summary>
@@ -31,16 +32,22 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
     public PowerPointSlide? Slide { get; set; }
 
     /// <summary>Source objects to convert into table rows.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetData)]
-    public object[] Data { get; set; } = Array.Empty<object>();
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetInputObject)]
+    [Alias("Data")]
+    public object? InputObject { get; set; }
 
     /// <summary>Optional header order to apply to the table.</summary>
-    [Parameter(ParameterSetName = ParameterSetData)]
-    public string[]? Headers { get; set; }
+    [Parameter(ParameterSetName = ParameterSetInputObject)]
+    [Alias("Headers")]
+    public string[]? Header { get; set; }
 
     /// <summary>Skip writing header row.</summary>
-    [Parameter(ParameterSetName = ParameterSetData)]
+    [Parameter(ParameterSetName = ParameterSetInputObject)]
     public SwitchParameter NoHeader { get; set; }
+
+    /// <summary>Projection to apply before writing the table.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObject)]
+    public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
     /// <summary>Row count for an empty table.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetSize)]
@@ -113,12 +120,11 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
 
     private PowerPointTable CreateDataTable(PowerPointSlide slide)
     {
-        if (Data == null || Data.Length == 0)
-        {
-            throw new PSArgumentException("Provide at least one data row.", nameof(Data));
-        }
-
-        var normalized = PowerShellObjectNormalizer.NormalizeItems(Data);
+        var items = new List<object?>();
+        TableInputCollector.AddInput(items, InputObject);
+        var inputRows = TableInputCollector.RequireRows(items, nameof(InputObject));
+        var projectedRows = TableViewProjection.Project(inputRows, View);
+        var normalized = PowerShellObjectNormalizer.NormalizeItems(projectedRows);
         var rows = NormalizeRows(normalized);
         var headers = ResolveHeaders(rows);
 
@@ -188,16 +194,16 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
 
     private List<string> ResolveHeaders(IReadOnlyList<Dictionary<string, object?>> rows)
     {
-        if (Headers != null && Headers.Length > 0)
+        if (Header != null && Header.Length > 0)
         {
-            var explicitHeaders = Headers
+            var explicitHeaders = Header
                 .Where(h => !string.IsNullOrWhiteSpace(h))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
             if (explicitHeaders.Count == 0)
             {
-                throw new PSArgumentException("Headers cannot be empty.", nameof(Headers));
+                throw new PSArgumentException("Header cannot be empty.", nameof(Header));
             }
 
             return explicitHeaders;

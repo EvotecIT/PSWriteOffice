@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 /// <example>
 ///   <summary>Add front matter from a hashtable.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>MarkdownFrontMatter -Data @{ title = 'Weekly Report'; tags = @('ops','summary') }</code>
+///   <code>MarkdownFrontMatter -InputObject @{ title = 'Weekly Report'; tags = @('ops','summary') }</code>
 ///   <para>Sets the document header using the supplied key/value pairs.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeMarkdownFrontMatter", DefaultParameterSetName = ParameterSetContext)]
@@ -29,7 +29,8 @@ public sealed class AddOfficeMarkdownFrontMatterCommand : PSCmdlet
 
     /// <summary>Front matter data expressed as a hashtable or object.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public object Data { get; set; } = null!;
+    [Alias("Data")]
+    public object InputObject { get; set; } = null!;
 
     /// <summary>Emit the updated Markdown document.</summary>
     [Parameter]
@@ -39,7 +40,7 @@ public sealed class AddOfficeMarkdownFrontMatterCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var doc = ResolveDocument();
-        doc.FrontMatter(NormalizeData(Data));
+        doc.FrontMatter(NormalizeInputObject(InputObject));
 
         if (PassThru.IsPresent)
         {
@@ -47,11 +48,11 @@ public sealed class AddOfficeMarkdownFrontMatterCommand : PSCmdlet
         }
     }
 
-    private static object NormalizeData(object? value)
+    private static object NormalizeInputObject(object? value)
     {
         if (value == null)
         {
-            throw new PSArgumentNullException(nameof(Data));
+            throw new PSArgumentNullException(nameof(InputObject));
         }
 
         if (value is IDictionary dictionary)

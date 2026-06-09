@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Replace merge fields from a hashtable.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Invoke-OfficeWordMailMerge -Data @{ FirstName = 'John'; OrderId = 12345 }</code>
+///   <code>Invoke-OfficeWordMailMerge -InputObject @{ FirstName = 'John'; OrderId = 12345 }</code>
 ///   <para>Updates MERGEFIELD values in the active Word document.</para>
 /// </example>
 [Cmdlet(VerbsLifecycle.Invoke, "OfficeWordMailMerge")]
@@ -26,8 +26,8 @@ public sealed class InvokeOfficeWordMailMergeCommand : PSCmdlet
 
     /// <summary>Hashtable or object whose properties map to MERGEFIELD names.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    [Alias("Values")]
-    public object Data { get; set; } = null!;
+    [Alias("Data", "Values")]
+    public object InputObject { get; set; } = null!;
 
     /// <summary>Preserve field codes and only update displayed field text.</summary>
     [Parameter]
@@ -46,10 +46,10 @@ public sealed class InvokeOfficeWordMailMergeCommand : PSCmdlet
             throw new InvalidOperationException("Word document was not provided.");
         }
 
-        var values = NormalizeData(Data);
+        var values = NormalizeInputObject(InputObject);
         if (values.Count == 0)
         {
-            throw new PSArgumentException("Provide at least one mail-merge value.", nameof(Data));
+            throw new PSArgumentException("Provide at least one mail-merge value.", nameof(InputObject));
         }
 
         WordMailMerge.Execute(document, values, removeFields: !PreserveFields.IsPresent);
@@ -60,11 +60,11 @@ public sealed class InvokeOfficeWordMailMergeCommand : PSCmdlet
         }
     }
 
-    private static Dictionary<string, string> NormalizeData(object? value)
+    private static Dictionary<string, string> NormalizeInputObject(object? value)
     {
         if (value == null)
         {
-            throw new PSArgumentNullException(nameof(Data));
+            throw new PSArgumentNullException(nameof(InputObject));
         }
 
         if (value is IDictionary dictionary)
@@ -80,7 +80,7 @@ public sealed class InvokeOfficeWordMailMergeCommand : PSCmdlet
 
         if (properties.Count == 0)
         {
-            throw new PSArgumentException("Mail-merge data must be a hashtable or an object with readable properties.", nameof(Data));
+            throw new PSArgumentException("Mail-merge input must be a hashtable or an object with readable properties.", nameof(InputObject));
         }
 
         var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

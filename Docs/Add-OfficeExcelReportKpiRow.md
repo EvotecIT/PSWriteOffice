@@ -11,7 +11,7 @@ Adds a KPI row to the current Excel report sheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportKpiRow [-Data] <Object> [-PerRow <int>] [-LabelFillColor <string>] [<CommonParameters>]
+Add-OfficeExcelReportKpiRow [-InputObject] <Object> [-PerRow <int>] [-LabelFillColor <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -23,7 +23,7 @@ Adds a KPI row to the current Excel report sheet.
 ```powershell
 PS> New-OfficeExcel -Path .\Operations.xlsx {
     Add-OfficeExcelReportSheet -Name Summary {
-        Add-OfficeExcelReportKpiRow -Data @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3
+        Add-OfficeExcelReportKpiRow -InputObject @{ Revenue = 125000; Incidents = 3; Status = 'Ready' } -PerRow 3
     }
 }
 ```
@@ -32,13 +32,13 @@ Renders PowerShell key/value data as a KPI row through the OfficeIMO sheet compo
 
 ## PARAMETERS
 
-### -Data
+### -InputObject
 Hashtable or objects with Label/Value, Key/Value, Name/Value, or Title/Value properties.
 
 ```yaml
 Type: Object
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Data
 Possible values:
 
 Required: True

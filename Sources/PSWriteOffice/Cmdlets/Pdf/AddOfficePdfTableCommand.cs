@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -27,14 +29,19 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
 {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
+    private const string ParameterSetPipelineDocument = "PipelineDocument";
+    private readonly List<object?> _items = new();
 
     /// <summary>PDF document to update outside the DSL context.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetPipelineDocument)]
     public PdfDocument Document { get; set; } = null!;
 
     /// <summary>Objects or row arrays to render as a table.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
-    public object[] InputObject { get; set; } = System.Array.Empty<object>();
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetContext)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPipelineDocument)]
+    public object? InputObject { get; set; }
 
     /// <summary>Specific object properties to include.</summary>
     [Parameter]
@@ -43,6 +50,10 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     /// <summary>Header labels. Defaults to property names.</summary>
     [Parameter]
     public string[]? Header { get; set; }
+
+    /// <summary>Projection to apply before writing the table.</summary>
+    [Parameter]
+    public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
     /// <summary>Table alignment.</summary>
     [Parameter]
@@ -55,18 +66,53 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        var rowArrayInput = InputObject.All(item => item is IEnumerable && item is not string && item is not IDictionary);
-        string[][] rows = rowArrayInput
-            ? PdfCommandUtilities.ConvertDataRows(InputObject, Header)
-            : InputObject.Length == 1 && InputObject[0] is IEnumerable enumerable && InputObject[0] is not string && InputObject[0] is not IDictionary
-            ? PdfCommandUtilities.ConvertDataRows(enumerable, Header)
-            : PdfCommandUtilities.ConvertToTableRows(InputObject, Property, Header);
+        if (ParameterSetName == ParameterSetPipelineDocument)
+        {
+            RenderTable(Document, BuildRows(InputObject));
+            if (PassThru.IsPresent)
+            {
+                WriteObject(Document);
+            }
 
-        document.Table(rows, Align);
+            return;
+        }
+
+        TableInputCollector.AddInput(_items, InputObject);
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        if (ParameterSetName == ParameterSetPipelineDocument)
+        {
+            return;
+        }
+
+        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
+        RenderTable(document, TableInputCollector.RequireRows(_items, nameof(InputObject)));
         if (PassThru.IsPresent)
         {
             WriteObject(document);
         }
+    }
+
+    private void RenderTable(PdfDocument document, object[] inputRows)
+    {
+        var projectedRows = TableViewProjection.Project(inputRows, View);
+        var rowArrayInput = projectedRows.All(item => item is IEnumerable && item is not string && item is not IDictionary);
+        string[][] rows = rowArrayInput
+            ? PdfCommandUtilities.ConvertDataRows(projectedRows, Header)
+            : projectedRows.Length == 1 && projectedRows[0] is IEnumerable enumerable && projectedRows[0] is not string && projectedRows[0] is not IDictionary
+            ? PdfCommandUtilities.ConvertDataRows(enumerable, Header)
+            : PdfCommandUtilities.ConvertToTableRows(projectedRows, Property, Header);
+
+        document.Table(rows, Align);
+    }
+
+    private static object[] BuildRows(object? value)
+    {
+        var items = new List<object?>();
+        TableInputCollector.AddInput(items, value);
+        return TableInputCollector.RequireRows(items, nameof(InputObject));
     }
 }

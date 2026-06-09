@@ -11,7 +11,7 @@ Executes a simple mail merge against MERGEFIELD values in a Word document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Invoke-OfficeWordMailMerge [-Data] <Object> [-Document <WordDocument>] [-PreserveFields] [-PassThru] [<CommonParameters>]
+Invoke-OfficeWordMailMerge [-InputObject] <Object> [-Document <WordDocument>] [-PreserveFields] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,28 +21,12 @@ Executes a simple mail merge against MERGEFIELD values in a Word document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Invoke-OfficeWordMailMerge -Data @{ FirstName = 'John'; OrderId = 12345 }
+PS> Invoke-OfficeWordMailMerge -InputObject @{ FirstName = 'John'; OrderId = 12345 }
 ```
 
 Updates MERGEFIELD values in the active Word document.
 
 ## PARAMETERS
-
-### -Data
-Hashtable or object whose properties map to MERGEFIELD names.
-
-```yaml
-Type: Object
-Parameter Sets: __AllParameterSets
-Aliases: Values
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
 
 ### -Document
 Document to update when provided explicitly.
@@ -57,6 +41,22 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -InputObject
+Hashtable or object whose properties map to MERGEFIELD names.
+
+```yaml
+Type: Object
+Parameter Sets: __AllParameterSets
+Aliases: Data, Values
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

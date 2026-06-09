@@ -24,7 +24,7 @@ Creates a worksheet through the OfficeIMO sheet composer and runs report-block c
 PS> New-OfficeExcel -Path .\report.xlsx {
   Add-OfficeExcelReportSheet -Name Summary {
     Add-OfficeExcelReportTitle -Title 'Operational Summary' -Subtitle 'Current view'
-    Add-OfficeExcelReportKpiRow -Data @{ Ready = 12; Blocked = 2 }
+    Add-OfficeExcelReportKpiRow -InputObject @{ Ready = 12; Blocked = 2 }
   }
 }
 ```

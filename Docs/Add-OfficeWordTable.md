@@ -11,7 +11,7 @@ Creates a table from PowerShell objects.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-SkipHeader] [-Transpose] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-NoHeader] [-View <OfficeTableView>] [-Transpose] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -56,7 +56,7 @@ Possible values:
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -76,13 +76,13 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -PassThru
-Emit the created WordTable.
+### -NoHeader
+Skip writing header row.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: SkipHeader
 Possible values:
 
 Required: False
@@ -92,8 +92,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -SkipHeader
-Skip writing header row.
+### -PassThru
+Emit the created WordTable.
 
 ```yaml
 Type: SwitchParameter
@@ -125,7 +125,7 @@ Accept wildcard characters: True
 ```
 
 ### -Transpose
-Transpose rows into property-oriented output.
+Legacy switch that maps to Transpose.
 
 ```yaml
 Type: SwitchParameter
@@ -140,12 +140,28 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -View
+Projection to apply before writing the table.
+
+```yaml
+Type: OfficeTableView
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Normal, Transpose
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-- `None`
+- `System.Object`
 
 ## OUTPUTS
 

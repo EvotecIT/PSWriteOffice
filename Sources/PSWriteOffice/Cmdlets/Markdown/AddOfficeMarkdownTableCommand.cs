@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Markdown;
 using PSWriteOffice.Services.Markdown;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.Markdown;
 
@@ -29,16 +30,24 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
 {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
+    private const string ParameterSetPipelineDocument = "PipelineDocument";
     private readonly List<object?> _items = new();
     private MarkdownDoc? _document;
 
     /// <summary>Markdown document to update outside the DSL context.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetPipelineDocument)]
     public MarkdownDoc Document { get; set; } = null!;
 
     /// <summary>Objects to convert into a Markdown table.</summary>
-    [Parameter(ValueFromPipeline = true)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetContext)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPipelineDocument)]
     public object? InputObject { get; set; }
+
+    /// <summary>Projection to apply before writing the table.</summary>
+    [Parameter]
+    public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
     /// <summary>Disable automatic alignment heuristics for tables.</summary>
     [Parameter]
@@ -51,51 +60,69 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
-        _document = ResolveDocument();
+        if (ParameterSetName == ParameterSetContext)
+        {
+            _document = ResolveDocument();
+        }
     }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (ParameterSetName == ParameterSetPipelineDocument)
+        {
+            RenderTable(Document, BuildRows(InputObject));
+            if (PassThru.IsPresent)
+            {
+                WriteObject(Document);
+            }
+
+            return;
+        }
+
         AddInput(InputObject);
     }
 
     /// <inheritdoc />
     protected override void EndProcessing()
     {
-        if (_items.Count == 0)
+        if (ParameterSetName == ParameterSetPipelineDocument)
         {
             return;
         }
 
         var doc = _document ?? ResolveDocument();
-        if (DisableAutoAlign.IsPresent)
-        {
-            doc.TableFrom(_items);
-        }
-        else
-        {
-            doc.TableFromAuto(_items);
-        }
-
+        RenderTable(doc, TableInputCollector.RequireRows(_items, nameof(InputObject)));
         if (PassThru.IsPresent)
         {
             WriteObject(doc);
         }
     }
 
+    private void RenderTable(MarkdownDoc doc, object[] rows)
+    {
+        var projectedRows = TableViewProjection.Project(rows, View);
+        var normalizedRows = projectedRows.Select(NormalizeItem).ToArray();
+        if (DisableAutoAlign.IsPresent)
+        {
+            doc.TableFrom(normalizedRows);
+        }
+        else
+        {
+            doc.TableFromAuto(normalizedRows);
+        }
+    }
+
     private void AddInput(object? value)
     {
-        if (value is IEnumerable enumerable and not string and not IDictionary)
-        {
-            foreach (var entry in enumerable)
-            {
-                _items.Add(NormalizeItem(entry));
-            }
-            return;
-        }
+        TableInputCollector.AddInput(_items, value);
+    }
 
-        _items.Add(NormalizeItem(value));
+    private static object[] BuildRows(object? value)
+    {
+        var items = new List<object?>();
+        TableInputCollector.AddInput(items, value);
+        return TableInputCollector.RequireRows(items, nameof(InputObject));
     }
 
     private static object? NormalizeItem(object? item)

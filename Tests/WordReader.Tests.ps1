@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
         $env:PSWRITEOFFICE_MODULE_MANIFEST
     } else {
@@ -142,7 +142,7 @@ Describe 'Word reader helpers' {
                 Add-OfficeWordField -Type MergeField -Parameters '"FirstName"'
             }
 
-            Invoke-OfficeWordMailMerge -Data ([pscustomobject]@{
+            Invoke-OfficeWordMailMerge -InputObject ([pscustomobject]@{
                 FirstName = 'Morgan'
             }) -PreserveFields
         } | Out-Null

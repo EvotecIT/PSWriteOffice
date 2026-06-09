@@ -26,7 +26,7 @@ Use this to add paragraphs, lists, images, or nested tables inside a cell select
 
 ### EXAMPLE 1
 ```powershell
-PS> WordTable -Data $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }
+PS> WordTable -InputObject $Rows { WordTableCell -Row 1 -Column 0 { WordParagraph { WordText 'Details' } } }
 ```
 
 Targets the data cell at row 1, column 0 and writes text inside it.

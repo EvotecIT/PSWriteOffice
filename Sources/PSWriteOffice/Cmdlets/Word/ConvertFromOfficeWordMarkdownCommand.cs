@@ -24,6 +24,12 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Get-OfficeMarkdown -Path .\README.md | ConvertFrom-OfficeWordMarkdown</code>
 ///   <para>Returns a Word document instance for further edits.</para>
 /// </example>
+/// <example>
+///   <summary>Insert Markdown into a Word template bookmark.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>ConvertFrom-OfficeWordMarkdown -Path .\SOP.md -TemplatePath .\Template.docx -BookmarkName MainContent -OutputPath .\SOP.docx</code>
+///   <para>Copies the template and replaces the bookmark paragraph with generated Markdown content.</para>
+/// </example>
 [Cmdlet(VerbsData.ConvertFrom, "OfficeWordMarkdown", DefaultParameterSetName = ParameterSetMarkdown)]
 [Alias("ConvertFrom-WordMarkdown")]
 [OutputType(typeof(WordDocument), typeof(FileInfo))]
@@ -50,6 +56,31 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
     [Parameter]
     [Alias("OutPath")]
     public string? OutputPath { get; set; }
+
+    /// <summary>Optional Word template document to copy before inserting Markdown content.</summary>
+    [Parameter]
+    [Alias("Template")]
+    public string? TemplatePath { get; set; }
+
+    /// <summary>Bookmark name that marks where Markdown content should be inserted in the template.</summary>
+    [Parameter]
+    public string? BookmarkName { get; set; }
+
+    /// <summary>Block content control tag that marks where Markdown content should be inserted in the template.</summary>
+    [Parameter]
+    public string? ContentControlTag { get; set; }
+
+    /// <summary>Block content control alias that marks where Markdown content should be inserted in the template.</summary>
+    [Parameter]
+    public string? ContentControlAlias { get; set; }
+
+    /// <summary>Keep the target bookmark or content-control placeholder after inserting Markdown content.</summary>
+    [Parameter]
+    public SwitchParameter KeepPlaceholder { get; set; }
+
+    /// <summary>Render YAML front matter as visible Word content. Template conversions hide front matter by default.</summary>
+    [Parameter]
+    public SwitchParameter RenderFrontMatter { get; set; }
 
     /// <summary>Optional font family applied during conversion.</summary>
     [Parameter]
@@ -116,6 +147,7 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
                 throw new ArgumentException("Use either -FitImagesToPageContentWidth or -FitImagesToContextWidth, not both.");
             }
 
+            ValidateTemplateParameters();
             var options = BuildOptions();
 
             switch (ParameterSetName)
@@ -133,11 +165,19 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
                         options.BaseUri = BuildDirectoryUri(Path.GetDirectoryName(resolvedPath) ?? Directory.GetCurrentDirectory());
                     }
 
-                    document = WordMarkdownConverterExtensions.LoadFromMarkdown(resolvedPath, options);
+                    if (options is MarkdownToWordTemplateOptions templateOptions)
+                    {
+                        var markdown = File.ReadAllText(resolvedPath);
+                        document = markdown.LoadFromMarkdownTemplate(ResolveTemplatePath(), templateOptions);
+                    }
+                    else
+                    {
+                        document = WordMarkdownConverterExtensions.LoadFromMarkdown(resolvedPath, options);
+                    }
                     break;
                 }
                 case ParameterSetDocument:
-                    document = WordMarkdownConverterExtensions.LoadFromMarkdown(Document.ToMarkdown(), options);
+                    document = ConvertMarkdownText(Document.ToMarkdown(), options);
                     break;
                 default:
                     if (string.IsNullOrWhiteSpace(Markdown))
@@ -145,7 +185,7 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
                         throw new ArgumentException("Markdown content cannot be empty.", nameof(Markdown));
                     }
 
-                    document = Markdown.LoadFromMarkdown(options);
+                    document = ConvertMarkdownText(Markdown, options);
                     break;
             }
 
@@ -201,11 +241,22 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
 
     private MarkdownToWordOptions BuildOptions()
     {
-        var options = new MarkdownToWordOptions
+        var options = CreateOptions();
+        options.AllowLocalImages = AllowLocalImages.IsPresent;
+        options.AllowRemoteImages = AllowRemoteImages.IsPresent;
+
+        if (RenderFrontMatter.IsPresent)
         {
-            AllowLocalImages = AllowLocalImages.IsPresent,
-            AllowRemoteImages = AllowRemoteImages.IsPresent
-        };
+            options.RenderFrontMatter = true;
+        }
+
+        if (options is MarkdownToWordTemplateOptions templateOptions)
+        {
+            templateOptions.BookmarkName = NormalizeOptionalText(BookmarkName);
+            templateOptions.ContentControlTag = NormalizeOptionalText(ContentControlTag);
+            templateOptions.ContentControlAlias = NormalizeOptionalText(ContentControlAlias);
+            templateOptions.ReplacePlaceholder = !KeepPlaceholder.IsPresent;
+        }
 
         if (!string.IsNullOrWhiteSpace(FontFamily))
         {
@@ -238,6 +289,54 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
         }
 
         return options;
+    }
+
+    private MarkdownToWordOptions CreateOptions()
+    {
+        return string.IsNullOrWhiteSpace(TemplatePath)
+            ? new MarkdownToWordOptions()
+            : new MarkdownToWordTemplateOptions();
+    }
+
+    private WordDocument ConvertMarkdownText(string markdown, MarkdownToWordOptions options)
+    {
+        return options is MarkdownToWordTemplateOptions templateOptions
+            ? markdown.LoadFromMarkdownTemplate(ResolveTemplatePath(), templateOptions)
+            : markdown.LoadFromMarkdown(options);
+    }
+
+    private void ValidateTemplateParameters()
+    {
+        var hasTemplateTarget = !string.IsNullOrWhiteSpace(BookmarkName)
+            || !string.IsNullOrWhiteSpace(ContentControlTag)
+            || !string.IsNullOrWhiteSpace(ContentControlAlias)
+            || KeepPlaceholder.IsPresent;
+
+        if (hasTemplateTarget && string.IsNullOrWhiteSpace(TemplatePath))
+        {
+            throw new ArgumentException("Template insertion parameters require -TemplatePath.", nameof(TemplatePath));
+        }
+    }
+
+    private string ResolveTemplatePath()
+    {
+        if (string.IsNullOrWhiteSpace(TemplatePath))
+        {
+            throw new ArgumentException("Template path cannot be empty.", nameof(TemplatePath));
+        }
+
+        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(TemplatePath);
+        if (!File.Exists(resolvedPath))
+        {
+            throw new FileNotFoundException($"Template file '{resolvedPath}' was not found.", resolvedPath);
+        }
+
+        return resolvedPath;
+    }
+
+    private static string? NormalizeOptionalText(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value) ? null : value;
     }
 
     private static void TrySetOptionProperty(object target, string propertyName, object? value)

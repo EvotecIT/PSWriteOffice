@@ -9,9 +9,9 @@ schema: 2.0.0
 Adds a table to a PowerPoint slide.
 
 ## SYNTAX
-### Data (Default)
+### InputObject (Default)
 ```powershell
-Add-OfficePowerPointTable [[-Slide] <PowerPointSlide>] -Data <Object[]> [-Headers <string[]>] [-NoHeader] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-StyleId <string>] [<CommonParameters>]
+Add-OfficePowerPointTable [[-Slide] <PowerPointSlide>] [-InputObject] <Object> [-Header <string[]>] [-NoHeader] [-View <OfficeTableView>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-StyleId <string>] [<CommonParameters>]
 ```
 
 ### Size
@@ -27,7 +27,7 @@ Builds a table from data rows or creates a blank grid with a fixed size.
 ### EXAMPLE 1
 ```powershell
 PS> $rows = @([pscustomobject]@{ Item='Alpha'; Qty=2 }, [pscustomobject]@{ Item='Beta'; Qty=4 })
-Add-OfficePowerPointTable -Slide $slide -Data $rows -X 60 -Y 140 -Width 420 -Height 200
+Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 60 -Y 140 -Width 420 -Height 200
 ```
 
 Creates a table with headers and two data rows.
@@ -50,29 +50,13 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Data
-Source objects to convert into table rows.
-
-```yaml
-Type: Object[]
-Parameter Sets: Data
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Headers
+### -Header
 Optional header order to apply to the table.
 
 ```yaml
 Type: String[]
-Parameter Sets: Data
-Aliases: None
+Parameter Sets: InputObject
+Aliases: Headers
 Possible values:
 
 Required: False
@@ -87,7 +71,7 @@ Table height in points.
 
 ```yaml
 Type: Double
-Parameter Sets: Data, Size
+Parameter Sets: InputObject, Size
 Aliases: None
 Possible values:
 
@@ -98,12 +82,28 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -InputObject
+Source objects to convert into table rows.
+
+```yaml
+Type: Object
+Parameter Sets: InputObject
+Aliases: Data
+Possible values:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -NoHeader
 Skip writing header row.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Data
+Parameter Sets: InputObject
 Aliases: None
 Possible values:
 
@@ -135,7 +135,7 @@ Target slide that will receive the table (optional inside DSL).
 
 ```yaml
 Type: PowerPointSlide
-Parameter Sets: Data, Size
+Parameter Sets: InputObject, Size
 Aliases: None
 Possible values:
 
@@ -151,9 +151,25 @@ Optional table style ID (GUID string).
 
 ```yaml
 Type: String
-Parameter Sets: Data, Size
+Parameter Sets: InputObject, Size
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -View
+Projection to apply before writing the table.
+
+```yaml
+Type: OfficeTableView
+Parameter Sets: InputObject
+Aliases: None
+Possible values: Normal, Transpose
 
 Required: False
 Position: named
@@ -167,7 +183,7 @@ Table width in points.
 
 ```yaml
 Type: Double
-Parameter Sets: Data, Size
+Parameter Sets: InputObject, Size
 Aliases: None
 Possible values:
 
@@ -183,7 +199,7 @@ Left offset (in points) from the slide origin.
 
 ```yaml
 Type: Double
-Parameter Sets: Data, Size
+Parameter Sets: InputObject, Size
 Aliases: None
 Possible values:
 
@@ -199,7 +215,7 @@ Top offset (in points) from the slide origin.
 
 ```yaml
 Type: Double
-Parameter Sets: Data, Size
+Parameter Sets: InputObject, Size
 Aliases: None
 Possible values:
 

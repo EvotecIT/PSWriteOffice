@@ -7,6 +7,7 @@ using System.Management.Automation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services;
+using PSWriteOffice.Services.Table;
 using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
@@ -23,8 +24,10 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Alias("WordTable")]
 public sealed class AddOfficeWordTableCommand : PSCmdlet
 {
+    private readonly List<object?> _items = new();
+
     /// <summary>Input data (array, list, DataTable, etc.).</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [Alias("Data")]
     public object? InputObject { get; set; }
 
@@ -39,9 +42,14 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
     /// <summary>Skip writing header row.</summary>
     [Parameter]
-    public SwitchParameter SkipHeader { get; set; }
+    [Alias("SkipHeader")]
+    public SwitchParameter NoHeader { get; set; }
 
-    /// <summary>Transpose rows into property-oriented output.</summary>
+    /// <summary>Projection to apply before writing the table.</summary>
+    [Parameter]
+    public OfficeTableView View { get; set; } = OfficeTableView.Normal;
+
+    /// <summary>Legacy switch that maps to <see cref="OfficeTableView.Transpose"/>.</summary>
     [Parameter]
     public SwitchParameter Transpose { get; set; }
 
@@ -56,7 +64,13 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var rows = NormalizeRows(InputObject);
+        TableInputCollector.AddInput(_items, InputObject);
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         if (rows.Length == 0)
         {
             ThrowTerminatingError(new ErrorRecord(
@@ -68,10 +82,11 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         var context = WordDslContext.Require(this);
-        var tableRows = Transpose.IsPresent ? TransposeRows(rows) : rows;
+        var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
+        var tableRows = TableViewProjection.Project(rows, effectiveView);
         var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(tableRows);
         var legacyLayout = ResolveLegacyLayout(Layout);
-        var table = CreateTable(context, normalizedRows, Style, includeHeader: !SkipHeader.IsPresent, layout: legacyLayout);
+        var table = CreateTable(context, normalizedRows, Style, includeHeader: !NoHeader.IsPresent, layout: legacyLayout);
         ApplyLayout(table, Layout);
         context.RegisterTableSource(table, tableRows);
 
@@ -83,7 +98,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var conditions = context.ConsumeTableConditions(table);
         if (conditions.Count > 0)
         {
-            ApplyConditions(table, tableRows, conditions, SkipHeader.IsPresent);
+            ApplyConditions(table, tableRows, conditions, NoHeader.IsPresent);
         }
 
         context.ClearTableSource(table);
@@ -92,109 +107,6 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         {
             WriteObject(table);
         }
-    }
-
-    private static object[] NormalizeRows(object? data)
-    {
-        switch (data)
-        {
-            case null:
-                return Array.Empty<object>();
-            case Array array:
-                return array.Cast<object?>().Where(o => o != null).Select(o => o!).ToArray();
-            case IEnumerable enumerable when data is not string:
-                var list = new List<object>();
-                foreach (var item in enumerable)
-                {
-                    if (item != null)
-                    {
-                        list.Add(item);
-                    }
-                }
-                return list.ToArray();
-            default:
-                return new[] { data };
-        }
-    }
-
-    private static object[] TransposeRows(IReadOnlyList<object> rows)
-    {
-        var maps = rows.Select(BuildPropertyMap).ToList();
-        var columnNames = new List<string>();
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var map in maps)
-        {
-            foreach (var key in map.Keys)
-            {
-                if (seen.Add(key))
-                {
-                    columnNames.Add(key);
-                }
-            }
-        }
-
-        if (columnNames.Count == 0)
-        {
-            return Array.Empty<object>();
-        }
-
-        var transposed = new object[columnNames.Count];
-        for (var columnIndex = 0; columnIndex < columnNames.Count; columnIndex++)
-        {
-            var propertyName = columnNames[columnIndex];
-            var transposedRow = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["Property"] = propertyName
-            };
-
-            for (var rowIndex = 0; rowIndex < maps.Count; rowIndex++)
-            {
-                var header = $"Row{rowIndex + 1}";
-                transposedRow[header] = maps[rowIndex].TryGetValue(propertyName, out var value)
-                    ? value
-                    : null;
-            }
-
-            transposed[columnIndex] = transposedRow;
-        }
-
-        return transposed;
-    }
-
-    private static Dictionary<string, object?> BuildPropertyMap(object row)
-    {
-        var normalized = PowerShellObjectNormalizer.NormalizeItem(row);
-        if (normalized is IDictionary dictionary)
-        {
-            var mapped = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-            foreach (DictionaryEntry entry in dictionary)
-            {
-                var key = entry.Key?.ToString();
-                if (string.IsNullOrWhiteSpace(key))
-                {
-                    continue;
-                }
-
-                var propertyName = key!;
-                if (mapped.ContainsKey(propertyName))
-                {
-                    continue;
-                }
-
-                mapped[propertyName] = entry.Value;
-            }
-
-            if (mapped.Count > 0)
-            {
-                return mapped;
-            }
-        }
-
-        return new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["Value"] = normalized
-        };
     }
 
     private void ApplyConditions(WordTable table, IReadOnlyList<object> rows, IReadOnlyList<WordTableConditionModel> conditions, bool skipHeader)

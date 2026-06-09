@@ -93,24 +93,28 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
     {
         try
         {
-            if (!string.IsNullOrWhiteSpace(CategoryTitle))
+            var categoryTitle = CategoryTitle;
+            if (!string.IsNullOrWhiteSpace(categoryTitle))
             {
-                Chart.SetCategoryAxisTitle(CategoryTitle, AxisGroup);
+                Chart.SetCategoryAxisTitle(categoryTitle!, AxisGroup);
             }
 
-            if (!string.IsNullOrWhiteSpace(ValueTitle))
+            var valueTitle = ValueTitle;
+            if (!string.IsNullOrWhiteSpace(valueTitle))
             {
-                Chart.SetValueAxisTitle(ValueTitle, AxisGroup);
+                Chart.SetValueAxisTitle(valueTitle!, AxisGroup);
             }
 
-            if (!string.IsNullOrWhiteSpace(CategoryNumberFormat))
+            var categoryNumberFormat = CategoryNumberFormat;
+            if (!string.IsNullOrWhiteSpace(categoryNumberFormat))
             {
-                Chart.SetCategoryAxisNumberFormat(CategoryNumberFormat, SourceLinked, AxisGroup);
+                Chart.SetCategoryAxisNumberFormat(categoryNumberFormat!, SourceLinked, AxisGroup);
             }
 
-            if (!string.IsNullOrWhiteSpace(ValueNumberFormat))
+            var valueNumberFormat = ValueNumberFormat;
+            if (!string.IsNullOrWhiteSpace(valueNumberFormat))
             {
-                Chart.SetValueAxisNumberFormat(ValueNumberFormat, SourceLinked, AxisGroup);
+                Chart.SetValueAxisNumberFormat(valueNumberFormat!, SourceLinked, AxisGroup);
             }
 
             if (ValueMinimum.HasValue || ValueMaximum.HasValue || ValueMajorUnit.HasValue || ValueMinorUnit.HasValue)
@@ -118,30 +122,33 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
                 Chart.SetValueAxisScale(ValueMinimum, ValueMaximum, ValueMajorUnit, ValueMinorUnit, axisGroup: AxisGroup);
             }
 
+            var categoryGridlineColor = CategoryGridlineColor;
+            var valueGridlineColor = ValueGridlineColor;
+
             bool categoryGridlinesRequested = ShowCategoryMajorGridlines.IsPresent ||
                 ShowCategoryMinorGridlines.IsPresent ||
-                !string.IsNullOrWhiteSpace(CategoryGridlineColor);
+                !string.IsNullOrWhiteSpace(categoryGridlineColor);
             bool valueGridlinesRequested = ShowValueMajorGridlines.IsPresent ||
                 ShowValueMinorGridlines.IsPresent ||
-                !string.IsNullOrWhiteSpace(ValueGridlineColor);
+                !string.IsNullOrWhiteSpace(valueGridlineColor);
             bool widthOnlyRequest = GridlineWidthPoints.HasValue && !categoryGridlinesRequested && !valueGridlinesRequested;
 
-            bool categoryStyleRequested = !string.IsNullOrWhiteSpace(CategoryGridlineColor) ||
+            bool categoryStyleRequested = !string.IsNullOrWhiteSpace(categoryGridlineColor) ||
                 (GridlineWidthPoints.HasValue && (categoryGridlinesRequested || widthOnlyRequest));
             if (categoryGridlinesRequested || widthOnlyRequest)
             {
                 bool showMajor = ShowCategoryMajorGridlines.IsPresent || ShowCategoryMinorGridlines.IsPresent || categoryStyleRequested;
                 Chart.SetCategoryAxisGridlines(showMajor,
-                    ShowCategoryMinorGridlines.IsPresent, CategoryGridlineColor, GridlineWidthPoints, AxisGroup);
+                    ShowCategoryMinorGridlines.IsPresent, categoryGridlineColor, GridlineWidthPoints, AxisGroup);
             }
 
-            bool valueStyleRequested = !string.IsNullOrWhiteSpace(ValueGridlineColor) ||
+            bool valueStyleRequested = !string.IsNullOrWhiteSpace(valueGridlineColor) ||
                 (GridlineWidthPoints.HasValue && (valueGridlinesRequested || widthOnlyRequest));
             if (valueGridlinesRequested || widthOnlyRequest)
             {
                 bool showMajor = ShowValueMajorGridlines.IsPresent || ShowValueMinorGridlines.IsPresent || valueStyleRequested;
                 Chart.SetValueAxisGridlines(showMajor,
-                    ShowValueMinorGridlines.IsPresent, ValueGridlineColor, GridlineWidthPoints, AxisGroup);
+                    ShowValueMinorGridlines.IsPresent, valueGridlineColor, GridlineWidthPoints, AxisGroup);
             }
 
             WriteObject(Chart);

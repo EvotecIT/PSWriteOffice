@@ -46,4 +46,47 @@ Describe 'Word Markdown conversions' {
             $document.Dispose()
         }
     }
+
+    It 'inserts Markdown into a Word template bookmark' {
+        $templatePath = Join-Path $TestDrive 'Template.docx'
+        $docPath = Join-Path $TestDrive 'TemplateOutput.docx'
+
+        New-OfficeWord -Path $templatePath {
+            Add-OfficeWordParagraph -Text 'Before template content'
+            Add-OfficeWordParagraph {
+                Add-OfficeWordText -Text 'PLACEHOLDER'
+                Add-OfficeWordBookmark -Name 'MainContent'
+            }
+            Add-OfficeWordParagraph -Text 'After template content'
+        } | Out-Null
+
+        $markdown = @'
+---
+title: Hidden metadata
+---
+# Inserted heading
+
+Inserted body.
+'@
+
+        $file = ConvertFrom-OfficeWordMarkdown -Markdown $markdown -TemplatePath $templatePath -BookmarkName 'MainContent' -OutputPath $docPath -PassThru
+        $file | Should -BeOfType System.IO.FileInfo
+
+        $paragraphs = @(Get-OfficeWordParagraph -Path $docPath)
+        $texts = @($paragraphs.Text | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+
+        $texts | Should -Contain 'Before template content'
+        $texts | Should -Contain 'Inserted heading'
+        $texts | Should -Contain 'Inserted body.'
+        $texts | Should -Contain 'After template content'
+        $texts | Should -Not -Contain 'PLACEHOLDER'
+        ($texts -join "`n") | Should -Not -Match 'Hidden metadata'
+        [Array]::IndexOf($texts, 'Inserted heading') | Should -BeGreaterThan ([Array]::IndexOf($texts, 'Before template content'))
+        [Array]::IndexOf($texts, 'After template content') | Should -BeGreaterThan ([Array]::IndexOf($texts, 'Inserted body.'))
+    }
+
+    It 'rejects template insertion selectors without a template path' {
+        { ConvertFrom-OfficeWordMarkdown -Markdown '# Missing template' -BookmarkName 'MainContent' -ErrorAction Stop } |
+            Should -Throw '*Template insertion parameters require -TemplatePath*'
+    }
 }
