@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
+using System.Text;
 using OfficeIMO.Html.Pdf;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
@@ -21,6 +22,8 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
 {
     private const string ParameterSetHtml = "Html";
     private const string ParameterSetPath = "Path";
+    private readonly StringBuilder _pipelineHtml = new();
+    private bool _receivedHtml;
 
     /// <summary>HTML markup to convert.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetHtml)]
@@ -73,56 +76,83 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
     {
         try
         {
-            string html = Html;
-            string? htmlFileDirectory = null;
-            if (ParameterSetName == ParameterSetPath)
+            if (ParameterSetName == ParameterSetHtml)
             {
-                string resolvedPath = PdfCommandUtilities.ResolvePath(this, InputPath);
-                if (!File.Exists(resolvedPath))
+                if (_receivedHtml)
                 {
-                    throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
+                    _pipelineHtml.AppendLine();
                 }
 
-                html = File.ReadAllText(resolvedPath);
-                htmlFileDirectory = Path.GetDirectoryName(resolvedPath);
-            }
-
-            if (string.IsNullOrWhiteSpace(html))
-            {
-                ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("HTML content cannot be empty."),
-                    "HtmlEmpty",
-                    ErrorCategory.InvalidArgument,
-                    html));
+                _pipelineHtml.Append(Html);
+                _receivedHtml = true;
                 return;
             }
 
-            HtmlPdfSaveOptions options = BuildOptions(htmlFileDirectory);
-            if (!string.IsNullOrWhiteSpace(OutputPath))
+            string resolvedPath = PdfCommandUtilities.ResolvePath(this, InputPath);
+            if (!File.Exists(resolvedPath))
             {
-                string outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
-                PdfCommandUtilities.EnsureDirectory(outputPath);
-                html.SaveAsPdf(outputPath, options);
-                if (Open.IsPresent)
-                {
-                    FileOpenService.Open(outputPath);
-                }
-
-                if (PassThru.IsPresent)
-                {
-                    WriteObject(new FileInfo(outputPath));
-                }
-
-                return;
+                throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
-            WriteObject(html.SaveAsPdf(options), enumerateCollection: false);
+            ConvertHtml(File.ReadAllText(resolvedPath), Path.GetDirectoryName(resolvedPath));
         }
         catch (Exception ex)
         {
             WriteError(new ErrorRecord(ex, "HtmlToPdfFailed", ErrorCategory.InvalidOperation,
                 ParameterSetName == ParameterSetPath ? InputPath : Html));
         }
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        if (ParameterSetName != ParameterSetHtml || !_receivedHtml)
+        {
+            return;
+        }
+
+        try
+        {
+            ConvertHtml(_pipelineHtml.ToString(), htmlFileDirectory: null);
+        }
+        catch (Exception ex)
+        {
+            WriteError(new ErrorRecord(ex, "HtmlToPdfFailed", ErrorCategory.InvalidOperation, Html));
+        }
+    }
+
+    private void ConvertHtml(string html, string? htmlFileDirectory)
+    {
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            ThrowTerminatingError(new ErrorRecord(
+                new ArgumentException("HTML content cannot be empty."),
+                "HtmlEmpty",
+                ErrorCategory.InvalidArgument,
+                html));
+            return;
+        }
+
+        HtmlPdfSaveOptions options = BuildOptions(htmlFileDirectory);
+        if (!string.IsNullOrWhiteSpace(OutputPath))
+        {
+            string outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+            PdfCommandUtilities.EnsureDirectory(outputPath);
+            html.SaveAsPdf(outputPath, options);
+            if (Open.IsPresent)
+            {
+                FileOpenService.Open(outputPath);
+            }
+
+            if (PassThru.IsPresent)
+            {
+                WriteObject(new FileInfo(outputPath));
+            }
+
+            return;
+        }
+
+        WriteObject(html.SaveAsPdf(options), enumerateCollection: false);
     }
 
     private HtmlPdfSaveOptions BuildOptions(string? htmlFileDirectory)

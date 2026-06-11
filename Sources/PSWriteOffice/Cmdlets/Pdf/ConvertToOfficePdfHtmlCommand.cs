@@ -120,7 +120,7 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
 
             if (MaxEmbeddedImageBytes.HasValue)
             {
-                options.MaxEmbeddedImageBytes = MaxEmbeddedImageBytes.Value == 0 ? null : MaxEmbeddedImageBytes.Value;
+                options.MaxEmbeddedImageBytes = MaxEmbeddedImageBytes.Value;
             }
 
             if (!string.IsNullOrWhiteSpace(DocumentTitleFallback))

@@ -20,6 +20,20 @@ Describe 'PDF HTML cmdlets' {
         $text | Should -Match 'Ready for archive'
     }
 
+    It 'accumulates piped HTML lines into one PDF document' {
+        $path = Join-Path $TestDrive 'pipeline-html-report.pdf'
+
+        @(
+            '<h1>Pipeline HTML</h1>'
+            '<p>Full document body.</p>'
+        ) | ConvertFrom-OfficePdfHtml -OutputPath $path | Out-Null
+
+        Test-Path $path | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Pipeline HTML'
+        $text | Should -Match 'Full document body'
+    }
+
     It 'converts a PDF file to semantic HTML' {
         $path = Join-Path $TestDrive 'source.pdf'
         $htmlPath = Join-Path $TestDrive 'source.html'

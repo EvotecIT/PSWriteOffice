@@ -82,6 +82,28 @@ Describe 'Visio cmdlets' {
         $svg | Should -Match 'API'
     }
 
+    It 'targets nested Visio page scopes and generates unique unkeyed stencil ids' {
+        $path = Join-Path $TestDrive 'nested-stencils.vsdx'
+
+        New-OfficeVisio -Path $path -Title 'Nested stencil diagram' {
+            Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
+            VisioPage 'Nested' {
+                VisioStencil -Stencil process -Text 'First process' -X 2 -Y 3
+                VisioStencil -Stencil process -Text 'Second process' -X 5 -Y 3
+            }
+        } | Out-Null
+
+        $document = Get-OfficeVisio -Path $path
+        @($document.Pages).Count | Should -Be 2
+        @($document.Pages[0].Shapes).Count | Should -Be 0
+
+        $nestedShapes = @($document.Pages[1].Shapes)
+        $nestedShapes.Count | Should -Be 2
+        @($nestedShapes | Select-Object -ExpandProperty Id -Unique).Count | Should -Be 2
+        @($nestedShapes | Select-Object -ExpandProperty Text) | Should -Contain 'First process'
+        @($nestedShapes | Select-Object -ExpandProperty Text) | Should -Contain 'Second process'
+    }
+
     It 'searches built-in stencil catalogs and creates a stencil-based DSL diagram' {
         $path = Join-Path $TestDrive 'stencil-dsl.vsdx'
         $svgPath = Join-Path $TestDrive 'stencil-dsl.svg'

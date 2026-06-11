@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Visio;
 using OfficeIMO.Visio.Stencils;
@@ -99,9 +101,10 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSCmdlet
         var context = VisioDslContext.Current;
         var page = Page ?? VisioDslContext.Require(this).RequirePage();
         var catalog = ResolveCatalog(context);
-        var id = string.IsNullOrWhiteSpace(Key) ? Stencil : Key!;
+        var stencil = catalog.Get(Stencil);
+        var id = string.IsNullOrWhiteSpace(Key) ? CreateUniqueShapeId(page, stencil.Id) : Key!;
         var shape = Width.HasValue || Height.HasValue
-            ? page.AddStencilShape(catalog, Stencil, id, X, Y, Width ?? catalog.Get(Stencil).DefaultWidth, Height ?? catalog.Get(Stencil).DefaultHeight, Text)
+            ? page.AddStencilShape(catalog, Stencil, id, X, Y, Width ?? stencil.DefaultWidth, Height ?? stencil.DefaultHeight, Text)
             : page.AddStencilShape(catalog, Stencil, id, X, Y, Text);
 
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, ShapeName ?? Key, NameU, FillColor, LineColor, LineWeight, LinePattern, FillPattern, Angle);
@@ -129,5 +132,28 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSCmdlet
         return string.IsNullOrWhiteSpace(Catalog)
             ? VisioStencils.All
             : throw new PSInvalidOperationException("A named stencil catalog can only be resolved inside New-OfficeVisio.");
+    }
+
+    private static string CreateUniqueShapeId(VisioPage page, string baseId)
+    {
+        string stem = string.IsNullOrWhiteSpace(baseId) ? "stencil" : baseId.Trim();
+        var existingIds = page.AllShapes()
+            .Select(shape => shape.Id)
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (!existingIds.Contains(stem))
+        {
+            return stem;
+        }
+
+        for (int index = 2; ; index++)
+        {
+            string candidate = stem + "-" + index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (!existingIds.Contains(candidate))
+            {
+                return candidate;
+            }
+        }
     }
 }

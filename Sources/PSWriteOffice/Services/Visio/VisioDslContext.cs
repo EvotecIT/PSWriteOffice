@@ -42,7 +42,7 @@ internal sealed class VisioDslContext : IDisposable
             $"'{caller.MyInvocation.InvocationName}' must run inside New-OfficeVisio.");
     }
 
-    internal VisioPage? CurrentPage => _pages.LastOrDefault();
+    internal VisioPage? CurrentPage => _pages.Count == 0 ? null : _pages.Peek();
 
     internal VisioStencilCatalog? DefaultStencilCatalog { get; private set; }
 
