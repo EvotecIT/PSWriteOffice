@@ -8,6 +8,57 @@ $BinaryModules = @(
 )
 $AssemblyFolders = Get-ChildItem -Path (Join-Path $PSScriptRoot 'Lib') -Directory -ErrorAction SilentlyContinue
 
+function Register-PSWriteOfficeDevelopmentAssemblyResolver {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Directory
+    )
+
+    if ($PSEdition -ne 'Core' -or -not (Test-Path -LiteralPath $Directory)) {
+        return
+    }
+
+    $resolvedDirectory = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $Directory).ProviderPath)
+
+    if (-not $script:PSWriteOfficeDevelopmentAssemblyDirectories) {
+        $script:PSWriteOfficeDevelopmentAssemblyDirectories = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    }
+
+    [void] $script:PSWriteOfficeDevelopmentAssemblyDirectories.Add($resolvedDirectory)
+
+    if ($script:PSWriteOfficeDevelopmentAssemblyResolver) {
+        return
+    }
+
+    $script:PSWriteOfficeDevelopmentAssemblyResolver = [System.Func[
+        System.Runtime.Loader.AssemblyLoadContext,
+        System.Reflection.AssemblyName,
+        System.Reflection.Assembly
+    ]] {
+        param(
+            [System.Runtime.Loader.AssemblyLoadContext] $LoadContext,
+            [System.Reflection.AssemblyName] $AssemblyName
+        )
+
+        foreach ($assemblyDirectory in $script:PSWriteOfficeDevelopmentAssemblyDirectories) {
+            $candidate = Join-Path -Path $assemblyDirectory -ChildPath "$($AssemblyName.Name).dll"
+            if (-not (Test-Path -LiteralPath $candidate)) {
+                continue
+            }
+
+            try {
+                return $LoadContext.LoadFromAssemblyPath($candidate)
+            } catch {
+                Write-Verbose -Message "Failed to load dependency assembly '$candidate': $($_.Exception.Message)"
+            }
+        }
+
+        return $null
+    }
+
+    [System.Runtime.Loader.AssemblyLoadContext]::Default.add_Resolving($script:PSWriteOfficeDevelopmentAssemblyResolver)
+}
+
 # ensure script file collections always exist (legacy folders were removed)
 if (-not (Test-Path variable:Classes)) { $Classes = @() }
 if (-not (Test-Path variable:Enums)) { $Enums = @() }
@@ -114,6 +165,7 @@ $FoundErrors = @(
     if ($Development) {
         foreach ($BinaryModule in $BinaryDev) {
             try {
+                Register-PSWriteOfficeDevelopmentAssemblyResolver -Directory (Split-Path -Path $BinaryModule -Parent)
                 Import-Module -Name $BinaryModule -Force -ErrorAction Stop
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
