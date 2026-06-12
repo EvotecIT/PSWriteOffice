@@ -5,6 +5,8 @@ BeforeAll {
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
     Import-Module $ModuleManifest -Global -ErrorAction Stop
+
+    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 }
 
 Describe 'Reader cmdlets' {
@@ -19,28 +21,38 @@ Describe 'Reader cmdlets' {
 
     It 'does not replace caller-registered PDF readers' {
         $handlerId = 'pswriteoffice.test.pdf'
-        [OfficeIMO.Reader.DocumentReader]::UnregisterHandler($handlerId) | Out-Null
+        $documentReaderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.DocumentReader' -CommandName 'Get-OfficeDocumentCapability'
+        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
+        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
+        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
+        $pdfRegistrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Pdf' -TypeName 'OfficeIMO.Reader.Pdf.DocumentReaderPdfRegistrationExtensions' -CommandName 'Get-OfficeDocumentCapability'
 
-        $registration = [OfficeIMO.Reader.ReaderHandlerRegistration]::new()
+        $unregisterHandler = $documentReaderType.GetMethod('UnregisterHandler', [type[]] @([string]))
+        $registerHandler = $documentReaderType.GetMethod('RegisterHandler', [type[]] @($registrationType, [bool]))
+        $unregisterPdfHandler = $pdfRegistrationType.GetMethod('UnregisterPdfHandler', [System.Reflection.BindingFlags]'Public, Static')
+        $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
+
+        $registration = [Activator]::CreateInstance($registrationType)
         $registration.Id = $handlerId
         $registration.DisplayName = 'Test PDF Reader'
-        $registration.Kind = [OfficeIMO.Reader.ReaderInputKind]::Pdf
+        $registration.Kind = [Enum]::Parse($inputKindType, 'Pdf')
         $registration.Extensions = [string[]]@('.pdf')
-        $registration.ReadPath = [Func[string, OfficeIMO.Reader.ReaderOptions, Threading.CancellationToken, Collections.Generic.IEnumerable[OfficeIMO.Reader.ReaderChunk]]] {
+        $readPathType = $registrationType.GetProperty('ReadPath').PropertyType
+        $registration.ReadPath = [System.Management.Automation.LanguagePrimitives]::ConvertTo({
             param($Path, $Options, $CancellationToken)
 
-            [OfficeIMO.Reader.ReaderChunk[]]@()
-        }
+            [Array]::CreateInstance($chunkType, 0)
+        }.GetNewClosure(), $readPathType)
 
         try {
-            [OfficeIMO.Reader.DocumentReader]::RegisterHandler($registration, $true)
+            $registerHandler.Invoke($null, @($registration, $true)) | Out-Null
 
             $capabilities = @(Get-OfficeDocumentCapability -ExcludeBuiltIn)
             ($capabilities | Where-Object Id -EQ $handlerId).Count | Should -Be 1
             ($capabilities | Where-Object Id -EQ 'officeimo.reader.pdf').Count | Should -Be 0
         } finally {
-            [OfficeIMO.Reader.DocumentReader]::UnregisterHandler($handlerId) | Out-Null
-            [OfficeIMO.Reader.Pdf.DocumentReaderPdfRegistrationExtensions]::UnregisterPdfHandler() | Out-Null
+            $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
+            $unregisterPdfHandler.Invoke($null, @()) | Out-Null
         }
     }
 

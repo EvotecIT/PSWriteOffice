@@ -212,3 +212,73 @@ function Stop-TestHttpFileServer {
         }
     }
 }
+
+function Get-TestPSWriteOfficeAssemblyLoadContext {
+    param(
+        [string] $CommandName = 'New-OfficeWord'
+    )
+
+    $assemblyLoadContextType = 'System.Runtime.Loader.AssemblyLoadContext' -as [type]
+    if (-not $assemblyLoadContextType) {
+        return $null
+    }
+
+    $command = Get-Command -Name $CommandName -ErrorAction Stop
+    $assemblyLoadContextType.GetMethod('GetLoadContext').Invoke($null, @($command.ImplementingType.Assembly))
+}
+
+function Get-TestPSWriteOfficeAssembly {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Name,
+
+        [string] $CommandName = 'New-OfficeWord'
+    )
+
+    $loadContext = Get-TestPSWriteOfficeAssemblyLoadContext -CommandName $CommandName
+    if ($loadContext) {
+        return $loadContext.LoadFromAssemblyName([System.Reflection.AssemblyName]::new($Name))
+    }
+
+    $assembly = [AppDomain]::CurrentDomain.GetAssemblies() |
+        Where-Object { $_.GetName().Name -eq $Name } |
+        Select-Object -First 1
+    if ($assembly) {
+        return $assembly
+    }
+
+    [System.Reflection.Assembly]::Load($Name)
+}
+
+function Get-TestPSWriteOfficeType {
+    param(
+        [Parameter(Mandatory)]
+        [string] $AssemblyName,
+
+        [Parameter(Mandatory)]
+        [string] $TypeName,
+
+        [string] $CommandName = 'New-OfficeWord'
+    )
+
+    $assembly = Get-TestPSWriteOfficeAssembly -Name $AssemblyName -CommandName $CommandName
+    $assembly.GetType($TypeName, $true)
+}
+
+function Get-TestPSWriteOfficeEnumValue {
+    param(
+        [Parameter(Mandatory)]
+        [string] $AssemblyName,
+
+        [Parameter(Mandatory)]
+        [string] $TypeName,
+
+        [Parameter(Mandatory)]
+        [string] $Name,
+
+        [string] $CommandName = 'New-OfficeWord'
+    )
+
+    $type = Get-TestPSWriteOfficeType -AssemblyName $AssemblyName -TypeName $TypeName -CommandName $CommandName
+    [Enum]::Parse($type, $Name)
+}

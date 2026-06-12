@@ -5,6 +5,8 @@ BeforeAll {
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
     Import-Module $ModuleManifest -Global -ErrorAction Stop
+
+    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 }
 
 Describe 'Visio cmdlets' {
@@ -181,7 +183,12 @@ Describe 'Visio cmdlets' {
 
     It 'preserves stencil default units when one dimension is omitted' {
         $path = Join-Path $TestDrive 'metric-stencil.vsdx'
-        $stencil = [OfficeIMO.Visio.Stencils.VisioStencilShape]::new(
+        $visioAssembly = Get-TestPSWriteOfficeAssembly -Name 'OfficeIMO.Visio' -CommandName 'New-OfficeVisio'
+        $stencilType = $visioAssembly.GetType('OfficeIMO.Visio.Stencils.VisioStencilShape', $true)
+        $catalogType = $visioAssembly.GetType('OfficeIMO.Visio.Stencils.VisioStencilCatalog', $true)
+        $measurementUnitType = $visioAssembly.GetType('OfficeIMO.Visio.VisioMeasurementUnit', $true)
+
+        $stencil = [Activator]::CreateInstance($stencilType, [object[]]@(
             'metric.process',
             'Metric Process',
             'MetricProcess',
@@ -192,10 +199,10 @@ Describe 'Visio cmdlets' {
             $null,
             $null,
             $null,
-            [OfficeIMO.Visio.VisioMeasurementUnit]::Centimeters)
-        $catalog = [OfficeIMO.Visio.Stencils.VisioStencilCatalog]::new(
-            'Metric',
-            [OfficeIMO.Visio.Stencils.VisioStencilShape[]]@($stencil))
+            [Enum]::Parse($measurementUnitType, 'Centimeters')))
+        $stencils = [Array]::CreateInstance($stencilType, 1)
+        $stencils.SetValue($stencil, 0)
+        $catalog = [Activator]::CreateInstance($catalogType, [object[]]@('Metric', $stencils))
 
         New-OfficeVisio -Path $path -Title 'Metric stencil defaults' {
             Import-OfficeVisioStencil -Catalog $catalog -Name Metric -Default | Out-Null
