@@ -34,6 +34,20 @@ Describe 'PDF HTML cmdlets' {
         $text | Should -Match 'Full document body'
     }
 
+    It 'converts an HTML file when InputPath is named' {
+        $htmlPath = Join-Path $TestDrive 'source.html'
+        $path = Join-Path $TestDrive 'html-file-report.pdf'
+        Set-Content -Path $htmlPath -Value '<h1>File HTML</h1><p>Loaded from disk.</p>' -Encoding UTF8
+
+        ConvertFrom-OfficePdfHtml -InputPath $htmlPath -OutputPath $path -PassThru |
+            Should -BeOfType System.IO.FileInfo
+
+        Test-Path $path | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'File HTML'
+        $text | Should -Match 'Loaded from disk'
+    }
+
     It 'converts a PDF file to semantic HTML' {
         $path = Join-Path $TestDrive 'source.pdf'
         $htmlPath = Join-Path $TestDrive 'source.html'

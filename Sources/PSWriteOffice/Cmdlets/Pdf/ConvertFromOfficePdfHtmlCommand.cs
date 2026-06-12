@@ -30,7 +30,7 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
     public string Html { get; set; } = string.Empty;
 
     /// <summary>Path to an HTML file.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetPath)]
     [Alias("FilePath", "Path")]
     public string InputPath { get; set; } = string.Empty;
 
