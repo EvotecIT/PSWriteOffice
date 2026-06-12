@@ -1,5 +1,5 @@
 ﻿# to speed up development adding direct path to binaries, instead of the the Lib folder
-$DevelopmentPath = Join-Path $PSScriptRoot 'Sources\PSWriteOffice\bin\Debug'
+$DevelopmentPath = Join-Path (Join-Path (Join-Path (Join-Path $PSScriptRoot 'Sources') 'PSWriteOffice') 'bin') 'Debug'
 $Development = $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES -eq 'true' -and (Test-Path $DevelopmentPath)
 $DevelopmentFolderCore = "net8.0"
 $DevelopmentFolderDefault = "net472"
@@ -58,6 +58,45 @@ function Register-PSWriteOfficeDevelopmentAssemblyResolver {
 
             return $null
         }
+    }
+
+    if (-not $script:PSWriteOfficeDevelopmentAppDomainAssemblyResolver) {
+        $script:PSWriteOfficeDevelopmentAppDomainAssemblyResolver = [System.ResolveEventHandler] {
+            param(
+                [object] $Sender,
+                [System.ResolveEventArgs] $Args
+            )
+
+            try {
+                $assemblyName = [System.Reflection.AssemblyName]::new($Args.Name)
+            } catch {
+                return $null
+            }
+
+            foreach ($assemblyDirectory in $script:PSWriteOfficeDevelopmentAssemblyDirectories) {
+                $candidate = Join-Path -Path $assemblyDirectory -ChildPath "$($assemblyName.Name).dll"
+                if (-not (Test-Path -LiteralPath $candidate)) {
+                    continue
+                }
+
+                try {
+                    return [System.Runtime.Loader.AssemblyLoadContext]::Default.LoadFromAssemblyPath($candidate)
+                } catch {
+                    foreach ($loadedAssembly in [System.Runtime.Loader.AssemblyLoadContext]::Default.Assemblies) {
+                        if ($loadedAssembly.GetName().Name -eq $assemblyName.Name -and
+                            $loadedAssembly.GetName().Version -eq $assemblyName.Version) {
+                            return $loadedAssembly
+                        }
+                    }
+
+                    Write-Verbose -Message "Failed to resolve dependency assembly '$candidate': $($_.Exception.Message)"
+                }
+            }
+
+            return $null
+        }
+
+        [System.AppDomain]::CurrentDomain.add_AssemblyResolve($script:PSWriteOfficeDevelopmentAppDomainAssemblyResolver)
     }
 
     if (-not $script:PSWriteOfficeDevelopmentAssemblyResolverContexts) {
@@ -223,9 +262,9 @@ if ($Standard -and $Core -and $Default) {
 $BinaryDev = @(
     foreach ($BinaryModule in $BinaryModules) {
         if ($PSEdition -eq 'Core') {
-            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore\$BinaryModule"
+            $Variable = Resolve-Path (Join-Path (Join-Path $DevelopmentPath $DevelopmentFolderCore) $BinaryModule)
         } else {
-            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
+            $Variable = Resolve-Path (Join-Path (Join-Path $DevelopmentPath $DevelopmentFolderDefault) $BinaryModule)
         }
         $Variable
         Write-Verbose "Development mode: Using binaries from $Variable"
