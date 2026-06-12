@@ -69,7 +69,7 @@ public sealed class AddOfficeVisioTextBoxCommand : PSCmdlet
         var page = Page ?? VisioDslContext.Require(this).RequirePage();
         var shape = page.AddTextBox(X, Y, Width, Height, Text, Unit);
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, Name ?? Key, NameU, FillColor, LineColor, LineWeight, null, null, null);
-        context?.RegisterShape(Key, shape);
+        context?.RegisterShape(page, Key, shape);
         WriteObject(shape);
     }
 }

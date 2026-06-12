@@ -81,7 +81,7 @@ public sealed class AddOfficeVisioRectangleCommand : PSCmdlet
         var page = Page ?? VisioDslContext.Require(this).RequirePage();
         var shape = page.AddRectangle(X, Y, Width, Height, Text, Unit);
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, Name ?? Key, NameU, FillColor, LineColor, LineWeight, LinePattern, FillPattern, Angle);
-        context?.RegisterShape(Key, shape);
+        context?.RegisterShape(page, Key, shape);
         WriteObject(shape);
     }
 }

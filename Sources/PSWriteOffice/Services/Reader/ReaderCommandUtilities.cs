@@ -24,6 +24,15 @@ internal static class ReaderCommandUtilities
 
     internal static void RegisterPdfReader()
     {
+        var customPdfHandler = DocumentReader.GetCapabilities(includeBuiltIn: false, includeCustom: true)
+            .FirstOrDefault(static capability => capability.Extensions.Any(static extension =>
+                string.Equals(extension, ".pdf", StringComparison.OrdinalIgnoreCase)));
+
+        if (customPdfHandler != null)
+        {
+            return;
+        }
+
         DocumentReaderPdfRegistrationExtensions.RegisterPdfHandler(replaceExisting: true);
     }
 

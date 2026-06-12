@@ -17,6 +17,33 @@ Describe 'Reader cmdlets' {
         $capabilities.Id | Should -Contain 'officeimo.reader.pdf'
     }
 
+    It 'does not replace caller-registered PDF readers' {
+        $handlerId = 'pswriteoffice.test.pdf'
+        [OfficeIMO.Reader.DocumentReader]::UnregisterHandler($handlerId) | Out-Null
+
+        $registration = [OfficeIMO.Reader.ReaderHandlerRegistration]::new()
+        $registration.Id = $handlerId
+        $registration.DisplayName = 'Test PDF Reader'
+        $registration.Kind = [OfficeIMO.Reader.ReaderInputKind]::Pdf
+        $registration.Extensions = [string[]]@('.pdf')
+        $registration.ReadPath = [Func[string, OfficeIMO.Reader.ReaderOptions, Threading.CancellationToken, Collections.Generic.IEnumerable[OfficeIMO.Reader.ReaderChunk]]] {
+            param($Path, $Options, $CancellationToken)
+
+            [OfficeIMO.Reader.ReaderChunk[]]@()
+        }
+
+        try {
+            [OfficeIMO.Reader.DocumentReader]::RegisterHandler($registration, $true)
+
+            $capabilities = @(Get-OfficeDocumentCapability -ExcludeBuiltIn)
+            ($capabilities | Where-Object Id -EQ $handlerId).Count | Should -Be 1
+            ($capabilities | Where-Object Id -EQ 'officeimo.reader.pdf').Count | Should -Be 0
+        } finally {
+            [OfficeIMO.Reader.DocumentReader]::UnregisterHandler($handlerId) | Out-Null
+            [OfficeIMO.Reader.Pdf.DocumentReaderPdfRegistrationExtensions]::UnregisterPdfHandler() | Out-Null
+        }
+    }
+
     It 'reads Markdown files as chunks and a document envelope' {
         $path = Join-Path $TestDrive 'source.md'
         Set-Content -Path $path -Value "# Reader smoke`n`nOfficeIMO Reader keeps this text." -Encoding UTF8

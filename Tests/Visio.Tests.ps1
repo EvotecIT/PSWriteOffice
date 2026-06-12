@@ -104,6 +104,20 @@ Describe 'Visio cmdlets' {
         @($nestedShapes | Select-Object -ExpandProperty Text) | Should -Contain 'Second process'
     }
 
+    It 'keeps DSL connector key resolution scoped to the active page' {
+        $path = Join-Path $TestDrive 'cross-page-connector.vsdx'
+
+        {
+            New-OfficeVisio -Path $path -Title 'Cross-page connector' {
+                VisioRectangle -Key web -Text 'Web' -X 1.5 -Y 4 -Width 1.5 -Height 0.8
+                VisioPage 'Operations' {
+                    VisioEllipse -Key ops -Text 'Ops' -X 4 -Y 4 -Width 1.4 -Height 0.8
+                    VisioConnector -From web -To ops
+                }
+            } | Out-Null
+        } | Should -Throw "*Visio shape 'web' was not found on the active Visio page*"
+    }
+
     It 'searches built-in stencil catalogs and creates a stencil-based DSL diagram' {
         $path = Join-Path $TestDrive 'stencil-dsl.vsdx'
         $svgPath = Join-Path $TestDrive 'stencil-dsl.svg'
@@ -163,5 +177,69 @@ Describe 'Visio cmdlets' {
         $info = Get-OfficeVisioInfo -Path $path
         $info.ShapeCount | Should -Be 1
         $info.Title | Should -Be 'Package stencil DSL'
+    }
+
+    It 'preserves stencil default units when one dimension is omitted' {
+        $path = Join-Path $TestDrive 'metric-stencil.vsdx'
+        $stencil = [OfficeIMO.Visio.Stencils.VisioStencilShape]::new(
+            'metric.process',
+            'Metric Process',
+            'MetricProcess',
+            'Test',
+            4.0,
+            2.0,
+            $null,
+            $null,
+            $null,
+            $null,
+            [OfficeIMO.Visio.VisioMeasurementUnit]::Centimeters)
+        $catalog = [OfficeIMO.Visio.Stencils.VisioStencilCatalog]::new(
+            'Metric',
+            [OfficeIMO.Visio.Stencils.VisioStencilShape[]]@($stencil))
+
+        New-OfficeVisio -Path $path -Title 'Metric stencil defaults' {
+            Import-OfficeVisioStencil -Catalog $catalog -Name Metric -Default | Out-Null
+            VisioPage 'Metric Page' -Width 210 -Height 297 -Unit Millimeters {
+                VisioStencil -Catalog Metric -Stencil 'metric.process' -Key process -Text 'Metric' -X 50 -Y 50 -Width 30
+            }
+        } | Out-Null
+
+        $document = Get-OfficeVisio -Path $path
+        $shape = $document.Pages[1].Shapes[0]
+        [Math]::Round($shape.Width, 3) | Should -Be ([Math]::Round(30 / 25.4, 3))
+        [Math]::Round($shape.Height, 3) | Should -Be ([Math]::Round(20 / 25.4, 3))
+    }
+
+    It 'resolves relative PNG font paths from the PowerShell location' {
+        $fontSource = @(
+            'C:\Windows\Fonts\arial.ttf',
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+            '/System/Library/Fonts/Supplemental/Arial.ttf',
+            '/System/Library/Fonts/Supplemental/Arial Unicode.ttf'
+        ) | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+
+        if (-not $fontSource) {
+            Set-ItResult -Skipped -Because 'No TrueType font fixture was found on this runner.'
+            return
+        }
+
+        $path = Join-Path $TestDrive 'font-path.vsdx'
+        $pngPath = Join-Path $TestDrive 'font-path.png'
+        $fontFolder = Join-Path $TestDrive 'Fonts'
+        New-Item -Path $fontFolder -ItemType Directory | Out-Null
+        Copy-Item -LiteralPath $fontSource -Destination (Join-Path $fontFolder 'test-font.ttf')
+
+        New-OfficeVisio -Path $path -Title 'Font path' {
+            VisioRectangle -Key text -Text 'Font Path' -X 2 -Y 2 -Width 2 -Height 1
+        } | Out-Null
+
+        Push-Location $TestDrive
+        try {
+            ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath -FontFilePath '.\Fonts\test-font.ttf' | Out-Null
+        } finally {
+            Pop-Location
+        }
+
+        Test-Path -LiteralPath $pngPath | Should -BeTrue
     }
 }

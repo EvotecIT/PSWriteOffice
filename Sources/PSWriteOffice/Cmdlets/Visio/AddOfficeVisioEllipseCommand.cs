@@ -65,7 +65,7 @@ public sealed class AddOfficeVisioEllipseCommand : PSCmdlet
         var page = Page ?? VisioDslContext.Require(this).RequirePage();
         var shape = page.AddEllipse(X, Y, Width, Height, Text, Unit);
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, Name ?? Key, null, FillColor, LineColor, LineWeight, null, null, null);
-        context?.RegisterShape(Key, shape);
+        context?.RegisterShape(page, Key, shape);
         WriteObject(shape);
     }
 }

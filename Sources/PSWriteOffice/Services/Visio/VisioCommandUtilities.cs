@@ -76,6 +76,7 @@ internal static class VisioCommandUtilities
     }
 
     internal static VisioPngSaveOptions BuildPngOptions(
+        PSCmdlet cmdlet,
         int pageIndex,
         double? pixelsPerInch,
         string? backgroundColor,
@@ -93,7 +94,7 @@ internal static class VisioCommandUtilities
         {
             PageIndex = pageIndex,
             RenderText = !noText,
-            FontFilePath = fontFilePath,
+            FontFilePath = string.IsNullOrWhiteSpace(fontFilePath) ? null : ResolvePath(cmdlet, fontFilePath!),
             FontFaceName = fontFaceName,
             FontCollectionIndex = fontCollectionIndex,
             RenderStencilArtwork = !noStencilArtwork,

@@ -104,11 +104,19 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSCmdlet
         var stencil = catalog.Get(Stencil);
         var id = string.IsNullOrWhiteSpace(Key) ? CreateUniqueShapeId(page, stencil.Id) : Key!;
         var shape = Width.HasValue || Height.HasValue
-            ? page.AddStencilShape(catalog, Stencil, id, X, Y, Width ?? stencil.DefaultWidth, Height ?? stencil.DefaultHeight, Text)
+            ? page.AddStencilShape(
+                catalog,
+                Stencil,
+                id,
+                X,
+                Y,
+                Width ?? ConvertStencilDefaultToPageUnit(stencil.DefaultWidth, stencil, page),
+                Height ?? ConvertStencilDefaultToPageUnit(stencil.DefaultHeight, stencil, page),
+                Text)
             : page.AddStencilShape(catalog, Stencil, id, X, Y, Text);
 
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, ShapeName ?? Key, NameU, FillColor, LineColor, LineWeight, LinePattern, FillPattern, Angle);
-        context?.RegisterShape(Key, shape);
+        context?.RegisterShape(page, Key, shape);
         WriteObject(shape);
     }
 
@@ -155,5 +163,23 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSCmdlet
                 return candidate;
             }
         }
+    }
+
+    private static double ConvertStencilDefaultToPageUnit(double value, VisioStencilShape stencil, VisioPage page)
+    {
+        var sourceUnit = stencil.DefaultUnit ?? page.DefaultUnit;
+        var inches = sourceUnit switch
+        {
+            VisioMeasurementUnit.Centimeters => value / 2.54,
+            VisioMeasurementUnit.Millimeters => value / 25.4,
+            _ => value
+        };
+
+        return page.DefaultUnit switch
+        {
+            VisioMeasurementUnit.Centimeters => inches * 2.54,
+            VisioMeasurementUnit.Millimeters => inches * 25.4,
+            _ => inches
+        };
     }
 }

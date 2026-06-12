@@ -12,7 +12,7 @@ internal sealed class VisioDslContext : IDisposable
 {
     private static readonly AsyncLocal<VisioDslContext?> CurrentScope = new();
     private readonly Stack<VisioPage> _pages = new();
-    private readonly Dictionary<string, VisioShape> _shapesByKey = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<VisioPage, Dictionary<string, VisioShape>> _shapesByPage = new();
     private readonly Dictionary<string, VisioStencilCatalog> _stencilCatalogsByKey = new(StringComparer.OrdinalIgnoreCase);
 
     private VisioDslContext(VisioDocument document)
@@ -62,42 +62,58 @@ internal sealed class VisioDslContext : IDisposable
         return new PopToken(this, page);
     }
 
-    internal void RegisterShape(string? key, VisioShape shape)
+    internal void RegisterShape(VisioPage page, string? key, VisioShape shape)
     {
+        if (page == null)
+        {
+            throw new ArgumentNullException(nameof(page));
+        }
+
         if (shape == null)
         {
             throw new ArgumentNullException(nameof(shape));
         }
 
+        if (!_shapesByPage.TryGetValue(page, out var shapesByKey))
+        {
+            shapesByKey = new Dictionary<string, VisioShape>(StringComparer.OrdinalIgnoreCase);
+            _shapesByPage[page] = shapesByKey;
+        }
+
         if (!string.IsNullOrWhiteSpace(key))
         {
-            _shapesByKey[key!] = shape;
+            shapesByKey[key!] = shape;
         }
 
         if (!string.IsNullOrWhiteSpace(shape.Name))
         {
-            _shapesByKey[shape.Name!] = shape;
+            shapesByKey[shape.Name!] = shape;
         }
 
         if (!string.IsNullOrWhiteSpace(shape.Id))
         {
-            _shapesByKey[shape.Id] = shape;
+            shapesByKey[shape.Id] = shape;
         }
     }
 
-    internal VisioShape ResolveShape(string value)
+    internal VisioShape ResolveShape(VisioPage page, string value)
     {
+        if (page == null)
+        {
+            throw new ArgumentNullException(nameof(page));
+        }
+
         if (string.IsNullOrWhiteSpace(value))
         {
             throw new PSArgumentException("Shape reference cannot be empty.", nameof(value));
         }
 
-        if (_shapesByKey.TryGetValue(value, out var shape))
+        if (_shapesByPage.TryGetValue(page, out var shapesByKey) &&
+            shapesByKey.TryGetValue(value, out var shape))
         {
             return shape;
         }
 
-        var page = RequirePage();
         shape = page.AllShapes().FirstOrDefault(candidate =>
             string.Equals(candidate.Id, value, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(candidate.Name, value, StringComparison.OrdinalIgnoreCase) ||
@@ -105,11 +121,11 @@ internal sealed class VisioDslContext : IDisposable
 
         if (shape != null)
         {
-            RegisterShape(value, shape);
+            RegisterShape(page, value, shape);
             return shape;
         }
 
-        throw new PSInvalidOperationException($"Visio shape '{value}' was not found in the current DSL scope.");
+        throw new PSInvalidOperationException($"Visio shape '{value}' was not found on the active Visio page.");
     }
 
     internal void RegisterStencilCatalog(string? key, VisioStencilCatalog catalog, bool makeDefault)
@@ -166,7 +182,7 @@ internal sealed class VisioDslContext : IDisposable
         }
 
         _pages.Clear();
-        _shapesByKey.Clear();
+        _shapesByPage.Clear();
         _stencilCatalogsByKey.Clear();
         DefaultStencilCatalog = null;
     }

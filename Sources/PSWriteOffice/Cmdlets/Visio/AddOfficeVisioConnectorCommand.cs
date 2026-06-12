@@ -92,7 +92,7 @@ public sealed class AddOfficeVisioConnectorCommand : PSCmdlet
     {
         if (context != null)
         {
-            return context.ResolveShape(value);
+            return context.ResolveShape(page, value);
         }
 
         var shape = page.AllShapes().FirstOrDefault(candidate =>

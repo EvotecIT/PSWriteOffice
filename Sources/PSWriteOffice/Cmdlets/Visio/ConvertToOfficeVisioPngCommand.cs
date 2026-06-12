@@ -86,6 +86,7 @@ public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
     {
         var document = VisioCommandUtilities.ResolveDocument(this, Document, Path);
         var options = VisioCommandUtilities.BuildPngOptions(
+            this,
             PageIndex,
             PixelsPerInch,
             BackgroundColor,
