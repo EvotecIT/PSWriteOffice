@@ -89,4 +89,20 @@ The eighth implementation slice adds rich inline text:
 - `Add-OfficePdfText` / `PdfText` exposes OfficeIMO.Pdf paragraph runs for bold, italic, underline, strike, color, highlight, font, baseline, URI links, and bookmark links.
 - `Add-OfficePdfRow` column specifications can use the same `Run`/`Runs` shape for rich inline text inside row/column layouts.
 
-The old PSWritePDF HTML-to-PDF command should not be recreated in PSWriteOffice until that conversion is an OfficeIMO-owned capability. The next PDF slices should add signatures, encryption, redaction, and richer existing-PDF compliance checks only as OfficeIMO.Pdf supports them.
+The ninth implementation slice adds the OfficeIMO-owned HTML/PDF bridge:
+
+- `ConvertFrom-OfficePdfHtml` maps HTML text or files to PDF bytes or files through OfficeIMO.Html.Pdf semantic/document profiles.
+- `ConvertTo-OfficePdfHtml` maps PDF files to semantic or positioned-review HTML through OfficeIMO.Html.Pdf.
+
+The tenth implementation slice adds the OfficeIMO.Reader and OfficeIMO.Visio bridge:
+
+- `Get-OfficeDocumentCapability` registers `OfficeIMO.Reader.Pdf` and exposes Reader handler discovery.
+- `Get-OfficeDocumentChunk` wraps Reader file/folder chunk extraction for Office, PDF, Markdown, and text-like files.
+- `Get-OfficeDocument` returns the shared document read result envelope or deterministic JSON.
+- `New-OfficeVisio { ... }` supports the first Visio DSL slices: `VisioPage`, `VisioRectangle`, `VisioEllipse`, `VisioDiamond`, `VisioTextBox`, `VisioConnector`, and `VisioStencil`.
+- `Get/Find/Import-OfficeVisioStencil*` expose OfficeIMO.Visio built-in catalogs, package-backed catalogs, installed stencil discovery, search, and DSL catalog registration.
+- `New/Get/Save-OfficeVisio` expose the basic `.vsdx` lifecycle.
+- `Get-OfficeVisioInfo` exposes deterministic OfficeIMO.Visio inspection snapshots.
+- `ConvertTo-OfficeVisioSvg` and `ConvertTo-OfficeVisioPng` expose dependency-free Visio export.
+
+Future HTML/PDF fidelity improvements should happen in OfficeIMO.Html.Pdf and OfficeIMO.Pdf, then flow through PSWriteOffice by updating the OfficeIMO packages. The next PDF slices should add signatures, encryption, redaction, and richer existing-PDF compliance checks only as OfficeIMO.Pdf supports them.

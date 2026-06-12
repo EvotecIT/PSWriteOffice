@@ -1,6 +1,6 @@
 # PSWriteOffice
 
-PowerShell-first document automation for Word, Excel, PowerPoint, PDF, Markdown, and CSV, built on top of `OfficeIMO.*`.
+PowerShell-first document automation for Word, Excel, PowerPoint, PDF, Markdown, CSV, Reader, and Visio, built on top of `OfficeIMO.*`.
 
 📦 PowerShell Gallery
 
@@ -30,9 +30,11 @@ PowerShell-first document automation for Word, Excel, PowerPoint, PDF, Markdown,
 | Word | Mature | Document creation, readers, bookmarks, content controls, fields, HTML conversion, Markdown conversion |
 | Excel | Advanced | Sheets, tables, named ranges, formulas, validation, charts, pivots, comments, TOC/navigation, explicit range readers, chart formatting, smarter links, URL images, summary-sheet linking |
 | PowerPoint | Experimental but useful | Slides, titles, text boxes, bullets, notes, layouts, placeholders, sections, text replacement, slide import, slide copy, transitions, sizing |
-| PDF | Advanced | New PDFs, text, headings, images, tables, panels, bookmarks, metadata, attachments, stamps, watermarks, forms, merge/split/copy/move pages, text/image/attachment extraction, compliance inspection |
+| PDF | Advanced | New PDFs, text, headings, images, tables, panels, bookmarks, metadata, attachments, stamps, watermarks, forms, merge/split/copy/move pages, HTML conversion, text/image/attachment extraction, compliance inspection |
 | Markdown | Solid | Read Markdown, inspect full object trees/headings/front matter/tables, build Markdown with a DSL, render HTML, convert HTML |
 | CSV | Solid | Read CSV, emit CSV, object-focused data workflows |
+| Reader | New | Unified chunk/document readback over Word, Excel, PowerPoint, Markdown, PDF, and text-like files through `OfficeIMO.Reader` |
+| Visio | New | DSL diagram creation, built-in and package-backed stencils, create/load/save `.vsdx`, inspect diagrams, export SVG and PNG through `OfficeIMO.Visio` |
 
 ## Quick Start 🚀
 
@@ -191,6 +193,56 @@ New-OfficeMarkdown -Path .\README.md {
 $data | ConvertTo-OfficeCsv -OutputPath .\export.csv
 ```
 
+### Reader and Visio
+
+```powershell
+Get-OfficeDocumentCapability
+Get-OfficeDocumentChunk -Path .\Report.docx
+Get-OfficeDocument -Path .\Report.pdf -AsJson -Indented
+```
+
+```powershell
+New-OfficeVisio -Path .\Diagram.vsdx -Title 'Service map' -RequestRecalcOnOpen {
+    VisioRectangle -Key web -Text 'Web' -X 1.5 -Y 4 -Width 1.5 -Height 0.8 -FillColor LightBlue -LineColor SteelBlue
+    VisioDiamond -Key decision -Text 'Ready?' -X 4 -Y 4 -Width 1.2 -Height 1 -FillColor '#FFF2CC' -LineColor '#B45309'
+    VisioRectangle -Key api -Text 'API' -X 6.2 -Y 4 -Width 1.5 -Height 0.8 -FillColor LightGreen -LineColor SeaGreen
+    VisioConnector -From web -To decision -Kind RightAngle -EndArrow Triangle -Label 'check'
+    VisioConnector -From decision -To api -Kind RightAngle -EndArrow Triangle -Label 'ship'
+}
+
+Get-OfficeVisioInfo -Path .\Diagram.vsdx -AsText
+ConvertTo-OfficeVisioSvg -Path .\Diagram.vsdx -OutputPath .\Diagram.svg
+ConvertTo-OfficeVisioPng -Path .\Diagram.vsdx -OutputPath .\Diagram.png
+```
+
+```powershell
+$flow = Get-OfficeVisioStencilCatalog -BuiltIn Flowchart
+Find-OfficeVisioStencil -Catalog $flow -Query process -First 5
+
+New-OfficeVisio -Path .\Flow.vsdx -Title 'Stencil flow' -UseMastersByDefault -RequestRecalcOnOpen {
+    Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
+    VisioStencil -Catalog Flow -Stencil process -Key intake -Text 'Intake' -X 1.5 -Y 4 -FillColor '#E0F2FE' -LineColor '#0369A1'
+    VisioStencil -Catalog Flow -Stencil decision -Key review -Text 'Review?' -X 4 -Y 4 -FillColor '#FEF3C7' -LineColor '#B45309'
+    VisioStencil -Catalog Flow -Stencil data -Key archive -Text 'Archive' -X 6.5 -Y 4 -FillColor '#DCFCE7' -LineColor '#15803D'
+    VisioConnector -From intake -To review -Kind RightAngle -EndArrow Triangle -Label 'submit'
+    VisioConnector -From review -To archive -Kind RightAngle -EndArrow Triangle -Label 'store'
+}
+```
+
+```powershell
+$catalog = Get-OfficeVisioStencilCatalog -Path .\MyShapes.vssx -CatalogName 'Custom Shapes' -IncludeUnsupportedMasters
+Find-OfficeVisioStencil -Catalog $catalog -Query server -First 10
+
+New-OfficeVisio -Path .\CustomStencil.vsdx -UseMastersByDefault {
+    Import-OfficeVisioStencil -Catalog $catalog -Name Custom -Default
+    VisioStencil -Stencil server -Key server -Text 'Server' -X 2 -Y 4
+    VisioStencil -Stencil database -Key database -Text 'Database' -X 5 -Y 4
+    VisioConnector -From server -To database -Kind RightAngle -EndArrow Triangle
+}
+```
+
+More visual Visio examples live in `Examples\Visio`. Run `.\Examples\Visio\Build-VisioShowcase.ps1` to generate editable `.vsdx` files plus SVG/PNG previews for stencil flowcharts, architecture maps, network topology, and package-backed stencil loading.
+
 ## Read, Inspect, and Convert 🔍
 
 `PSWriteOffice` is not only about writing files. The module now has stronger read-back and bridge workflows too.
@@ -257,7 +309,9 @@ Get-OfficePowerPointShape -Presentation $ppt -Index 0
 ## Recent Highlights 🆕
 
 - Word to Markdown and Markdown to Word are now surfaced directly through `OfficeIMO.Word.Markdown`.
-- PDF now has first-class creation, composition, merge/split, page movement, metadata, forms, stamping, attachment, extraction, and compliance inspection cmdlets. Deeper PDF engine features still belong in `OfficeIMO.Pdf` first.
+- PDF now has first-class creation, composition, merge/split, page movement, metadata, forms, stamping, attachment, extraction, HTML conversion, and compliance inspection cmdlets. Deeper PDF engine features still belong in `OfficeIMO.Pdf` first.
+- `OfficeIMO.Reader` is surfaced through chunk, document-envelope, JSON, and capability-discovery cmdlets.
+- `OfficeIMO.Visio` is surfaced through a first diagram DSL plus built-in and external stencil catalogs, create/load/save, deterministic inspection, and SVG/PNG export cmdlets.
 - Excel now has `Add-OfficeExcelTableOfContents`, `Get-OfficeExcelRange`, and `Get-OfficeExcelUsedRange`.
 - PowerPoint now has section cmdlets, deck-wide text replacement, slide import helpers, slide copy, transitions, slide sizing, theme inspection, theme updates, and layout switching.
 - Excel charts can now be finished with `Set-OfficeExcelChartLegend`, `Set-OfficeExcelChartDataLabels`, and `Set-OfficeExcelChartStyle`.
@@ -272,7 +326,7 @@ Use the examples in this README for the first pass, then move to the generated c
 - [OVERVIEW.md](OVERVIEW.md) explains the project scope and design direction.
 - [Docs/Readme.md](Docs/Readme.md) is the generated cmdlet index.
 - [Docs](Docs) contains one generated page per command.
-- [Examples](Examples) contains runnable scripts grouped by Word, Excel, PowerPoint, Markdown, CSV, and shared samples.
+- [Examples](Examples) contains runnable scripts grouped by Word, Excel, PowerPoint, PDF, Markdown, CSV, and shared samples.
 - [Roadmap/PSWriteOffice-CmdletExamplesAndPolishPlan.md](Roadmap/PSWriteOffice-CmdletExamplesAndPolishPlan.md) tracks the documentation quality bar and the next wrapper-polish priorities.
 
 The generated command pages are built from XML comments in the cmdlet source. Prefer contextual examples there too: small workflow snippets with real input data, generated artifacts, readback/validation where useful, and no fake PowerShell compatibility aliases.

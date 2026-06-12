@@ -418,7 +418,8 @@ Describe 'PowerPoint cmdlets' {
         Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Transition Demo' | Out-Null
 
         $updatedSlide = $slide | Set-OfficePowerPointSlideTransition -Transition Fade
-        $updatedSlide.Transition | Should -Be ([OfficeIMO.PowerPoint.SlideTransition]::Fade)
+        $fadeTransition = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.PowerPoint' -TypeName 'OfficeIMO.PowerPoint.SlideTransition' -Name 'Fade' -CommandName 'New-OfficePowerPoint'
+        $updatedSlide.Transition | Should -Be $fadeTransition
 
         $slideSize = Set-OfficePowerPointSlideSize -Presentation $presentation -WidthCm 25.4 -HeightCm 14.0
         [math]::Round($slideSize.WidthCm, 1) | Should -Be 25.4
@@ -435,7 +436,7 @@ Describe 'PowerPoint cmdlets' {
         $reloaded = Get-OfficePowerPoint -FilePath $path
         try {
             $reloadedSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
-            $reloadedSlide.Transition | Should -Be ([OfficeIMO.PowerPoint.SlideTransition]::Fade)
+            $reloadedSlide.Transition | Should -Be $fadeTransition
             [math]::Round($reloaded.SlideSize.WidthCm, 1) | Should -Be 25.4
             [math]::Round($reloaded.SlideSize.HeightCm, 1) | Should -Be 14.0
             $reloaded.SlideSize.IsLandscape | Should -BeTrue
@@ -636,8 +637,10 @@ Describe 'PowerPoint cmdlets' {
 
         $themeAfter = Get-OfficePowerPointTheme -Presentation $presentation
         $themeAfter.ThemeName | Should -Be 'Contoso Theme'
-        $themeAfter.Colors[[OfficeIMO.PowerPoint.PowerPointThemeColor]::Accent1] | Should -Be 'C00000'
-        $themeAfter.Colors[[OfficeIMO.PowerPoint.PowerPointThemeColor]::Accent2] | Should -Be '00B0F0'
+        $accent1Color = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.PowerPoint' -TypeName 'OfficeIMO.PowerPoint.PowerPointThemeColor' -Name 'Accent1' -CommandName 'New-OfficePowerPoint'
+        $accent2Color = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.PowerPoint' -TypeName 'OfficeIMO.PowerPoint.PowerPointThemeColor' -Name 'Accent2' -CommandName 'New-OfficePowerPoint'
+        $themeAfter.Colors[$accent1Color] | Should -Be 'C00000'
+        $themeAfter.Colors[$accent2Color] | Should -Be '00B0F0'
         $themeAfter.MajorLatin | Should -Be 'Aptos'
         $themeAfter.MinorLatin | Should -Be 'Calibri'
         $slide.LayoutIndex | Should -Be $alternativeLayout.LayoutIndex
@@ -649,8 +652,8 @@ Describe 'PowerPoint cmdlets' {
         try {
             $reloadedTheme = Get-OfficePowerPointTheme -Presentation $reloaded
             $reloadedTheme.ThemeName | Should -Be 'Contoso Theme'
-            $reloadedTheme.Colors[[OfficeIMO.PowerPoint.PowerPointThemeColor]::Accent1] | Should -Be 'C00000'
-            $reloadedTheme.Colors[[OfficeIMO.PowerPoint.PowerPointThemeColor]::Accent2] | Should -Be '00B0F0'
+            $reloadedTheme.Colors[$accent1Color] | Should -Be 'C00000'
+            $reloadedTheme.Colors[$accent2Color] | Should -Be '00B0F0'
             $reloadedTheme.MajorLatin | Should -Be 'Aptos'
             $reloadedTheme.MinorLatin | Should -Be 'Calibri'
 

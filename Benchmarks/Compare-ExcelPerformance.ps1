@@ -819,7 +819,9 @@ if ($Engine -contains 'ExcelFast') {
 
 if ($Engine -contains 'PSWriteOffice') {
     $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
-    $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
+    if (-not $env:OfficeIMORoot) {
+        $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
+    }
     Import-Module (Join-Path $repoRoot 'PSWriteOffice.psd1') -Force -ErrorAction Stop
 }
 if ($Engine -contains 'ImportExcel') {

@@ -1,5 +1,5 @@
 ﻿# to speed up development adding direct path to binaries, instead of the the Lib folder
-$DevelopmentPath = Join-Path $PSScriptRoot 'Sources\PSWriteOffice\bin\Debug'
+$DevelopmentPath = Join-Path (Join-Path (Join-Path (Join-Path $PSScriptRoot 'Sources') 'PSWriteOffice') 'bin') 'Debug'
 $Development = $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES -eq 'true' -and (Test-Path $DevelopmentPath)
 $DevelopmentFolderCore = "net8.0"
 $DevelopmentFolderDefault = "net472"
@@ -7,6 +7,156 @@ $BinaryModules = @(
     "PSWriteOffice.dll"
 )
 $AssemblyFolders = Get-ChildItem -Path (Join-Path $PSScriptRoot 'Lib') -Directory -ErrorAction SilentlyContinue
+
+function Import-PSWriteOfficeDevelopmentBinaryModule {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Path
+    )
+
+    $loaderTypeName = 'PSWriteOffice.DevelopmentModuleLoadContext.ModuleAssemblyLoadContext'
+    if (-not ($loaderTypeName -as [type])) {
+        Add-Type -TypeDefinition @'
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.Loader;
+
+namespace PSWriteOffice.DevelopmentModuleLoadContext;
+
+public sealed class ModuleAssemblyLoadContext : AssemblyLoadContext
+{
+    private static readonly object Sync = new();
+    private static readonly Dictionary<string, ModuleAssemblyLoadContext> Contexts = new(StringComparer.OrdinalIgnoreCase);
+    private readonly string _assemblyDirectory;
+    private readonly string _moduleAssemblyPath;
+    private readonly AssemblyDependencyResolver _resolver;
+    private Assembly _moduleAssembly;
+
+    private ModuleAssemblyLoadContext(string moduleAssemblyPath, string contextName) : base(contextName, isCollectible: false)
+    {
+        _moduleAssemblyPath = Path.GetFullPath(moduleAssemblyPath);
+        _assemblyDirectory = Path.GetDirectoryName(_moduleAssemblyPath) ?? string.Empty;
+        _resolver = new AssemblyDependencyResolver(_moduleAssemblyPath);
+    }
+
+    public static Assembly LoadModule(string moduleAssemblyPath, string contextName)
+    {
+        if (string.IsNullOrWhiteSpace(moduleAssemblyPath))
+        {
+            throw new ArgumentException("Module assembly path is required.", nameof(moduleAssemblyPath));
+        }
+
+        string fullPath = Path.GetFullPath(moduleAssemblyPath);
+        if (!File.Exists(fullPath))
+        {
+            throw new FileNotFoundException("Module assembly was not found.", fullPath);
+        }
+
+        lock (Sync)
+        {
+            if (!Contexts.TryGetValue(fullPath, out ModuleAssemblyLoadContext context))
+            {
+                context = new ModuleAssemblyLoadContext(fullPath, string.IsNullOrWhiteSpace(contextName) ? Path.GetFileNameWithoutExtension(fullPath) : contextName);
+                Contexts[fullPath] = context;
+            }
+
+            return context.LoadMainModule();
+        }
+    }
+
+    protected override Assembly Load(AssemblyName assemblyName)
+    {
+        if (assemblyName == null || string.IsNullOrWhiteSpace(assemblyName.Name))
+        {
+            return null;
+        }
+
+        AssemblyName loaderAssembly = typeof(ModuleAssemblyLoadContext).Assembly.GetName();
+        if (AssemblyName.ReferenceMatchesDefinition(loaderAssembly, assemblyName))
+        {
+            return typeof(ModuleAssemblyLoadContext).Assembly;
+        }
+
+        if (string.Equals(assemblyName.Name, "System.Management.Automation", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
+        if (!string.IsNullOrWhiteSpace(assemblyPath) && File.Exists(assemblyPath))
+        {
+            return LoadFromAssemblyPath(assemblyPath);
+        }
+
+        string fallbackPath = Path.Combine(_assemblyDirectory, assemblyName.Name + ".dll");
+        return File.Exists(fallbackPath) ? LoadFromAssemblyPath(fallbackPath) : null;
+    }
+
+    protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
+    {
+        string libraryPath = _resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
+        if (libraryPath != null)
+        {
+            return LoadUnmanagedDllFromPath(libraryPath);
+        }
+
+        return IntPtr.Zero;
+    }
+
+    private Assembly LoadMainModule()
+    {
+        if (_moduleAssembly == null)
+        {
+            _moduleAssembly = LoadFromAssemblyPath(_moduleAssemblyPath);
+        }
+
+        return _moduleAssembly;
+    }
+}
+'@ -ErrorAction Stop
+    }
+
+    $importModule = Get-Command -Name Import-Module -Module Microsoft.PowerShell.Core
+    $moduleAssembly = [PSWriteOffice.DevelopmentModuleLoadContext.ModuleAssemblyLoadContext]::LoadModule($Path, 'PSWriteOfficeDevelopment')
+    $innerModule = & $importModule -Assembly $moduleAssembly -Force -PassThru -ErrorAction Stop
+
+    if ($innerModule) {
+        $addExportedCmdlet = [System.Management.Automation.PSModuleInfo].GetMethod(
+            'AddExportedCmdlet',
+            [System.Reflection.BindingFlags]'Instance, NonPublic'
+        )
+        if ($null -ne $addExportedCmdlet) {
+            foreach ($cmdlet in $innerModule.ExportedCmdlets.Values) {
+                $addExportedCmdlet.Invoke($ExecutionContext.SessionState.Module, @(, $cmdlet)) | Out-Null
+            }
+
+            $addExportedAlias = [System.Management.Automation.PSModuleInfo].GetMethod(
+                'AddExportedAlias',
+                [System.Reflection.BindingFlags]'Instance, NonPublic'
+            )
+            if ($null -ne $addExportedAlias) {
+                foreach ($alias in $innerModule.ExportedAliases.Values) {
+                    $aliasTarget = if ([string]::IsNullOrWhiteSpace($alias.Definition)) {
+                        $alias.ResolvedCommandName
+                    } else {
+                        $alias.Definition
+                    }
+
+                    Set-Alias -Name $alias.Name -Value $aliasTarget -Scope Local -Force -ErrorAction Stop
+                    $exportedAlias = $ExecutionContext.SessionState.InvokeCommand.GetCommand($alias.Name, [System.Management.Automation.CommandTypes]::Alias)
+                    if ($null -ne $exportedAlias) {
+                        $addExportedAlias.Invoke($ExecutionContext.SessionState.Module, @(, $exportedAlias)) | Out-Null
+                    }
+                }
+            }
+        } else {
+            throw 'AddExportedCmdlet is not available on this PowerShell version.'
+        }
+    }
+}
 
 # ensure script file collections always exist (legacy folders were removed)
 if (-not (Test-Path variable:Classes)) { $Classes = @() }
@@ -101,9 +251,9 @@ if ($Standard -and $Core -and $Default) {
 $BinaryDev = @(
     foreach ($BinaryModule in $BinaryModules) {
         if ($PSEdition -eq 'Core') {
-            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderCore\$BinaryModule"
+            $Variable = Resolve-Path (Join-Path (Join-Path $DevelopmentPath $DevelopmentFolderCore) $BinaryModule)
         } else {
-            $Variable = Resolve-Path "$DevelopmentPath\$DevelopmentFolderDefault\$BinaryModule"
+            $Variable = Resolve-Path (Join-Path (Join-Path $DevelopmentPath $DevelopmentFolderDefault) $BinaryModule)
         }
         $Variable
         Write-Verbose "Development mode: Using binaries from $Variable"
@@ -114,7 +264,12 @@ $FoundErrors = @(
     if ($Development) {
         foreach ($BinaryModule in $BinaryDev) {
             try {
-                Import-Module -Name $BinaryModule -Force -ErrorAction Stop
+                $binaryModulePath = (Resolve-Path -LiteralPath $BinaryModule).ProviderPath
+                if ($PSEdition -eq 'Core') {
+                    Import-PSWriteOfficeDevelopmentBinaryModule -Path $binaryModulePath
+                } else {
+                    Import-Module -Name $BinaryModule -Force -ErrorAction Stop
+                }
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
                 $true

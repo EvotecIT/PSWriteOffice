@@ -21,7 +21,8 @@ Describe 'Word reader helpers' {
         try {
             $null = $doc.AddBookmark('Bookmark1')
             $paragraph = $doc.AddParagraph('Page')
-            $null = $paragraph.AddField([OfficeIMO.Word.WordFieldType]::Page)
+            $pageFieldType = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.Word' -TypeName 'OfficeIMO.Word.WordFieldType' -Name 'Page'
+            $null = $paragraph.AddField($pageFieldType)
         } finally {
             Close-OfficeWord -Document $doc -Save
         }
@@ -149,8 +150,9 @@ Describe 'Word reader helpers' {
 
         $doc = Get-OfficeWord -Path $path -ReadOnly
         try {
-            $doc.Fields.Where({ $_.FieldType -eq [OfficeIMO.Word.WordFieldType]::MergeField }).Count | Should -Be 1
-            $doc.Fields.Where({ $_.FieldType -eq [OfficeIMO.Word.WordFieldType]::MergeField })[0].Text | Should -Be 'Morgan'
+            $mergeFieldType = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.Word' -TypeName 'OfficeIMO.Word.WordFieldType' -Name 'MergeField'
+            $doc.Fields.Where({ $_.FieldType -eq $mergeFieldType }).Count | Should -Be 1
+            $doc.Fields.Where({ $_.FieldType -eq $mergeFieldType })[0].Text | Should -Be 'Morgan'
         } finally {
             $doc.Dispose()
         }

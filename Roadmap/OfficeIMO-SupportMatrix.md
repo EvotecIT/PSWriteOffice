@@ -1,6 +1,6 @@
 # PSWriteOffice and OfficeIMO Support Matrix
 
-Date: 2026-05-18
+Date: 2026-06-11
 
 This matrix is the current planning companion for `OfficeIMO-Showcase-PolishPlan.md`.
 For the ImportExcel and PSWriteWord competitive crosswalk, see
@@ -112,14 +112,37 @@ For the ImportExcel and PSWriteWord competitive crosswalk, see
 | Existing-PDF readback | Wrapped | Info, preflight, text, logical Markdown, form fields, images, and attachments |
 | Existing-PDF operations | Wrapped | Join, split, copy, remove, move, rotate through `Set-OfficePdfPage -Rotation`, metadata updates, form fill/flat conversion, and text/image stamps |
 | Compliance readiness | Partial wrapper | Generated document profile/groundwork and readiness reports are wrapped; existing-PDF conformance checks remain engine-led |
-| HTML to PDF | Engine gap | Do not recreate the old PSWritePDF command in PSWriteOffice until OfficeIMO owns the conversion |
+| HTML/PDF conversion | Wrapped | `ConvertFrom-OfficePdfHtml` and `ConvertTo-OfficePdfHtml` expose OfficeIMO.Html.Pdf semantic/document and semantic/positioned-review profiles |
 | Signatures, encryption, redaction | Engine gap | Add only when OfficeIMO.Pdf exposes stable reusable APIs |
+
+## Reader
+
+| Capability | Status | Notes |
+| --- | --- | --- |
+| Capability discovery | Wrapped | `Get-OfficeDocumentCapability` lists built-in and modular handlers after registering the OfficeIMO.Reader.Pdf adapter |
+| Chunk extraction | Wrapped | `Get-OfficeDocumentChunk` wraps `DocumentReader.Read` and `ReadFolder` for Word, Excel, PowerPoint, Markdown, PDF, and text-like files |
+| Document envelope | Wrapped | `Get-OfficeDocument` returns `OfficeDocumentReadResult` or deterministic JSON through `-AsJson` |
+| PDF reader adapter | Wrapped | `OfficeIMO.Reader.Pdf` is referenced and registered so the modular PDF handler can replace the built-in PDF capability |
+| Tables, assets, and visuals | Wrapper gap | OfficeIMO.Reader exposes deeper table/asset/visual APIs; PSWriteOffice currently surfaces the chunk and document-envelope workflows first |
+
+## Visio
+
+| Capability | Status | Notes |
+| --- | --- | --- |
+| Create/load/save documents | Wrapped | `New/Get/Save-OfficeVisio` expose the core `.vsdx` lifecycle |
+| Basic diagram DSL | Wrapped | `New-OfficeVisio { VisioRectangle ...; VisioConnector ... }` covers pages, rectangles, ellipses, diamonds, text boxes, connectors, and stencil shapes |
+| Inspection snapshots | Wrapped | `Get-OfficeVisioInfo` exposes deterministic `CreateInspectionSnapshot()` output and stable text |
+| SVG/PNG export | Wrapped | `ConvertTo-OfficeVisioSvg` and `ConvertTo-OfficeVisioPng` expose dependency-free OfficeIMO.Visio renderers |
+| Stencil catalogs | Wrapped | `Get/Find/Import-OfficeVisioStencil*` expose built-in catalogs, installed/package-backed catalog loading, search, and `VisioStencil` placement |
+| Shape and connector authoring | Partial wrapper | Basic shape/connectors/stencil DSL exists; grouping, layers, layout helpers, and semantic diagram builders remain future wrapper slices |
+| Semantic diagram builders | Wrapper gap | Keep this in OfficeIMO.Visio first, then expose focused PowerShell workflows once the high-level API is stable |
 
 ## Recommended Next PRs
 
 1. Word run/paragraph style, row/column table mutation, and text box helpers.
 2. PowerPoint metrics/visual-frame helpers, fit diagnostics, and shape layout polish.
-3. OfficeIMO engine confidence for Excel pivot/sparkline desktop-open compatibility.
+3. Visio grouping/layer/layout and semantic diagram builder wrappers after OfficeIMO.Visio stabilizes the high-level workflows.
+4. OfficeIMO engine confidence for Excel pivot/sparkline desktop-open compatibility.
 
 ## Example Quality Bar
 

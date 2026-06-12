@@ -593,7 +593,8 @@ Describe 'Word DSL surface' {
         $document = Get-OfficeWord -Path $path -ReadOnly
         try {
             $document.Background.Color | Should -Be 'ddeeff'
-            $document.Fields.Where({ $_.FieldType -eq [OfficeIMO.Word.WordFieldType]::MergeField }).Count | Should -Be 0
+            $mergeFieldType = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.Word' -TypeName 'OfficeIMO.Word.WordFieldType' -Name 'MergeField'
+            $document.Fields.Where({ $_.FieldType -eq $mergeFieldType }).Count | Should -Be 0
         } finally {
             $document.Dispose()
         }

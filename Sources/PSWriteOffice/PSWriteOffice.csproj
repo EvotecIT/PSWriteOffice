@@ -15,11 +15,12 @@
 
     <PropertyGroup>
         <OfficeIMORoot Condition=" '$(OfficeIMORoot)' == '' ">..\..\..\OfficeIMO</OfficeIMORoot>
-        <UseOfficeIMOProjectReferences Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Pdf\OfficeIMO.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Pdf\OfficeIMO.Word.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Pdf\OfficeIMO.Excel.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Pdf\OfficeIMO.Markdown.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Pdf\OfficeIMO.PowerPoint.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj')">true</UseOfficeIMOProjectReferences>
+        <UseOfficeIMOProjectReferences Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Pdf\OfficeIMO.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Pdf\OfficeIMO.Word.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Pdf\OfficeIMO.Excel.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Pdf\OfficeIMO.Markdown.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Html.Pdf\OfficeIMO.Html.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Pdf\OfficeIMO.PowerPoint.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader\OfficeIMO.Reader.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Pdf\OfficeIMO.Reader.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj')">true</UseOfficeIMOProjectReferences>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
+        <PackageReference Include="System.IO.Packaging" Version="10.0.8" />
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
@@ -71,24 +72,32 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Pdf\OfficeIMO.Word.Pdf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel.Pdf\OfficeIMO.Excel.Pdf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Markdown.Pdf\OfficeIMO.Markdown.Pdf.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Html.Pdf\OfficeIMO.Html.Pdf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.PowerPoint.Pdf\OfficeIMO.PowerPoint.Pdf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader\OfficeIMO.Reader.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Pdf\OfficeIMO.Reader.Pdf.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
-        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.14" />
-        <PackageReference Include="OfficeIMO.Word" Version="1.0.61" />
-        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.36" />
-        <PackageReference Include="OfficeIMO.Excel" Version="0.6.40" />
-        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.35" />
-        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.27" />
-        <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.27" />
-        <PackageReference Include="OfficeIMO.Pdf" Version="0.1.35" />
-        <PackageReference Include="OfficeIMO.Word.Pdf" Version="1.0.34" />
-        <PackageReference Include="OfficeIMO.Excel.Pdf" Version="1.0.0" />
-        <PackageReference Include="OfficeIMO.Markdown.Pdf" Version="1.0.0" />
-        <PackageReference Include="OfficeIMO.PowerPoint.Pdf" Version="1.0.0" />
-        <PackageReference Include="OfficeIMO.CSV" Version="0.1.39" />
-        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.34" />
+        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.16" />
+        <PackageReference Include="OfficeIMO.Word" Version="1.0.63" />
+        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.38" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.42" />
+        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.37" />
+        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.29" />
+        <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.29" />
+        <PackageReference Include="OfficeIMO.Pdf" Version="0.1.37" />
+        <PackageReference Include="OfficeIMO.Word.Pdf" Version="1.0.36" />
+        <PackageReference Include="OfficeIMO.Excel.Pdf" Version="1.0.2" />
+        <PackageReference Include="OfficeIMO.Markdown.Pdf" Version="1.0.2" />
+        <PackageReference Include="OfficeIMO.Html.Pdf" Version="1.0.0" />
+        <PackageReference Include="OfficeIMO.PowerPoint.Pdf" Version="1.0.2" />
+        <PackageReference Include="OfficeIMO.CSV" Version="0.1.42" />
+        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.36" />
+        <PackageReference Include="OfficeIMO.Reader" Version="0.1.37" />
+        <PackageReference Include="OfficeIMO.Reader.Pdf" Version="0.0.1" />
+        <PackageReference Include="OfficeIMO.Visio" Version="1.0.2" />
     </ItemGroup>
 </Project>
