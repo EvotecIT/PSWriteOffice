@@ -11,11 +11,17 @@ $AssemblyFolders = Get-ChildItem -Path (Join-Path $PSScriptRoot 'Lib') -Director
 function Register-PSWriteOfficeDevelopmentAssemblyResolver {
     param(
         [Parameter(Mandatory)]
-        [string] $Directory
+        [string] $Directory,
+
+        [object] $LoadContext = $null
     )
 
     if ($PSEdition -ne 'Core' -or -not (Test-Path -LiteralPath $Directory)) {
         return
+    }
+
+    if (-not $LoadContext) {
+        $LoadContext = [System.Runtime.Loader.AssemblyLoadContext]::Default
     }
 
     $resolvedDirectory = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $Directory).ProviderPath)
@@ -26,37 +32,102 @@ function Register-PSWriteOfficeDevelopmentAssemblyResolver {
 
     [void] $script:PSWriteOfficeDevelopmentAssemblyDirectories.Add($resolvedDirectory)
 
-    if ($script:PSWriteOfficeDevelopmentAssemblyResolver) {
+    if (-not $script:PSWriteOfficeDevelopmentAssemblyResolver) {
+        $script:PSWriteOfficeDevelopmentAssemblyResolver = [System.Func[
+            System.Runtime.Loader.AssemblyLoadContext,
+            System.Reflection.AssemblyName,
+            System.Reflection.Assembly
+        ]] {
+            param(
+                [System.Runtime.Loader.AssemblyLoadContext] $AssemblyLoadContext,
+                [System.Reflection.AssemblyName] $AssemblyName
+            )
+
+            foreach ($assemblyDirectory in $script:PSWriteOfficeDevelopmentAssemblyDirectories) {
+                $candidate = Join-Path -Path $assemblyDirectory -ChildPath "$($AssemblyName.Name).dll"
+                if (-not (Test-Path -LiteralPath $candidate)) {
+                    continue
+                }
+
+                try {
+                    return $AssemblyLoadContext.LoadFromAssemblyPath($candidate)
+                } catch {
+                    Write-Verbose -Message "Failed to load dependency assembly '$candidate': $($_.Exception.Message)"
+                }
+            }
+
+            return $null
+        }
+    }
+
+    if (-not $script:PSWriteOfficeDevelopmentAssemblyResolverContexts) {
+        $script:PSWriteOfficeDevelopmentAssemblyResolverContexts = [System.Collections.ArrayList]::new()
+    }
+
+    $registered = $false
+    foreach ($context in $script:PSWriteOfficeDevelopmentAssemblyResolverContexts) {
+        if ([object]::ReferenceEquals($context, $LoadContext)) {
+            $registered = $true
+            break
+        }
+    }
+
+    if (-not $registered) {
+        $LoadContext.add_Resolving($script:PSWriteOfficeDevelopmentAssemblyResolver)
+        [void] $script:PSWriteOfficeDevelopmentAssemblyResolverContexts.Add($LoadContext)
+    }
+}
+
+function Import-PSWriteOfficeDevelopmentDependencyAssemblies {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Directory,
+
+        [object] $LoadContext = $null
+    )
+
+    if ($PSEdition -ne 'Core' -or -not (Test-Path -LiteralPath $Directory)) {
         return
     }
 
-    $script:PSWriteOfficeDevelopmentAssemblyResolver = [System.Func[
-        System.Runtime.Loader.AssemblyLoadContext,
-        System.Reflection.AssemblyName,
-        System.Reflection.Assembly
-    ]] {
-        param(
-            [System.Runtime.Loader.AssemblyLoadContext] $LoadContext,
-            [System.Reflection.AssemblyName] $AssemblyName
-        )
+    if (-not $LoadContext) {
+        $LoadContext = [System.Runtime.Loader.AssemblyLoadContext]::Default
+    }
 
-        foreach ($assemblyDirectory in $script:PSWriteOfficeDevelopmentAssemblyDirectories) {
-            $candidate = Join-Path -Path $assemblyDirectory -ChildPath "$($AssemblyName.Name).dll"
-            if (-not (Test-Path -LiteralPath $candidate)) {
-                continue
-            }
+    $excludedAssemblies = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    [void] $excludedAssemblies.Add('PSWriteOffice')
+    [void] $excludedAssemblies.Add('System.Management.Automation')
 
-            try {
-                return $LoadContext.LoadFromAssemblyPath($candidate)
-            } catch {
-                Write-Verbose -Message "Failed to load dependency assembly '$candidate': $($_.Exception.Message)"
+    foreach ($dependency in Get-ChildItem -LiteralPath $Directory -Filter '*.dll' -File | Sort-Object -Property Name) {
+        try {
+            $assemblyName = [System.Reflection.AssemblyName]::GetAssemblyName($dependency.FullName)
+        } catch {
+            Write-Verbose -Message "Failed to read dependency assembly '$($dependency.FullName)': $($_.Exception.Message)"
+            continue
+        }
+
+        if ($excludedAssemblies.Contains($assemblyName.Name)) {
+            continue
+        }
+
+        $alreadyLoaded = $false
+        foreach ($loadedAssembly in $LoadContext.Assemblies) {
+            if ($loadedAssembly.GetName().Name -eq $assemblyName.Name) {
+                $alreadyLoaded = $true
+                break
             }
         }
 
-        return $null
-    }
+        if ($alreadyLoaded) {
+            continue
+        }
 
-    [System.Runtime.Loader.AssemblyLoadContext]::Default.add_Resolving($script:PSWriteOfficeDevelopmentAssemblyResolver)
+        try {
+            $LoadContext.LoadFromAssemblyPath($dependency.FullName) | Out-Null
+        } catch {
+            Write-Verbose -Message "Failed to preload dependency assembly '$($dependency.FullName)': $($_.Exception.Message)"
+        }
+    }
 }
 
 # ensure script file collections always exist (legacy folders were removed)
@@ -165,8 +236,20 @@ $FoundErrors = @(
     if ($Development) {
         foreach ($BinaryModule in $BinaryDev) {
             try {
-                Register-PSWriteOfficeDevelopmentAssemblyResolver -Directory (Split-Path -Path $BinaryModule -Parent)
+                $binaryModulePath = (Resolve-Path -LiteralPath $BinaryModule).ProviderPath
+                $binaryDirectory = Split-Path -Path $binaryModulePath -Parent
+                Register-PSWriteOfficeDevelopmentAssemblyResolver -Directory $binaryDirectory
                 Import-Module -Name $BinaryModule -Force -ErrorAction Stop
+                if ($PSEdition -eq 'Core') {
+                    $moduleAssembly = [AppDomain]::CurrentDomain.GetAssemblies() | Where-Object {
+                        $_.Location -and [string]::Equals($_.Location, $binaryModulePath, [System.StringComparison]::OrdinalIgnoreCase)
+                    } | Select-Object -First 1
+                    if ($moduleAssembly) {
+                        $moduleLoadContext = [System.Runtime.Loader.AssemblyLoadContext]::GetLoadContext($moduleAssembly)
+                        Register-PSWriteOfficeDevelopmentAssemblyResolver -Directory $binaryDirectory -LoadContext $moduleLoadContext
+                        Import-PSWriteOfficeDevelopmentDependencyAssemblies -Directory $binaryDirectory -LoadContext $moduleLoadContext
+                    }
+                }
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
                 $true
