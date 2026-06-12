@@ -64,11 +64,11 @@ function Register-PSWriteOfficeDevelopmentAssemblyResolver {
         $script:PSWriteOfficeDevelopmentAppDomainAssemblyResolver = [System.ResolveEventHandler] {
             param(
                 [object] $Sender,
-                [System.ResolveEventArgs] $Args
+                [System.ResolveEventArgs] $ResolveEventArgs
             )
 
             try {
-                $assemblyName = [System.Reflection.AssemblyName]::new($Args.Name)
+                $assemblyName = [System.Reflection.AssemblyName]::new($ResolveEventArgs.Name)
             } catch {
                 return $null
             }
