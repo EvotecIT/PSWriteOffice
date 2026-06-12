@@ -80,7 +80,6 @@ jobs:
           path: WebsiteArtifacts/**
 
   test-windows-ps5:
-    if: false # Temporarily disabled
     needs: refresh-psd1
     name: 'Windows PowerShell 5.1'
     runs-on: windows-latest

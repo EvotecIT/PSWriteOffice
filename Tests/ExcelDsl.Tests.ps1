@@ -1301,7 +1301,7 @@ Describe 'Excel DSL surface' {
 
             $backLink = $null
             $doc['Data'].TryGetCellText(5, 1, [ref] $backLink) | Should -BeTrue
-            $backLink | Should -Be '← TOC'
+            $backLink | Should -Be "$([char]0x2190) TOC"
         } finally {
             Close-OfficeExcel -Document $doc
         }
