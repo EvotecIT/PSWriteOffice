@@ -239,16 +239,18 @@ $FoundErrors = @(
                 $binaryModulePath = (Resolve-Path -LiteralPath $BinaryModule).ProviderPath
                 $binaryDirectory = Split-Path -Path $binaryModulePath -Parent
                 Register-PSWriteOfficeDevelopmentAssemblyResolver -Directory $binaryDirectory
-                Import-Module -Name $BinaryModule -Force -ErrorAction Stop
                 if ($PSEdition -eq 'Core') {
-                    $moduleAssembly = [AppDomain]::CurrentDomain.GetAssemblies() | Where-Object {
+                    $moduleLoadContext = [System.Runtime.Loader.AssemblyLoadContext]::Default
+                    Import-PSWriteOfficeDevelopmentDependencyAssemblies -Directory $binaryDirectory -LoadContext $moduleLoadContext
+                    $moduleAssembly = $moduleLoadContext.Assemblies | Where-Object {
                         $_.Location -and [string]::Equals($_.Location, $binaryModulePath, [System.StringComparison]::OrdinalIgnoreCase)
                     } | Select-Object -First 1
-                    if ($moduleAssembly) {
-                        $moduleLoadContext = [System.Runtime.Loader.AssemblyLoadContext]::GetLoadContext($moduleAssembly)
-                        Register-PSWriteOfficeDevelopmentAssemblyResolver -Directory $binaryDirectory -LoadContext $moduleLoadContext
-                        Import-PSWriteOfficeDevelopmentDependencyAssemblies -Directory $binaryDirectory -LoadContext $moduleLoadContext
+                    if (-not $moduleAssembly) {
+                        $moduleAssembly = $moduleLoadContext.LoadFromAssemblyPath($binaryModulePath)
                     }
+                    Import-Module -Assembly $moduleAssembly -Force -ErrorAction Stop
+                } else {
+                    Import-Module -Name $BinaryModule -Force -ErrorAction Stop
                 }
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
