@@ -202,14 +202,33 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
 
             var sheet = PrepareSheet(document);
+            var dataStartRow = ResolveDataStartRow(sheet, isAppendingToExistingSheet);
+            var includeHeaders = !NoHeader.IsPresent && !isAppendingToExistingSheet;
+
+            if (TryExportObjectsThroughOfficeImoObjectPath(
+                sheet,
+                isAppendingToExistingSheet,
+                preserveWorkbook,
+                dataStartRow,
+                includeHeaders,
+                style,
+                out var objectRange))
+            {
+                if (!string.IsNullOrWhiteSpace(objectRange))
+                {
+                    WriteVerbose($"Exported data to {sheet.Name}!{objectRange}.");
+                }
+
+                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+                WritePassThru(resolvedPath);
+                return;
+            }
+
             var data = BuildDataTable();
             if (data.Columns.Count == 0)
             {
                 throw new InvalidOperationException("Unable to infer columns from the supplied data.");
             }
-
-            var dataStartRow = ResolveDataStartRow(sheet, isAppendingToExistingSheet);
-            var includeHeaders = !NoHeader.IsPresent && !isAppendingToExistingSheet;
 
             if (!string.IsNullOrWhiteSpace(Title) && !isAppendingToExistingSheet)
             {
@@ -260,6 +279,81 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     private bool CanExportReaderDirectly(bool isAppendingToExistingSheet)
     {
         return !isAppendingToExistingSheet && ExcludeProperty is not { Length: > 0 };
+    }
+
+    private bool TryExportObjectsThroughOfficeImoObjectPath(
+        ExcelSheet sheet,
+        bool isAppendingToExistingSheet,
+        bool preserveWorkbook,
+        int dataStartRow,
+        bool includeHeaders,
+        TableStyle style,
+        out string range)
+    {
+        range = string.Empty;
+        if (!CanExportObjectsThroughOfficeImoObjectPath(isAppendingToExistingSheet, preserveWorkbook, dataStartRow, includeHeaders))
+        {
+            return false;
+        }
+
+        var items = _input.Where(static item => item != null).ToList();
+        if (items.Count == 0)
+        {
+            return false;
+        }
+
+        if (!CanUseOfficeImoObjectPathInput(items))
+        {
+            return false;
+        }
+
+        sheet.InsertObjects<object?>(items, includeHeaders, dataStartRow);
+        range = sheet.GetUsedRangeA1();
+        if (string.IsNullOrWhiteSpace(range))
+        {
+            return false;
+        }
+
+        if (!NoTable.IsPresent)
+        {
+            sheet.AddTable(range, includeHeaders, TableName ?? string.Empty, style, includeAutoFilter: !NoAutoFilter.IsPresent);
+        }
+
+        return true;
+    }
+
+    private bool CanExportObjectsThroughOfficeImoObjectPath(bool isAppendingToExistingSheet, bool preserveWorkbook, int dataStartRow, bool includeHeaders)
+    {
+        return !isAppendingToExistingSheet &&
+            !preserveWorkbook &&
+            includeHeaders &&
+            dataStartRow == 1 &&
+            StartColumn == 1 &&
+            string.IsNullOrWhiteSpace(Title) &&
+            ExcludeProperty is not { Length: > 0 } &&
+            !AutoFit.IsPresent &&
+            !BoldTopRow.IsPresent &&
+            !FreezeTopRow.IsPresent &&
+            !FreezeFirstColumn.IsPresent;
+    }
+
+    private static bool CanUseOfficeImoObjectPathInput(IReadOnlyList<object?> items)
+    {
+        foreach (var item in items)
+        {
+            if (item is PSObject ||
+                item is Dictionary<string, object?> ||
+                item is IReadOnlyDictionary<string, object?> ||
+                item is IDictionary<string, object?> ||
+                item is IDictionary)
+            {
+                continue;
+            }
+
+            return false;
+        }
+
+        return items.Count > 0;
     }
 
     private string ExportDataReader(ExcelSheet sheet, IDataReader reader, TableStyle style)

@@ -295,6 +295,28 @@ Describe 'Excel DSL surface' {
             Should -Throw '*StartColumn must be less than or equal to EndColumn*'
     }
 
+    It 'exports plain objects through the default table path' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDefaultObjects.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100; Created = [DateTime] '2026-01-01'; Enabled = $true }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200; Created = [DateTime] '2026-01-02'; Enabled = $false }
+        )
+
+        $rows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales'
+
+        $tables = @(Get-OfficeExcelTable -Path $path | Where-Object Name -eq 'Sales')
+        $tables.Count | Should -Be 1
+        $tables[0].Range | Should -Be 'A1:D3'
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:D3')
+        $imported.Count | Should -Be 2
+        $imported[0].Region | Should -Be 'NA'
+        $imported[0].Revenue | Should -Be 100
+        $imported[1].Region | Should -Be 'EMEA'
+        $imported[1].Revenue | Should -Be 200
+        $imported[1].Enabled | Should -BeFalse
+    }
+
     It 'appends rows without rewriting headers' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelAppend.xlsx'
         $rows = @(
