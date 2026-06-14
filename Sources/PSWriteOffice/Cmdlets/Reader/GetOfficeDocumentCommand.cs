@@ -77,7 +77,7 @@ public sealed class GetOfficeDocumentCommand : PSCmdlet
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
-        ReaderCommandUtilities.RegisterPdfReader();
+        ReaderCommandUtilities.RegisterReaderAdapters();
     }
 
     /// <inheritdoc />

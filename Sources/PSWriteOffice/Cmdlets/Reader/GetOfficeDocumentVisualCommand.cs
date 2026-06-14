@@ -4,44 +4,40 @@ using PSWriteOffice.Services.Reader;
 
 namespace PSWriteOffice.Cmdlets.Reader;
 
-/// <summary>Reads supported Office, PDF, Markdown, and text files into normalized OfficeIMO.Reader chunks.</summary>
-/// <remarks>
-/// This is a thin adapter over <see cref="DocumentReader"/>. The OfficeIMO.Reader engine owns detection,
-/// extraction, hashing, and chunk shaping.
-/// </remarks>
-[Cmdlet(VerbsCommon.Get, "OfficeDocumentChunk", DefaultParameterSetName = FileParameterSet)]
-[Alias("Read-OfficeDocumentChunk")]
-[OutputType(typeof(ReaderChunk))]
-public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
+/// <summary>Reads visual payloads discovered by OfficeIMO.Reader from a supported document.</summary>
+[Cmdlet(VerbsCommon.Get, "OfficeDocumentVisual")]
+[Alias("Read-OfficeDocumentVisual")]
+[OutputType(typeof(ReaderVisual), typeof(ReaderVisualExportBundle), typeof(ReaderVisualMaterializedExport))]
+public sealed class GetOfficeDocumentVisualCommand : PSCmdlet
 {
-    private const string FileParameterSet = "File";
-    private const string FolderParameterSet = "Folder";
-
     /// <summary>File path to read.</summary>
-    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = FileParameterSet)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [Alias("FilePath")]
     public string Path { get; set; } = string.Empty;
 
-    /// <summary>Folder path to read.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = FolderParameterSet)]
-    public string FolderPath { get; set; } = string.Empty;
+    /// <summary>Return deterministic payload and JSON export bundles instead of visual models.</summary>
+    [Parameter]
+    public SwitchParameter AsExport { get; set; }
 
-    /// <summary>Do not recurse into child folders when reading a folder.</summary>
-    [Parameter(ParameterSetName = FolderParameterSet)]
-    public SwitchParameter NoRecurse { get; set; }
+    /// <summary>Optional directory where visual sidecars should be written.</summary>
+    [Parameter]
+    public string? OutputDirectory { get; set; }
 
-    /// <summary>Maximum number of folder files to read.</summary>
-    [Parameter(ParameterSetName = FolderParameterSet)]
-    public int? MaxFiles { get; set; }
+    /// <summary>Do not overwrite existing sidecar files.</summary>
+    [Parameter]
+    public SwitchParameter NoOverwrite { get; set; }
 
-    /// <summary>Maximum total folder bytes to read.</summary>
-    [Parameter(ParameterSetName = FolderParameterSet)]
-    public long? MaxTotalBytes { get; set; }
+    /// <summary>Indent JSON payloads in export bundles and sidecars.</summary>
+    [Parameter]
+    public SwitchParameter Indented { get; set; }
 
-    /// <summary>Allowed folder extensions such as .docx, .xlsx, .pdf, or md.</summary>
-    [Parameter(ParameterSetName = FolderParameterSet)]
-    [Alias("Extensions")]
-    public string[]? Extension { get; set; }
+    /// <summary>Do not write raw payload sidecars when <c>-OutputDirectory</c> is used.</summary>
+    [Parameter]
+    public SwitchParameter NoPayload { get; set; }
+
+    /// <summary>Do not write JSON sidecars when <c>-OutputDirectory</c> is used.</summary>
+    [Parameter]
+    public SwitchParameter NoJson { get; set; }
 
     /// <summary>Maximum input size in bytes.</summary>
     [Parameter]
@@ -55,7 +51,7 @@ public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
     [Parameter]
     public int? MaxChars { get; set; }
 
-    /// <summary>Maximum table rows per emitted table chunk.</summary>
+    /// <summary>Maximum table rows per emitted table.</summary>
     [Parameter]
     public int? MaxTableRows { get; set; }
 
@@ -100,25 +96,30 @@ public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        var path = ReaderCommandUtilities.ResolvePath(this, Path);
         var options = BuildOptions();
 
-        if (ParameterSetName == FolderParameterSet)
+        if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
-            var folderPath = ReaderCommandUtilities.ResolvePath(this, FolderPath);
-            var folderOptions = ReaderCommandUtilities.BuildFolderOptions(!NoRecurse.IsPresent, MaxFiles, MaxTotalBytes, Extension);
-            foreach (var chunk in DocumentReader.ReadFolder(folderPath, folderOptions, options))
+            var outputDirectory = ReaderCommandUtilities.ResolvePath(this, OutputDirectory!);
+            var exports = DocumentReader.ReadVisualExports(path, options, Indented.IsPresent);
+            var materialized = exports.WriteVisualExportsToDirectory(outputDirectory, new ReaderVisualExportMaterializationOptions
             {
-                WriteObject(chunk);
-            }
-
+                Overwrite = !NoOverwrite.IsPresent,
+                IncludePayload = !NoPayload.IsPresent,
+                IncludeJson = !NoJson.IsPresent
+            });
+            WriteObject(materialized, enumerateCollection: true);
             return;
         }
 
-        var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        foreach (var chunk in DocumentReader.Read(path, options))
+        if (AsExport.IsPresent)
         {
-            WriteObject(chunk);
+            WriteObject(DocumentReader.ReadVisualExports(path, options, Indented.IsPresent), enumerateCollection: true);
+            return;
         }
+
+        WriteObject(DocumentReader.ReadVisuals(path, options), enumerateCollection: true);
     }
 
     private ReaderOptions BuildOptions()

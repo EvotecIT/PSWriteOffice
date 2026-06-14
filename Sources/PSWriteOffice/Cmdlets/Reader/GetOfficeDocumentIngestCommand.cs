@@ -4,44 +4,35 @@ using PSWriteOffice.Services.Reader;
 
 namespace PSWriteOffice.Cmdlets.Reader;
 
-/// <summary>Reads supported Office, PDF, Markdown, and text files into normalized OfficeIMO.Reader chunks.</summary>
-/// <remarks>
-/// This is a thin adapter over <see cref="DocumentReader"/>. The OfficeIMO.Reader engine owns detection,
-/// extraction, hashing, and chunk shaping.
-/// </remarks>
-[Cmdlet(VerbsCommon.Get, "OfficeDocumentChunk", DefaultParameterSetName = FileParameterSet)]
-[Alias("Read-OfficeDocumentChunk")]
-[OutputType(typeof(ReaderChunk))]
-public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
+/// <summary>Reads a folder into an OfficeIMO.Reader ingestion summary.</summary>
+[Cmdlet(VerbsCommon.Get, "OfficeDocumentIngest")]
+[OutputType(typeof(ReaderIngestResult))]
+public sealed class GetOfficeDocumentIngestCommand : PSCmdlet
 {
-    private const string FileParameterSet = "File";
-    private const string FolderParameterSet = "Folder";
-
-    /// <summary>File path to read.</summary>
-    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = FileParameterSet)]
-    [Alias("FilePath")]
-    public string Path { get; set; } = string.Empty;
-
-    /// <summary>Folder path to read.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = FolderParameterSet)]
+    /// <summary>Folder path to ingest.</summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     public string FolderPath { get; set; } = string.Empty;
 
-    /// <summary>Do not recurse into child folders when reading a folder.</summary>
-    [Parameter(ParameterSetName = FolderParameterSet)]
+    /// <summary>Do not recurse into child folders.</summary>
+    [Parameter]
     public SwitchParameter NoRecurse { get; set; }
 
     /// <summary>Maximum number of folder files to read.</summary>
-    [Parameter(ParameterSetName = FolderParameterSet)]
+    [Parameter]
     public int? MaxFiles { get; set; }
 
     /// <summary>Maximum total folder bytes to read.</summary>
-    [Parameter(ParameterSetName = FolderParameterSet)]
+    [Parameter]
     public long? MaxTotalBytes { get; set; }
 
-    /// <summary>Allowed folder extensions such as .docx, .xlsx, .pdf, or md.</summary>
-    [Parameter(ParameterSetName = FolderParameterSet)]
+    /// <summary>Allowed folder extensions such as .docx, .xlsx, .pdf, .html, or json.</summary>
+    [Parameter]
     [Alias("Extensions")]
     public string[]? Extension { get; set; }
+
+    /// <summary>Do not materialize chunks in the returned ingestion result.</summary>
+    [Parameter]
+    public SwitchParameter NoChunks { get; set; }
 
     /// <summary>Maximum input size in bytes.</summary>
     [Parameter]
@@ -100,30 +91,9 @@ public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var options = BuildOptions();
-
-        if (ParameterSetName == FolderParameterSet)
-        {
-            var folderPath = ReaderCommandUtilities.ResolvePath(this, FolderPath);
-            var folderOptions = ReaderCommandUtilities.BuildFolderOptions(!NoRecurse.IsPresent, MaxFiles, MaxTotalBytes, Extension);
-            foreach (var chunk in DocumentReader.ReadFolder(folderPath, folderOptions, options))
-            {
-                WriteObject(chunk);
-            }
-
-            return;
-        }
-
-        var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        foreach (var chunk in DocumentReader.Read(path, options))
-        {
-            WriteObject(chunk);
-        }
-    }
-
-    private ReaderOptions BuildOptions()
-    {
-        return ReaderCommandUtilities.BuildReaderOptions(
+        var folderPath = ReaderCommandUtilities.ResolvePath(this, FolderPath);
+        var folderOptions = ReaderCommandUtilities.BuildFolderOptions(!NoRecurse.IsPresent, MaxFiles, MaxTotalBytes, Extension);
+        var options = ReaderCommandUtilities.BuildReaderOptions(
             MaxInputBytes,
             OpenXmlMaxCharactersInPart,
             MaxChars,
@@ -136,5 +106,7 @@ public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
             ExcelA1Range,
             !NoMarkdownHeadingChunks.IsPresent,
             !NoHashes.IsPresent);
+
+        WriteObject(DocumentReader.ReadFolderDetailed(folderPath, folderOptions, options, includeChunks: !NoChunks.IsPresent));
     }
 }

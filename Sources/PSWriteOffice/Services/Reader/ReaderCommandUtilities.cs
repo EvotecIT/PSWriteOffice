@@ -3,7 +3,15 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Reader;
+using OfficeIMO.Reader.Csv;
+using OfficeIMO.Reader.Epub;
+using OfficeIMO.Reader.Html;
+using OfficeIMO.Reader.Json;
 using OfficeIMO.Reader.Pdf;
+using OfficeIMO.Reader.Visio;
+using OfficeIMO.Reader.Xml;
+using OfficeIMO.Reader.Yaml;
+using OfficeIMO.Reader.Zip;
 
 namespace PSWriteOffice.Services.Reader;
 
@@ -34,6 +42,61 @@ internal static class ReaderCommandUtilities
         }
 
         DocumentReaderPdfRegistrationExtensions.RegisterPdfHandler(replaceExisting: true);
+    }
+
+    internal static void RegisterReaderAdapters()
+    {
+        RegisterPdfReader();
+
+        RegisterAdapter(
+            DocumentReaderHtmlRegistrationExtensions.HandlerId,
+            new[] { ".html", ".htm", ".xhtml" },
+            static () => DocumentReaderHtmlRegistrationExtensions.RegisterHtmlHandler());
+        RegisterAdapter(
+            DocumentReaderCsvRegistrationExtensions.HandlerId,
+            new[] { ".csv", ".tsv" },
+            static () => DocumentReaderCsvRegistrationExtensions.RegisterCsvHandler(replaceExisting: true));
+        RegisterAdapter(
+            DocumentReaderJsonRegistrationExtensions.HandlerId,
+            new[] { ".json" },
+            static () => DocumentReaderJsonRegistrationExtensions.RegisterJsonHandler(replaceExisting: true));
+        RegisterAdapter(
+            DocumentReaderXmlRegistrationExtensions.HandlerId,
+            new[] { ".xml" },
+            static () => DocumentReaderXmlRegistrationExtensions.RegisterXmlHandler(replaceExisting: true));
+        RegisterAdapter(
+            DocumentReaderYamlRegistrationExtensions.HandlerId,
+            new[] { ".yaml", ".yml" },
+            static () => DocumentReaderYamlRegistrationExtensions.RegisterYamlHandler(replaceExisting: true));
+        RegisterAdapter(
+            DocumentReaderZipRegistrationExtensions.HandlerId,
+            new[] { ".zip" },
+            static () => DocumentReaderZipRegistrationExtensions.RegisterZipHandler());
+        RegisterAdapter(
+            DocumentReaderEpubRegistrationExtensions.HandlerId,
+            new[] { ".epub" },
+            static () => DocumentReaderEpubRegistrationExtensions.RegisterEpubHandler());
+        RegisterAdapter(
+            DocumentReaderVisioRegistrationExtensions.HandlerId,
+            new[] { ".vsdx", ".vsdm", ".vstx", ".vstm" },
+            static () => DocumentReaderVisioRegistrationExtensions.RegisterVisioHandler());
+    }
+
+    private static void RegisterAdapter(string handlerId, string[] extensions, Action register)
+    {
+        var customCapabilities = DocumentReader.GetCapabilities(includeBuiltIn: false, includeCustom: true);
+        if (customCapabilities.Any(capability => string.Equals(capability.Id, handlerId, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        if (customCapabilities.Any(capability => capability.Extensions.Any(extension =>
+            extensions.Any(target => string.Equals(extension, target, StringComparison.OrdinalIgnoreCase)))))
+        {
+            return;
+        }
+
+        register();
     }
 
     internal static ReaderOptions BuildReaderOptions(
