@@ -50,48 +50,34 @@ internal static class ReaderCommandUtilities
 
         RegisterAdapter(
             DocumentReaderHtmlRegistrationExtensions.HandlerId,
-            new[] { ".html", ".htm", ".xhtml" },
-            static () => DocumentReaderHtmlRegistrationExtensions.RegisterHtmlHandler());
+            static () => DocumentReaderHtmlRegistrationExtensions.RegisterHtmlHandler(preserveExistingCustomExtensions: true));
         RegisterAdapter(
             DocumentReaderCsvRegistrationExtensions.HandlerId,
-            new[] { ".csv", ".tsv" },
-            static () => DocumentReaderCsvRegistrationExtensions.RegisterCsvHandler(replaceExisting: true));
+            static () => DocumentReaderCsvRegistrationExtensions.RegisterCsvHandler(replaceExisting: true, preserveExistingCustomExtensions: true));
         RegisterAdapter(
             DocumentReaderJsonRegistrationExtensions.HandlerId,
-            new[] { ".json" },
-            static () => DocumentReaderJsonRegistrationExtensions.RegisterJsonHandler(replaceExisting: true));
+            static () => DocumentReaderJsonRegistrationExtensions.RegisterJsonHandler(replaceExisting: true, preserveExistingCustomExtensions: true));
         RegisterAdapter(
             DocumentReaderXmlRegistrationExtensions.HandlerId,
-            new[] { ".xml" },
-            static () => DocumentReaderXmlRegistrationExtensions.RegisterXmlHandler(replaceExisting: true));
+            static () => DocumentReaderXmlRegistrationExtensions.RegisterXmlHandler(replaceExisting: true, preserveExistingCustomExtensions: true));
         RegisterAdapter(
             DocumentReaderYamlRegistrationExtensions.HandlerId,
-            new[] { ".yaml", ".yml" },
-            static () => DocumentReaderYamlRegistrationExtensions.RegisterYamlHandler(replaceExisting: true));
+            static () => DocumentReaderYamlRegistrationExtensions.RegisterYamlHandler(replaceExisting: true, preserveExistingCustomExtensions: true));
         RegisterAdapter(
             DocumentReaderZipRegistrationExtensions.HandlerId,
-            new[] { ".zip" },
-            static () => DocumentReaderZipRegistrationExtensions.RegisterZipHandler());
+            static () => DocumentReaderZipRegistrationExtensions.RegisterZipHandler(preserveExistingCustomExtensions: true));
         RegisterAdapter(
             DocumentReaderEpubRegistrationExtensions.HandlerId,
-            new[] { ".epub" },
-            static () => DocumentReaderEpubRegistrationExtensions.RegisterEpubHandler());
+            static () => DocumentReaderEpubRegistrationExtensions.RegisterEpubHandler(preserveExistingCustomExtensions: true));
         RegisterAdapter(
             DocumentReaderVisioRegistrationExtensions.HandlerId,
-            new[] { ".vsdx", ".vsdm", ".vstx", ".vstm" },
-            static () => DocumentReaderVisioRegistrationExtensions.RegisterVisioHandler());
+            static () => DocumentReaderVisioRegistrationExtensions.RegisterVisioHandler(preserveExistingCustomExtensions: true));
     }
 
-    private static void RegisterAdapter(string handlerId, string[] extensions, Action register)
+    private static void RegisterAdapter(string handlerId, Action register)
     {
         var customCapabilities = DocumentReader.GetCapabilities(includeBuiltIn: false, includeCustom: true);
         if (customCapabilities.Any(capability => string.Equals(capability.Id, handlerId, StringComparison.OrdinalIgnoreCase)))
-        {
-            return;
-        }
-
-        if (customCapabilities.Any(capability => capability.Extensions.Any(extension =>
-            extensions.Any(target => string.Equals(extension, target, StringComparison.OrdinalIgnoreCase)))))
         {
             return;
         }

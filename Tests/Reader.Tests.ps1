@@ -72,6 +72,51 @@ Describe 'Reader cmdlets' {
         }
     }
 
+    It 'keeps non-conflicting adapter extensions when a caller owns one extension' {
+        $handlerId = 'pswriteoffice.test.html'
+        $documentReaderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.DocumentReader' -CommandName 'Get-OfficeDocumentCapability'
+        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
+        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
+        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
+        $htmlRegistrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Html' -TypeName 'OfficeIMO.Reader.Html.DocumentReaderHtmlRegistrationExtensions' -CommandName 'Get-OfficeDocumentCapability'
+
+        $unregisterHandler = $documentReaderType.GetMethod('UnregisterHandler', [type[]] @([string]))
+        $registerHandler = $documentReaderType.GetMethod('RegisterHandler', [type[]] @($registrationType, [bool]))
+        $unregisterHtmlHandler = $htmlRegistrationType.GetMethod('UnregisterHtmlHandler', [System.Reflection.BindingFlags]'Public, Static')
+        $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
+        $unregisterHtmlHandler.Invoke($null, @()) | Out-Null
+
+        $registration = [Activator]::CreateInstance($registrationType)
+        $registration.Id = $handlerId
+        $registration.DisplayName = 'Test HTML Reader'
+        $registration.Kind = [Enum]::Parse($inputKindType, 'Html')
+        $registration.Extensions = [string[]]@('.html')
+        $readPathType = $registrationType.GetProperty('ReadPath').PropertyType
+        $registration.ReadPath = [System.Management.Automation.LanguagePrimitives]::ConvertTo({
+            param($Path, $Options, $CancellationToken)
+
+            [Array]::CreateInstance($chunkType, 0)
+        }.GetNewClosure(), $readPathType)
+
+        try {
+            $registerHandler.Invoke($null, @($registration, $true)) | Out-Null
+
+            $capabilities = @(Get-OfficeDocumentCapability -ExcludeBuiltIn)
+            $customCapability = $capabilities | Where-Object Id -EQ $handlerId
+            $htmlCapability = $capabilities | Where-Object Id -EQ 'officeimo.reader.html'
+
+            $customCapability | Should -HaveCount 1
+            $htmlCapability | Should -HaveCount 1
+            $customCapability.Extensions | Should -Contain '.html'
+            $htmlCapability.Extensions | Should -Not -Contain '.html'
+            $htmlCapability.Extensions | Should -Contain '.htm'
+            $htmlCapability.Extensions | Should -Contain '.xhtml'
+        } finally {
+            $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
+            $unregisterHtmlHandler.Invoke($null, @()) | Out-Null
+        }
+    }
+
     It 'reads Markdown files as chunks and a document envelope' {
         $path = Join-Path $TestDrive 'source.md'
         Set-Content -Path $path -Value "# Reader smoke`n`nOfficeIMO Reader keeps this text." -Encoding UTF8
