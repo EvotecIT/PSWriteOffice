@@ -89,31 +89,31 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
-        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.17" />
-        <PackageReference Include="OfficeIMO.Word" Version="1.0.64" />
-        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.39" />
-        <PackageReference Include="OfficeIMO.Excel" Version="0.6.43" />
-        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.38" />
-        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.30" />
-        <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.30" />
-        <PackageReference Include="OfficeIMO.Pdf" Version="0.1.38" />
+        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.18" />
+        <PackageReference Include="OfficeIMO.Word" Version="1.0.65" />
+        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.40" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.44" />
+        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.39" />
+        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.31" />
+        <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.31" />
+        <PackageReference Include="OfficeIMO.Pdf" Version="0.1.39" />
         <PackageReference Include="OfficeIMO.Word.Pdf" Version="1.0.37" />
         <PackageReference Include="OfficeIMO.Excel.Pdf" Version="1.0.3" />
         <PackageReference Include="OfficeIMO.Markdown.Pdf" Version="1.0.3" />
         <PackageReference Include="OfficeIMO.Html.Pdf" Version="1.0.1" />
         <PackageReference Include="OfficeIMO.PowerPoint.Pdf" Version="1.0.3" />
-        <PackageReference Include="OfficeIMO.CSV" Version="0.1.43" />
-        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.37" />
-        <PackageReference Include="OfficeIMO.Reader" Version="0.1.38" />
-        <PackageReference Include="OfficeIMO.Reader.Pdf" Version="0.0.2" />
-        <PackageReference Include="OfficeIMO.Reader.Html" Version="0.0.21" />
-        <PackageReference Include="OfficeIMO.Reader.Csv" Version="0.0.21" />
-        <PackageReference Include="OfficeIMO.Reader.Json" Version="0.0.21" />
-        <PackageReference Include="OfficeIMO.Reader.Xml" Version="0.0.21" />
+        <PackageReference Include="OfficeIMO.CSV" Version="0.1.44" />
+        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.38" />
+        <PackageReference Include="OfficeIMO.Reader" Version="0.1.39" />
+        <PackageReference Include="OfficeIMO.Reader.Pdf" Version="0.0.3" />
+        <PackageReference Include="OfficeIMO.Reader.Html" Version="0.0.22" />
+        <PackageReference Include="OfficeIMO.Reader.Csv" Version="0.0.22" />
+        <PackageReference Include="OfficeIMO.Reader.Json" Version="0.0.22" />
+        <PackageReference Include="OfficeIMO.Reader.Xml" Version="0.0.22" />
         <PackageReference Include="OfficeIMO.Reader.Yaml" Version="0.0.1" />
-        <PackageReference Include="OfficeIMO.Reader.Zip" Version="0.0.21" />
-        <PackageReference Include="OfficeIMO.Reader.Epub" Version="0.0.21" />
-        <PackageReference Include="OfficeIMO.Reader.Visio" Version="0.0.2" />
-        <PackageReference Include="OfficeIMO.Visio" Version="1.0.3" />
+        <PackageReference Include="OfficeIMO.Reader.Zip" Version="0.0.22" />
+        <PackageReference Include="OfficeIMO.Reader.Epub" Version="0.0.22" />
+        <PackageReference Include="OfficeIMO.Reader.Visio" Version="0.0.3" />
+        <PackageReference Include="OfficeIMO.Visio" Version="1.0.4" />
     </ItemGroup>
 </Project>
