@@ -82,6 +82,9 @@ Writes tabular data to the current worksheet and formats it as an Excel table.
 ### [Add-OfficeExcelTableOfContents](Add-OfficeExcelTableOfContents.md)
 Adds or refreshes a workbook table of contents sheet.
 
+### [Add-OfficeExcelTableRow](Add-OfficeExcelTableRow.md)
+Appends one or more data rows to an existing Excel table.
+
 ### [Add-OfficeExcelValidationCustomFormula](Add-OfficeExcelValidationCustomFormula.md)
 Adds a custom-formula data validation rule to a worksheet range.
 
@@ -241,8 +244,32 @@ Adds a new slide to a PowerPoint presentation.
 ### [Add-OfficePowerPointTable](Add-OfficePowerPointTable.md)
 Adds a table to a PowerPoint slide.
 
+### [Add-OfficePowerPointTableRow](Add-OfficePowerPointTableRow.md)
+Appends or inserts a row in an existing PowerPoint table.
+
 ### [Add-OfficePowerPointTextBox](Add-OfficePowerPointTextBox.md)
 Adds a text box to a slide.
+
+### [Add-OfficeVisioConnector](Add-OfficeVisioConnector.md)
+Adds a connector between two Visio shapes.
+
+### [Add-OfficeVisioDiamond](Add-OfficeVisioDiamond.md)
+Adds a diamond shape to the current Visio page.
+
+### [Add-OfficeVisioEllipse](Add-OfficeVisioEllipse.md)
+Adds an ellipse shape to the current Visio page.
+
+### [Add-OfficeVisioPage](Add-OfficeVisioPage.md)
+Adds a page to a Visio document and optionally executes nested DSL content.
+
+### [Add-OfficeVisioRectangle](Add-OfficeVisioRectangle.md)
+Adds a rectangle shape to the current Visio page.
+
+### [Add-OfficeVisioStencilShape](Add-OfficeVisioStencilShape.md)
+Adds a stencil shape to the current Visio page.
+
+### [Add-OfficeVisioTextBox](Add-OfficeVisioTextBox.md)
+Adds a text box to the current Visio page.
 
 ### [Add-OfficeWordBookmark](Add-OfficeWordBookmark.md)
 Adds a bookmark to the current paragraph.
@@ -331,6 +358,9 @@ Attaches conditional formatting logic to the current table.
 ### [Add-OfficeWordTableOfContent](Add-OfficeWordTableOfContent.md)
 Adds a table of contents to a Word document.
 
+### [Add-OfficeWordTableRow](Add-OfficeWordTableRow.md)
+Appends a row to an existing Word table.
+
 ### [Add-OfficeWordTabStop](Add-OfficeWordTabStop.md)
 Adds a tab stop to a Word paragraph.
 
@@ -361,6 +391,9 @@ Compares two Excel worksheets or ranges and returns cell-level differences.
 ### [ConvertFrom-OfficeMarkdownHtml](ConvertFrom-OfficeMarkdownHtml.md)
 Converts HTML content to Markdown.
 
+### [ConvertFrom-OfficePdfHtml](ConvertFrom-OfficePdfHtml.md)
+Converts HTML content to a PDF through the first-party OfficeIMO HTML/PDF adapter.
+
 ### [ConvertFrom-OfficeWordHtml](ConvertFrom-OfficeWordHtml.md)
 Creates a Word document from HTML.
 
@@ -379,8 +412,17 @@ Converts Markdown content to HTML.
 ### [ConvertTo-OfficePdfFlatForm](ConvertTo-OfficePdfFlatForm.md)
 Converts a PDF with simple AcroForm fields into a flat PDF.
 
+### [ConvertTo-OfficePdfHtml](ConvertTo-OfficePdfHtml.md)
+Converts a PDF file to HTML through the first-party OfficeIMO HTML/PDF adapter.
+
 ### [ConvertTo-OfficePdfMarkdown](ConvertTo-OfficePdfMarkdown.md)
 Converts PDF logical text readback to Markdown.
+
+### [ConvertTo-OfficeVisioPng](ConvertTo-OfficeVisioPng.md)
+Exports a Visio document page to native dependency-free PNG.
+
+### [ConvertTo-OfficeVisioSvg](ConvertTo-OfficeVisioSvg.md)
+Exports a Visio document page to dependency-free SVG.
 
 ### [ConvertTo-OfficeWordHtml](ConvertTo-OfficeWordHtml.md)
 Converts a Word document to HTML.
@@ -406,14 +448,35 @@ Exports PowerShell objects to an Excel workbook using an operator-friendly surfa
 ### [Find-OfficeExcel](Find-OfficeExcel.md)
 Finds text in worksheet values.
 
+### [Find-OfficePowerPointShape](Find-OfficePowerPointShape.md)
+Finds PowerPoint shapes by text, name, kind, or slide.
+
+### [Find-OfficeVisioStencil](Find-OfficeVisioStencil.md)
+Searches OfficeIMO Visio stencil catalogs.
+
 ### [Find-OfficeWord](Find-OfficeWord.md)
 Finds text matches inside a Word document.
+
+### [Find-OfficeWordList](Find-OfficeWordList.md)
+Finds Word lists containing matching list-item text.
+
+### [Find-OfficeWordTable](Find-OfficeWordTable.md)
+Finds Word tables containing matching cell text.
 
 ### [Get-OfficeCsv](Get-OfficeCsv.md)
 Loads a CSV document from disk or parses CSV text.
 
 ### [Get-OfficeCsvData](Get-OfficeCsvData.md)
 Reads CSV rows as PSCustomObjects or dictionaries.
+
+### [Get-OfficeDocument](Get-OfficeDocument.md)
+Reads a supported file into the OfficeIMO shared document read result envelope.
+
+### [Get-OfficeDocumentCapability](Get-OfficeDocumentCapability.md)
+Lists OfficeIMO.Reader capabilities registered in the current PSWriteOffice process.
+
+### [Get-OfficeDocumentChunk](Get-OfficeDocumentChunk.md)
+Reads supported Office, PDF, Markdown, and text files into normalized OfficeIMO.Reader chunks.
 
 ### [Get-OfficeExcel](Get-OfficeExcel.md)
 Opens an existing Excel workbook.
@@ -511,6 +574,15 @@ Reads high-level slide summaries from a presentation.
 ### [Get-OfficePowerPointTheme](Get-OfficePowerPointTheme.md)
 Gets theme information for a PowerPoint presentation master.
 
+### [Get-OfficeVisio](Get-OfficeVisio.md)
+Loads an existing .vsdx file as an OfficeIMO.Visio document.
+
+### [Get-OfficeVisioInfo](Get-OfficeVisioInfo.md)
+Creates a deterministic inspection snapshot for a Visio document.
+
+### [Get-OfficeVisioStencilCatalog](Get-OfficeVisioStencilCatalog.md)
+Gets built-in or package-backed OfficeIMO Visio stencil catalogs.
+
 ### [Get-OfficeWord](Get-OfficeWord.md)
 Opens an existing Word document.
 
@@ -550,6 +622,9 @@ Gets hyperlinks from a Word document.
 ### [Get-OfficeWordImage](Get-OfficeWordImage.md)
 Gets images from a Word document, section, or paragraph.
 
+### [Get-OfficeWordList](Get-OfficeWordList.md)
+Gets lists from a Word document or section.
+
 ### [Get-OfficeWordParagraph](Get-OfficeWordParagraph.md)
 Gets paragraphs from a Word document or section.
 
@@ -585,6 +660,9 @@ Imports rows from an Excel workbook as PowerShell objects.
 
 ### [Import-OfficePowerPointSlide](Import-OfficePowerPointSlide.md)
 Imports a slide from another PowerPoint presentation.
+
+### [Import-OfficeVisioStencil](Import-OfficeVisioStencil.md)
+Registers a stencil catalog with the active Visio DSL scope.
 
 ### [Invoke-OfficeExcelAutoFit](Invoke-OfficeExcelAutoFit.md)
 Automatically fits Excel row heights and/or column widths.
@@ -625,6 +703,9 @@ Creates a PowerPoint presentation using the DSL.
 ### [New-OfficePowerPointDeckPlan](New-OfficePowerPointDeckPlan.md)
 Creates a semantic PowerPoint deck plan for designer rendering.
 
+### [New-OfficeVisio](New-OfficeVisio.md)
+Creates a new OfficeIMO.Visio document with an initial page and optional DSL content.
+
 ### [New-OfficeWord](New-OfficeWord.md)
 Creates a Word document using the DSL.
 
@@ -660,6 +741,9 @@ Saves an OfficeIMO.Pdf document.
 
 ### [Save-OfficePowerPoint](Save-OfficePowerPoint.md)
 Saves a presentation to disk.
+
+### [Save-OfficeVisio](Save-OfficeVisio.md)
+Saves an OfficeIMO.Visio document.
 
 ### [Save-OfficeWord](Save-OfficeWord.md)
 Saves a Word document without disposing it.
@@ -802,6 +886,9 @@ Sets speaker notes for a PowerPoint slide.
 ### [Set-OfficePowerPointPlaceholderText](Set-OfficePowerPointPlaceholderText.md)
 Sets text in a slide placeholder.
 
+### [Set-OfficePowerPointShapeText](Set-OfficePowerPointShapeText.md)
+Sets text on an existing PowerPoint text box.
+
 ### [Set-OfficePowerPointSlideLayout](Set-OfficePowerPointSlideLayout.md)
 Changes the layout used by a slide.
 
@@ -813,6 +900,9 @@ Sets the text of the title placeholder on a slide.
 
 ### [Set-OfficePowerPointSlideTransition](Set-OfficePowerPointSlideTransition.md)
 Sets the transition used when advancing to a slide.
+
+### [Set-OfficePowerPointTableCell](Set-OfficePowerPointTableCell.md)
+Sets text in an existing PowerPoint table cell.
 
 ### [Set-OfficePowerPointThemeColor](Set-OfficePowerPointThemeColor.md)
 Sets one or more PowerPoint theme colors.
@@ -842,7 +932,7 @@ Updates paragraph style, spacing, indentation, and pagination hints.
 Updates OfficeIMO Word shape metadata, sizing, and colors.
 
 ### [Set-OfficeWordTableCell](Set-OfficeWordTableCell.md)
-Updates OfficeIMO Word table-cell layout and merge settings.
+Updates OfficeIMO Word table-cell content, layout, and merge settings.
 
 ### [Set-OfficeWordTableOfContent](Set-OfficeWordTableOfContent.md)
 Sets properties on a table of contents in a Word document.

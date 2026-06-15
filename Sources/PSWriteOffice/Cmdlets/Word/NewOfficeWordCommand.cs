@@ -8,12 +8,18 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Creates a Word document using the DSL.</summary>
-/// <para>Handles file creation, scriptblock execution, optional autosave, and emits the document path when <c>-PassThru</c> is used.</para>
+/// <para>Handles file creation or template cloning, scriptblock execution, optional autosave, and emits the document path when <c>-PassThru</c> is used.</para>
 /// <example>
 ///   <summary>Create a document inline.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficeWord -Path .\Report.docx { WordSection { WordParagraph 'Hello DSL' } } -Open</code>
 ///   <para>Builds a document, adds one paragraph, saves it to disk, and opens it.</para>
+/// </example>
+/// <example>
+///   <summary>Create a document from a template.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeWord -TemplatePath .\Template.docx -Path .\Report.docx { WordParagraph -Text 'Generated content' -StyleId 'ReportBody' }</code>
+///   <para>Copies the template to the output path, runs the DSL against the copied document, and saves it.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeWord")]
 public sealed class NewOfficeWordCommand : PSCmdlet
@@ -22,6 +28,10 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     [Parameter(Mandatory = true, Position = 0)]
     [Alias("FilePath", "Path")]
     public string OutputPath { get; set; } = string.Empty;
+
+    /// <summary>Existing .docx file to clone before running the DSL.</summary>
+    [Parameter]
+    public string? TemplatePath { get; set; }
 
     /// <summary>DSL scriptblock describing document content.</summary>
     [Parameter(Position = 1)]
@@ -61,7 +71,7 @@ public sealed class NewOfficeWordCommand : PSCmdlet
             Directory.CreateDirectory(directory);
         }
 
-        var document = WordDocumentService.CreateDocument(fullPath, AutoSave.IsPresent);
+        var document = CreateOrLoadDocument(fullPath);
 
         if (Content == null)
         {
@@ -69,10 +79,7 @@ public sealed class NewOfficeWordCommand : PSCmdlet
             return;
         }
 
-        using (WordDslContext.Enter(document))
-        {
-            Content.InvokeReturnAsIs();
-        }
+        WordDocumentService.InvokeDsl(document, Content);
 
         if (NoSave.IsPresent)
         {
@@ -93,6 +100,35 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     private string GetResolvedPath()
     {
         var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+        return Path.IsPathRooted(providerPath)
+            ? providerPath
+            : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
+    }
+
+    private OfficeIMO.Word.WordDocument CreateOrLoadDocument(string fullPath)
+    {
+        if (string.IsNullOrWhiteSpace(TemplatePath))
+        {
+            return WordDocumentService.CreateDocument(fullPath, AutoSave.IsPresent);
+        }
+
+        var templatePath = ResolveFileSystemPath(TemplatePath!);
+        if (!File.Exists(templatePath))
+        {
+            throw new FileNotFoundException($"Template file {templatePath} doesn't exist.", templatePath);
+        }
+
+        if (!string.Equals(templatePath, fullPath, StringComparison.OrdinalIgnoreCase))
+        {
+            File.Copy(templatePath, fullPath, overwrite: true);
+        }
+
+        return WordDocumentService.LoadDocument(fullPath, readOnly: false, autoSave: AutoSave.IsPresent);
+    }
+
+    private string ResolveFileSystemPath(string path)
+    {
+        var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
         return Path.IsPathRooted(providerPath)
             ? providerPath
             : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);

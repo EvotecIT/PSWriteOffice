@@ -11,12 +11,12 @@ Adds a paragraph to the current section/header/footer context.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficeWordParagraph [[-Text] <string>] [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordParagraph [[-Text] <string>] [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Content
 ```powershell
-Add-OfficeWordParagraph [[-Content] <scriptblock>] [-Text <string>] [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordParagraph [[-Content] <scriptblock>] [-Text <string>] [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,13 @@ PS> Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Hello '; Add-OfficeWordT
 ```
 
 Outputs “Hello World” with the second word bolded.
+
+### EXAMPLE 2
+```powershell
+PS> WordParagraph -Text 'Executive summary' -StyleId 'ReportHeading'
+```
+
+Applies a paragraph style id, including custom styles already present in a template document.
 
 ## PARAMETERS
 
@@ -86,6 +93,22 @@ Paragraph style.
 
 ```yaml
 Type: Nullable`1
+Parameter Sets: Text, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -StyleId
+Paragraph style id, including custom style ids from a template document.
+
+```yaml
+Type: String
 Parameter Sets: Text, Content
 Aliases: None
 Possible values:

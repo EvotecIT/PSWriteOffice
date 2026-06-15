@@ -235,6 +235,38 @@ Describe 'Excel DSL surface' {
         $imported[0].Score | Should -Be 10
     }
 
+    It 'appends rows to an existing Excel table outside the DSL' {
+        $path = Join-Path $TestDrive 'ExcelExistingTableAppend.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+            }
+        }
+
+        $doc = Get-OfficeExcel -Path $path
+        try {
+            $table = $doc | Add-OfficeExcelTableRow -Sheet Data -TableName Sales -InputObject ([pscustomobject]@{ Region = 'APAC'; Revenue = 300 }) -PassThru
+            $table.Range | Should -Be 'A1:B4'
+
+            Close-OfficeExcel -Document $doc -Save
+            $doc = $null
+        } finally {
+            if ($null -ne $doc) {
+                Close-OfficeExcel -Document $doc
+            }
+        }
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B4')
+        $imported.Count | Should -Be 3
+        $imported[2].Region | Should -Be 'APAC'
+        $imported[2].Revenue | Should -Be 300
+    }
+
     It 'writes a DataSet as one worksheet per table' {
         $path = Join-Path $TestDrive 'DslExcelDataSet.xlsx'
         $dataSet = [System.Data.DataSet]::new('Report')

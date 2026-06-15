@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-13T10:38:45.0859301+00:00",
+  "generatedAt": "2026-06-15T17:49:09.4100321+02:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -169,6 +169,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableOfContentsCommand.cs",
       "sourceLine": 24,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableOfContentsCommand.cs#L24"
+    },
+    {
+      "name": "Add-OfficeExcelTableRow",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableRowCommand.cs",
+      "sourceLine": 43,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableRowCommand.cs#L43"
     },
     {
       "name": "Add-OfficeExcelValidationCustomFormula",
@@ -595,6 +603,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableCommand.cs#L25"
     },
     {
+      "name": "Add-OfficePowerPointTableRow",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableRowCommand.cs",
+      "sourceLine": 37,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTableRowCommand.cs#L37"
+    },
+    {
       "name": "Add-OfficePowerPointTextBox",
       "kind": "Cmdlet",
       "aliases": [],
@@ -807,8 +823,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListItemCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListItemCommand.cs#L18"
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordListItemCommand.cs#L24"
     },
     {
       "name": "Add-OfficeWordPageNumber",
@@ -823,8 +839,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordParagraphCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordParagraphCommand.cs#L18"
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordParagraphCommand.cs#L24"
     },
     {
       "name": "Add-OfficeWordPictureControl",
@@ -889,6 +905,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentCommand.cs",
       "sourceLine": 25,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentCommand.cs#L25"
+    },
+    {
+      "name": "Add-OfficeWordTableRow",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableRowCommand.cs",
+      "sourceLine": 40,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableRowCommand.cs#L40"
     },
     {
       "name": "Add-OfficeWordTabStop",
@@ -1147,6 +1171,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/FindOfficeExcelCommand.cs#L21"
     },
     {
+      "name": "Find-OfficePowerPointShape",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/FindOfficePowerPointShapeCommand.cs",
+      "sourceLine": 39,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/FindOfficePowerPointShapeCommand.cs#L39"
+    },
+    {
       "name": "Find-OfficeVisioStencil",
       "kind": "Cmdlet",
       "aliases": [
@@ -1163,6 +1195,22 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordCommand.cs",
       "sourceLine": 32,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordCommand.cs#L32"
+    },
+    {
+      "name": "Find-OfficeWordList",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordListCommand.cs",
+      "sourceLine": 41,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordListCommand.cs#L41"
+    },
+    {
+      "name": "Find-OfficeWordTable",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordTableCommand.cs",
+      "sourceLine": 43,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/FindOfficeWordTableCommand.cs#L43"
     },
     {
       "name": "Get-OfficeCsv",
@@ -1495,8 +1543,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCommand.cs#L17"
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordCommand.cs#L23"
     },
     {
       "name": "Get-OfficeWordBookmark",
@@ -1593,6 +1641,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordImageCommand.cs",
       "sourceLine": 22,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordImageCommand.cs#L22"
+    },
+    {
+      "name": "Get-OfficeWordList",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordListCommand.cs",
+      "sourceLine": 37,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordListCommand.cs#L37"
     },
     {
       "name": "Get-OfficeWordParagraph",
@@ -1823,8 +1879,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs#L19"
+      "sourceLine": 25,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs#L25"
     },
     {
       "name": "Protect-OfficeExcelSheet",
@@ -2299,6 +2355,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointPlaceholderTextCommand.cs#L24"
     },
     {
+      "name": "Set-OfficePowerPointShapeText",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointShapeTextCommand.cs",
+      "sourceLine": 33,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointShapeTextCommand.cs#L33"
+    },
+    {
       "name": "Set-OfficePowerPointSlideLayout",
       "kind": "Cmdlet",
       "aliases": [],
@@ -2329,6 +2393,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideTransitionCommand.cs",
       "sourceLine": 19,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointSlideTransitionCommand.cs#L19"
+    },
+    {
+      "name": "Set-OfficePowerPointTableCell",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointTableCellCommand.cs",
+      "sourceLine": 31,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointTableCellCommand.cs#L31"
     },
     {
       "name": "Set-OfficePowerPointThemeColor",
@@ -2407,8 +2479,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableCellCommand.cs",
-      "sourceLine": 33,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableCellCommand.cs#L33"
+      "sourceLine": 44,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableCellCommand.cs#L44"
     },
     {
       "name": "Set-OfficeWordTableOfContent",

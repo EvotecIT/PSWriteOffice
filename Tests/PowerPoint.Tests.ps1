@@ -221,6 +221,55 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'finds and modifies existing PowerPoint text boxes and tables' {
+        $path = Join-Path $TestDrive 'PowerPointExistingShapeModify.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+        try {
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            Add-OfficePowerPointTextBox -Slide $slide -Text 'Draft status' -X 80 -Y 80 -Width 300 -Height 50 | Out-Null
+            $rows = @(
+                [PSCustomObject]@{ Metric = 'Risk'; State = 'Open' }
+                [PSCustomObject]@{ Metric = 'Quality'; State = 'Ready' }
+            )
+            Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 80 -Y 160 -Width 420 -Height 180 | Out-Null
+
+            $textShape = Find-OfficePowerPointShape -Presentation $presentation -Text 'Draft status' -Kind TextBox |
+                Set-OfficePowerPointShapeText -Text 'Ready status' -PassThru
+            $textShape.Text | Should -Be 'Ready status'
+
+            $tableShape = Find-OfficePowerPointShape -Presentation $presentation -Text 'Risk' -Kind Table | Select-Object -First 1
+            $tableShape | Should -Not -BeNullOrEmpty
+            $row = $tableShape | Add-OfficePowerPointTableRow -Values 'Latency', 'Investigating' -PassThru
+            $row.Cells[0].Text | Should -Be 'Latency'
+            $row.Cells[1].Text | Should -Be 'Investigating'
+
+            $cell = $tableShape | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Text 'Mitigating' -PassThru
+            $cell.Text | Should -Be 'Mitigating'
+
+            Save-OfficePowerPoint -Presentation $presentation
+            $presentation.Dispose()
+            $presentation = $null
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $readyShape = Find-OfficePowerPointShape -Presentation $reloaded -Text 'Ready status' -Kind TextBox | Select-Object -First 1
+            $readyShape | Should -Not -BeNullOrEmpty
+
+            $updatedTable = Find-OfficePowerPointShape -Presentation $reloaded -Text 'Mitigating' -Kind Table | Select-Object -First 1
+            $updatedTable | Should -Not -BeNullOrEmpty
+            $updatedTable.RowCount | Should -Be 4
+            $latencyTable = Find-OfficePowerPointShape -Presentation $reloaded -Text 'Latency' -Kind Table | Select-Object -First 1
+            $latencyTable | Should -Not -BeNullOrEmpty
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
     It 'reads notes without creating empty notes parts' {
         $path = Join-Path $TestDrive 'PowerPointNotesRead.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path
