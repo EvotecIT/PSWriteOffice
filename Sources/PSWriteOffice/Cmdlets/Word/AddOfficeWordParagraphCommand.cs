@@ -13,6 +13,12 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Hello '; Add-OfficeWordText -Text 'World' -Bold }</code>
 ///   <para>Outputs “Hello World” with the second word bolded.</para>
 /// </example>
+/// <example>
+///   <summary>Apply a paragraph style by id.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>WordParagraph -Text 'Executive summary' -StyleId 'ReportHeading'</code>
+///   <para>Applies a paragraph style id, including custom styles already present in a template document.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordParagraph", DefaultParameterSetName = ParameterSetText)]
 [Alias("WordParagraph")]
 public sealed class AddOfficeWordParagraphCommand : PSCmdlet
@@ -37,6 +43,10 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
     [Parameter]
     public WordParagraphStyles? Style { get; set; }
 
+    /// <summary>Paragraph style id, including custom style ids from a template document.</summary>
+    [Parameter]
+    public string? StyleId { get; set; }
+
     /// <summary>Emit the <see cref="WordParagraph"/> for further use.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -56,6 +66,11 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
         if (Style.HasValue)
         {
             paragraph.Style = Style.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(StyleId))
+        {
+            paragraph.SetStyleId(StyleId!);
         }
 
         using (context.Push(paragraph))

@@ -49,7 +49,7 @@ internal sealed class WordDslContext : IDisposable
         if (scope == null)
         {
             throw new InvalidOperationException(
-                $"'{caller.MyInvocation.InvocationName}' must run inside New-OfficeWord script block.");
+                $"'{caller.MyInvocation.InvocationName}' must run inside a Word DSL script block.");
         }
 
         return scope;

@@ -27,6 +27,69 @@ BeforeAll {
 
         @($type.GetMethods() | Where-Object Name -eq $MethodName).Count -gt 0
     }
+
+    function Add-TestWordParagraphStyle {
+        param(
+            [Parameter(Mandatory)]
+            [string] $Path,
+
+            [Parameter(Mandatory)]
+            [string] $StyleId
+        )
+
+        $archive = [System.IO.Compression.ZipFile]::Open($Path, [System.IO.Compression.ZipArchiveMode]::Update)
+        try {
+            $entry = $archive.GetEntry('word/styles.xml')
+            if (-not $entry) {
+                throw "Zip entry 'word/styles.xml' not found in '$Path'."
+            }
+
+            $stream = $entry.Open()
+            try {
+                $reader = [System.IO.StreamReader]::new($stream)
+                try {
+                    [xml] $stylesXml = $reader.ReadToEnd()
+                } finally {
+                    $reader.Dispose()
+                }
+            } finally {
+                $stream.Dispose()
+            }
+
+            $wordNamespace = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+            $style = $stylesXml.CreateElement('w', 'style', $wordNamespace)
+            $style.SetAttribute('type', $wordNamespace, 'paragraph')
+            $style.SetAttribute('customStyle', $wordNamespace, '1')
+            $style.SetAttribute('styleId', $wordNamespace, $StyleId)
+
+            $name = $stylesXml.CreateElement('w', 'name', $wordNamespace)
+            $name.SetAttribute('val', $wordNamespace, 'Issue 115 Style')
+            $basedOn = $stylesXml.CreateElement('w', 'basedOn', $wordNamespace)
+            $basedOn.SetAttribute('val', $wordNamespace, 'Normal')
+            $quickFormat = $stylesXml.CreateElement('w', 'qFormat', $wordNamespace)
+
+            $style.AppendChild($name) | Out-Null
+            $style.AppendChild($basedOn) | Out-Null
+            $style.AppendChild($quickFormat) | Out-Null
+            $stylesXml.DocumentElement.AppendChild($style) | Out-Null
+
+            $entry.Delete()
+            $newEntry = $archive.CreateEntry('word/styles.xml')
+            $writeStream = $newEntry.Open()
+            try {
+                $writer = [System.IO.StreamWriter]::new($writeStream, [System.Text.UTF8Encoding]::new($false))
+                try {
+                    $stylesXml.Save($writer)
+                } finally {
+                    $writer.Dispose()
+                }
+            } finally {
+                $writeStream.Dispose()
+            }
+        } finally {
+            $archive.Dispose()
+        }
+    }
 }
 
 Describe 'Word DSL surface' {
@@ -77,6 +140,62 @@ Describe 'Word DSL surface' {
             $document.Paragraphs.Text | Should -Contain 'Encrypted Word value'
         } finally {
             $document.Dispose()
+        }
+    }
+
+    It 'runs the Word DSL against a cloned template document' {
+        $templatePath = Join-Path $TestDrive 'Issue115Template.docx'
+        $outputPath = Join-Path $TestDrive 'Issue115Output.docx'
+        $styleId = 'Issue115Style'
+
+        New-OfficeWord -Path $templatePath {
+            WordParagraph -Text 'Template fixed section'
+        } | Out-Null
+        Add-TestWordParagraphStyle -Path $templatePath -StyleId $styleId
+
+        New-OfficeWord -TemplatePath $templatePath -Path $outputPath {
+            WordParagraph -Text 'Generated appendix' -StyleId $styleId
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $outputPath -ReadOnly
+        try {
+            $document.Paragraphs.Text | Should -Contain 'Template fixed section'
+            $document.Paragraphs.Text | Should -Contain 'Generated appendix'
+        } finally {
+            $document.Dispose()
+        }
+
+        $stylesXml = Get-ZipXmlDocumentLocal -Path $outputPath -Entry 'word/styles.xml'
+        $documentXml = Get-ZipXmlDocumentLocal -Path $outputPath -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+
+        $stylesXml.SelectSingleNode("//w:style[@w:styleId='$styleId']", $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode("//w:p[w:r/w:t='Generated appendix']/w:pPr/w:pStyle[@w:val='$styleId']", $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
+
+    It 'runs the Word DSL against a loaded existing document' {
+        $path = Join-Path $TestDrive 'Issue115Existing.docx'
+
+        New-OfficeWord -Path $path {
+            WordParagraph -Text 'Existing report body'
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path {
+            WordParagraph -Text 'Added after load'
+        }
+        try {
+            $document | Save-OfficeWord | Out-Null
+        } finally {
+            Close-OfficeWord -Document $document
+        }
+
+        $saved = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $saved.Paragraphs.Text | Should -Contain 'Existing report body'
+            $saved.Paragraphs.Text | Should -Contain 'Added after load'
+        } finally {
+            $saved.Dispose()
         }
     }
 
@@ -815,6 +934,129 @@ Describe 'Word DSL surface' {
             $cell.WidthType.Value | Should -Be 'dxa'
         } finally {
             $document.Dispose()
+        }
+    }
+
+    It 'finds an existing Word table and appends rows' {
+        $path = Join-Path $TestDrive 'ExistingWordTableAppend.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Risk register'; State = 'Open' }
+        )
+
+        New-OfficeWord -Path $path {
+            WordParagraph -Text 'Existing table follows'
+            WordTable -InputObject $rows -Style TableGrid
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path
+        try {
+            $table = Find-OfficeWordTable -Document $document -Text 'Risk register' | Select-Object -First 1
+            $table | Should -Not -BeNullOrEmpty
+
+            $row = $table | Add-OfficeWordTableRow -Values @('Mitigation plan', 'Ready') -PassThru
+            $row.Cells[0].Paragraphs[0].Text | Should -Be 'Mitigation plan'
+            $row.Cells[1].Paragraphs[0].Text | Should -Be 'Ready'
+
+            $table |
+                Get-OfficeWordTableCell -Row 1 -Column 1 |
+                Set-OfficeWordTableCell -Text 'Investigating'
+
+            Close-OfficeWord -Document $document -Save
+            $document = $null
+        } finally {
+            if ($null -ne $document) {
+                $document.Dispose()
+            }
+        }
+
+        $saved = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $savedTable = Find-OfficeWordTable -Document $saved -Text 'Mitigation plan' | Select-Object -First 1
+            $savedTable | Should -Not -BeNullOrEmpty
+            $savedTable.RowsCount | Should -Be 3
+            $savedTable.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'Investigating'
+        } finally {
+            $saved.Dispose()
+        }
+    }
+
+    It 'preserves Word table width when appending after a merged first row' {
+        $path = Join-Path $TestDrive 'ExistingWordTableMergedHeaderAppend.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Risk register'; State = 'Open' }
+        )
+
+        New-OfficeWord -Path $path {
+            $table = WordTable -InputObject $rows -Style TableGrid -PassThru
+            $table |
+                Get-OfficeWordTableCell -Row 0 -Column 0 |
+                Set-OfficeWordTableCell -Text 'Merged risk header' -MergeRight 1
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path
+        try {
+            $table = Find-OfficeWordTable -Document $document -Text 'Risk register' | Select-Object -First 1
+            $table | Should -Not -BeNullOrEmpty
+            $table.Rows[0].CellsCount | Should -Be 1
+            $table.Rows[1].CellsCount | Should -Be 2
+
+            $row = $table | Add-OfficeWordTableRow -Values 'Mitigation plan' -PassThru
+            $row.CellsCount | Should -Be 2
+            $row.Cells[0].Paragraphs[0].Text | Should -Be 'Mitigation plan'
+            $row.Cells[1].Paragraphs[0].Text | Should -Be ''
+
+            Close-OfficeWord -Document $document -Save
+            $document = $null
+        } finally {
+            if ($null -ne $document) {
+                $document.Dispose()
+            }
+        }
+
+        $saved = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $savedTable = Find-OfficeWordTable -Document $saved -Text 'Mitigation plan' | Select-Object -First 1
+            $savedTable | Should -Not -BeNullOrEmpty
+            $savedTable.Rows[2].CellsCount | Should -Be 2
+        } finally {
+            $saved.Dispose()
+        }
+    }
+
+    It 'finds an existing Word list and appends items' {
+        $path = Join-Path $TestDrive 'ExistingWordListAppend.docx'
+
+        New-OfficeWord -Path $path {
+            WordParagraph -Text 'Existing checklist follows'
+            WordList {
+                WordListItem -Text 'Initial review'
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path
+        try {
+            $lists = @($document | Get-OfficeWordList)
+            $lists.Count | Should -Be 1
+
+            $item = Find-OfficeWordList -Document $document -Text 'Initial review' |
+                Add-OfficeWordListItem -Text 'Final approval' -PassThru
+            $item.Text | Should -Be 'Final approval'
+
+            Close-OfficeWord -Document $document -Save
+            $document = $null
+        } finally {
+            if ($null -ne $document) {
+                $document.Dispose()
+            }
+        }
+
+        $saved = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            (Find-OfficeWord -Document $saved -Text 'Final approval').Count | Should -Be 1
+            $list = Find-OfficeWordList -Document $saved -Text 'Initial review' | Select-Object -First 1
+            $list.ListItems.Text | Should -Contain 'Final approval'
+        } finally {
+            $saved.Dispose()
         }
     }
 

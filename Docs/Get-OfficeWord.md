@@ -11,11 +11,11 @@ Opens an existing Word document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeWord [-InputPath] <string> [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
+Get-OfficeWord [-InputPath] <string> [[-Content] <scriptblock>] [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Returns an OfficeIMO WordDocument for inspection or advanced operations.
+Returns an OfficeIMO WordDocument for inspection, advanced operations, or optional DSL edits.
 
 ## EXAMPLES
 
@@ -25,6 +25,13 @@ PS> $doc = Get-OfficeWord -Path .\Report.docx -ReadOnly
 ```
 
 Loads Report.docx and exposes the document object for querying.
+
+### EXAMPLE 2
+```powershell
+PS> $doc = Get-OfficeWord -Path .\Report.docx { WordParagraph -Text 'Appended by DSL' }; $doc | Save-OfficeWord
+```
+
+Loads the document, appends content through the DSL, and returns the open document for saving or further edits.
 
 ## PARAMETERS
 
@@ -39,6 +46,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Content
+Optional DSL scriptblock to execute against the loaded document.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

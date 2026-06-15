@@ -11,11 +11,11 @@ Creates a Word document using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeWord [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru] [-Open] [-NoSave] [-AutoSave] [-Password <string>] [-PdfPath <string>] [<CommonParameters>]
+New-OfficeWord [-OutputPath] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-PassThru] [-Open] [-NoSave] [-AutoSave] [-Password <string>] [-PdfPath <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Handles file creation, scriptblock execution, optional autosave, and emits the document path when -PassThru is used.
+Handles file creation or template cloning, scriptblock execution, optional autosave, and emits the document path when -PassThru is used.
 
 ## EXAMPLES
 
@@ -25,6 +25,13 @@ PS> New-OfficeWord -Path .\Report.docx { WordSection { WordParagraph 'Hello DSL'
 ```
 
 Builds a document, adds one paragraph, saves it to disk, and opens it.
+
+### EXAMPLE 2
+```powershell
+PS> New-OfficeWord -TemplatePath .\Template.docx -Path .\Report.docx { WordParagraph -Text 'Generated content' -StyleId 'ReportBody' }
+```
+
+Copies the template to the output path, runs the DSL against the copied document, and saves it.
 
 ## PARAMETERS
 
@@ -142,6 +149,22 @@ Accept wildcard characters: True
 
 ### -PdfPath
 Optional PDF path to create from the same Word document before closing it.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TemplatePath
+Existing .docx file to clone before running the DSL.
 
 ```yaml
 Type: String
