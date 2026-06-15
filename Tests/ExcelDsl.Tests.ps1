@@ -290,6 +290,29 @@ Describe 'Excel DSL surface' {
         $imported[1].Revenue | Should -Be 300
     }
 
+    It 'does not emit a live table from path-owned Excel table appends' {
+        $path = Join-Path $TestDrive 'ExcelPathAppendPassThru.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+            }
+        }
+
+        $warnings = @()
+        $result = Add-OfficeExcelTableRow -Path $path -TableName Sales -InputObject ([pscustomobject]@{ Region = 'APAC'; Revenue = 300 }) -PassThru -WarningVariable warnings
+
+        $result | Should -BeNullOrEmpty
+        $warnings[0].Message | Should -BeLike '*no live ExcelTable is emitted*'
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $imported.Count | Should -Be 2
+        $imported[1].Region | Should -Be 'APAC'
+        $imported[1].Revenue | Should -Be 300
+    }
+
     It 'appends explicit input to each piped Excel table target' {
         $path1 = Join-Path $TestDrive 'ExcelPipedTableAppend1.xlsx'
         $path2 = Join-Path $TestDrive 'ExcelPipedTableAppend2.xlsx'

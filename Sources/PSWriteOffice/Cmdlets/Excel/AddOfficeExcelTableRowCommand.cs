@@ -84,7 +84,10 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
     [Alias("Data", "Values")]
     public object? InputObject { get; set; }
 
-    /// <summary>Emit the updated table wrapper so additional table operations can continue in the pipeline.</summary>
+    /// <summary>
+    /// Emit the updated table wrapper for open document or table inputs. Path-owned workbooks are saved and closed by this command,
+    /// so they do not emit a live table wrapper.
+    /// </summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
@@ -133,6 +136,12 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
 
         if (PassThru.IsPresent)
         {
+            if (string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase))
+            {
+                WriteWarning("Path-owned workbooks are saved and closed by Add-OfficeExcelTableRow; no live ExcelTable is emitted. Open the workbook with Get-OfficeExcel when chaining table edits.");
+                return;
+            }
+
             WriteObject(table);
         }
     }

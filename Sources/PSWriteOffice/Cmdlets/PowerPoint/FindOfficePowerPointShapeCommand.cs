@@ -14,9 +14,9 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// this command can locate the right object before piping it into modification commands.
 /// </para>
 /// <para>
-/// Use <c>-Text</c> for literal contains matching or <c>-Pattern</c> for regular expressions. Combine
-/// <c>-Kind</c>, <c>-Name</c>, <c>-Index</c>, and <c>-ShapeIndex</c> when a deck has repeated labels and
-/// the script should target a specific slide or shape type.
+/// Use <c>-Text</c> for literal contains matching or <c>-Pattern</c> for regular expressions, or omit
+/// both text parameters when <c>-Kind</c>, <c>-Name</c>, <c>-Index</c>, and <c>-ShapeIndex</c> identify
+/// the target shape without reading text content.
 /// </para>
 /// <example>
 ///   <summary>Find and update a text box.</summary>
@@ -54,8 +54,8 @@ public sealed class FindOfficePowerPointShapeCommand : PSCmdlet
     public PowerPointSlide? Slide { get; set; }
 
     /// <summary>Literal text to find in text boxes and table cells.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPresentationText)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetSlideText)]
+    [Parameter(Position = 0, ParameterSetName = ParameterSetPresentationText)]
+    [Parameter(Position = 0, ParameterSetName = ParameterSetSlideText)]
     public string Text { get; set; } = string.Empty;
 
     /// <summary>Regular expression to find in text boxes and table cells.</summary>
@@ -88,6 +88,8 @@ public sealed class FindOfficePowerPointShapeCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        var hasTextFilter = ParameterSetName.EndsWith("Regex", StringComparison.Ordinal)
+            || MyInvocation.BoundParameters.ContainsKey(nameof(Text));
         var matcher = ParameterSetName.EndsWith("Regex", StringComparison.Ordinal)
             ? PowerPointObjectSearch.CreateRegexMatcher(Pattern, CaseSensitive.IsPresent)
             : PowerPointObjectSearch.CreateTextMatcher(Text, CaseSensitive.IsPresent);
@@ -120,7 +122,7 @@ public sealed class FindOfficePowerPointShapeCommand : PSCmdlet
             for (var shapeIndex = 0; shapeIndex < slide.Shapes.Count; shapeIndex++)
             {
                 var info = PowerPointShapeReader.Read(slide, slide.Shapes[shapeIndex], slideIndex, shapeIndex);
-                if (MatchesMetadata(info) && PowerPointObjectSearch.MatchesShape(info, matcher))
+                if (MatchesMetadata(info) && (!hasTextFilter || PowerPointObjectSearch.MatchesShape(info, matcher)))
                 {
                     WriteObject(info);
                 }

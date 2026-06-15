@@ -270,6 +270,33 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'finds existing PowerPoint shapes by metadata without a text term' {
+        $path = Join-Path $TestDrive 'PowerPointMetadataShapeFind.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+        try {
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $textBox = Add-OfficePowerPointTextBox -Slide $slide -Text 'Metadata status' -X 80 -Y 80 -Width 300 -Height 50
+            $textBox.Name = 'Status.Primary'
+            $rows = @(
+                [PSCustomObject]@{ Metric = 'Risk'; State = 'Open' }
+            )
+            $table = Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 80 -Y 160 -Width 420 -Height 120
+            $table.Name = 'Status.Table'
+
+            $byName = Find-OfficePowerPointShape -Presentation $presentation -Name 'Status.*' -Kind TextBox
+            $byName | Should -HaveCount 1
+            $byName[0].Name | Should -Be 'Status.Primary'
+            $byName[0].Kind | Should -Be 'TextBox'
+
+            $byKind = Find-OfficePowerPointShape -Presentation $presentation -Kind Table
+            $byKind | Should -HaveCount 1
+            $byKind[0].Name | Should -Be 'Status.Table'
+            $byKind[0].Kind | Should -Be 'Table'
+        } finally {
+            Close-OfficePowerPoint -Presentation $presentation
+        }
+    }
+
     It 'reads notes without creating empty notes parts' {
         $path = Join-Path $TestDrive 'PowerPointNotesRead.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path
