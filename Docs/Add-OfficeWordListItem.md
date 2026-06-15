@@ -11,11 +11,11 @@ Adds a single list item.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordListItem [[-Text] <string>] [-Level <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordListItem [[-Text] <string>] [-List <WordList>] [-Level <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Must be called within Add-OfficeWordList/WordList; supports nesting via -Level.
+Can be called within Add-OfficeWordList/WordList or against an existing WordList from the pipeline; supports nesting via -Level.
 
 ## EXAMPLES
 
@@ -25,6 +25,13 @@ PS> WordList { Add-OfficeWordListItem -Text 'First task' }
 ```
 
 Creates a bullet with the text “First task”.
+
+### EXAMPLE 2
+```powershell
+PS> Find-OfficeWordList -Document $doc -Text 'Initial review' | Add-OfficeWordListItem -Text 'Final approval'
+```
+
+Finds a list in an existing document and appends a new item.
 
 ## PARAMETERS
 
@@ -41,6 +48,22 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -List
+Existing list to append to. When omitted, the current DSL list is used.
+
+```yaml
+Type: WordList
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
@@ -81,7 +104,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `OfficeIMO.Word.WordList`
 
 ## OUTPUTS
 

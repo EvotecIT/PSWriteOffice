@@ -4,7 +4,18 @@ using OfficeIMO.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
-/// <summary>Updates OfficeIMO Word table-cell layout and merge settings.</summary>
+/// <summary>Updates OfficeIMO Word table-cell content, layout, and merge settings.</summary>
+/// <example>
+///   <summary>Replace text in a cell after finding a table.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$doc = Get-OfficeWord -Path .\Handover.docx
+/// $table = Find-OfficeWordTable -Document $doc -Text 'Risk marker' | Select-Object -First 1
+/// $table |
+///     Get-OfficeWordTableCell -Row 2 -Column 2 |
+///     Set-OfficeWordTableCell -Text 'Investigating' -ShadingFillColor '#fff2cc' -ShadingPattern Clear
+/// $doc | Close-OfficeWord -Save</code>
+///   <para>Finds an existing table by text, replaces a target cell value, applies shading, and saves the document.</para>
+/// </example>
 /// <example>
 ///   <summary>Highlight a status column in the first report table.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -35,6 +46,9 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
     /// <summary>Table cell to update.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public WordTableCell Cell { get; set; } = null!;
+
+    /// <summary>Replace the visible cell text.</summary>
+    [Parameter] public string? Text { get; set; }
 
     /// <summary>Cell shading fill color as #RRGGBB.</summary>
     [Parameter] public string? ShadingFillColor { get; set; }
@@ -125,6 +139,7 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
             return;
         }
 
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Text))) Cell.AddParagraph(Text ?? string.Empty, removeExistingParagraphs: true);
         if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingFillColor))) Cell.ShadingFillColorHex = ShadingFillColor ?? string.Empty;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingPattern))) Cell.ShadingPattern = new ShadingPatternValues(ToOpenXmlToken(ShadingPattern));
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Width))) Cell.Width = Width;

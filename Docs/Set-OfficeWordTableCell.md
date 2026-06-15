@@ -6,20 +6,32 @@ schema: 2.0.0
 ---
 # Set-OfficeWordTableCell
 ## SYNOPSIS
-Updates OfficeIMO Word table-cell layout and merge settings.
+Updates OfficeIMO Word table-cell content, layout, and merge settings.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordTableCell [-Cell] <WordTableCell> [-ShadingFillColor <string>] [-ShadingPattern <string>] [-Width <int>] [-WidthType <string>] [-TextDirection <TextDirectionValues>] [-WrapText <bool>] [-FitText <bool>] [-MergeRight <int>] [-MergeDown <int>] [-SplitHorizontal <int>] [-SplitVertical <int>] [-CopyParagraphs] [-PassThru] [<CommonParameters>]
+Set-OfficeWordTableCell [-Cell] <WordTableCell> [-Text <string>] [-ShadingFillColor <string>] [-ShadingPattern <string>] [-Width <int>] [-WidthType <string>] [-TextDirection <TextDirectionValues>] [-WrapText <bool>] [-FitText <bool>] [-MergeRight <int>] [-MergeDown <int>] [-SplitHorizontal <int>] [-SplitVertical <int>] [-CopyParagraphs] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Updates OfficeIMO Word table-cell layout and merge settings.
+Updates OfficeIMO Word table-cell content, layout, and merge settings.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
+```powershell
+PS> $doc = Get-OfficeWord -Path .\Handover.docx
+$table = Find-OfficeWordTable -Document $doc -Text 'Risk marker' | Select-Object -First 1
+$table |
+    Get-OfficeWordTableCell -Row 2 -Column 2 |
+    Set-OfficeWordTableCell -Text 'Investigating' -ShadingFillColor '#fff2cc' -ShadingPattern Clear
+$doc | Close-OfficeWord -Save
+```
+
+Finds an existing table by text, replaces a target cell value, applies shading, and saves the document.
+
+### EXAMPLE 2
 ```powershell
 PS> $doc = Get-OfficeWord -Path .\Report.docx
 $table = $doc | Get-OfficeWordTable | Select-Object -First 1
@@ -31,7 +43,7 @@ $doc | Save-OfficeWord -Path .\Report-StatusCells.docx
 
 Reads cells from an OfficeIMO table object, applies cell shading and width, and saves the updated document.
 
-### EXAMPLE 2
+### EXAMPLE 3
 ```powershell
 PS> $doc = Get-OfficeWord -Path .\Report.docx
 $table = $doc | Get-OfficeWordTable | Select-Object -First 1
@@ -194,6 +206,22 @@ Number of rows to split the cell into.
 
 ```yaml
 Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Text
+Replace the visible cell text.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

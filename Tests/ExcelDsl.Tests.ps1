@@ -235,6 +235,129 @@ Describe 'Excel DSL surface' {
         $imported[0].Score | Should -Be 10
     }
 
+    It 'appends rows to an existing Excel table outside the DSL' {
+        $path = Join-Path $TestDrive 'ExcelExistingTableAppend.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+            }
+        }
+
+        $doc = Get-OfficeExcel -Path $path
+        try {
+            $table = $doc | Add-OfficeExcelTableRow -Sheet Data -TableName Sales -InputObject ([pscustomobject]@{ Region = 'APAC'; Revenue = 300 }) -PassThru
+            $table.Range | Should -Be 'A1:B4'
+
+            Close-OfficeExcel -Document $doc -Save
+            $doc = $null
+        } finally {
+            if ($null -ne $doc) {
+                Close-OfficeExcel -Document $doc
+            }
+        }
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B4')
+        $imported.Count | Should -Be 3
+        $imported[2].Region | Should -Be 'APAC'
+        $imported[2].Revenue | Should -Be 300
+    }
+
+    It 'finds a named Excel table on later sheets when appending without a sheet filter' {
+        $path = Join-Path $TestDrive 'ExcelExistingTableAppendWithoutSheet.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Summary' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Overview'
+            }
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+            }
+        }
+
+        Add-OfficeExcelTableRow -Path $path -TableName Sales -InputObject ([pscustomobject]@{ Region = 'APAC'; Revenue = 300 })
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $imported.Count | Should -Be 2
+        $imported[1].Region | Should -Be 'APAC'
+        $imported[1].Revenue | Should -Be 300
+    }
+
+    It 'does not emit a live table from path-owned Excel table appends' {
+        $path = Join-Path $TestDrive 'ExcelPathAppendPassThru.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+            }
+        }
+
+        $warnings = @()
+        $result = Add-OfficeExcelTableRow -Path $path -TableName Sales -InputObject ([pscustomobject]@{ Region = 'APAC'; Revenue = 300 }) -PassThru -WarningVariable warnings
+
+        $result | Should -BeNullOrEmpty
+        $warnings[0].Message | Should -BeLike '*no live ExcelTable is emitted*'
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $imported.Count | Should -Be 2
+        $imported[1].Region | Should -Be 'APAC'
+        $imported[1].Revenue | Should -Be 300
+    }
+
+    It 'appends explicit input to each piped Excel table target' {
+        $path1 = Join-Path $TestDrive 'ExcelPipedTableAppend1.xlsx'
+        $path2 = Join-Path $TestDrive 'ExcelPipedTableAppend2.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+        )
+
+        foreach ($path in @($path1, $path2)) {
+            New-OfficeExcel -Path $path {
+                Add-OfficeExcelSheet -Name 'Data' -Content {
+                    Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+                }
+            }
+        }
+
+        $doc1 = Get-OfficeExcel -Path $path1
+        $doc2 = Get-OfficeExcel -Path $path2
+        try {
+            $table1 = $doc1.Sheets[0].Table('Sales')
+            $table2 = $doc2.Sheets[0].Table('Sales')
+
+            @($table1, $table2) |
+                Add-OfficeExcelTableRow -InputObject ([pscustomobject]@{ Region = 'APAC'; Revenue = 300 })
+
+            Close-OfficeExcel -Document $doc1 -Save
+            Close-OfficeExcel -Document $doc2 -Save
+            $doc1 = $null
+            $doc2 = $null
+        } finally {
+            if ($null -ne $doc1) {
+                Close-OfficeExcel -Document $doc1
+            }
+            if ($null -ne $doc2) {
+                Close-OfficeExcel -Document $doc2
+            }
+        }
+
+        foreach ($path in @($path1, $path2)) {
+            $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+            $imported.Count | Should -Be 2
+            $imported[1].Region | Should -Be 'APAC'
+            $imported[1].Revenue | Should -Be 300
+        }
+    }
+
     It 'writes a DataSet as one worksheet per table' {
         $path = Join-Path $TestDrive 'DslExcelDataSet.xlsx'
         $dataSet = [System.Data.DataSet]::new('Report')
