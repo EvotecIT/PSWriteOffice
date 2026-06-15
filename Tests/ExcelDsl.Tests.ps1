@@ -290,6 +290,51 @@ Describe 'Excel DSL surface' {
         $imported[1].Revenue | Should -Be 300
     }
 
+    It 'appends explicit input to each piped Excel table target' {
+        $path1 = Join-Path $TestDrive 'ExcelPipedTableAppend1.xlsx'
+        $path2 = Join-Path $TestDrive 'ExcelPipedTableAppend2.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+        )
+
+        foreach ($path in @($path1, $path2)) {
+            New-OfficeExcel -Path $path {
+                Add-OfficeExcelSheet -Name 'Data' -Content {
+                    Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+                }
+            }
+        }
+
+        $doc1 = Get-OfficeExcel -Path $path1
+        $doc2 = Get-OfficeExcel -Path $path2
+        try {
+            $table1 = $doc1.Sheets[0].Table('Sales')
+            $table2 = $doc2.Sheets[0].Table('Sales')
+
+            @($table1, $table2) |
+                Add-OfficeExcelTableRow -InputObject ([pscustomobject]@{ Region = 'APAC'; Revenue = 300 })
+
+            Close-OfficeExcel -Document $doc1 -Save
+            Close-OfficeExcel -Document $doc2 -Save
+            $doc1 = $null
+            $doc2 = $null
+        } finally {
+            if ($null -ne $doc1) {
+                Close-OfficeExcel -Document $doc1
+            }
+            if ($null -ne $doc2) {
+                Close-OfficeExcel -Document $doc2
+            }
+        }
+
+        foreach ($path in @($path1, $path2)) {
+            $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+            $imported.Count | Should -Be 2
+            $imported[1].Region | Should -Be 'APAC'
+            $imported[1].Revenue | Should -Be 300
+        }
+    }
+
     It 'writes a DataSet as one worksheet per table' {
         $path = Join-Path $TestDrive 'DslExcelDataSet.xlsx'
         $dataSet = [System.Data.DataSet]::new('Report')

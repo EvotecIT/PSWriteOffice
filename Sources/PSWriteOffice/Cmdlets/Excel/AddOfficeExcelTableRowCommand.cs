@@ -91,13 +91,28 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        TableInputCollector.AddInput(_items, InputObject, preserveTabularInput: true);
+        if (string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase))
+        {
+            TableInputCollector.AddInput(_items, InputObject, preserveTabularInput: true);
+            return;
+        }
+
+        AppendRows(CreateDataTable(InputObject), saveOwnedWorkbook: false);
     }
 
     /// <inheritdoc />
     protected override void EndProcessing()
     {
-        var data = ExcelTabularInputService.ToDataTable(_items, TableName);
+        if (!string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        AppendRows(ExcelTabularInputService.ToDataTable(_items, TableName), saveOwnedWorkbook: true);
+    }
+
+    private void AppendRows(System.Data.DataTable data, bool saveOwnedWorkbook)
+    {
         ExcelTable table;
 
         if (ParameterSetName == ParameterSetTable)
@@ -110,13 +125,23 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
             using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
             table = ResolveTable(workbook.Document);
             table.AppendDataTable(data);
-            workbook.SaveIfOwned();
+            if (saveOwnedWorkbook)
+            {
+                workbook.SaveIfOwned();
+            }
         }
 
         if (PassThru.IsPresent)
         {
             WriteObject(table);
         }
+    }
+
+    private System.Data.DataTable CreateDataTable(object? value)
+    {
+        var items = new List<object?>();
+        TableInputCollector.AddInput(items, value, preserveTabularInput: true);
+        return ExcelTabularInputService.ToDataTable(items, TableName);
     }
 
     private ExcelTable ResolveTable(ExcelDocument document)
