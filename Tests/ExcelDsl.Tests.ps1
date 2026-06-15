@@ -267,6 +267,29 @@ Describe 'Excel DSL surface' {
         $imported[2].Revenue | Should -Be 300
     }
 
+    It 'finds a named Excel table on later sheets when appending without a sheet filter' {
+        $path = Join-Path $TestDrive 'ExcelExistingTableAppendWithoutSheet.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Summary' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Overview'
+            }
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+            }
+        }
+
+        Add-OfficeExcelTableRow -Path $path -TableName Sales -InputObject ([pscustomobject]@{ Region = 'APAC'; Revenue = 300 })
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $imported.Count | Should -Be 2
+        $imported[1].Region | Should -Be 'APAC'
+        $imported[1].Revenue | Should -Be 300
+    }
+
     It 'writes a DataSet as one worksheet per table' {
         $path = Join-Path $TestDrive 'DslExcelDataSet.xlsx'
         $dataSet = [System.Data.DataSet]::new('Report')

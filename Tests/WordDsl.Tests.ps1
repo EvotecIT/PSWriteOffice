@@ -980,6 +980,49 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'preserves Word table width when appending after a merged first row' {
+        $path = Join-Path $TestDrive 'ExistingWordTableMergedHeaderAppend.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Risk register'; State = 'Open' }
+        )
+
+        New-OfficeWord -Path $path {
+            $table = WordTable -InputObject $rows -Style TableGrid -PassThru
+            $table |
+                Get-OfficeWordTableCell -Row 0 -Column 0 |
+                Set-OfficeWordTableCell -Text 'Merged risk header' -MergeRight 1
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path
+        try {
+            $table = Find-OfficeWordTable -Document $document -Text 'Risk register' | Select-Object -First 1
+            $table | Should -Not -BeNullOrEmpty
+            $table.Rows[0].CellsCount | Should -Be 1
+            $table.Rows[1].CellsCount | Should -Be 2
+
+            $row = $table | Add-OfficeWordTableRow -Values 'Mitigation plan' -PassThru
+            $row.CellsCount | Should -Be 2
+            $row.Cells[0].Paragraphs[0].Text | Should -Be 'Mitigation plan'
+            $row.Cells[1].Paragraphs[0].Text | Should -Be ''
+
+            Close-OfficeWord -Document $document -Save
+            $document = $null
+        } finally {
+            if ($null -ne $document) {
+                $document.Dispose()
+            }
+        }
+
+        $saved = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $savedTable = Find-OfficeWordTable -Document $saved -Text 'Mitigation plan' | Select-Object -First 1
+            $savedTable | Should -Not -BeNullOrEmpty
+            $savedTable.Rows[2].CellsCount | Should -Be 2
+        } finally {
+            $saved.Dispose()
+        }
+    }
+
     It 'finds an existing Word list and appends items' {
         $path = Join-Path $TestDrive 'ExistingWordListAppend.docx'
 

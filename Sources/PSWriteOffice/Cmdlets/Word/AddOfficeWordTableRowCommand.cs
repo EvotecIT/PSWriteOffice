@@ -63,7 +63,7 @@ public sealed class AddOfficeWordTableRowCommand : PSCmdlet
 
         var values = ExpandValues(Values);
         var existingColumnCount = Table.RowsCount > 0
-            ? Table.Rows[0].CellsCount
+            ? Table.Rows.Max(row => row.CellsCount)
             : 0;
         var cellCount = Math.Max(existingColumnCount, values.Count);
         if (cellCount == 0)

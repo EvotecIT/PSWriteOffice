@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -107,8 +108,7 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
         else
         {
             using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-            var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
-            table = sheet.Table(TableName);
+            table = ResolveTable(workbook.Document);
             table.AppendDataTable(data);
             workbook.SaveIfOwned();
         }
@@ -117,5 +117,32 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
         {
             WriteObject(table);
         }
+    }
+
+    private ExcelTable ResolveTable(ExcelDocument document)
+    {
+        if (!string.IsNullOrWhiteSpace(Sheet) || SheetIndex.HasValue)
+        {
+            var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
+            return sheet.Table(TableName);
+        }
+
+        var matches = document.Sheets
+            .Where(sheet => sheet.GetTableRange(TableName) != null)
+            .ToArray();
+
+        if (matches.Length == 0)
+        {
+            throw new PSArgumentException($"Table '{TableName}' was not found in the workbook.", nameof(TableName));
+        }
+
+        if (matches.Length > 1)
+        {
+            throw new PSArgumentException(
+                $"Table '{TableName}' exists on multiple worksheets. Specify -Sheet or -SheetIndex to select one.",
+                nameof(TableName));
+        }
+
+        return matches[0].Table(TableName);
     }
 }
