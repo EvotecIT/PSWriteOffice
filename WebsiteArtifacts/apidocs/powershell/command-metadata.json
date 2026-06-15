@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-15T20:09:08.3400704+00:00",
+  "generatedAt": "2026-06-15T20:50:26.9766354+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -1257,6 +1257,34 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Reader/GetOfficeDocumentChunkCommand.cs",
       "sourceLine": 15,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Reader/GetOfficeDocumentChunkCommand.cs#L15"
+    },
+    {
+      "name": "Get-OfficeDocumentIngest",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Reader/GetOfficeDocumentIngestCommand.cs",
+      "sourceLine": 10,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Reader/GetOfficeDocumentIngestCommand.cs#L10"
+    },
+    {
+      "name": "Get-OfficeDocumentTable",
+      "kind": "Cmdlet",
+      "aliases": [
+        "Read-OfficeDocumentTable"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Reader/GetOfficeDocumentTableCommand.cs",
+      "sourceLine": 12,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Reader/GetOfficeDocumentTableCommand.cs#L12"
+    },
+    {
+      "name": "Get-OfficeDocumentVisual",
+      "kind": "Cmdlet",
+      "aliases": [
+        "Read-OfficeDocumentVisual"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Reader/GetOfficeDocumentVisualCommand.cs",
+      "sourceLine": 11,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Reader/GetOfficeDocumentVisualCommand.cs#L11"
     },
     {
       "name": "Get-OfficeExcel",
