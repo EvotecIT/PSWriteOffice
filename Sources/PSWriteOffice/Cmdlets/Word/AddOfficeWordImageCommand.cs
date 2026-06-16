@@ -45,7 +45,7 @@ public sealed class AddOfficeWordImageCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);
-        var paragraph = context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
+        var paragraph = context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
         var fullPath = ResolvePath();
         var image = paragraph.InsertImage(fullPath, Width, Height, Wrap, Description);
 

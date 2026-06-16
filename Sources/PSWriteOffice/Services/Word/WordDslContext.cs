@@ -13,7 +13,6 @@ internal sealed class WordDslContext : IDisposable
     private static readonly AsyncLocal<WordDslContext?> CurrentScope = new();
     private readonly Stack<object> _scopes = new();
     private readonly Dictionary<WordList, WordParagraph?> _listAnchors = new();
-    private readonly Dictionary<object, WordParagraph> _blockCursors = new();
     private readonly Dictionary<WordTable, IReadOnlyList<object>> _tableSources = new();
     private readonly Dictionary<WordTable, List<WordTableConditionModel>> _tableConditions = new();
     private bool _initialSectionConsumed;
@@ -58,7 +57,6 @@ internal sealed class WordDslContext : IDisposable
 
     public void Dispose()
     {
-        ClearBlockCursors();
         if (CurrentScope.Value == this)
         {
             CurrentScope.Value = null;
@@ -149,78 +147,6 @@ internal sealed class WordDslContext : IDisposable
         }
 
         return RequireSection();
-    }
-
-    public WordParagraph AddParagraphToCurrentHost(string? text = null)
-    {
-        return AddParagraphToHost(RequireParagraphHost(), text);
-    }
-
-    public WordParagraph AddParagraphToHost(object host, string? text = null)
-    {
-        if (host == null)
-        {
-            throw new ArgumentNullException(nameof(host));
-        }
-
-        if (_blockCursors.TryGetValue(host, out var cursor))
-        {
-            _blockCursors.Remove(host);
-            if (text != null)
-            {
-                cursor.Text = text;
-            }
-
-            return cursor;
-        }
-
-        return host.AddParagraph(text);
-    }
-
-    public void RegisterBlockCursor(object host, WordParagraph cursor)
-    {
-        if (host == null)
-        {
-            throw new ArgumentNullException(nameof(host));
-        }
-        if (cursor == null)
-        {
-            throw new ArgumentNullException(nameof(cursor));
-        }
-
-        _blockCursors[host] = cursor;
-    }
-
-    public void ClearBlockCursor(object host)
-    {
-        if (host == null)
-        {
-            throw new ArgumentNullException(nameof(host));
-        }
-
-        if (_blockCursors.TryGetValue(host, out var cursor))
-        {
-            _blockCursors.Remove(host);
-            RemoveEmptyCursor(cursor);
-        }
-    }
-
-    private void ClearBlockCursors()
-    {
-        foreach (var cursor in _blockCursors.Values.ToArray())
-        {
-            RemoveEmptyCursor(cursor);
-        }
-
-        _blockCursors.Clear();
-    }
-
-    private static void RemoveEmptyCursor(WordParagraph cursor)
-    {
-        if (string.IsNullOrWhiteSpace(cursor.Text))
-        {
-            cursor.Remove();
-        }
     }
 
     public WordTable? ResolveCurrentTable()

@@ -30,7 +30,7 @@ public sealed class AddOfficeWordListCommand : PSCmdlet
     {
         var context = WordDslContext.Require(this);
         var host = context.RequireParagraphHost();
-        var anchor = context.AddParagraphToHost(host);
+        var anchor = host.AddParagraph();
 
         var list = anchor.AddList(Style);
         context.RegisterListAnchor(list, anchor);

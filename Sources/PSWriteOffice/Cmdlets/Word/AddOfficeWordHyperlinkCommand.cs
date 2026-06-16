@@ -104,6 +104,6 @@ public sealed class AddOfficeWordHyperlinkCommand : PSCmdlet
     private WordParagraph ResolveParagraph()
     {
         var context = WordDslContext.Require(this);
-        return context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
+        return context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
     }
 }

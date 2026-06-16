@@ -34,7 +34,7 @@ public sealed class AddOfficeWordBookmarkCommand : PSCmdlet
         if (paragraph == null)
         {
             var context = WordDslContext.Require(this);
-            paragraph = context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
+            paragraph = context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
         }
 
         if (string.IsNullOrWhiteSpace(Name))

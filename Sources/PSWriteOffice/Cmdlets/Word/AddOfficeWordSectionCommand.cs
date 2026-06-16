@@ -39,7 +39,6 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
         {
             Content?.InvokeReturnAsIs();
         }
-        context.ClearBlockCursor(section);
 
         if (PassThru.IsPresent)
         {

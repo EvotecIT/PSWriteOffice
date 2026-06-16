@@ -55,7 +55,7 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);
-        var paragraph = context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
+        var paragraph = context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
 
         foreach (var entry in Text)
         {

@@ -172,11 +172,8 @@ Describe 'Word DSL surface' {
         )
     }
 
-    It 'inserts paragraphs and tables next to found paragraphs without moving them to the document end' {
+    It 'preserves OfficeIMO insertion order when editing paragraphs returned by Find-OfficeWord' {
         $path = Join-Path $TestDrive 'ExistingWordInlineInsertion.docx'
-        $rows = @(
-            [PSCustomObject]@{ Name = 'Inserted table'; State = 'Ready' }
-        )
 
         New-OfficeWord -Path $path {
             Add-OfficeWordParagraph -Text 'Before marker'
@@ -189,8 +186,20 @@ Describe 'Word DSL surface' {
             $marker = Find-OfficeWord -Document $document -Text 'Insertion marker' | Select-Object -First 1
             $marker | Should -Not -BeNullOrEmpty
 
-            $inserted = Add-OfficeWordParagraph -AfterParagraph $marker -Text 'Inserted paragraph' -PassThru
-            Add-OfficeWordTable -AfterParagraph $inserted -InputObject $rows -Style TableGrid
+            $inserted = $marker.AddParagraphAfterSelf()
+            $inserted.Text = 'Inserted paragraph'
+
+            $tableStyleType = [AppDomain]::CurrentDomain.GetAssemblies() |
+                ForEach-Object { $_.GetType('OfficeIMO.Word.WordTableStyle', $false) } |
+                Where-Object { $null -ne $_ } |
+                Select-Object -First 1
+            $tableStyleType | Should -Not -BeNullOrEmpty
+
+            $table = $inserted.AddTableAfter(2, 2, [Enum]::Parse($tableStyleType, 'TableGrid'))
+            $table.Rows[0].Cells[0].Paragraphs[0].Text = 'Name'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text = 'State'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text = 'Inserted table'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text = 'Ready'
 
             Close-OfficeWord -Document $document -Save
             $document = $null

@@ -70,7 +70,7 @@ public sealed class AddOfficeWordEquationCommand : PSCmdlet
         var context = WordDslContext.Current;
         if (context != null)
         {
-            return context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
+            return context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
         }
 
         var document = WordDocumentService.GetCurrentTrackedDocument()

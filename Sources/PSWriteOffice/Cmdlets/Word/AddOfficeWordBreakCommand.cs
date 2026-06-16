@@ -56,6 +56,6 @@ public sealed class AddOfficeWordBreakCommand : PSCmdlet
     private WordParagraph ResolveContextParagraph()
     {
         var context = WordDslContext.Require(this);
-        return context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
+        return context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
     }
 }

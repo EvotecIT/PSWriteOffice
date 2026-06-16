@@ -82,7 +82,7 @@ public sealed class AddOfficeWordShapeCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);
-        var paragraph = context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
+        var paragraph = context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
 
         var shape = Left.HasValue || Top.HasValue
             ? WordShape.AddDrawingShapeAnchored(paragraph, Type, Width, Height, Left ?? 0, Top ?? 0)

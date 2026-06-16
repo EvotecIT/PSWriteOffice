@@ -54,6 +54,6 @@ public sealed class AddOfficeWordEndnoteCommand : PSCmdlet
         }
 
         var context = WordDslContext.Require(this);
-        return context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
+        return context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
     }
 }
