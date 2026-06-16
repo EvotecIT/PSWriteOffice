@@ -345,7 +345,18 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         };
     }
 
-    private sealed record TableInsertionAnchor(WordParagraph Paragraph, bool Before);
+    private sealed class TableInsertionAnchor
+    {
+        public TableInsertionAnchor(WordParagraph paragraph, bool before)
+        {
+            Paragraph = paragraph;
+            Before = before;
+        }
+
+        public WordParagraph Paragraph { get; }
+
+        public bool Before { get; }
+    }
 
     private static IReadOnlyList<string> GetColumnNames(object item)
     {
