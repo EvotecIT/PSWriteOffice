@@ -212,7 +212,7 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
             return context.CurrentParagraph.AddChart(title, width: WidthPixels, height: HeightPixels);
         }
 
-        var paragraph = context.RequireParagraphHost().AddParagraph();
+        var paragraph = context.AddParagraphToCurrentHost();
         return paragraph.AddChart(title, width: WidthPixels, height: HeightPixels);
     }
 

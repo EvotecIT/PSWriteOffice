@@ -36,5 +36,6 @@ public sealed class AddOfficeWordFooterCommand : PSCmdlet
         {
             Content?.InvokeReturnAsIs();
         }
+        context.ClearBlockCursor(footer);
     }
 }

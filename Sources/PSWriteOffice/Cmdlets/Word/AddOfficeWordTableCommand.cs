@@ -57,6 +57,14 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     [Parameter(Position = 1)]
     public ScriptBlock? Content { get; set; }
 
+    /// <summary>Existing paragraph after which the table should be inserted.</summary>
+    [Parameter]
+    public WordParagraph? AfterParagraph { get; set; }
+
+    /// <summary>Existing paragraph before which the table should be inserted.</summary>
+    [Parameter]
+    public WordParagraph? BeforeParagraph { get; set; }
+
     /// <summary>Emit the created <see cref="WordTable"/>.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -70,6 +78,11 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void EndProcessing()
     {
+        if (AfterParagraph != null && BeforeParagraph != null)
+        {
+            throw new PSArgumentException("Use either -AfterParagraph or -BeforeParagraph, not both.");
+        }
+
         var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         if (rows.Length == 0)
         {
@@ -81,13 +94,29 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
             return;
         }
 
-        var context = WordDslContext.Require(this);
+        var context = WordDslContext.Current;
+        if (Content != null && context == null)
+        {
+            throw new InvalidOperationException("Nested Word table content must run inside a Word DSL script block.");
+        }
+
         var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
         var tableRows = TableViewProjection.Project(rows, effectiveView);
         var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(tableRows);
         var legacyLayout = ResolveLegacyLayout(Layout);
         var table = CreateTable(context, normalizedRows, Style, includeHeader: !NoHeader.IsPresent, layout: legacyLayout);
         ApplyLayout(table, Layout);
+
+        if (context == null)
+        {
+            if (PassThru.IsPresent)
+            {
+                WriteObject(table);
+            }
+
+            return;
+        }
+
         context.RegisterTableSource(table, tableRows);
 
         using (context.Push(table))
@@ -198,23 +227,48 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
     }
 
-    private static WordTable CreateTable(
-        WordDslContext context,
+    private WordTable CreateTable(
+        WordDslContext? context,
         IReadOnlyList<object?> normalizedRows,
         WordTableStyle style,
         bool includeHeader,
         TableLayoutValues? layout)
     {
-        if (context.CurrentTableCell == null)
+        if (AfterParagraph != null)
         {
-            return context.Document.AddTableFromObjects(normalizedRows, style, includeHeader, layout);
+            return AddTableToHost(AfterParagraph, normalizedRows, style, includeHeader, layout);
         }
 
-        return AddTableToCell(context.CurrentTableCell, normalizedRows, style, includeHeader, layout);
+        if (BeforeParagraph != null)
+        {
+            return AddTableToHost(new TableInsertionAnchor(BeforeParagraph, true), normalizedRows, style, includeHeader, layout);
+        }
+
+        var host = context?.RequireParagraphHost()
+            ?? throw new InvalidOperationException("Add-OfficeWordTable must run inside a Word DSL script block or use -AfterParagraph/-BeforeParagraph.");
+
+        return AddTableToDslHost(context, host, normalizedRows, style, includeHeader, layout, context.CurrentParagraph);
     }
 
-    private static WordTable AddTableToCell(
-        WordTableCell cell,
+    private static WordTable AddTableToDslHost(
+        WordDslContext context,
+        object host,
+        IReadOnlyList<object?> items,
+        WordTableStyle style,
+        bool includeHeader,
+        TableLayoutValues? layout,
+        WordParagraph? anchorParagraph)
+    {
+        var cursor = anchorParagraph != null
+            ? anchorParagraph.AddParagraphAfterSelf()
+            : context.AddParagraphToHost(host);
+        var table = AddTableToHost(new TableInsertionAnchor(cursor, true), items, style, includeHeader, layout);
+        context.RegisterBlockCursor(host, cursor);
+        return table;
+    }
+
+    private static WordTable AddTableToHost(
+        object host,
         IReadOnlyList<object?> items,
         WordTableStyle style,
         bool includeHeader,
@@ -238,7 +292,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         var rowCount = items.Count + (includeHeader ? 1 : 0);
-        var table = cell.AddTable(rowCount, columns.Count, style);
+        var table = CreateEmptyTable(host, rowCount, columns.Count, style);
         if (layout.HasValue)
         {
             table.LayoutType = layout.Value;
@@ -274,6 +328,24 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
         return table;
     }
+
+    private static WordTable CreateEmptyTable(object host, int rows, int columns, WordTableStyle style)
+    {
+        return host switch
+        {
+            WordTableCell cell => cell.AddTable(rows, columns, style),
+            WordSection section => section.AddTable(rows, columns, style),
+            WordHeader header => header.AddTable(rows, columns, style),
+            WordFooter footer => footer.AddTable(rows, columns, style),
+            WordParagraph paragraph => paragraph.AddTableAfter(rows, columns, style),
+            TableInsertionAnchor anchor => anchor.Before
+                ? anchor.Paragraph.AddTableBefore(rows, columns, style)
+                : anchor.Paragraph.AddTableAfter(rows, columns, style),
+            _ => throw new InvalidOperationException("Tables can only be added inside sections, headers, footers, table cells, or next to an existing paragraph.")
+        };
+    }
+
+    private sealed record TableInsertionAnchor(WordParagraph Paragraph, bool Before);
 
     private static IReadOnlyList<string> GetColumnNames(object item)
     {

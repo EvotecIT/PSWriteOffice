@@ -1,3 +1,4 @@
+using System;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
@@ -47,6 +48,14 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
     [Parameter]
     public string? StyleId { get; set; }
 
+    /// <summary>Existing paragraph after which the new paragraph should be inserted.</summary>
+    [Parameter]
+    public WordParagraph? AfterParagraph { get; set; }
+
+    /// <summary>Existing paragraph before which the new paragraph should be inserted.</summary>
+    [Parameter]
+    public WordParagraph? BeforeParagraph { get; set; }
+
     /// <summary>Emit the <see cref="WordParagraph"/> for further use.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -54,9 +63,18 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var context = WordDslContext.Require(this);
-        var host = context.RequireParagraphHost();
-        var paragraph = host.AddParagraph(Text);
+        if (AfterParagraph != null && BeforeParagraph != null)
+        {
+            throw new PSArgumentException("Use either -AfterParagraph or -BeforeParagraph, not both.");
+        }
+
+        var context = WordDslContext.Current;
+        if (Content != null && context == null)
+        {
+            throw new InvalidOperationException("Nested Word paragraph content must run inside a Word DSL script block.");
+        }
+
+        var paragraph = ResolveParagraph();
 
         if (Alignment.HasValue)
         {
@@ -73,7 +91,7 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
             paragraph.SetStyleId(StyleId!);
         }
 
-        using (context.Push(paragraph))
+        using (context?.Push(paragraph))
         {
             Content?.InvokeReturnAsIs();
         }
@@ -81,6 +99,34 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
         if (PassThru.IsPresent)
         {
             WriteObject(paragraph);
+        }
+    }
+
+    private WordParagraph ResolveParagraph()
+    {
+        if (AfterParagraph != null)
+        {
+            var paragraph = AfterParagraph.AddParagraphAfterSelf();
+            ApplyText(paragraph);
+            return paragraph;
+        }
+
+        if (BeforeParagraph != null)
+        {
+            var paragraph = BeforeParagraph.AddParagraphBeforeSelf();
+            ApplyText(paragraph);
+            return paragraph;
+        }
+
+        var context = WordDslContext.Require(this);
+        return context.AddParagraphToCurrentHost(Text);
+    }
+
+    private void ApplyText(WordParagraph paragraph)
+    {
+        if (Text != null)
+        {
+            paragraph.Text = Text;
         }
     }
 }

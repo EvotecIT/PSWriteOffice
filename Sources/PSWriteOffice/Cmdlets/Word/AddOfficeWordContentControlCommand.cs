@@ -56,6 +56,6 @@ public sealed class AddOfficeWordContentControlCommand : PSCmdlet
         }
 
         var context = WordDslContext.Require(this);
-        return context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
+        return context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
     }
 }

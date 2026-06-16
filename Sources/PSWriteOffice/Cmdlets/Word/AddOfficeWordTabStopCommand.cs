@@ -64,7 +64,7 @@ public sealed class AddOfficeWordTabStopCommand : PSCmdlet
         var context = WordDslContext.Current;
         if (context != null)
         {
-            return context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
+            return context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
         }
 
         var document = WordDocumentService.GetCurrentTrackedDocument()

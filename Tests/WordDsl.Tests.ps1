@@ -90,6 +90,31 @@ BeforeAll {
             $archive.Dispose()
         }
     }
+
+    function Get-TestWordBodyOrder {
+        param(
+            [Parameter(Mandatory)]
+            [string] $Path
+        )
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $Path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+
+        foreach ($node in $documentXml.SelectNodes('/w:document/w:body/*', $namespaceManager)) {
+            if ($node.LocalName -eq 'p') {
+                $text = ($node.SelectNodes('.//w:t', $namespaceManager) | ForEach-Object { $_.'#text' }) -join ''
+                if (-not [string]::IsNullOrWhiteSpace($text)) {
+                    "p:$text"
+                }
+            } elseif ($node.LocalName -eq 'tbl') {
+                $text = ($node.SelectNodes('.//w:t', $namespaceManager) | ForEach-Object { $_.'#text' }) -join '|'
+                if (-not [string]::IsNullOrWhiteSpace($text)) {
+                    "tbl:$text"
+                }
+            }
+        }
+    }
 }
 
 Describe 'Word DSL surface' {
@@ -115,6 +140,73 @@ Describe 'Word DSL surface' {
         } finally {
             $document.Dispose()
         }
+    }
+
+    It 'preserves authored paragraph and table order inside a single Word section' {
+        $path = Join-Path $TestDrive 'DslSectionOrderedBlocks.docx'
+        $firstTable = @(
+            [PSCustomObject]@{ Control = 'A'; Status = 'Open' }
+        )
+        $secondTable = @(
+            [PSCustomObject]@{ Control = 'B'; Status = 'Closed' }
+        )
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordSection {
+                Add-OfficeWordParagraph -Text 'Heading check'
+                Add-OfficeWordParagraph -Text 'Text before table'
+                Add-OfficeWordTable -InputObject $firstTable -Style TableGrid
+                Add-OfficeWordParagraph -Text 'Text after table'
+                Add-OfficeWordTable -InputObject $secondTable -Style TableGrid
+                Add-OfficeWordParagraph -Text 'Tail paragraph'
+            }
+        }
+
+        @(Get-TestWordBodyOrder -Path $path) | Should -Be @(
+            'p:Heading check'
+            'p:Text before table'
+            'tbl:Control|Status|A|Open'
+            'p:Text after table'
+            'tbl:Control|Status|B|Closed'
+            'p:Tail paragraph'
+        )
+    }
+
+    It 'inserts paragraphs and tables next to found paragraphs without moving them to the document end' {
+        $path = Join-Path $TestDrive 'ExistingWordInlineInsertion.docx'
+        $rows = @(
+            [PSCustomObject]@{ Name = 'Inserted table'; State = 'Ready' }
+        )
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordParagraph -Text 'Before marker'
+            Add-OfficeWordParagraph -Text 'Insertion marker'
+            Add-OfficeWordParagraph -Text 'After marker'
+        }
+
+        $document = Get-OfficeWord -Path $path
+        try {
+            $marker = Find-OfficeWord -Document $document -Text 'Insertion marker' | Select-Object -First 1
+            $marker | Should -Not -BeNullOrEmpty
+
+            $inserted = Add-OfficeWordParagraph -AfterParagraph $marker -Text 'Inserted paragraph' -PassThru
+            Add-OfficeWordTable -AfterParagraph $inserted -InputObject $rows -Style TableGrid
+
+            Close-OfficeWord -Document $document -Save
+            $document = $null
+        } finally {
+            if ($null -ne $document) {
+                $document.Dispose()
+            }
+        }
+
+        @(Get-TestWordBodyOrder -Path $path) | Should -Be @(
+            'p:Before marker'
+            'p:Insertion marker'
+            'p:Inserted paragraph'
+            'tbl:Name|State|Inserted table|Ready'
+            'p:After marker'
+        )
     }
 
     It 'round-trips encrypted Word documents through lifecycle cmdlets' {

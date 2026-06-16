@@ -53,7 +53,7 @@ public sealed class AddOfficeWordFieldCommand : PSCmdlet
         if (paragraph == null)
         {
             var context = WordDslContext.Require(this);
-            paragraph = context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
+            paragraph = context.CurrentParagraph ?? context.AddParagraphToCurrentHost();
         }
 
         List<string>? parameters = null;

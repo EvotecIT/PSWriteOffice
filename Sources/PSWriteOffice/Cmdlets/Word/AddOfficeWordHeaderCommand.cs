@@ -36,5 +36,6 @@ public sealed class AddOfficeWordHeaderCommand : PSCmdlet
         {
             Content?.InvokeReturnAsIs();
         }
+        context.ClearBlockCursor(header);
     }
 }

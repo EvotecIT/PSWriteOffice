@@ -69,6 +69,7 @@ public sealed class AddOfficeWordTableCellCommand : PSCmdlet
         {
             Content?.InvokeReturnAsIs();
         }
+        context.ClearBlockCursor(cell);
 
         if (PassThru.IsPresent)
         {
