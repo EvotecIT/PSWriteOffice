@@ -64,22 +64,22 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
         }
 
         var document = MarkdownDoc.Create();
-        if (Content == null)
+        if (Content != null)
+        {
+            using (MarkdownDslContext.Enter(document))
+            {
+                Content.InvokeReturnAsIs();
+            }
+        }
+
+        if (NoSave.IsPresent)
         {
             WriteObject(document);
             return;
         }
 
-        using (MarkdownDslContext.Enter(document))
-        {
-            Content.InvokeReturnAsIs();
-        }
-
-        if (!NoSave.IsPresent)
-        {
-            File.WriteAllText(fullPath, document.ToMarkdown(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-            SavePdfIfRequested(document);
-        }
+        File.WriteAllText(fullPath, document.ToMarkdown(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        SavePdfIfRequested(document);
 
         if (PassThru.IsPresent)
         {

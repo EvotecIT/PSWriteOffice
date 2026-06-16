@@ -59,6 +59,130 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     [Parameter]
     public PdfAlign Align { get; set; } = PdfAlign.Left;
 
+    /// <summary>OfficeIMO table style preset or supported Word table style name.</summary>
+    [Parameter]
+    public string? TableStyle { get; set; }
+
+    /// <summary>Header fill color in #RRGGBB format.</summary>
+    [Parameter]
+    public string? HeaderFill { get; set; }
+
+    /// <summary>Header text color in #RRGGBB format.</summary>
+    [Parameter]
+    public string? HeaderTextColor { get; set; }
+
+    /// <summary>Body text color in #RRGGBB format.</summary>
+    [Parameter]
+    public string? TextColor { get; set; }
+
+    /// <summary>Alternating body row fill color in #RRGGBB format.</summary>
+    [Parameter]
+    public string? RowStripeFill { get; set; }
+
+    /// <summary>Border color in #RRGGBB format.</summary>
+    [Parameter]
+    public string? BorderColor { get; set; }
+
+    /// <summary>Border width in PDF points.</summary>
+    [Parameter]
+    public double? BorderWidth { get; set; }
+
+    /// <summary>Body cell font size in PDF points.</summary>
+    [Parameter]
+    public double? FontSize { get; set; }
+
+    /// <summary>Header cell font size in PDF points.</summary>
+    [Parameter]
+    public double? HeaderFontSize { get; set; }
+
+    /// <summary>Wrapped line height multiplier for table cells.</summary>
+    [Parameter]
+    public double? LineHeight { get; set; }
+
+    /// <summary>Horizontal cell padding in PDF points.</summary>
+    [Parameter]
+    public double? CellPaddingX { get; set; }
+
+    /// <summary>Vertical cell padding in PDF points.</summary>
+    [Parameter]
+    public double? CellPaddingY { get; set; }
+
+    /// <summary>Spacing before the table in PDF points.</summary>
+    [Parameter]
+    public double? SpacingBefore { get; set; }
+
+    /// <summary>Spacing after the table in PDF points.</summary>
+    [Parameter]
+    public double? SpacingAfter { get; set; }
+
+    /// <summary>Caption rendered above the table grid.</summary>
+    [Parameter]
+    public string? Caption { get; set; }
+
+    /// <summary>Caption alignment.</summary>
+    [Parameter]
+    public PdfAlign? CaptionAlign { get; set; }
+
+    /// <summary>Caption color in #RRGGBB format.</summary>
+    [Parameter]
+    public string? CaptionColor { get; set; }
+
+    /// <summary>Caption font size in PDF points.</summary>
+    [Parameter]
+    public double? CaptionFontSize { get; set; }
+
+    /// <summary>Fixed column widths in PDF points.</summary>
+    [Parameter]
+    public double[]? ColumnWidthPoints { get; set; }
+
+    /// <summary>Relative column width weights.</summary>
+    [Parameter]
+    public double[]? ColumnWidthWeights { get; set; }
+
+    /// <summary>Per-column horizontal alignment.</summary>
+    [Parameter]
+    public PdfColumnAlign[]? ColumnAlign { get; set; }
+
+    /// <summary>Measure flexible columns from content.</summary>
+    [Parameter]
+    public SwitchParameter AutoFitColumns { get; set; }
+
+    /// <summary>Right-align numeric-looking cell values.</summary>
+    [Parameter]
+    public SwitchParameter RightAlignNumeric { get; set; }
+
+    /// <summary>Keep the table together when possible.</summary>
+    [Parameter]
+    public SwitchParameter KeepTogether { get; set; }
+
+    /// <summary>Keep the table with the next block when possible.</summary>
+    [Parameter]
+    public SwitchParameter KeepWithNext { get; set; }
+
+    /// <summary>Hide table borders.</summary>
+    [Parameter]
+    public SwitchParameter NoBorder { get; set; }
+
+    /// <summary>Disable the header fill.</summary>
+    [Parameter]
+    public SwitchParameter NoHeaderFill { get; set; }
+
+    /// <summary>Disable alternating row fill.</summary>
+    [Parameter]
+    public SwitchParameter NoRowStripeFill { get; set; }
+
+    /// <summary>Number of leading rows rendered as header rows.</summary>
+    [Parameter]
+    public int? HeaderRowCount { get; set; }
+
+    /// <summary>Number of leading header rows repeated on following pages.</summary>
+    [Parameter]
+    public int? RepeatHeaderRowCount { get; set; }
+
+    /// <summary>Number of trailing rows rendered as footer rows.</summary>
+    [Parameter]
+    public int? FooterRowCount { get; set; }
+
     /// <summary>Emit the updated document.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -106,7 +230,45 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
             ? PdfCommandUtilities.ConvertDataRows(enumerable, Header)
             : PdfCommandUtilities.ConvertToTableRows(projectedRows, Property, Header);
 
-        document.Table(rows, Align);
+        document.Table(rows, Align, CreateStyle());
+    }
+
+    private PdfTableStyle? CreateStyle()
+    {
+        return PdfTableStyleBuilder.Create(new PdfTableStyleOptions
+        {
+            TableStyle = TableStyle,
+            HeaderFill = HeaderFill,
+            HeaderTextColor = HeaderTextColor,
+            TextColor = TextColor,
+            RowStripeFill = RowStripeFill,
+            BorderColor = BorderColor,
+            BorderWidth = BorderWidth,
+            FontSize = FontSize,
+            HeaderFontSize = HeaderFontSize,
+            LineHeight = LineHeight,
+            CellPaddingX = CellPaddingX,
+            CellPaddingY = CellPaddingY,
+            SpacingBefore = SpacingBefore,
+            SpacingAfter = SpacingAfter,
+            Caption = Caption,
+            CaptionAlign = CaptionAlign,
+            CaptionColor = CaptionColor,
+            CaptionFontSize = CaptionFontSize,
+            ColumnWidthPoints = ColumnWidthPoints,
+            ColumnWidthWeights = ColumnWidthWeights,
+            ColumnAlign = ColumnAlign,
+            AutoFitColumns = AutoFitColumns.IsPresent,
+            RightAlignNumeric = RightAlignNumeric.IsPresent,
+            KeepTogether = KeepTogether.IsPresent,
+            KeepWithNext = KeepWithNext.IsPresent,
+            NoBorder = NoBorder.IsPresent,
+            NoHeaderFill = NoHeaderFill.IsPresent,
+            NoRowStripeFill = NoRowStripeFill.IsPresent,
+            HeaderRowCount = HeaderRowCount,
+            RepeatHeaderRowCount = RepeatHeaderRowCount,
+            FooterRowCount = FooterRowCount
+        });
     }
 
     private static object[] BuildRows(object? value)

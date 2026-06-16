@@ -114,6 +114,24 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
+    It 'applies OfficeIMO PDF table style options' {
+        $path = Join-Path $TestDrive 'styled-table.pdf'
+        $rows = @(
+            [pscustomobject]@{ Service = 'Directory'; Status = 'Healthy'; Incidents = 0 }
+            [pscustomobject]@{ Service = 'Mail'; Status = 'Watch'; Incidents = 2 }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows -Property Service, Status, Incidents -TableStyle Report -Caption 'Service status' -CaptionAlign Center -AutoFitColumns -RightAlignNumeric -ColumnWidthWeights 2, 1, 1
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Service status'
+        $text | Should -Match 'Directory'
+        $text | Should -Match 'Healthy'
+    }
+
     It 'adds piped PDF table rows to a supplied document' {
         $path = Join-Path $TestDrive 'piped-rows-supplied-document.pdf'
         $doc = New-OfficePdf {
@@ -247,7 +265,7 @@ Describe 'PDF cmdlets' {
                     Content = @(
                         @{ Type = 'Bookmark'; Name = 'layout-row' }
                         @{ Type = 'Panel'; Text = 'Right column panel.' }
-                        @{ Type = 'Table'; InputObject = $rows }
+                        @{ Type = 'Table'; InputObject = $rows; TableStyle = 'Compact'; Caption = 'Layout row table'; NoBorder = $true }
                         @{ Type = 'Rule'; Color = '#0F766E'; Thickness = 1.2 }
                     )
                 }
@@ -262,6 +280,7 @@ Describe 'PDF cmdlets' {
         $text = Get-OfficePdfText -Path $path
         $text | Should -Match 'Highlights'
         $text | Should -Match 'Right column panel'
+        $text | Should -Match 'Layout row table'
         $text | Should -Match 'After layout row'
     }
 

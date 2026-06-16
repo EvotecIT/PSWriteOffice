@@ -249,4 +249,42 @@ Describe 'Visio cmdlets' {
 
         Test-Path -LiteralPath $pngPath | Should -BeTrue
     }
+
+    It 'arranges Visio shapes with OfficeIMO selection layout and layers' {
+        $path = Join-Path $TestDrive 'visio-layout.vsdx'
+
+        $document = New-OfficeVisio -Path $path -PassThru
+        $page = $document.Pages[0]
+        $shape1 = $page.AddRectangle(1, 4, 1, 0.5, 'One')
+        $shape2 = $page.AddRectangle(3, 3, 1, 0.5, 'Two')
+        $shape3 = $page.AddRectangle(5, 2, 1, 0.5, 'Three')
+
+        @($shape1, $shape2, $shape3) |
+            Set-OfficeVisioShapeLayout -Page $page -AlignVertical Top -Layer 'Milestones' -PassThru |
+            Should -HaveCount 3
+
+        $shape1.PinY | Should -Be $shape2.PinY
+        $shape2.PinY | Should -Be $shape3.PinY
+        $page.Layers.Name | Should -Contain 'Milestones'
+        $shape1.LayerNames | Should -Contain 'Milestones'
+
+        Set-OfficeVisioShapeLayout -Page $page -ShapeId $shape1.Id, $shape2.Id, $shape3.Id -Grid -Columns 3 -HorizontalSpacing 0.25 -NoRouteInternalConnectors
+        $ordered = @($page.Shapes | Sort-Object PinX)
+        $ordered[0].Text | Should -Be 'One'
+        $ordered[1].PinX | Should -BeGreaterThan $ordered[0].PinX
+        $ordered[2].PinX | Should -BeGreaterThan $ordered[1].PinX
+
+        $container = Add-OfficeVisioContainer -Page $page -ShapeId $shape1.Id, $shape2.Id, $shape3.Id -Id 'milestone-container' -Text 'Milestones' -Margin 0.2 -HeadingHeight 0.3 -FillColor '#E0F2FE' -LineColor '#0369A1'
+        $container.IsContainer | Should -BeTrue
+        $container.ContainerMemberIds | Should -Contain $shape1.Id
+        $shape1.ContainerOwnerIds | Should -Contain 'milestone-container'
+
+        $document | Save-OfficeVisio -Path $path | Out-Null
+        $loaded = Get-OfficeVisio -Path $path
+        $loaded.Pages[0].Layers.Name | Should -Contain 'Milestones'
+        @($loaded.Pages[0].Shapes | Where-Object { $_.LayerNames -contains 'Milestones' }).Count | Should -Be 3
+        $loadedContainer = $loaded.Pages[0].Shapes | Where-Object Id -EQ 'milestone-container' | Select-Object -First 1
+        $loadedContainer.IsContainer | Should -BeTrue
+        $loadedContainer.ContainerMemberIds | Should -Contain $shape1.Id
+    }
 }
