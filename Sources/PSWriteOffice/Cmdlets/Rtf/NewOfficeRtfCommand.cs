@@ -1,0 +1,74 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Management.Automation;
+using System.Text;
+using OfficeIMO.Rtf;
+using PSWriteOffice.Services.Pdf;
+
+namespace PSWriteOffice.Cmdlets.Rtf;
+
+/// <summary>Creates an RTF document with plain paragraph content.</summary>
+/// <example>
+///   <summary>Create a small RTF file.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review' -PassThru</code>
+///   <para>Creates an RTF document with two paragraphs and returns the file.</para>
+/// </example>
+[Cmdlet(VerbsCommon.New, "OfficeRtf")]
+[Alias("RtfNew")]
+[OutputType(typeof(FileInfo), typeof(RtfDocument))]
+public sealed class NewOfficeRtfCommand : PSCmdlet
+{
+    /// <summary>Destination path for the RTF file.</summary>
+    [Parameter(Mandatory = true, Position = 0)]
+    [Alias("FilePath", "Path")]
+    public string OutputPath { get; set; } = string.Empty;
+
+    /// <summary>Plain paragraph text to add to the document.</summary>
+    [Parameter(Position = 1, ValueFromPipeline = true)]
+    public string[]? Text { get; set; }
+
+    /// <summary>Emit a FileInfo for chaining.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
+    /// <summary>Return the OfficeIMO RTF document without saving.</summary>
+    [Parameter]
+    public SwitchParameter NoSave { get; set; }
+
+    private readonly List<string> _paragraphs = new();
+
+    /// <inheritdoc />
+    protected override void ProcessRecord()
+    {
+        if (Text != null)
+        {
+            _paragraphs.AddRange(Text);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        var document = RtfDocument.Create();
+        foreach (var paragraph in _paragraphs)
+        {
+            document.AddParagraph(paragraph);
+        }
+
+        if (NoSave.IsPresent)
+        {
+            WriteObject(document);
+            return;
+        }
+
+        var path = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        PdfCommandUtilities.EnsureDirectory(path);
+        document.Save(path, encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+
+        if (PassThru.IsPresent)
+        {
+            WriteObject(new FileInfo(path));
+        }
+    }
+}

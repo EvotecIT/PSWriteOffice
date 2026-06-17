@@ -75,7 +75,7 @@ internal static class PdfRowColumnBuilder
                 AddList(column, specification, string.Equals(Normalize(type!), "numbered", StringComparison.Ordinal));
                 break;
             case "table":
-                column.Table(GetTableRows(specification), GetAlign(specification));
+                column.Table(GetTableRows(specification), GetAlign(specification), PdfTableStyleBuilder.CreateFromSpecification(specification));
                 break;
             case "rule":
             case "hr":
@@ -127,7 +127,7 @@ internal static class PdfRowColumnBuilder
 
         if (TryGetValue(specification, out _, "Table", "Rows", "InputObject"))
         {
-            column.Table(GetTableRows(specification), GetAlign(specification));
+            column.Table(GetTableRows(specification), GetAlign(specification), PdfTableStyleBuilder.CreateFromSpecification(specification));
         }
 
         if (GetBool(specification, "Rule", "HorizontalRule", "Hr"))

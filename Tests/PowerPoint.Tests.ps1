@@ -297,6 +297,31 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'arranges PowerPoint shapes through OfficeIMO layout helpers' {
+        $path = Join-Path $TestDrive 'PowerPointShapeLayout.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path
+        try {
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $shape1 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.One' -ShapeType Rectangle -X 40 -Y 80 -Width 80 -Height 40
+            $shape2 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.Two' -ShapeType Rectangle -X 180 -Y 140 -Width 80 -Height 40
+            $shape3 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.Three' -ShapeType Rectangle -X 320 -Y 200 -Width 80 -Height 40
+
+            @($shape1, $shape2, $shape3) | Set-OfficePowerPointShapeLayout -Slide $slide -Align Top
+            $shape1.TopPoints | Should -Be $shape2.TopPoints
+            $shape1.TopPoints | Should -Be $shape3.TopPoints
+
+            Find-OfficePowerPointShape -Slide $slide -Name 'Kpi.*' |
+                Set-OfficePowerPointShapeLayout -Grid -Columns 3 -Rows 1 -ToSlide -GutterXPoints 12 -NoResize | Out-Null
+
+            $arranged = @(Get-OfficePowerPointShape -Slide $slide -Kind AutoShape | Sort-Object LeftPoints)
+            $arranged | Should -HaveCount 3
+            $arranged[0].LeftPoints | Should -BeLessThan $arranged[1].LeftPoints
+            $arranged[1].LeftPoints | Should -BeLessThan $arranged[2].LeftPoints
+        } finally {
+            Close-OfficePowerPoint -Presentation $presentation
+        }
+    }
+
     It 'reads notes without creating empty notes parts' {
         $path = Join-Path $TestDrive 'PowerPointNotesRead.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path

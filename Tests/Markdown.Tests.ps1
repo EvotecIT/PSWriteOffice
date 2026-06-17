@@ -141,6 +141,16 @@ Describe 'Markdown cmdlets' {
         $content | Should -Match 'Value'
     }
 
+    It 'creates an empty Markdown file when no DSL content is supplied' {
+        $path = Join-Path $TestDrive 'EmptyMarkdown.md'
+
+        $file = New-OfficeMarkdown -Path $path -PassThru
+
+        $file | Should -BeOfType System.IO.FileInfo
+        Test-Path -LiteralPath $path | Should -BeTrue
+        [System.IO.File]::ReadAllText($path) | Should -Be ''
+    }
+
     It 'supports transposed Markdown tables' {
         $path = Join-Path $TestDrive 'MarkdownTransposedTable.md'
         $rows = @(
@@ -211,10 +221,12 @@ Describe 'Markdown cmdlets' {
         $path = Join-Path $TestDrive 'NoSave.md'
         $pdfPath = Join-Path $TestDrive 'NoSave.pdf'
 
-        New-OfficeMarkdown -Path $path -PdfPath $pdfPath -NoSave {
+        $document = New-OfficeMarkdown -Path $path -PdfPath $pdfPath -NoSave {
             MarkdownHeading -Level 1 -Text 'Draft'
-        } | Out-Null
+        }
 
+        $document.GetType().FullName | Should -Be 'OfficeIMO.Markdown.MarkdownDoc'
+        $document.ToMarkdown() | Should -Match '# Draft'
         Test-Path $path | Should -BeFalse
         Test-Path $pdfPath | Should -BeFalse
     }

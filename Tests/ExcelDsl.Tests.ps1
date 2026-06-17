@@ -1216,6 +1216,43 @@ Describe 'Excel DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'saves pivot and sparkline workbooks with reopenable package parts' {
+        $path = Join-Path $TestDrive 'DslExcelPivotSparklineOpen.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Sales = 200 }
+            [PSCustomObject]@{ Region = 'APAC'; Sales = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+                Add-OfficeExcelPivotTable -SourceRange 'A1:B4' -DestinationCell 'E1' -RowField 'Region' -DataField 'Sales'
+                Add-OfficeExcelSparkline -DataRange 'B2:B4' -LocationRange 'D2:D4' -Type Line
+            }
+        }
+
+        $doc = Get-OfficeExcel -Path $path -ReadOnly
+        try {
+            $summary = Get-OfficeExcelSummary -Document $doc
+            $summary.PivotTableCount | Should -Be 1
+            $summary.SparklineGroupCount | Should -Be 1
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $contentTypes = Get-ZipXmlDocumentLocal -Path $path -Entry '[Content_Types].xml'
+        $contentTypes.OuterXml | Should -Match 'pivotTable'
+        $workbookXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/workbook.xml'
+        $workbookXml.OuterXml | Should -Match 'Data'
+        $worksheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $worksheetXml.OuterXml | Should -Match 'sparklineGroup'
+
+        $pivotTables = @(Get-OfficeExcelPivotTable -Path $path)
+        $pivotTables.Count | Should -Be 1
+        $pivotTables[0].RowFields | Should -Contain 'Region'
+    }
+
     It 'supports advanced Excel page setup and visibility helpers' {
         $path = Join-Path $TestDrive 'DslExcelAdvancedLayout.xlsx'
         $rows = @(
