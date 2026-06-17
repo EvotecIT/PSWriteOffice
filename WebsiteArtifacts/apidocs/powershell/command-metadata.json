@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-16T18:34:57.6448402+00:00",
+  "generatedAt": "2026-06-17T06:04:56.5855493+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -627,6 +627,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visio/AddOfficeVisioConnectorCommand.cs#L13"
     },
     {
+      "name": "Add-OfficeVisioContainer",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visio/AddOfficeVisioContainerCommand.cs",
+      "sourceLine": 15,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visio/AddOfficeVisioContainerCommand.cs#L15"
+    },
+    {
       "name": "Add-OfficeVisioDiamond",
       "kind": "Cmdlet",
       "aliases": [],
@@ -931,6 +939,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTextCommand.cs#L18"
     },
     {
+      "name": "Add-OfficeWordTextBox",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTextBoxCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTextBoxCommand.cs#L20"
+    },
+    {
       "name": "Add-OfficeWordWatermark",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1009,6 +1025,16 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertFromOfficePdfHtmlCommand.cs#L21"
     },
     {
+      "name": "ConvertFrom-OfficeRtf",
+      "kind": "Cmdlet",
+      "aliases": [
+        "ConvertFrom-Rtf"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/ConvertFromOfficeRtfCommand.cs",
+      "sourceLine": 37,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Rtf/ConvertFromOfficeRtfCommand.cs#L37"
+    },
+    {
       "name": "ConvertFrom-OfficeWordHtml",
       "kind": "Cmdlet",
       "aliases": [
@@ -1079,6 +1105,16 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfMarkdownCommand.cs",
       "sourceLine": 19,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfMarkdownCommand.cs#L19"
+    },
+    {
+      "name": "ConvertTo-OfficeRtf",
+      "kind": "Cmdlet",
+      "aliases": [
+        "ConvertTo-Rtf"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/ConvertToOfficeRtfCommand.cs",
+      "sourceLine": 36,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Rtf/ConvertToOfficeRtfCommand.cs#L36"
     },
     {
       "name": "ConvertTo-OfficeVisioPng",
@@ -1543,6 +1579,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointThemeCommand.cs#L21"
     },
     {
+      "name": "Get-OfficeRtf",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/GetOfficeRtfCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Rtf/GetOfficeRtfCommand.cs#L18"
+    },
+    {
       "name": "Get-OfficeVisio",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1893,6 +1937,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointDeckPlanCommand.cs",
       "sourceLine": 27,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointDeckPlanCommand.cs#L27"
+    },
+    {
+      "name": "New-OfficeRtf",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfCommand.cs#L20"
     },
     {
       "name": "New-OfficeVisio",
@@ -2383,6 +2435,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointPlaceholderTextCommand.cs#L24"
     },
     {
+      "name": "Set-OfficePowerPointShapeLayout",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointShapeLayoutCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointShapeLayoutCommand.cs#L22"
+    },
+    {
       "name": "Set-OfficePowerPointShapeText",
       "kind": "Cmdlet",
       "aliases": [],
@@ -2453,6 +2513,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeNameCommand.cs",
       "sourceLine": 21,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeNameCommand.cs#L21"
+    },
+    {
+      "name": "Set-OfficeVisioShapeLayout",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visio/SetOfficeVisioShapeLayoutCommand.cs",
+      "sourceLine": 14,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visio/SetOfficeVisioShapeLayoutCommand.cs#L14"
     },
     {
       "name": "Set-OfficeWordBackground",
@@ -2561,6 +2629,16 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/UpdateOfficePowerPointTextCommand.cs",
       "sourceLine": 23,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/UpdateOfficePowerPointTextCommand.cs#L23"
+    },
+    {
+      "name": "Update-OfficeRtfText",
+      "kind": "Cmdlet",
+      "aliases": [
+        "Replace-OfficeRtfText"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/UpdateOfficeRtfTextCommand.cs",
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Rtf/UpdateOfficeRtfTextCommand.cs#L21"
     },
     {
       "name": "Update-OfficeWordFields",
