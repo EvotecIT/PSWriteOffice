@@ -128,7 +128,15 @@ internal sealed class WordDslContext : IDisposable
 
     public WordSection RequireSection()
     {
-        return CurrentSection ?? AcquireSection();
+        return CurrentSection ?? RequireImplicitSection();
+    }
+
+    private WordSection RequireImplicitSection()
+    {
+        _initialSectionConsumed = true;
+        return Document.Sections.Count > 0
+            ? Document.Sections.Last()
+            : Document.AddSection();
     }
 
     public object RequireParagraphHost()
