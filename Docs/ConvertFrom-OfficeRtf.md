@@ -26,7 +26,8 @@ Converts RTF input to Word, HTML, or PDF output.
 
 ### EXAMPLE 1
 ```powershell
-PS> ConvertFrom-OfficeRtf -Path .\Report.rtf -As Word -OutputPath .\Report.docx -PassThru
+PS> New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review'
+            ConvertFrom-OfficeRtf -Path .\Report.rtf -As Word -OutputPath .\Report.docx -PassThru
 ```
 
 Loads the RTF file and saves a Word document using OfficeIMO.Word.Rtf.

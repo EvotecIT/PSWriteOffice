@@ -8,6 +8,15 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Adds a stencil shape to the current Visio page.</summary>
+/// <example>
+///   <summary>Add built-in flowchart stencil shapes.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\StencilFlow.vsdx -UseMastersByDefault {
+///     Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
+///     VisioStencil -Catalog Flow -Stencil process -Key intake -Text 'Intake' -X 1.5 -Y 4
+/// }</code>
+///   <para>Registers a built-in catalog and places a stencil shape on the active page.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeVisioStencilShape", DefaultParameterSetName = CatalogNameParameterSet)]
 [Alias("VisioStencil")]
 [OutputType(typeof(VisioShape))]

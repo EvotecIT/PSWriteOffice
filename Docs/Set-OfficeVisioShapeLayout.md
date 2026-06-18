@@ -21,9 +21,14 @@ Applies OfficeIMO Visio selection layout and layer operations to shapes.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficeVisioShapeLayout -AlignHorizontal 'Value'
+PS> New-OfficeVisio -Path .\Layout.vsdx {
+    VisioRectangle -Key one -Text 'One'
+    VisioRectangle -Key two -Text 'Two'
+    VisioLayout -ShapeId one,two -HorizontalStack -HorizontalSpacing 0.4
+}
 ```
 
+Resolves keyed shapes and applies a reusable OfficeIMO Visio layout operation.
 
 ## PARAMETERS
 

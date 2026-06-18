@@ -1,6 +1,6 @@
 # PSWriteOffice
 
-PowerShell-first document automation for Word, Excel, PowerPoint, PDF, Markdown, CSV, Reader, and Visio, built on top of `OfficeIMO.*`.
+PowerShell-first document automation for Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Reader, and Visio, built on top of `OfficeIMO.*`.
 
 📦 PowerShell Gallery
 
@@ -13,7 +13,7 @@ PowerShell-first document automation for Word, Excel, PowerPoint, PDF, Markdown,
 
 [![Test PowerShell](https://github.com/EvotecIT/PSWriteOffice/actions/workflows/test-powershell.yml/badge.svg?branch=main)](https://github.com/EvotecIT/PSWriteOffice/actions/workflows/test-powershell.yml)
 [![Test .NET Libraries](https://github.com/EvotecIT/PSWriteOffice/actions/workflows/test-dotnet.yml/badge.svg?branch=main)](https://github.com/EvotecIT/PSWriteOffice/actions/workflows/test-dotnet.yml)
-[![License](https://img.shields.io/github/license/EvotecIT/PSWriteOffice.svg)](https://github.com/EvotecIT/PSWriteOffice)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## Why PSWriteOffice ✨
 
@@ -23,6 +23,8 @@ PowerShell-first document automation for Word, Excel, PowerPoint, PDF, Markdown,
 - `PSWriteOffice` owns the PowerShell cmdlets, DSL aliases, packaging, examples, and scripting ergonomics.
 - The goal is simple: make Office document automation feel native in PowerShell without requiring Microsoft Office on the machine.
 
+Start here when you want to create polished documents from PowerShell: workbooks with tables, charts, links, images, pivots, and navigation; Word reports with sections, headers, footers, tables, charts, and conversions; PowerPoint decks with reusable slides, notes, sections, themes, and transitions; PDFs with composition, extraction, forms, stamps, and metadata; RTF documents and bridges; Markdown and CSV workflows; Visio diagrams; and unified readback for existing files.
+
 ## Platform Areas 🧭
 
 | Area | Status | What it covers now |
@@ -31,10 +33,11 @@ PowerShell-first document automation for Word, Excel, PowerPoint, PDF, Markdown,
 | Excel | Advanced | Sheets, tables, named ranges, formulas, validation, charts, pivots, comments, TOC/navigation, explicit range readers, chart formatting, smarter links, URL images, summary-sheet linking |
 | PowerPoint | Experimental but useful | Slides, titles, text boxes, bullets, notes, layouts, placeholders, sections, text replacement, slide import, slide copy, transitions, sizing |
 | PDF | Advanced | New PDFs, text, headings, images, tables, panels, bookmarks, metadata, attachments, stamps, watermarks, forms, merge/split/copy/move pages, HTML conversion, text/image/attachment extraction, compliance inspection |
+| RTF | Solid | Create/read/update `.rtf`, replace text, append paragraphs, edit document properties, convert RTF to Word/HTML/PDF, convert Word/HTML to RTF, and read semantic chunks through Reader |
 | Markdown | Solid | Read Markdown, inspect full object trees/headings/front matter/tables, build Markdown with a DSL, render HTML, convert HTML |
 | CSV | Solid | Read CSV, emit CSV, object-focused data workflows |
-| Reader | New | Unified chunk/document readback over Word, Excel, PowerPoint, Markdown, PDF, and text-like files through `OfficeIMO.Reader` |
-| Visio | New | DSL diagram creation, built-in and package-backed stencils, create/load/save `.vsdx`, inspect diagrams, export SVG and PNG through `OfficeIMO.Visio` |
+| Reader | New | Unified chunk/document/table/visual/asset/ingest readback over Word, Excel, PowerPoint, Markdown, PDF, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPUB, Visio, and text-like files through `OfficeIMO.Reader` |
+| Visio | New | DSL diagram creation, built-in and package-backed stencils, create/load/save `.vsdx`, inspect diagrams, generate galleries, export stencil preview galleries, and export SVG/PNG through `OfficeIMO.Visio` |
 
 ## Quick Start 🚀
 
@@ -182,6 +185,16 @@ ExcelSheet 'Summary' {
 }
 ```
 
+### RTF
+
+```powershell
+New-OfficeRtf -OutputPath .\Report.rtf -Text 'Summary', 'Ready for review'
+Get-OfficeRtf -Path .\Report.rtf
+Update-OfficeRtfText -Path .\Report.rtf -OutputPath .\Report-Updated.rtf -OldText 'review' -NewText 'release'
+ConvertFrom-OfficeRtf -Path .\Report-Updated.rtf -As Pdf -OutputPath .\Report.pdf
+Get-OfficeDocumentChunk -Path .\Report-Updated.rtf
+```
+
 ### Markdown and CSV
 
 ```powershell
@@ -198,7 +211,9 @@ $data | ConvertTo-OfficeCsv -OutputPath .\export.csv
 ```powershell
 Get-OfficeDocumentCapability
 Get-OfficeDocumentChunk -Path .\Report.docx
+Get-OfficeDocumentChunk -Path .\Report.rtf
 Get-OfficeDocument -Path .\Report.pdf -AsJson -Indented
+Get-OfficeDocumentAsset -Path .\Deck.pptx -Kind image -OutputDirectory .\reader-assets
 ```
 
 ```powershell
@@ -243,6 +258,13 @@ New-OfficeVisio -Path .\CustomStencil.vsdx -UseMastersByDefault {
 
 More visual Visio examples live in `Examples\Visio`. Run `.\Examples\Visio\Build-VisioShowcase.ps1` to generate editable `.vsdx` files plus SVG/PNG previews for stencil flowcharts, architecture maps, network topology, and package-backed stencil loading.
 
+```powershell
+New-OfficeVisioGallery -OutputDirectory .\VisioGallery |
+    Select-Object Name, FilePath, IsClean
+
+Export-OfficeVisioStencilPreviewGallery -Path .\MyShapes.vssx -OutputDirectory .\StencilGallery -Title 'Custom stencil previews'
+```
+
 ## Read, Inspect, and Convert 🔍
 
 `PSWriteOffice` is not only about writing files. The module now has stronger read-back and bridge workflows too.
@@ -272,6 +294,15 @@ ConvertFrom-OfficeWordMarkdown -Markdown $markdown -OutputPath .\Report-Roundtri
 $doc = Get-OfficeWord -Path .\Report.docx
 Update-OfficeWordText -Document $doc -OldValue 'FY24' -NewValue 'FY25'
 Close-OfficeWord -Document $doc -Save
+```
+
+### RTF bridges
+
+```powershell
+ConvertTo-OfficeRtf -WordPath .\Report.docx -OutputPath .\Report.rtf
+ConvertTo-OfficeRtf -HtmlPath .\Report.html -OutputPath .\Report-from-html.rtf
+ConvertFrom-OfficeRtf -Path .\Report.rtf -As Word -OutputPath .\Report-from-rtf.docx
+ConvertFrom-OfficeRtf -Path .\Report.rtf -As Html -OutputPath .\Report.html -IncludeDefaultCss
 ```
 
 ### Word charts with the current API
@@ -310,8 +341,9 @@ Get-OfficePowerPointShape -Presentation $ppt -Index 0
 
 - Word to Markdown and Markdown to Word are now surfaced directly through `OfficeIMO.Word.Markdown`.
 - PDF now has first-class creation, composition, merge/split, page movement, metadata, forms, stamping, attachment, extraction, HTML conversion, and compliance inspection cmdlets. Deeper PDF engine features still belong in `OfficeIMO.Pdf` first.
-- `OfficeIMO.Reader` is surfaced through chunk, document-envelope, JSON, and capability-discovery cmdlets.
-- `OfficeIMO.Visio` is surfaced through a first diagram DSL plus built-in and external stencil catalogs, create/load/save, deterministic inspection, and SVG/PNG export cmdlets.
+- RTF now has create/read/update/replace cmdlets, Word/HTML/PDF bridges, and semantic Reader chunks through the `OfficeIMO.Reader.Rtf` adapter.
+- `OfficeIMO.Reader` is surfaced through chunk, document-envelope, table, visual, asset, ingest, JSON, and capability-discovery cmdlets across the currently registered adapters.
+- `OfficeIMO.Visio` is surfaced through a first diagram DSL plus built-in and external stencil catalogs, create/load/save, deterministic inspection, reference gallery generation, stencil preview gallery export, and SVG/PNG export cmdlets.
 - Excel now has `Add-OfficeExcelTableOfContents`, `Get-OfficeExcelRange`, and `Get-OfficeExcelUsedRange`.
 - PowerPoint now has section cmdlets, deck-wide text replacement, slide import helpers, slide copy, transitions, slide sizing, theme inspection, theme updates, and layout switching.
 - Excel charts can now be finished with `Set-OfficeExcelChartLegend`, `Set-OfficeExcelChartDataLabels`, and `Set-OfficeExcelChartStyle`.
@@ -323,10 +355,9 @@ Get-OfficePowerPointShape -Presentation $ppt -Index 0
 
 Use the examples in this README for the first pass, then move to the generated command reference when you need exact parameters and pipeline behavior.
 
-- [OVERVIEW.md](OVERVIEW.md) explains the project scope and design direction.
 - [Docs/Readme.md](Docs/Readme.md) is the generated cmdlet index.
 - [Docs](Docs) contains one generated page per command.
-- [Examples](Examples) contains runnable scripts grouped by Word, Excel, PowerPoint, PDF, Markdown, CSV, and shared samples.
+- [Examples](Examples) contains runnable scripts grouped by Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Visio, and shared samples.
 - [Roadmap/PSWriteOffice-CmdletExamplesAndPolishPlan.md](Roadmap/PSWriteOffice-CmdletExamplesAndPolishPlan.md) tracks the documentation quality bar and the next wrapper-polish priorities.
 
 The generated command pages are built from XML comments in the cmdlet source. Prefer contextual examples there too: small workflow snippets with real input data, generated artifacts, readback/validation where useful, and no fake PowerShell compatibility aliases.

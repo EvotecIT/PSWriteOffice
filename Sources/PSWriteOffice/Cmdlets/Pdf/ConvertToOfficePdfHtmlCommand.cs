@@ -12,7 +12,8 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Export a PDF as semantic HTML.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>ConvertTo-OfficePdfHtml -Path .\report.pdf -OutputPath .\report.html</code>
+///   <code>New-OfficePdf -Path .\report.pdf { Add-OfficePdfParagraph -Text 'Ready' }
+/// ConvertTo-OfficePdfHtml -Path .\report.pdf -OutputPath .\report.html</code>
 ///   <para>Writes HTML generated from the OfficeIMO logical PDF read model.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficePdfHtml")]

@@ -18,7 +18,7 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
         # Copyright statement for this module
         Copyright              = "(c) 2011 - $((Get-Date).Year) Przemyslaw Klys @ Evotec. All rights reserved."
         # Description of the functionality provided by this module
-        Description            = 'PowerShell module to create and read Microsoft Word, Excel, PowerPoint (experimental), PDF, Markdown, and CSV documents without Microsoft Office installed. Powered by OfficeIMO.*.'
+        Description            = 'PowerShell module to create, convert, read, and export Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Reader, and Visio documents without Microsoft Office installed. Powered by OfficeIMO.*.'
         # Tags applied to this module. These help with module discovery in online galleries.
         Tags                   = @('officeimo', 'word', 'excel', 'powerpoint', 'pdf', 'markdown', 'csv', 'docx', 'xlsx', 'pptx', 'openxml', 'windows', 'linux', 'macos')
         # A URL to the main website for this project.

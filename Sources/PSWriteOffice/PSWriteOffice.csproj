@@ -15,7 +15,7 @@
 
     <PropertyGroup>
         <OfficeIMORoot Condition=" '$(OfficeIMORoot)' == '' ">..\..\..\OfficeIMO</OfficeIMORoot>
-        <UseOfficeIMOProjectReferences Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Pdf\OfficeIMO.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Pdf\OfficeIMO.Word.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Pdf\OfficeIMO.Excel.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Pdf\OfficeIMO.Markdown.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Html.Pdf\OfficeIMO.Html.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Pdf\OfficeIMO.PowerPoint.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader\OfficeIMO.Reader.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Pdf\OfficeIMO.Reader.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Html\OfficeIMO.Reader.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Csv\OfficeIMO.Reader.Csv.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Json\OfficeIMO.Reader.Json.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Xml\OfficeIMO.Reader.Xml.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Yaml\OfficeIMO.Reader.Yaml.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Zip\OfficeIMO.Reader.Zip.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Epub\OfficeIMO.Reader.Epub.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Visio\OfficeIMO.Reader.Visio.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf\OfficeIMO.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Rtf\OfficeIMO.Word.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf.Pdf\OfficeIMO.Rtf.Pdf.csproj')">true</UseOfficeIMOProjectReferences>
+        <UseOfficeIMOProjectReferences Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Pdf\OfficeIMO.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Pdf\OfficeIMO.Word.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Pdf\OfficeIMO.Excel.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Pdf\OfficeIMO.Markdown.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Html.Pdf\OfficeIMO.Html.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Pdf\OfficeIMO.PowerPoint.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader\OfficeIMO.Reader.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Pdf\OfficeIMO.Reader.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Html\OfficeIMO.Reader.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Csv\OfficeIMO.Reader.Csv.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Json\OfficeIMO.Reader.Json.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Xml\OfficeIMO.Reader.Xml.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Yaml\OfficeIMO.Reader.Yaml.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Zip\OfficeIMO.Reader.Zip.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Epub\OfficeIMO.Reader.Epub.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Visio\OfficeIMO.Reader.Visio.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Rtf\OfficeIMO.Reader.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf\OfficeIMO.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Rtf\OfficeIMO.Word.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf.Pdf\OfficeIMO.Rtf.Pdf.csproj')">true</UseOfficeIMOProjectReferences>
     </PropertyGroup>
 
     <ItemGroup>
@@ -86,6 +86,7 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Zip\OfficeIMO.Reader.Zip.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Epub\OfficeIMO.Reader.Epub.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Visio\OfficeIMO.Reader.Visio.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Rtf\OfficeIMO.Reader.Rtf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Rtf\OfficeIMO.Rtf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Rtf\OfficeIMO.Word.Rtf.csproj" />
@@ -94,11 +95,11 @@
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
         <PackageReference Include="OfficeIMO.Drawing" Version="1.0.20" />
         <PackageReference Include="OfficeIMO.Word" Version="1.0.67" />
-        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.41" />
-        <PackageReference Include="OfficeIMO.Excel" Version="0.6.45" />
-        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.40" />
-        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.32" />
-        <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.32" />
+        <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.42" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.46" />
+        <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.41" />
+        <PackageReference Include="OfficeIMO.Markdown" Version="0.6.33" />
+        <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.33" />
         <PackageReference Include="OfficeIMO.Pdf" Version="0.1.41" />
         <PackageReference Include="OfficeIMO.Word.Pdf" Version="1.0.39" />
         <PackageReference Include="OfficeIMO.Excel.Pdf" Version="1.0.5" />
@@ -106,8 +107,8 @@
         <PackageReference Include="OfficeIMO.Html.Pdf" Version="1.0.3" />
         <PackageReference Include="OfficeIMO.PowerPoint.Pdf" Version="1.0.5" />
         <PackageReference Include="OfficeIMO.CSV" Version="0.1.45" />
-        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.39" />
-        <PackageReference Include="OfficeIMO.Reader" Version="0.1.40" />
+        <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.40" />
+        <PackageReference Include="OfficeIMO.Reader" Version="0.1.41" />
         <PackageReference Include="OfficeIMO.Reader.Pdf" Version="0.0.4" />
         <PackageReference Include="OfficeIMO.Reader.Html" Version="0.0.23" />
         <PackageReference Include="OfficeIMO.Reader.Csv" Version="0.0.23" />
@@ -117,6 +118,7 @@
         <PackageReference Include="OfficeIMO.Reader.Zip" Version="0.0.23" />
         <PackageReference Include="OfficeIMO.Reader.Epub" Version="0.0.23" />
         <PackageReference Include="OfficeIMO.Reader.Visio" Version="0.0.4" />
+        <PackageReference Include="OfficeIMO.Reader.Rtf" Version="0.0.2" />
         <PackageReference Include="OfficeIMO.Visio" Version="1.0.5" />
         <PackageReference Include="OfficeIMO.Rtf" Version="0.1.1" />
         <PackageReference Include="OfficeIMO.Word.Rtf" Version="0.1.1" />

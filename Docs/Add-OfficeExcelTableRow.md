@@ -108,7 +108,8 @@ Accept wildcard characters: True
 ```
 
 ### -PassThru
-Emit the updated table wrapper so additional table operations can continue in the pipeline.
+Emit the updated table wrapper for open document or table inputs. Path-owned workbooks are saved and closed by this command,
+so they do not emit a live table wrapper.
 
 ```yaml
 Type: SwitchParameter

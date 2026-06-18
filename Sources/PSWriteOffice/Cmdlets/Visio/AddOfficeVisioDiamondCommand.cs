@@ -5,6 +5,14 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Adds a diamond shape to the current Visio page.</summary>
+/// <example>
+///   <summary>Add a decision shape.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\Flow.vsdx {
+///     VisioDiamond -Key review -Text 'Approved?' -X 4 -Y 4 -Width 1.2 -Height 1 -FillColor '#FEF3C7'
+/// }</code>
+///   <para>Adds a decision diamond to the active Visio page.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeVisioDiamond")]
 [Alias("VisioDiamond")]
 [OutputType(typeof(VisioShape))]

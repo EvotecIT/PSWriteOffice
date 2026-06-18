@@ -25,14 +25,17 @@ Describe 'Reader cmdlets' {
         $capabilities.Id | Should -Contain 'officeimo.reader.zip'
         $capabilities.Id | Should -Contain 'officeimo.reader.epub'
         $capabilities.Id | Should -Contain 'officeimo.reader.visio'
+        $capabilities.Id | Should -Contain 'officeimo.reader.rtf'
     }
 
-    It 'exports Reader table, visual, and ingestion cmdlets' {
+    It 'exports Reader table, visual, asset, and ingestion cmdlets' {
         Get-Command -Name Get-OfficeDocumentTable -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Get-OfficeDocumentVisual -ErrorAction Stop | Should -Not -BeNullOrEmpty
+        Get-Command -Name Get-OfficeDocumentAsset -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Get-OfficeDocumentIngest -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Read-OfficeDocumentTable -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Read-OfficeDocumentVisual -ErrorAction Stop | Should -Not -BeNullOrEmpty
+        Get-Command -Name Read-OfficeDocumentAsset -ErrorAction Stop | Should -Not -BeNullOrEmpty
     }
 
     It 'does not replace caller-registered PDF readers' {
@@ -69,6 +72,44 @@ Describe 'Reader cmdlets' {
         } finally {
             $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
             $unregisterPdfHandler.Invoke($null, @()) | Out-Null
+        }
+    }
+
+    It 'does not replace caller-registered RTF readers' {
+        $handlerId = 'pswriteoffice.test.rtf'
+        $documentReaderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.DocumentReader' -CommandName 'Get-OfficeDocumentCapability'
+        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
+        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
+        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
+        $rtfRegistrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Rtf' -TypeName 'OfficeIMO.Reader.Rtf.DocumentReaderRtfRegistrationExtensions' -CommandName 'Get-OfficeDocumentCapability'
+
+        $unregisterHandler = $documentReaderType.GetMethod('UnregisterHandler', [type[]] @([string]))
+        $registerHandler = $documentReaderType.GetMethod('RegisterHandler', [type[]] @($registrationType, [bool]))
+        $unregisterRtfHandler = $rtfRegistrationType.GetMethod('UnregisterRtfHandler', [System.Reflection.BindingFlags]'Public, Static')
+        $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
+        $unregisterRtfHandler.Invoke($null, @()) | Out-Null
+
+        $registration = [Activator]::CreateInstance($registrationType)
+        $registration.Id = $handlerId
+        $registration.DisplayName = 'Test RTF Reader'
+        $registration.Kind = [Enum]::Parse($inputKindType, 'Rtf')
+        $registration.Extensions = [string[]]@('.rtf')
+        $readPathType = $registrationType.GetProperty('ReadPath').PropertyType
+        $registration.ReadPath = [System.Management.Automation.LanguagePrimitives]::ConvertTo({
+            param($Path, $Options, $CancellationToken)
+
+            [Array]::CreateInstance($chunkType, 0)
+        }.GetNewClosure(), $readPathType)
+
+        try {
+            $registerHandler.Invoke($null, @($registration, $true)) | Out-Null
+
+            $capabilities = @(Get-OfficeDocumentCapability -ExcludeBuiltIn)
+            ($capabilities | Where-Object Id -EQ $handlerId).Count | Should -Be 1
+            ($capabilities | Where-Object Id -EQ 'officeimo.reader.rtf').Count | Should -Be 0
+        } finally {
+            $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
+            $unregisterRtfHandler.Invoke($null, @()) | Out-Null
         }
     }
 
@@ -167,6 +208,18 @@ Describe 'Reader cmdlets' {
         ($yamlChunks.Text -join "`n") | Should -Match 'OfficeIMO'
     }
 
+    It 'reads RTF files through the semantic Reader adapter' {
+        $path = Join-Path $TestDrive 'source.rtf'
+        New-OfficeRtf -Path $path -Text 'Reader RTF adapter', 'Semantic chunk text' | Out-Null
+
+        $chunks = @(Get-OfficeDocumentChunk -Path $path)
+        $chunks.Count | Should -BeGreaterThan 0
+        $chunks[0].Kind.ToString() | Should -Be 'Rtf'
+        ($chunks.Text -join "`n") | Should -Match 'Reader RTF adapter'
+        ($chunks.Text -join "`n") | Should -Match 'Semantic chunk text'
+        ($chunks.Text -join "`n") | Should -Not -Match '\\rtf1'
+    }
+
     It 'reads Markdown tables and materializes deterministic table sidecars' {
         $path = Join-Path $TestDrive 'table.md'
         Set-Content -Path $path -Value @(
@@ -196,6 +249,29 @@ Describe 'Reader cmdlets' {
         Test-Path -LiteralPath (Join-Path $outputDirectory 'table-table-0000.csv') | Should -BeTrue
         Test-Path -LiteralPath (Join-Path $outputDirectory 'table-table-0000.md') | Should -BeTrue
         Test-Path -LiteralPath (Join-Path $outputDirectory 'table-table-0000.json') | Should -BeTrue
+    }
+
+    It 'reads and materializes embedded document assets' {
+        $path = Join-Path $TestDrive 'assets.docx'
+        $imagePath = Join-Path $PSScriptRoot 'Assets\CellImage.png'
+
+        New-OfficeWord -Path $path {
+            WordSection {
+                WordParagraph { WordText 'Document with embedded asset' }
+                WordParagraph { WordImage -Path $imagePath -Width 24 -Height 24 }
+            }
+        } | Out-Null
+
+        $assets = @(Get-OfficeDocumentAsset -Path $path -Kind image)
+        $assets.Count | Should -BeGreaterThan 0
+        $assets[0].Kind | Should -Be 'image'
+        $assets[0].MediaType | Should -Match 'image'
+        $assets[0].PayloadBytes.Length | Should -BeGreaterThan 0
+
+        $outputDirectory = Join-Path $TestDrive 'asset-exports'
+        $materialized = @(Get-OfficeDocumentAsset -Path $path -Kind image -OutputDirectory $outputDirectory -ValidatePayloadHash)
+        ($materialized | Where-Object Written).Count | Should -BeGreaterThan 0
+        Test-Path -LiteralPath $materialized[0].Path | Should -BeTrue
     }
 
     It 'reads folders using extension filters' {

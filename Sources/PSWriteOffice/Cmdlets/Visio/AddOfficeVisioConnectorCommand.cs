@@ -7,6 +7,16 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Adds a connector between two Visio shapes.</summary>
+/// <example>
+///   <summary>Connect two keyed shapes.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\Flow.vsdx {
+///     VisioRectangle -Key source -Text 'Source' -X 1 -Y 4
+///     VisioRectangle -Key target -Text 'Target' -X 4 -Y 4
+///     VisioConnector -From source -To target -Kind RightAngle -EndArrow Triangle -Label 'sync'
+/// }</code>
+///   <para>Adds a routed connector between shapes registered in the current DSL scope.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeVisioConnector", DefaultParameterSetName = ByKeyParameterSet)]
 [Alias("VisioConnector")]
 [OutputType(typeof(VisioConnector))]

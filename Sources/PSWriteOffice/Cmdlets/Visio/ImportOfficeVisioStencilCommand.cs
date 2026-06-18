@@ -5,6 +5,15 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Registers a stencil catalog with the active Visio DSL scope.</summary>
+/// <example>
+///   <summary>Register a catalog for DSL use.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\Flow.vsdx -UseMastersByDefault {
+///     Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
+///     VisioStencil -Stencil process -Key step -Text 'Step' -X 2 -Y 4
+/// }</code>
+///   <para>Registers the flowchart catalog and makes it the default for later VisioStencil calls.</para>
+/// </example>
 [Cmdlet(VerbsData.Import, "OfficeVisioStencil", DefaultParameterSetName = CatalogParameterSet)]
 [Alias("Import-VisioStencil")]
 [OutputType(typeof(VisioStencilCatalog))]

@@ -8,6 +8,16 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Applies OfficeIMO Visio selection layout and layer operations to shapes.</summary>
+/// <example>
+///   <summary>Arrange keyed shapes in a horizontal stack.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\Layout.vsdx {
+///     VisioRectangle -Key one -Text 'One'
+///     VisioRectangle -Key two -Text 'Two'
+///     VisioLayout -ShapeId one,two -HorizontalStack -HorizontalSpacing 0.4
+/// }</code>
+///   <para>Resolves keyed shapes and applies a reusable OfficeIMO Visio layout operation.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeVisioShapeLayout")]
 [Alias("VisioLayout", "VisioArrange")]
 [OutputType(typeof(VisioShape))]

@@ -11,7 +11,8 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 /// <example>
 ///   <summary>Create a small RTF file.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review' -PassThru</code>
+///   <code>$file = New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review' -PassThru
+/// Get-OfficeRtf -Path $file.FullName</code>
 ///   <para>Creates an RTF document with two paragraphs and returns the file.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeRtf")]

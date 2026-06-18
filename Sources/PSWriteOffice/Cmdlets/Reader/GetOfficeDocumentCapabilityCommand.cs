@@ -5,6 +5,13 @@ using PSWriteOffice.Services.Reader;
 namespace PSWriteOffice.Cmdlets.Reader;
 
 /// <summary>Lists OfficeIMO.Reader capabilities registered in the current PSWriteOffice process.</summary>
+/// <example>
+///   <summary>Show registered Reader adapters.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$capabilities = Get-OfficeDocumentCapability
+/// $capabilities | Sort-Object Id | Select-Object Id, Extensions</code>
+///   <para>Lists built-in and modular Reader handlers, including adapters such as PDF, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPUB, and Visio when available.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentCapability")]
 [Alias("Get-OfficeReaderCapability")]
 [OutputType(typeof(ReaderHandlerCapability), typeof(ReaderCapabilityManifest))]

@@ -7,6 +7,13 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Exports a Visio document page to native dependency-free PNG.</summary>
+/// <example>
+///   <summary>Export a diagram preview to PNG.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
+/// ConvertTo-OfficeVisioPng -Path .\ServiceMap.vsdx -OutputPath .\ServiceMap.png -PixelsPerInch 144</code>
+///   <para>Creates a diagram and exports the first page to a PNG preview.</para>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficeVisioPng", DefaultParameterSetName = PathParameterSet)]
 [Alias("ConvertTo-VisioPng")]
 [OutputType(typeof(byte[]), typeof(FileInfo))]

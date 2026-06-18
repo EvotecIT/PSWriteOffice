@@ -181,6 +181,39 @@ Describe 'Visio cmdlets' {
         $info.Title | Should -Be 'Package stencil DSL'
     }
 
+    It 'generates OfficeIMO Visio gallery documents' {
+        $outputDirectory = Join-Path $TestDrive 'visio-gallery'
+
+        $results = @(New-OfficeVisioGallery -OutputDirectory $outputDirectory -NoPackageValidation -NoVisualQualityAnalysis)
+
+        $results.Count | Should -BeGreaterThan 5
+        ($results | Where-Object { -not (Test-Path -LiteralPath $_.FilePath) }).Count | Should -Be 0
+        ($results | Where-Object Name -EQ 'Swimlane Process').Count | Should -Be 1
+    }
+
+    It 'exports a package-backed stencil preview gallery when a fixture is available' {
+        $repoRoot = if ($env:EVOTEC_GITHUB_ROOT) {
+            $env:EVOTEC_GITHUB_ROOT
+        } elseif ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+            'C:\Support\GitHub'
+        } else {
+            Join-Path $HOME 'Support/GitHub'
+        }
+
+        $templatePath = Join-Path $repoRoot 'OfficeIMO\Assets\VisioTemplates\DrawingWithShapes.vsdx'
+        if (-not (Test-Path -LiteralPath $templatePath)) {
+            Set-ItResult -Skipped -Because "OfficeIMO Visio template fixture was not found at $templatePath."
+            return
+        }
+
+        $outputDirectory = Join-Path $TestDrive 'stencil-preview-gallery'
+        $gallery = Export-OfficeVisioStencilPreviewGallery -Path $templatePath -OutputDirectory $outputDirectory -IncludeUnsupportedMasters -Title 'Template stencil previews'
+
+        Test-Path -LiteralPath $gallery.OutputDirectory | Should -BeTrue
+        Test-Path -LiteralPath $gallery.PreviewDirectory | Should -BeTrue
+        Test-Path -LiteralPath $gallery.IndexPath | Should -BeTrue
+    }
+
     It 'preserves stencil default units when one dimension is omitted' {
         $path = Join-Path $TestDrive 'metric-stencil.vsdx'
         $visioAssembly = Get-TestPSWriteOfficeAssembly -Name 'OfficeIMO.Visio' -CommandName 'New-OfficeVisio'

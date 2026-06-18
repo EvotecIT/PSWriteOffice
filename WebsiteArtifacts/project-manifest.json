@@ -7,8 +7,8 @@
   "status": "active",
   "listed": false,
   "version": "1.0.3",
-  "generatedAt": "2026-06-18T09:22:46.9699772+00:00",
-  "sourceRef": "main",
+  "generatedAt": "2026-06-18T11:33:25.2456450+02:00",
+  "sourceRef": "codex/rtf-reader-adapter",
   "links": {
     "source": "https://github.com/EvotecIT/PSWriteOffice"
   },

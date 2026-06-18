@@ -9,6 +9,16 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Creates an OfficeIMO-authored Visio-native container around existing shapes.</summary>
+/// <example>
+///   <summary>Group related shapes in a container.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\Architecture.vsdx {
+///     VisioRectangle -Key api -Text 'API' -X 2 -Y 4
+///     VisioRectangle -Key worker -Text 'Worker' -X 4 -Y 4
+///     VisioContainer -Id app -Text 'Application tier' -ShapeId api,worker -FillColor '#F8FAFC'
+/// }</code>
+///   <para>Creates a native Visio container around previously keyed shapes.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeVisioContainer")]
 [Alias("VisioContainer")]
 [OutputType(typeof(VisioShape))]
