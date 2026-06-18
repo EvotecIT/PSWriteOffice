@@ -172,6 +172,26 @@ Describe 'Word DSL surface' {
         )
     }
 
+    It 'keeps top-level paragraphs in the implicit section' {
+        $path = Join-Path $TestDrive 'DslImplicitSectionParagraphs.docx'
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordParagraph -Text 'Hello World'
+            Add-OfficeWordParagraph -Text 'Hello Again'
+        }
+
+        @(Get-TestWordBodyOrder -Path $path) | Should -Be @(
+            'p:Hello World'
+            'p:Hello Again'
+        )
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+
+        $documentXml.SelectNodes('/w:document/w:body/w:p[w:pPr/w:sectPr and not(.//w:t[normalize-space()])]', $namespaceManager).Count | Should -Be 0
+    }
+
     It 'preserves OfficeIMO insertion order when editing paragraphs returned by Find-OfficeWord' {
         $path = Join-Path $TestDrive 'ExistingWordInlineInsertion.docx'
 
