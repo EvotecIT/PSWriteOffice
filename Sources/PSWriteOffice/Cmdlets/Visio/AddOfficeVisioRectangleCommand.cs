@@ -5,6 +5,14 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Adds a rectangle shape to the current Visio page.</summary>
+/// <example>
+///   <summary>Add a labeled process box.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\Flow.vsdx {
+///     VisioRectangle -Key intake -Text 'Intake' -X 1.5 -Y 4 -Width 1.7 -Height 0.8 -FillColor '#E0F2FE'
+/// }</code>
+///   <para>Adds a rectangle and registers a key for later connector commands.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeVisioRectangle")]
 [Alias("VisioRectangle", "VisioRect")]
 [OutputType(typeof(VisioShape))]

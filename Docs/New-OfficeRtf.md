@@ -21,7 +21,8 @@ Creates an RTF document with plain paragraph content.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review' -PassThru
+PS> $file = New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review' -PassThru
+Get-OfficeRtf -Path $file.FullName
 ```
 
 Creates an RTF document with two paragraphs and returns the file.

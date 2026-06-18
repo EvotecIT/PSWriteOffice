@@ -5,6 +5,16 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Adds a page to a Visio document and optionally executes nested DSL content.</summary>
+/// <example>
+///   <summary>Add a second diagram page.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\Workbook.vsdx {
+///     VisioPage -Name 'Architecture' {
+///         VisioRectangle -Key api -Text 'API' -X 2 -Y 4
+///     }
+/// }</code>
+///   <para>Adds a named page and executes the nested shape DSL inside that page scope.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeVisioPage")]
 [Alias("VisioPage")]
 [OutputType(typeof(VisioPage))]

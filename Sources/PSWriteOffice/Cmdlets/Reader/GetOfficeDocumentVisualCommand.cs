@@ -5,6 +5,13 @@ using PSWriteOffice.Services.Reader;
 namespace PSWriteOffice.Cmdlets.Reader;
 
 /// <summary>Reads visual payloads discovered by OfficeIMO.Reader from a supported document.</summary>
+/// <example>
+///   <summary>Export discovered visual payloads.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$visuals = Get-OfficeDocumentVisual -Path .\Deck.pptx -AsExport -OutputDirectory .\reader-visuals -Indented
+/// $visuals | Select-Object Id, ContentType, PayloadPath</code>
+///   <para>Extracts supported visual payloads and writes payload plus metadata sidecars.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentVisual")]
 [Alias("Read-OfficeDocumentVisual")]
 [OutputType(typeof(ReaderVisual), typeof(ReaderVisualExportBundle), typeof(ReaderVisualMaterializedExport))]

@@ -8,6 +8,13 @@ namespace PSWriteOffice.Cmdlets.Reader;
 /// <remarks>
 /// Use <c>-AsJson</c> for a deterministic serialized payload suitable for indexing or API handoff.
 /// </remarks>
+/// <example>
+///   <summary>Read a document envelope as JSON.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$json = Get-OfficeDocument -Path .\Report.pdf -AsJson -Indented
+/// $json | Set-Content -Path .\Report.reader.json</code>
+///   <para>Reads a supported document and stores the normalized Reader result for indexing or diagnostics.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocument")]
 [Alias("Read-OfficeDocument")]
 [OutputType(typeof(OfficeDocumentReadResult), typeof(string))]

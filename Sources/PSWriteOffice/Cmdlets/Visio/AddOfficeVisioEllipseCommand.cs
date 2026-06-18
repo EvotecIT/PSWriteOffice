@@ -5,6 +5,14 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Adds an ellipse shape to the current Visio page.</summary>
+/// <example>
+///   <summary>Add a start node.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\Flow.vsdx {
+///     VisioEllipse -Key start -Text 'Start' -X 1 -Y 5 -Width 1.4 -Height 0.7 -FillColor '#DCFCE7'
+/// }</code>
+///   <para>Adds an ellipse to the active Visio page.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeVisioEllipse")]
 [Alias("VisioEllipse")]
 [OutputType(typeof(VisioShape))]

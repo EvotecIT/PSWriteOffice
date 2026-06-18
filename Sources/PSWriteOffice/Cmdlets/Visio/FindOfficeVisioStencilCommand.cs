@@ -6,6 +6,13 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Searches OfficeIMO Visio stencil catalogs.</summary>
+/// <example>
+///   <summary>Search the built-in flowchart catalog.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$flow = Get-OfficeVisioStencilCatalog -BuiltIn Flowchart
+/// Find-OfficeVisioStencil -Catalog $flow -Query process -First 5</code>
+///   <para>Returns matching stencil definitions that can be used by VisioStencil.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Find, "OfficeVisioStencil", DefaultParameterSetName = QueryParameterSet)]
 [Alias("Find-VisioStencil")]
 [OutputType(typeof(VisioStencilShape))]

@@ -5,6 +5,13 @@ using PSWriteOffice.Services.Reader;
 namespace PSWriteOffice.Cmdlets.Reader;
 
 /// <summary>Reads a folder into an OfficeIMO.Reader ingestion summary.</summary>
+/// <example>
+///   <summary>Ingest a report folder.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$ingest = Get-OfficeDocumentIngest -FolderPath .\Reports -Extension docx,pdf,rtf -MaxFiles 50
+/// $ingest.Files | Select-Object Path, Status, ChunkCount</code>
+///   <para>Reads supported files from a folder and returns the ingestion summary with per-file status and chunk counts.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentIngest")]
 [OutputType(typeof(ReaderIngestResult))]
 public sealed class GetOfficeDocumentIngestCommand : PSCmdlet

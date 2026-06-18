@@ -12,7 +12,8 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 /// <example>
 ///   <summary>Replace text in an RTF file.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Update-OfficeRtfText -Path .\Input.rtf -OutputPath .\Output.rtf -OldText Draft -NewText Final -PassThru</code>
+///   <code>New-OfficeRtf -Path .\Input.rtf -Text 'Status: Draft'
+/// Update-OfficeRtfText -Path .\Input.rtf -OutputPath .\Output.rtf -OldText Draft -NewText Final -PassThru</code>
 ///   <para>Uses OfficeIMO.Rtf's lossless editor to update visible text while preserving untouched RTF syntax.</para>
 /// </example>
 [Cmdlet(VerbsData.Update, "OfficeRtfText")]

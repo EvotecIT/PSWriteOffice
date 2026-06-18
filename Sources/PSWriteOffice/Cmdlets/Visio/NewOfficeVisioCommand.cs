@@ -7,6 +7,16 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Creates a new OfficeIMO.Visio document with an initial page and optional DSL content.</summary>
+/// <example>
+///   <summary>Create a simple service map.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\ServiceMap.vsdx -Title 'Service map' -RequestRecalcOnOpen {
+///     VisioRectangle -Key web -Text 'Web' -X 1 -Y 4 -FillColor LightBlue
+///     VisioRectangle -Key api -Text 'API' -X 4 -Y 4 -FillColor LightGreen
+///     VisioConnector -From web -To api -EndArrow Triangle -Label 'calls'
+/// }</code>
+///   <para>Creates an editable .vsdx diagram with two shapes and a connector.</para>
+/// </example>
 [Cmdlet(VerbsCommon.New, "OfficeVisio")]
 [Alias("VisioNew")]
 [OutputType(typeof(VisioDocument), typeof(FileInfo))]

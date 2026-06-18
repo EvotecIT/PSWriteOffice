@@ -15,7 +15,8 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 /// <example>
 ///   <summary>Convert Word to RTF.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>ConvertTo-OfficeRtf -WordPath .\Report.docx -OutputPath .\Report.rtf -PassThru</code>
+///   <code>New-OfficeWord -Path .\Report.docx { WordParagraph -Text 'Summary' }
+/// ConvertTo-OfficeRtf -WordPath .\Report.docx -OutputPath .\Report.rtf -PassThru</code>
 ///   <para>Loads the Word document and saves an RTF file using OfficeIMO.Word.Rtf.</para>
 /// </example>
 /// <example>

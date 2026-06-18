@@ -7,6 +7,13 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Saves an OfficeIMO.Visio document.</summary>
+/// <example>
+///   <summary>Save a loaded diagram under a new path.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$diagram = Get-OfficeVisio -Path .\ServiceMap.vsdx
+/// $diagram | Save-OfficeVisio -Path .\ServiceMap-copy.vsdx -PassThru</code>
+///   <para>Saves an existing OfficeIMO.Visio document to another .vsdx file.</para>
+/// </example>
 [Cmdlet(VerbsData.Save, "OfficeVisio")]
 [Alias("VisioSave")]
 [OutputType(typeof(VisioDocument), typeof(FileInfo))]

@@ -21,9 +21,14 @@ Creates an OfficeIMO-authored Visio-native container around existing shapes.
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficeVisioContainer -Id 'Value'
+PS> New-OfficeVisio -Path .\Architecture.vsdx {
+    VisioRectangle -Key api -Text 'API' -X 2 -Y 4
+    VisioRectangle -Key worker -Text 'Worker' -X 4 -Y 4
+    VisioContainer -Id app -Text 'Application tier' -ShapeId api,worker -FillColor '#F8FAFC'
+}
 ```
 
+Creates a native Visio container around previously keyed shapes.
 
 ## PARAMETERS
 

@@ -21,7 +21,8 @@ Applies lossless text and metadata edits to an RTF document.
 
 ### EXAMPLE 1
 ```powershell
-PS> Update-OfficeRtfText -Path .\Input.rtf -OutputPath .\Output.rtf -OldText Draft -NewText Final -PassThru
+PS> New-OfficeRtf -Path .\Input.rtf -Text 'Status: Draft'
+            Update-OfficeRtfText -Path .\Input.rtf -OutputPath .\Output.rtf -OldText Draft -NewText Final -PassThru
 ```
 
 Uses OfficeIMO.Rtf's lossless editor to update visible text while preserving untouched RTF syntax.

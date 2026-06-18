@@ -4,11 +4,18 @@ using PSWriteOffice.Services.Reader;
 
 namespace PSWriteOffice.Cmdlets.Reader;
 
-/// <summary>Reads supported Office, PDF, Markdown, and text files into normalized OfficeIMO.Reader chunks.</summary>
+/// <summary>Reads supported Office, PDF, Markdown, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPUB, Visio, and text files into normalized OfficeIMO.Reader chunks.</summary>
 /// <remarks>
 /// This is a thin adapter over <see cref="DocumentReader"/>. The OfficeIMO.Reader engine owns detection,
 /// extraction, hashing, and chunk shaping.
 /// </remarks>
+/// <example>
+///   <summary>Read semantic chunks from an RTF document.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review'
+/// Get-OfficeDocumentChunk -Path .\Report.rtf | Select-Object Kind, Text</code>
+///   <para>Creates a small RTF file and reads it back through the Reader adapter as normalized chunks.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentChunk", DefaultParameterSetName = FileParameterSet)]
 [Alias("Read-OfficeDocumentChunk")]
 [OutputType(typeof(ReaderChunk))]

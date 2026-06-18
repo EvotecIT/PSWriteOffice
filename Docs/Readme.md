@@ -7,7 +7,7 @@ Locale: en-US
 ---
 # PSWriteOffice Module
 ## Description
-PowerShell module to create and read Microsoft Word, Excel, PowerPoint (experimental), PDF, Markdown, and CSV documents without Microsoft Office installed. Powered by OfficeIMO.*.
+PowerShell module to create, convert, read, and export Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Reader, and Visio documents without Microsoft Office installed. Powered by OfficeIMO.*.
 
 ## PSWriteOffice Cmdlets
 ### [Add-OfficeExcelAutoFilter](Add-OfficeExcelAutoFilter.md)
@@ -253,6 +253,9 @@ Adds a text box to a slide.
 ### [Add-OfficeVisioConnector](Add-OfficeVisioConnector.md)
 Adds a connector between two Visio shapes.
 
+### [Add-OfficeVisioContainer](Add-OfficeVisioContainer.md)
+Creates an OfficeIMO-authored Visio-native container around existing shapes.
+
 ### [Add-OfficeVisioDiamond](Add-OfficeVisioDiamond.md)
 Adds a diamond shape to the current Visio page.
 
@@ -367,6 +370,9 @@ Adds a tab stop to a Word paragraph.
 ### [Add-OfficeWordText](Add-OfficeWordText.md)
 Adds inline text to the current paragraph.
 
+### [Add-OfficeWordTextBox](Add-OfficeWordTextBox.md)
+Adds an OfficeIMO Word text box to the current Word DSL location.
+
 ### [Add-OfficeWordWatermark](Add-OfficeWordWatermark.md)
 Adds a watermark to the current section or header.
 
@@ -394,6 +400,9 @@ Converts HTML content to Markdown.
 ### [ConvertFrom-OfficePdfHtml](ConvertFrom-OfficePdfHtml.md)
 Converts HTML content to a PDF through the first-party OfficeIMO HTML/PDF adapter.
 
+### [ConvertFrom-OfficeRtf](ConvertFrom-OfficeRtf.md)
+Converts RTF input to Word, HTML, or PDF output.
+
 ### [ConvertFrom-OfficeWordHtml](ConvertFrom-OfficeWordHtml.md)
 Creates a Word document from HTML.
 
@@ -417,6 +426,9 @@ Converts a PDF file to HTML through the first-party OfficeIMO HTML/PDF adapter.
 
 ### [ConvertTo-OfficePdfMarkdown](ConvertTo-OfficePdfMarkdown.md)
 Converts PDF logical text readback to Markdown.
+
+### [ConvertTo-OfficeRtf](ConvertTo-OfficeRtf.md)
+Converts Word, HTML, or PDF input to RTF.
 
 ### [ConvertTo-OfficeVisioPng](ConvertTo-OfficeVisioPng.md)
 Exports a Visio document page to native dependency-free PNG.
@@ -445,6 +457,9 @@ Runs a script block against editable worksheet rows.
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
 Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
 
+### [Export-OfficeVisioStencilPreviewGallery](Export-OfficeVisioStencilPreviewGallery.md)
+Exports preview artwork from a Visio stencil package into a browsable HTML gallery.
+
 ### [Find-OfficeExcel](Find-OfficeExcel.md)
 Finds text in worksheet values.
 
@@ -472,11 +487,23 @@ Reads CSV rows as PSCustomObjects or dictionaries.
 ### [Get-OfficeDocument](Get-OfficeDocument.md)
 Reads a supported file into the OfficeIMO shared document read result envelope.
 
+### [Get-OfficeDocumentAsset](Get-OfficeDocumentAsset.md)
+Reads or materializes embedded assets discovered by OfficeIMO.Reader from a supported document.
+
 ### [Get-OfficeDocumentCapability](Get-OfficeDocumentCapability.md)
 Lists OfficeIMO.Reader capabilities registered in the current PSWriteOffice process.
 
 ### [Get-OfficeDocumentChunk](Get-OfficeDocumentChunk.md)
-Reads supported Office, PDF, Markdown, and text files into normalized OfficeIMO.Reader chunks.
+Reads supported Office, PDF, Markdown, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPUB, Visio, and text files into normalized OfficeIMO.Reader chunks.
+
+### [Get-OfficeDocumentIngest](Get-OfficeDocumentIngest.md)
+Reads a folder into an OfficeIMO.Reader ingestion summary.
+
+### [Get-OfficeDocumentTable](Get-OfficeDocumentTable.md)
+Reads structured tables discovered by OfficeIMO.Reader from a supported document.
+
+### [Get-OfficeDocumentVisual](Get-OfficeDocumentVisual.md)
+Reads visual payloads discovered by OfficeIMO.Reader from a supported document.
 
 ### [Get-OfficeExcel](Get-OfficeExcel.md)
 Opens an existing Excel workbook.
@@ -573,6 +600,9 @@ Reads high-level slide summaries from a presentation.
 
 ### [Get-OfficePowerPointTheme](Get-OfficePowerPointTheme.md)
 Gets theme information for a PowerPoint presentation master.
+
+### [Get-OfficeRtf](Get-OfficeRtf.md)
+Reads RTF into OfficeIMO's semantic and lossless syntax models.
 
 ### [Get-OfficeVisio](Get-OfficeVisio.md)
 Loads an existing .vsdx file as an OfficeIMO.Visio document.
@@ -703,8 +733,14 @@ Creates a PowerPoint presentation using the DSL.
 ### [New-OfficePowerPointDeckPlan](New-OfficePowerPointDeckPlan.md)
 Creates a semantic PowerPoint deck plan for designer rendering.
 
+### [New-OfficeRtf](New-OfficeRtf.md)
+Creates an RTF document with plain paragraph content.
+
 ### [New-OfficeVisio](New-OfficeVisio.md)
 Creates a new OfficeIMO.Visio document with an initial page and optional DSL content.
+
+### [New-OfficeVisioGallery](New-OfficeVisioGallery.md)
+Generates the OfficeIMO Visio reference gallery as editable .vsdx diagrams.
 
 ### [New-OfficeWord](New-OfficeWord.md)
 Creates a Word document using the DSL.
@@ -886,6 +922,9 @@ Sets speaker notes for a PowerPoint slide.
 ### [Set-OfficePowerPointPlaceholderText](Set-OfficePowerPointPlaceholderText.md)
 Sets text in a slide placeholder.
 
+### [Set-OfficePowerPointShapeLayout](Set-OfficePowerPointShapeLayout.md)
+Aligns, distributes, or arranges PowerPoint shapes using OfficeIMO layout helpers.
+
 ### [Set-OfficePowerPointShapeText](Set-OfficePowerPointShapeText.md)
 Sets text on an existing PowerPoint text box.
 
@@ -912,6 +951,9 @@ Sets PowerPoint theme fonts.
 
 ### [Set-OfficePowerPointThemeName](Set-OfficePowerPointThemeName.md)
 Sets the PowerPoint theme name.
+
+### [Set-OfficeVisioShapeLayout](Set-OfficeVisioShapeLayout.md)
+Applies OfficeIMO Visio selection layout and layer operations to shapes.
 
 ### [Set-OfficeWordBackground](Set-OfficeWordBackground.md)
 Sets the background for a Word document.
@@ -951,6 +993,9 @@ Replaces text in worksheet values.
 
 ### [Update-OfficePowerPointText](Update-OfficePowerPointText.md)
 Replaces text in a PowerPoint slide or presentation.
+
+### [Update-OfficeRtfText](Update-OfficeRtfText.md)
+Applies lossless text and metadata edits to an RTF document.
 
 ### [Update-OfficeWordFields](Update-OfficeWordFields.md)
 Updates fields in a Word document.

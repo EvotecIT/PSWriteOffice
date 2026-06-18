@@ -6,6 +6,13 @@ using PSWriteOffice.Services.Reader;
 namespace PSWriteOffice.Cmdlets.Reader;
 
 /// <summary>Reads structured tables discovered by OfficeIMO.Reader from a supported document.</summary>
+/// <example>
+///   <summary>Export discovered tables as sidecars.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$tables = Get-OfficeDocumentTable -Path .\Workbook.xlsx -AsExport -OutputDirectory .\reader-tables -Indented
+/// $tables | Select-Object Id, CsvPath, JsonPath</code>
+///   <para>Reads tables from a supported document and writes deterministic CSV, Markdown, and JSON sidecars.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentTable")]
 [Alias("Read-OfficeDocumentTable")]
 [OutputType(typeof(ReaderTable), typeof(ReaderTableExportBundle), typeof(ReaderTableMaterializedExport))]

@@ -43,7 +43,10 @@ $RequiredCommands = @(
     'Add-OfficePdfText',
     'Add-OfficePdfRow',
     'Save-OfficePdf',
-    'Get-OfficePdfInfo'
+    'Get-OfficePdfInfo',
+    'Get-OfficeDocumentAsset',
+    'New-OfficeVisioGallery',
+    'Export-OfficeVisioStencilPreviewGallery'
 )
 
 $RequiredCommandsLiteral = "'" + ($RequiredCommands -join "', '") + "'"

@@ -5,6 +5,13 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Loads an existing .vsdx file as an OfficeIMO.Visio document.</summary>
+/// <example>
+///   <summary>Open and inspect a Visio document.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$diagram = Get-OfficeVisio -Path .\ServiceMap.vsdx
+/// Get-OfficeVisioInfo -Document $diagram -AsText</code>
+///   <para>Loads an existing .vsdx file and creates a deterministic inspection snapshot.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeVisio")]
 [Alias("VisioOpen")]
 [OutputType(typeof(VisioDocument))]

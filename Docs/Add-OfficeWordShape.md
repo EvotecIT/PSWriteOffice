@@ -192,7 +192,7 @@ Shape type to add.
 Type: ShapeType
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Rectangle, Ellipse, Line, RoundedRectangle, Triangle, Diamond, Pentagon, Hexagon, RightArrow, LeftArrow, UpArrow, DownArrow, Star5, Heart, Cloud, Donut, Can, Cube
+Possible values: Rectangle, Ellipse, Line, RoundedRectangle, Triangle, Diamond, Pentagon, Hexagon, Parallelogram, Trapezoid, Chevron, Plus, RightArrow, LeftArrow, UpArrow, DownArrow, LeftRightArrow, Star5, Heart, Cloud, Donut, Can, Cube
 
 Required: False
 Position: named

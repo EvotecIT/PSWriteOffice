@@ -8,6 +8,7 @@ using OfficeIMO.Reader.Epub;
 using OfficeIMO.Reader.Html;
 using OfficeIMO.Reader.Json;
 using OfficeIMO.Reader.Pdf;
+using OfficeIMO.Reader.Rtf;
 using OfficeIMO.Reader.Visio;
 using OfficeIMO.Reader.Xml;
 using OfficeIMO.Reader.Yaml;
@@ -32,11 +33,7 @@ internal static class ReaderCommandUtilities
 
     internal static void RegisterPdfReader()
     {
-        var customPdfHandler = DocumentReader.GetCapabilities(includeBuiltIn: false, includeCustom: true)
-            .FirstOrDefault(static capability => capability.Extensions.Any(static extension =>
-                string.Equals(extension, ".pdf", StringComparison.OrdinalIgnoreCase)));
-
-        if (customPdfHandler != null)
+        if (HasCustomHandlerForExtension(".pdf"))
         {
             return;
         }
@@ -72,6 +69,19 @@ internal static class ReaderCommandUtilities
         RegisterAdapter(
             DocumentReaderVisioRegistrationExtensions.HandlerId,
             static () => DocumentReaderVisioRegistrationExtensions.RegisterVisioHandler(null, replaceExisting: false, preserveExistingCustomExtensions: true));
+        RegisterRtfReader();
+    }
+
+    internal static void RegisterRtfReader()
+    {
+        if (HasCustomHandlerForExtension(".rtf"))
+        {
+            return;
+        }
+
+        RegisterAdapter(
+            DocumentReaderRtfRegistrationExtensions.HandlerId,
+            static () => DocumentReaderRtfRegistrationExtensions.RegisterRtfHandler(null, replaceExisting: true));
     }
 
     private static void RegisterAdapter(string handlerId, Action register)
@@ -83,6 +93,13 @@ internal static class ReaderCommandUtilities
         }
 
         register();
+    }
+
+    private static bool HasCustomHandlerForExtension(string extension)
+    {
+        return DocumentReader.GetCapabilities(includeBuiltIn: false, includeCustom: true)
+            .Any(capability => capability.Extensions.Any(candidate =>
+                string.Equals(candidate, extension, StringComparison.OrdinalIgnoreCase)));
     }
 
     internal static ReaderOptions BuildReaderOptions(

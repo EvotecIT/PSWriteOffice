@@ -11,7 +11,7 @@ Finds PowerPoint shapes by text, name, kind, or slide.
 ## SYNTAX
 ### PresentationText (Default)
 ```powershell
-Find-OfficePowerPointShape [-Text] <string> -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <int>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Find-OfficePowerPointShape [[-Text] <string>] -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <int>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
 ```
 
 ### PresentationRegex
@@ -21,7 +21,7 @@ Find-OfficePowerPointShape [-Pattern] <string> -Presentation <PowerPointPresenta
 
 ### SlideText
 ```powershell
-Find-OfficePowerPointShape [-Text] <string> -Slide <PowerPointSlide> [-CaseSensitive] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Find-OfficePowerPointShape [[-Text] <string>] -Slide <PowerPointSlide> [-CaseSensitive] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
 ```
 
 ### SlideRegex
@@ -35,9 +35,9 @@ records that include the slide index, shape index, shape kind, extracted text, s
 underlying OfficeIMO shape object. Text matching includes normal text boxes and table cell text, so
 this command can locate the right object before piping it into modification commands.
 
-Use -Text for literal contains matching or -Pattern for regular expressions. Combine
--Kind, -Name, -Index, and -ShapeIndex when a deck has repeated labels and
-the script should target a specific slide or shape type.
+Use -Text for literal contains matching or -Pattern for regular expressions, or omit
+both text parameters when -Kind, -Name, -Index, and -ShapeIndex identify
+the target shape without reading text content.
 
 ## EXAMPLES
 
@@ -198,7 +198,7 @@ Parameter Sets: PresentationText, SlideText
 Aliases: None
 Possible values:
 
-Required: True
+Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False

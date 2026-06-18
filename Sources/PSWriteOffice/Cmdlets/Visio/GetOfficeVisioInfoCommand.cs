@@ -5,6 +5,13 @@ using PSWriteOffice.Services.Visio;
 namespace PSWriteOffice.Cmdlets.Visio;
 
 /// <summary>Creates a deterministic inspection snapshot for a Visio document.</summary>
+/// <example>
+///   <summary>Inspect a generated diagram.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
+/// Get-OfficeVisioInfo -Path .\ServiceMap.vsdx -AsText</code>
+///   <para>Returns stable line-oriented text that is useful for tests and release notes.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeVisioInfo", DefaultParameterSetName = PathParameterSet)]
 [Alias("VisioInfo")]
 [OutputType(typeof(VisioInspectionSnapshot), typeof(string))]
