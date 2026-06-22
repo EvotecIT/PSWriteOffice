@@ -409,10 +409,7 @@ Describe 'PDF cmdlets' {
 
     It 'applies PDF themes and decorative backgrounds' {
         $path = Join-Path $TestDrive 'styled-backgrounds.pdf'
-        $imagePath = Join-Path $TestDrive 'pixel.png'
-        [IO.File]::WriteAllBytes(
-            $imagePath,
-            [Convert]::FromBase64String('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=='))
+        $imagePath = Join-Path (Join-Path $PSScriptRoot 'Assets') 'CellImage.png'
 
         New-OfficePdf -Path $path {
             PdfTheme Report
