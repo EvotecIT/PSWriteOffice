@@ -362,6 +362,52 @@ Describe 'PDF cmdlets' {
         Get-OfficePdfText -Path $incrementalPath | Should -Match 'Incremental body text'
     }
 
+    It 'optimizes PDFs with lossless stream compression' {
+        (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'PassThruReport'
+        (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'MinimumStreamCompressionBytes'
+
+        $path = Join-Path $TestDrive 'uncompressed-source.pdf'
+        $optimizedPath = Join-Path $TestDrive 'uncompressed-optimized.pdf'
+        $payload = 'A' * 4096
+        $stream = "BT`n/F1 12 Tf`n72 720 Td`n($payload) Tj`nET`n"
+        $pdf = @"
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 300] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length $([Text.Encoding]::ASCII.GetByteCount($stream)) >>
+stream
+$($stream.TrimEnd("`n"))
+endstream
+endobj
+trailer
+<< /Root 1 0 R /Size 6 >>
+startxref
+123
+%%EOF
+"@
+        [IO.File]::WriteAllBytes($path, [Text.Encoding]::ASCII.GetBytes($pdf))
+
+        $report = ConvertTo-OfficePdfOptimized -Path $path -OutputPath $optimizedPath -PassThruReport
+
+        $report.Applied | Should -BeTrue
+        $report.ActionCount | Should -Be 1
+        $report.Actions[0].Kind | Should -Be 'CompressStream'
+        Test-Path $optimizedPath | Should -BeTrue
+        (Get-Item $optimizedPath).Length | Should -BeLessThan (Get-Item $path).Length
+        Get-OfficePdfText -Path $optimizedPath | Should -Match ('A' * 64)
+    }
+
     It 'reports PDF signature structure and preservation markers' {
         $path = Join-Path $TestDrive 'signed-fixture.pdf'
         $pdf = @'
