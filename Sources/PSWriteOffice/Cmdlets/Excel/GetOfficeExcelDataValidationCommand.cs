@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object -Property SheetName, Range, Type, Operator, Formula1, Formula2</code>
 ///   <para>Returns validation metadata for workbook audits and maintenance workflows.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeExcelDataValidation", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Get, "OfficeExcelDataValidation", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelDataValidation")]
 [OutputType(typeof(PSObject))]
 public sealed class GetOfficeExcelDataValidationCommand : PSCmdlet

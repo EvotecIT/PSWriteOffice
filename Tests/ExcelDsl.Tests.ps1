@@ -1953,6 +1953,22 @@ Describe 'Excel DSL surface' {
         $worksheetXml | Should -Not -Match '\{\{'
     }
 
+    It 'does not save path-owned template work when WhatIf skips all sheets' {
+        $path = Join-Path $TestDrive 'DslExcelTemplateWhatIf.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Invoice' -Content {
+                Set-OfficeExcelCell -Address A1 -Value 'Invoice {{Number}}'
+            }
+        }
+
+        $before = [System.IO.File]::ReadAllBytes($path)
+        Invoke-OfficeExcelTemplate -Path $path -Sheet Invoice -Value @{ Number = 'INV-001' } -WhatIf
+        $after = [System.IO.File]::ReadAllBytes($path)
+
+        [Convert]::ToBase64String($after) | Should -Be ([Convert]::ToBase64String($before))
+    }
+
     It 'inspects Excel template markers and reports missing bindings' {
         $path = Join-Path $TestDrive 'DslExcelTemplateInspection.xlsx'
 
@@ -2346,6 +2362,25 @@ Describe 'Excel DSL surface' {
                 $rules.Count | Should -Be 1
                 $rules[0].SheetName | Should -Be 'Data'
                 $rules[0].Range | Should -Be 'A1:A2'
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
+    }
+
+    It 'reads data validation rules from the current DSL sheet by default' {
+        $path = Join-Path $TestDrive 'DslExcelDataValidationContextRead.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelCell -Address 'B2' -Value 10
+                Set-OfficeExcelCell -Address 'B3' -Value 20
+                Add-OfficeExcelValidationWholeNumber -Range 'B2:B4' -Operator Between -Formula1 1 -Formula2 100
+
+                $validations = @(Get-OfficeExcelDataValidation -Range 'B3')
+                $validations.Count | Should -Be 1
+                $validations[0].SheetName | Should -Be 'Data'
+                $validations[0].Range | Should -Be 'B2:B4'
             }
         }
 
@@ -3647,6 +3682,7 @@ Describe 'Excel DSL surface' {
         $commentAuditAfterThreaded = Get-OfficeExcelCommentAudit -Path $left -IncludeComments
         $commentAuditAfterThreaded.ThreadedCommentCount | Should -Be 2
         $commentAuditAfterThreaded.ThreadedComments.Author | Should -Contain 'Modern Reviewer'
+        $commentAuditAfterThreaded.ThreadedComments.SheetName | Should -Contain 'Data'
 
         $template = Test-OfficeExcelTemplateBinding -Path $left -Binding @{ CustomerName = 'Northwind' }
         $template.Passed | Should -BeTrue

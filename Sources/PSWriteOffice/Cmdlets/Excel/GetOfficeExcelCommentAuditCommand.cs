@@ -80,6 +80,7 @@ public sealed class GetOfficeExcelCommentAuditCommand : PSCmdlet
     private static PSObject CreateThreadedComment(ExcelThreadedCommentSnapshot comment)
     {
         var item = new PSObject();
+        item.Properties.Add(new PSNoteProperty("SheetName", comment.SheetName));
         item.Properties.Add(new PSNoteProperty("CellReference", comment.CellReference));
         item.Properties.Add(new PSNoteProperty("Id", comment.Id));
         item.Properties.Add(new PSNoteProperty("ParentId", comment.ParentId));

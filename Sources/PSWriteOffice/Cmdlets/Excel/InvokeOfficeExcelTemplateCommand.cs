@@ -66,6 +66,7 @@ public sealed class InvokeOfficeExcelTemplateCommand : PSCmdlet
         var options = ExcelTemplateValueService.CreateOptions(CultureName, MissingValueBehavior, ThrowOnMissing.IsPresent);
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
         var replacements = 0;
+        var processedAnySheet = false;
 
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
         {
@@ -75,9 +76,13 @@ public sealed class InvokeOfficeExcelTemplateCommand : PSCmdlet
             }
 
             replacements += sheet.ApplyTemplate(values, options);
+            processedAnySheet = true;
         }
 
-        workbook.SaveIfOwned();
+        if (processedAnySheet)
+        {
+            workbook.SaveIfOwned();
+        }
         if (PassThru.IsPresent)
         {
             WriteObject(replacements);
