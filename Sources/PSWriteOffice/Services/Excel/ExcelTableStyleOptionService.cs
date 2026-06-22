@@ -7,7 +7,7 @@ internal static class ExcelTableStyleOptionService
 {
     public static bool IsSwitchPresent(PSCmdlet cmdlet, string parameterName, SwitchParameter value)
     {
-        return value.IsPresent || cmdlet.MyInvocation.BoundParameters.ContainsKey(parameterName);
+        return value.IsPresent;
     }
 
     public static void Apply(

@@ -189,15 +189,6 @@ public sealed class AddOfficeExcelSubtotalSummaryCommand : PSCmdlet
             }
         }
 
-        if (lettersOnly && trimmed.Length <= 3)
-        {
-            int letterIndex = A1.ColumnLettersToIndex(trimmed);
-            if (letterIndex > 0 && letterIndex <= A1.MaxColumns)
-            {
-                return letterIndex;
-            }
-        }
-
         for (int column = firstColumn; column <= lastColumn; column++)
         {
             if (sheet.TryGetCellText(headerRow, column, out string header)

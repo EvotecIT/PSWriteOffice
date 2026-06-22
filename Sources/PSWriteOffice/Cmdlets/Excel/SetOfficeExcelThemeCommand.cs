@@ -58,17 +58,25 @@ public sealed class SetOfficeExcelThemeCommand : PSCmdlet
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
 
         string? xml = ResolveThemeXml();
-        if (Default.IsPresent || xml == null)
+        if (Default.IsPresent)
         {
             workbook.Document.ResetWorkbookTheme(Name);
         }
-        else
+        else if (xml != null)
         {
             workbook.Document.SetWorkbookThemeXml(xml);
             if (!string.IsNullOrWhiteSpace(Name))
             {
                 workbook.Document.SetWorkbookThemeName(Name!);
             }
+        }
+        else if (!string.IsNullOrWhiteSpace(Name))
+        {
+            workbook.Document.SetWorkbookThemeName(Name!);
+        }
+        else
+        {
+            throw new PSArgumentException("Specify -Default, -Xml, -XmlPath, or -Name.");
         }
 
         ExcelWorkbookThemeInfo info = workbook.Document.GetWorkbookTheme(includeXml: false);

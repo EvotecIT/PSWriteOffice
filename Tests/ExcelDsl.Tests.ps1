@@ -295,6 +295,10 @@ Describe 'Excel DSL surface' {
         $summary = Get-OfficeExcelSummary -Path $path
         $summary.HasTheme | Should -BeTrue
         $summary.ThemeName | Should -Be 'Contoso Workbook Theme'
+
+        $rename = Set-OfficeExcelTheme -Path $path -Name 'Renamed Workbook Theme' -PassThru
+        $rename.HasTheme | Should -BeTrue
+        $rename.Name | Should -Be 'Renamed Workbook Theme'
     }
 
     It 'reports preserved slicer and timeline package parts in workbook summaries' {
@@ -634,6 +638,25 @@ Describe 'Excel DSL surface' {
         $tableXml | Should -Match 'showLastColumn="(?:1|true)"'
         $tableXml | Should -Match 'showRowStripes="(?:0|false)"'
         $tableXml | Should -Match 'showColumnStripes="(?:1|true)"'
+
+        $falseSwitchPath = Join-Path $TestDrive 'TableVisualFalseSwitches.xlsx'
+        $falseSwitchParameters = @{
+            InputObject = $rows
+            TableName = 'Sales'
+            ShowFirstColumn = $false
+            NoRowStripes = $false
+            ShowColumnStripes = $false
+        }
+        New-OfficeExcel -Path $falseSwitchPath {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable @falseSwitchParameters
+            }
+        }
+
+        $falseSwitchTableXml = Read-XlsxEntryText -Path $falseSwitchPath -Entry 'xl/tables/table1.xml'
+        $falseSwitchTableXml | Should -Not -Match 'showFirstColumn="(?:1|true)"'
+        $falseSwitchTableXml | Should -Not -Match 'showColumnStripes="(?:1|true)"'
+        $falseSwitchTableXml | Should -Not -Match 'showRowStripes="(?:0|false)"'
 
         $exportPath = Join-Path $TestDrive 'ExportTableVisualFlags.xlsx'
         $rows | Export-OfficeExcel -Path $exportPath -TableName 'ExportedSales' -ShowFirstColumn -ShowLastColumn -NoRowStripes -ShowColumnStripes
@@ -1735,6 +1758,18 @@ Describe 'Excel DSL surface' {
         $summary = Get-OfficeExcelSummary -Path $path -IncludeSchema
         (@($summary.Schema.Rows | Where-Object Index -eq 2)[0]).OutlineLevel | Should -Be 1
         (@($summary.Schema.Rows | Where-Object Index -eq 4)[0]).OutlineLevel | Should -Be 1
+
+        $shortHeaderPath = Join-Path $TestDrive 'DslExcelSubtotalSummaryShortHeaders.xlsx'
+        New-OfficeExcel -Path $shortHeaderPath {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelRow -Row 1 -Values 'ID', 'SKU', 'Amount'
+                Set-OfficeExcelRow -Row 2 -Values 'A', 10, 2
+                Set-OfficeExcelRow -Row 3 -Values 'A', 15, 3
+                Add-OfficeExcelSubtotalSummary -GroupColumn ID -ValueColumn SKU -DataEndRow 3 -SummaryStartRow 5
+            }
+        }
+
+        Get-TestWorksheetCellFormula -Path $shortHeaderPath -Address B6 | Should -Be 'SUBTOTAL(9,B2:B3)'
     }
 
     It 'sets and clears worksheet tab colors through thin sheet commands' {
