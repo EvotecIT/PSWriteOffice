@@ -76,6 +76,13 @@ internal static class PdfCommandUtilities
             : PdfDslContext.Require(cmdlet).Document;
     }
 
+    internal static PdfReadOptions? CreateReadOptions(string? password)
+    {
+        return string.IsNullOrEmpty(password)
+            ? null
+            : new PdfReadOptions { Password = password };
+    }
+
     internal static PdfColor? ParseColor(string? color)
     {
         if (string.IsNullOrWhiteSpace(color))
@@ -102,16 +109,15 @@ internal static class PdfCommandUtilities
 
     internal static PageSize ResolvePageSize(string? pageSize, double? width, double? height, bool landscape)
     {
-        PageSize size = (pageSize ?? "Letter").Trim().ToUpperInvariant() switch
+        var pageSizeName = (pageSize ?? "Letter").Trim();
+        PageSize size = pageSizeName.ToUpperInvariant() switch
         {
-            "A4" => PageSizes.A4,
-            "A5" => PageSizes.A5,
-            "LEGAL" => PageSizes.Legal,
-            "LETTER" => PageSizes.Letter,
             "CUSTOM" => width.HasValue && height.HasValue
                 ? new PageSize(width.Value, height.Value)
                 : throw new PSArgumentException("Custom page size requires -Width and -Height."),
-            _ => throw new PSArgumentException("PageSize must be A4, A5, Letter, Legal, or Custom.", nameof(pageSize))
+            _ => PageSizes.TryGet(pageSizeName, out var resolved)
+                ? resolved
+                : throw new PSArgumentException("PageSize must be a known OfficeIMO page size name or Custom.", nameof(pageSize))
         };
 
         return landscape ? size.Landscape() : size.Portrait();

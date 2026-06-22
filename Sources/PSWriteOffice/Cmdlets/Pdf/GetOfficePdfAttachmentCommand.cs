@@ -33,10 +33,14 @@ public sealed class GetOfficePdfAttachmentCommand : PSCmdlet
     [Parameter]
     public string? OutputDirectory { get; set; }
 
+    /// <summary>Password used to read a Standard password-encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var attachments = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Read.Attachments();
+        var attachments = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)).Read.Attachments();
         string? outputDirectory = null;
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {

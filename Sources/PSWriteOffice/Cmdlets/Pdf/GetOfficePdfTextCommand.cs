@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
@@ -32,6 +33,18 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
     [Parameter]
     public SwitchParameter AsMarkdown { get; set; }
 
+    /// <summary>Return one object per page with PageNumber and Text properties.</summary>
+    [Parameter]
+    public SwitchParameter ByPage { get; set; }
+
+    /// <summary>Return line-level logical text blocks with page and coordinate metadata.</summary>
+    [Parameter]
+    public SwitchParameter AsTextBlock { get; set; }
+
+    /// <summary>Password used to extract from a Standard password-encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <summary>Optional output text file path.</summary>
     [Parameter]
     public string? OutputPath { get; set; }
@@ -39,7 +52,62 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
+        if (AsTextBlock.IsPresent)
+        {
+            if (AsMarkdown.IsPresent || ByPage.IsPresent)
+            {
+                throw new PSArgumentException("-AsTextBlock cannot be combined with -AsMarkdown or -ByPage.", nameof(AsTextBlock));
+            }
+
+            var blocks = string.IsNullOrWhiteSpace(PageRange)
+                ? document.Read.TextBlocks()
+                : document.Read.TextBlocks(PageRange!);
+
+            if (!string.IsNullOrWhiteSpace(OutputPath))
+            {
+                var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+                PdfCommandUtilities.EnsureDirectory(outputPath);
+                File.WriteAllLines(outputPath, blocks.Select(block => block.Text));
+                WriteObject(new FileInfo(outputPath));
+                return;
+            }
+
+            WriteObject(blocks, true);
+            return;
+        }
+
+        if (ByPage.IsPresent)
+        {
+            if (AsMarkdown.IsPresent)
+            {
+                throw new PSArgumentException("-ByPage is supported for plain text extraction only.", nameof(ByPage));
+            }
+
+            var pages = string.IsNullOrWhiteSpace(PageRange)
+                ? document.Read.TextByPage()
+                : document.Read.TextByPage(PageRange!);
+
+            if (!string.IsNullOrWhiteSpace(OutputPath))
+            {
+                var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+                PdfCommandUtilities.EnsureDirectory(outputPath);
+                File.WriteAllText(outputPath, string.Join("\f", pages));
+                WriteObject(new FileInfo(outputPath));
+                return;
+            }
+
+            for (var index = 0; index < pages.Count; index++)
+            {
+                var item = new PSObject();
+                item.Properties.Add(new PSNoteProperty("PageNumber", index + 1));
+                item.Properties.Add(new PSNoteProperty("Text", pages[index]));
+                WriteObject(item);
+            }
+
+            return;
+        }
+
         var text = AsMarkdown.IsPresent
             ? string.IsNullOrWhiteSpace(PageRange) ? document.Read.Markdown() : document.Read.Markdown(PageRange!)
             : string.IsNullOrWhiteSpace(PageRange) ? document.Read.Text() : document.Read.Text(PageRange!);

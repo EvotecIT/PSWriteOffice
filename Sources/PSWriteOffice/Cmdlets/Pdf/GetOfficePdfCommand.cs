@@ -21,9 +21,13 @@ public sealed class GetOfficePdfCommand : PSCmdlet
     [Alias("FilePath")]
     public string Path { get; set; } = string.Empty;
 
+    /// <summary>Password used to open a Standard password-encrypted PDF for readback operations.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        WriteObject(PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)));
+        WriteObject(PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)));
     }
 }

@@ -8,6 +8,21 @@ BeforeAll {
 }
 
 Describe 'PDF cmdlets' {
+    It 'supports passwords for encrypted PDF read cmdlets' {
+        $encryptedPath = Join-Path $TestDrive 'encrypted.pdf'
+        [IO.File]::WriteAllBytes($encryptedPath, [Convert]::FromBase64String('JVBERi0xLjQKJT8/Pz8KMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAzMDAgMjAwXSAvUmVzb3VyY2VzIDw8IC9Gb250IDw8IC9GMSA0IDAgUiA+PiA+PiAvQ29udGVudHMgNSAwIFIgPj4KZW5kb2JqCjQgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNlRm9udCAvSGVsdmV0aWNhID4+CmVuZG9iago1IDAgb2JqCjw8IC9MZW5ndGggNDYgPj4Kc3RyZWFtCi8xB1rv33VvGaaV2g01B7caayy3ttoqyqa6Fkx+aapdiBLgquqJCxhp8zWpAXQKZW5kc3RyZWFtCmVuZG9iago2IDAgb2JqCjw8IC9GaWx0ZXIgL1N0YW5kYXJkIC9WIDEgL1IgMiAvTGVuZ3RoIDQwIC9PIDw4RUVCMDk1ODE5NjYyQTc3NDQ0MkZCMDcyRTNEOUYxOUU5RDEzMEVDMDlBNEQwMDYxRTc4RkU5MjBGN0FCNjJGPiAvVSA8QjFFNzY0MTI2QzQ4RDI4RDkwNTI1NTk1MjAwREQ4MTg3NEI4NkZFMUNBNTRCQTAxODZFNThCRTJDMzU5ODhEQz4gL1AgLTQgPj4KZW5kb2JqCnhyZWYKMCA3CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDY0IDAwMDAwIG4gCjAwMDAwMDAxMjEgMDAwMDAgbiAKMDAwMDAwMDI0NyAwMDAwMCBuIAowMDAwMDAwMzE3IDAwMDAwIG4gCjAwMDAwMDA0MTMgMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA3IC9Sb290IDEgMCBSIC9FbmNyeXB0IDYgMCBSIC9JRCBbPDEwNDVBODdDMjIxODRFQzE5MTRBQ0Y2NjMxRDI3NDAzPiA8MTA0NUE4N0MyMjE4NEVDMTkxNEFDRjY2MzFEMjc0MDM+XSA+PgpzdGFydHhyZWYKNjE5CiUlRU9GCg=='))
+
+        foreach ($name in 'Get-OfficePdf', 'Get-OfficePdfInfo', 'Get-OfficePdfPreflight', 'Get-OfficePdfDiagnostic', 'Get-OfficePdfOptimization', 'Get-OfficePdfText', 'Get-OfficePdfAttachment', 'Get-OfficePdfFormField', 'Get-OfficePdfRedactionPlan', 'ConvertTo-OfficePdfMarkdown', 'ConvertTo-OfficePdfHtml') {
+            (Get-Command $name).Parameters.Keys | Should -Contain 'Password'
+        }
+
+        (Get-OfficePdfPreflight -Path $encryptedPath).CanRead | Should -BeFalse
+        (Get-OfficePdfPreflight -Path $encryptedPath -Password 'open').CanRead | Should -BeTrue
+        Get-OfficePdfText -Path $encryptedPath -Password 'open' | Should -Match 'Secret PDF Text'
+        (Get-OfficePdf -Path $encryptedPath -Password 'open').Read.Text() | Should -Match 'Secret PDF Text'
+        ConvertTo-OfficePdfMarkdown -Path $encryptedPath -Password 'open' | Should -Match 'Secret PDF Text'
+    }
+
     It 'builds a composed PDF and extracts text' {
         $path = Join-Path $TestDrive 'report.pdf'
         $rows = @(
@@ -190,6 +205,20 @@ Describe 'PDF cmdlets' {
         [math]::Round($page.Height) | Should -Be 842
     }
 
+    It 'supports expanded page sizes and PDF 2 file version' {
+        $path = Join-Path $TestDrive 'b5-pdf20.pdf'
+
+        New-OfficePdf -Path $path -FileVersion Pdf20 {
+            PdfPageSetup -PageSize B5
+            PdfHeading 'B5 PDF 2'
+        } | Out-Null
+
+        $info = Get-OfficePdfInfo -Path $path
+        $info.HeaderVersion | Should -Be '2.0'
+        [math]::Round($info.Pages[0].Width) | Should -Be 498
+        [math]::Round($info.Pages[0].Height) | Should -Be 708
+    }
+
     It 'supports PDF page operations with approved verbs' {
         $path = Join-Path $TestDrive 'pages.pdf'
         New-OfficePdf -Path $path {
@@ -208,6 +237,81 @@ Describe 'PDF cmdlets' {
 
         (Get-OfficePdfInfo -Path $copy).PageCount | Should -Be 1
         (Get-OfficePdfInfo -Path $removed).PageCount | Should -Be 1
+    }
+
+    It 'splits PDFs by page count, page range, and headings-derived bookmarks' {
+        $path = Join-Path $TestDrive 'split-source.pdf'
+        New-OfficePdf -Path $path -CreateOutlineFromHeadings {
+            PdfHeading 'Chapter One'
+            PdfParagraph 'First chapter body'
+            PdfPageBreak
+            PdfHeading 'Chapter Two'
+            PdfParagraph 'Second chapter body'
+            PdfPageBreak
+            PdfHeading 'Chapter Three'
+            PdfParagraph 'Third chapter body'
+        } | Out-Null
+
+        $pages = @(Get-OfficePdfText -Path $path -ByPage)
+        $pages.Count | Should -Be 3
+        $pages[0].PageNumber | Should -Be 1
+        $pages[0].Text | Should -Match 'Chapter One'
+        $pages[2].Text | Should -Match 'Chapter Three'
+
+        $groupDirectory = Join-Path $TestDrive 'groups'
+        $groups = @(Split-OfficePdf -Path $path -OutputDirectory $groupDirectory -Prefix 'group' -PagesPerDocument 2)
+        $groups.Count | Should -Be 2
+        (Get-OfficePdfInfo -Path $groups[0].FullName).PageCount | Should -Be 2
+        (Get-OfficePdfInfo -Path $groups[1].FullName).PageCount | Should -Be 1
+
+        $rangeDirectory = Join-Path $TestDrive 'ranges'
+        $ranges = @(Split-OfficePdf -Path $path -OutputDirectory $rangeDirectory -Prefix 'range' -PageRange '1-2', '3')
+        $ranges.Count | Should -Be 2
+        Get-OfficePdfText -Path $ranges[0].FullName | Should -Match 'Chapter Two'
+        Get-OfficePdfText -Path $ranges[1].FullName | Should -Match 'Chapter Three'
+
+        $bookmarkDirectory = Join-Path $TestDrive 'bookmarks'
+        $bookmarks = @(Split-OfficePdf -Path $path -OutputDirectory $bookmarkDirectory -Prefix 'bookmark' -BookmarkName 'Chapter Two')
+        $bookmarks.Count | Should -Be 1
+        Get-OfficePdfText -Path $bookmarks[0].FullName | Should -Match 'Chapter Two'
+        Get-OfficePdfText -Path $bookmarks[0].FullName | Should -Not -Match 'Chapter Three'
+    }
+
+    It 'exposes diagnostics, optimization hints, structured text, catalog settings, and redaction planning' {
+        $path = Join-Path $TestDrive 'diagnostic-source.pdf'
+        New-OfficePdf -Path $path -CreateOutlineFromHeadings -IncludePageLabels -PageLabelPrefix 'P-' -DisplayDocTitle -FitWindow -OpenActionPage 1 -OpenActionMode Fit -PageMode UseOutlines {
+            PdfMetadata -Title 'Diagnostic Report'
+            PdfHeading 'Diagnostic Report'
+            PdfParagraph 'This paragraph should appear in structured text and redaction planning.'
+        } | Out-Null
+
+        $info = Get-OfficePdfInfo -Path $path
+        $info.HasOutlines | Should -BeTrue
+        $info.HasReadablePageLabels | Should -BeTrue
+        $info.HasReadableOpenAction | Should -BeTrue
+        $info.HasReadableViewerPreferences | Should -BeTrue
+
+        $diagnostic = Get-OfficePdfDiagnostic -Path $path
+        $diagnostic.CanRead | Should -BeTrue
+        $diagnostic.ObjectGraphParsed | Should -BeTrue
+        $diagnostic.StreamCount | Should -BeGreaterThan 0
+        $diagnostic.StreamTypeCounts.Keys | Should -Contain 'Stream'
+
+        $optimization = Get-OfficePdfOptimization -Path $path
+        $optimization.StreamCount | Should -Be $diagnostic.StreamCount
+        $optimization.LargestStreams.Count | Should -BeGreaterThan 0
+
+        $blocks = @(Get-OfficePdfText -Path $path -AsTextBlock)
+        $blocks.Count | Should -BeGreaterThan 0
+        $blocks.Text -join "`n" | Should -Match 'Diagnostic Report'
+
+        $plan = Get-OfficePdfRedactionPlan -Path $path -PageNumber 1 -X 0 -Y 0 -Width 1000 -Height 1000
+        $plan.HasMatches | Should -BeTrue
+        $plan.Matches.Text -join "`n" | Should -Match 'structured text'
+
+        $flatPath = Join-Path $TestDrive 'diagnostic-source-flat-annotations.pdf'
+        ConvertTo-OfficePdfFlatAnnotation -Path $path -OutputPath $flatPath | Should -BeOfType System.IO.FileInfo
+        Test-Path $flatPath | Should -BeTrue
     }
 
     It 'creates PDFs with document-level font options' {

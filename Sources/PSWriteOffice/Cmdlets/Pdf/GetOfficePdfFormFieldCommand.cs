@@ -26,10 +26,14 @@ public sealed class GetOfficePdfFormFieldCommand : PSCmdlet
     [Parameter]
     public string? Name { get; set; }
 
+    /// <summary>Password used to inspect a Standard password-encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var fields = PdfInspector.Inspect(PdfCommandUtilities.ResolvePath(this, Path)).FormFields;
+        var fields = PdfInspector.Inspect(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)).FormFields;
         foreach (var field in fields)
         {
             if (string.IsNullOrWhiteSpace(Name) || string.Equals(field.Name, Name, System.StringComparison.Ordinal))

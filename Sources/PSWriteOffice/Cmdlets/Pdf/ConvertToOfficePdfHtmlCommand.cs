@@ -30,6 +30,10 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
     [Parameter]
     public string? PageRange { get; set; }
 
+    /// <summary>Password used to read a Standard password-encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <summary>Optional output HTML file path.</summary>
     [Parameter]
     [Alias("OutPath")]
@@ -133,6 +137,11 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(PageRange))
         {
             options.PageRanges = PdfPageSelection.Parse(PageRange!).Ranges;
+        }
+
+        if (!string.IsNullOrEmpty(Password))
+        {
+            options.ReadOptions = PdfCommandUtilities.CreateReadOptions(Password);
         }
 
         return options;
