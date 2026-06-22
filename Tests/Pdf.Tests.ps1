@@ -243,6 +243,8 @@ Describe 'PDF cmdlets' {
 
         $info = Get-OfficePdfInfo -Path $path
         $info.HeaderVersion | Should -Be '2.0'
+        $info.EffectiveVersion | Should -Be '2.0'
+        $info.IsPdf20OrLater | Should -BeTrue
         [math]::Round($info.Pages[0].Width) | Should -Be 498
         [math]::Round($info.Pages[0].Height) | Should -Be 708
     }
@@ -402,6 +404,9 @@ startxref
 
         $report.Applied | Should -BeTrue
         $report.ActionCount | Should -Be 1
+        $report.ReportAfter | Should -Not -BeNullOrEmpty
+        $report.CandidateSavedBytes | Should -BeGreaterThan 0
+        $report.SkippedActionCount | Should -BeGreaterThan -1
         $report.Actions[0].Kind | Should -Be 'CompressStream'
         Test-Path $optimizedPath | Should -BeTrue
         (Get-Item $optimizedPath).Length | Should -BeLessThan (Get-Item $path).Length
@@ -473,11 +478,20 @@ startxref
         $report.RequiresAppendOnlyMutation | Should -BeTrue
         $report.HasLongTermValidationEvidence | Should -BeTrue
         $report.CryptographicTrustVerified | Should -BeFalse
+        $report.DigestVerified | Should -BeFalse
+        $report.CertificateChainVerified | Should -BeFalse
+        $report.RevocationChecked | Should -BeFalse
+        $report.TimestampValidationPerformed | Should -BeFalse
         $report.Signatures[0].Signature.FieldName | Should -Be 'Approval'
         $report.Signatures[0].Signature.ByteRangeValues -join ',' | Should -Be '0,10,20,30'
+        $report.Signatures[0].Signature.HasRecognizedSubFilter | Should -BeTrue
+        $report.Signatures[0].Signature.UsesDetachedCmsSubFilter | Should -BeTrue
+        $report.Signatures[0].UnsignedByteCount | Should -BeGreaterThan 0
+        $report.Signatures[0].ByteRangeCoverageRatio | Should -BeGreaterThan 0
         $report.Findings.Code | Should -Contain 'CryptographicTrustNotVerified'
         $report.Findings.Code | Should -Contain 'DocMDPDetected'
         $report.Findings.Code | Should -Contain 'LongTermValidationEvidenceDetected'
+        $report.Findings.Code | Should -Contain 'SignatureDetachedCmsSubFilter'
     }
 
     It 'applies PDF redactions using planned text block coordinates' {

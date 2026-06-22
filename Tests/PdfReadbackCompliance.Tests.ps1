@@ -78,18 +78,51 @@ Describe 'PDF readback and compliance cmdlets' {
         $report.Requirements.Count | Should -BeGreaterThan 0
     }
 
+    It 'configures PDF/A-4 and PDF/UA-2 groundwork through compliance profiles' {
+        $pdfA4Path = Join-Path $TestDrive 'pdfa4.pdf'
+        $pdfUa2Path = Join-Path $TestDrive 'pdfua2.pdf'
+
+        New-OfficePdf -Path $pdfA4Path {
+            PdfCompliance -Profile PdfA4F -Groundwork -Language 'en-US'
+            PdfMetadata -Title 'PDF/A-4F Draft'
+            PdfParagraph 'PDF/A-4F groundwork from PowerShell.'
+        } | Out-Null
+
+        New-OfficePdf -Path $pdfUa2Path {
+            PdfCompliance -Profile PdfUa2 -Groundwork -Language 'en-US'
+            PdfMetadata -Title 'PDF/UA-2 Draft'
+            PdfHeading 'PDF/UA-2 Draft'
+            PdfParagraph 'PDF/UA-2 groundwork from PowerShell.'
+        } | Out-Null
+
+        $pdfA4Info = Get-OfficePdfInfo -Path $pdfA4Path
+        $pdfUa2Info = Get-OfficePdfInfo -Path $pdfUa2Path
+        $pdfA4Report = Get-OfficePdfCompliance -Path $pdfA4Path -Profile PdfA4F
+        $pdfUa2Report = Get-OfficePdfCompliance -Path $pdfUa2Path -Profile PdfUa2
+
+        $pdfA4Info.HeaderVersion | Should -Be '2.0'
+        $pdfA4Info.IsPdf20OrLater | Should -BeTrue
+        $pdfA4Report.FindRequirement('readback-pdfa-identification').Status | Should -Be 'Satisfied'
+        $pdfA4Report.FindRequirement('readback-output-intent').Status | Should -Be 'Satisfied'
+
+        $pdfUa2Info.HeaderVersion | Should -Be '2.0'
+        $pdfUa2Info.TaggedContent.HasDocumentStructureElement | Should -BeTrue
+        $pdfUa2Info.TaggedContent.MarkedContentReferenceCount | Should -BeGreaterThan 0
+        $pdfUa2Report.FindRequirement('readback-pdfua-identification').Status | Should -Be 'Satisfied'
+        $pdfUa2Report.FindRequirement('readback-structure-element-count').Status | Should -Be 'Satisfied'
+        $pdfUa2Report.FindRequirement('readback-marked-content-references').Status | Should -Be 'Satisfied'
+        $pdfUa2Report.FindRequirement('pdfua-validation').Status | Should -Be 'Unsupported'
+    }
+
     It 'reports saved PDF compliance readback evidence by path' {
         $pdfPath = Join-Path $TestDrive 'pdfua-readback.pdf'
-        $options = [OfficeIMO.Pdf.PdfOptions]::new()
-        $options.FileVersion = [OfficeIMO.Pdf.PdfFileVersion]::Pdf17
-        $options.IncludeStandardFontToUnicodeMaps = $true
 
-        $document = [OfficeIMO.Pdf.PdfDocument]::Create($options)
-        $document.ConfigurePdfUaGroundwork('en-US') | Out-Null
-        $document.Meta('Readback PDF/UA', 'PSWriteOffice', $null, $null) | Out-Null
-        $document.H1('Readback PDF/UA') | Out-Null
-        $document.Paragraph({ param($p) $p.Text('Saved PDF compliance readback evidence') }) | Out-Null
-        $document.Save($pdfPath)
+        New-OfficePdf -Path $pdfPath {
+            PdfCompliance -Profile PdfUa1 -Groundwork -Language 'en-US'
+            PdfMetadata -Title 'Readback PDF/UA' -Author 'PSWriteOffice'
+            PdfHeading 'Readback PDF/UA'
+            PdfParagraph 'Saved PDF compliance readback evidence'
+        } | Out-Null
 
         $report = Get-OfficePdfCompliance -Path $pdfPath -Profile PdfUa1
 
