@@ -233,6 +233,21 @@ Describe 'PDF cmdlets' {
         [math]::Round($page.Height) | Should -Be 842
     }
 
+    It 'reports append-only mutation support for generated PDFs' {
+        (Get-Command Get-OfficePdfAppendOnlyMutation).OutputType.Type.Name | Should -Contain 'PdfAppendOnlyMutationReport'
+
+        $path = Join-Path $TestDrive 'append-plan.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'Append-only metadata readiness'
+        } | Out-Null
+
+        $plan = Get-OfficePdfAppendOnlyMutation -Path $path
+        $plan.CanAppendMetadata | Should -BeTrue
+        $plan.SupportedActions | Should -Contain 'Metadata'
+        $plan.BlockedActions | Should -Contain 'FormFill'
+        $plan.Summary | Should -Match 'Metadata-only'
+    }
+
     It 'supports expanded page sizes and PDF 2 file version' {
         $path = Join-Path $TestDrive 'b5-pdf20.pdf'
 
@@ -326,10 +341,15 @@ Describe 'PDF cmdlets' {
         $diagnostic.ObjectGraphParsed | Should -BeTrue
         $diagnostic.StreamCount | Should -BeGreaterThan 0
         $diagnostic.StreamTypeCounts.Keys | Should -Contain 'Stream'
+        $diagnostic.FontCount | Should -BeGreaterThan 0
+        $diagnostic.Fonts[0].ObjectNumber | Should -BeGreaterThan 0
 
         $optimization = Get-OfficePdfOptimization -Path $path
         $optimization.StreamCount | Should -Be $diagnostic.StreamCount
         $optimization.LargestStreams.Count | Should -BeGreaterThan 0
+        $optimization.TotalStreamBytes | Should -BeGreaterThan 0
+        $optimization.LargestStreamBytes | Should -BeGreaterThan 0
+        $optimization.DuplicateStreamGroupCount | Should -BeGreaterOrEqual 0
 
         $blocks = @(Get-OfficePdfText -Path $path -AsTextBlock)
         $blocks.Count | Should -BeGreaterThan 0

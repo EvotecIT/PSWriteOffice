@@ -78,6 +78,23 @@ Describe 'PDF readback and compliance cmdlets' {
         $report.Requirements.Count | Should -BeGreaterThan 0
     }
 
+    It 'reports compliance proof status and external validator placeholders' {
+        $document = New-OfficePdf {
+            PdfMetadata -Title 'Compliance Proof Draft'
+            PdfCompliance -Profile PdfA3B -Groundwork
+            PdfParagraph 'Compliance proof combines readiness with external validation evidence.'
+        }
+
+        $proof = $document | Get-OfficePdfCompliance -Profile PdfA3B -Proof
+
+        $proof.Profile | Should -Be 'PdfA3B'
+        $proof.RequiredExternalValidatorCount | Should -BeGreaterThan 0
+        $proof.RequiresExternalValidation | Should -BeTrue
+        $proof.MissingExternalValidatorCount | Should -BeGreaterThan 0
+        $proof.ProofStatus | Should -Be 'InternalGaps'
+        $proof.CanClaimConformance | Should -BeFalse
+    }
+
     It 'configures PDF/A-4 and PDF/UA-2 groundwork through compliance profiles' {
         $pdfA4Path = Join-Path $TestDrive 'pdfa4.pdf'
         $pdfUa2Path = Join-Path $TestDrive 'pdfua2.pdf'

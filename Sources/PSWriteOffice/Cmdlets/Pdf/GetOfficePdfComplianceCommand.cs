@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <para>Returns the OfficeIMO.Pdf readiness report before saving.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdfCompliance", DefaultParameterSetName = ParameterSetDocument)]
-[OutputType(typeof(PdfComplianceReadinessReport))]
+[OutputType(typeof(PdfComplianceReadinessReport), typeof(PdfComplianceProofReport))]
 public sealed class GetOfficePdfComplianceCommand : PSCmdlet
 {
     private const string ParameterSetDocument = "Document";
@@ -40,16 +40,22 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetPath)]
     public string? Password { get; set; }
 
+    /// <summary>Return a proof report that combines readiness with required external validator evidence placeholders.</summary>
+    [Parameter]
+    public SwitchParameter Proof { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         if (ParameterSetName == ParameterSetPath)
         {
-            WriteObject(PdfComplianceAnalyzer.AssessReadback(Profile!.Value, PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)));
+            var readiness = PdfComplianceAnalyzer.AssessReadback(Profile!.Value, PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
+            WriteObject(Proof.IsPresent ? PdfComplianceAnalyzer.AssessProof(readiness) : readiness);
             return;
         }
 
         var document = Document ?? PdfDslContext.Require(this).Document;
-        WriteObject(Profile.HasValue ? document.AssessCompliance(Profile.Value) : document.AssessCompliance());
+        var documentReadiness = Profile.HasValue ? document.AssessCompliance(Profile.Value) : document.AssessCompliance();
+        WriteObject(Proof.IsPresent ? PdfComplianceAnalyzer.AssessProof(documentReadiness) : documentReadiness);
     }
 }
