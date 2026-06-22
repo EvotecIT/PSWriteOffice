@@ -99,4 +99,35 @@ Describe 'PDF readback and compliance cmdlets' {
         $report.FindRequirement('readback-marked-catalog').Status | Should -Be 'Satisfied'
         $report.FindRequirement('pdfua-validation').Status | Should -Be 'Unsupported'
     }
+
+    It 'configures e-invoice associated file groundwork from XML' {
+        $xmlPath = Join-Path $TestDrive 'invoice.xml'
+        $pdfPath = Join-Path $TestDrive 'einvoice.pdf'
+        @'
+<?xml version="1.0" encoding="UTF-8"?>
+<rsm:CrossIndustryInvoice xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+  <rsm:ExchangedDocumentContext>
+    <ram:GuidelineSpecifiedDocumentContextParameter>
+      <ram:ID>urn:factur-x.eu:1p0:en16931</ram:ID>
+    </ram:GuidelineSpecifiedDocumentContextParameter>
+  </rsm:ExchangedDocumentContext>
+</rsm:CrossIndustryInvoice>
+'@ | Set-Content -Path $xmlPath -Encoding UTF8
+
+        New-OfficePdf -Path $pdfPath {
+            PdfElectronicInvoice -Path $xmlPath -Profile FacturX -ConformanceLevel 'EN 16931'
+            PdfMetadata -Title 'E-invoice'
+            PdfHeading 'E-invoice'
+            PdfParagraph 'The CII XML payload is embedded as an associated file.'
+        } | Out-Null
+
+        $attachment = Get-OfficePdfAttachment -Path $pdfPath
+        $report = Get-OfficePdfCompliance -Path $pdfPath -Profile FacturX
+
+        $attachment.FileName | Should -Be 'factur-x.xml'
+        $attachment.MimeType | Should -Be 'application/xml'
+        $attachment.Relationship | Should -Be 'Data'
+        $report.FindRequirement('readback-einvoice-xmp').Status | Should -Be 'Satisfied'
+        $report.FindRequirement('readback-associated-invoice-file').Status | Should -Be 'Satisfied'
+    }
 }
