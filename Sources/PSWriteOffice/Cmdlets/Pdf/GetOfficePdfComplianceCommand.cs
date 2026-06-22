@@ -64,6 +64,22 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     [Parameter]
     public string? ExternalValidatorName { get; set; }
 
+    /// <summary>External validator process exit code. When provided, status is inferred from -ExternalSuccessExitCode.</summary>
+    [Parameter]
+    public int? ExternalExitCode { get; set; }
+
+    /// <summary>External validator process exit code that means success.</summary>
+    [Parameter]
+    public int ExternalSuccessExitCode { get; set; } = 0;
+
+    /// <summary>External validator executable path recorded in the proof evidence.</summary>
+    [Parameter]
+    public string? ExternalExecutablePath { get; set; }
+
+    /// <summary>External validator command-line arguments recorded in the proof evidence.</summary>
+    [Parameter]
+    public string? ExternalArguments { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -92,7 +108,9 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
             var validator = ExternalValidator[i];
             var name = string.IsNullOrWhiteSpace(ExternalValidatorName) ? validator.ToString() : ExternalValidatorName!;
             var diagnostic = string.IsNullOrWhiteSpace(ExternalDiagnostic) ? ExternalStatus.ToString() : ExternalDiagnostic!;
-            results[i] = new PdfExternalValidationResult(validator, ExternalStatus, name, diagnostic, ExternalProfile);
+            results[i] = ExternalExitCode.HasValue
+                ? PdfExternalValidationResult.FromExitCode(validator, ExternalExitCode.Value, name, diagnostic, ExternalProfile, ExternalExecutablePath, ExternalArguments, ExternalSuccessExitCode)
+                : new PdfExternalValidationResult(validator, ExternalStatus, name, diagnostic, ExternalProfile, ExternalExecutablePath, ExternalArguments);
         }
 
         return results;

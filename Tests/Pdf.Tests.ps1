@@ -447,6 +447,7 @@ startxref
         (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'PassThruReport'
         (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'MinimumStreamCompressionBytes'
         (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'KeepUnreferencedObjects'
+        (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'KeepDuplicateStreams'
 
         $path = Join-Path $TestDrive 'uncompressed-source.pdf'
         $optimizedPath = Join-Path $TestDrive 'uncompressed-optimized.pdf'

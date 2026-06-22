@@ -34,6 +34,10 @@ public sealed class ConvertToOfficePdfOptimizedCommand : PSCmdlet
     [Parameter]
     public SwitchParameter KeepUnreferencedObjects { get; set; }
 
+    /// <summary>Keep byte-identical stream objects instead of rewriting duplicate references to one object.</summary>
+    [Parameter]
+    public SwitchParameter KeepDuplicateStreams { get; set; }
+
     /// <summary>Write the optimized candidate even when it is not smaller than the source PDF.</summary>
     [Parameter]
     public SwitchParameter AllowLarger { get; set; }
@@ -60,6 +64,7 @@ public sealed class ConvertToOfficePdfOptimizedCommand : PSCmdlet
         {
             CompressUnfilteredStreams = !NoCompressStreams.IsPresent,
             RemoveUnreferencedObjects = !KeepUnreferencedObjects.IsPresent,
+            DeduplicateIdenticalStreams = !KeepDuplicateStreams.IsPresent,
             KeepOriginalWhenNotSmaller = !AllowLarger.IsPresent,
             MinimumStreamCompressionBytes = MinimumStreamCompressionBytes
         };

@@ -97,6 +97,12 @@ Describe 'PDF readback and compliance cmdlets' {
         $withEvidence = $document | Get-OfficePdfCompliance -Profile PdfA3B -Proof -ExternalValidator VeraPdf -ExternalProfile 'PDF/A-3b' -ExternalDiagnostic 'veraPDF passed'
         $withEvidence.PassedExternalValidationCount | Should -Be 1
         $withEvidence.ExternalValidations[0].Diagnostic | Should -Be 'veraPDF passed'
+
+        $fromExitCode = $document | Get-OfficePdfCompliance -Profile PdfA3B -Proof -ExternalValidator VeraPdf -ExternalProfile 'PDF/A-3b' -ExternalDiagnostic 'veraPDF process result' -ExternalExitCode 0 -ExternalExecutablePath 'verapdf' -ExternalArguments '--format text file.pdf'
+        $fromExitCode.PassedExternalValidationCount | Should -Be 1
+        $fromExitCode.ExternalValidations[0].ExitCode | Should -Be 0
+        $fromExitCode.ExternalValidations[0].ExecutablePath | Should -Be 'verapdf'
+        $fromExitCode.ExternalValidations[0].Arguments | Should -Be '--format text file.pdf'
     }
 
     It 'gets font diagnostics as pipeline-friendly objects' {
@@ -115,7 +121,11 @@ Describe 'PDF readback and compliance cmdlets' {
 
     It 'gets annotation readback with action filters' {
         (Get-Command Get-OfficePdfAnnotation).Parameters.Keys | Should -Contain 'WithAction'
+        Get-Command Set-OfficePdfAnnotation | Should -Not -BeNullOrEmpty
+        Get-Command Remove-OfficePdfAnnotation | Should -Not -BeNullOrEmpty
         $pdfPath = Join-Path $TestDrive 'annotations.pdf'
+        $updatedPath = Join-Path $TestDrive 'annotations-updated.pdf'
+        $removedPath = Join-Path $TestDrive 'annotations-removed.pdf'
         @'
 %PDF-1.7
 1 0 obj
@@ -141,6 +151,40 @@ startxref
         $annotations.Count | Should -Be 1
         $annotations[0].Contents | Should -Be 'Review note'
         $annotations[0].HasAdditionalActions | Should -BeTrue
+
+        @'
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 300] /Annots [4 0 R] >>
+endobj
+4 0 obj
+<< /Type /Annot /Subtype /Text /Rect [20 20 40 40] /Contents (Editable note) >>
+endobj
+trailer
+<< /Root 1 0 R /Size 5 >>
+startxref
+123
+%%EOF
+'@ | Set-Content -Path $pdfPath -NoNewline -Encoding Ascii
+
+        $updateReport = Set-OfficePdfAnnotation -Path $pdfPath -OutputPath $updatedPath -ObjectNumber 4 -Contents 'Updated note' -Title 'Reviewer' -Name 'Note-2' -Color '#0080FF' -RemoveAction -PassThruReport
+        $updateReport.Applied | Should -BeTrue
+        $updated = @(Get-OfficePdfAnnotation -Path $updatedPath -Subtype Text)
+        $updated.Count | Should -Be 1
+        $updated[0].Contents | Should -Be 'Updated note'
+        $updated[0].Title | Should -Be 'Reviewer'
+        $updated[0].Name | Should -Be 'Note-2'
+        $updated[0].HasAdditionalActions | Should -BeFalse
+
+        $removeReport = Remove-OfficePdfAnnotation -Path $updatedPath -OutputPath $removedPath -Subtype Text -PassThruReport
+        $removeReport.Applied | Should -BeTrue
+        @(Get-OfficePdfAnnotation -Path $removedPath -Subtype Text).Count | Should -Be 0
     }
 
     It 'configures PDF/A-4 and PDF/UA-2 groundwork through compliance profiles' {
