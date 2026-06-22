@@ -77,4 +77,26 @@ Describe 'PDF readback and compliance cmdlets' {
         $report.DisplayName | Should -BeLike '*PDF/UA*'
         $report.Requirements.Count | Should -BeGreaterThan 0
     }
+
+    It 'reports saved PDF compliance readback evidence by path' {
+        $pdfPath = Join-Path $TestDrive 'pdfua-readback.pdf'
+        $options = [OfficeIMO.Pdf.PdfOptions]::new()
+        $options.FileVersion = [OfficeIMO.Pdf.PdfFileVersion]::Pdf17
+        $options.IncludeStandardFontToUnicodeMaps = $true
+
+        $document = [OfficeIMO.Pdf.PdfDocument]::Create($options)
+        $document.ConfigurePdfUaGroundwork('en-US') | Out-Null
+        $document.Meta('Readback PDF/UA', 'PSWriteOffice', $null, $null) | Out-Null
+        $document.H1('Readback PDF/UA') | Out-Null
+        $document.Paragraph({ param($p) $p.Text('Saved PDF compliance readback evidence') }) | Out-Null
+        $document.Save($pdfPath)
+
+        $report = Get-OfficePdfCompliance -Path $pdfPath -Profile PdfUa1
+
+        $report.Profile | Should -Be 'PdfUa1'
+        $report.FindRequirement('readback-pdfua-identification').Status | Should -Be 'Satisfied'
+        $report.FindRequirement('readback-document-title').Status | Should -Be 'Satisfied'
+        $report.FindRequirement('readback-marked-catalog').Status | Should -Be 'Satisfied'
+        $report.FindRequirement('pdfua-validation').Status | Should -Be 'Unsupported'
+    }
 }

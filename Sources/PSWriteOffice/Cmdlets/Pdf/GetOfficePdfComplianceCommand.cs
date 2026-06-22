@@ -15,25 +15,41 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $pdf | Get-OfficePdfCompliance -Profile PdfA3B</code>
 ///   <para>Returns the OfficeIMO.Pdf readiness report before saving.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficePdfCompliance", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Get, "OfficePdfCompliance", DefaultParameterSetName = ParameterSetDocument)]
 [OutputType(typeof(PdfComplianceReadinessReport))]
 public sealed class GetOfficePdfComplianceCommand : PSCmdlet
 {
-    private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
+    private const string ParameterSetPath = "Path";
 
     /// <summary>Generated PDF document to assess outside the DSL context.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
+    /// <summary>Existing PDF file path to assess after generation.</summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPath)]
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
+
     /// <summary>Compliance profile to assess. When omitted, the document's configured profile is used.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetPath)]
     public PdfComplianceProfile? Profile { get; set; }
+
+    /// <summary>Password used to inspect a Standard password-encrypted PDF.</summary>
+    [Parameter(ParameterSetName = ParameterSetPath)]
+    public string? Password { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
+        if (ParameterSetName == ParameterSetPath)
+        {
+            WriteObject(PdfComplianceAnalyzer.AssessReadback(Profile!.Value, PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)));
+            return;
+        }
+
+        var document = Document ?? PdfDslContext.Require(this).Document;
         WriteObject(Profile.HasValue ? document.AssessCompliance(Profile.Value) : document.AssessCompliance());
     }
 }
