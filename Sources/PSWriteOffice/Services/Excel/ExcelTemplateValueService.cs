@@ -93,6 +93,14 @@ internal static class ExcelTemplateValueService
             return new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
         }
 
+        if (row is PSObject psRow
+            && psRow.BaseObject != null
+            && !ReferenceEquals(psRow.BaseObject, row)
+            && psRow.BaseObject is not PSCustomObject)
+        {
+            return ConvertRow(psRow.BaseObject);
+        }
+
         if (row is Hashtable hashtable)
         {
             return ConvertValues(hashtable);
@@ -113,6 +121,16 @@ internal static class ExcelTemplateValueService
             return result;
         }
 
+        if (TryConvertGenericDictionary(row, out var genericDictionary))
+        {
+            return genericDictionary;
+        }
+
+        if (TryConvertKeyValueEntries(row, out var keyValueEntries))
+        {
+            return keyValueEntries;
+        }
+
         var psObject = PSObject.AsPSObject(row);
         var properties = psObject.Properties
             .Where(property => property.IsGettable && property.MemberType is PSMemberTypes.NoteProperty or PSMemberTypes.Property)
@@ -124,5 +142,84 @@ internal static class ExcelTemplateValueService
         }
 
         return values;
+    }
+
+    private static bool TryConvertGenericDictionary(object row, out IDictionary<string, object?> values)
+    {
+        values = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+        Type rowType = row.GetType();
+        bool isStringKeyDictionary = rowType
+            .GetInterfaces()
+            .Concat(new[] { rowType })
+            .Any(type => type.IsGenericType
+                && (type.GetGenericTypeDefinition() == typeof(IDictionary<,>)
+                    || type.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>))
+                && type.GetGenericArguments()[0] == typeof(string));
+
+        if (!isStringKeyDictionary || row is not IEnumerable entries)
+        {
+            return false;
+        }
+
+        foreach (var entry in entries)
+        {
+            if (entry == null)
+            {
+                continue;
+            }
+
+            Type entryType = entry.GetType();
+            var keyProperty = entryType.GetProperty("Key");
+            var valueProperty = entryType.GetProperty("Value");
+            if (keyProperty == null || valueProperty == null)
+            {
+                continue;
+            }
+
+            var key = Convert.ToString(keyProperty.GetValue(entry), CultureInfo.InvariantCulture);
+            if (!string.IsNullOrWhiteSpace(key))
+            {
+                values[key!] = valueProperty.GetValue(entry);
+            }
+        }
+
+        return true;
+    }
+
+    private static bool TryConvertKeyValueEntries(object row, out IDictionary<string, object?> values)
+    {
+        values = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+        if (row is string || row is not IEnumerable entries)
+        {
+            return false;
+        }
+
+        bool hasEntries = false;
+        foreach (var entry in entries)
+        {
+            if (entry == null)
+            {
+                return false;
+            }
+
+            Type entryType = entry.GetType();
+            var keyProperty = entryType.GetProperty("Key");
+            var valueProperty = entryType.GetProperty("Value");
+            if (keyProperty == null || valueProperty == null)
+            {
+                return false;
+            }
+
+            var key = Convert.ToString(keyProperty.GetValue(entry), CultureInfo.InvariantCulture);
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return false;
+            }
+
+            values[key!] = valueProperty.GetValue(entry);
+            hasEntries = true;
+        }
+
+        return hasEntries;
     }
 }

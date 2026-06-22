@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Format-Table SheetName, FrozenRowCount, FrozenColumnCount, ShowGridlines, ZoomScale</code>
 ///   <para>Returns view metadata useful for workbook audits and maintenance scripts.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeExcelWorksheetView", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Get, "OfficeExcelWorksheetView", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelWorksheetView")]
 [OutputType(typeof(PSObject))]
 public sealed class GetOfficeExcelWorksheetViewCommand : PSCmdlet

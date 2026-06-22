@@ -1848,6 +1848,24 @@ Describe 'Excel DSL surface' {
         $viewAfterUpdate.View | Should -Be 'normal'
     }
 
+    It 'reads worksheet view options from the current DSL sheet' {
+        $path = Join-Path $TestDrive 'DslExcelWorksheetViewContext.xlsx'
+        $script:currentSheetView = $null
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelRow -Row 1 -Values 'Name', 'Value'
+                Set-OfficeExcelWorksheetView -HideGridlines -ZoomScale 125 -View PageLayout
+                $script:currentSheetView = Get-OfficeExcelWorksheetView
+            }
+        }
+
+        $script:currentSheetView.SheetName | Should -Be 'Data'
+        $script:currentSheetView.ShowGridlines | Should -BeFalse
+        $script:currentSheetView.ZoomScale | Should -Be 125
+        $script:currentSheetView.View | Should -Be 'pageLayout'
+    }
+
     It 'sets the active worksheet through thin workbook commands' {
         $path = Join-Path $TestDrive 'DslExcelActiveSheet.xlsx'
 
@@ -2031,6 +2049,30 @@ Describe 'Excel DSL surface' {
         $worksheetXml | Should -Match 'r="A4"'
         $worksheetXml | Should -Not -Match '\{\{'
         (Read-XlsxEntryText -Path $path -Entry 'xl/sharedStrings.xml') | Should -Match 'Footer'
+    }
+
+    It 'repeats an Excel template row from generic dictionary data' {
+        $path = Join-Path $TestDrive 'DslExcelTemplateRows.GenericDictionary.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Invoice' -Content {
+                Set-OfficeExcelCell -Address A1 -Value 'Item'
+                Set-OfficeExcelCell -Address B1 -Value 'Amount'
+                Set-OfficeExcelCell -Address A2 -Value '{{Name}}'
+                Set-OfficeExcelCell -Address B2 -Value 'Amount {{Amount:currency}}'
+                Set-OfficeExcelCell -Address A3 -Value 'Footer'
+            }
+        }
+
+        $first = [System.Collections.Generic.Dictionary[string,object]]::new()
+        $first['Name'] = 'Consulting'
+        $first['Amount'] = 1200
+        Invoke-OfficeExcelTemplateRow -Path $path -Sheet Invoice -TemplateRow 2 -InputObject $first -CultureName en-US -MissingValueBehavior Throw -PassThru | Should -Be 2
+
+        $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $worksheetXml | Should -Match 'Consulting'
+        $worksheetXml | Should -Match 'Amount \$1,200\.00'
+        $worksheetXml | Should -Not -Match '\{\{'
     }
 
     It 'includes and removes optional Excel template rows' {
