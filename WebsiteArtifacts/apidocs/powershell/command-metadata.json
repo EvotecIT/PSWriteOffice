@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-18T10:00:09.0406421+00:00",
+  "generatedAt": "2026-06-22T09:00:08.8189330+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -1011,8 +1011,8 @@
         "ConvertFrom-MarkdownHtml"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/ConvertFromOfficeMarkdownHtmlCommand.cs",
-      "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertFromOfficeMarkdownHtmlCommand.cs#L27"
+      "sourceLine": 28,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertFromOfficeMarkdownHtmlCommand.cs#L28"
     },
     {
       "name": "ConvertFrom-OfficePdfHtml",
@@ -1077,8 +1077,8 @@
         "ConvertTo-MarkdownHtml"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownHtmlCommand.cs",
-      "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownHtmlCommand.cs#L25"
+      "sourceLine": 26,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownHtmlCommand.cs#L26"
     },
     {
       "name": "ConvertTo-OfficePdfFlatForm",
@@ -1412,8 +1412,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownCommand.cs",
-      "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownCommand.cs#L23"
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownCommand.cs#L24"
     },
     {
       "name": "Get-OfficeMarkdownFrontMatter",
@@ -1436,8 +1436,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownNodeCommand.cs",
-      "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownNodeCommand.cs#L25"
+      "sourceLine": 26,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/GetOfficeMarkdownNodeCommand.cs#L26"
     },
     {
       "name": "Get-OfficeMarkdownTable",
@@ -2062,8 +2062,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/SaveOfficeMarkdownCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/SaveOfficeMarkdownCommand.cs#L19"
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/SaveOfficeMarkdownCommand.cs#L20"
     },
     {
       "name": "Save-OfficePdf",
