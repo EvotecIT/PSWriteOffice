@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>Get-OfficeExcelTemplateMarker -Path .\Invoice.xlsx -Sheet Invoice -Value @{ Number = 'INV-001'; Total = 123.45 }</code>
 ///   <para>Returns one object per marker with address, format, and binding metadata.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeExcelTemplateMarker", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Get, "OfficeExcelTemplateMarker", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelTemplateMarkers")]
 [OutputType(typeof(PSObject))]
 public sealed class GetOfficeExcelTemplateMarkerCommand : PSCmdlet

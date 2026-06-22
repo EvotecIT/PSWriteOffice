@@ -60,6 +60,7 @@ public sealed class ClearOfficeExcelPageBreakCommand : PSCmdlet
         }
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        var shouldSave = false;
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
         {
             if (!ShouldProcess(sheet.Name, "Clear Excel manual page breaks"))
@@ -69,21 +70,24 @@ public sealed class ClearOfficeExcelPageBreakCommand : PSCmdlet
 
             if (All.IsPresent)
             {
-                sheet.ClearManualPageBreaks(save: false);
+                shouldSave |= sheet.ClearManualPageBreaks(save: false);
                 continue;
             }
 
             foreach (var row in Row)
             {
-                sheet.RemoveManualRowPageBreak(row, save: false);
+                shouldSave |= sheet.RemoveManualRowPageBreak(row, save: false);
             }
 
             foreach (var column in Column)
             {
-                sheet.RemoveManualColumnPageBreak(column, save: false);
+                shouldSave |= sheet.RemoveManualColumnPageBreak(column, save: false);
             }
         }
 
-        workbook.SaveIfOwned();
+        if (shouldSave)
+        {
+            workbook.SaveIfOwned();
+        }
     }
 }

@@ -1986,8 +1986,12 @@ Describe 'Excel DSL surface' {
                 Set-OfficeExcelCell -Address A1 -Value 'Invoice {{Number}}'
                 Set-OfficeExcelCell -Address A2 -Value 'Total {{Total:currency}}'
                 Set-OfficeExcelCell -Address A3 -Value 'Missing {{Optional}}'
+                $script:contextTemplateMarkers = @(Get-OfficeExcelTemplateMarker -Value @{ Number = 'INV-001'; Total = 123.4 })
             }
         }
+
+        $script:contextTemplateMarkers.Count | Should -Be 3
+        ($script:contextTemplateMarkers | Where-Object Name -eq Number).IsBound | Should -BeTrue
 
         $markers = @(Get-OfficeExcelTemplateMarker -Path $path -Sheet Invoice -Value @{ Number = 'INV-001'; Total = 123.4 })
         $markers.Count | Should -Be 3
@@ -2725,7 +2729,9 @@ Describe 'Excel DSL surface' {
         $breaks = @(Get-OfficeExcelPageBreak -Path $path -Sheet Data)
         $breaks.Count | Should -Be 2
         ($breaks | Where-Object Type -EQ 'Row').Index | Should -Be 5
+        ($breaks | Where-Object Type -EQ 'Row').Position | Should -Be 5
         ($breaks | Where-Object Type -EQ 'Column').Index | Should -Be 1
+        ($breaks | Where-Object Type -EQ 'Column').Position | Should -Be 1
 
         $bothFilters = @(Get-OfficeExcelPageBreak -Path $path -Sheet Data -Row -Column)
         $bothFilters.Count | Should -Be 2
@@ -2735,6 +2741,11 @@ Describe 'Excel DSL surface' {
         $worksheetXml | Should -Match '<(?:\w+:)?colBreaks\b'
         $worksheetXml | Should -Match 'id="5"'
         $worksheetXml | Should -Match 'id="1"'
+
+        $beforeWhatIf = [System.IO.File]::ReadAllBytes($path)
+        Clear-OfficeExcelPageBreak -Path $path -Sheet Data -Row 5 -WhatIf
+        $afterWhatIf = [System.IO.File]::ReadAllBytes($path)
+        [Convert]::ToBase64String($afterWhatIf) | Should -Be ([Convert]::ToBase64String($beforeWhatIf))
 
         Clear-OfficeExcelPageBreak -Path $path -Sheet Data -Row 5 -Confirm:$false
 

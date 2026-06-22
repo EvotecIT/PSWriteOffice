@@ -10,6 +10,7 @@ internal static class ExcelPageBreakRecordService
         record.Properties.Add(new PSNoteProperty("Type", kind));
         record.Properties.Add(new PSNoteProperty("Kind", kind));
         record.Properties.Add(new PSNoteProperty("Index", index));
+        record.Properties.Add(new PSNoteProperty("Position", index));
         record.Properties.Add(new PSNoteProperty("SheetName", sheetName));
         record.Properties.Add(new PSNoteProperty("Sheet", sheetName));
         if (!string.IsNullOrWhiteSpace(path))

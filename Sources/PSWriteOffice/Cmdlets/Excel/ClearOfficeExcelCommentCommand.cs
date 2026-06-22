@@ -70,6 +70,7 @@ public sealed class ClearOfficeExcelCommentCommand : PSCmdlet
         var filter = CreateRequiredFilter();
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
         var cleared = 0;
+        var shouldSave = false;
 
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
         {
@@ -78,10 +79,15 @@ public sealed class ClearOfficeExcelCommentCommand : PSCmdlet
                 continue;
             }
 
+            shouldSave = true;
             cleared += sheet.ClearComments(filter);
         }
 
-        workbook.SaveIfOwned();
+        if (shouldSave)
+        {
+            workbook.SaveIfOwned();
+        }
+
         if (PassThru.IsPresent)
         {
             WriteObject(cleared);

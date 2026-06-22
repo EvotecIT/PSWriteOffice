@@ -63,6 +63,7 @@ public sealed class ClearOfficeExcelDataValidationCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        var shouldSave = false;
 
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
         {
@@ -73,9 +74,13 @@ public sealed class ClearOfficeExcelDataValidationCommand : PSCmdlet
                 continue;
             }
 
+            shouldSave = true;
             sheet.RemoveDataValidations(targetRange);
         }
 
-        workbook.SaveIfOwned();
+        if (shouldSave)
+        {
+            workbook.SaveIfOwned();
+        }
     }
 }
