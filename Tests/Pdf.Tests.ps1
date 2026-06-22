@@ -12,7 +12,7 @@ Describe 'PDF cmdlets' {
         $encryptedPath = Join-Path $TestDrive 'encrypted.pdf'
         [IO.File]::WriteAllBytes($encryptedPath, [Convert]::FromBase64String('JVBERi0xLjQKJT8/Pz8KMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAzMDAgMjAwXSAvUmVzb3VyY2VzIDw8IC9Gb250IDw8IC9GMSA0IDAgUiA+PiA+PiAvQ29udGVudHMgNSAwIFIgPj4KZW5kb2JqCjQgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNlRm9udCAvSGVsdmV0aWNhID4+CmVuZG9iago1IDAgb2JqCjw8IC9MZW5ndGggNDYgPj4Kc3RyZWFtCi8xB1rv33VvGaaV2g01B7caayy3ttoqyqa6Fkx+aapdiBLgquqJCxhp8zWpAXQKZW5kc3RyZWFtCmVuZG9iago2IDAgb2JqCjw8IC9GaWx0ZXIgL1N0YW5kYXJkIC9WIDEgL1IgMiAvTGVuZ3RoIDQwIC9PIDw4RUVCMDk1ODE5NjYyQTc3NDQ0MkZCMDcyRTNEOUYxOUU5RDEzMEVDMDlBNEQwMDYxRTc4RkU5MjBGN0FCNjJGPiAvVSA8QjFFNzY0MTI2QzQ4RDI4RDkwNTI1NTk1MjAwREQ4MTg3NEI4NkZFMUNBNTRCQTAxODZFNThCRTJDMzU5ODhEQz4gL1AgLTQgPj4KZW5kb2JqCnhyZWYKMCA3CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDY0IDAwMDAwIG4gCjAwMDAwMDAxMjEgMDAwMDAgbiAKMDAwMDAwMDI0NyAwMDAwMCBuIAowMDAwMDAwMzE3IDAwMDAwIG4gCjAwMDAwMDA0MTMgMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA3IC9Sb290IDEgMCBSIC9FbmNyeXB0IDYgMCBSIC9JRCBbPDEwNDVBODdDMjIxODRFQzE5MTRBQ0Y2NjMxRDI3NDAzPiA8MTA0NUE4N0MyMjE4NEVDMTkxNEFDRjY2MzFEMjc0MDM+XSA+PgpzdGFydHhyZWYKNjE5CiUlRU9GCg=='))
 
-        foreach ($name in 'Get-OfficePdf', 'Get-OfficePdfInfo', 'Get-OfficePdfPreflight', 'Get-OfficePdfDiagnostic', 'Get-OfficePdfOptimization', 'Get-OfficePdfText', 'Get-OfficePdfAttachment', 'Get-OfficePdfFormField', 'Get-OfficePdfRedactionPlan', 'ConvertTo-OfficePdfMarkdown', 'ConvertTo-OfficePdfHtml', 'ConvertTo-OfficePdfRedacted') {
+        foreach ($name in 'Get-OfficePdf', 'Get-OfficePdfInfo', 'Get-OfficePdfPreflight', 'Get-OfficePdfDiagnostic', 'Get-OfficePdfOptimization', 'Get-OfficePdfSignature', 'Get-OfficePdfText', 'Get-OfficePdfAttachment', 'Get-OfficePdfFormField', 'Get-OfficePdfRedactionPlan', 'ConvertTo-OfficePdfMarkdown', 'ConvertTo-OfficePdfHtml', 'ConvertTo-OfficePdfRedacted') {
             (Get-Command $name).Parameters.Keys | Should -Contain 'Password'
         }
 
@@ -360,6 +360,78 @@ Describe 'PDF cmdlets' {
         $info.Security.HasIncrementalUpdates | Should -BeTrue
         $info.Security.RevisionCount | Should -BeGreaterThan 1
         Get-OfficePdfText -Path $incrementalPath | Should -Match 'Incremental body text'
+    }
+
+    It 'reports PDF signature structure and preservation markers' {
+        $path = Join-Path $TestDrive 'signed-fixture.pdf'
+        $pdf = @'
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R /AcroForm 7 0 R /Perms << /DocMDP 6 0 R /UR3 6 0 R >> /DSS 9 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Contents 4 0 R /Annots [5 0 R] >>
+endobj
+4 0 obj
+<< /Length 0 >>
+stream
+
+endstream
+endobj
+5 0 obj
+<< /FT /Sig /T (Approval) /V 6 0 R /Subtype /Widget /Rect [10 10 120 40] >>
+endobj
+6 0 obj
+<< /Type /Sig /Filter /Adobe.PPKLite /SubFilter /adbe.pkcs7.detached /Name (Alice) /ByteRange [0 10 20 30] /Contents <001122> /Reference [<< /TransformMethod /DocMDP /TransformParams << /Type /TransformParams /V /1.2 /P 2 >> >>] >>
+endobj
+7 0 obj
+<< /Fields [5 0 R] /SigFlags 3 >>
+endobj
+8 0 obj
+<< /Producer (PSWriteOffice signed fixture) >>
+endobj
+9 0 obj
+<< /Certs [10 0 R] /OCSPs [11 0 R] /CRLs [12 0 R] /VRI << /ABCDEF << /Cert [10 0 R] /OCSP [11 0 R] /CRL [12 0 R] /TS 13 0 R >> >> >>
+endobj
+10 0 obj
+<< /Type /EmbeddedFile /Length 0 >>
+endobj
+11 0 obj
+<< /Type /EmbeddedFile /Length 0 >>
+endobj
+12 0 obj
+<< /Type /EmbeddedFile /Length 0 >>
+endobj
+13 0 obj
+<< /Type /TimestampEvidence /Length 0 >>
+endobj
+trailer
+<< /Root 1 0 R /Info 8 0 R /ID [(abc) (def)] /Size 14 /Prev 100 >>
+startxref
+100
+%%EOF
+startxref
+200
+%%EOF
+'@
+        [IO.File]::WriteAllBytes($path, [Text.Encoding]::ASCII.GetBytes($pdf))
+
+        $report = Get-OfficePdfSignature -Path $path
+
+        $report.HasSignatures | Should -BeTrue
+        $report.SignatureCount | Should -Be 1
+        $report.IsStructurallyValid | Should -BeTrue
+        $report.RequiresAppendOnlyMutation | Should -BeTrue
+        $report.HasLongTermValidationEvidence | Should -BeTrue
+        $report.CryptographicTrustVerified | Should -BeFalse
+        $report.Signatures[0].Signature.FieldName | Should -Be 'Approval'
+        $report.Signatures[0].Signature.ByteRangeValues -join ',' | Should -Be '0,10,20,30'
+        $report.Findings.Code | Should -Contain 'CryptographicTrustNotVerified'
+        $report.Findings.Code | Should -Contain 'DocMDPDetected'
+        $report.Findings.Code | Should -Contain 'LongTermValidationEvidenceDetected'
     }
 
     It 'applies PDF redactions using planned text block coordinates' {
