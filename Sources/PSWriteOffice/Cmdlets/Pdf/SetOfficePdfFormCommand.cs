@@ -69,7 +69,7 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
 
             if (!string.IsNullOrWhiteSpace(AppearanceFontPath))
             {
-                throw new PSArgumentException("-Incremental cannot synthesize new appearance font resources; use -KeepNeedAppearances or a full rewrite.");
+                throw new PSArgumentException("-Incremental uses built-in Helvetica appearance streams; use -KeepNeedAppearances or a full rewrite when custom appearance fonts are required.");
             }
 
             if (Field == null || Field.Count == 0)
@@ -78,7 +78,12 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            PdfIncrementalUpdater.UpdateFormFields(inputPath, outputPath, PdfCommandUtilities.ConvertFieldValues(Field), keepNeedAppearances: true);
+            var options = new PdfIncrementalFormFieldUpdateOptions
+            {
+                KeepNeedAppearances = KeepNeedAppearances.IsPresent,
+                GenerateAppearanceStreams = !KeepNeedAppearances.IsPresent
+            };
+            PdfIncrementalUpdater.UpdateFormFields(inputPath, outputPath, PdfCommandUtilities.ConvertFieldValues(Field), options);
             WriteObject(new FileInfo(outputPath));
             return;
         }

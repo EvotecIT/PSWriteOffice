@@ -407,7 +407,7 @@ endobj
 << /Type /Annot /Subtype /Widget /FT /Tx /T (Name) /V (Ada) /Rect [50 50 180 70] /F 4 >>
 endobj
 6 0 obj
-<< /Fields [5 0 R] /SigFlags 2 >>
+<< /Fields [5 0 R] >>
 endobj
 trailer
 << /Root 1 0 R /Info 4 0 R /Size 7 >>
@@ -422,7 +422,105 @@ startxref
         (Get-Item $outputPath).Length | Should -BeGreaterThan (Get-Item $path).Length
         $field = Get-OfficePdfFormField -Path $outputPath -Name Name
         $field.Value | Should -Be 'Grace'
-        (Get-OfficePdfInfo -Path $outputPath).Security.HasIncrementalUpdates | Should -BeTrue
+        $info = Get-OfficePdfInfo -Path $outputPath
+        $info.Security.HasIncrementalUpdates | Should -BeTrue
+        $info.AcroFormNeedAppearances | Should -BeFalse
+        [IO.File]::ReadAllText($outputPath) | Should -Match '/AP'
+        [IO.File]::ReadAllText($outputPath) | Should -Match '/Subtype /Form'
+    }
+
+    It 'can keep NeedAppearances for incremental PDF form fills' {
+        $path = Join-Path $TestDrive 'form-incremental-legacy-source.pdf'
+        $outputPath = Join-Path $TestDrive 'form-incremental-legacy-output.pdf'
+        @'
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R /AcroForm 6 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 300] /Annots [5 0 R] >>
+endobj
+4 0 obj
+<< /Producer (PSWriteOffice form fixture) >>
+endobj
+5 0 obj
+<< /Type /Annot /Subtype /Widget /FT /Tx /T (Name) /V (Ada) /Rect [50 50 180 70] /F 4 >>
+endobj
+6 0 obj
+<< /Fields [5 0 R] >>
+endobj
+trailer
+<< /Root 1 0 R /Info 4 0 R /Size 7 >>
+startxref
+123
+%%EOF
+'@ | Set-Content -Path $path -NoNewline -Encoding Ascii
+
+        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental -KeepNeedAppearances |
+            Should -BeOfType System.IO.FileInfo
+
+        $field = Get-OfficePdfFormField -Path $outputPath -Name Name
+        $field.Value | Should -Be 'Grace'
+        $info = Get-OfficePdfInfo -Path $outputPath
+        $info.Security.HasIncrementalUpdates | Should -BeTrue
+        $info.AcroFormNeedAppearances | Should -BeTrue
+    }
+
+    It 'updates DocMDP-certified PDF form fields when permissions allow form filling' {
+        $path = Join-Path $TestDrive 'form-docmdp-source.pdf'
+        $outputPath = Join-Path $TestDrive 'form-docmdp-output.pdf'
+        @'
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R /AcroForm 8 0 R /Perms << /DocMDP 7 0 R >> >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 300] /Annots [5 0 R 6 0 R] /Contents 9 0 R >>
+endobj
+4 0 obj
+<< /Producer (PSWriteOffice DocMDP form fixture) >>
+endobj
+5 0 obj
+<< /Type /Annot /Subtype /Widget /FT /Tx /T (Name) /V (Ada) /Rect [50 50 180 70] /F 4 >>
+endobj
+6 0 obj
+<< /FT /Sig /T (Approval) /V 7 0 R /Subtype /Widget /Rect [10 10 120 40] >>
+endobj
+7 0 obj
+<< /Type /Sig /Filter /Adobe.PPKLite /SubFilter /adbe.pkcs7.detached /Name (Alice) /ByteRange [0 10 20 30] /Contents <001122> /Reference [<< /TransformMethod /DocMDP /TransformParams << /Type /TransformParams /V /1.2 /P 2 >> >>] >>
+endobj
+8 0 obj
+<< /Fields [5 0 R 6 0 R] /SigFlags 3 >>
+endobj
+9 0 obj
+<< /Length 44 >>
+stream
+BT /F1 12 Tf 72 720 Td (Signed form) Tj ET
+endstream
+endobj
+trailer
+<< /Root 1 0 R /Info 4 0 R /Size 10 >>
+startxref
+123
+%%EOF
+'@ | Set-Content -Path $path -NoNewline -Encoding Ascii
+
+        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental |
+            Should -BeOfType System.IO.FileInfo
+
+        $field = Get-OfficePdfFormField -Path $outputPath -Name Name
+        $field.Value | Should -Be 'Grace'
+        $info = Get-OfficePdfInfo -Path $outputPath
+        $info.Security.HasIncrementalUpdates | Should -BeTrue
+        $info.Security.HasSignatures | Should -BeTrue
+        $info.Security.HasDocMDPPermissions | Should -BeTrue
+        $info.AcroFormNeedAppearances | Should -BeFalse
     }
 
     It 'sets page production boundary boxes' {
