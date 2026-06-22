@@ -12,7 +12,7 @@ Describe 'PDF cmdlets' {
         $encryptedPath = Join-Path $TestDrive 'encrypted.pdf'
         [IO.File]::WriteAllBytes($encryptedPath, [Convert]::FromBase64String('JVBERi0xLjQKJT8/Pz8KMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAzMDAgMjAwXSAvUmVzb3VyY2VzIDw8IC9Gb250IDw8IC9GMSA0IDAgUiA+PiA+PiAvQ29udGVudHMgNSAwIFIgPj4KZW5kb2JqCjQgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNlRm9udCAvSGVsdmV0aWNhID4+CmVuZG9iago1IDAgb2JqCjw8IC9MZW5ndGggNDYgPj4Kc3RyZWFtCi8xB1rv33VvGaaV2g01B7caayy3ttoqyqa6Fkx+aapdiBLgquqJCxhp8zWpAXQKZW5kc3RyZWFtCmVuZG9iago2IDAgb2JqCjw8IC9GaWx0ZXIgL1N0YW5kYXJkIC9WIDEgL1IgMiAvTGVuZ3RoIDQwIC9PIDw4RUVCMDk1ODE5NjYyQTc3NDQ0MkZCMDcyRTNEOUYxOUU5RDEzMEVDMDlBNEQwMDYxRTc4RkU5MjBGN0FCNjJGPiAvVSA8QjFFNzY0MTI2QzQ4RDI4RDkwNTI1NTk1MjAwREQ4MTg3NEI4NkZFMUNBNTRCQTAxODZFNThCRTJDMzU5ODhEQz4gL1AgLTQgPj4KZW5kb2JqCnhyZWYKMCA3CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDY0IDAwMDAwIG4gCjAwMDAwMDAxMjEgMDAwMDAgbiAKMDAwMDAwMDI0NyAwMDAwMCBuIAowMDAwMDAwMzE3IDAwMDAwIG4gCjAwMDAwMDA0MTMgMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA3IC9Sb290IDEgMCBSIC9FbmNyeXB0IDYgMCBSIC9JRCBbPDEwNDVBODdDMjIxODRFQzE5MTRBQ0Y2NjMxRDI3NDAzPiA8MTA0NUE4N0MyMjE4NEVDMTkxNEFDRjY2MzFEMjc0MDM+XSA+PgpzdGFydHhyZWYKNjE5CiUlRU9GCg=='))
 
-        foreach ($name in 'Get-OfficePdf', 'Get-OfficePdfInfo', 'Get-OfficePdfPreflight', 'Get-OfficePdfDiagnostic', 'Get-OfficePdfOptimization', 'Get-OfficePdfText', 'Get-OfficePdfAttachment', 'Get-OfficePdfFormField', 'Get-OfficePdfRedactionPlan', 'ConvertTo-OfficePdfMarkdown', 'ConvertTo-OfficePdfHtml') {
+        foreach ($name in 'Get-OfficePdf', 'Get-OfficePdfInfo', 'Get-OfficePdfPreflight', 'Get-OfficePdfDiagnostic', 'Get-OfficePdfOptimization', 'Get-OfficePdfText', 'Get-OfficePdfAttachment', 'Get-OfficePdfFormField', 'Get-OfficePdfRedactionPlan', 'ConvertTo-OfficePdfMarkdown', 'ConvertTo-OfficePdfHtml', 'ConvertTo-OfficePdfRedacted') {
             (Get-Command $name).Parameters.Keys | Should -Contain 'Password'
         }
 
@@ -312,6 +312,34 @@ Describe 'PDF cmdlets' {
         $flatPath = Join-Path $TestDrive 'diagnostic-source-flat-annotations.pdf'
         ConvertTo-OfficePdfFlatAnnotation -Path $path -OutputPath $flatPath | Should -BeOfType System.IO.FileInfo
         Test-Path $flatPath | Should -BeTrue
+    }
+
+    It 'applies PDF redactions using planned text block coordinates' {
+        $path = Join-Path $TestDrive 'redaction-source.pdf'
+        $redactedPath = Join-Path $TestDrive 'redaction-output.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'Visible before'
+            PdfParagraph 'Secret account 123-45'
+            PdfParagraph 'Visible after'
+        } | Out-Null
+
+        $block = Get-OfficePdfText -Path $path -AsTextBlock |
+            Where-Object { $_.Text -match 'Secret account' } |
+            Select-Object -First 1
+        $block | Should -Not -BeNullOrEmpty
+
+        $x = [math]::Min($block.XStart, $block.XEnd) - 2
+        $width = [math]::Abs($block.XEnd - $block.XStart) + 4
+        $y = $block.BaselineY - 14
+
+        ConvertTo-OfficePdfRedacted -Path $path -OutputPath $redactedPath -PageNumber $block.PageNumber -X $x -Y $y -Width $width -Height 20 -FillColor '#111111' |
+            Should -BeOfType System.IO.FileInfo
+
+        $text = Get-OfficePdfText -Path $redactedPath
+        $text | Should -Match 'Visible before'
+        $text | Should -Match 'Visible after'
+        $text | Should -Not -Match 'Secret account'
+        $text | Should -Not -Match '123-45'
     }
 
     It 'creates PDFs with document-level font options' {
