@@ -16,6 +16,8 @@ param(
 
     [switch] $SkipFollowUps,
 
+    [switch] $SkipWorkbookValidation,
+
     [switch] $SkipImportExcelInstall,
 
     [switch] $SkipExcelFastInstall
@@ -306,6 +308,61 @@ function ConvertTo-ExcelColumnName {
     $name
 }
 
+function Get-BenchmarkRegionGroups {
+    param([object[]] $Rows)
+
+    foreach ($region in @('NA', 'EU', 'APAC', 'LATAM')) {
+        [pscustomobject]@{
+            Name = $region
+            TableName = 'Data_' + $region
+            Data = @($Rows | Where-Object { $_.Region -eq $region })
+        }
+    }
+}
+
+function Get-BenchmarkSummaryRows {
+    param([int] $Rows)
+
+    @(
+        [pscustomobject]@{ Metric = 'Rows'; Formula = 'COUNTA(Data!A2:A{0})' -f ($Rows + 1); NumberFormat = '#,##0' }
+        [pscustomobject]@{ Metric = 'Average score'; Formula = 'AVERAGE(Data!G2:G{0})' -f ($Rows + 1); NumberFormat = '#,##0.00' }
+        [pscustomobject]@{ Metric = 'Tickets'; Formula = 'SUM(Data!I2:I{0})' -f ($Rows + 1); NumberFormat = '#,##0' }
+        [pscustomobject]@{ Metric = 'Enabled'; Formula = 'COUNTIF(Data!E2:E{0},TRUE)' -f ($Rows + 1); NumberFormat = '#,##0' }
+    )
+}
+
+function Get-BenchmarkAppendSplit {
+    param([object[]] $Rows)
+
+    $initialCount = [math]::Max(1, [math]::Floor($Rows.Count * 0.8))
+    [pscustomobject]@{
+        Initial = @($Rows | Select-Object -First $initialCount)
+        Append = @($Rows | Select-Object -Skip $initialCount)
+    }
+}
+
+function Get-BenchmarkSmallSheetGroups {
+    param(
+        [object[]] $Rows,
+        [int] $SheetCount = 20
+    )
+
+    $safeSheetCount = [math]::Max(1, [math]::Min($SheetCount, [math]::Max(1, $Rows.Count)))
+    $rowsPerSheet = [math]::Max(1, [math]::Ceiling($Rows.Count / $safeSheetCount))
+    for ($sheetIndex = 0; $sheetIndex -lt $safeSheetCount; $sheetIndex++) {
+        $sheetRows = @($Rows | Select-Object -Skip ($sheetIndex * $rowsPerSheet) -First $rowsPerSheet)
+        if ($sheetRows.Count -eq 0) {
+            continue
+        }
+
+        [pscustomobject]@{
+            Name = 'Sheet{0:00}' -f ($sheetIndex + 1)
+            TableName = 'Data{0:00}' -f ($sheetIndex + 1)
+            Data = $sheetRows
+        }
+    }
+}
+
 function Get-RowCount {
     param([object] $Rows)
 
@@ -328,7 +385,8 @@ function New-FollowUpScenario {
         [string] $Key,
         [string] $Name,
         [string[]] $Suites,
-        [scriptblock] $Script
+        [scriptblock] $Script,
+        [string[]] $Engines = @('PSWriteOffice', 'ImportExcel', 'ExcelFast')
     )
 
     [pscustomobject]@{
@@ -336,6 +394,7 @@ function New-FollowUpScenario {
         Name = $Name
         Suites = $Suites
         Script = $Script
+        Engines = $Engines
     }
 }
 
@@ -370,6 +429,7 @@ function Get-ExcelBenchmarkScenarios {
     $scaleSuites = @('Standard', 'Large', 'Full', 'SuperLarge')
     $dataSetSuites = @('Large', 'Full')
     $reportSuites = @('Smoke', 'Standard', 'Large', 'Full')
+    $workflowSuites = @('Standard', 'Large', 'Full')
 
     $defaultImport = New-FollowUpScenario -Key 'import-default-full' -Name 'Import full sheet from default export' -Suites $basicSuites -Script {
         param($Context)
@@ -401,6 +461,34 @@ function Get-ExcelBenchmarkScenarios {
         }
     }
 
+    $noHeaderRangeImport = New-FollowUpScenario -Key 'read-no-header-range' -Name 'Read selected range without headers' -Suites $standardSuites -Script {
+        param($Context)
+
+        switch ($Context.Engine) {
+            'PSWriteOffice' { Import-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -Range $Context.Range -NoHeader }
+            'ImportExcel' { Import-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -StartRow 1 -EndRow ($Context.Rows + 1) -StartColumn 1 -EndColumn $Context.ColumnCount -NoHeader }
+            'ExcelFast' { Import-Workbook -Path $Context.Path -SheetName $Context.WorksheetName -StartCell 'A1' -EndCell $Context.RangeEndCell -NoHeaders }
+        }
+    }
+
+    $usedRangeAsDataTable = New-FollowUpScenario -Key 'read-used-range-datatable' -Name 'Read used range as DataTable' -Suites $standardSuites -Engines @('PSWriteOffice') -Script {
+        param($Context)
+
+        Get-OfficeExcelUsedRange -Path $Context.Path -Sheet $Context.WorksheetName -AsDataTable
+    }
+
+    $tableMetadataRead = New-FollowUpScenario -Key 'read-table-metadata' -Name 'Read workbook table metadata' -Suites $standardSuites -Engines @('PSWriteOffice') -Script {
+        param($Context)
+
+        Get-OfficeExcelTable -Path $Context.Path -Sheet $Context.WorksheetName
+    }
+
+    $namedRangeRead = New-FollowUpScenario -Key 'read-named-range-metadata' -Name 'Read workbook named range metadata' -Suites $standardSuites -Engines @('PSWriteOffice') -Script {
+        param($Context)
+
+        Get-OfficeExcelNamedRange -Path $Context.Path -Sheet $Context.WorksheetName
+    }
+
     @(
         New-ExportScenario -Key 'objects-table' -Name 'Export objects as table' -Suites $tableSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-table' -FollowUps @($tableImport) -Script {
             param($Context)
@@ -410,15 +498,15 @@ function Get-ExcelBenchmarkScenarios {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter
         }
-        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-default' -FollowUps @($defaultImport, $defaultRangeImport, $noHeaderRangeImport, $usedRangeAsDataTable, $tableMetadataRead) -Script {
             param($Context)
             $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-default' -FollowUps @($defaultImport, $defaultRangeImport, $noHeaderRangeImport, $usedRangeAsDataTable, $tableMetadataRead) -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'ExcelFast' -Profile 'MixedObjects' -FileStem 'excelfast-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'objects-default' -Name 'Export objects default' -Suites $basicSuites -Engine 'ExcelFast' -Profile 'MixedObjects' -FileStem 'excelfast-objects-default' -FollowUps @($defaultImport, $defaultRangeImport, $noHeaderRangeImport, $usedRangeAsDataTable, $tableMetadataRead) -Script {
             param($Context)
             Export-Workbook -Destination $Context.Path -InputObject $Context.Data -SheetName $Context.WorksheetName -Force
         }
@@ -438,15 +526,23 @@ function Get-ExcelBenchmarkScenarios {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -AutoSize
         }
-        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'PSWriteOffice' -Profile 'WideObjects' -FileStem 'pswriteoffice-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'objects-title-freeze' -Name 'Export objects with title, offset header, and frozen top row' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-title-freeze' -Script {
+            param($Context)
+            $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -Title 'Operational export' -StartRow 3 -FreezeTopRow -BoldTopRow
+        }
+        New-ExportScenario -Key 'objects-title-freeze' -Name 'Export objects with title, offset header, and frozen top row' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-objects-title-freeze' -Script {
+            param($Context)
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -Title 'Operational export' -StartRow 3 -FreezeTopRow -BoldTopRow
+        }
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'PSWriteOffice' -Profile 'WideObjects' -FileStem 'pswriteoffice-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport, $noHeaderRangeImport, $usedRangeAsDataTable, $tableMetadataRead) -Script {
             param($Context)
             $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'ImportExcel' -Profile 'WideObjects' -FileStem 'importexcel-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'ImportExcel' -Profile 'WideObjects' -FileStem 'importexcel-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport, $noHeaderRangeImport, $usedRangeAsDataTable, $tableMetadataRead) -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
         }
-        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'ExcelFast' -Profile 'WideObjects' -FileStem 'excelfast-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+        New-ExportScenario -Key 'wide-objects-default' -Name 'Export wide objects default' -Suites $scaleSuites -Engine 'ExcelFast' -Profile 'WideObjects' -FileStem 'excelfast-wide-objects-default' -FollowUps @($defaultImport, $defaultRangeImport, $noHeaderRangeImport, $usedRangeAsDataTable, $tableMetadataRead) -Script {
             param($Context)
             Export-Workbook -Destination $Context.Path -InputObject $Context.Data -SheetName $Context.WorksheetName -Force
         }
@@ -457,6 +553,233 @@ function Get-ExcelBenchmarkScenarios {
         New-ExportScenario -Key 'datatable-default' -Name 'Export DataTable default' -Suites $scaleSuites -Engine 'ImportExcel' -Profile 'DataTable' -FileStem 'importexcel-datatable-default' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
             $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'multi-sheet-regions' -Name 'Export regional workbook with one table per sheet' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-multi-sheet-regions' -Script {
+            param($Context)
+
+            New-OfficeExcel -Path $Context.Path {
+                foreach ($group in (Get-BenchmarkRegionGroups -Rows $Context.Data)) {
+                    Add-OfficeExcelSheet -Name $group.Name -Content {
+                        Add-OfficeExcelTable -Data $group.Data -TableName $group.TableName
+                        Set-OfficeExcelFreeze -TopRows 1
+                    }
+                }
+            } | Out-Null
+        }
+        New-ExportScenario -Key 'multi-sheet-regions' -Name 'Export regional workbook with one table per sheet' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-multi-sheet-regions' -Script {
+            param($Context)
+
+            $excel = $null
+            try {
+                foreach ($group in (Get-BenchmarkRegionGroups -Rows $Context.Data)) {
+                    if ($excel) {
+                        $excel = $group.Data | Export-Excel -ExcelPackage $excel -WorksheetName $group.Name -TableName $group.TableName -AutoFilter -FreezeTopRow -BoldTopRow -PassThru
+                    } else {
+                        $excel = $group.Data | Export-Excel -Path $Context.Path -WorksheetName $group.Name -TableName $group.TableName -AutoFilter -FreezeTopRow -BoldTopRow -PassThru
+                    }
+                }
+            } finally {
+                if ($excel) {
+                    Close-ExcelPackage -ExcelPackage $excel
+                }
+            }
+        }
+        New-ExportScenario -Key 'summary-formulas' -Name 'Export data workbook with summary formulas' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-summary-formulas' -Script {
+            param($Context)
+
+            $summaryRows = Get-BenchmarkSummaryRows -Rows $Context.Rows
+            New-OfficeExcel -Path $Context.Path {
+                Add-OfficeExcelSheet -Name $Context.WorksheetName -Content {
+                    Add-OfficeExcelTable -Data $Context.Data -TableName Data
+                    Set-OfficeExcelFreeze -TopRows 1
+                }
+                Add-OfficeExcelSheet -Name 'Summary' -Content {
+                    Set-OfficeExcelCell -Address 'A1' -Value 'Metric'
+                    Set-OfficeExcelCell -Address 'B1' -Value 'Value'
+                    $row = 2
+                    foreach ($summaryRow in $summaryRows) {
+                        Set-OfficeExcelCell -Row $row -Column 1 -Value $summaryRow.Metric
+                        Set-OfficeExcelFormula -Address ('B{0}' -f $row) -Formula $summaryRow.Formula
+                        Set-OfficeExcelCell -Row $row -Column 2 -NumberFormat $summaryRow.NumberFormat
+                        $row++
+                    }
+                }
+            } | Out-Null
+        }
+        New-ExportScenario -Key 'summary-formulas' -Name 'Export data workbook with summary formulas' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-summary-formulas' -Script {
+            param($Context)
+
+            $summaryRows = Get-BenchmarkSummaryRows -Rows $Context.Rows
+            $excel = $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -FreezeTopRow -BoldTopRow -PassThru
+            try {
+                $summary = $excel.Workbook.Worksheets.Add('Summary')
+                $summary.Cells['A1'].Value = 'Metric'
+                $summary.Cells['B1'].Value = 'Value'
+                $row = 2
+                foreach ($summaryRow in $summaryRows) {
+                    $summary.Cells[$row, 1].Value = $summaryRow.Metric
+                    $summary.Cells[$row, 2].Formula = $summaryRow.Formula
+                    $summary.Cells[$row, 2].Style.Numberformat.Format = $summaryRow.NumberFormat
+                    $row++
+                }
+            } finally {
+                Close-ExcelPackage -ExcelPackage $excel
+            }
+        }
+        New-ExportScenario -Key 'append-existing-table' -Name 'Append rows to an existing workbook table' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-append-existing-table' -FollowUps @($defaultImport, $tableMetadataRead) -Script {
+            param($Context)
+
+            $split = Get-BenchmarkAppendSplit -Rows $Context.Data
+            $split.Initial | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data
+            if ($split.Append.Count -gt 0) {
+                Add-OfficeExcelTableRow -InputPath $Context.Path -Sheet $Context.WorksheetName -TableName Data -InputObject $split.Append | Out-Null
+            }
+        }
+        New-ExportScenario -Key 'append-existing-table' -Name 'Append rows to an existing workbook table' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-append-existing-table' -FollowUps @($defaultImport, $tableMetadataRead) -Script {
+            param($Context)
+
+            $split = Get-BenchmarkAppendSplit -Rows $Context.Data
+            $split.Initial | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter
+            if ($split.Append.Count -gt 0) {
+                $split.Append | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -Append
+            }
+        }
+        New-ExportScenario -Key 'update-existing-workbook' -Name 'Update cells and formulas in an existing workbook' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-update-existing-workbook' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+
+            $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data
+            Edit-OfficeExcelRow -InputPath $Context.Path -Sheet $Context.WorksheetName -ScriptBlock {
+                param($row)
+
+                $row.Set('TicketCount', ([int]$row.Get[int]('TicketCount') + 1))
+                if ($row.Get[bool]('IsEnabled')) {
+                    $row.Set('Notes', 'Reviewed')
+                }
+            } | Out-Null
+
+            $document = Get-OfficeExcel -Path $Context.Path
+            try {
+                $sheet = $document.Sheets | Where-Object { $_.Name -eq $Context.WorksheetName } | Select-Object -First 1
+                $formulaColumn = $Context.ColumnCount + 1
+                $sheet.Cell(1, $formulaColumn, 'ScoreDouble', $null, $null)
+                $sheet.Cell(2, $formulaColumn, $null, 'G2*2', '#,##0.00')
+                $document | Save-OfficeExcel
+            } finally {
+                $document | Close-OfficeExcel
+            }
+        }
+        New-ExportScenario -Key 'update-existing-workbook' -Name 'Update cells and formulas in an existing workbook' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-update-existing-workbook' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
+            param($Context)
+
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter
+            $excel = Open-ExcelPackage -Path $Context.Path
+            try {
+                $sheet = $excel.Workbook.Worksheets[$Context.WorksheetName]
+                for ($row = 2; $row -le ($Context.Rows + 1); $row++) {
+                    $sheet.Cells[$row, 9].Value = [int]$sheet.Cells[$row, 9].Value + 1
+                    if ([bool]$sheet.Cells[$row, 5].Value) {
+                        $sheet.Cells[$row, 10].Value = 'Reviewed'
+                    }
+                }
+
+                $formulaColumn = $Context.ColumnCount + 1
+                $sheet.Cells[1, $formulaColumn].Value = 'ScoreDouble'
+                $sheet.Cells[2, $formulaColumn].Formula = 'G2*2'
+                $sheet.Cells[2, $formulaColumn].Style.Numberformat.Format = '#,##0.00'
+            } finally {
+                Close-ExcelPackage -ExcelPackage $excel
+            }
+        }
+        New-ExportScenario -Key 'many-small-sheets' -Name 'Export many small worksheets' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-many-small-sheets' -Script {
+            param($Context)
+
+            New-OfficeExcel -Path $Context.Path {
+                foreach ($group in (Get-BenchmarkSmallSheetGroups -Rows $Context.Data -SheetCount 20)) {
+                    Add-OfficeExcelSheet -Name $group.Name -Content {
+                        Add-OfficeExcelTable -Data $group.Data -TableName $group.TableName
+                        Set-OfficeExcelFreeze -TopRows 1
+                    }
+                }
+            } | Out-Null
+        }
+        New-ExportScenario -Key 'many-small-sheets' -Name 'Export many small worksheets' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-many-small-sheets' -Script {
+            param($Context)
+
+            $excel = $null
+            try {
+                foreach ($group in (Get-BenchmarkSmallSheetGroups -Rows $Context.Data -SheetCount 20)) {
+                    if ($excel) {
+                        $excel = $group.Data | Export-Excel -ExcelPackage $excel -WorksheetName $group.Name -TableName $group.TableName -AutoFilter -FreezeTopRow -BoldTopRow -PassThru
+                    } else {
+                        $excel = $group.Data | Export-Excel -Path $Context.Path -WorksheetName $group.Name -TableName $group.TableName -AutoFilter -FreezeTopRow -BoldTopRow -PassThru
+                    }
+                }
+            } finally {
+                if ($excel) {
+                    Close-ExcelPackage -ExcelPackage $excel
+                }
+            }
+        }
+        New-ExportScenario -Key 'named-range-workbook' -Name 'Export workbook with named data range' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-named-range-workbook' -FollowUps @($defaultImport, $namedRangeRead) -Script {
+            param($Context)
+
+            $sourceRange = 'A1:{0}{1}' -f (ConvertTo-ExcelColumnName -ColumnNumber $Context.ColumnCount), ($Context.Rows + 1)
+            New-OfficeExcel -Path $Context.Path {
+                Add-OfficeExcelSheet -Name $Context.WorksheetName -Content {
+                    Add-OfficeExcelTable -Data $Context.Data -TableName Data
+                    Set-OfficeExcelNamedRange -Name SalesData -Range $sourceRange
+                }
+            } | Out-Null
+        }
+        New-ExportScenario -Key 'named-range-workbook' -Name 'Export workbook with named data range' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-named-range-workbook' -FollowUps @($defaultImport, $namedRangeRead) -Script {
+            param($Context)
+
+            $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -RangeName SalesData
+        }
+        New-ExportScenario -Key 'chart-only-workbook' -Name 'Export workbook with table and chart' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-chart-only-workbook' -Script {
+            param($Context)
+
+            New-OfficeExcel -Path $Context.Path {
+                Add-OfficeExcelSheet -Name $Context.WorksheetName -Content {
+                    Add-OfficeExcelTable -Data $Context.Data -TableName Data
+                    Add-OfficeExcelChart -TableName Data -Row 2 -Column 12 -Type ColumnClustered -Title 'Score by region'
+                }
+            } | Out-Null
+        }
+        New-ExportScenario -Key 'chart-only-workbook' -Name 'Export workbook with table and chart' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-chart-only-workbook' -Script {
+            param($Context)
+
+            $lastRow = $Context.Rows + 1
+            $excel = $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -PassThru
+            try {
+                $worksheet = $excel.Workbook.Worksheets[$Context.WorksheetName]
+                Add-ExcelChart -Worksheet $worksheet -ChartType ColumnClustered -Title 'Score by region' -XRange "D2:D$lastRow" -YRange "G2:G$lastRow" -Row 2 -Column 12 -Width 640 -Height 360
+            } finally {
+                Close-ExcelPackage -ExcelPackage $excel
+            }
+        }
+        New-ExportScenario -Key 'pivot-only-workbook' -Name 'Export workbook with table and pivot' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-pivot-only-workbook' -Script {
+            param($Context)
+
+            $lastRow = $Context.Rows + 1
+            $sourceRange = 'A1:{0}{1}' -f (ConvertTo-ExcelColumnName -ColumnNumber $Context.ColumnCount), $lastRow
+            New-OfficeExcel -Path $Context.Path {
+                Add-OfficeExcelSheet -Name $Context.WorksheetName -Content {
+                    Add-OfficeExcelTable -Data $Context.Data -TableName Data
+                    Add-OfficeExcelPivotTable -SourceRange $sourceRange -DestinationCell 'L4' -Name 'SummaryPivot' -RowField Region -ColumnField Department -DataField Score, TicketCount -DataFunction Average, Sum -DataDisplayName 'Average Score', 'Tickets' -DataNumberFormat '#,##0.00', '#,##0'
+                }
+            } | Out-Null
+        }
+        New-ExportScenario -Key 'pivot-only-workbook' -Name 'Export workbook with table and pivot' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-pivot-only-workbook' -Script {
+            param($Context)
+
+            $excel = $Context.Data | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data -AutoFilter -PassThru
+            try {
+                $worksheet = $excel.Workbook.Worksheets[$Context.WorksheetName]
+                Add-PivotTable -ExcelPackage $excel -Address $worksheet.Cells['L4'] -SourceWorksheet $worksheet -SourceRange $worksheet.Tables[0].Address -PivotTableName SummaryPivot -PivotRows Region -PivotColumns Department -PivotData @{ Score = 'Average'; TicketCount = 'Sum' } -PivotNumberFormat '#,##0.00'
+            } finally {
+                Close-ExcelPackage -ExcelPackage $excel
+            }
         }
         New-ExportScenario -Key 'report-workbook' -Name 'Export report workbook with table chart pivot formatting' -Suites $reportSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-report-workbook' -FollowUps @($defaultImport, $defaultRangeImport) -Script {
             param($Context)
@@ -527,7 +850,11 @@ function Test-ScenarioFilter {
 function Get-SelectedFollowUps {
     param([object] $ScenarioObject)
 
-    $followUps = @($ScenarioObject.FollowUps | Where-Object { $_.Suites -contains $Suite })
+    $followUps = @(
+        $ScenarioObject.FollowUps |
+            Where-Object { $_.Suites -contains $Suite } |
+            Where-Object { -not $_.PSObject.Properties['Engines'] -or $_.Engines -contains $ScenarioObject.Engine }
+    )
     if (-not $Scenario -or $Scenario.Count -eq 0) {
         return $followUps
     }
@@ -539,19 +866,111 @@ function Get-SelectedFollowUps {
     @($followUps | Where-Object { Test-ScenarioFilter -ScenarioObject $_ -Patterns $Scenario })
 }
 
+function Get-BenchmarkLoadedType {
+    param([string] $FullName)
+
+    foreach ($assembly in [AppDomain]::CurrentDomain.GetAssemblies()) {
+        $type = $assembly.GetType($FullName, $false, $false)
+        if ($type) {
+            return $type
+        }
+    }
+
+    $null
+}
+
+function Test-BenchmarkWorkbook {
+    param([string] $Path)
+
+    $stopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $openStatus = 'Skipped'
+    $openXmlStatus = 'Skipped'
+    $errorMessage = $null
+
+    if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path $Path)) {
+        $stopwatch.Stop()
+        return [pscustomobject]@{
+            Status = 'Skipped'
+            OpenStatus = $openStatus
+            OpenXmlStatus = $openXmlStatus
+            Milliseconds = [math]::Round($stopwatch.Elapsed.TotalMilliseconds, 3)
+            Error = 'Workbook file was not created.'
+        }
+    }
+
+    try {
+        $document = Get-OfficeExcel -Path $Path -ReadOnly
+        if ($document) {
+            Close-OfficeExcel -Document $document
+        }
+        $openStatus = 'Passed'
+    } catch {
+        $openStatus = 'Failed'
+        $errorMessage = $_.Exception.Message
+    }
+
+    if ($openStatus -eq 'Passed') {
+        $spreadsheetDocumentType = Get-BenchmarkLoadedType -FullName 'DocumentFormat.OpenXml.Packaging.SpreadsheetDocument'
+        $openXmlValidatorType = Get-BenchmarkLoadedType -FullName 'DocumentFormat.OpenXml.Validation.OpenXmlValidator'
+
+        if ($spreadsheetDocumentType -and $openXmlValidatorType) {
+            $spreadsheetDocument = $null
+            try {
+                $openMethod = $spreadsheetDocumentType.GetMethod('Open', [type[]]@([string], [bool]))
+                $spreadsheetDocument = $openMethod.Invoke($null, @($Path, $false))
+                $validator = [Activator]::CreateInstance($openXmlValidatorType)
+                $validationErrors = @($validator.Validate($spreadsheetDocument) | Select-Object -First 1)
+                if ($validationErrors.Count -gt 0) {
+                    $openXmlStatus = 'Failed'
+                    $errorMessage = $validationErrors[0].Description
+                } else {
+                    $openXmlStatus = 'Passed'
+                }
+            } catch {
+                $openXmlStatus = 'Failed'
+                $errorMessage = $_.Exception.Message
+            } finally {
+                if ($spreadsheetDocument) {
+                    $spreadsheetDocument.Dispose()
+                }
+            }
+        }
+    }
+
+    $stopwatch.Stop()
+    $status = if ($openStatus -eq 'Failed' -or $openXmlStatus -eq 'Failed') {
+        'Failed'
+    } elseif ($openStatus -eq 'Passed') {
+        'Passed'
+    } else {
+        'Skipped'
+    }
+
+    [pscustomobject]@{
+        Status = $status
+        OpenStatus = $openStatus
+        OpenXmlStatus = $openXmlStatus
+        Milliseconds = [math]::Round($stopwatch.Elapsed.TotalMilliseconds, 3)
+        Error = $errorMessage
+    }
+}
+
 function Invoke-BenchmarkOperation {
     param(
         [object] $Context,
         [string] $ScenarioKey,
         [string] $ScenarioName,
-        [scriptblock] $ScriptBlock
+        [scriptblock] $ScriptBlock,
+        [bool] $ValidateWorkbook = $false
     )
 
     [GC]::Collect()
     [GC]::WaitForPendingFinalizers()
     [GC]::Collect()
     $process = [Diagnostics.Process]::GetCurrentProcess()
+    $process.Refresh()
     $beforeWorkingSet = $process.WorkingSet64
+    $beforePeakWorkingSet = $process.PeakWorkingSet64
     $beforeManaged = [GC]::GetTotalMemory($false)
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
     $resultCount = 0
@@ -566,6 +985,19 @@ function Invoke-BenchmarkOperation {
     }
     $stopwatch.Stop()
     $process.Refresh()
+    $afterWorkingSet = $process.WorkingSet64
+    $afterPeakWorkingSet = $process.PeakWorkingSet64
+    $workbookValidation = if ($ValidateWorkbook -and $status -eq 'Passed') {
+        Test-BenchmarkWorkbook -Path $Context.Path
+    } else {
+        [pscustomobject]@{
+            Status = 'Skipped'
+            OpenStatus = 'Skipped'
+            OpenXmlStatus = 'Skipped'
+            Milliseconds = 0
+            Error = $null
+        }
+    }
 
     [pscustomobject]@{
         TimestampUtc      = [datetime]::UtcNow.ToString('o')
@@ -579,8 +1011,17 @@ function Invoke-BenchmarkOperation {
         Milliseconds      = [math]::Round($stopwatch.Elapsed.TotalMilliseconds, 3)
         ResultCount       = $resultCount
         FileBytes         = if (Test-Path $Context.Path) { (Get-Item $Context.Path).Length } else { 0 }
-        WorkingSetDeltaMB = [math]::Round(($process.WorkingSet64 - $beforeWorkingSet) / 1MB, 3)
+        WorkingSetBeforeMB = [math]::Round($beforeWorkingSet / 1MB, 3)
+        WorkingSetAfterMB = [math]::Round($afterWorkingSet / 1MB, 3)
+        WorkingSetDeltaMB = [math]::Round(($afterWorkingSet - $beforeWorkingSet) / 1MB, 3)
+        PeakWorkingSetMB = [math]::Round($afterPeakWorkingSet / 1MB, 3)
+        PeakWorkingSetDeltaMB = [math]::Round([math]::Max(0, $afterPeakWorkingSet - $beforePeakWorkingSet) / 1MB, 3)
         ManagedDeltaMB    = [math]::Round(([GC]::GetTotalMemory($false) - $beforeManaged) / 1MB, 3)
+        WorkbookValidationStatus = $workbookValidation.Status
+        WorkbookOpenStatus = $workbookValidation.OpenStatus
+        WorkbookOpenXmlStatus = $workbookValidation.OpenXmlStatus
+        WorkbookValidationMs = $workbookValidation.Milliseconds
+        WorkbookValidationError = $workbookValidation.Error
         Status            = $status
         Error             = $errorMessage
     }
@@ -621,6 +1062,65 @@ function Format-Ratio {
     }
 
     ('{0:0.#} x' -f $Value)
+}
+
+function Get-BenchmarkModuleDetails {
+    param([string] $Name)
+
+    $module = Get-Module $Name | Select-Object -First 1
+    if (-not $module) {
+        return $null
+    }
+
+    $prerelease = $null
+    $psData = $null
+    if ($module.PrivateData -and $module.PrivateData.PSData) {
+        $psData = $module.PrivateData.PSData
+    }
+
+    if ($psData -is [Collections.IDictionary]) {
+        if ($psData.Contains('Prerelease') -and $psData['Prerelease']) {
+            $prerelease = [string]$psData['Prerelease']
+        }
+    } elseif ($psData -and $psData.PSObject.Properties['Prerelease'] -and $psData.Prerelease) {
+        $prerelease = [string]$psData.Prerelease
+    }
+
+    $version = $module.Version.ToString()
+    [pscustomobject]@{
+        Name = $module.Name
+        Version = $version
+        Prerelease = $prerelease
+        DisplayVersion = if ($prerelease) { "$version-$prerelease" } else { $version }
+        ModuleBase = $module.ModuleBase
+        Path = $module.Path
+    }
+}
+
+function Get-BenchmarkEnvironment {
+    $processor = $null
+    $computerSystem = $null
+    if (Get-Command Get-CimInstance -ErrorAction SilentlyContinue) {
+        try {
+            $processor = Get-CimInstance Win32_Processor -ErrorAction Stop | Select-Object -First 1
+            $computerSystem = Get-CimInstance Win32_ComputerSystem -ErrorAction Stop | Select-Object -First 1
+        } catch {
+            $processor = $null
+            $computerSystem = $null
+        }
+    }
+
+    [pscustomobject]@{
+        MachineName = [Environment]::MachineName
+        OSDescription = [Runtime.InteropServices.RuntimeInformation]::OSDescription
+        OSArchitecture = [Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString()
+        ProcessArchitecture = [Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString()
+        DotNetVersion = [Environment]::Version.ToString()
+        ProcessorName = if ($processor) { $processor.Name.Trim() } else { $null }
+        ProcessorCores = if ($processor) { [int]$processor.NumberOfCores } else { $null }
+        ProcessorLogicalProcessors = if ($processor) { [int]$processor.NumberOfLogicalProcessors } else { $null }
+        TotalPhysicalMemoryGB = if ($computerSystem) { [math]::Round([double]$computerSystem.TotalPhysicalMemory / 1GB, 2) } else { $null }
+    }
 }
 
 function Get-ComparisonRating {
@@ -705,6 +1205,23 @@ function New-BenchmarkComparison {
                         MinMs = [double]$_.MinMs
                         MaxMs = [double]$_.MaxMs
                         MedianFileKB = [double]$_.MedianFileKB
+                        MedianWorkingSetBeforeMB = [double]$_.MedianWorkingSetBeforeMB
+                        MedianWorkingSetAfterMB = [double]$_.MedianWorkingSetAfterMB
+                        MedianWorkingSetDeltaMB = [double]$_.MedianWorkingSetDeltaMB
+                        MedianPeakWorkingSetMB = [double]$_.MedianPeakWorkingSetMB
+                        MedianPeakWorkingSetDeltaMB = [double]$_.MedianPeakWorkingSetDeltaMB
+                        MedianManagedDeltaMB = [double]$_.MedianManagedDeltaMB
+                        WorkbookValidationStatus = if ([int]$_.WorkbookValidationFailed -gt 0) {
+                            'failed'
+                        } elseif ([int]$_.WorkbookValidationPassed -gt 0) {
+                            'passed'
+                        } else {
+                            'skipped'
+                        }
+                        WorkbookValidationPassed = [int]$_.WorkbookValidationPassed
+                        WorkbookValidationFailed = [int]$_.WorkbookValidationFailed
+                        WorkbookValidationSkipped = [int]$_.WorkbookValidationSkipped
+                        MedianWorkbookValidationMs = [double]$_.MedianWorkbookValidationMs
                         TimeVsFastest = $timeRatio
                         TimeVsFastestText = Format-Ratio -Value $timeRatio
                         FileVsSmallest = $fileRatio
@@ -731,10 +1248,25 @@ function New-BenchmarkComparison {
 
         foreach ($engineName in @('PSWriteOffice', 'ImportExcel', 'ExcelFast')) {
             $engineResult = @($engineResults | Where-Object Engine -eq $engineName | Select-Object -First 1)
+            $engineSummary = @($group.Group | Where-Object Engine -eq $engineName | Select-Object -First 1)
             $prefix = $engineName -replace '[^A-Za-z0-9]', ''
+            $row["${prefix}Status"] = if ($engineResult.Count -gt 0) {
+                'tested'
+            } elseif ($engineSummary.Count -gt 0) {
+                'failed'
+            } elseif ($Engine -contains $engineName) {
+                'not supported by scenario'
+            } else {
+                'not selected'
+            }
             $row["${prefix}Ms"] = if ($engineResult.Count -gt 0) { $engineResult[0].MedianMs } else { $null }
             $row["${prefix}VsFastest"] = if ($engineResult.Count -gt 0) { $engineResult[0].TimeVsFastest } else { $null }
             $row["${prefix}FileKB"] = if ($engineResult.Count -gt 0) { $engineResult[0].MedianFileKB } else { $null }
+            $row["${prefix}WorkingSetDeltaMB"] = if ($engineResult.Count -gt 0) { $engineResult[0].MedianWorkingSetDeltaMB } else { $null }
+            $row["${prefix}PeakWorkingSetDeltaMB"] = if ($engineResult.Count -gt 0) { $engineResult[0].MedianPeakWorkingSetDeltaMB } else { $null }
+            $row["${prefix}ManagedDeltaMB"] = if ($engineResult.Count -gt 0) { $engineResult[0].MedianManagedDeltaMB } else { $null }
+            $row["${prefix}WorkbookValidationStatus"] = if ($engineResult.Count -gt 0) { $engineResult[0].WorkbookValidationStatus } else { $null }
+            $row["${prefix}WorkbookValidationMs"] = if ($engineResult.Count -gt 0) { $engineResult[0].MedianWorkbookValidationMs } else { $null }
         }
 
         $comparisonRows.Add([pscustomobject]$row)
@@ -817,7 +1349,7 @@ if ($Engine -contains 'ExcelFast') {
     Ensure-ExcelFast
 }
 
-if ($Engine -contains 'PSWriteOffice') {
+if (($Engine -contains 'PSWriteOffice') -or (-not $SkipWorkbookValidation.IsPresent)) {
     $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
     if (-not $env:OfficeIMORoot) {
         $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
@@ -860,7 +1392,7 @@ foreach ($rows in $RowCount) {
                 Remove-Item $context.Path -Force
             }
 
-            $results.Add((Invoke-BenchmarkOperation -Context $context -ScenarioKey $benchmarkScenario.Key -ScenarioName $benchmarkScenario.Name -ScriptBlock $benchmarkScenario.Script))
+            $results.Add((Invoke-BenchmarkOperation -Context $context -ScenarioKey $benchmarkScenario.Key -ScenarioName $benchmarkScenario.Name -ScriptBlock $benchmarkScenario.Script -ValidateWorkbook (-not $SkipWorkbookValidation.IsPresent)))
 
             if ((-not $SkipFollowUps.IsPresent) -and (Test-Path $context.Path)) {
                 foreach ($followUp in (Get-SelectedFollowUps -ScenarioObject $benchmarkScenario)) {
@@ -896,8 +1428,16 @@ $summary = $results |
             MinMs        = if ($passed.Count) { ($passed | Measure-Object Milliseconds -Minimum).Minimum } else { 0 }
             MaxMs        = if ($passed.Count) { ($passed | Measure-Object Milliseconds -Maximum).Maximum } else { 0 }
             MedianFileKB = if ($passed.Count) { [math]::Round((($passed | Sort-Object FileBytes)[[int][math]::Floor(($passed.Count - 1) / 2)].FileBytes) / 1KB, 1) } else { 0 }
+            MedianWorkingSetBeforeMB = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName WorkingSetBeforeMB), 3) } else { 0 }
+            MedianWorkingSetAfterMB = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName WorkingSetAfterMB), 3) } else { 0 }
             MedianWorkingSetDeltaMB = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName WorkingSetDeltaMB), 3) } else { 0 }
+            MedianPeakWorkingSetMB = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName PeakWorkingSetMB), 3) } else { 0 }
+            MedianPeakWorkingSetDeltaMB = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName PeakWorkingSetDeltaMB), 3) } else { 0 }
             MedianManagedDeltaMB = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName ManagedDeltaMB), 3) } else { 0 }
+            WorkbookValidationPassed = @($passed | Where-Object WorkbookValidationStatus -eq 'Passed').Count
+            WorkbookValidationFailed = @($passed | Where-Object WorkbookValidationStatus -eq 'Failed').Count
+            WorkbookValidationSkipped = @($passed | Where-Object WorkbookValidationStatus -eq 'Skipped').Count
+            MedianWorkbookValidationMs = if ($passed.Count) { [math]::Round((Get-MedianValue -InputObject $passed -PropertyName WorkbookValidationMs), 3) } else { 0 }
         }
     } |
     Sort-Object ScenarioKey, Profile, Rows, Engine
@@ -905,7 +1445,7 @@ $summary = $results |
 $summary | Export-Csv -NoTypeInformation -Path $summaryPath
 $comparison = @(New-BenchmarkComparison -Summary $summary)
 $comparison |
-    Select-Object ScenarioKey, Scenario, Profile, Rows, FastestEngine, FastestMs, PSWriteOfficeMs, PSWriteOfficeRank, PSWriteOfficeVsFastest, PSWriteOfficeVsFastestText, LeadText, Rating, ImportExcelMs, ImportExcelVsFastest, ExcelFastMs, ExcelFastVsFastest, SmallestFileEngine, PSWriteOfficeFileKB, ImportExcelFileKB, ExcelFastFileKB |
+    Select-Object ScenarioKey, Scenario, Profile, Rows, FastestEngine, FastestMs, PSWriteOfficeStatus, PSWriteOfficeMs, PSWriteOfficeRank, PSWriteOfficeVsFastest, PSWriteOfficeVsFastestText, LeadText, Rating, ImportExcelStatus, ImportExcelMs, ImportExcelVsFastest, ExcelFastStatus, ExcelFastMs, ExcelFastVsFastest, SmallestFileEngine, PSWriteOfficeFileKB, ImportExcelFileKB, ExcelFastFileKB, PSWriteOfficeWorkbookValidationStatus, ImportExcelWorkbookValidationStatus, ExcelFastWorkbookValidationStatus, PSWriteOfficeWorkbookValidationMs, ImportExcelWorkbookValidationMs, ExcelFastWorkbookValidationMs, PSWriteOfficeWorkingSetDeltaMB, ImportExcelWorkingSetDeltaMB, ExcelFastWorkingSetDeltaMB, PSWriteOfficePeakWorkingSetDeltaMB, ImportExcelPeakWorkingSetDeltaMB, ExcelFastPeakWorkingSetDeltaMB, PSWriteOfficeManagedDeltaMB, ImportExcelManagedDeltaMB, ExcelFastManagedDeltaMB |
     Export-Csv -NoTypeInformation -Path $comparisonCsvPath
 $comparison | ConvertTo-Json -Depth 8 | Set-Content -Path $comparisonJsonPath -Encoding UTF8
 $officeIMOExcelAssemblyPath = Join-Path $repoRoot 'Sources\PSWriteOffice\bin\Debug\net8.0\OfficeIMO.Excel.dll'
@@ -922,25 +1462,41 @@ $officeIMOExcelAssemblyVersion = if (Test-Path $officeIMOExcelAssemblyPath) {
     }
 }
 
+$moduleDetails = [ordered]@{
+    PSWriteOffice = Get-BenchmarkModuleDetails -Name PSWriteOffice
+    ImportExcel = Get-BenchmarkModuleDetails -Name ImportExcel
+    ExcelFast = Get-BenchmarkModuleDetails -Name ExcelFast
+}
+
 [pscustomobject]@{
     PowerShellVersion = $PSVersionTable.PSVersion.ToString()
     PSEdition = $PSEdition
+    Environment = Get-BenchmarkEnvironment
     Suite = $Suite
-    ImportExcel = if (Get-Module ImportExcel) { (Get-Module ImportExcel).Version.ToString() } else { $null }
-    ExcelFast = if (Get-Module ExcelFast) { (Get-Module ExcelFast).Version.ToString() } else { $null }
-    PSWriteOffice = if (Get-Module PSWriteOffice) { (Get-Module PSWriteOffice).Version.ToString() } else { $null }
+    ImportExcel = if ($moduleDetails.ImportExcel) { $moduleDetails.ImportExcel.DisplayVersion } else { $null }
+    ExcelFast = if ($moduleDetails.ExcelFast) { $moduleDetails.ExcelFast.DisplayVersion } else { $null }
+    PSWriteOffice = if ($moduleDetails.PSWriteOffice) { $moduleDetails.PSWriteOffice.DisplayVersion } else { $null }
+    Modules = $moduleDetails
     OfficeIMOExcelAssembly = $officeIMOExcelAssemblyVersion
+    OfficeIMOExcelAssemblyPath = if (Test-Path $officeIMOExcelAssemblyPath) { $officeIMOExcelAssemblyPath } else { $null }
     Engines = $Engine
     ScenarioFilter = $Scenario
     RowCount = $RowCount
     RepeatCount = $RepeatCount
     SkipFollowUps = $SkipFollowUps.IsPresent
+    SkipWorkbookValidation = $SkipWorkbookValidation.IsPresent
     ScenarioCount = $selectedScenarios.Count
+    RepoRoot = $repoRoot.Path
+    OutputDirectory = $OutputDirectory
+    WorkRoot = $workRoot
+    ModuleCache = $moduleRoot
+    OfficeIMORoot = $env:OfficeIMORoot
+    PSWriteOfficeUseDevelopmentBinaries = $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES
     ResultsPath = $resultsPath
     SummaryPath = $summaryPath
     ComparisonCsvPath = $comparisonCsvPath
     ComparisonJsonPath = $comparisonJsonPath
-} | ConvertTo-Json -Depth 5 | Set-Content -Path $metadataPath -Encoding UTF8
+} | ConvertTo-Json -Depth 8 | Set-Content -Path $metadataPath -Encoding UTF8
 
 Write-Host "Results: $resultsPath"
 Write-Host "Summary: $summaryPath"

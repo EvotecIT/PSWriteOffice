@@ -4,6 +4,7 @@ using System.Management.Automation;
 using System.Text;
 using OfficeIMO.Markdown;
 using OfficeIMO.Markdown.Html;
+using PSWriteOffice.Services.Markdown;
 
 namespace PSWriteOffice.Cmdlets.Markdown;
 
@@ -25,6 +26,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Alias("ConvertFrom-MarkdownHtml")]
 [OutputType(typeof(string), typeof(FileInfo), typeof(MarkdownDoc))]
 public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
+    , IMarkdownWriteOptionSource
 {
     private const string ParameterSetHtml = "Html";
     private const string ParameterSetPath = "Path";
@@ -82,6 +84,42 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
     /// <summary>Maximum input length, in characters, accepted by the converter.</summary>
     [Parameter]
     public int? MaxInputCharacters { get; set; }
+
+    /// <summary>Controls how base64 data URI images are converted.</summary>
+    [Parameter]
+    public HtmlBase64ImageHandling? Base64ImageHandling { get; set; }
+
+    /// <summary>Output directory for decoded base64 images when saving them to files.</summary>
+    [Parameter]
+    public string? Base64ImageOutputDirectory { get; set; }
+
+    /// <summary>Controls whether repeated listing-card metadata is preserved or suppressed.</summary>
+    [Parameter]
+    public HtmlListingCardMetadataMode? ListingCardMetadataMode { get; set; }
+
+    /// <summary>Maximum logical columns produced by expanding HTML table spans.</summary>
+    [Parameter]
+    public int? MaxTableExpandedColumns { get; set; }
+
+    /// <summary>Optional Markdown writer options for generated Markdown text.</summary>
+    [Parameter]
+    public MarkdownWriteOptions? WriteOptions { get; set; }
+
+    /// <summary>Friendly Markdown writer profile for generated Markdown text.</summary>
+    [Parameter]
+    public OfficeMarkdownWriteProfile? WriteProfile { get; set; }
+
+    /// <summary>Controls how generated Markdown images are serialized.</summary>
+    [Parameter]
+    public MarkdownImageRenderingMode? ImageRenderingMode { get; set; }
+
+    /// <summary>Markdown line ending: CRLF, LF, CR, or a literal line ending string.</summary>
+    [Parameter]
+    public string? LineEnding { get; set; }
+
+    /// <summary>Unordered list marker: '-', '*', or '+'.</summary>
+    [Parameter]
+    public string? UnorderedListMarker { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
@@ -172,6 +210,32 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
         if (MaxInputCharacters.HasValue)
         {
             options.MaxInputCharacters = MaxInputCharacters.Value;
+        }
+
+        if (Base64ImageHandling.HasValue)
+        {
+            options.Base64Images = Base64ImageHandling.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(Base64ImageOutputDirectory))
+        {
+            options.Base64ImageOutputDirectory = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Base64ImageOutputDirectory);
+        }
+
+        if (ListingCardMetadataMode.HasValue)
+        {
+            options.ListingCardMetadataMode = ListingCardMetadataMode.Value;
+        }
+
+        if (MaxTableExpandedColumns.HasValue)
+        {
+            options.MaxTableExpandedColumns = MaxTableExpandedColumns.Value;
+        }
+
+        var writeOptions = MarkdownOptionUtilities.BuildWriteOptions(this);
+        if (writeOptions != null)
+        {
+            options.MarkdownWriteOptions = writeOptions;
         }
 
         if (!string.IsNullOrWhiteSpace(BaseUri))

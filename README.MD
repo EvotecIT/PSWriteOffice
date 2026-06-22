@@ -276,6 +276,56 @@ $data | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data' -TableName 
 Import-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data'
 ```
 
+### Excel benchmark snapshot
+
+The benchmark harness in `Benchmarks\Compare-ExcelPerformance.ps1` compares
+`Export-OfficeExcel` / `Import-OfficeExcel` with `ImportExcel` and `ExcelFast`
+on repeatable local workloads. The table below is a local snapshot, not a
+universal performance promise: hardware, PowerShell version, data shape,
+formatting, and workbook features all matter.
+
+Run context: PowerShell 7.5.5, AMD Ryzen 9 9950X3D2 16-Core Processor
+(16 cores / 32 logical processors), 64 GB RAM, Standard suite, median of three
+runs, measured on 2026-06-22.
+
+| Scenario | Rows | Winner | PSWriteOffice 1.0.3 / OfficeIMO.Excel 0.6.47 | ImportExcel 7.8.10 | ExcelFast 0.0.1-alpha16 | Relative time (winner = 1x) |
+| --- | ---: | --- | ---: | ---: | ---: | --- |
+| Export objects default | 1k | PSWriteOffice | 16 ms | 183 ms | 126 ms | PSWriteOffice 1x; ImportExcel 11.44x; ExcelFast 7.88x |
+| Export objects default | 10k | PSWriteOffice | 84 ms | 1,287 ms | 153 ms | PSWriteOffice 1x; ImportExcel 15.32x; ExcelFast 1.82x |
+| Export objects default | 25k | PSWriteOffice | 199 ms | 3,827 ms | 233 ms | PSWriteOffice 1x; ImportExcel 19.23x; ExcelFast 1.17x |
+| Export wide objects default | 1k | PSWriteOffice | 26 ms | 166 ms | 127 ms | PSWriteOffice 1x; ImportExcel 6.38x; ExcelFast 4.88x |
+| Export wide objects default | 10k | PSWriteOffice | 256 ms | 1,231 ms | 296 ms | PSWriteOffice 1x; ImportExcel 4.81x; ExcelFast 1.16x |
+| Export wide objects default | 25k | PSWriteOffice | 679 ms | 3,832 ms | 1,134 ms | PSWriteOffice 1x; ImportExcel 5.64x; ExcelFast 1.67x |
+| Import mixed objects full sheet | 1k | PSWriteOffice | 9 ms | 52 ms | 32 ms | PSWriteOffice 1x; ImportExcel 5.78x; ExcelFast 3.56x |
+| Import mixed objects full sheet | 10k | PSWriteOffice | 98 ms | 383 ms | 311 ms | PSWriteOffice 1x; ImportExcel 3.91x; ExcelFast 3.17x |
+| Import mixed objects full sheet | 25k | PSWriteOffice | 333 ms | 3,083 ms | 881 ms | PSWriteOffice 1x; ImportExcel 9.26x; ExcelFast 2.65x |
+| Report workbook with table, chart, pivot, formatting | 1k | PSWriteOffice | 98 ms | 214 ms | n/a | PSWriteOffice 1x; ImportExcel 2.18x; ExcelFast n/a |
+| Report workbook with table, chart, pivot, formatting | 10k | PSWriteOffice | 1,134 ms | 1,560 ms | n/a | PSWriteOffice 1x; ImportExcel 1.38x; ExcelFast n/a |
+| Report workbook with table, chart, pivot, formatting | 25k | PSWriteOffice | 3,677 ms | 3,929 ms | n/a | PSWriteOffice 1x; ImportExcel 1.07x; ExcelFast n/a |
+| Export regional workbook, one table per sheet | 1k | PSWriteOffice | 105 ms | 248 ms | n/a | PSWriteOffice 1x; ImportExcel 2.36x; ExcelFast n/a |
+| Export regional workbook, one table per sheet | 10k | PSWriteOffice | 735 ms | 1,509 ms | n/a | PSWriteOffice 1x; ImportExcel 2.05x; ExcelFast n/a |
+| Export regional workbook, one table per sheet | 25k | PSWriteOffice | 2,003 ms | 3,611 ms | n/a | PSWriteOffice 1x; ImportExcel 1.8x; ExcelFast n/a |
+| Export title, offset header, frozen top row | 1k | ImportExcel | 251 ms | 222 ms | n/a | PSWriteOffice 1.13x; ImportExcel 1x; ExcelFast n/a |
+| Export title, offset header, frozen top row | 10k | PSWriteOffice | 735 ms | 1,370 ms | n/a | PSWriteOffice 1x; ImportExcel 1.86x; ExcelFast n/a |
+| Export title, offset header, frozen top row | 25k | PSWriteOffice | 1,828 ms | 3,290 ms | n/a | PSWriteOffice 1x; ImportExcel 1.8x; ExcelFast n/a |
+| Export data workbook with summary formulas | 1k | PSWriteOffice | 53 ms | 192 ms | n/a | PSWriteOffice 1x; ImportExcel 3.62x; ExcelFast n/a |
+| Export data workbook with summary formulas | 10k | PSWriteOffice | 507 ms | 1,449 ms | n/a | PSWriteOffice 1x; ImportExcel 2.86x; ExcelFast n/a |
+| Export data workbook with summary formulas | 25k | PSWriteOffice | 1,531 ms | 3,254 ms | n/a | PSWriteOffice 1x; ImportExcel 2.13x; ExcelFast n/a |
+
+To compare on your machine, run:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard
+```
+
+The benchmark output also records exact module prerelease versions, machine and
+runtime metadata, per-engine support status, file sizes, and memory deltas in
+the generated CSV/JSON files. Export scenarios are also opened after generation
+and checked with Open XML validation when the validator is available. The full
+scenario list includes append, existing-workbook update, many-sheet, named
+range, chart-only, pivot-only, and read-focused workloads. See
+`Benchmarks\README.md` for the artifact schema and scenario list.
+
 ### Excel readers
 
 ```powershell

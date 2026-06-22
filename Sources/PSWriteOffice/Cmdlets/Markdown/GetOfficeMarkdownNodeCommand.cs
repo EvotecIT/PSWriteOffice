@@ -3,6 +3,7 @@ using System.IO;
 using System.Management.Automation;
 using System.Text;
 using OfficeIMO.Markdown;
+using PSWriteOffice.Services.Markdown;
 
 namespace PSWriteOffice.Cmdlets.Markdown;
 
@@ -23,6 +24,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdownNode", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject), typeof(MarkdownObject))]
 public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
+    , IMarkdownReaderOptionSource
 {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
@@ -43,15 +45,54 @@ public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
 
     /// <summary>Optional reader options used when parsing path or text input.</summary>
     [Parameter]
+    [Alias("ReaderOptions")]
     public MarkdownReaderOptions? Options { get; set; }
 
     /// <summary>Named reader profile used when <see cref="Options"/> is not supplied.</summary>
     [Parameter]
     public MarkdownReaderOptions.MarkdownDialectProfile? Profile { get; set; }
 
+    /// <summary>Base URI used to resolve and restrict relative Markdown links and images.</summary>
+    [Parameter]
+    public string? BaseUri { get; set; }
+
+    /// <summary>Maximum Markdown input length accepted by the reader.</summary>
+    [Parameter]
+    public int? MaxInputCharacters { get; set; }
+
+    /// <summary>Applies a built-in Markdown input normalization preset before parsing.</summary>
+    [Parameter]
+    public MarkdownInputNormalizationPreset? NormalizeInput { get; set; }
+
+    /// <summary>Block file URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? DisallowFileUrls { get; set; }
+
+    /// <summary>Allow data URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? AllowDataUrls { get; set; }
+
+    /// <summary>Allow mailto URLs while parsing Markdown links.</summary>
+    [Parameter]
+    public bool? AllowMailtoUrls { get; set; }
+
+    /// <summary>Allow protocol-relative URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? AllowProtocolRelativeUrls { get; set; }
+
+    /// <summary>Restrict parsed URL schemes to the allow-list.</summary>
+    [Parameter]
+    public bool? RestrictUrlSchemes { get; set; }
+
+    /// <summary>Allowed URL schemes when URL scheme restriction is enabled.</summary>
+    [Parameter]
+    public string[]? AllowedUrlScheme { get; set; }
+
     /// <summary>Optional wildcard pattern matched against node type names.</summary>
     [Parameter]
     public string? NodeType { get; set; }
+
+    MarkdownReaderOptions? IMarkdownReaderOptionSource.ReaderOptions => Options;
 
     /// <summary>Maximum traversal depth. Zero returns only the document root.</summary>
     [Parameter]
@@ -82,19 +123,12 @@ public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
 
     private MarkdownDoc ResolveDocument()
     {
-        if (Options != null && Profile.HasValue)
-        {
-            throw new PSArgumentException("Specify either -Options or -Profile, not both.");
-        }
-
         if (ParameterSetName == ParameterSetDocument)
         {
             return Document ?? throw new PSArgumentException("Provide a Markdown document.");
         }
 
-        var options = Options ?? (Profile.HasValue
-            ? MarkdownReaderOptions.CreateProfile(Profile.Value)
-            : null);
+        var options = MarkdownOptionUtilities.BuildReaderOptions(this);
 
         string markdown;
         if (ParameterSetName == ParameterSetPath)

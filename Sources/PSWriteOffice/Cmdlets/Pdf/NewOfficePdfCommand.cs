@@ -78,6 +78,10 @@ public sealed class NewOfficePdfCommand : PSCmdlet
     [Parameter]
     public double? DefaultFontSize { get; set; }
 
+    /// <summary>Built-in OfficeIMO.Pdf theme applied before the DSL content runs.</summary>
+    [Parameter]
+    public OfficePdfThemePreset? Theme { get; set; }
+
     /// <summary>Embedded TrueType font family name for generated text.</summary>
     [Parameter]
     public string? FontFamily { get; set; }
@@ -143,6 +147,11 @@ public sealed class NewOfficePdfCommand : PSCmdlet
         if (DefaultFontSize.HasValue)
         {
             options.DefaultFontSize = DefaultFontSize.Value;
+        }
+
+        if (Theme.HasValue)
+        {
+            options.ApplyTheme(PdfThemeUtilities.ResolveTheme(Theme.Value));
         }
 
         if (!string.IsNullOrWhiteSpace(FontFamily))
