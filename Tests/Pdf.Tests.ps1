@@ -673,6 +673,42 @@ startxref
         $report.Findings.Code | Should -Contain 'SignatureDetachedCmsSubFilter'
     }
 
+    It 'prepares and injects external PDF signature bytes' {
+        $path = Join-Path $TestDrive 'signature-source.pdf'
+        $preparedPath = Join-Path $TestDrive 'signature-prepared.pdf'
+        $signedPath = Join-Path $TestDrive 'signature-applied.pdf'
+        $signaturePath = Join-Path $TestDrive 'signature.der'
+
+        New-OfficePdf -Path $path {
+            PdfParagraph 'External signing workflow'
+        } | Out-Null
+
+        $plan = New-OfficePdfSignature -Path $path -OutputPath $preparedPath -FieldName Approval -Name Alice -Reason Approval -ReservedBytes 512 -PassThruReport
+        $plan.FieldName | Should -Be 'Approval'
+        $plan.ByteRangeValues.Count | Should -Be 4
+        $plan.ComputeSha256Digest().Length | Should -Be 32
+
+        $preparedReport = Get-OfficePdfSignature -Path $preparedPath
+        $preparedReport.HasSignatures | Should -BeTrue
+        $preparedReport.Signatures[0].Signature.FieldName | Should -Be 'Approval'
+        $preparedReport.Signatures[0].ByteRangeCoversEndOfFile | Should -BeTrue
+
+        [IO.File]::WriteAllBytes($signaturePath, [byte[]](0x30, 0x82, 0x01, 0x0A, 0xAA, 0x55))
+        $signedReport = Set-OfficePdfSignature -Path $preparedPath -SignaturePath $signaturePath -OutputPath $signedPath -PassThruReport
+        $signedReport.HasSignatures | Should -BeTrue
+        $signedReport.Signatures[0].Signature.ByteRangeValues -join ',' | Should -Be ($plan.ByteRangeValues -join ',')
+        $signedReport.Findings.Code | Should -Contain 'SignatureDetachedCmsSubFilter'
+        [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($signedPath)) | Should -Match '3082010AAA55'
+    }
+
+    It 'reports complex PDF text layout diagnostics' {
+        $arabic = -join ([char[]](0x0645, 0x0631, 0x062D, 0x0628, 0x0627))
+        $diagnostics = @(Get-OfficePdfTextDiagnostic -Text $arabic -AdvancedLayout)
+
+        $diagnostics.Code | Should -Contain 'unsupported-bidirectional-text-layout'
+        $diagnostics.Code | Should -Contain 'unsupported-complex-script-shaping'
+    }
+
     It 'applies PDF redactions using planned text block coordinates' {
         $path = Join-Path $TestDrive 'redaction-source.pdf'
         $redactedPath = Join-Path $TestDrive 'redaction-output.pdf'
