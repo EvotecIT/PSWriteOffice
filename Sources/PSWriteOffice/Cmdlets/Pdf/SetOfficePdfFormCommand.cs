@@ -39,10 +39,23 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Flatten { get; set; }
 
+    /// <summary>True to keep /NeedAppearances enabled for legacy PDF viewers after filling fields.</summary>
+    [Parameter]
+    public SwitchParameter KeepNeedAppearances { get; set; }
+
+    /// <summary>TrueType or OpenType/CFF font file used to synthesize Unicode form field appearances.</summary>
+    [Parameter]
+    public string? AppearanceFontPath { get; set; }
+
+    /// <summary>PDF font family name used for the supplied appearance font.</summary>
+    [Parameter]
+    public string? AppearanceFontFamilyName { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
         PdfDocument result;
         if (Field == null || Field.Count == 0)
         {
@@ -51,14 +64,25 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
                 throw new PSArgumentException("Provide -Field values or use -Flatten.", nameof(Field));
             }
 
-            result = document.Forms.Flatten();
+            result = formOptions == null
+                ? document.Forms.Flatten()
+                : document.Forms.Flatten(formOptions);
         }
         else
         {
             var values = PdfCommandUtilities.ConvertFieldValues(Field);
-            result = Flatten.IsPresent
-                ? document.Forms.FillAndFlatten(values)
-                : document.Forms.Fill(values);
+            if (Flatten.IsPresent)
+            {
+                result = formOptions == null
+                    ? document.Forms.FillAndFlatten(values)
+                    : document.Forms.FillAndFlatten(values, formOptions);
+            }
+            else
+            {
+                result = formOptions == null
+                    ? document.Forms.Fill(values)
+                    : document.Forms.Fill(values, formOptions);
+            }
         }
 
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);

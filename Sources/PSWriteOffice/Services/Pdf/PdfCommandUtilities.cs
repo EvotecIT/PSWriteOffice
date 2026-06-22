@@ -83,6 +83,30 @@ internal static class PdfCommandUtilities
             : new PdfReadOptions { Password = password };
     }
 
+    internal static PdfFormFillerOptions? CreateFormFillerOptions(PSCmdlet cmdlet, string? appearanceFontPath, string? appearanceFontFamilyName, bool keepNeedAppearances)
+    {
+        if (string.IsNullOrWhiteSpace(appearanceFontPath) && !keepNeedAppearances)
+        {
+            return null;
+        }
+
+        var options = new PdfFormFillerOptions
+        {
+            KeepNeedAppearances = keepNeedAppearances
+        };
+
+        if (!string.IsNullOrWhiteSpace(appearanceFontPath))
+        {
+            var fontPath = ResolvePath(cmdlet, appearanceFontPath!);
+            var familyName = string.IsNullOrWhiteSpace(appearanceFontFamilyName)
+                ? Path.GetFileNameWithoutExtension(fontPath)
+                : appearanceFontFamilyName!;
+            options.UseAppearanceFontFile(familyName, fontPath);
+        }
+
+        return options;
+    }
+
     internal static void ApplyEncryption(PdfOptions options, string? password, string? ownerPassword, int? permissions)
     {
         if (string.IsNullOrEmpty(password))

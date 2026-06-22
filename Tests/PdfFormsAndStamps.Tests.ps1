@@ -52,6 +52,40 @@ Describe 'PDF forms and stamps' {
         (Get-OfficePdfPreflight -Path $filledPath).CanRead | Should -BeTrue
     }
 
+    It 'writes deterministic form appearances without requiring viewer regeneration' {
+        $formPath = Join-Path $TestDrive 'appearance-source.pdf'
+        New-OfficePdf -Path $formPath {
+            PdfHeading 'Customer intake'
+            PdfFormField -Name 'CustomerName' -Type Text
+        } | Out-Null
+
+        $filledPath = Join-Path $TestDrive 'appearance-filled.pdf'
+        Set-OfficePdfForm -Path $formPath -OutputPath $filledPath -Field @{
+            CustomerName = 'Alice Example'
+        } | Should -BeOfType System.IO.FileInfo
+
+        $info = Get-OfficePdfInfo -Path $filledPath
+        $raw = [System.Text.Encoding]::ASCII.GetString([System.IO.File]::ReadAllBytes($filledPath))
+
+        $info.AcroFormNeedAppearances | Should -BeFalse
+        $raw | Should -Match '/AP << /N'
+    }
+
+    It 'can keep NeedAppearances for legacy PDF viewers' {
+        $formPath = Join-Path $TestDrive 'legacy-appearance-source.pdf'
+        New-OfficePdf -Path $formPath {
+            PdfHeading 'Customer intake'
+            PdfFormField -Name 'CustomerName' -Type Text
+        } | Out-Null
+
+        $filledPath = Join-Path $TestDrive 'legacy-appearance-filled.pdf'
+        Set-OfficePdfForm -Path $formPath -OutputPath $filledPath -Field @{
+            CustomerName = 'Alice Example'
+        } -KeepNeedAppearances | Should -BeOfType System.IO.FileInfo
+
+        (Get-OfficePdfInfo -Path $filledPath).AcroFormNeedAppearances | Should -BeTrue
+    }
+
     It 'updates existing PDF metadata and adds extractable text stamps' {
         $sourcePath = Join-Path $TestDrive 'source.pdf'
         New-OfficePdf -Path $sourcePath {

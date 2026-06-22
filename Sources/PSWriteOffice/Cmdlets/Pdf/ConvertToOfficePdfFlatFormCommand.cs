@@ -29,10 +29,22 @@ public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
     [Parameter(Mandatory = true, Position = 1)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>TrueType or OpenType/CFF font file used to synthesize Unicode form field appearances while flattening.</summary>
+    [Parameter]
+    public string? AppearanceFontPath { get; set; }
+
+    /// <summary>PDF font family name used for the supplied appearance font.</summary>
+    [Parameter]
+    public string? AppearanceFontFamilyName { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var result = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Forms.Flatten();
+        var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, keepNeedAppearances: false);
+        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var result = formOptions == null
+            ? document.Forms.Flatten()
+            : document.Forms.Flatten(formOptions);
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath);
