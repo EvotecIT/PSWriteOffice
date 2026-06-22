@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Format-Table Index, Text, Bold, Italic, Color</code>
 ///   <para>Returns one object per inline rich text run with text and style properties.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeExcelRichText", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Get, "OfficeExcelRichText", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelRichTextRuns")]
 [OutputType(typeof(PSObject))]
 public sealed class GetOfficeExcelRichTextCommand : PSCmdlet

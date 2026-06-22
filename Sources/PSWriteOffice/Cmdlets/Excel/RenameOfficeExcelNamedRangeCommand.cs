@@ -53,6 +53,10 @@ public sealed class RenameOfficeExcelNamedRangeCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <summary>Save the workbook immediately after renaming the name.</summary>
+    [Parameter]
+    public SwitchParameter Save { get; set; }
+
     protected override void ProcessRecord()
     {
         ExcelDocument document;
@@ -74,7 +78,7 @@ public sealed class RenameOfficeExcelNamedRangeCommand : PSCmdlet
 
         if (ShouldProcess(Name, "Rename Excel named range"))
         {
-            var renamed = document.RenameNamedRange(Name, NewName, scope, ValidationMode, save: true);
+            var renamed = document.RenameNamedRange(Name, NewName, scope, ValidationMode, save: Save.IsPresent);
             if (PassThru.IsPresent)
             {
                 WriteObject(renamed);

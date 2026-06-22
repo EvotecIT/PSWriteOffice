@@ -57,7 +57,7 @@ public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet
         var document = workbook.Document;
 
         string? sheetName = null;
-        ExtendedPart part;
+        OpenXmlPart part;
         if (string.Equals(Kind, "QueryTable", StringComparison.OrdinalIgnoreCase))
         {
             sheetName = ExcelWorkbookCommandService.ResolveSheetNameOrCurrent(this, document, ParameterSetName, WorksheetName);

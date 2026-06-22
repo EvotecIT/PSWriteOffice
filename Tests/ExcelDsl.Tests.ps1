@@ -2526,6 +2526,20 @@ Describe 'Excel DSL surface' {
         $runs[2].Italic | Should -BeTrue
         $runs[2].Underline | Should -BeTrue
 
+        $contextRuns = @()
+        New-OfficeExcel -Path (Join-Path $TestDrive 'DslExcelRichText.Context.xlsx') {
+            Add-OfficeExcelSheet -Name 'Summary' -Content {
+                Set-OfficeExcelRichText -Address A1 -Run @(
+                    'Context '
+                    @{ Text = 'read'; Bold = $true }
+                )
+                $contextRuns = @(Get-OfficeExcelRichText -Address A1)
+                $contextRuns.Count | Should -Be 2
+                $contextRuns[0].Text | Should -Be 'Context '
+                $contextRuns[1].Bold | Should -BeTrue
+            }
+        }
+
         $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
         $worksheetXml | Should -Match 't="inlineStr"'
         $worksheetXml | Should -Match '<(?:\w+:)?rPr>'
@@ -2560,6 +2574,11 @@ Describe 'Excel DSL surface' {
 
         Unprotect-OfficeExcelWorkbook -Path $path
 
+        $protectedFile = Protect-OfficeExcelWorkbook -Path $path -LegacyPasswordHash 'CAFE' -PassThru
+        $protectedFile | Should -BeOfType ([System.IO.FileInfo])
+        $protectedFile.FullName | Should -Be (Resolve-Path -LiteralPath $path).Path
+        Unprotect-OfficeExcelWorkbook -Path $path
+
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {
             $doc.IsWorkbookProtected | Should -BeFalse
@@ -2568,6 +2587,46 @@ Describe 'Excel DSL surface' {
         }
 
         (Read-XlsxEntryText -Path $path -Entry 'xl/workbook.xml') | Should -Not -Match '<workbookProtection\b'
+    }
+
+    It 'renames and removes named ranges without saving unless requested' {
+        $path = Join-Path $TestDrive 'DslExcelNamedRangeSaveSemantics.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelRow -Row 1 -Values 'Name', 'Value'
+                Set-OfficeExcelNamedRange -Name 'Totals' -Range 'A1:B1'
+            }
+        }
+
+        $doc = Get-OfficeExcel -Path $path
+        try {
+            ($doc | Rename-OfficeExcelNamedRange -Name 'Totals' -NewName 'GrandTotal' -Sheet 'Data' -PassThru) | Should -BeTrue
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        (Get-OfficeExcelNamedRange -Path $path -Sheet 'Data').Name | Should -Contain 'Totals'
+        (Get-OfficeExcelNamedRange -Path $path -Sheet 'Data').Name | Should -Not -Contain 'GrandTotal'
+
+        $doc = Get-OfficeExcel -Path $path
+        try {
+            ($doc | Rename-OfficeExcelNamedRange -Name 'Totals' -NewName 'GrandTotal' -Sheet 'Data' -Save -PassThru) | Should -BeTrue
+            ($doc | Remove-OfficeExcelNamedRange -Name 'GrandTotal' -Sheet 'Data' -PassThru) | Should -BeTrue
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        (Get-OfficeExcelNamedRange -Path $path -Sheet 'Data').Name | Should -Contain 'GrandTotal'
+
+        $doc = Get-OfficeExcel -Path $path
+        try {
+            ($doc | Remove-OfficeExcelNamedRange -Name 'GrandTotal' -Sheet 'Data' -Save -PassThru) | Should -BeTrue
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        @(Get-OfficeExcelNamedRange -Path $path -Sheet 'Data' | Where-Object Name -eq 'GrandTotal').Count | Should -Be 0
     }
 
     It 'adds, lists, and clears manual worksheet page breaks' {

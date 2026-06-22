@@ -1,3 +1,4 @@
+using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -15,6 +16,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsSecurity.Protect, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelWorkbookProtect")]
+[OutputType(typeof(ExcelDocument), typeof(FileInfo))]
 public sealed class ProtectOfficeExcelWorkbookCommand : PSCmdlet
 {
     private const string ParameterSetContext = "Context";
@@ -59,6 +61,11 @@ public sealed class ProtectOfficeExcelWorkbookCommand : PSCmdlet
             throw new PSArgumentException("Use -ProtectWindows when -NoStructure is specified.");
         }
 
+        var pathPassThru = string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase);
+        string? resolvedPath = pathPassThru
+            ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath)
+            : null;
+
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
         var document = workbook.Document;
         document.ProtectWorkbook(new ExcelWorkbookProtectionOptions
@@ -73,7 +80,7 @@ public sealed class ProtectOfficeExcelWorkbookCommand : PSCmdlet
 
         if (PassThru.IsPresent)
         {
-            WriteObject(document);
+            WriteObject(pathPassThru ? new FileInfo(resolvedPath!) : document);
         }
     }
 }

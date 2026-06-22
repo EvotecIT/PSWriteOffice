@@ -46,6 +46,10 @@ public sealed class RemoveOfficeExcelNamedRangeCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <summary>Save the workbook immediately after removing the name.</summary>
+    [Parameter]
+    public SwitchParameter Save { get; set; }
+
     protected override void ProcessRecord()
     {
         ExcelDocument document;
@@ -67,7 +71,7 @@ public sealed class RemoveOfficeExcelNamedRangeCommand : PSCmdlet
 
         if (ShouldProcess(Name, "Remove Excel named range"))
         {
-            var removed = document.RemoveNamedRange(Name, scope, save: true);
+            var removed = document.RemoveNamedRange(Name, scope, save: Save.IsPresent);
             if (PassThru.IsPresent)
             {
                 WriteObject(removed);
