@@ -285,6 +285,22 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
     [Parameter]
     public string TableStyle { get; set; } = "TableStyleMedium9";
 
+    /// <summary>Emphasize the first table column when the selected style supports it.</summary>
+    [Parameter]
+    public SwitchParameter ShowFirstColumn { get; set; }
+
+    /// <summary>Emphasize the last table column when the selected style supports it.</summary>
+    [Parameter]
+    public SwitchParameter ShowLastColumn { get; set; }
+
+    /// <summary>Disable alternating row stripes for the generated table.</summary>
+    [Parameter]
+    public SwitchParameter NoRowStripes { get; set; }
+
+    /// <summary>Enable alternating column stripes for the generated table.</summary>
+    [Parameter]
+    public SwitchParameter ShowColumnStripes { get; set; }
+
     /// <summary>Disable AutoFilter dropdowns.</summary>
     [Parameter]
     public SwitchParameter NoAutoFilter { get; set; }
@@ -321,7 +337,14 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
             style: style,
             autoFilter: !NoAutoFilter.IsPresent,
             freezeHeaderRow: !NoFreezeHeaderRow.IsPresent,
-            visuals: options => options.AutoFormatDynamicCollections = !NoAutoFormatDynamicCollections.IsPresent);
+            visuals: options =>
+            {
+                options.AutoFormatDynamicCollections = !NoAutoFormatDynamicCollections.IsPresent;
+                options.ShowFirstColumn = ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowFirstColumn), ShowFirstColumn);
+                options.ShowLastColumn = ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowLastColumn), ShowLastColumn);
+                options.ShowRowStripes = !ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(NoRowStripes), NoRowStripes);
+                options.ShowColumnStripes = ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowColumnStripes), ShowColumnStripes);
+            });
 
         if (PassThru.IsPresent)
         {

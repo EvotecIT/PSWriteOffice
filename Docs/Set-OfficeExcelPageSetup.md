@@ -11,12 +11,12 @@ Configures page setup options on a worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelPageSetup [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPageSetup [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelPageSetup -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPageSetup -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -67,6 +67,22 @@ Accept wildcard characters: True
 
 ### -FitToWidth
 Number of pages to fit horizontally.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PageOrder
+Multi-page print order.
 
 ```yaml
 Type: Nullable`1

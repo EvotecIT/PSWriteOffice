@@ -11,22 +11,22 @@ Adds an image anchored to a worksheet cell.
 ## SYNTAX
 ### ContextPath (Default)
 ```powershell
-Add-OfficeExcelImage [-Path] <string> [-Row <int>] [-Column <int>] [-Address <string>] [-WidthPixels <int>] [-HeightPixels <int>] [-OffsetXPixels <int>] [-OffsetYPixels <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelImage [-Path] <string> [-Row <int>] [-Column <int>] [-Address <string>] [-WidthPixels <int>] [-HeightPixels <int>] [-OffsetXPixels <int>] [-OffsetYPixels <int>] [-Name <string>] [-AltText <string>] [-LockAspectRatio] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentPath
 ```powershell
-Add-OfficeExcelImage [-Path] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-WidthPixels <int>] [-HeightPixels <int>] [-OffsetXPixels <int>] [-OffsetYPixels <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelImage [-Path] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-WidthPixels <int>] [-HeightPixels <int>] [-OffsetXPixels <int>] [-OffsetYPixels <int>] [-Name <string>] [-AltText <string>] [-LockAspectRatio] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentUrl
 ```powershell
-Add-OfficeExcelImage [-Url] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-WidthPixels <int>] [-HeightPixels <int>] [-OffsetXPixels <int>] [-OffsetYPixels <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelImage [-Url] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-WidthPixels <int>] [-HeightPixels <int>] [-OffsetXPixels <int>] [-OffsetYPixels <int>] [-Name <string>] [-AltText <string>] [-LockAspectRatio] [-PassThru] [<CommonParameters>]
 ```
 
 ### ContextUrl
 ```powershell
-Add-OfficeExcelImage [-Url] <string> [-Row <int>] [-Column <int>] [-Address <string>] [-WidthPixels <int>] [-HeightPixels <int>] [-OffsetXPixels <int>] [-OffsetYPixels <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelImage [-Url] <string> [-Row <int>] [-Column <int>] [-Address <string>] [-WidthPixels <int>] [-HeightPixels <int>] [-OffsetXPixels <int>] [-OffsetYPixels <int>] [-Name <string>] [-AltText <string>] [-LockAspectRatio] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -52,6 +52,22 @@ Downloads and anchors the image to cell A1.
 
 ### -Address
 A1-style cell address (e.g., A1, C5).
+
+```yaml
+Type: String
+Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AltText
+Optional alternative text description.
 
 ```yaml
 Type: String
@@ -103,6 +119,38 @@ Image height in pixels.
 
 ```yaml
 Type: Int32
+Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -LockAspectRatio
+Prevent Excel from changing the image aspect ratio.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Name
+Optional drawing name.
+
+```yaml
+Type: String
 Parameter Sets: ContextPath, DocumentPath, DocumentUrl, ContextUrl
 Aliases: None
 Possible values:

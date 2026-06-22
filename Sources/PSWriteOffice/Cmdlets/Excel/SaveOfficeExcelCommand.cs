@@ -46,9 +46,34 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter ValidateOpenXml { get; set; }
 
+    /// <summary>Disable OfficeIMO fast package writers for this save.</summary>
+    [Parameter]
+    public SwitchParameter DisableFastPackageWriter { get; set; }
+
+    /// <summary>Evaluate supported formulas and write cached values before saving.</summary>
+    [Parameter]
+    public SwitchParameter EvaluateFormulas { get; set; }
+
+    /// <summary>Remove cached formula results before saving.</summary>
+    [Parameter]
+    public SwitchParameter ClearCachedFormulaResults { get; set; }
+
+    /// <summary>Mark formula cells dirty before saving.</summary>
+    [Parameter]
+    public SwitchParameter MarkFormulasDirty { get; set; }
+
+    /// <summary>Request a full workbook recalculation when opened in Excel-compatible applications.</summary>
+    [Parameter]
+    public SwitchParameter ForceFullCalculationOnOpen { get; set; }
+
     /// <summary>Optional PDF path to create from the same workbook.</summary>
     [Parameter]
     public string? PdfPath { get; set; }
+
+    /// <summary>Workbook date system for Excel date serials.</summary>
+    [Parameter]
+    [ValidateSet("1900", "1904", "NineteenHundred", "NineteenFour")]
+    public string? DateSystem { get; set; }
 
     /// <summary>Emit the workbook for further processing.</summary>
     [Parameter]
@@ -67,10 +92,17 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             throw new PSInvalidOperationException("No file path provided. Use -Path or open the workbook from disk.");
         }
 
+        ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
+
         var saveOptions = ExcelDocumentService.CreateSaveOptions(
             SafePreflight.IsPresent,
             SafeRepairDefinedNames.IsPresent,
-            ValidateOpenXml.IsPresent);
+            ValidateOpenXml.IsPresent,
+            DisableFastPackageWriter.IsPresent,
+            EvaluateFormulas.IsPresent,
+            ClearCachedFormulaResults.IsPresent,
+            MarkFormulasDirty.IsPresent,
+            ForceFullCalculationOnOpen.IsPresent);
 
         if (!string.IsNullOrWhiteSpace(Path))
         {

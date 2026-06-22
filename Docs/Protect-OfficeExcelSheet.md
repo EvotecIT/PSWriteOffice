@@ -11,12 +11,12 @@ Protects the current worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Protect-OfficeExcelSheet [-AllowSelectLockedCells <bool>] [-AllowSelectUnlockedCells <bool>] [-AllowFormatCells <bool>] [-AllowFormatColumns <bool>] [-AllowFormatRows <bool>] [-AllowInsertColumns <bool>] [-AllowInsertRows <bool>] [-AllowInsertHyperlinks <bool>] [-AllowDeleteColumns <bool>] [-AllowDeleteRows <bool>] [-AllowSort <bool>] [-AllowAutoFilter <bool>] [-AllowPivotTables <bool>] [-PassThru] [<CommonParameters>]
+Protect-OfficeExcelSheet [-AllowTableEditing] [-AllowSelectLockedCells <bool>] [-AllowSelectUnlockedCells <bool>] [-AllowFormatCells <bool>] [-AllowFormatColumns <bool>] [-AllowFormatRows <bool>] [-AllowInsertColumns <bool>] [-AllowInsertRows <bool>] [-AllowInsertHyperlinks <bool>] [-AllowDeleteColumns <bool>] [-AllowDeleteRows <bool>] [-AllowSort <bool>] [-AllowAutoFilter <bool>] [-AllowPivotTables <bool>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Protect-OfficeExcelSheet -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-AllowSelectLockedCells <bool>] [-AllowSelectUnlockedCells <bool>] [-AllowFormatCells <bool>] [-AllowFormatColumns <bool>] [-AllowFormatRows <bool>] [-AllowInsertColumns <bool>] [-AllowInsertRows <bool>] [-AllowInsertHyperlinks <bool>] [-AllowDeleteColumns <bool>] [-AllowDeleteRows <bool>] [-AllowSort <bool>] [-AllowAutoFilter <bool>] [-AllowPivotTables <bool>] [-PassThru] [<CommonParameters>]
+Protect-OfficeExcelSheet -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-AllowTableEditing] [-AllowSelectLockedCells <bool>] [-AllowSelectUnlockedCells <bool>] [-AllowFormatCells <bool>] [-AllowFormatColumns <bool>] [-AllowFormatRows <bool>] [-AllowInsertColumns <bool>] [-AllowInsertRows <bool>] [-AllowInsertHyperlinks <bool>] [-AllowDeleteColumns <bool>] [-AllowDeleteRows <bool>] [-AllowSort <bool>] [-AllowAutoFilter <bool>] [-AllowPivotTables <bool>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -230,6 +230,22 @@ Allow sorting.
 
 ```yaml
 Type: Boolean
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AllowTableEditing
+Allow common protected-table workflows: selecting cells, inserting rows, sorting, and filtering.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:

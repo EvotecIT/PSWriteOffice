@@ -32,8 +32,33 @@ public sealed class AddOfficeExcelConditionalColorScaleCommand : PSCmdlet
     public int? SheetIndex { get; set; }
 
     /// <summary>A1 range to format.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
-    public string Range { get; set; } = string.Empty;
+    [Parameter(Position = 0)]
+    public string? Range { get; set; }
+
+    /// <summary>Header or table column name used to resolve the target range.</summary>
+    [Parameter]
+    [Alias("ColumnName")]
+    public string? HeaderName { get; set; }
+
+    /// <summary>Optional table name for header-based range resolution.</summary>
+    [Parameter]
+    public string? TableName { get; set; }
+
+    /// <summary>Pivot table name used to resolve the target range.</summary>
+    [Parameter]
+    public string? PivotTableName { get; set; }
+
+    /// <summary>Use the full pivot output range instead of the default data body range.</summary>
+    [Parameter]
+    public SwitchParameter PivotWholeTable { get; set; }
+
+    /// <summary>Worksheet header row used when resolving HeaderName without a table. Use 0 for the first row of the used range.</summary>
+    [Parameter]
+    public int HeaderRow { get; set; }
+
+    /// <summary>Include the header cell in the resolved range.</summary>
+    [Parameter]
+    public SwitchParameter IncludeHeader { get; set; }
 
     /// <summary>Start color in hex (#RRGGBB or FFRRGGBB).</summary>
     [Parameter(Mandatory = true, Position = 1)]
@@ -51,12 +76,13 @@ public sealed class AddOfficeExcelConditionalColorScaleCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var sheet = ResolveSheet();
+        string targetRange = ExcelTargetRangeResolver.Resolve(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent, PivotTableName, !PivotWholeTable.IsPresent);
 
-        sheet.AddConditionalColorScale(Range, NormalizeColor(StartColor), NormalizeColor(EndColor));
+        sheet.AddConditionalColorScale(targetRange, NormalizeColor(StartColor), NormalizeColor(EndColor));
 
         if (PassThru.IsPresent)
         {
-            WriteObject(Range);
+            WriteObject(targetRange);
         }
     }
 

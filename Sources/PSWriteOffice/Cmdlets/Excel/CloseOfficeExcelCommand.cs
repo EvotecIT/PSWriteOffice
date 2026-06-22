@@ -54,6 +54,31 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter ValidateOpenXml { get; set; }
 
+    /// <summary>Disable OfficeIMO fast package writers for this save.</summary>
+    [Parameter]
+    public SwitchParameter DisableFastPackageWriter { get; set; }
+
+    /// <summary>Evaluate supported formulas and write cached values before saving.</summary>
+    [Parameter]
+    public SwitchParameter EvaluateFormulas { get; set; }
+
+    /// <summary>Remove cached formula results before saving.</summary>
+    [Parameter]
+    public SwitchParameter ClearCachedFormulaResults { get; set; }
+
+    /// <summary>Mark formula cells dirty before saving.</summary>
+    [Parameter]
+    public SwitchParameter MarkFormulasDirty { get; set; }
+
+    /// <summary>Request a full workbook recalculation when opened in Excel-compatible applications.</summary>
+    [Parameter]
+    public SwitchParameter ForceFullCalculationOnOpen { get; set; }
+
+    /// <summary>Workbook date system for Excel date serials.</summary>
+    [Parameter]
+    [ValidateSet("1900", "1904", "NineteenHundred", "NineteenFour")]
+    public string? DateSystem { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -64,13 +89,19 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet
 
         if (Save.IsPresent || !string.IsNullOrEmpty(Path))
         {
+            ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
             var resolvedPath = !string.IsNullOrWhiteSpace(Path)
                 ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
                 : Document.FilePath;
             var saveOptions = ExcelDocumentService.CreateSaveOptions(
                 SafePreflight.IsPresent,
                 SafeRepairDefinedNames.IsPresent,
-                ValidateOpenXml.IsPresent);
+                ValidateOpenXml.IsPresent,
+                DisableFastPackageWriter.IsPresent,
+                EvaluateFormulas.IsPresent,
+                ClearCachedFormulaResults.IsPresent,
+                MarkFormulasDirty.IsPresent,
+                ForceFullCalculationOnOpen.IsPresent);
             ExcelDocumentService.SaveDocument(Document, Show.IsPresent, resolvedPath, Password, saveOptions);
         }
         else

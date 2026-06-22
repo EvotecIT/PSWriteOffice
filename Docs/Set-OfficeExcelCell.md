@@ -11,12 +11,12 @@ Sets a cell value, formula, or number format within the current worksheet.
 ## SYNTAX
 ### Coordinates
 ```powershell
-Set-OfficeExcelCell [-Row <int>] [-Column <int>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [<CommonParameters>]
+Set-OfficeExcelCell [-Row <int>] [-Column <int>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
 ```
 
 ### Address
 ```powershell
-Set-OfficeExcelCell [-Address <string>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [<CommonParameters>]
+Set-OfficeExcelCell [-Address <string>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -49,6 +49,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -BackgroundColor
+Solid background color as #RRGGBB or #AARRGGBB.
+
+```yaml
+Type: String
+Parameter Sets: Coordinates, Address
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Column
 1-based column index.
 
@@ -67,6 +83,54 @@ Accept wildcard characters: True
 
 ### -Formula
 Formula text (without leading =).
+
+```yaml
+Type: String
+Parameter Sets: Coordinates, Address
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -GradientDegree
+Linear gradient angle in degrees.
+
+```yaml
+Type: Double
+Parameter Sets: Coordinates, Address
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -GradientFrom
+Gradient start color as #RRGGBB or #AARRGGBB.
+
+```yaml
+Type: String
+Parameter Sets: Coordinates, Address
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -GradientTo
+Gradient end color as #RRGGBB or #AARRGGBB.
 
 ```yaml
 Type: String

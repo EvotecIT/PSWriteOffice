@@ -11,12 +11,12 @@ Creates a PDF document using the OfficeIMO.Pdf composition engine.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-New-OfficePdf [[-Path] <string>] [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [<CommonParameters>]
+New-OfficePdf [[-Path] <string>] [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [<CommonParameters>]
 ```
 
 ### Content
 ```powershell
-New-OfficePdf [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [<CommonParameters>]
+New-OfficePdf [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -240,6 +240,22 @@ Open the PDF after saving.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Theme
+Built-in OfficeIMO.Pdf theme applied before the DSL content runs.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: Path, Content
 Aliases: None
 Possible values:
