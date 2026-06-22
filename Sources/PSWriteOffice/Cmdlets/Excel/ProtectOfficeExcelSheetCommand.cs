@@ -97,7 +97,11 @@ public sealed class ProtectOfficeExcelSheetCommand : PSCmdlet
         var sheet = ResolveSheet();
         var options = AllowTableEditing.IsPresent
             ? ExcelSheetProtectionOptions.TableEditing()
-            : new ExcelSheetProtectionOptions();
+            : new ExcelSheetProtectionOptions
+            {
+                AllowSelectLockedCells = AllowSelectLockedCells,
+                AllowSelectUnlockedCells = AllowSelectUnlockedCells
+            };
 
         ApplyBoundOption(options, nameof(AllowSelectLockedCells), value => options.AllowSelectLockedCells = value);
         ApplyBoundOption(options, nameof(AllowSelectUnlockedCells), value => options.AllowSelectUnlockedCells = value);

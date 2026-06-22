@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object SheetName, Address, Author, Text</code>
 ///   <para>Returns matching comment metadata without modifying the workbook.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeExcelComment", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Get, "OfficeExcelComment", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelComments")]
 [OutputType(typeof(PSObject))]
 public sealed class GetOfficeExcelCommentCommand : PSCmdlet

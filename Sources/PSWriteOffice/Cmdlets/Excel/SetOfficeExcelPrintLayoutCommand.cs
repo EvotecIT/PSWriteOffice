@@ -1,3 +1,4 @@
+using System;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -13,6 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelPrintLayout", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelPrintLayout")]
+[OutputType(typeof(ExcelSheet), typeof(PSObject))]
 public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
 {
     private const string ParameterSetContext = "Context";
@@ -120,7 +122,33 @@ public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
 
         if (PassThru.IsPresent)
         {
-            WriteObject(sheet);
+            WriteObject(string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)
+                ? CreatePathRecord(document, sheet)
+                : sheet);
         }
+    }
+
+    private PSObject CreatePathRecord(ExcelDocument document, ExcelSheet sheet)
+    {
+        var item = new PSObject();
+        item.Properties.Add(new PSNoteProperty("Path", document.FilePath ?? SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath)));
+        item.Properties.Add(new PSNoteProperty("Name", sheet.Name));
+        item.Properties.Add(new PSNoteProperty("SheetName", sheet.Name));
+        item.Properties.Add(new PSNoteProperty("SheetIndex", ResolveSheetIndex(document, sheet)));
+        item.Properties.Add(new PSNoteProperty("Preset", Preset));
+        return item;
+    }
+
+    private static int ResolveSheetIndex(ExcelDocument document, ExcelSheet sheet)
+    {
+        for (int i = 0; i < document.Sheets.Count; i++)
+        {
+            if (string.Equals(document.Sheets[i].Name, sheet.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Sort-Object Type, Position</code>
 ///   <para>Returns row and column page-break records for print-layout audits.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeExcelPageBreak", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Get, "OfficeExcelPageBreak", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelPageBreaks")]
 [OutputType(typeof(PSObject))]
 public sealed class GetOfficeExcelPageBreakCommand : PSCmdlet
@@ -55,10 +55,12 @@ public sealed class GetOfficeExcelPageBreakCommand : PSCmdlet
         var path = string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)
             ? InputPath
             : null;
+        bool includeRows = Row.IsPresent || !Column.IsPresent;
+        bool includeColumns = Column.IsPresent || !Row.IsPresent;
 
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
         {
-            if (!Column.IsPresent)
+            if (includeRows)
             {
                 foreach (var row in sheet.GetManualRowPageBreaks())
                 {
@@ -66,7 +68,7 @@ public sealed class GetOfficeExcelPageBreakCommand : PSCmdlet
                 }
             }
 
-            if (!Row.IsPresent)
+            if (includeColumns)
             {
                 foreach (var column in sheet.GetManualColumnPageBreaks())
                 {

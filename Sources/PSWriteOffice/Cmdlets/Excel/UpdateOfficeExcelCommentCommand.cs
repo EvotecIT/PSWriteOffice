@@ -104,7 +104,11 @@ public sealed class UpdateOfficeExcelCommentCommand : PSCmdlet
                 : sheet.UpdateCommentsRichText(filter, ExcelRichTextRunService.ToRuns(Run), Author, Initials);
         }
 
-        workbook.SaveIfOwned();
+        if (updated > 0)
+        {
+            workbook.SaveIfOwned();
+        }
+
         if (PassThru.IsPresent)
         {
             WriteObject(updated);

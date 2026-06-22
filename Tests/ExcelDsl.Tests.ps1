@@ -459,6 +459,11 @@ Describe 'Excel DSL surface' {
         $titles = Get-TestWorkbookDefinedName -Path $path -Name '_xlnm.Print_Titles'
         $titles | Should -Match '\$1:\$1'
         $titles | Should -Match '\$A:\$A'
+
+        $layoutResult = Set-OfficeExcelPrintLayout -Path $path -Sheet Report -Preset Worksheet -PassThru
+        $layoutResult.Path | Should -Be $path
+        $layoutResult.SheetName | Should -Be 'Report'
+        $layoutResult.Preset | Should -Be 'Worksheet'
     }
 
     It 'adds dashboard chart presets through a thin command' {
@@ -1872,7 +1877,11 @@ Describe 'Excel DSL surface' {
         $detailsXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet2.xml'
         $detailsXml | Should -Match 'tabSelected="(?:1|true)"'
 
-        Set-OfficeExcelActiveSheet -Path $path -SheetIndex 2
+        $activeResult = Set-OfficeExcelActiveSheet -Path $path -SheetIndex 2 -PassThru
+        $activeResult.Path | Should -Be $path
+        $activeResult.Name | Should -Be 'Archive'
+        $activeResult.SheetName | Should -Be 'Archive'
+        $activeResult.SheetIndex | Should -Be 2
 
         $updatedSummary = Get-OfficeExcelSummary -Path $path -IncludeSheets
         $updatedSummary.ActiveSheetIndex | Should -Be 2
@@ -2168,6 +2177,7 @@ Describe 'Excel DSL surface' {
                 Add-OfficeExcelImage -Address 'I1' -Path $imagePath -WidthPixels 64 -HeightPixels 64
                 Set-OfficeExcelHyperlink -Address 'A2' -Url 'https://example.org' -Display 'Example'
                 Add-OfficeExcelComment -Address 'B2' -Text 'Check sales' -Author Alice -Initials AA
+                $script:contextComments = @(Get-OfficeExcelComment -TextContains sales)
                 Add-OfficeExcelSparkline -DataRange 'B2:B4' -LocationRange 'H2:H4' -Type Column
             }
         }
@@ -2188,11 +2198,19 @@ Describe 'Excel DSL surface' {
             Close-OfficeExcel -Document $doc
         }
 
+        $script:contextComments.Count | Should -Be 1
+        $script:contextComments[0].SheetName | Should -Be 'Data'
+
         $comments = @(Get-OfficeExcelComment -Path $path -Sheet Data -TextContains sales)
         $comments.Count | Should -Be 1
         $comments[0].Address | Should -Be 'B2'
         $comments[0].Author | Should -Be 'Alice (AA)'
         $comments[0].Text | Should -Be 'Check sales'
+
+        Update-OfficeExcelComment -Path $path -Sheet Data -Address B2 -Text 'Should not save' -Author Nope -WhatIf
+        $whatIfComment = Get-OfficeExcelComment -Path $path -Sheet Data -Address B2
+        $whatIfComment.Author | Should -Be 'Alice (AA)'
+        $whatIfComment.Text | Should -Be 'Check sales'
 
         Update-OfficeExcelComment -Path $path -Sheet Data -Address B2 -Text 'Reviewed sales' -Author Carol -Initials CC -PassThru | Should -Be 1
         $updatedComment = Get-OfficeExcelComment -Path $path -Sheet Data -Address B2
@@ -2295,6 +2313,8 @@ Describe 'Excel DSL surface' {
 
         $protection | Should -Not -BeNullOrEmpty
         $protection.GetAttribute('sheet') | Should -Match '^(1|true)$'
+        $protection.GetAttribute('selectLockedCells') | Should -Match '^(0|false)$'
+        $protection.GetAttribute('selectUnlockedCells') | Should -Match '^(0|false)$'
         $protection.GetAttribute('insertRows') | Should -Match '^(0|false)$'
         $protection.GetAttribute('sort') | Should -Match '^(0|false)$'
         $protection.GetAttribute('autoFilter') | Should -Match '^(0|false)$'
@@ -2698,6 +2718,7 @@ Describe 'Excel DSL surface' {
             Add-OfficeExcelSheet -Name 'Data' -Content {
                 Add-OfficeExcelTable -InputObject $rows -TableName 'Items'
                 Add-OfficeExcelPageBreak -Row 5 -Column 1
+                $script:contextPageBreaks = @(Get-OfficeExcelPageBreak)
             }
         }
 
@@ -2705,6 +2726,9 @@ Describe 'Excel DSL surface' {
         $breaks.Count | Should -Be 2
         ($breaks | Where-Object Type -EQ 'Row').Index | Should -Be 5
         ($breaks | Where-Object Type -EQ 'Column').Index | Should -Be 1
+
+        $bothFilters = @(Get-OfficeExcelPageBreak -Path $path -Sheet Data -Row -Column)
+        $bothFilters.Count | Should -Be 2
 
         $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
         $worksheetXml | Should -Match '<(?:\w+:)?rowBreaks\b'
@@ -2719,6 +2743,9 @@ Describe 'Excel DSL surface' {
         $columnBreaks = @(Get-OfficeExcelPageBreak -Path $path -Sheet Data -Column)
         $columnBreaks.Count | Should -Be 1
         $columnBreaks[0].Index | Should -Be 1
+
+        $script:contextPageBreaks.Count | Should -Be 2
+        $script:contextPageBreaks[0].SheetName | Should -Be 'Data'
 
         Clear-OfficeExcelPageBreak -Path $path -Sheet Data -All -Confirm:$false
 
