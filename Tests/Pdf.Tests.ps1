@@ -23,6 +23,34 @@ Describe 'PDF cmdlets' {
         ConvertTo-OfficePdfMarkdown -Path $encryptedPath -Password 'open' | Should -Match 'Secret PDF Text'
     }
 
+    It 'writes password encrypted PDFs from new and save cmdlets' {
+        foreach ($name in 'New-OfficePdf', 'Save-OfficePdf') {
+            (Get-Command $name).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command $name).Parameters.Keys | Should -Contain 'OwnerPassword'
+            (Get-Command $name).Parameters.Keys | Should -Contain 'Permission'
+        }
+
+        $newPath = Join-Path $TestDrive 'new-encrypted.pdf'
+        New-OfficePdf -Path $newPath -Password 'open' -OwnerPassword 'owner' {
+            PdfParagraph 'Generated encrypted PDF text'
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $newPath).CanRead | Should -BeFalse
+        (Get-OfficePdfPreflight -Path $newPath -Password 'open').CanRead | Should -BeTrue
+        Get-OfficePdfText -Path $newPath -Password 'open' | Should -Match 'Generated encrypted PDF text'
+        { Get-OfficePdfText -Path $newPath -Password 'wrong' } | Should -Throw
+
+        $savedPath = Join-Path $TestDrive 'saved-encrypted.pdf'
+        $doc = New-OfficePdf {
+            PdfParagraph 'Saved encrypted PDF text'
+        }
+
+        $doc | Save-OfficePdf -Path $savedPath -Password 'open' -OwnerPassword 'owner' | Out-Null
+
+        (Get-OfficePdfPreflight -Path $savedPath).CanRead | Should -BeFalse
+        Get-OfficePdfText -Path $savedPath -Password 'open' | Should -Match 'Saved encrypted PDF text'
+    }
+
     It 'builds a composed PDF and extracts text' {
         $path = Join-Path $TestDrive 'report.pdf'
         $rows = @(

@@ -171,6 +171,20 @@ public sealed class NewOfficePdfCommand : PSCmdlet
     [Parameter]
     public SwitchParameter FlattenVisualAnnotations { get; set; }
 
+    /// <summary>Password required to open the generated PDF.</summary>
+    [Parameter]
+    [Alias("UserPassword")]
+    public string? Password { get; set; }
+
+    /// <summary>Optional owner password for the generated encrypted PDF.</summary>
+    [Parameter]
+    public string? OwnerPassword { get; set; }
+
+    /// <summary>Raw PDF Standard security permission bit mask. Defaults to allowing all standard operations.</summary>
+    [Parameter]
+    [Alias("Permissions")]
+    public int? Permission { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -261,6 +275,7 @@ public sealed class NewOfficePdfCommand : PSCmdlet
         }
 
         ConfigureViewerPreferences(options);
+        PdfCommandUtilities.ApplyEncryption(options, Password, OwnerPassword, Permission);
 
         if (!string.IsNullOrWhiteSpace(FontFamily))
         {

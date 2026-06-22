@@ -83,6 +83,36 @@ internal static class PdfCommandUtilities
             : new PdfReadOptions { Password = password };
     }
 
+    internal static void ApplyEncryption(PdfOptions options, string? password, string? ownerPassword, int? permissions)
+    {
+        if (string.IsNullOrEmpty(password))
+        {
+            if (!string.IsNullOrEmpty(ownerPassword) || permissions.HasValue)
+            {
+                throw new PSArgumentException("-OwnerPassword and -Permission require -Password.");
+            }
+
+            return;
+        }
+
+        options.SetEncryption(password!, ownerPassword, permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions);
+    }
+
+    internal static void ApplyEncryption(PdfDocument document, string? password, string? ownerPassword, int? permissions)
+    {
+        if (string.IsNullOrEmpty(password))
+        {
+            if (!string.IsNullOrEmpty(ownerPassword) || permissions.HasValue)
+            {
+                throw new PSArgumentException("-OwnerPassword and -Permission require -Password.");
+            }
+
+            return;
+        }
+
+        document.Encryption(password!, ownerPassword, permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions);
+    }
+
     internal static PdfColor? ParseColor(string? color)
     {
         if (string.IsNullOrWhiteSpace(color))
