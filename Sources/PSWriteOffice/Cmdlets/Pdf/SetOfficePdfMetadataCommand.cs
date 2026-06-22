@@ -8,7 +8,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <summary>Sets PDF document metadata on generated documents or existing PDF files.</summary>
 /// <remarks>
 /// In a <c>New-OfficePdf</c> script block this command updates the generated document metadata.
-/// With <c>-Path</c> and <c>-OutputPath</c>, it rewrites an existing PDF with updated metadata.
+/// With <c>-Path</c> and <c>-OutputPath</c>, it rewrites an existing PDF with updated metadata unless <c>-Incremental</c> is used.
 /// </remarks>
 /// <example>
 ///   <summary>Set metadata while generating a PDF.</summary>
@@ -67,6 +67,10 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <summary>Append a metadata-only incremental PDF revision instead of rewriting the existing PDF bytes.</summary>
+    [Parameter(ParameterSetName = ParameterSetFile)]
+    public SwitchParameter Incremental { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -75,7 +79,15 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
             var inputPath = PdfCommandUtilities.ResolvePath(this, Path!);
             var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            PdfMetadataEditor.UpdateMetadata(inputPath, outputPath, Title, Author, Subject, Keywords);
+            if (Incremental.IsPresent)
+            {
+                PdfIncrementalUpdater.UpdateMetadata(inputPath, outputPath, Title, Author, Subject, Keywords);
+            }
+            else
+            {
+                PdfMetadataEditor.UpdateMetadata(inputPath, outputPath, Title, Author, Subject, Keywords);
+            }
+
             WriteObject(new FileInfo(outputPath));
             return;
         }

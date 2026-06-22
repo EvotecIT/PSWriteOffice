@@ -342,6 +342,26 @@ Describe 'PDF cmdlets' {
         Test-Path $flatPath | Should -BeTrue
     }
 
+    It 'updates PDF metadata as an incremental revision' {
+        $path = Join-Path $TestDrive 'incremental-source.pdf'
+        $incrementalPath = Join-Path $TestDrive 'incremental-output.pdf'
+        New-OfficePdf -Path $path {
+            PdfMetadata -Title 'Original title' -Author 'Original author'
+            PdfParagraph 'Incremental body text'
+        } | Out-Null
+
+        Set-OfficePdfMetadata -Path $path -OutputPath $incrementalPath -Title 'Updated title' -Incremental |
+            Should -BeOfType System.IO.FileInfo
+
+        (Get-Item $incrementalPath).Length | Should -BeGreaterThan (Get-Item $path).Length
+        $info = Get-OfficePdfInfo -Path $incrementalPath
+        $info.Metadata.Title | Should -Be 'Updated title'
+        $info.Metadata.Author | Should -Be 'Original author'
+        $info.Security.HasIncrementalUpdates | Should -BeTrue
+        $info.Security.RevisionCount | Should -BeGreaterThan 1
+        Get-OfficePdfText -Path $incrementalPath | Should -Match 'Incremental body text'
+    }
+
     It 'applies PDF redactions using planned text block coordinates' {
         $path = Join-Path $TestDrive 'redaction-source.pdf'
         $redactedPath = Join-Path $TestDrive 'redaction-output.pdf'
