@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object -Property SheetName, Range, Type, Operator, Formulas</code>
 ///   <para>Returns rule metadata that can be filtered, exported, or used before clearing stale rules.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficeExcelConditionalFormatting", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Get, "OfficeExcelConditionalFormatting", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelConditionalFormatting")]
 [OutputType(typeof(PSObject))]
 public sealed class GetOfficeExcelConditionalFormattingCommand : PSCmdlet

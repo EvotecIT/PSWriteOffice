@@ -1,3 +1,4 @@
+using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -15,6 +16,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsSecurity.Unprotect, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelWorkbookUnprotect")]
+[OutputType(typeof(ExcelDocument), typeof(FileInfo))]
 public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet
 {
     private const string ParameterSetContext = "Context";
@@ -37,6 +39,11 @@ public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        var pathPassThru = string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase);
+        string? resolvedPath = pathPassThru
+            ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath)
+            : null;
+
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
         var document = workbook.Document;
         document.UnprotectWorkbook();
@@ -44,7 +51,7 @@ public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet
 
         if (PassThru.IsPresent)
         {
-            WriteObject(document);
+            WriteObject(pathPassThru ? new FileInfo(resolvedPath!) : document);
         }
     }
 }

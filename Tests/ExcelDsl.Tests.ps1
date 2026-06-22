@@ -2333,6 +2333,25 @@ Describe 'Excel DSL surface' {
         @(Get-OfficeExcelDataValidation -Path $path -Sheet Data).Count | Should -Be 0
     }
 
+    It 'reads conditional formatting rules from the current DSL sheet by default' {
+        $path = Join-Path $TestDrive 'DslExcelConditionalFormattingContextRead.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 1
+                Set-OfficeExcelCell -Address 'A2' -Value 2
+                Add-OfficeExcelConditionalRule -Range 'A1:A2' -Operator GreaterThan -Formula1 '1'
+
+                $rules = @(Get-OfficeExcelConditionalFormatting -Range 'A2')
+                $rules.Count | Should -Be 1
+                $rules[0].SheetName | Should -Be 'Data'
+                $rules[0].Range | Should -Be 'A1:A2'
+            }
+        }
+
+        Test-Path $path | Should -BeTrue
+    }
+
     It 'adds friendly conditional formatting rule types through the thin DSL surface' {
         $path = Join-Path $TestDrive 'DslExcelConditionalRuleTypes.xlsx'
 
@@ -2577,7 +2596,9 @@ Describe 'Excel DSL surface' {
         $protectedFile = Protect-OfficeExcelWorkbook -Path $path -LegacyPasswordHash 'CAFE' -PassThru
         $protectedFile | Should -BeOfType ([System.IO.FileInfo])
         $protectedFile.FullName | Should -Be (Resolve-Path -LiteralPath $path).Path
-        Unprotect-OfficeExcelWorkbook -Path $path
+        $unprotectedFile = Unprotect-OfficeExcelWorkbook -Path $path -PassThru
+        $unprotectedFile | Should -BeOfType ([System.IO.FileInfo])
+        $unprotectedFile.FullName | Should -Be (Resolve-Path -LiteralPath $path).Path
 
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {
