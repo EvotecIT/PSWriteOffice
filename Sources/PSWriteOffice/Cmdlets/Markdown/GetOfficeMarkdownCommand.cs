@@ -1,6 +1,7 @@
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Markdown;
+using PSWriteOffice.Services.Markdown;
 
 namespace PSWriteOffice.Cmdlets.Markdown;
 
@@ -21,6 +22,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdown", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(MarkdownDoc))]
 public sealed class GetOfficeMarkdownCommand : PSCmdlet
+    , IMarkdownReaderOptionSource
 {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetText = "Text";
@@ -36,23 +38,55 @@ public sealed class GetOfficeMarkdownCommand : PSCmdlet
 
     /// <summary>Optional reader options.</summary>
     [Parameter]
+    [Alias("ReaderOptions")]
     public MarkdownReaderOptions? Options { get; set; }
 
     /// <summary>Named reader profile used when <see cref="Options"/> is not supplied.</summary>
     [Parameter]
     public MarkdownReaderOptions.MarkdownDialectProfile? Profile { get; set; }
 
+    /// <summary>Base URI used to resolve and restrict relative Markdown links and images.</summary>
+    [Parameter]
+    public string? BaseUri { get; set; }
+
+    /// <summary>Maximum Markdown input length accepted by the reader.</summary>
+    [Parameter]
+    public int? MaxInputCharacters { get; set; }
+
+    /// <summary>Applies a built-in Markdown input normalization preset before parsing.</summary>
+    [Parameter]
+    public MarkdownInputNormalizationPreset? NormalizeInput { get; set; }
+
+    /// <summary>Block file URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? DisallowFileUrls { get; set; }
+
+    /// <summary>Allow data URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? AllowDataUrls { get; set; }
+
+    /// <summary>Allow mailto URLs while parsing Markdown links.</summary>
+    [Parameter]
+    public bool? AllowMailtoUrls { get; set; }
+
+    /// <summary>Allow protocol-relative URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? AllowProtocolRelativeUrls { get; set; }
+
+    /// <summary>Restrict parsed URL schemes to the allow-list.</summary>
+    [Parameter]
+    public bool? RestrictUrlSchemes { get; set; }
+
+    /// <summary>Allowed URL schemes when URL scheme restriction is enabled.</summary>
+    [Parameter]
+    public string[]? AllowedUrlScheme { get; set; }
+
+    MarkdownReaderOptions? IMarkdownReaderOptionSource.ReaderOptions => Options;
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (Options != null && Profile.HasValue)
-        {
-            throw new PSArgumentException("Specify either -Options or -Profile, not both.");
-        }
-
-        var options = Options ?? (Profile.HasValue
-            ? MarkdownReaderOptions.CreateProfile(Profile.Value)
-            : null);
+        var options = MarkdownOptionUtilities.BuildReaderOptions(this);
 
         MarkdownDoc document;
         if (ParameterSetName == ParameterSetPath)

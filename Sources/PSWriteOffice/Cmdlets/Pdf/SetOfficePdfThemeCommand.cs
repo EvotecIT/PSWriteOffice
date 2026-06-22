@@ -52,13 +52,6 @@ public sealed class SetOfficePdfThemeCommand : PSCmdlet
 
     private PdfTheme ResolveTheme()
     {
-        return Theme switch
-        {
-            OfficePdfThemePreset.WordLike => PdfTheme.WordLike(),
-            OfficePdfThemePreset.TechnicalDocument => PdfTheme.TechnicalDocument(),
-            OfficePdfThemePreset.Compact => PdfTheme.Compact(),
-            OfficePdfThemePreset.Report => PdfTheme.Report(),
-            _ => throw new PSArgumentOutOfRangeException(nameof(Theme), Theme, "Unsupported PDF theme preset.")
-        };
+        return PdfThemeUtilities.ResolveTheme(Theme);
     }
 }

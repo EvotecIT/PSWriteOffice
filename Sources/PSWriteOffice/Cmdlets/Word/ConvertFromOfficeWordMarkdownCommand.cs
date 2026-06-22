@@ -107,6 +107,30 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
     [Parameter]
     public MarkdownReaderOptions? ReaderOptions { get; set; }
 
+    /// <summary>Named Markdown reader profile used when <see cref="ReaderOptions"/> is not supplied.</summary>
+    [Parameter]
+    public MarkdownReaderOptions.MarkdownDialectProfile? Profile { get; set; }
+
+    /// <summary>Applies a built-in Markdown input normalization preset before parsing.</summary>
+    [Parameter]
+    public MarkdownInputNormalizationPreset? NormalizeInput { get; set; }
+
+    /// <summary>Shared Markdown visual theme for generated Word output.</summary>
+    [Parameter]
+    public MarkdownVisualThemeKind? Theme { get; set; }
+
+    /// <summary>Allow data URI Markdown images to be embedded in Word output.</summary>
+    [Parameter]
+    public bool? AllowDataUriImages { get; set; }
+
+    /// <summary>Maximum decoded size for one data URI image.</summary>
+    [Parameter]
+    public long? MaxDataUriImageBytes { get; set; }
+
+    /// <summary>Prefer narrative paragraphs for isolated single-line definition-list patterns.</summary>
+    [Parameter]
+    public SwitchParameter PreferNarrativeSingleLineDefinitions { get; set; }
+
     /// <summary>Fit Markdown images to the page content width.</summary>
     [Parameter]
     public SwitchParameter FitImagesToPageContentWidth { get; set; }
@@ -241,6 +265,11 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
 
     private MarkdownToWordOptions BuildOptions()
     {
+        if (ReaderOptions != null && Profile.HasValue)
+        {
+            throw new PSArgumentException("Specify either -ReaderOptions or -Profile, not both.");
+        }
+
         var options = CreateOptions();
         options.AllowLocalImages = AllowLocalImages.IsPresent;
         options.AllowRemoteImages = AllowRemoteImages.IsPresent;
@@ -268,7 +297,40 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
             options.BaseUri = ResolveBaseUri(BaseUri!);
         }
 
-        TrySetOptionProperty(options, "ReaderOptions", ReaderOptions);
+        if (Theme.HasValue)
+        {
+            options.Theme = MarkdownVisualTheme.Create(Theme.Value);
+        }
+
+        if (AllowDataUriImages.HasValue)
+        {
+            options.AllowDataUriImages = AllowDataUriImages.Value;
+        }
+
+        if (MaxDataUriImageBytes.HasValue)
+        {
+            options.MaxDataUriImageBytes = MaxDataUriImageBytes.Value;
+        }
+
+        if (PreferNarrativeSingleLineDefinitions.IsPresent)
+        {
+            options.PreferNarrativeSingleLineDefinitions = true;
+        }
+
+        var readerOptions = ReaderOptions ?? (Profile.HasValue
+            ? MarkdownReaderOptions.CreateProfile(Profile.Value)
+            : null);
+        if (readerOptions != null && NormalizeInput.HasValue)
+        {
+            readerOptions.InputNormalization.ApplyPreset(NormalizeInput.Value);
+        }
+        else if (readerOptions == null && NormalizeInput.HasValue)
+        {
+            readerOptions = MarkdownReaderOptions.CreateOfficeIMOProfile();
+            readerOptions.InputNormalization.ApplyPreset(NormalizeInput.Value);
+        }
+
+        options.ReaderOptions = readerOptions;
         TrySetOptionProperty(options, "FitImagesToPageContentWidth", FitImagesToPageContentWidth.IsPresent ? true : null);
         TrySetOptionProperty(options, "FitImagesToContextWidth", FitImagesToContextWidth.IsPresent ? true : null);
         TrySetOptionProperty(options, "MaxImageWidthPixels", MaxImageWidthPixels);

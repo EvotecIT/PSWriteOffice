@@ -21,6 +21,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdownHeading", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(MarkdownDoc.HeadingInfo))]
 public sealed class GetOfficeMarkdownHeadingCommand : PSCmdlet
+    , IMarkdownReaderOptionSource
 {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
@@ -41,16 +42,55 @@ public sealed class GetOfficeMarkdownHeadingCommand : PSCmdlet
 
     /// <summary>Optional reader options used when parsing path or text input.</summary>
     [Parameter]
+    [Alias("ReaderOptions")]
     public MarkdownReaderOptions? Options { get; set; }
 
     /// <summary>Named reader profile used when <see cref="Options"/> is not supplied.</summary>
     [Parameter]
     public MarkdownReaderOptions.MarkdownDialectProfile? Profile { get; set; }
 
+    /// <summary>Base URI used to resolve and restrict relative Markdown links and images.</summary>
+    [Parameter]
+    public string? BaseUri { get; set; }
+
+    /// <summary>Maximum Markdown input length accepted by the reader.</summary>
+    [Parameter]
+    public int? MaxInputCharacters { get; set; }
+
+    /// <summary>Applies a built-in Markdown input normalization preset before parsing.</summary>
+    [Parameter]
+    public MarkdownInputNormalizationPreset? NormalizeInput { get; set; }
+
+    /// <summary>Block file URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? DisallowFileUrls { get; set; }
+
+    /// <summary>Allow data URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? AllowDataUrls { get; set; }
+
+    /// <summary>Allow mailto URLs while parsing Markdown links.</summary>
+    [Parameter]
+    public bool? AllowMailtoUrls { get; set; }
+
+    /// <summary>Allow protocol-relative URLs while parsing Markdown links and images.</summary>
+    [Parameter]
+    public bool? AllowProtocolRelativeUrls { get; set; }
+
+    /// <summary>Restrict parsed URL schemes to the allow-list.</summary>
+    [Parameter]
+    public bool? RestrictUrlSchemes { get; set; }
+
+    /// <summary>Allowed URL schemes when URL scheme restriction is enabled.</summary>
+    [Parameter]
+    public string[]? AllowedUrlScheme { get; set; }
+
     /// <summary>Minimum heading level to return.</summary>
     [Parameter]
     [ValidateRange(1, 6)]
     public int MinLevel { get; set; } = 1;
+
+    MarkdownReaderOptions? IMarkdownReaderOptionSource.ReaderOptions => Options;
 
     /// <summary>Maximum heading level to return.</summary>
     [Parameter]
@@ -84,8 +124,7 @@ public sealed class GetOfficeMarkdownHeadingCommand : PSCmdlet
             Document,
             InputPath,
             Text,
-            Options,
-            Profile);
+            this);
 
         var wildcardOptions = CaseSensitive
             ? WildcardOptions.None
