@@ -142,7 +142,7 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
 
     private void ApplyRule(ExcelSheet sheet, string targetRange)
     {
-        switch (RuleType)
+        switch (ResolveRuleType())
         {
             case "CellIs":
                 if (string.IsNullOrWhiteSpace(Operator))
@@ -225,6 +225,28 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
             default:
                 throw new PSArgumentException($"Unknown conditional formatting rule type '{RuleType}'.", nameof(RuleType));
         }
+    }
+
+    private string ResolveRuleType()
+    {
+        string[] supportedRuleTypes =
+        {
+            "CellIs", "Expression", "Formula", "DuplicateValues", "UniqueValues",
+            "Top", "Top10", "Bottom", "Bottom10", "AboveAverage", "BelowAverage",
+            "ContainsText", "NotContainsText", "BeginsWith", "EndsWith",
+            "ContainsBlanks", "NotContainsBlanks", "ContainsErrors", "NotContainsErrors",
+            "TimePeriod"
+        };
+
+        foreach (string supportedRuleType in supportedRuleTypes)
+        {
+            if (string.Equals(supportedRuleType, RuleType, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return supportedRuleType;
+            }
+        }
+
+        return RuleType;
     }
 
     private string RequireText()

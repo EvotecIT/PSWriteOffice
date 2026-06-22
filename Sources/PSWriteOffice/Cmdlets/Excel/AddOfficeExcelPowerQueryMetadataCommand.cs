@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     -PassThru</code>
 ///   <para>Writes package metadata only. OfficeIMO does not execute Power Query M; Excel-compatible applications perform refresh when opened.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelPowerQueryMetadata", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelPowerQueryMetadata", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelPowerQueryMetadata", "ExcelQueryMetadata")]
 [OutputType(typeof(PSObject))]
 public sealed class AddOfficeExcelPowerQueryMetadataCommand : PSCmdlet

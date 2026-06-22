@@ -2351,12 +2351,12 @@ Describe 'Excel DSL surface' {
                 Add-OfficeExcelConditionalRule -Range 'A1:A3' -RuleType UniqueValues
                 Add-OfficeExcelConditionalRule -Range 'A1:A3' -RuleType ContainsText -Text Ready
                 Add-OfficeExcelConditionalRule -Range 'A1:A3' -RuleType BeginsWith -Text Blo
-                Add-OfficeExcelConditionalRule -Range 'B1:B3' -RuleType Top -Rank 1
+                Add-OfficeExcelConditionalRule -Range 'B1:B3' -RuleType top10 -Rank 1
                 Add-OfficeExcelConditionalRule -Range 'B1:B3' -RuleType BelowAverage -EqualAverage -StandardDeviation 1
                 Add-OfficeExcelConditionalRule -Range 'D1:D3' -RuleType ContainsBlanks
                 Add-OfficeExcelConditionalRule -Range 'E1:E3' -RuleType NotContainsErrors
                 Add-OfficeExcelConditionalRule -Range 'C1:C3' -RuleType TimePeriod -TimePeriod Today
-                Add-OfficeExcelConditionalRule -Range 'B1:B3' -RuleType Formula -Formula1 'B1>1' -StopIfTrue
+                Add-OfficeExcelConditionalRule -Range 'B1:B3' -RuleType formula -Formula1 'B1>1' -StopIfTrue
             }
         }
 
@@ -2374,6 +2374,26 @@ Describe 'Excel DSL surface' {
         $rules.Type | Should -Contain 'Expression'
         ($rules | Where-Object Type -EQ 'ContainsText').Formulas | Should -Contain 'NOT(ISERROR(SEARCH("Ready",A1)))'
         ($rules | Where-Object Type -EQ 'Expression').StopIfTrue | Should -BeTrue
+    }
+
+    It 'adds Power Query metadata from the current Excel DSL sheet' {
+        $path = Join-Path $TestDrive 'DslExcelPowerQueryContext.xlsx'
+        $script:PowerQueryContextMetadata = $null
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Region'
+                Set-OfficeExcelCell -Address 'A2' -Value 'EU'
+                $script:PowerQueryContextMetadata = Add-OfficeExcelPowerQueryMetadata -Name 'ContextQuery' -CommandText 'let Source = Excel.CurrentWorkbook() in Source' -PassThru
+            }
+        }
+
+        $script:PowerQueryContextMetadata.AddedWorkbookConnection | Should -BeTrue
+        $script:PowerQueryContextMetadata.AddedWorksheetQueryTable | Should -BeTrue
+        $script:PowerQueryContextMetadata.QueryTableName | Should -Be 'ContextQueryTable'
+
+        $dataModel = Get-OfficeExcelDataModel -InputPath $path
+        $dataModel.HasDataModelOrQueries | Should -BeTrue
     }
 
     It 'targets conditional formatting and validation by table header' {
