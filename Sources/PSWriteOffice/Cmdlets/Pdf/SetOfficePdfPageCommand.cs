@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
@@ -30,9 +32,30 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
     public string? PageRange { get; set; }
 
     /// <summary>Rotation in degrees. Supported values are 0, 90, 180, and 270.</summary>
-    [Parameter(Mandatory = true)]
+    [Parameter]
     [ValidateSet("0", "90", "180", "270")]
     public int Rotation { get; set; }
+
+    /// <summary>Page boundary box to set. Supported values are MediaBox, CropBox, BleedBox, TrimBox, and ArtBox.</summary>
+    [Parameter]
+    [ValidateSet("MediaBox", "CropBox", "BleedBox", "TrimBox", "ArtBox")]
+    public string? BoxName { get; set; }
+
+    /// <summary>Left coordinate for the page boundary box.</summary>
+    [Parameter]
+    public double? Left { get; set; }
+
+    /// <summary>Bottom coordinate for the page boundary box.</summary>
+    [Parameter]
+    public double? Bottom { get; set; }
+
+    /// <summary>Right coordinate for the page boundary box.</summary>
+    [Parameter]
+    public double? Right { get; set; }
+
+    /// <summary>Top coordinate for the page boundary box.</summary>
+    [Parameter]
+    public double? Top { get; set; }
 
     /// <summary>Output PDF path.</summary>
     [Parameter(Mandatory = true)]
@@ -43,11 +66,37 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
     {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        if (!string.IsNullOrWhiteSpace(BoxName))
+        {
+            if (!Left.HasValue || !Bottom.HasValue || !Right.HasValue || !Top.HasValue)
+            {
+                throw new PSArgumentException("-BoxName requires -Left, -Bottom, -Right, and -Top.");
+            }
+
+            int[] pages = string.IsNullOrWhiteSpace(PageRange)
+                ? Array.Empty<int>()
+                : PdfPageRange.ParseMany(PageRange!).SelectMany(ExpandPageRange).Distinct().ToArray();
+            PdfPageEditor.SetPageBox(inputPath, outputPath, BoxName!, Left.Value, Bottom.Value, Right.Value, Top.Value, pages);
+            WriteObject(new FileInfo(outputPath));
+            return;
+        }
+
+        if (!MyInvocation.BoundParameters.ContainsKey(nameof(Rotation)))
+        {
+            throw new PSArgumentException("Provide -Rotation or -BoxName with coordinates.");
+        }
+
+        var document = PdfDocument.Open(inputPath);
         var result = string.IsNullOrWhiteSpace(PageRange)
             ? document.Pages.Rotate(Rotation)
             : document.Pages.Rotate(Rotation, PageRange!);
         result.Save(outputPath);
         WriteObject(new FileInfo(outputPath));
+    }
+
+    private static int[] ExpandPageRange(PdfPageRange range)
+    {
+        return Enumerable.Range(range.FirstPage, range.PageCount).ToArray();
     }
 }

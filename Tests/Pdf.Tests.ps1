@@ -243,9 +243,10 @@ Describe 'PDF cmdlets' {
 
         $plan = Get-OfficePdfAppendOnlyMutation -Path $path
         $plan.CanAppendMetadata | Should -BeTrue
+        $plan.CanAppendFormFields | Should -BeTrue
         $plan.SupportedActions | Should -Contain 'Metadata'
-        $plan.BlockedActions | Should -Contain 'FormFill'
-        $plan.Summary | Should -Match 'Metadata-only'
+        $plan.SupportedActions | Should -Contain 'FormFill'
+        $plan.Summary | Should -Match 'Incremental updates are supported'
     }
 
     It 'supports expanded page sizes and PDF 2 file version' {
@@ -384,9 +385,68 @@ Describe 'PDF cmdlets' {
         Get-OfficePdfText -Path $incrementalPath | Should -Match 'Incremental body text'
     }
 
+    It 'updates PDF form fields as an incremental revision' {
+        (Get-Command Set-OfficePdfForm).Parameters.Keys | Should -Contain 'Incremental'
+        $path = Join-Path $TestDrive 'form-incremental-source.pdf'
+        $outputPath = Join-Path $TestDrive 'form-incremental-output.pdf'
+        @'
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R /AcroForm 6 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 300] /Annots [5 0 R] >>
+endobj
+4 0 obj
+<< /Producer (PSWriteOffice form fixture) >>
+endobj
+5 0 obj
+<< /Type /Annot /Subtype /Widget /FT /Tx /T (Name) /V (Ada) /Rect [50 50 180 70] /F 4 >>
+endobj
+6 0 obj
+<< /Fields [5 0 R] /SigFlags 2 >>
+endobj
+trailer
+<< /Root 1 0 R /Info 4 0 R /Size 7 >>
+startxref
+123
+%%EOF
+'@ | Set-Content -Path $path -NoNewline -Encoding Ascii
+
+        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental |
+            Should -BeOfType System.IO.FileInfo
+
+        (Get-Item $outputPath).Length | Should -BeGreaterThan (Get-Item $path).Length
+        $field = Get-OfficePdfFormField -Path $outputPath -Name Name
+        $field.Value | Should -Be 'Grace'
+        (Get-OfficePdfInfo -Path $outputPath).Security.HasIncrementalUpdates | Should -BeTrue
+    }
+
+    It 'sets page production boundary boxes' {
+        (Get-Command Set-OfficePdfPage).Parameters.Keys | Should -Contain 'BoxName'
+        $path = Join-Path $TestDrive 'pagebox-source.pdf'
+        $outputPath = Join-Path $TestDrive 'pagebox-output.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'Page box source'
+        } | Out-Null
+
+        Set-OfficePdfPage -Path $path -OutputPath $outputPath -BoxName TrimBox -Left 12 -Bottom 14 -Right 222 -Top 244 |
+            Should -BeOfType System.IO.FileInfo
+
+        $geometry = (Get-OfficePdfInfo -Path $outputPath).Pages[0].Geometry
+        $geometry.TrimBox.Left | Should -Be 12
+        $geometry.TrimBox.Bottom | Should -Be 14
+        $geometry.TrimBox.Right | Should -Be 222
+        $geometry.TrimBox.Top | Should -Be 244
+    }
+
     It 'optimizes PDFs with lossless stream compression' {
         (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'PassThruReport'
         (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'MinimumStreamCompressionBytes'
+        (Get-Command ConvertTo-OfficePdfOptimized).Parameters.Keys | Should -Contain 'KeepUnreferencedObjects'
 
         $path = Join-Path $TestDrive 'uncompressed-source.pdf'
         $optimizedPath = Join-Path $TestDrive 'uncompressed-optimized.pdf'

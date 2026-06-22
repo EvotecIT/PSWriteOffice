@@ -44,18 +44,57 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Proof { get; set; }
 
+    /// <summary>External validator families whose result should be attached to the proof report.</summary>
+    [Parameter]
+    public PdfExternalValidatorKind[]? ExternalValidator { get; set; }
+
+    /// <summary>External validator status to attach when -ExternalValidator is provided.</summary>
+    [Parameter]
+    public PdfExternalValidationStatus ExternalStatus { get; set; } = PdfExternalValidationStatus.Passed;
+
+    /// <summary>Profile string reported by the external validator, for example PDF/A-3b.</summary>
+    [Parameter]
+    public string? ExternalProfile { get; set; }
+
+    /// <summary>Human-readable external validation diagnostic.</summary>
+    [Parameter]
+    public string? ExternalDiagnostic { get; set; }
+
+    /// <summary>Human-readable external validator name.</summary>
+    [Parameter]
+    public string? ExternalValidatorName { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         if (ParameterSetName == ParameterSetPath)
         {
             var readiness = PdfComplianceAnalyzer.AssessReadback(Profile!.Value, PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
-            WriteObject(Proof.IsPresent ? PdfComplianceAnalyzer.AssessProof(readiness) : readiness);
+            WriteObject(Proof.IsPresent ? PdfComplianceAnalyzer.AssessProof(readiness, BuildExternalValidationResults()) : readiness);
             return;
         }
 
         var document = Document ?? PdfDslContext.Require(this).Document;
         var documentReadiness = Profile.HasValue ? document.AssessCompliance(Profile.Value) : document.AssessCompliance();
-        WriteObject(Proof.IsPresent ? PdfComplianceAnalyzer.AssessProof(documentReadiness) : documentReadiness);
+        WriteObject(Proof.IsPresent ? PdfComplianceAnalyzer.AssessProof(documentReadiness, BuildExternalValidationResults()) : documentReadiness);
+    }
+
+    private PdfExternalValidationResult[] BuildExternalValidationResults()
+    {
+        if (ExternalValidator == null || ExternalValidator.Length == 0)
+        {
+            return System.Array.Empty<PdfExternalValidationResult>();
+        }
+
+        var results = new PdfExternalValidationResult[ExternalValidator.Length];
+        for (int i = 0; i < ExternalValidator.Length; i++)
+        {
+            var validator = ExternalValidator[i];
+            var name = string.IsNullOrWhiteSpace(ExternalValidatorName) ? validator.ToString() : ExternalValidatorName!;
+            var diagnostic = string.IsNullOrWhiteSpace(ExternalDiagnostic) ? ExternalStatus.ToString() : ExternalDiagnostic!;
+            results[i] = new PdfExternalValidationResult(validator, ExternalStatus, name, diagnostic, ExternalProfile);
+        }
+
+        return results;
     }
 }

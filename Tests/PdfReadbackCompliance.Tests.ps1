@@ -93,6 +93,54 @@ Describe 'PDF readback and compliance cmdlets' {
         $proof.MissingExternalValidatorCount | Should -BeGreaterThan 0
         $proof.ProofStatus | Should -Be 'InternalGaps'
         $proof.CanClaimConformance | Should -BeFalse
+
+        $withEvidence = $document | Get-OfficePdfCompliance -Profile PdfA3B -Proof -ExternalValidator VeraPdf -ExternalProfile 'PDF/A-3b' -ExternalDiagnostic 'veraPDF passed'
+        $withEvidence.PassedExternalValidationCount | Should -Be 1
+        $withEvidence.ExternalValidations[0].Diagnostic | Should -Be 'veraPDF passed'
+    }
+
+    It 'gets font diagnostics as pipeline-friendly objects' {
+        (Get-Command Get-OfficePdfFont).Parameters.Keys | Should -Contain 'NeedsReview'
+        $pdfPath = Join-Path $TestDrive 'font-diagnostics.pdf'
+
+        New-OfficePdf -Path $pdfPath {
+            PdfParagraph 'Font diagnostic readback'
+        } | Out-Null
+
+        $fonts = @(Get-OfficePdfFont -Path $pdfPath)
+        $fonts.Count | Should -BeGreaterThan 0
+        $fonts[0].PSObject.Properties.Name | Should -Contain 'RepairReadiness'
+        $fonts[0].PSObject.Properties.Name | Should -Contain 'HasToUnicodeMap'
+    }
+
+    It 'gets annotation readback with action filters' {
+        (Get-Command Get-OfficePdfAnnotation).Parameters.Keys | Should -Contain 'WithAction'
+        $pdfPath = Join-Path $TestDrive 'annotations.pdf'
+        @'
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 300] /Annots [4 0 R] >>
+endobj
+4 0 obj
+<< /Type /Annot /Subtype /Text /Rect [20 20 40 40] /Contents (Review note) /AA << /E << /S /Launch /F (tool.exe) >> >> >>
+endobj
+trailer
+<< /Root 1 0 R /Size 5 >>
+startxref
+123
+%%EOF
+'@ | Set-Content -Path $pdfPath -NoNewline -Encoding Ascii
+
+        $annotations = @(Get-OfficePdfAnnotation -Path $pdfPath -Subtype Text -WithAction)
+        $annotations.Count | Should -Be 1
+        $annotations[0].Contents | Should -Be 'Review note'
+        $annotations[0].HasAdditionalActions | Should -BeTrue
     }
 
     It 'configures PDF/A-4 and PDF/UA-2 groundwork through compliance profiles' {

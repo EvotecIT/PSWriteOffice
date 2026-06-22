@@ -43,6 +43,10 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
     [Parameter]
     public SwitchParameter KeepNeedAppearances { get; set; }
 
+    /// <summary>Append simple form field values as an incremental PDF revision instead of rewriting the existing PDF.</summary>
+    [Parameter]
+    public SwitchParameter Incremental { get; set; }
+
     /// <summary>TrueType or OpenType/CFF font file used to synthesize Unicode form field appearances.</summary>
     [Parameter]
     public string? AppearanceFontPath { get; set; }
@@ -54,7 +58,32 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (Incremental.IsPresent)
+        {
+            if (Flatten.IsPresent)
+            {
+                throw new PSArgumentException("-Incremental cannot be combined with -Flatten because flattening requires a full rewrite.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(AppearanceFontPath))
+            {
+                throw new PSArgumentException("-Incremental cannot synthesize new appearance font resources; use -KeepNeedAppearances or a full rewrite.");
+            }
+
+            if (Field == null || Field.Count == 0)
+            {
+                throw new PSArgumentException("Provide -Field values when using -Incremental.", nameof(Field));
+            }
+
+            PdfCommandUtilities.EnsureDirectory(outputPath);
+            PdfIncrementalUpdater.UpdateFormFields(inputPath, outputPath, PdfCommandUtilities.ConvertFieldValues(Field), keepNeedAppearances: true);
+            WriteObject(new FileInfo(outputPath));
+            return;
+        }
+
+        var document = PdfDocument.Open(inputPath);
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
         PdfDocument result;
         if (Field == null || Field.Count == 0)
@@ -85,7 +114,6 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
             }
         }
 
-        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath);
         WriteObject(new FileInfo(outputPath));

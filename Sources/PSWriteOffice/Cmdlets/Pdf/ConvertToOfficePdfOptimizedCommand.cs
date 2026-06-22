@@ -30,6 +30,10 @@ public sealed class ConvertToOfficePdfOptimizedCommand : PSCmdlet
     [Parameter]
     public SwitchParameter NoCompressStreams { get; set; }
 
+    /// <summary>Keep orphaned indirect PDF objects instead of pruning objects unreachable from the catalog.</summary>
+    [Parameter]
+    public SwitchParameter KeepUnreferencedObjects { get; set; }
+
     /// <summary>Write the optimized candidate even when it is not smaller than the source PDF.</summary>
     [Parameter]
     public SwitchParameter AllowLarger { get; set; }
@@ -55,6 +59,7 @@ public sealed class ConvertToOfficePdfOptimizedCommand : PSCmdlet
         var options = new PdfOptimizationOptions
         {
             CompressUnfilteredStreams = !NoCompressStreams.IsPresent,
+            RemoveUnreferencedObjects = !KeepUnreferencedObjects.IsPresent,
             KeepOriginalWhenNotSmaller = !AllowLarger.IsPresent,
             MinimumStreamCompressionBytes = MinimumStreamCompressionBytes
         };
