@@ -478,6 +478,17 @@ Describe 'Excel DSL surface' {
         $titleRevenueCell = $titleSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
         $titleRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
 
+        $appendTitlePath = Join-Path $TestDrive 'ExportOfficeExcelAppendColumnFormatsWithTitle.xlsx'
+        $rows | Export-OfficeExcel -Path $appendTitlePath -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export'
+        [PSCustomObject]@{ Id = '00043'; Revenue = 987.65; Rate = 0.2; Created = [DateTime] '2026-06-24' } |
+            Export-OfficeExcel -Path $appendTitlePath -WorksheetName 'Data' -TableName 'Sales' -Append -CurrencyColumn Revenue -FormatCultureName en-US
+        $appendTitleSheetXml = Get-ZipXmlDocumentLocal -Path $appendTitlePath -Entry 'xl/worksheets/sheet1.xml'
+        $appendTitleRevenueCell = $appendTitleSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B4']")
+        $appendTitleRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $appendTitleStylesXml = Get-ZipXmlDocumentLocal -Path $appendTitlePath -Entry 'xl/styles.xml'
+        $appendTitleFormats = @($appendTitleStylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
+        ($appendTitleFormats -join '|') | Should -Match '\$'
+
         $customPath = Join-Path $TestDrive 'ExportOfficeExcelNumericCustomFormat.xlsx'
         [PSCustomObject]@{ Count = 42 } | Export-OfficeExcel -Path $customPath -ColumnFormat @{ Count = '00000' }
         $customStylesXml = Get-ZipXmlDocumentLocal -Path $customPath -Entry 'xl/styles.xml'

@@ -300,7 +300,10 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
             var range = WriteData(sheet, data, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, ResolveTableName(data));
-            ApplyColumnFormatPlan(sheet, columnFormatPlan, includeHeaders ? dataStartRow : null);
+            ApplyColumnFormatPlan(
+                sheet,
+                columnFormatPlan,
+                ResolveColumnFormatHeaderRow(document, sheet, columnFormatPlan, isAppendingToExistingSheet, appendTableName, includeHeaders, dataStartRow));
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -558,7 +561,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
             var tableName = ResolveDataSetTableName(table, usedTableNames);
             var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, tableName);
-            foreach (var result in ApplyColumnFormatPlan(sheet, columnFormatPlan, includeHeaders ? dataStartRow : null, throwOnMissing: false))
+            foreach (var result in ApplyColumnFormatPlan(
+                         sheet,
+                         columnFormatPlan,
+                         ResolveColumnFormatHeaderRow(document, sheet, columnFormatPlan, isAppendingToExistingSheet, appendTableName, includeHeaders, dataStartRow),
+                         throwOnMissing: false))
             {
                 if (result.Applied)
                 {
@@ -755,6 +762,97 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             .ToList();
 
         return sheetTables.Count == 1 ? sheetTables[0].Name : null;
+    }
+
+    private int? ResolveColumnFormatHeaderRow(
+        ExcelDocument document,
+        ExcelSheet sheet,
+        ExcelColumnFormatPlan? plan,
+        bool appendToExistingSheet,
+        string? appendTableName,
+        bool includeHeaders,
+        int dataStartRow)
+    {
+        if (includeHeaders)
+        {
+            return dataStartRow;
+        }
+
+        if (!appendToExistingSheet || plan == null)
+        {
+            return null;
+        }
+
+        var tableHeaderRow = ResolveExistingTableHeaderRow(document, sheet, appendTableName);
+        return tableHeaderRow ?? FindExistingHeaderRow(sheet, plan);
+    }
+
+    private int? ResolveExistingTableHeaderRow(ExcelDocument document, ExcelSheet sheet, string? tableName)
+    {
+        if (string.IsNullOrWhiteSpace(tableName))
+        {
+            return null;
+        }
+
+        var table = document.GetTables().FirstOrDefault(candidate =>
+            string.Equals(candidate.SheetName, sheet.Name, StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(candidate.Name, tableName, StringComparison.OrdinalIgnoreCase));
+        if (table != null && !string.IsNullOrWhiteSpace(table.Range) &&
+            A1.TryParseRange(table.Range, out var tableStartRow, out _, out _, out _))
+        {
+            return Math.Max(1, tableStartRow);
+        }
+
+        return null;
+    }
+
+    private static int? FindExistingHeaderRow(ExcelSheet sheet, ExcelColumnFormatPlan plan)
+    {
+        var requestedHeaders = plan.Rules
+            .Select(static rule => rule.Header.Trim())
+            .Where(static header => header.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (requestedHeaders.Length == 0)
+        {
+            return null;
+        }
+
+        var usedRange = sheet.GetUsedRangeA1();
+        if (!A1.TryParseRange(usedRange, out var firstRow, out var firstColumn, out var lastRow, out var lastColumn))
+        {
+            var (row, column) = A1.ParseCellRef(usedRange);
+            firstRow = lastRow = row;
+            firstColumn = lastColumn = column;
+        }
+
+        var bestRow = 0;
+        var bestMatches = 0;
+        for (var row = Math.Max(1, firstRow); row <= lastRow; row++)
+        {
+            var rowHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (var column = Math.Max(1, firstColumn); column <= lastColumn; column++)
+            {
+                if (sheet.TryGetCellText(row, column, out var text) && !string.IsNullOrWhiteSpace(text))
+                {
+                    rowHeaders.Add(text.Trim());
+                }
+            }
+
+            var matches = requestedHeaders.Count(rowHeaders.Contains);
+            if (matches == requestedHeaders.Length)
+            {
+                return row;
+            }
+
+            if (matches > bestMatches)
+            {
+                bestMatches = matches;
+                bestRow = row;
+            }
+        }
+
+        return bestMatches > 0 ? bestRow : null;
     }
 
     private string? ResolveTableName(DataTable table, bool allowExplicitOverride = true)
