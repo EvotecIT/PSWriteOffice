@@ -308,4 +308,21 @@ if ($FoundErrors.Count -gt 0) {
     #break
 }
 
+foreach ($cmdlet in Get-Command -Module PSWriteOffice -CommandType Cmdlet -ErrorAction SilentlyContinue) {
+    if ($null -eq $cmdlet.ImplementingType) {
+        continue
+    }
+
+    $aliasAttributes = $cmdlet.ImplementingType.GetCustomAttributes([System.Management.Automation.AliasAttribute], $true)
+    foreach ($attribute in $aliasAttributes) {
+        foreach ($aliasName in $attribute.AliasNames) {
+            if ([string]::IsNullOrWhiteSpace($aliasName)) {
+                continue
+            }
+
+            Set-Alias -Name $aliasName -Value $cmdlet.Name -Scope Local -Force -ErrorAction Stop
+        }
+    }
+}
+
 Export-ModuleMember -Function '*' -Alias '*' -Cmdlet '*'

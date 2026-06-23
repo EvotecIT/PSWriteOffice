@@ -2537,7 +2537,7 @@ Describe 'Excel DSL surface' {
         ($conditionalRules | Where-Object Range -EQ 'B2:B4').Count | Should -Be 2
 
         $validations = @(Get-OfficeExcelDataValidation -Path $path -Sheet Data -ColumnName Status -TableName Sales)
-        ($validations | Where-Object Range -EQ 'C2:C4').Count | Should -Be 1
+        @($validations | Where-Object Range -EQ 'C2:C4').Count | Should -Be 1
 
         $updated = @(Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -HeaderName Status -TableName Sales -PromptTitle Status -Prompt 'Pick a listed status' -ErrorTitle Invalid -ErrorMessage 'Use the list' -PassThru)
         $updated.Count | Should -Be 1
