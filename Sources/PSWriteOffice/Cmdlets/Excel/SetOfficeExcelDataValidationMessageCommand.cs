@@ -108,14 +108,19 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
             return;
         }
 
+        var existing = sheet.GetDataValidations(targetRange).FirstOrDefault();
+        var promptTitle = ResolveMessageValue(nameof(PromptTitle), PromptTitle, existing?.PromptTitle);
+        var prompt = ResolveMessageValue(nameof(Prompt), Prompt, existing?.Prompt);
+        var errorTitle = ResolveMessageValue(nameof(ErrorTitle), ErrorTitle, existing?.ErrorTitle);
+        var errorMessage = ResolveMessageValue(nameof(ErrorMessage), ErrorMessage, existing?.Error);
         sheet.SetDataValidationMessages(targetRange, new ExcelDataValidationMessageOptions
         {
-            PromptTitle = PromptTitle,
-            Prompt = Prompt,
-            ErrorTitle = ErrorTitle,
-            Error = ErrorMessage,
-            ShowInputMessage = ShowInputMessage.IsPresent,
-            ShowErrorMessage = ShowErrorMessage.IsPresent
+            PromptTitle = promptTitle,
+            Prompt = prompt,
+            ErrorTitle = errorTitle,
+            Error = errorMessage,
+            ShowInputMessage = ResolveDisplayFlag(nameof(ShowInputMessage), ShowInputMessage, promptTitle, prompt),
+            ShowErrorMessage = ResolveDisplayFlag(nameof(ShowErrorMessage), ShowErrorMessage, errorTitle, errorMessage)
         });
 
         workbook.SaveIfOwned();
@@ -140,5 +145,17 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
             || MyInvocation.BoundParameters.ContainsKey(nameof(ErrorMessage))
             || MyInvocation.BoundParameters.ContainsKey(nameof(ShowInputMessage))
             || MyInvocation.BoundParameters.ContainsKey(nameof(ShowErrorMessage));
+    }
+
+    private string? ResolveMessageValue(string parameterName, string? value, string? existing)
+    {
+        return MyInvocation.BoundParameters.ContainsKey(parameterName) ? value : existing;
+    }
+
+    private bool ResolveDisplayFlag(string parameterName, SwitchParameter value, string? title, string? message)
+    {
+        return MyInvocation.BoundParameters.ContainsKey(parameterName)
+            ? value.IsPresent
+            : !string.IsNullOrEmpty(title) || !string.IsNullOrEmpty(message);
     }
 }

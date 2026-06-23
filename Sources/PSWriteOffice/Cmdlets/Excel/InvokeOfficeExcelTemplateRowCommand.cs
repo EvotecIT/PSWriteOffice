@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -67,7 +68,7 @@ public sealed class InvokeOfficeExcelTemplateRowCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        _rows.Add(InputObject);
+        TableInputCollector.AddInput(_rows, InputObject);
     }
 
     /// <inheritdoc />

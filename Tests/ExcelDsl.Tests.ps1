@@ -1079,6 +1079,9 @@ Describe 'Excel DSL surface' {
         $wrongRows = @([PSCustomObject]@{ Region = 'LATAM'; Amount = 400 })
         { $wrongRows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -Append -AppendToTable -TableName 'Sales' } |
             Should -Throw
+
+        { $moreRows | Export-OfficeExcel -Path $path -WorksheetName 'Missing' -Append -AppendToTable -TableName 'Sales' } |
+            Should -Throw
     }
 
     It 'exports DataTable input without exposing DataRow metadata' {
@@ -2075,6 +2078,32 @@ Describe 'Excel DSL surface' {
         $worksheetXml | Should -Not -Match '\{\{'
     }
 
+    It 'expands named Excel template row arrays' {
+        $path = Join-Path $TestDrive 'DslExcelTemplateRows.NamedArray.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Invoice' -Content {
+                Set-OfficeExcelCell -Address A1 -Value 'Item'
+                Set-OfficeExcelCell -Address B1 -Value 'Amount'
+                Set-OfficeExcelCell -Address A2 -Value '{{Name}}'
+                Set-OfficeExcelCell -Address B2 -Value '{{Amount}}'
+            }
+        }
+
+        $items = @(
+            [pscustomobject]@{ Name = 'Consulting'; Amount = 1200 }
+            [pscustomobject]@{ Name = 'Support'; Amount = 300 }
+        )
+
+        Invoke-OfficeExcelTemplateRow -Path $path -Sheet Invoice -TemplateRow 2 -Rows $items -MissingValueBehavior Throw -PassThru | Should -Be 4
+
+        $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $worksheetXml | Should -Match 'Consulting'
+        $worksheetXml | Should -Match 'Support'
+        $worksheetXml | Should -Match 'r="A3"'
+        $worksheetXml | Should -Not -Match '\{\{'
+    }
+
     It 'includes and removes optional Excel template rows' {
         $path = Join-Path $TestDrive 'DslExcelTemplateOptionalRows.xlsx'
 
@@ -2587,6 +2616,21 @@ Describe 'Excel DSL surface' {
         $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
         $worksheetXml | Should -Match 'promptTitle="Sales input"'
         $worksheetXml | Should -Match 'prompt="Use 1-1000"'
+        $worksheetXml | Should -Match 'errorTitle="Invalid sales"'
+        $worksheetXml | Should -Match 'error="Use 1-1000"'
+        $worksheetXml | Should -Match 'showInputMessage="(?:1|true)"'
+        $worksheetXml | Should -Match 'showErrorMessage="(?:1|true)"'
+
+        $updated = @(Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range 'B2:B4' -Prompt 'Use a whole number' -PassThru)
+        $updated.Count | Should -Be 1
+        $updated[0].PromptTitle | Should -Be 'Sales input'
+        $updated[0].Prompt | Should -Be 'Use a whole number'
+        $updated[0].ErrorTitle | Should -Be 'Invalid sales'
+        $updated[0].Error | Should -Be 'Use 1-1000'
+
+        $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $worksheetXml | Should -Match 'promptTitle="Sales input"'
+        $worksheetXml | Should -Match 'prompt="Use a whole number"'
         $worksheetXml | Should -Match 'errorTitle="Invalid sales"'
         $worksheetXml | Should -Match 'error="Use 1-1000"'
         $worksheetXml | Should -Match 'showInputMessage="(?:1|true)"'

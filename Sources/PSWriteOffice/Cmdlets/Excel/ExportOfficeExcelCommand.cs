@@ -306,6 +306,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
 
             var isAppendingToExistingSheet = Append.IsPresent && SheetExists(document, WorksheetName);
+            if (AppendToTable.IsPresent && !isAppendingToExistingSheet)
+            {
+                throw new PSArgumentException($"Worksheet '{WorksheetName}' must exist when using -AppendToTable.");
+            }
+
             var reader = ExcelTabularInputService.TryGetSingleDataReader(_input);
             if (reader != null && CanExportReaderDirectly(isAppendingToExistingSheet))
             {
@@ -722,7 +727,17 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private string? ResolveAppendTableName(ExcelDocument document, ExcelSheet sheet, bool appendToExistingSheet)
     {
-        if (!appendToExistingSheet || NoTable.IsPresent)
+        if (!appendToExistingSheet)
+        {
+            if (AppendToTable.IsPresent)
+            {
+                throw new PSArgumentException($"Worksheet '{sheet.Name}' must exist when using -AppendToTable.");
+            }
+
+            return null;
+        }
+
+        if (NoTable.IsPresent)
         {
             return null;
         }
