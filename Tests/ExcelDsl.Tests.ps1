@@ -1703,6 +1703,31 @@ Describe 'Excel DSL surface' {
         $chartOuterXml | Should -Match 'C00000'
     }
 
+    It 'exports readable collection values and handles failing script properties' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelPowerShellProjection.xlsx'
+        $row = [PSCustomObject]@{
+            Name = 'Alpha'
+            Tags = @('one', 'two')
+        }
+        $row | Add-Member -MemberType ScriptProperty -Name Broken -Value { throw 'boom' }
+        $row | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Rows'
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $imported.Count | Should -Be 1
+        $imported[0].Name | Should -Be 'Alpha'
+        $imported[0].Tags | Should -Be 'one, two'
+        $imported[0].PSObject.Properties.Name | Should -Not -Contain 'Broken'
+
+        $strictPath = Join-Path $TestDrive 'ExportOfficeExcelPowerShellProjectionStrict.xlsx'
+        { $row | Export-OfficeExcel -Path $strictPath -PropertyConversionErrorAction Stop -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage "*Unable to read PowerShell property 'Broken'*"
+
+        $placeholderPath = Join-Path $TestDrive 'ExportOfficeExcelPowerShellProjectionPlaceholder.xlsx'
+        $row | Export-OfficeExcel -Path $placeholderPath -IncludeUnexportableProperties
+        $placeholder = @(Import-OfficeExcel -Path $placeholderPath -WorksheetName 'Sheet1')
+        $placeholder[0].Broken | Should -BeLike 'Property export failed:*boom*'
+    }
+
     It 'sets category date-axis scale values through the chart axis cmdlet' {
         $path = Join-Path $TestDrive 'DslExcelCategoryAxisScale.xlsx'
         $rows = @(
