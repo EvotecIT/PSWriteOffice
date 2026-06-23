@@ -300,7 +300,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
             var range = WriteData(sheet, data, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, ResolveTableName(data));
-            ApplyColumnFormatPlan(sheet, columnFormatPlan);
+            ApplyColumnFormatPlan(sheet, columnFormatPlan, includeHeaders ? dataStartRow : null);
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -382,7 +382,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             sheet.AddTable(range, includeHeaders, TableName ?? string.Empty, style, includeAutoFilter: !NoAutoFilter.IsPresent);
         }
 
-        ApplyColumnFormatPlan(sheet, columnFormatPlan);
+        ApplyColumnFormatPlan(sheet, columnFormatPlan, includeHeaders ? dataStartRow : null);
         return true;
     }
 
@@ -440,28 +440,35 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             FormatDecimals,
             FormatCultureName);
 
-    private void ApplyColumnFormatPlan(ExcelSheet sheet, ExcelColumnFormatPlan? plan)
+    private IReadOnlyList<ExcelColumnFormatResult> ApplyColumnFormatPlan(
+        ExcelSheet sheet,
+        ExcelColumnFormatPlan? plan,
+        int? headerRow = null,
+        bool throwOnMissing = true)
     {
         if (plan == null)
         {
-            return;
+            return Array.Empty<ExcelColumnFormatResult>();
         }
 
         var results = sheet.ApplyColumnFormatPlan(
             plan,
             includeHeader: IncludeHeaderInColumnFormat.IsPresent,
-            autoFit: AutoFitFormattedColumn.IsPresent);
+            autoFit: AutoFitFormattedColumn.IsPresent,
+            headerRow: headerRow);
         var missing = results.Where(static result => !result.Applied).ToArray();
         foreach (var result in missing)
         {
             WriteVerbose(result.Warning);
         }
 
-        if (missing.Length > 0 && !IgnoreMissingColumnFormat.IsPresent)
+        if (missing.Length > 0 && throwOnMissing && !IgnoreMissingColumnFormat.IsPresent)
         {
             var headers = string.Join(", ", missing.Select(static result => result.Header));
             throw new PSArgumentException($"Column format headers were not found on worksheet '{sheet.Name}': {headers}. Use -IgnoreMissingColumnFormat for optional columns.");
         }
+
+        return results;
     }
 
     private bool ColumnFormatRequiresMaterializedCells(ExcelColumnFormatPlan? plan)
@@ -493,7 +500,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(range))
         {
-            ApplyColumnFormatPlan(sheet, columnFormatPlan);
+            ApplyColumnFormatPlan(sheet, columnFormatPlan, !NoHeader.IsPresent ? dataStartRow : null);
 
             if (BoldTopRow.IsPresent && !NoHeader.IsPresent)
             {
@@ -525,6 +532,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         var sheetNames = BuildDataSetWorksheetNames(document, dataSet, Append.IsPresent || ClearSheet.IsPresent);
         var usedTableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var formattedHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var tableIndex = 1;
         foreach (DataTable sourceTable in dataSet.Tables)
         {
@@ -550,7 +558,13 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
             var tableName = ResolveDataSetTableName(table, usedTableNames);
             var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, tableName);
-            ApplyColumnFormatPlan(sheet, columnFormatPlan);
+            foreach (var result in ApplyColumnFormatPlan(sheet, columnFormatPlan, includeHeaders ? dataStartRow : null, throwOnMissing: false))
+            {
+                if (result.Applied)
+                {
+                    formattedHeaders.Add(result.Header);
+                }
+            }
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -576,6 +590,28 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             tableIndex++;
         }
+
+        ThrowForDataSetColumnFormatsMissingEverywhere(columnFormatPlan, formattedHeaders);
+    }
+
+    private void ThrowForDataSetColumnFormatsMissingEverywhere(ExcelColumnFormatPlan? plan, HashSet<string> formattedHeaders)
+    {
+        if (plan == null || IgnoreMissingColumnFormat.IsPresent)
+        {
+            return;
+        }
+
+        var missingEverywhere = plan.Rules
+            .Select(static rule => rule.Header)
+            .Where(header => !formattedHeaders.Contains(header))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (missingEverywhere.Length == 0)
+        {
+            return;
+        }
+
+        throw new PSArgumentException($"Column format headers were not found in any DataSet worksheet: {string.Join(", ", missingEverywhere)}. Use -IgnoreMissingColumnFormat for optional columns.");
     }
 
     private DataTable PrepareDataTableForExport(DataTable sourceTable)

@@ -471,6 +471,35 @@ Describe 'Excel DSL surface' {
 
         { $rows | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelMissingColumnFormat.xlsx') -ColumnFormat @{ Missing = 'Integer' } -ErrorAction Stop } |
             Should -Throw '*Column format headers were not found*'
+
+        $titlePath = Join-Path $TestDrive 'ExportOfficeExcelColumnFormatsWithTitle.xlsx'
+        $rows | Export-OfficeExcel -Path $titlePath -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export' -CurrencyColumn Revenue -FormatCultureName en-US
+        $titleSheetXml = Get-ZipXmlDocumentLocal -Path $titlePath -Entry 'xl/worksheets/sheet1.xml'
+        $titleRevenueCell = $titleSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+        $titleRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
+        $customPath = Join-Path $TestDrive 'ExportOfficeExcelNumericCustomFormat.xlsx'
+        [PSCustomObject]@{ Count = 42 } | Export-OfficeExcel -Path $customPath -ColumnFormat @{ Count = '00000' }
+        $customStylesXml = Get-ZipXmlDocumentLocal -Path $customPath -Entry 'xl/styles.xml'
+        $customFormats = @($customStylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
+        $customFormats | Should -Contain '00000'
+
+        $dataSet = [System.Data.DataSet]::new('Mixed')
+        $sales = [System.Data.DataTable]::new('Sales')
+        $null = $sales.Columns.Add('Region', [string])
+        $null = $sales.Columns.Add('Revenue', [decimal])
+        $null = $sales.Rows.Add('NA', 100.5)
+        $inventory = [System.Data.DataTable]::new('Inventory')
+        $null = $inventory.Columns.Add('Item', [string])
+        $null = $inventory.Columns.Add('Count', [int])
+        $null = $inventory.Rows.Add('Widget', 3)
+        $dataSet.Tables.Add($sales)
+        $dataSet.Tables.Add($inventory)
+
+        { $dataSet | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelDataSetColumnFormats.xlsx') -CurrencyColumn Revenue -IntegerColumn Count -ErrorAction Stop } |
+            Should -Not -Throw
+        { $dataSet | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelDataSetMissingColumnFormat.xlsx') -ColumnFormat @{ Missing = 'Integer' } -ErrorAction Stop } |
+            Should -Throw '*not found in any DataSet worksheet*'
     }
 
     It 'appends rows without rewriting headers' {

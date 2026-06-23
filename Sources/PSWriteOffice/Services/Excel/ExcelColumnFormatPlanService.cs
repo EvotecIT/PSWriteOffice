@@ -147,6 +147,12 @@ internal static class ExcelColumnFormatPlanService
     private static bool TryResolveNumberPreset(string text, out ExcelNumberPreset preset)
     {
         var normalized = text.Trim().Replace("-", string.Empty).Replace("_", string.Empty).Replace(" ", string.Empty);
+        if (int.TryParse(normalized, NumberStyles.Integer, CultureInfo.InvariantCulture, out _))
+        {
+            preset = default;
+            return false;
+        }
+
         switch (normalized.ToUpperInvariant())
         {
             case "NUMBER":
