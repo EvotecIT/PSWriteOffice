@@ -52,12 +52,24 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
     [Parameter]
     public SwitchParameter ByBookmark { get; set; }
 
+    /// <summary>Password used to open an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>Pad numeric split names to the width required by the source page count.</summary>
+    [Parameter]
+    public SwitchParameter PadIndex { get; set; }
+
+    /// <summary>Pad numeric split names to this explicit width.</summary>
+    [Parameter]
+    public int? IndexWidth { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory);
         Directory.CreateDirectory(outputDirectory);
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
         var outputs = CreateOutputs(document);
         foreach (var output in outputs)
         {
@@ -95,11 +107,19 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
             throw new PSArgumentException("-PagesPerDocument must be greater than zero.", nameof(PagesPerDocument));
         }
 
+        if (IndexWidth.HasValue && IndexWidth.Value < 1)
+        {
+            throw new PSArgumentException("-IndexWidth must be greater than zero.", nameof(IndexWidth));
+        }
+
+        var pageCount = document.Inspect().PageCount;
+        var indexWidth = GetIndexWidth(pageCount);
+
         if (PagesPerDocument > 0)
         {
-            var ranges = GetPageGroups(document.Inspect().PageCount, PagesPerDocument);
+            var ranges = GetPageGroups(pageCount, PagesPerDocument);
             var documents = document.Pages.Split(ranges);
-            return CreateRangeOutputs(documents, ranges);
+            return CreateRangeOutputs(documents, ranges, indexWidth);
         }
 
         if (PageRange != null && PageRange.Length > 0)
@@ -123,16 +143,38 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
 
         var split = document.Pages.Split();
         return split
-            .Select((pdf, index) => new PdfSplitOutput(pdf, (index + 1).ToString(CultureInfo.InvariantCulture)))
+            .Select((pdf, index) => new PdfSplitOutput(pdf, FormatIndex(index + 1, indexWidth)))
             .ToArray();
     }
 
-    private static IReadOnlyList<PdfSplitOutput> CreateRangeOutputs(IReadOnlyList<PdfDocument> documents, IReadOnlyList<PdfPageRange> ranges)
+    private IReadOnlyList<PdfSplitOutput> CreateRangeOutputs(IReadOnlyList<PdfDocument> documents, IReadOnlyList<PdfPageRange> ranges, int indexWidth)
     {
         return documents
-            .Select((pdf, index) => new PdfSplitOutput(pdf, ranges[index].ToString()))
+            .Select((pdf, index) => new PdfSplitOutput(pdf, FormatRange(ranges[index], indexWidth)))
             .ToArray();
     }
+
+    private int GetIndexWidth(int pageCount)
+    {
+        if (IndexWidth.HasValue)
+        {
+            return IndexWidth.Value;
+        }
+
+        return PadIndex.IsPresent
+            ? Math.Max(1, pageCount.ToString(CultureInfo.InvariantCulture).Length)
+            : 0;
+    }
+
+    private string FormatRange(PdfPageRange range, int indexWidth) =>
+        range.FirstPage == range.LastPage
+            ? FormatIndex(range.FirstPage, indexWidth)
+            : FormatIndex(range.FirstPage, indexWidth) + "-" + FormatIndex(range.LastPage, indexWidth);
+
+    private static string FormatIndex(int index, int indexWidth) =>
+        indexWidth > 0
+            ? index.ToString("D" + indexWidth.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture)
+            : index.ToString(CultureInfo.InvariantCulture);
 
     private static IReadOnlyList<PdfPageRange> GetPageGroups(int pageCount, int pagesPerDocument)
     {

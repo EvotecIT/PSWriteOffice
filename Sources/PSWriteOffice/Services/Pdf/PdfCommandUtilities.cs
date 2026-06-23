@@ -177,6 +177,27 @@ internal static class PdfCommandUtilities
         return landscape ? size.Landscape() : size.Portrait();
     }
 
+    internal static PdfPageResizeOptions? CreatePageResizeOptions(string? pageSize, double? width, double? height, bool landscape, PdfPageResizeMode mode, double? margin, bool requested)
+    {
+        if (!requested)
+        {
+            return null;
+        }
+
+        var resolvedPageSize = ResolvePageSize(pageSize ?? (width.HasValue || height.HasValue ? "Custom" : "Letter"), width, height, landscape);
+        var options = new PdfPageResizeOptions(resolvedPageSize)
+        {
+            Mode = mode
+        };
+
+        if (margin.HasValue)
+        {
+            options.Margin = margin.Value;
+        }
+
+        return options;
+    }
+
     internal static string[][] ConvertToTableRows(object[] inputObject, string[]? property, string[]? header)
     {
         if (inputObject.Length == 0)

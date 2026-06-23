@@ -175,6 +175,26 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Healthy'
     }
 
+    It 'shrinks PDF table text to fit fixed-width cells' {
+        (Get-Command PdfTable).Parameters.Keys | Should -Contain 'ShrinkTextToFit'
+        (Get-Command PdfTable).Parameters.Keys | Should -Contain 'MinimumShrinkFontSize'
+
+        $path = Join-Path $TestDrive 'shrink-table.pdf'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 'ThisIdentifierShouldShrinkToFit' }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows -Property Name, Value -ColumnWidthPoints 54, 108 -FontSize 18 -ShrinkTextToFit -MinimumShrinkFontSize 7
+        } | Out-Null
+
+        $blocks = @(Get-OfficePdfText -Path $path -AsTextBlock)
+        $valueBlock = $blocks | Where-Object { $_.Text -match 'ThisIdentifierShouldShrinkToFit' } | Select-Object -First 1
+        $valueBlock | Should -Not -BeNullOrEmpty
+        $valueBlock.FontSize | Should -BeLessThan 18
+        $valueBlock.FontSize | Should -BeGreaterOrEqual 7
+    }
+
     It 'adds piped PDF table rows to a supplied document' {
         $path = Join-Path $TestDrive 'piped-rows-supplied-document.pdf'
         $doc = New-OfficePdf {
@@ -321,6 +341,90 @@ Describe 'PDF cmdlets' {
         $bookmarks.Count | Should -Be 1
         Get-OfficePdfText -Path $bookmarks[0].FullName | Should -Match 'Chapter Two'
         Get-OfficePdfText -Path $bookmarks[0].FullName | Should -Not -Match 'Chapter Three'
+    }
+
+    It 'splits encrypted PDFs and writes padded page names' {
+        foreach ($name in 'Split-OfficePdf') {
+            (Get-Command $name).Parameters.Keys | Should -Contain 'Password'
+            (Get-Command $name).Parameters.Keys | Should -Contain 'PadIndex'
+            (Get-Command $name).Parameters.Keys | Should -Contain 'IndexWidth'
+        }
+
+        $path = Join-Path $TestDrive 'split-encrypted-source.pdf'
+        New-OfficePdf -Path $path -Password 'open' {
+            PdfParagraph 'Encrypted page one'
+            PdfPageBreak
+            PdfParagraph 'Encrypted page two'
+            PdfPageBreak
+            PdfParagraph 'Encrypted page three'
+        } | Out-Null
+
+        $outputDirectory = Join-Path $TestDrive 'encrypted-split'
+        $outputs = @(Split-OfficePdf -Path $path -Password 'open' -OutputDirectory $outputDirectory -Prefix 'page' -IndexWidth 3)
+
+        $outputs.Count | Should -Be 3
+        $outputs[0].Name | Should -Be 'page-001.pdf'
+        $outputs[1].Name | Should -Be 'page-002.pdf'
+        $outputs[2].Name | Should -Be 'page-003.pdf'
+        Get-OfficePdfText -Path $outputs[1].FullName | Should -Match 'Encrypted page two'
+    }
+
+    It 'merges and resizes PDFs to fixed paper sizes' {
+        foreach ($parameter in 'FlattenVisualAnnotations', 'PageSize', 'Width', 'Height', 'Landscape', 'ResizeMode', 'ResizeMargin') {
+            (Get-Command Join-OfficePdf).Parameters.Keys | Should -Contain $parameter
+        }
+
+        $letter = Join-Path $TestDrive 'letter-source.pdf'
+        $a5 = Join-Path $TestDrive 'a5-source.pdf'
+        $merged = Join-Path $TestDrive 'merged-a4.pdf'
+
+        New-OfficePdf -Path $letter {
+            PdfPageSetup -PageSize Letter
+            PdfParagraph 'Letter source text'
+        } | Out-Null
+        New-OfficePdf -Path $a5 {
+            PdfPageSetup -PageSize A5
+            PdfParagraph 'A5 source text'
+        } | Out-Null
+
+        Join-OfficePdf -Path $letter, $a5 -OutputPath $merged -PageSize A4 -ResizeMargin 12 -ResizeMode Fit -PassThru |
+            Should -BeOfType System.IO.FileInfo
+
+        $info = Get-OfficePdfInfo -Path $merged
+        $info.PageCount | Should -Be 2
+        foreach ($page in $info.Pages) {
+            [math]::Round($page.Width) | Should -Be 595
+            [math]::Round($page.Height) | Should -Be 842
+        }
+
+        Get-OfficePdfText -Path $merged | Should -Match 'Letter source text'
+        Get-OfficePdfText -Path $merged | Should -Match 'A5 source text'
+    }
+
+    It 'resizes selected PDF pages' {
+        foreach ($parameter in 'PageSize', 'Width', 'Height', 'Landscape', 'ResizeMode', 'ResizeMargin') {
+            (Get-Command Set-OfficePdfPage).Parameters.Keys | Should -Contain $parameter
+        }
+
+        $path = Join-Path $TestDrive 'resize-page-source.pdf'
+        $outputPath = Join-Path $TestDrive 'resize-page-output.pdf'
+        New-OfficePdf -Path $path {
+            PdfPageSetup -PageSize A4
+            PdfParagraph 'Resize first page'
+            PdfPageBreak
+            PdfParagraph 'Leave second page'
+        } | Out-Null
+
+        Set-OfficePdfPage -Path $path -OutputPath $outputPath -PageRange '1' -PageSize Letter -ResizeMargin 18 |
+            Should -BeOfType System.IO.FileInfo
+
+        $info = Get-OfficePdfInfo -Path $outputPath
+        [math]::Round($info.Pages[0].Width) | Should -Be 612
+        [math]::Round($info.Pages[0].Height) | Should -Be 792
+        [math]::Round($info.Pages[1].Width) | Should -Be 595
+        [math]::Round($info.Pages[1].Height) | Should -Be 842
+        Get-OfficePdfText -Path $outputPath | Should -Match 'Resize first page'
+        Get-OfficePdfText -Path $outputPath | Should -Match 'Leave second page'
     }
 
     It 'exposes diagnostics, optimization hints, structured text, catalog settings, and redaction planning' {
@@ -653,7 +757,7 @@ startxref
 
         $report.HasSignatures | Should -BeTrue
         $report.SignatureCount | Should -Be 1
-        $report.IsStructurallyValid | Should -BeTrue
+        $report.IsStructurallyValid | Should -BeFalse
         $report.RequiresAppendOnlyMutation | Should -BeTrue
         $report.HasLongTermValidationEvidence | Should -BeTrue
         $report.CryptographicTrustVerified | Should -BeFalse

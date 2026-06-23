@@ -57,6 +57,30 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
     [Parameter]
     public double? Top { get; set; }
 
+    /// <summary>Resize selected pages to a known OfficeIMO page size such as A4, Letter, or Custom.</summary>
+    [Parameter]
+    public string? PageSize { get; set; }
+
+    /// <summary>Custom page width in points when -PageSize Custom is used.</summary>
+    [Parameter]
+    public double? Width { get; set; }
+
+    /// <summary>Custom page height in points when -PageSize Custom is used.</summary>
+    [Parameter]
+    public double? Height { get; set; }
+
+    /// <summary>Use the landscape orientation of the selected page size.</summary>
+    [Parameter]
+    public SwitchParameter Landscape { get; set; }
+
+    /// <summary>How source page content is fitted into the resized output page.</summary>
+    [Parameter]
+    public PdfPageResizeMode ResizeMode { get; set; } = PdfPageResizeMode.Fit;
+
+    /// <summary>Margin, in points, reserved around resized page content.</summary>
+    [Parameter]
+    public double? ResizeMargin { get; set; }
+
     /// <summary>Output PDF path.</summary>
     [Parameter(Mandatory = true)]
     public string OutputPath { get; set; } = string.Empty;
@@ -67,6 +91,35 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         PdfCommandUtilities.EnsureDirectory(outputPath);
         string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        int[] pages = string.IsNullOrWhiteSpace(PageRange)
+            ? Array.Empty<int>()
+            : PdfPageRange.ParseMany(PageRange!).SelectMany(ExpandPageRange).Distinct().ToArray();
+        var resizeOptions = PdfCommandUtilities.CreatePageResizeOptions(
+            PageSize,
+            Width,
+            Height,
+            Landscape.IsPresent,
+            ResizeMode,
+            ResizeMargin,
+            MyInvocation.BoundParameters.ContainsKey(nameof(PageSize)) ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(Width)) ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(Height)) ||
+            Landscape.IsPresent ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(ResizeMode)) ||
+            ResizeMargin.HasValue);
+
+        if (resizeOptions != null)
+        {
+            if (!string.IsNullOrWhiteSpace(BoxName) || MyInvocation.BoundParameters.ContainsKey(nameof(Rotation)))
+            {
+                throw new PSArgumentException("Use page resize, rotation, or box editing as separate Set-OfficePdfPage operations.");
+            }
+
+            PdfPageEditor.ResizePages(inputPath, outputPath, resizeOptions, pages);
+            WriteObject(new FileInfo(outputPath));
+            return;
+        }
+
         if (!string.IsNullOrWhiteSpace(BoxName))
         {
             if (!Left.HasValue || !Bottom.HasValue || !Right.HasValue || !Top.HasValue)
@@ -74,9 +127,6 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
                 throw new PSArgumentException("-BoxName requires -Left, -Bottom, -Right, and -Top.");
             }
 
-            int[] pages = string.IsNullOrWhiteSpace(PageRange)
-                ? Array.Empty<int>()
-                : PdfPageRange.ParseMany(PageRange!).SelectMany(ExpandPageRange).Distinct().ToArray();
             PdfPageEditor.SetPageBox(inputPath, outputPath, BoxName!, Left.Value, Bottom.Value, Right.Value, Top.Value, pages);
             WriteObject(new FileInfo(outputPath));
             return;
@@ -84,7 +134,7 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
 
         if (!MyInvocation.BoundParameters.ContainsKey(nameof(Rotation)))
         {
-            throw new PSArgumentException("Provide -Rotation or -BoxName with coordinates.");
+            throw new PSArgumentException("Provide -Rotation, -BoxName with coordinates, or page resize options.");
         }
 
         var document = PdfDocument.Open(inputPath);
