@@ -303,7 +303,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             ApplyColumnFormatPlan(
                 sheet,
                 columnFormatPlan,
-                ResolveColumnFormatHeaderRow(document, sheet, columnFormatPlan, isAppendingToExistingSheet, appendTableName, includeHeaders, dataStartRow));
+                ResolveColumnFormatHeaderRow(document, sheet, columnFormatPlan, isAppendingToExistingSheet, appendTableName, includeHeaders, dataStartRow),
+                requireExplicitHeaderRow: !includeHeaders);
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -447,10 +448,23 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         ExcelSheet sheet,
         ExcelColumnFormatPlan? plan,
         int? headerRow = null,
-        bool throwOnMissing = true)
+        bool throwOnMissing = true,
+        bool requireExplicitHeaderRow = false)
     {
         if (plan == null)
         {
+            return Array.Empty<ExcelColumnFormatResult>();
+        }
+
+        if (requireExplicitHeaderRow && !headerRow.HasValue)
+        {
+            var headers = string.Join(", ", GetColumnFormatHeaders(plan));
+            WriteVerbose($"Column format headers were not applied on worksheet '{sheet.Name}' because no header row was emitted.");
+            if (throwOnMissing && !IgnoreMissingColumnFormat.IsPresent)
+            {
+                throw new PSArgumentException($"Column format headers were not found on worksheet '{sheet.Name}': {headers}. Export-time column formats require a header row; remove -NoHeader or use -IgnoreMissingColumnFormat for optional columns.");
+            }
+
             return Array.Empty<ExcelColumnFormatResult>();
         }
 
@@ -473,6 +487,13 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         return results;
     }
+
+    private static string[] GetColumnFormatHeaders(ExcelColumnFormatPlan plan)
+        => plan.Rules
+            .Select(static rule => rule.Header.Trim())
+            .Where(static header => header.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
     private bool ColumnFormatRequiresMaterializedCells(ExcelColumnFormatPlan? plan)
     {
@@ -503,7 +524,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(range))
         {
-            ApplyColumnFormatPlan(sheet, columnFormatPlan, !NoHeader.IsPresent ? dataStartRow : null);
+            ApplyColumnFormatPlan(sheet, columnFormatPlan, !NoHeader.IsPresent ? dataStartRow : null, requireExplicitHeaderRow: NoHeader.IsPresent);
 
             if (BoldTopRow.IsPresent && !NoHeader.IsPresent)
             {
@@ -565,7 +586,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                          sheet,
                          columnFormatPlan,
                          ResolveColumnFormatHeaderRow(document, sheet, columnFormatPlan, isAppendingToExistingSheet, appendTableName, includeHeaders, dataStartRow),
-                         throwOnMissing: false))
+                         throwOnMissing: false,
+                         requireExplicitHeaderRow: !includeHeaders))
             {
                 if (result.Applied)
                 {
@@ -808,11 +830,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private static int? FindExistingHeaderRow(ExcelSheet sheet, ExcelColumnFormatPlan plan)
     {
-        var requestedHeaders = plan.Rules
-            .Select(static rule => rule.Header.Trim())
-            .Where(static header => header.Length > 0)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+        var requestedHeaders = GetColumnFormatHeaders(plan);
         if (requestedHeaders.Length == 0)
         {
             return null;
@@ -826,33 +844,17 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             firstColumn = lastColumn = column;
         }
 
-        var bestRow = 0;
-        var bestMatches = 0;
-        for (var row = Math.Max(1, firstRow); row <= lastRow; row++)
+        var headerRow = Math.Max(1, firstRow);
+        var rowHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        for (var column = Math.Max(1, firstColumn); column <= lastColumn; column++)
         {
-            var rowHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            for (var column = Math.Max(1, firstColumn); column <= lastColumn; column++)
+            if (sheet.TryGetCellText(headerRow, column, out var text) && !string.IsNullOrWhiteSpace(text))
             {
-                if (sheet.TryGetCellText(row, column, out var text) && !string.IsNullOrWhiteSpace(text))
-                {
-                    rowHeaders.Add(text.Trim());
-                }
-            }
-
-            var matches = requestedHeaders.Count(rowHeaders.Contains);
-            if (matches == requestedHeaders.Length)
-            {
-                return row;
-            }
-
-            if (matches > bestMatches)
-            {
-                bestMatches = matches;
-                bestRow = row;
+                rowHeaders.Add(text.Trim());
             }
         }
 
-        return bestMatches > 0 ? bestRow : null;
+        return requestedHeaders.All(rowHeaders.Contains) ? headerRow : null;
     }
 
     private string? ResolveTableName(DataTable table, bool allowExplicitOverride = true)

@@ -472,6 +472,24 @@ Describe 'Excel DSL surface' {
         { $rows | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelMissingColumnFormat.xlsx') -ColumnFormat @{ Missing = 'Integer' } -ErrorAction Stop } |
             Should -Throw '*Column format headers were not found*'
 
+        { $rows | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelNoHeaderColumnFormat.xlsx') -NoHeader -CurrencyColumn Revenue -ErrorAction Stop } |
+            Should -Throw '*require a header row*'
+
+        $rawAppendPath = Join-Path $TestDrive 'ExportOfficeExcelRawAppendMissingHeader.xlsx'
+        @([PSCustomObject]@{ Region = 'Revenue'; Amount = 100 }) |
+            Export-OfficeExcel -Path $rawAppendPath -WorksheetName 'Data' -NoTable
+        { [PSCustomObject]@{ Region = 'EMEA'; Amount = 200 } | Export-OfficeExcel -Path $rawAppendPath -WorksheetName 'Data' -Append -NoTable -CurrencyColumn Revenue -ErrorAction Stop } |
+            Should -Throw '*Column format headers were not found*'
+
+        $rawAppendFormatPath = Join-Path $TestDrive 'ExportOfficeExcelRawAppendColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'NA'; Revenue = 123.45 }) |
+            Export-OfficeExcel -Path $rawAppendFormatPath -WorksheetName 'Data' -NoTable
+        [PSCustomObject]@{ Region = 'EMEA'; Revenue = 987.65 } |
+            Export-OfficeExcel -Path $rawAppendFormatPath -WorksheetName 'Data' -Append -NoTable -CurrencyColumn Revenue -FormatCultureName en-US
+        $rawAppendSheetXml = Get-ZipXmlDocumentLocal -Path $rawAppendFormatPath -Entry 'xl/worksheets/sheet1.xml'
+        $rawAppendRevenueCell = $rawAppendSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+        $rawAppendRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
         $titlePath = Join-Path $TestDrive 'ExportOfficeExcelColumnFormatsWithTitle.xlsx'
         $rows | Export-OfficeExcel -Path $titlePath -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export' -CurrencyColumn Revenue -FormatCultureName en-US
         $titleSheetXml = Get-ZipXmlDocumentLocal -Path $titlePath -Entry 'xl/worksheets/sheet1.xml'
