@@ -805,8 +805,13 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return null;
         }
 
+        if (NoHeader.IsPresent)
+        {
+            return null;
+        }
+
         var tableHeaderRow = ResolveExistingTableHeaderRow(document, sheet, appendTableName);
-        return tableHeaderRow ?? FindExistingHeaderRow(sheet, plan);
+        return tableHeaderRow ?? FindExistingHeaderRow(sheet, plan, allowPartialMatch: IgnoreMissingColumnFormat.IsPresent);
     }
 
     private int? ResolveExistingTableHeaderRow(ExcelDocument document, ExcelSheet sheet, string? tableName)
@@ -819,7 +824,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         var table = document.GetTables().FirstOrDefault(candidate =>
             string.Equals(candidate.SheetName, sheet.Name, StringComparison.OrdinalIgnoreCase) &&
             string.Equals(candidate.Name, tableName, StringComparison.OrdinalIgnoreCase));
-        if (table != null && !string.IsNullOrWhiteSpace(table.Range) &&
+        if (table != null && table.HasHeaderRow && !string.IsNullOrWhiteSpace(table.Range) &&
             A1.TryParseRange(table.Range, out var tableStartRow, out _, out _, out _))
         {
             return Math.Max(1, tableStartRow);
@@ -828,7 +833,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return null;
     }
 
-    private static int? FindExistingHeaderRow(ExcelSheet sheet, ExcelColumnFormatPlan plan)
+    private static int? FindExistingHeaderRow(ExcelSheet sheet, ExcelColumnFormatPlan plan, bool allowPartialMatch)
     {
         var requestedHeaders = GetColumnFormatHeaders(plan);
         if (requestedHeaders.Length == 0)
@@ -854,7 +859,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             }
         }
 
-        return requestedHeaders.All(rowHeaders.Contains) ? headerRow : null;
+        var hasRequestedHeader = allowPartialMatch
+            ? requestedHeaders.Any(rowHeaders.Contains)
+            : requestedHeaders.All(rowHeaders.Contains);
+
+        return hasRequestedHeader ? headerRow : null;
     }
 
     private string? ResolveTableName(DataTable table, bool allowExplicitOverride = true)

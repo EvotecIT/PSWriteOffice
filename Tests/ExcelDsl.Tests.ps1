@@ -490,6 +490,27 @@ Describe 'Excel DSL surface' {
         $rawAppendRevenueCell = $rawAppendSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
         $rawAppendRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
 
+        $rawAppendPartialFormatPath = Join-Path $TestDrive 'ExportOfficeExcelRawAppendPartialColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'NA'; Revenue = 123.45 }) |
+            Export-OfficeExcel -Path $rawAppendPartialFormatPath -WorksheetName 'Data' -NoTable
+        [PSCustomObject]@{ Region = 'EMEA'; Revenue = 987.65 } |
+            Export-OfficeExcel -Path $rawAppendPartialFormatPath -WorksheetName 'Data' -Append -NoTable -CurrencyColumn Revenue -IntegerColumn Missing -IgnoreMissingColumnFormat -FormatCultureName en-US
+        $rawAppendPartialSheetXml = Get-ZipXmlDocumentLocal -Path $rawAppendPartialFormatPath -Entry 'xl/worksheets/sheet1.xml'
+        $rawAppendPartialRevenueCell = $rawAppendPartialSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+        $rawAppendPartialRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
+        $headerlessTableAppendPath = Join-Path $TestDrive 'ExportOfficeExcelHeaderlessTableAppendColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'Revenue'; Amount = 100 }) |
+            Export-OfficeExcel -Path $headerlessTableAppendPath -WorksheetName 'Data' -TableName 'Sales' -NoHeader
+        { [PSCustomObject]@{ Region = 'EMEA'; Amount = 200 } | Export-OfficeExcel -Path $headerlessTableAppendPath -WorksheetName 'Data' -TableName 'Sales' -Append -NoHeader -CurrencyColumn Revenue -ErrorAction Stop } |
+            Should -Throw '*require a header row*'
+
+        $headerlessRawAppendPath = Join-Path $TestDrive 'ExportOfficeExcelHeaderlessRawAppendColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'Revenue'; Amount = 100 }) |
+            Export-OfficeExcel -Path $headerlessRawAppendPath -WorksheetName 'Data' -NoTable -NoHeader
+        { [PSCustomObject]@{ Region = 'EMEA'; Amount = 200 } | Export-OfficeExcel -Path $headerlessRawAppendPath -WorksheetName 'Data' -Append -NoTable -NoHeader -CurrencyColumn Revenue -ErrorAction Stop } |
+            Should -Throw '*require a header row*'
+
         $titlePath = Join-Path $TestDrive 'ExportOfficeExcelColumnFormatsWithTitle.xlsx'
         $rows | Export-OfficeExcel -Path $titlePath -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export' -CurrencyColumn Revenue -FormatCultureName en-US
         $titleSheetXml = Get-ZipXmlDocumentLocal -Path $titlePath -Entry 'xl/worksheets/sheet1.xml'
