@@ -49,6 +49,10 @@ internal sealed class ExcelDataValidationMessageDisplayState
 
             snapshots.Add(new DataValidationDisplaySnapshot(
                 range,
+                validation.PromptTitle?.Value,
+                validation.Prompt?.Value,
+                validation.ErrorTitle?.Value,
+                validation.Error?.Value,
                 validation.ShowInputMessage?.Value,
                 validation.ShowErrorMessage?.Value,
                 !string.IsNullOrEmpty(validation.PromptTitle?.Value) || !string.IsNullOrEmpty(validation.Prompt?.Value),
@@ -58,7 +62,15 @@ internal sealed class ExcelDataValidationMessageDisplayState
         return new ExcelDataValidationMessageDisplayState(snapshots);
     }
 
-    public void Restore(ExcelSheet sheet, string targetRange, bool? showInputMessage, bool? showErrorMessage)
+    public void Restore(
+        ExcelSheet sheet,
+        string targetRange,
+        bool restorePromptTitle,
+        bool restorePrompt,
+        bool restoreErrorTitle,
+        bool restoreError,
+        bool? showInputMessage,
+        bool? showErrorMessage)
     {
         if (sheet == null) throw new ArgumentNullException(nameof(sheet));
         if (string.IsNullOrWhiteSpace(targetRange)) throw new ArgumentNullException(nameof(targetRange));
@@ -85,6 +97,29 @@ internal sealed class ExcelDataValidationMessageDisplayState
             }
 
             DataValidationDisplaySnapshot? snapshot = snapshotIndex >= 0 ? _snapshots[snapshotIndex] : null;
+            if (snapshot != null)
+            {
+                if (restorePromptTitle)
+                {
+                    changed |= SetString(validation, MessageField.PromptTitle, snapshot.PromptTitle);
+                }
+
+                if (restorePrompt)
+                {
+                    changed |= SetString(validation, MessageField.Prompt, snapshot.Prompt);
+                }
+
+                if (restoreErrorTitle)
+                {
+                    changed |= SetString(validation, MessageField.ErrorTitle, snapshot.ErrorTitle);
+                }
+
+                if (restoreError)
+                {
+                    changed |= SetString(validation, MessageField.Error, snapshot.Error);
+                }
+            }
+
             if (showInputMessage.HasValue)
             {
                 changed |= SetBoolean(validation, isInputMessage: true, showInputMessage);
@@ -131,6 +166,49 @@ internal sealed class ExcelDataValidationMessageDisplayState
         }
 
         return -1;
+    }
+
+    private enum MessageField
+    {
+        PromptTitle,
+        Prompt,
+        ErrorTitle,
+        Error
+    }
+
+    private static bool SetString(DataValidation validation, MessageField field, string? value)
+    {
+        string? current = field switch
+        {
+            MessageField.PromptTitle => validation.PromptTitle?.Value,
+            MessageField.Prompt => validation.Prompt?.Value,
+            MessageField.ErrorTitle => validation.ErrorTitle?.Value,
+            MessageField.Error => validation.Error?.Value,
+            _ => null
+        };
+
+        if (string.Equals(current, value, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        switch (field)
+        {
+            case MessageField.PromptTitle:
+                validation.PromptTitle = value;
+                break;
+            case MessageField.Prompt:
+                validation.Prompt = value;
+                break;
+            case MessageField.ErrorTitle:
+                validation.ErrorTitle = value;
+                break;
+            case MessageField.Error:
+                validation.Error = value;
+                break;
+        }
+
+        return true;
     }
 
     private static bool SetBoolean(DataValidation validation, bool isInputMessage, bool? value)
@@ -267,9 +345,22 @@ internal sealed class ExcelDataValidationMessageDisplayState
 
     private sealed class DataValidationDisplaySnapshot
     {
-        public DataValidationDisplaySnapshot(string range, bool? showInputMessage, bool? showErrorMessage, bool hasInputMessageText, bool hasErrorMessageText)
+        public DataValidationDisplaySnapshot(
+            string range,
+            string? promptTitle,
+            string? prompt,
+            string? errorTitle,
+            string? error,
+            bool? showInputMessage,
+            bool? showErrorMessage,
+            bool hasInputMessageText,
+            bool hasErrorMessageText)
         {
             Range = range;
+            PromptTitle = promptTitle;
+            Prompt = prompt;
+            ErrorTitle = errorTitle;
+            Error = error;
             ShowInputMessage = showInputMessage;
             ShowErrorMessage = showErrorMessage;
             HasInputMessageText = hasInputMessageText;
@@ -277,6 +368,14 @@ internal sealed class ExcelDataValidationMessageDisplayState
         }
 
         public string Range { get; }
+
+        public string? PromptTitle { get; }
+
+        public string? Prompt { get; }
+
+        public string? ErrorTitle { get; }
+
+        public string? Error { get; }
 
         public bool? ShowInputMessage { get; }
 

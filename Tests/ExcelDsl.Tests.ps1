@@ -2097,6 +2097,28 @@ Describe 'Excel DSL surface' {
         $worksheetXml | Should -Match 'Consulting'
         $worksheetXml | Should -Match 'Amount \$1,200\.00'
         $worksheetXml | Should -Not -Match '\{\{'
+
+        $readOnlyPath = Join-Path $TestDrive 'DslExcelTemplateRows.ReadOnlyDictionary.xlsx'
+        New-OfficeExcel -Path $readOnlyPath {
+            Add-OfficeExcelSheet -Name 'Invoice' -Content {
+                Set-OfficeExcelCell -Address A1 -Value 'Item'
+                Set-OfficeExcelCell -Address B1 -Value 'Amount'
+                Set-OfficeExcelCell -Address A2 -Value '{{Name}}'
+                Set-OfficeExcelCell -Address B2 -Value 'Amount {{Amount:currency}}'
+            }
+        }
+
+        $backing = [System.Collections.Generic.Dictionary[string,object]]::new()
+        $backing['Name'] = 'Support'
+        $backing['Amount'] = 300
+        $readOnly = [System.Collections.ObjectModel.ReadOnlyDictionary[string,object]]::new($backing)
+
+        Invoke-OfficeExcelTemplateRow -Path $readOnlyPath -Sheet Invoice -TemplateRow 2 -Rows $readOnly -CultureName en-US -MissingValueBehavior Throw -PassThru | Should -Be 2
+
+        $worksheetXml = Read-XlsxEntryText -Path $readOnlyPath -Entry 'xl/worksheets/sheet1.xml'
+        $worksheetXml | Should -Match 'Support'
+        $worksheetXml | Should -Match 'Amount \$300\.00'
+        $worksheetXml | Should -Not -Match '\{\{'
     }
 
     It 'expands named Excel template row arrays' {
@@ -2206,6 +2228,29 @@ Describe 'Excel DSL surface' {
         $worksheetsXml | Should -Match 'Customer Northwind'
         $worksheetsXml | Should -Match 'Invoice INV-102'
         $worksheetsXml | Should -Match 'Customer Adventure Works'
+        $worksheetsXml | Should -Not -Match '\{\{'
+
+        $readOnlyPath = Join-Path $TestDrive 'DslExcelTemplateSheets.ReadOnlyDictionary.xlsx'
+        New-OfficeExcel -Path $readOnlyPath {
+            Add-OfficeExcelSheet -Name 'Template' -Content {
+                Set-OfficeExcelCell -Address A1 -Value 'Invoice {{Number}}'
+                Set-OfficeExcelCell -Address A2 -Value 'Customer {{Customer}}'
+            }
+        }
+
+        $backing = [System.Collections.Generic.Dictionary[string,object]]::new()
+        $backing['Number'] = 'INV-201'
+        $backing['Customer'] = 'Litware'
+        $backing['SheetName'] = 'Inv-201'
+        $readOnly = [System.Collections.ObjectModel.ReadOnlyDictionary[string,object]]::new($backing)
+
+        Invoke-OfficeExcelTemplateSheet -Path $readOnlyPath -TemplateSheet Template -SheetNameProperty SheetName -Rows $readOnly -MissingValueBehavior Throw -PassThru | Should -Be 2
+
+        $workbookXml = Read-XlsxEntryText -Path $readOnlyPath -Entry 'xl/workbook.xml'
+        $workbookXml | Should -Match 'name="Inv-201"'
+        $worksheetsXml = (Get-ZipEntriesLocal -Path $readOnlyPath | Where-Object { $_ -like 'xl/worksheets/sheet*.xml' } | ForEach-Object { Read-XlsxEntryText -Path $readOnlyPath -Entry $_ }) -join [Environment]::NewLine
+        $worksheetsXml | Should -Match 'Invoice INV-201'
+        $worksheetsXml | Should -Match 'Customer Litware'
         $worksheetsXml | Should -Not -Match '\{\{'
     }
 
@@ -2705,6 +2750,42 @@ Describe 'Excel DSL surface' {
         $worksheetXml | Should -Match 'error="Use 1-1000"'
         $worksheetXml | Should -Match 'showInputMessage="(?:0|false)"'
         $worksheetXml | Should -Match 'showErrorMessage="(?:0|false)"'
+    }
+
+    It 'preserves omitted prompt and error fields per matched data validation rule' {
+        $path = Join-Path $TestDrive 'DslExcelDataValidationMessages.PerRule.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Sales = 200 }
+            [PSCustomObject]@{ Region = 'APAC'; Sales = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+                Add-OfficeExcelValidationWholeNumber -Range 'B2:B3' -Operator Between -Formula1 1 -Formula2 1000
+                Add-OfficeExcelValidationWholeNumber -Range 'B4:B4' -Operator Between -Formula1 1 -Formula2 1000
+            }
+        }
+
+        Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range 'B2:B3' -PromptTitle 'North sales' -Prompt 'Use north sales' -ErrorTitle 'North invalid' -ErrorMessage 'North error'
+        Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range 'B4:B4' -PromptTitle 'South sales' -Prompt 'Use south sales' -ErrorTitle 'South invalid' -ErrorMessage 'South error'
+
+        $updated = @(Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range 'B2:B4' -Prompt 'Shared prompt' -PassThru)
+        $updated.Count | Should -Be 2
+
+        $firstRule = @(Get-OfficeExcelDataValidation -Path $path -Sheet Data -Range 'B2' | Where-Object Range -EQ 'B2:B3')[0]
+        $secondRule = @(Get-OfficeExcelDataValidation -Path $path -Sheet Data -Range 'B4' | Where-Object Range -EQ 'B4:B4')[0]
+
+        $firstRule.PromptTitle | Should -Be 'North sales'
+        $firstRule.Prompt | Should -Be 'Shared prompt'
+        $firstRule.ErrorTitle | Should -Be 'North invalid'
+        $firstRule.Error | Should -Be 'North error'
+
+        $secondRule.PromptTitle | Should -Be 'South sales'
+        $secondRule.Prompt | Should -Be 'Shared prompt'
+        $secondRule.ErrorTitle | Should -Be 'South invalid'
+        $secondRule.Error | Should -Be 'South error'
     }
 
     It 'clears range contents and attached metadata through a thin range command' {

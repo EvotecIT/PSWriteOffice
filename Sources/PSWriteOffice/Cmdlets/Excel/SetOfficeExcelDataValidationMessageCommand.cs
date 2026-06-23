@@ -127,7 +127,15 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
             ShowInputMessage = showInputMessage,
             ShowErrorMessage = showErrorMessage
         });
-        displayState.Restore(sheet, targetRange, boundShowInputMessage, boundShowErrorMessage);
+        displayState.Restore(
+            sheet,
+            targetRange,
+            !MyInvocation.BoundParameters.ContainsKey(nameof(PromptTitle)),
+            !MyInvocation.BoundParameters.ContainsKey(nameof(Prompt)),
+            !MyInvocation.BoundParameters.ContainsKey(nameof(ErrorTitle)),
+            !MyInvocation.BoundParameters.ContainsKey(nameof(ErrorMessage)),
+            boundShowInputMessage,
+            boundShowErrorMessage);
 
         workbook.SaveIfOwned();
 
