@@ -32,7 +32,7 @@ public sealed class NewOfficeExcelDashboardCommand : PSCmdlet
     public string InputPath { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
-    [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
     public ExcelDocument Document { get; set; } = null!;
 
     /// <summary>Worksheet name when using Path or Document.</summary>

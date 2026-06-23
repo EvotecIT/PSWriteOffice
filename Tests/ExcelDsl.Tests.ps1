@@ -513,6 +513,27 @@ Describe 'Excel DSL surface' {
         ($summary.Sheets | Where-Object Name -eq 'Dashboard').TableCount | Should -Be 1
     }
 
+    It 'keeps dashboard row Document columns as data' {
+        $path = Join-Path $TestDrive 'DslExcelDashboardDocumentColumn.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'EU'; Document = 'Proposal'; Revenue = 100 }
+            [PSCustomObject]@{ Region = 'US'; Document = 'Contract'; Revenue = 120 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Dashboard' -Content {
+                $result = $rows | New-OfficeExcelDashboard -Title 'Document Dashboard' -TableName 'Documents' -NoChart -PassThru
+                $result.TableRange | Should -Be 'A3:C5'
+                $result.TableName | Should -Be 'Documents'
+            }
+        } | Out-Null
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName Dashboard -Range 'A3:C5')
+        $rows.Count | Should -Be 2
+        $rows[0].Document | Should -Be 'Proposal'
+        $rows[1].Document | Should -Be 'Contract'
+    }
+
     It 'runs workbook preflight checks through the reusable OfficeIMO report' {
         $path = Join-Path $TestDrive 'DslExcelPreflight.xlsx'
 
@@ -2154,6 +2175,37 @@ Describe 'Excel DSL surface' {
         $worksheetsXml | Should -Match 'Customer Contoso'
         $worksheetsXml | Should -Match 'Invoice INV-002'
         $worksheetsXml | Should -Match 'Customer Fabrikam'
+        $worksheetsXml | Should -Not -Match '\{\{'
+    }
+
+    It 'expands named Excel template sheet arrays' {
+        $path = Join-Path $TestDrive 'DslExcelTemplateSheets.NamedArray.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Template' -Content {
+                Set-OfficeExcelCell -Address A1 -Value 'Invoice {{Number}}'
+                Set-OfficeExcelCell -Address A2 -Value 'Customer {{Customer}}'
+            }
+        }
+
+        $invoices = @(
+            [pscustomobject]@{ Number = 'INV-101'; Customer = 'Northwind'; SheetName = 'Inv-101' }
+            [pscustomobject]@{ Number = 'INV-102'; Customer = 'Adventure Works'; SheetName = 'Inv-102' }
+        )
+
+        Invoke-OfficeExcelTemplateSheet -Path $path -TemplateSheet Template -SheetNameProperty SheetName -Rows $invoices -MissingValueBehavior Throw -PassThru | Should -Be 4
+
+        $workbookXml = Read-XlsxEntryText -Path $path -Entry 'xl/workbook.xml'
+        $workbookXml | Should -Match 'name="Inv-101"'
+        $workbookXml | Should -Match 'name="Inv-102"'
+
+        $worksheetEntries = @(Get-ZipEntriesLocal -Path $path | Where-Object { $_ -like 'xl/worksheets/sheet*.xml' })
+        $worksheetEntries.Count | Should -Be 2
+        $worksheetsXml = ($worksheetEntries | ForEach-Object { Read-XlsxEntryText -Path $path -Entry $_ }) -join [Environment]::NewLine
+        $worksheetsXml | Should -Match 'Invoice INV-101'
+        $worksheetsXml | Should -Match 'Customer Northwind'
+        $worksheetsXml | Should -Match 'Invoice INV-102'
+        $worksheetsXml | Should -Match 'Customer Adventure Works'
         $worksheetsXml | Should -Not -Match '\{\{'
     }
 
