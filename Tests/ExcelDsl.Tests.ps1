@@ -1416,7 +1416,7 @@ Describe 'Excel DSL surface' {
 
         Copy-OfficeExcelSheet -Path $path -SourceSheet 'Data' -NewName 'DataCopy' | Should -Not -BeNullOrEmpty
         Move-OfficeExcelSheet -Path $path -Sheet 'DataCopy' -Index 0
-        Copy-OfficeExcelSheet -Path $path -SourcePath $sourcePath -SourceSheet 'External' -NewName 'ExternalCopy' | Should -Not -BeNullOrEmpty
+        Copy-OfficeExcelSheet -Path $path -SourcePath $sourcePath -SourceSheet 'External' -NewName 'ExternalCopy' -CopyMode Package | Should -Not -BeNullOrEmpty
         $join = Join-OfficeExcelSheet -Path $path -TargetSheet 'Data' -SourceSheet 'More' -MatchColumnsByHeader
         Set-OfficeExcelPrintArea -Path $path -Sheet 'Data' -Range 'A1:B4'
         Set-OfficeExcelPrintTitles -Path $path -Sheet 'Data' -FirstRow 1 -LastRow 1
@@ -1442,6 +1442,41 @@ Describe 'Excel DSL surface' {
         $names = @(Get-OfficeExcelNamedRange -Path $path -Sheet 'Data')
         @($names | Where-Object Name -eq '_xlnm.Print_Area').Count | Should -Be 1
         @($names | Where-Object Name -eq '_xlnm.Print_Titles').Count | Should -Be 1
+    }
+
+    It 'merges workbooks through the package copy fast path' {
+        $targetPath = Join-Path $TestDrive 'ExcelWorkbookPackageMerge.xlsx'
+        $sourceAPath = Join-Path $TestDrive 'ExcelWorkbookPackageMerge-A.xlsx'
+        $sourceBPath = Join-Path $TestDrive 'ExcelWorkbookPackageMerge-B.xlsx'
+
+        New-OfficeExcel -Path $sourceAPath {
+            Add-OfficeExcelSheet -Name 'First' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Name'
+                Set-OfficeExcelCell -Address 'A2' -Value 'Alpha'
+            }
+        }
+        New-OfficeExcel -Path $sourceBPath {
+            Add-OfficeExcelSheet -Name 'Second' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Name'
+                Set-OfficeExcelCell -Address 'A2' -Value 'Beta'
+            }
+        }
+
+        $results = @(Join-OfficeExcelWorkbook -Path $targetPath -SourcePath @($sourceAPath, $sourceBPath) -CopyMode Package -SheetNamePrefix 'Merged')
+        $results.Count | Should -Be 2
+        $results[0].SheetCount | Should -Be 1
+        $results[1].SheetCount | Should -Be 1
+        $results[0].TargetSheets | Should -Contain 'MergedFirst'
+        $results[1].TargetSheets | Should -Contain 'MergedSecond'
+
+        $summary = Get-OfficeExcelSummary -Path $targetPath -IncludeSheets
+        $summary.Sheets.Name | Should -Contain 'MergedFirst'
+        $summary.Sheets.Name | Should -Contain 'MergedSecond'
+
+        $first = @(Import-OfficeExcel -Path $targetPath -WorksheetName 'MergedFirst' -Range 'A1:A2')
+        $second = @(Import-OfficeExcel -Path $targetPath -WorksheetName 'MergedSecond' -Range 'A1:A2')
+        $first[0].Name | Should -Be 'Alpha'
+        $second[0].Name | Should -Be 'Beta'
     }
 
     It 'finds, replaces, and edits Excel row values' {

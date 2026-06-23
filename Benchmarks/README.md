@@ -66,6 +66,12 @@ Run the append, update, many-sheet, read-focused, and chart/pivot split workflow
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario objects-default,append-existing-table,update-existing-workbook,many-small-sheets,named-range-workbook,chart-only-workbook,pivot-only-workbook -RowCount 1000,10000,25000 -RepeatCount 3
 ```
 
+Measure workbook package-copy merges without row-object materialization:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario workbook-package-merge -RowCount 1000,10000,25000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel
+```
+
 Measure export creation without import follow-up timing:
 
 ```powershell
