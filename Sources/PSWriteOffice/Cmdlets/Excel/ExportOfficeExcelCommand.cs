@@ -22,6 +22,12 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>$rows | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -TableName Data -AutoFit -FreezeTopRow</code>
 ///   <para>Creates a workbook, writes the objects as a table, auto-fits columns, and freezes the header row.</para>
 /// </example>
+/// <example>
+///   <summary>Export objects with report-friendly column formats.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$rows | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -TableName Sales -TextColumn Id -CurrencyColumn Revenue -ColumnFormat @{ Rate = @{ Style = 'Percent'; Decimals = 1 }; Created = 'Date' } -FormatCultureName en-US -AutoFitFormattedColumn</code>
+///   <para>Formats ID values as text, Revenue as currency, Rate as a one-decimal percentage, and Created as a short date while keeping formatting logic in OfficeIMO.</para>
+/// </example>
 [Cmdlet(VerbsData.Export, "OfficeExcel")]
 [Alias("ExcelExport")]
 public sealed class ExportOfficeExcelCommand : PSCmdlet
@@ -114,6 +120,58 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public string[]? ExcludeProperty { get; set; }
 
+    /// <summary>Header-to-format map. Values may be preset names such as Text, Currency, Percent, Date, or custom Excel number formats.</summary>
+    [Parameter]
+    public Hashtable? ColumnFormat { get; set; }
+
+    /// <summary>Headers that should be formatted as text, useful for IDs, zip codes, and leading-zero values.</summary>
+    [Parameter]
+    public string[]? TextColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as decimal numbers.</summary>
+    [Parameter]
+    public string[]? NumberColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as whole numbers.</summary>
+    [Parameter]
+    public string[]? IntegerColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as percentages.</summary>
+    [Parameter]
+    public string[]? PercentColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as currency.</summary>
+    [Parameter]
+    public string[]? CurrencyColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as dates.</summary>
+    [Parameter]
+    public string[]? DateColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as date/time values.</summary>
+    [Parameter]
+    public string[]? DateTimeColumn { get; set; }
+
+    /// <summary>Decimal places used by friendly number, percent, and currency column presets.</summary>
+    [Parameter]
+    public int FormatDecimals { get; set; } = 2;
+
+    /// <summary>Culture used by friendly currency column presets, such as en-US or pl-PL.</summary>
+    [Parameter]
+    public string? FormatCultureName { get; set; }
+
+    /// <summary>Include header cells when applying export-time column formats.</summary>
+    [Parameter]
+    public SwitchParameter IncludeHeaderInColumnFormat { get; set; }
+
+    /// <summary>Auto-fit only columns that receive export-time column formats.</summary>
+    [Parameter]
+    public SwitchParameter AutoFitFormattedColumn { get; set; }
+
+    /// <summary>Continue when a requested export-time column format header is missing.</summary>
+    [Parameter]
+    public SwitchParameter IgnoreMissingColumnFormat { get; set; }
+
     /// <summary>Open the workbook after saving.</summary>
     [Parameter]
     [Alias("Show")]
@@ -152,6 +210,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }
 
+        var columnFormatPlan = BuildColumnFormatPlan();
+
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var directory = System.IO.Path.GetDirectoryName(resolvedPath);
         if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
@@ -179,7 +239,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var dataSet = ExcelTabularInputService.TryGetSingleDataSet(_input);
             if (dataSet != null)
             {
-                ExportDataSet(document, dataSet, style);
+                ExportDataSet(document, dataSet, style, columnFormatPlan);
                 ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
                 WritePassThru(resolvedPath);
                 return;
@@ -190,7 +250,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             if (reader != null && CanExportReaderDirectly(isAppendingToExistingSheet))
             {
                 var readerSheet = PrepareSheet(document);
-                var readerRange = ExportDataReader(readerSheet, reader, style);
+                var readerRange = ExportDataReader(readerSheet, reader, style, columnFormatPlan);
                 if (!string.IsNullOrWhiteSpace(readerRange))
                 {
                     WriteVerbose($"Exported data reader to {readerSheet.Name}!{readerRange}.");
@@ -212,6 +272,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 dataStartRow,
                 includeHeaders,
                 style,
+                columnFormatPlan,
                 out var objectRange))
             {
                 if (!string.IsNullOrWhiteSpace(objectRange))
@@ -239,6 +300,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
             var range = WriteData(sheet, data, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, ResolveTableName(data));
+            ApplyColumnFormatPlan(sheet, columnFormatPlan);
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -288,10 +350,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         int dataStartRow,
         bool includeHeaders,
         TableStyle style,
+        ExcelColumnFormatPlan? columnFormatPlan,
         out string range)
     {
         range = string.Empty;
-        if (!CanExportObjectsThroughOfficeImoObjectPath(isAppendingToExistingSheet, preserveWorkbook, dataStartRow, includeHeaders))
+        if (!CanExportObjectsThroughOfficeImoObjectPath(isAppendingToExistingSheet, preserveWorkbook, dataStartRow, includeHeaders, columnFormatPlan))
         {
             return false;
         }
@@ -319,10 +382,16 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             sheet.AddTable(range, includeHeaders, TableName ?? string.Empty, style, includeAutoFilter: !NoAutoFilter.IsPresent);
         }
 
+        ApplyColumnFormatPlan(sheet, columnFormatPlan);
         return true;
     }
 
-    private bool CanExportObjectsThroughOfficeImoObjectPath(bool isAppendingToExistingSheet, bool preserveWorkbook, int dataStartRow, bool includeHeaders)
+    private bool CanExportObjectsThroughOfficeImoObjectPath(
+        bool isAppendingToExistingSheet,
+        bool preserveWorkbook,
+        int dataStartRow,
+        bool includeHeaders,
+        ExcelColumnFormatPlan? columnFormatPlan)
     {
         return !isAppendingToExistingSheet &&
             !preserveWorkbook &&
@@ -332,6 +401,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             string.IsNullOrWhiteSpace(Title) &&
             ExcludeProperty is not { Length: > 0 } &&
             !AutoFit.IsPresent &&
+            !AutoFitFormattedColumn.IsPresent &&
+            !ColumnFormatRequiresMaterializedCells(columnFormatPlan) &&
             !BoldTopRow.IsPresent &&
             !FreezeTopRow.IsPresent &&
             !FreezeFirstColumn.IsPresent;
@@ -356,9 +427,52 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return items.Count > 0;
     }
 
-    private string ExportDataReader(ExcelSheet sheet, IDataReader reader, TableStyle style)
+    private ExcelColumnFormatPlan? BuildColumnFormatPlan()
+        => ExcelColumnFormatPlanService.Build(
+            ColumnFormat,
+            TextColumn,
+            NumberColumn,
+            IntegerColumn,
+            PercentColumn,
+            CurrencyColumn,
+            DateColumn,
+            DateTimeColumn,
+            FormatDecimals,
+            FormatCultureName);
+
+    private void ApplyColumnFormatPlan(ExcelSheet sheet, ExcelColumnFormatPlan? plan)
+    {
+        if (plan == null)
+        {
+            return;
+        }
+
+        var results = sheet.ApplyColumnFormatPlan(
+            plan,
+            includeHeader: IncludeHeaderInColumnFormat.IsPresent,
+            autoFit: AutoFitFormattedColumn.IsPresent);
+        var missing = results.Where(static result => !result.Applied).ToArray();
+        foreach (var result in missing)
+        {
+            WriteVerbose(result.Warning);
+        }
+
+        if (missing.Length > 0 && !IgnoreMissingColumnFormat.IsPresent)
+        {
+            var headers = string.Join(", ", missing.Select(static result => result.Header));
+            throw new PSArgumentException($"Column format headers were not found on worksheet '{sheet.Name}': {headers}. Use -IgnoreMissingColumnFormat for optional columns.");
+        }
+    }
+
+    private bool ColumnFormatRequiresMaterializedCells(ExcelColumnFormatPlan? plan)
+    {
+        return IncludeHeaderInColumnFormat.IsPresent || (plan?.Rules.Any(static rule => rule.IncludeHeader) ?? false);
+    }
+
+    private string ExportDataReader(ExcelSheet sheet, IDataReader reader, TableStyle style, ExcelColumnFormatPlan? columnFormatPlan)
     {
         var dataStartRow = StartRow;
+        var fieldCount = reader.FieldCount;
         if (!string.IsNullOrWhiteSpace(Title))
         {
             sheet.Cell(dataStartRow, StartColumn, Title!);
@@ -375,13 +489,20 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             style: style,
             includeAutoFilter: !NoAutoFilter.IsPresent,
             createTable: !NoTable.IsPresent,
-            autoFit: AutoFit.IsPresent);
+            autoFit: false);
 
         if (!string.IsNullOrWhiteSpace(range))
         {
+            ApplyColumnFormatPlan(sheet, columnFormatPlan);
+
             if (BoldTopRow.IsPresent && !NoHeader.IsPresent)
             {
-                BoldRow(sheet, dataStartRow, StartColumn, reader.FieldCount);
+                BoldRow(sheet, dataStartRow, StartColumn, fieldCount);
+            }
+
+            if (AutoFit.IsPresent)
+            {
+                sheet.AutoFitColumnsFor(Enumerable.Range(StartColumn, fieldCount));
             }
 
             if (FreezeTopRow.IsPresent || FreezeFirstColumn.IsPresent)
@@ -395,7 +516,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return range;
     }
 
-    private void ExportDataSet(ExcelDocument document, DataSet dataSet, TableStyle style)
+    private void ExportDataSet(ExcelDocument document, DataSet dataSet, TableStyle style, ExcelColumnFormatPlan? columnFormatPlan)
     {
         if (dataSet.Tables.Count == 0)
         {
@@ -429,6 +550,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
             var tableName = ResolveDataSetTableName(table, usedTableNames);
             var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, tableName);
+            ApplyColumnFormatPlan(sheet, columnFormatPlan);
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {

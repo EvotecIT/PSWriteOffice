@@ -440,6 +440,39 @@ Describe 'Excel DSL surface' {
         $imported[1].Enabled | Should -BeFalse
     }
 
+    It 'applies export-time column formats by header' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelColumnFormats.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Id = '00042'; Revenue = 1234.5; Rate = 0.125; Created = [DateTime] '2026-06-23' }
+        )
+
+        $rows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -TextColumn Id -CurrencyColumn Revenue -ColumnFormat @{
+            Rate = @{ Style = 'Percent'; Decimals = 1 }
+            Created = 'Date'
+        } -FormatCultureName en-US -AutoFitFormattedColumn
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $idCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='A2']")
+        $revenueCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='B2']")
+        $rateCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='C2']")
+        $createdCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='D2']")
+
+        $idCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $revenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $rateCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $createdCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
+        $stylesXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/styles.xml'
+        $formats = @($stylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
+        $formats | Should -Contain '@'
+        ($formats -join '|') | Should -Match '\$'
+        ($formats -join '|') | Should -Match '0\.0%'
+        ($formats -join '|') | Should -Match 'yyyy-mm-dd'
+
+        { $rows | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelMissingColumnFormat.xlsx') -ColumnFormat @{ Missing = 'Integer' } -ErrorAction Stop } |
+            Should -Throw '*Column format headers were not found*'
+    }
+
     It 'appends rows without rewriting headers' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelAppend.xlsx'
         $rows = @(
