@@ -1736,7 +1736,7 @@ Describe 'Excel DSL surface' {
         New-OfficeExcel -Path $path {
             Add-OfficeExcelSheet -Name 'Sales' -Content {
                 Add-OfficeExcelTable -InputObject @(
-                    [PSCustomObject]@{ Name = 'Alpha'; Value = 10 }
+                    [PSCustomObject]@{ Name = 'Alpha'; Value = 10; WorksheetName = 'SourceColumn' }
                 ) -TableName 'SalesRows'
             }
             Add-OfficeExcelSheet -Name 'Inventory' -Content {
@@ -1749,9 +1749,13 @@ Describe 'Excel DSL surface' {
         $allRows = @(Import-OfficeExcel -Path $path -AllSheets)
         $allRows.Count | Should -Be 2
         @($allRows | Select-Object -ExpandProperty WorksheetName | Sort-Object) | Should -Be @('Inventory', 'Sales')
+        ($allRows | Where-Object WorksheetName -eq 'Sales').WorksheetNameValue | Should -Be 'SourceColumn'
+
+        $allRowsAsHashtable = @(Import-OfficeExcel -Path $path -AllSheets -AsHashtable)
+        ($allRowsAsHashtable | Where-Object { $_['WorksheetName'] -eq 'Sales' })['WorksheetNameValue'] | Should -Be 'SourceColumn'
 
         $columns = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales' -ByColumn)
-        $columns.Count | Should -Be 2
+        $columns.Count | Should -Be 3
         $columns[0].ColumnName | Should -Be 'Name'
         $columns[0].ColumnIndex | Should -Be 1
         @($columns[0].Values)[0] | Should -Be 'Alpha'

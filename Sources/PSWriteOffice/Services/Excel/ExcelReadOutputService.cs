@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Management.Automation;
@@ -98,6 +99,7 @@ internal static class ExcelReadOutputService
         {
             columnNames[i] = table.Columns[i].ColumnName;
         }
+        var rowOutputColumnNames = CreateRowOutputColumnNames(columnNames, !string.IsNullOrWhiteSpace(worksheetName));
 
         if (byColumn)
         {
@@ -118,7 +120,7 @@ internal static class ExcelReadOutputService
                 for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
                 {
                     var value = row[columnIndex];
-                    hashtable[columnNames[columnIndex]] = value is DBNull ? null : value;
+                    hashtable[rowOutputColumnNames[columnIndex]] = value is DBNull ? null : value;
                 }
 
                 cmdlet.WriteObject(hashtable);
@@ -134,12 +136,53 @@ internal static class ExcelReadOutputService
                 for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
                 {
                     var value = row[columnIndex];
-                    psObject.Properties.Add(new PSNoteProperty(columnNames[columnIndex], value is DBNull ? null : value));
+                    psObject.Properties.Add(new PSNoteProperty(rowOutputColumnNames[columnIndex], value is DBNull ? null : value));
                 }
 
                 cmdlet.WriteObject(psObject);
             }
         }
+    }
+
+    private static string[] CreateRowOutputColumnNames(string[] columnNames, bool hasWorksheetMetadata)
+    {
+        if (!hasWorksheetMetadata)
+        {
+            return columnNames;
+        }
+
+        var outputNames = new string[columnNames.Length];
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "WorksheetName"
+        };
+
+        for (var i = 0; i < columnNames.Length; i++)
+        {
+            var candidate = columnNames[i];
+            if (used.Add(candidate))
+            {
+                outputNames[i] = candidate;
+                continue;
+            }
+
+            outputNames[i] = CreateUniqueColumnName(candidate, used);
+        }
+
+        return outputNames;
+    }
+
+    private static string CreateUniqueColumnName(string columnName, ISet<string> used)
+    {
+        var baseName = string.IsNullOrWhiteSpace(columnName) ? "Column" : columnName;
+        var candidate = $"{baseName}Value";
+        var index = 2;
+        while (!used.Add(candidate))
+        {
+            candidate = $"{baseName}Value{index++}";
+        }
+
+        return candidate;
     }
 
     private static void WriteColumnOutput(PSCmdlet cmdlet, DataTable table, string[] columnNames, bool asHashtable, string? worksheetName)
