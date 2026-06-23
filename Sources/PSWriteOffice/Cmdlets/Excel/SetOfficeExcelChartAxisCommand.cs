@@ -11,6 +11,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>$chart | Set-OfficeExcelChartAxis -CategoryTitle 'Month' -ValueTitle 'Revenue' -ValueNumberFormat '$#,##0' -ValueMinimum 0 -ValueMajorUnit 100 -ShowValueMajorGridlines</code>
 ///   <para>Sets axis titles, value formatting, scale, and major value gridlines.</para>
 /// </example>
+/// <example>
+///   <summary>Use a scaled date/category axis for a line chart.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$chart |
+///     Set-OfficeExcelChartAxis -CategoryTitle 'Week' -CategoryNumberFormat 'yyyy-mm-dd' -CategoryMinimum 46000 -CategoryMaximum 46090 -CategoryMajorUnit 14 -CategoryMinorUnit 7</code>
+///   <para>Configures the chart's X axis through OfficeIMO's category/date-axis scale support while keeping the workbook chart object on the pipeline.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelChartAxis")]
 [Alias("ExcelChartAxis")]
 [OutputType(typeof(ExcelChart))]
@@ -59,6 +66,22 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
     /// <summary>Value axis minor unit.</summary>
     [Parameter]
     public double? ValueMinorUnit { get; set; }
+
+    /// <summary>Category/date axis minimum.</summary>
+    [Parameter]
+    public double? CategoryMinimum { get; set; }
+
+    /// <summary>Category/date axis maximum.</summary>
+    [Parameter]
+    public double? CategoryMaximum { get; set; }
+
+    /// <summary>Category/date axis major unit.</summary>
+    [Parameter]
+    public double? CategoryMajorUnit { get; set; }
+
+    /// <summary>Category/date axis minor unit.</summary>
+    [Parameter]
+    public double? CategoryMinorUnit { get; set; }
 
     /// <summary>Show category major gridlines.</summary>
     [Parameter]
@@ -120,6 +143,11 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
             if (ValueMinimum.HasValue || ValueMaximum.HasValue || ValueMajorUnit.HasValue || ValueMinorUnit.HasValue)
             {
                 Chart.SetValueAxisScale(ValueMinimum, ValueMaximum, ValueMajorUnit, ValueMinorUnit, axisGroup: AxisGroup);
+            }
+
+            if (CategoryMinimum.HasValue || CategoryMaximum.HasValue || CategoryMajorUnit.HasValue || CategoryMinorUnit.HasValue)
+            {
+                Chart.SetCategoryAxisScale(CategoryMinimum, CategoryMaximum, CategoryMajorUnit, CategoryMinorUnit, axisGroup: AxisGroup);
             }
 
             var categoryGridlineColor = CategoryGridlineColor;

@@ -15,7 +15,7 @@ using PSWriteOffice.Services.Excel;
 namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Exports PowerShell objects to an Excel workbook using an operator-friendly surface.</summary>
-/// <para>Provides an ImportExcel-style fast path while keeping OfficeIMO as the workbook engine.</para>
+/// <para>Provides a fast PowerShell export path while keeping OfficeIMO as the workbook engine.</para>
 /// <example>
 ///   <summary>Export objects to a table.</summary>
 ///   <prefix>PS&gt; </prefix>
