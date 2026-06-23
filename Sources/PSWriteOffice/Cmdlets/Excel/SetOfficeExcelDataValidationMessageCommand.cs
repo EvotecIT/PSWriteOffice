@@ -113,15 +113,21 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
         var prompt = ResolveMessageValue(nameof(Prompt), Prompt, existing?.Prompt);
         var errorTitle = ResolveMessageValue(nameof(ErrorTitle), ErrorTitle, existing?.ErrorTitle);
         var errorMessage = ResolveMessageValue(nameof(ErrorMessage), ErrorMessage, existing?.Error);
+        var displayState = ExcelDataValidationMessageDisplayState.Capture(sheet, targetRange);
+        bool? boundShowInputMessage = ResolveBoundDisplayFlag(nameof(ShowInputMessage), ShowInputMessage);
+        bool? boundShowErrorMessage = ResolveBoundDisplayFlag(nameof(ShowErrorMessage), ShowErrorMessage);
+        bool showInputMessage = boundShowInputMessage ?? ResolveUnboundDisplayFlag(displayState.FirstShowInputMessage, displayState.FirstHasInputMessageText, promptTitle, prompt);
+        bool showErrorMessage = boundShowErrorMessage ?? ResolveUnboundDisplayFlag(displayState.FirstShowErrorMessage, displayState.FirstHasErrorMessageText, errorTitle, errorMessage);
         sheet.SetDataValidationMessages(targetRange, new ExcelDataValidationMessageOptions
         {
             PromptTitle = promptTitle,
             Prompt = prompt,
             ErrorTitle = errorTitle,
             Error = errorMessage,
-            ShowInputMessage = ResolveDisplayFlag(nameof(ShowInputMessage), ShowInputMessage, promptTitle, prompt),
-            ShowErrorMessage = ResolveDisplayFlag(nameof(ShowErrorMessage), ShowErrorMessage, errorTitle, errorMessage)
+            ShowInputMessage = showInputMessage,
+            ShowErrorMessage = showErrorMessage
         });
+        displayState.Restore(sheet, targetRange, boundShowInputMessage, boundShowErrorMessage);
 
         workbook.SaveIfOwned();
 
@@ -152,10 +158,20 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
         return MyInvocation.BoundParameters.ContainsKey(parameterName) ? value : existing;
     }
 
-    private bool ResolveDisplayFlag(string parameterName, SwitchParameter value, string? title, string? message)
+    private bool? ResolveBoundDisplayFlag(string parameterName, SwitchParameter value)
     {
         return MyInvocation.BoundParameters.ContainsKey(parameterName)
             ? value.IsPresent
-            : !string.IsNullOrEmpty(title) || !string.IsNullOrEmpty(message);
+            : null;
+    }
+
+    private static bool ResolveUnboundDisplayFlag(bool? existingDisplayFlag, bool existingHadMessageText, string? title, string? message)
+    {
+        if (existingHadMessageText)
+        {
+            return existingDisplayFlag ?? false;
+        }
+
+        return !string.IsNullOrEmpty(title) || !string.IsNullOrEmpty(message);
     }
 }

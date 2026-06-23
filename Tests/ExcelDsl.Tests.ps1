@@ -2687,6 +2687,24 @@ Describe 'Excel DSL surface' {
         $worksheetXml | Should -Match 'error="Use 1-1000"'
         $worksheetXml | Should -Match 'showInputMessage="(?:1|true)"'
         $worksheetXml | Should -Match 'showErrorMessage="(?:1|true)"'
+
+        $hiddenMessageXml = $worksheetXml -replace 'showInputMessage="(?:1|true)"', 'showInputMessage="0"' -replace 'showErrorMessage="(?:1|true)"', 'showErrorMessage="0"'
+        Set-XlsxEntryTextLocal -Path $path -Entry 'xl/worksheets/sheet1.xml' -Text $hiddenMessageXml
+
+        $updated = @(Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range 'B2:B4' -Prompt 'Keep prompt text hidden' -PassThru)
+        $updated.Count | Should -Be 1
+        $updated[0].PromptTitle | Should -Be 'Sales input'
+        $updated[0].Prompt | Should -Be 'Keep prompt text hidden'
+        $updated[0].ErrorTitle | Should -Be 'Invalid sales'
+        $updated[0].Error | Should -Be 'Use 1-1000'
+
+        $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $worksheetXml | Should -Match 'promptTitle="Sales input"'
+        $worksheetXml | Should -Match 'prompt="Keep prompt text hidden"'
+        $worksheetXml | Should -Match 'errorTitle="Invalid sales"'
+        $worksheetXml | Should -Match 'error="Use 1-1000"'
+        $worksheetXml | Should -Match 'showInputMessage="(?:0|false)"'
+        $worksheetXml | Should -Match 'showErrorMessage="(?:0|false)"'
     }
 
     It 'clears range contents and attached metadata through a thin range command' {
