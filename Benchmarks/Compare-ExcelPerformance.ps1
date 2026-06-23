@@ -1151,6 +1151,26 @@ function Get-BenchmarkModuleDetails {
     }
 }
 
+function Get-LoadedAssemblyDetails {
+    param([string] $Name)
+
+    $assembly = [AppDomain]::CurrentDomain.GetAssemblies() |
+        Where-Object { $_.GetName().Name -eq $Name } |
+        Sort-Object { $_.GetName().Version } -Descending |
+        Select-Object -First 1
+
+    if (-not $assembly) {
+        return $null
+    }
+
+    [pscustomobject]@{
+        Name = $assembly.GetName().Name
+        Version = $assembly.GetName().Version.ToString()
+        Location = $assembly.Location
+        FullName = $assembly.FullName
+    }
+}
+
 function Get-BenchmarkEnvironment {
     $processor = $null
     $computerSystem = $null
@@ -1521,6 +1541,10 @@ $moduleDetails = [ordered]@{
     ImportExcel = Get-BenchmarkModuleDetails -Name ImportExcel
     ExcelFast = Get-BenchmarkModuleDetails -Name ExcelFast
 }
+$assemblyDetails = [ordered]@{
+    OfficeOpenXml = Get-LoadedAssemblyDetails -Name OfficeOpenXml
+    OfficeIMOExcel = Get-LoadedAssemblyDetails -Name OfficeIMO.Excel
+}
 
 [pscustomobject]@{
     PowerShellVersion = $PSVersionTable.PSVersion.ToString()
@@ -1531,6 +1555,7 @@ $moduleDetails = [ordered]@{
     ExcelFast = if ($moduleDetails.ExcelFast) { $moduleDetails.ExcelFast.DisplayVersion } else { $null }
     PSWriteOffice = if ($moduleDetails.PSWriteOffice) { $moduleDetails.PSWriteOffice.DisplayVersion } else { $null }
     Modules = $moduleDetails
+    Assemblies = $assemblyDetails
     OfficeIMOExcelAssembly = $officeIMOExcelAssemblyVersion
     OfficeIMOExcelAssemblyPath = if (Test-Path $officeIMOExcelAssemblyPath) { $officeIMOExcelAssemblyPath } else { $null }
     Engines = $Engine
