@@ -181,6 +181,12 @@ Describe 'Excel DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'exports workbook merge aliases from the manifest' {
+        (Get-Alias -Name Merge-OfficeExcelWorkbook -ErrorAction Stop).ResolvedCommandName | Should -Be 'Join-OfficeExcelWorkbook'
+        (Get-Alias -Name ExcelWorkbookJoin -ErrorAction Stop).ResolvedCommandName | Should -Be 'Join-OfficeExcelWorkbook'
+        (Get-Alias -Name ExcelWorkbookMerge -ErrorAction Stop).ResolvedCommandName | Should -Be 'Join-OfficeExcelWorkbook'
+    }
+
     It 'preserves legacy Excel table data parameter aliases' {
         $path = Join-Path $TestDrive 'DslExcelTableDataAliases.xlsx'
         $rows = @(
