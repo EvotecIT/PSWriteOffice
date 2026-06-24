@@ -1,8 +1,10 @@
 # Excel Benchmarks
 
-`Compare-ExcelPerformance.ps1` compares PSWriteOffice against ImportExcel and ExcelFast across common PowerShell workbook workflows. It writes raw results, a summary, one-line comparison outputs, and metadata under `Ignore\Benchmarks\ExcelPerformance\Run-*`.
+`Compare-ExcelPerformance.ps1` compares PSWriteOffice against ImportExcel, ExcelFast, native PowerShell CSV commands, and CsvHelper across common PowerShell workbook and CSV workflows. It writes raw results, a summary, one-line comparison outputs, and metadata under `Ignore\Benchmarks\ExcelPerformance\Run-*`.
 
 The script uses published OfficeIMO packages by default by setting `OfficeIMORoot` to `.missing-officeimo`, so PSWriteOffice measures the package-mode path instead of a local OfficeIMO checkout.
+
+PSWriteOffice is built and imported from local development binaries for benchmark runs. The benchmark uses `-PSWriteOfficeConfiguration Release` by default so local source is compared in release mode; use `-PSWriteOfficeConfiguration Debug` for development diagnostics or `-SkipPSWriteOfficeBuild` only when intentionally reusing an existing build.
 
 This is the PowerShell/user-workflow scoreboard. .NET engine comparisons against ClosedXML, current EPPlus, legacy EPPlus, MiniExcel, LargeXlsx, ExcelDataReader, and Sylvan.Data.Excel live in the OfficeIMO benchmark harness. Keep the two views separate: PSWriteOffice measures cmdlet ergonomics and module-level workflows, while OfficeIMO measures raw engine/library paths.
 
@@ -88,11 +90,19 @@ Compare only selected engines:
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Engine PSWriteOffice,ExcelFast
 ```
 
+Measure CSV write/read and CSV-source-to-workbook conversion:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario csv-write,csv-read,csv-to-excel -RowCount 10000,100000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel,NativeCsv,CsvHelper
+```
+
+The CsvHelper lane is benchmark-only. It measures the cost of using CsvHelper from the same PowerShell-shaped object workflow as the other CSV lanes, so it is useful for user-facing comparison but should not be read as a pure typed C# CsvHelper microbenchmark.
+
 ## Scenario Suites
 
-`Smoke` is a quick confidence pass for default, table, and report workbook export/import paths.
+`Smoke` is a quick confidence pass for default workbook export/import paths plus CSV file write/read coverage.
 
-`Standard` covers the everyday decisions people make: default export, table export, no-table export, autofit, full-sheet import, range import, no-header reads, used-range DataTable reads, table/named-range metadata reads, append-to-existing-table workflows, update-existing-workbook workflows, wide objects, DataTable input, title/start-row/frozen-header exports, regional multi-sheet workbooks, many-small-sheet workbooks, formula summary sheets, chart-only and pivot-only workbooks, and a full report workbook with a table, freeze row, conditional formatting, validation, a chart, and a pivot table.
+`Standard` covers the everyday decisions people make: default export, table export, no-table export, autofit, full-sheet import, range import, no-header reads, used-range DataTable reads, table/named-range metadata reads, append-to-existing-table workflows, update-existing-workbook workflows, wide objects, DataTable input, CSV write/read, CSV-source-to-workbook conversion, title/start-row/frozen-header exports, regional multi-sheet workbooks, many-small-sheet workbooks, formula summary sheets, chart-only and pivot-only workbooks, and a full report workbook with a table, freeze row, conditional formatting, validation, a chart, and a pivot table.
 
 `Large` runs the broad workflow family at `25k`, `100k`, and `250k` rows, including the PSWriteOffice DataSet worksheet path.
 
@@ -144,7 +154,9 @@ OfficeIMO root, and output paths.
 
 The benchmark records failures as rows in `excel-performance-results.csv` instead of hiding them. That makes unsupported competitor scenarios visible without stopping the whole run.
 
-Install behavior is controlled by `-SkipImportExcelInstall` and `-SkipExcelFastInstall`. Without those switches, missing competitor modules are saved into the benchmark module cache under `Ignore`.
+Install behavior is controlled by `-SkipImportExcelInstall`, `-SkipExcelFastInstall`, and `-SkipCsvHelperInstall`. Without those switches, missing competitor modules are saved into the benchmark module cache under `Ignore`, and CsvHelper is restored into the normal NuGet package cache through a small restore project under `Ignore\Benchmarks\ExcelPerformance\Packages`. ExcelFast is currently consumed as a prerelease package when available from PSGallery; if installation fails, put ExcelFast on `PSModulePath` and rerun the selected lane.
+
+CsvHelper is not a PSWriteOffice runtime dependency. The benchmark loads the restored CsvHelper assembly only for selected CsvHelper runs and records its version in `metadata.json`.
 
 Workbook validation is enabled by default for export scenarios. Use
 `-SkipWorkbookValidation` only when you need raw timing without post-export
