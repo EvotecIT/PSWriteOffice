@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-22T09:00:08.8189330+00:00",
+  "generatedAt": "2026-06-24T06:54:51.4196508+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -59,6 +59,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalRuleCommand.cs#L18"
     },
     {
+      "name": "Add-OfficeExcelDashboardChart",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelDashboardChartCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelDashboardChartCommand.cs#L17"
+    },
+    {
       "name": "Add-OfficeExcelDataSet",
       "kind": "Cmdlet",
       "aliases": [],
@@ -83,12 +91,36 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelImageFromUrlCommand.cs#L18"
     },
     {
+      "name": "Add-OfficeExcelPackageMetadata",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPackageMetadataCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPackageMetadataCommand.cs#L20"
+    },
+    {
+      "name": "Add-OfficeExcelPageBreak",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPageBreakCommand.cs",
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPageBreakCommand.cs#L16"
+    },
+    {
       "name": "Add-OfficeExcelPivotTable",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPivotTableCommand.cs",
       "sourceLine": 32,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPivotTableCommand.cs#L32"
+    },
+    {
+      "name": "Add-OfficeExcelPowerQueryMetadata",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPowerQueryMetadataCommand.cs",
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelPowerQueryMetadataCommand.cs#L24"
     },
     {
       "name": "Add-OfficeExcelReportCallout",
@@ -147,12 +179,28 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSheetCommand.cs#L17"
     },
     {
+      "name": "Add-OfficeExcelSlicer",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSlicerCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSlicerCommand.cs#L20"
+    },
+    {
       "name": "Add-OfficeExcelSparkline",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSparklineCommand.cs",
       "sourceLine": 19,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSparklineCommand.cs#L19"
+    },
+    {
+      "name": "Add-OfficeExcelSubtotalSummary",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSubtotalSummaryCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelSubtotalSummaryCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelTable",
@@ -177,6 +225,22 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableRowCommand.cs",
       "sourceLine": 44,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTableRowCommand.cs#L44"
+    },
+    {
+      "name": "Add-OfficeExcelThreadedComment",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelThreadedCommentCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelThreadedCommentCommand.cs#L22"
+    },
+    {
+      "name": "Add-OfficeExcelTimeline",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTimelineCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelTimelineCommand.cs#L20"
     },
     {
       "name": "Add-OfficeExcelValidationCustomFormula",
@@ -963,6 +1027,46 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelAutoFilterCommand.cs#L16"
     },
     {
+      "name": "Clear-OfficeExcelComment",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelCommentCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelCommentCommand.cs#L20"
+    },
+    {
+      "name": "Clear-OfficeExcelConditionalFormatting",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelConditionalFormattingCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelConditionalFormattingCommand.cs#L18"
+    },
+    {
+      "name": "Clear-OfficeExcelDataValidation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelDataValidationCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelDataValidationCommand.cs#L18"
+    },
+    {
+      "name": "Clear-OfficeExcelPageBreak",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelPageBreakCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelPageBreakCommand.cs#L18"
+    },
+    {
+      "name": "Clear-OfficeExcelRange",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelRangeCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelRangeCommand.cs#L18"
+    },
+    {
       "name": "Clear-OfficePdfBackgroundShape",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1003,6 +1107,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/CompareOfficeExcelRangeCommand.cs",
       "sourceLine": 20,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/CompareOfficeExcelRangeCommand.cs#L20"
+    },
+    {
+      "name": "Compare-OfficeExcelWorkbook",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/CompareOfficeExcelWorkbookCommand.cs",
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/CompareOfficeExcelWorkbookCommand.cs#L24"
     },
     {
       "name": "ConvertFrom-OfficeMarkdownHtml",
@@ -1165,6 +1277,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelSheetCommand.cs#L23"
     },
     {
+      "name": "Copy-OfficeExcelWorkbook",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelWorkbookCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/CopyOfficeExcelWorkbookCommand.cs#L19"
+    },
+    {
       "name": "Copy-OfficePdfPage",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1195,8 +1315,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ExportOfficeExcelCommand.cs",
-      "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ExportOfficeExcelCommand.cs#L27"
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ExportOfficeExcelCommand.cs#L24"
     },
     {
       "name": "Export-OfficeVisioStencilPreviewGallery",
@@ -1352,12 +1472,68 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelCommand.cs#L18"
     },
     {
+      "name": "Get-OfficeExcelComment",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelCommentCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelCommentCommand.cs#L20"
+    },
+    {
+      "name": "Get-OfficeExcelCommentAudit",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelCommentAuditCommand.cs",
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelCommentAuditCommand.cs#L21"
+    },
+    {
+      "name": "Get-OfficeExcelConditionalFormatting",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelConditionalFormattingCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelConditionalFormattingCommand.cs#L18"
+    },
+    {
       "name": "Get-OfficeExcelData",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataCommand.cs",
       "sourceLine": 19,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataCommand.cs#L19"
+    },
+    {
+      "name": "Get-OfficeExcelDataModel",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataModelCommand.cs",
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataModelCommand.cs#L21"
+    },
+    {
+      "name": "Get-OfficeExcelDataValidation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataValidationCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDataValidationCommand.cs#L18"
+    },
+    {
+      "name": "Get-OfficeExcelDocumentProperty",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDocumentPropertyCommand.cs",
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelDocumentPropertyCommand.cs#L23"
+    },
+    {
+      "name": "Get-OfficeExcelFormulaAnalysis",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelFormulaAnalysisCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelFormulaAnalysisCommand.cs#L22"
     },
     {
       "name": "Get-OfficeExcelNamedRange",
@@ -1368,6 +1544,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelNamedRangeCommand.cs#L23"
     },
     {
+      "name": "Get-OfficeExcelPageBreak",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelPageBreakCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelPageBreakCommand.cs#L19"
+    },
+    {
       "name": "Get-OfficeExcelPivotTable",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1376,12 +1560,36 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelPivotTableCommand.cs#L24"
     },
     {
+      "name": "Get-OfficeExcelPreflight",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelPreflightCommand.cs",
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelPreflightCommand.cs#L21"
+    },
+    {
       "name": "Get-OfficeExcelRange",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRangeCommand.cs",
       "sourceLine": 23,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRangeCommand.cs#L23"
+    },
+    {
+      "name": "Get-OfficeExcelRichText",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRichTextCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRichTextCommand.cs#L19"
+    },
+    {
+      "name": "Get-OfficeExcelStreamingContract",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelStreamingContractCommand.cs",
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelStreamingContractCommand.cs#L23"
     },
     {
       "name": "Get-OfficeExcelSummary",
@@ -1400,12 +1608,28 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTableCommand.cs#L21"
     },
     {
+      "name": "Get-OfficeExcelTemplateMarker",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTemplateMarkerCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTemplateMarkerCommand.cs#L19"
+    },
+    {
       "name": "Get-OfficeExcelUsedRange",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelUsedRangeCommand.cs",
       "sourceLine": 23,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelUsedRangeCommand.cs#L23"
+    },
+    {
+      "name": "Get-OfficeExcelWorksheetView",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelWorksheetViewCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelWorksheetViewCommand.cs#L20"
     },
     {
       "name": "Get-OfficeMarkdown",
@@ -1828,8 +2052,16 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs",
-      "sourceLine": 22,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs#L22"
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs#L23"
+    },
+    {
+      "name": "Import-OfficeExcelDelimitedText",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelDelimitedTextCommand.cs",
+      "sourceLine": 26,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelDelimitedTextCommand.cs#L26"
     },
     {
       "name": "Import-OfficePowerPointSlide",
@@ -1866,6 +2098,38 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelSortCommand.cs#L25"
     },
     {
+      "name": "Invoke-OfficeExcelTemplate",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelTemplateCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelTemplateCommand.cs#L18"
+    },
+    {
+      "name": "Invoke-OfficeExcelTemplateOptionalRow",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelTemplateOptionalRowCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelTemplateOptionalRowCommand.cs#L19"
+    },
+    {
+      "name": "Invoke-OfficeExcelTemplateRow",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelTemplateRowCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelTemplateRowCommand.cs#L19"
+    },
+    {
+      "name": "Invoke-OfficeExcelTemplateSheet",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelTemplateSheetCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/InvokeOfficeExcelTemplateSheetCommand.cs#L20"
+    },
+    {
       "name": "Invoke-OfficeWordMailMerge",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1882,6 +2146,16 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/JoinOfficeExcelSheetCommand.cs",
       "sourceLine": 19,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/JoinOfficeExcelSheetCommand.cs#L19"
+    },
+    {
+      "name": "Join-OfficeExcelWorkbook",
+      "kind": "Cmdlet",
+      "aliases": [
+        "Merge-OfficeExcelWorkbook"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/JoinOfficeExcelWorkbookCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/JoinOfficeExcelWorkbookCommand.cs#L19"
     },
     {
       "name": "Join-OfficePdf",
@@ -1926,6 +2200,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelCommand.cs",
       "sourceLine": 20,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelCommand.cs#L20"
+    },
+    {
+      "name": "New-OfficeExcelDashboard",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelDashboardCommand.cs",
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelDashboardCommand.cs#L21"
     },
     {
       "name": "New-OfficeMarkdown",
@@ -1998,8 +2280,16 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ProtectOfficeExcelSheetCommand.cs",
-      "sourceLine": 16,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ProtectOfficeExcelSheetCommand.cs#L16"
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ProtectOfficeExcelSheetCommand.cs#L17"
+    },
+    {
+      "name": "Protect-OfficeExcelWorkbook",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ProtectOfficeExcelWorkbookCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ProtectOfficeExcelWorkbookCommand.cs#L20"
     },
     {
       "name": "Protect-OfficeWordDocument",
@@ -2016,6 +2306,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelCommentCommand.cs",
       "sourceLine": 16,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelCommentCommand.cs#L16"
+    },
+    {
+      "name": "Remove-OfficeExcelNamedRange",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelNamedRangeCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelNamedRangeCommand.cs#L20"
     },
     {
       "name": "Remove-OfficePdfPage",
@@ -2042,12 +2340,28 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/RemoveOfficeWordTableOfContentCommand.cs#L18"
     },
     {
+      "name": "Rename-OfficeExcelNamedRange",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/RenameOfficeExcelNamedRangeCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/RenameOfficeExcelNamedRangeCommand.cs#L20"
+    },
+    {
       "name": "Rename-OfficePowerPointSection",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/RenameOfficePowerPointSectionCommand.cs",
       "sourceLine": 21,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/RenameOfficePowerPointSectionCommand.cs#L21"
+    },
+    {
+      "name": "Repair-OfficeExcelWorkbook",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/RepairOfficeExcelWorkbookCommand.cs",
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/RepairOfficeExcelWorkbookCommand.cs#L23"
     },
     {
       "name": "Save-OfficeExcel",
@@ -2098,6 +2412,22 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/SaveOfficeWordCommand.cs#L20"
     },
     {
+      "name": "Set-OfficeExcelActiveSheet",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelActiveSheetCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelActiveSheetCommand.cs#L20"
+    },
+    {
+      "name": "Set-OfficeExcelAutoFilter",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelAutoFilterCommand.cs",
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelAutoFilterCommand.cs#L16"
+    },
+    {
       "name": "Set-OfficeExcelCell",
       "kind": "Cmdlet",
       "aliases": [],
@@ -2128,6 +2458,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartLegendCommand.cs",
       "sourceLine": 17,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartLegendCommand.cs#L17"
+    },
+    {
+      "name": "Set-OfficeExcelChartPoint",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartPointCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartPointCommand.cs#L17"
     },
     {
       "name": "Set-OfficeExcelChartSeries",
@@ -2162,12 +2500,44 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnCommand.cs#L18"
     },
     {
+      "name": "Set-OfficeExcelColumnGroup",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnGroupCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnGroupCommand.cs#L18"
+    },
+    {
       "name": "Set-OfficeExcelColumnStyleByHeader",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnStyleByHeaderCommand.cs",
       "sourceLine": 24,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelColumnStyleByHeaderCommand.cs#L24"
+    },
+    {
+      "name": "Set-OfficeExcelDataValidationMessage",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelDataValidationMessageCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelDataValidationMessageCommand.cs#L22"
+    },
+    {
+      "name": "Set-OfficeExcelDateSystem",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelDateSystemCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelDateSystemCommand.cs#L17"
+    },
+    {
+      "name": "Set-OfficeExcelDocumentProperty",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelDocumentPropertyCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelDocumentPropertyCommand.cs#L20"
     },
     {
       "name": "Set-OfficeExcelExecutionPolicy",
@@ -2282,6 +2652,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintAreaCommand.cs#L20"
     },
     {
+      "name": "Set-OfficeExcelPrintLayout",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintLayoutCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintLayoutCommand.cs#L18"
+    },
+    {
       "name": "Set-OfficeExcelPrintTitles",
       "kind": "Cmdlet",
       "aliases": [],
@@ -2290,12 +2668,44 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelPrintTitlesCommand.cs#L21"
     },
     {
+      "name": "Set-OfficeExcelRefreshOnOpen",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRefreshOnOpenCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRefreshOnOpenCommand.cs#L19"
+    },
+    {
+      "name": "Set-OfficeExcelRichText",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRichTextCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRichTextCommand.cs#L18"
+    },
+    {
       "name": "Set-OfficeExcelRow",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRowCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRowCommand.cs#L18"
+    },
+    {
+      "name": "Set-OfficeExcelRowGroup",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRowGroupCommand.cs",
       "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRowCommand.cs#L17"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelRowGroupCommand.cs#L17"
+    },
+    {
+      "name": "Set-OfficeExcelSheetTabColor",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSheetTabColorCommand.cs",
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSheetTabColorCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelSheetVisibility",
@@ -2314,6 +2724,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelSmartHyperlinkCommand.cs#L16"
     },
     {
+      "name": "Set-OfficeExcelTheme",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelThemeCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelThemeCommand.cs#L20"
+    },
+    {
       "name": "Set-OfficeExcelUrlLinks",
       "kind": "Cmdlet",
       "aliases": [],
@@ -2328,6 +2746,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelUrlLinksByHeaderCommand.cs",
       "sourceLine": 18,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelUrlLinksByHeaderCommand.cs#L18"
+    },
+    {
+      "name": "Set-OfficeExcelWorksheetView",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelWorksheetViewCommand.cs",
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelWorksheetViewCommand.cs#L16"
     },
     {
       "name": "Set-OfficePdfBackground",
@@ -2634,12 +3060,52 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SplitOfficePdfCommand.cs#L19"
     },
     {
+      "name": "Test-OfficeExcelAccessibility",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/TestOfficeExcelAccessibilityCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/TestOfficeExcelAccessibilityCommand.cs#L22"
+    },
+    {
+      "name": "Test-OfficeExcelTemplateBinding",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/TestOfficeExcelTemplateBindingCommand.cs",
+      "sourceLine": 26,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/TestOfficeExcelTemplateBindingCommand.cs#L26"
+    },
+    {
+      "name": "Test-OfficeExcelWorkbook",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/TestOfficeExcelWorkbookCommand.cs",
+      "sourceLine": 25,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/TestOfficeExcelWorkbookCommand.cs#L25"
+    },
+    {
       "name": "Unprotect-OfficeExcelSheet",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/UnprotectOfficeExcelSheetCommand.cs",
       "sourceLine": 16,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/UnprotectOfficeExcelSheetCommand.cs#L16"
+    },
+    {
+      "name": "Unprotect-OfficeExcelWorkbook",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/UnprotectOfficeExcelWorkbookCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/UnprotectOfficeExcelWorkbookCommand.cs#L20"
+    },
+    {
+      "name": "Update-OfficeExcelComment",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/UpdateOfficeExcelCommentCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/UpdateOfficeExcelCommentCommand.cs#L20"
     },
     {
       "name": "Update-OfficeExcelText",
