@@ -541,9 +541,6 @@ Finds Word tables containing matching cell text.
 ### [Get-OfficeCsv](Get-OfficeCsv.md)
 Loads a CSV document from disk or parses CSV text.
 
-### [Get-OfficeCsvData](Get-OfficeCsvData.md)
-Reads CSV rows as PSCustomObjects or dictionaries.
-
 ### [Get-OfficeDocument](Get-OfficeDocument.md)
 Reads a supported file into the OfficeIMO shared document read result envelope.
 
@@ -819,6 +816,9 @@ Gets the table of contents from a Word document.
 
 ### [Get-OfficeWordText](Get-OfficeWordText.md)
 Gets text segments from Word paragraphs.
+
+### [Import-OfficeCsv](Import-OfficeCsv.md)
+Imports CSV rows as PSCustomObjects or dictionaries.
 
 ### [Import-OfficeExcel](Import-OfficeExcel.md)
 Imports rows from an Excel workbook as PowerShell objects.

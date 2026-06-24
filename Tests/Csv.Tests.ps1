@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
         $env:PSWRITEOFFICE_MODULE_MANIFEST
     } else {
@@ -23,12 +23,18 @@ Describe 'CSV cmdlets' {
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
-        (Get-Command Get-OfficeCsvData).Parameters.Keys | Should -Contain 'NoHeader'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
 
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Not -Contain 'HasHeaderRow'
-        (Get-Command Get-OfficeCsvData).Parameters.Keys | Should -Not -Contain 'HasHeaderRow'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Not -Contain 'HasHeaderRow'
+    }
+
+    It 'exposes CSV row import with idiomatic command names' {
+        (Get-Command Import-OfficeCsv).CommandType | Should -Be 'Cmdlet'
+        (Get-Command Get-OfficeCsvData).ResolvedCommandName | Should -Be 'Import-OfficeCsv'
+        (Get-Command ConvertFrom-OfficeCsv).ResolvedCommandName | Should -Be 'Import-OfficeCsv'
     }
 
     It 'converts objects to CSV and reads them back' {
@@ -46,7 +52,7 @@ Describe 'CSV cmdlets' {
 
         Test-Path $path | Should -BeTrue
 
-        $data = Get-OfficeCsvData -Path $path
+        $data = Import-OfficeCsv -Path $path
         $data.Count | Should -Be 2
         $data[0].Region | Should -Be 'NA'
     }
@@ -75,7 +81,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'culture-read.csv'
         Set-Content -LiteralPath $path -Value "Name;Value`nAlpha;1" -Encoding UTF8
 
-        $data = Get-OfficeCsvData -Path $path -UseCulture -Culture $culture
+        $data = Import-OfficeCsv -Path $path -UseCulture -Culture $culture
 
         $data.Count | Should -Be 1
         $data[0].Name | Should -Be 'Alpha'
@@ -87,7 +93,7 @@ Describe 'CSV cmdlets' {
         Set-Content -LiteralPath $path -Value "Field1;Field2;Field3`n1,2,3,4;5,6,7,8;9,10,11,12" -Encoding UTF8
 
         $document = Get-OfficeCsv -Path $path -DetectDelimiter
-        $data = Get-OfficeCsvData -Path $path -DetectDelimiter
+        $data = Import-OfficeCsv -Path $path -DetectDelimiter
 
         $document.Delimiter | Should -Be ';'
         $document.Header | Should -Be @('Field1', 'Field2', 'Field3')
@@ -100,6 +106,14 @@ Describe 'CSV cmdlets' {
         $document.Delimiter | Should -Be '|'
         $row = @($document.AsEnumerable())[0]
         $row['Value'] | Should -Be '1'
+    }
+
+    It 'converts CSV text directly into row objects' {
+        $data = ConvertFrom-OfficeCsv -Text "Name|Value`nAlpha|1" -DetectDelimiter -DelimiterCandidates ';', '|'
+
+        $data.Count | Should -Be 1
+        $data[0].Name | Should -Be 'Alpha'
+        $data[0].Value | Should -Be '1'
     }
 
     It 'loads CSV documents from literal paths' {
@@ -116,8 +130,8 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'whitespace.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,  spaced  " -Encoding UTF8
 
-        $default = Get-OfficeCsvData -Path $path
-        $trimmed = Get-OfficeCsvData -Path $path -TrimWhitespace:$true
+        $default = Import-OfficeCsv -Path $path
+        $trimmed = Import-OfficeCsv -Path $path -TrimWhitespace:$true
 
         $default[0].Value | Should -Be '  spaced  '
         $trimmed[0].Value | Should -Be 'spaced'
@@ -127,7 +141,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'explicit-header.csv'
         Set-Content -LiteralPath $path -Value "Alpha,1`nBeta,2" -Encoding UTF8
 
-        $data = Get-OfficeCsvData -Path $path -Header Name, Value
+        $data = Import-OfficeCsv -Path $path -Header Name, Value
 
         $data.Count | Should -Be 2
         $data[0].Name | Should -Be 'Alpha'
@@ -138,7 +152,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'no-header-read.csv'
         Set-Content -LiteralPath $path -Value "Alpha,1`nBeta,2" -Encoding UTF8
 
-        $data = Get-OfficeCsvData -Path $path -NoHeader
+        $data = Import-OfficeCsv -Path $path -NoHeader
         $document = Get-OfficeCsv -Path $path -NoHeader
 
         $data.Count | Should -Be 2
@@ -152,7 +166,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'uneven.csv'
         Set-Content -LiteralPath $path -Value "Name,,Value`nAlpha,Ignored`nBeta,Ignored,2,Extra" -Encoding UTF8
 
-        $data = Get-OfficeCsvData -Path $path
+        $data = Import-OfficeCsv -Path $path
 
         $data.Count | Should -Be 2
         $data[0].H1 | Should -Be 'Ignored'
@@ -164,7 +178,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'strict-uneven.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha" -Encoding UTF8
 
-        { Get-OfficeCsvData -Path $path -ColumnCountMismatchPolicy Strict } | Should -Throw
+        { Import-OfficeCsv -Path $path -ColumnCountMismatchPolicy Strict } | Should -Throw
     }
 
     It 'recognizes W3C fields headers when loading CSV documents' {
@@ -187,7 +201,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'comments.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`n# ignored`nBeta,2" -Encoding UTF8
 
-        $data = Get-OfficeCsvData -Path $path -SkipCommentRows
+        $data = Import-OfficeCsv -Path $path -SkipCommentRows
 
         $data.Count | Should -Be 2
         $data[0].Name | Should -Be 'Alpha'
@@ -198,7 +212,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'custom-comments.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`n; ignored`nBeta,2" -Encoding UTF8
 
-        $data = Get-OfficeCsvData -Path $path -SkipCommentRows -CommentCharacter ';'
+        $data = Import-OfficeCsv -Path $path -SkipCommentRows -CommentCharacter ';'
 
         $data.Count | Should -Be 2
         $data[1].Name | Should -Be 'Beta'

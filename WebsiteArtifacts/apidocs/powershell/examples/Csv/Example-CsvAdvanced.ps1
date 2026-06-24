@@ -17,4 +17,4 @@ $rows = @(
 $rows | Export-OfficeCsv -Path $path -Delimiter ';'
 
 Write-Host "CSV saved to $path"
-Get-OfficeCsvData -Path $path -Delimiter ';' -AsHashtable | Format-Table
+Import-OfficeCsv -Path $path -Delimiter ';' -AsHashtable | Format-Table

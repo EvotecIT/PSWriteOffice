@@ -15,5 +15,5 @@ $rows = @(
 
 $rows | Export-OfficeCsv -Path $path
 
-$data = Get-OfficeCsvData -Path $path
+$data = Import-OfficeCsv -Path $path
 $data | Format-Table

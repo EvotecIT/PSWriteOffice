@@ -731,7 +731,7 @@ function Get-ExcelBenchmarkScenarios {
         param($Context)
 
         switch ($Context.Engine) {
-            'PSWriteOffice' { Get-OfficeCsvData -Path $Context.Path }
+            'PSWriteOffice' { Import-OfficeCsv -Path $Context.Path }
             'NativeCsv' { Import-Csv -Path $Context.Path }
             'CsvHelper' { Read-CsvHelperFile -Path $Context.Path }
         }

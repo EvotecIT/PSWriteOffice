@@ -11,42 +11,22 @@ Exports objects or a CSV document to a CSV file.
 ## SYNTAX
 ### InputObjectPathDelimiter (Default)
 ```powershell
-Export-OfficeCsv [-Path] <string> [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputObjectPathCulture
 ```powershell
-Export-OfficeCsv [-Path] <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### InputObjectPathDelimiterQuoteFields
-```powershell
-Export-OfficeCsv [-Path] <string> -QuoteFields <string[]> [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### InputObjectPathCultureQuoteFields
-```powershell
-Export-OfficeCsv [-Path] <string> -UseCulture -QuoteFields <string[]> [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DocumentPathDelimiter
 ```powershell
-Export-OfficeCsv [-Path] <string> -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DocumentPathCulture
 ```powershell
-Export-OfficeCsv [-Path] <string> -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### DocumentPathDelimiterQuoteFields
-```powershell
-Export-OfficeCsv [-Path] <string> -Document <CsvDocument> -QuoteFields <string[]> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### DocumentPathCultureQuoteFields
-```powershell
-Export-OfficeCsv [-Path] <string> -Document <CsvDocument> -UseCulture -QuoteFields <string[]> [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -75,7 +55,7 @@ Culture used for value formatting.
 
 ```yaml
 Type: CultureInfo
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields, DocumentPathDelimiter, DocumentPathCulture, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, DocumentPathDelimiter, DocumentPathCulture
 Aliases: None
 Possible values:
 
@@ -91,7 +71,7 @@ Field delimiter character.
 
 ```yaml
 Type: Char
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathDelimiterQuoteFields, DocumentPathDelimiter, DocumentPathDelimiterQuoteFields
+Parameter Sets: InputObjectPathDelimiter, DocumentPathDelimiter
 Aliases: None
 Possible values:
 
@@ -107,7 +87,7 @@ CSV document to export.
 
 ```yaml
 Type: CsvDocument
-Parameter Sets: DocumentPathDelimiter, DocumentPathCulture, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: DocumentPathDelimiter, DocumentPathCulture
 Aliases: None
 Possible values:
 
@@ -123,7 +103,7 @@ Encoding used when writing files.
 
 ```yaml
 Type: Encoding
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields, DocumentPathDelimiter, DocumentPathCulture, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, DocumentPathDelimiter, DocumentPathCulture
 Aliases: None
 Possible values:
 
@@ -139,7 +119,7 @@ Controls how formula-like values are written.
 
 ```yaml
 Type: CsvFormulaInjectionPolicy
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields, DocumentPathDelimiter, DocumentPathCulture, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, DocumentPathDelimiter, DocumentPathCulture
 Aliases: None
 Possible values: Preserve, Escape
 
@@ -155,7 +135,7 @@ Objects to export into CSV rows.
 
 ```yaml
 Type: Object
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture
 Aliases: None
 Possible values:
 
@@ -171,7 +151,7 @@ Override the newline sequence.
 
 ```yaml
 Type: String
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields, DocumentPathDelimiter, DocumentPathCulture, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, DocumentPathDelimiter, DocumentPathCulture
 Aliases: None
 Possible values:
 
@@ -187,7 +167,7 @@ Omit the header row from the output.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields, DocumentPathDelimiter, DocumentPathCulture, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, DocumentPathDelimiter, DocumentPathCulture
 Aliases: None
 Possible values:
 
@@ -203,7 +183,7 @@ Emit a FileInfo for the exported file.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields, DocumentPathDelimiter, DocumentPathCulture, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, DocumentPathDelimiter, DocumentPathCulture
 Aliases: None
 Possible values:
 
@@ -219,7 +199,7 @@ Destination CSV path.
 
 ```yaml
 Type: String
-Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields, DocumentPathDelimiter, DocumentPathCulture, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, DocumentPathDelimiter, DocumentPathCulture
 Aliases: FilePath, OutputPath, OutPath
 Possible values:
 
@@ -235,11 +215,11 @@ Field names that should always be quoted when UseQuotes is AsNeeded.
 
 ```yaml
 Type: String[]
-Parameter Sets: InputObjectPathDelimiterQuoteFields, InputObjectPathCultureQuoteFields, DocumentPathDelimiterQuoteFields, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, DocumentPathDelimiter, DocumentPathCulture
 Aliases: None
 Possible values:
 
-Required: True
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -251,7 +231,7 @@ Use the list separator from the selected or current culture as the delimiter.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: InputObjectPathCulture, InputObjectPathCultureQuoteFields, DocumentPathCulture, DocumentPathCultureQuoteFields
+Parameter Sets: InputObjectPathCulture, DocumentPathCulture
 Aliases: None
 Possible values:
 

@@ -11,42 +11,22 @@ Converts objects or a CSV document into CSV text.
 ## SYNTAX
 ### InputObjectDelimiter (Default)
 ```powershell
-ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [<CommonParameters>]
+ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [<CommonParameters>]
 ```
 
 ### DocumentDelimiter
 ```powershell
-ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [<CommonParameters>]
+ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [<CommonParameters>]
 ```
 
 ### DocumentCulture
 ```powershell
-ConvertTo-OfficeCsv -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [<CommonParameters>]
-```
-
-### DocumentDelimiterQuoteFields
-```powershell
-ConvertTo-OfficeCsv -Document <CsvDocument> -QuoteFields <string[]> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [<CommonParameters>]
-```
-
-### DocumentCultureQuoteFields
-```powershell
-ConvertTo-OfficeCsv -Document <CsvDocument> -UseCulture -QuoteFields <string[]> [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [<CommonParameters>]
+ConvertTo-OfficeCsv -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [<CommonParameters>]
 ```
 
 ### InputObjectCulture
 ```powershell
-ConvertTo-OfficeCsv -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [<CommonParameters>]
-```
-
-### InputObjectDelimiterQuoteFields
-```powershell
-ConvertTo-OfficeCsv -QuoteFields <string[]> [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [<CommonParameters>]
-```
-
-### InputObjectCultureQuoteFields
-```powershell
-ConvertTo-OfficeCsv -UseCulture -QuoteFields <string[]> [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [<CommonParameters>]
+ConvertTo-OfficeCsv -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -86,7 +66,7 @@ Culture used for value formatting.
 
 ```yaml
 Type: CultureInfo
-Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values:
 
@@ -102,7 +82,7 @@ Field delimiter character.
 
 ```yaml
 Type: Char
-Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentDelimiterQuoteFields, InputObjectDelimiterQuoteFields
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter
 Aliases: None
 Possible values:
 
@@ -118,7 +98,7 @@ CSV document to serialize.
 
 ```yaml
 Type: CsvDocument
-Parameter Sets: DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields
+Parameter Sets: DocumentDelimiter, DocumentCulture
 Aliases: None
 Possible values:
 
@@ -134,7 +114,7 @@ Encoding carried into the CSV save options.
 
 ```yaml
 Type: Encoding
-Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values:
 
@@ -150,7 +130,7 @@ Controls how formula-like values are written.
 
 ```yaml
 Type: CsvFormulaInjectionPolicy
-Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values: Preserve, Escape
 
@@ -166,7 +146,7 @@ Objects to convert into CSV rows.
 
 ```yaml
 Type: Object
-Parameter Sets: InputObjectDelimiter, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
+Parameter Sets: InputObjectDelimiter, InputObjectCulture
 Aliases: None
 Possible values:
 
@@ -182,7 +162,7 @@ Override the newline sequence.
 
 ```yaml
 Type: String
-Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values:
 
@@ -198,7 +178,7 @@ Omit the header row from the output.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values:
 
@@ -214,11 +194,11 @@ Field names that should always be quoted when UseQuotes is AsNeeded.
 
 ```yaml
 Type: String[]
-Parameter Sets: DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values:
 
-Required: True
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -230,7 +210,7 @@ Use the list separator from the selected or current culture as the delimiter.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: DocumentCulture, DocumentCultureQuoteFields, InputObjectCulture, InputObjectCultureQuoteFields
+Parameter Sets: DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values:
 
