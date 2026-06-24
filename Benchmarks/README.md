@@ -104,6 +104,8 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
 
 The CsvHelper lane is benchmark-only. It measures the cost of using CsvHelper from the same PowerShell-shaped object workflow as the other CSV lanes, so it is useful for user-facing comparison but should not be read as a pure typed C# CsvHelper microbenchmark.
 
+The NativeCsv write lane uses `Export-Csv -UseQuotes AsNeeded` so it is compared against PSWriteOffice's default compact CSV output instead of PowerShell's legacy quote-every-field default.
+
 ## Scenario Suites
 
 `Smoke` is a quick confidence pass for default workbook export/import paths plus CSV file write/read coverage.
