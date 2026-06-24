@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Excel;
@@ -108,17 +109,17 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
             return;
         }
 
-        var existing = sheet.GetDataValidations(targetRange).FirstOrDefault();
+        var displayState = ExcelDataValidationMessageDisplayState.Capture(sheet, targetRange);
+        var existing = GetFirstDataValidation(sheet, targetRange);
         var promptTitle = ResolveMessageValue(nameof(PromptTitle), PromptTitle, existing?.PromptTitle);
         var prompt = ResolveMessageValue(nameof(Prompt), Prompt, existing?.Prompt);
         var errorTitle = ResolveMessageValue(nameof(ErrorTitle), ErrorTitle, existing?.ErrorTitle);
         var errorMessage = ResolveMessageValue(nameof(ErrorMessage), ErrorMessage, existing?.Error);
-        var displayState = ExcelDataValidationMessageDisplayState.Capture(sheet, targetRange);
         bool? boundShowInputMessage = ResolveBoundDisplayFlag(nameof(ShowInputMessage), ShowInputMessage);
         bool? boundShowErrorMessage = ResolveBoundDisplayFlag(nameof(ShowErrorMessage), ShowErrorMessage);
-        bool showInputMessage = boundShowInputMessage ?? ResolveUnboundDisplayFlag(displayState.FirstShowInputMessage, displayState.FirstHasInputMessageText, promptTitle, prompt);
-        bool showErrorMessage = boundShowErrorMessage ?? ResolveUnboundDisplayFlag(displayState.FirstShowErrorMessage, displayState.FirstHasErrorMessageText, errorTitle, errorMessage);
-        sheet.SetDataValidationMessages(targetRange, new ExcelDataValidationMessageOptions
+        bool showInputMessage = boundShowInputMessage ?? HasMessageText(promptTitle, prompt);
+        bool showErrorMessage = boundShowErrorMessage ?? HasMessageText(errorTitle, errorMessage);
+        SetDataValidationMessages(sheet, targetRange, new ExcelDataValidationMessageOptions
         {
             PromptTitle = promptTitle,
             Prompt = prompt,
@@ -130,10 +131,14 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
         displayState.Restore(
             sheet,
             targetRange,
-            !MyInvocation.BoundParameters.ContainsKey(nameof(PromptTitle)),
-            !MyInvocation.BoundParameters.ContainsKey(nameof(Prompt)),
-            !MyInvocation.BoundParameters.ContainsKey(nameof(ErrorTitle)),
-            !MyInvocation.BoundParameters.ContainsKey(nameof(ErrorMessage)),
+            promptTitle,
+            MyInvocation.BoundParameters.ContainsKey(nameof(PromptTitle)),
+            prompt,
+            MyInvocation.BoundParameters.ContainsKey(nameof(Prompt)),
+            errorTitle,
+            MyInvocation.BoundParameters.ContainsKey(nameof(ErrorTitle)),
+            errorMessage,
+            MyInvocation.BoundParameters.ContainsKey(nameof(ErrorMessage)),
             boundShowInputMessage,
             boundShowErrorMessage);
 
@@ -144,7 +149,7 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
             var path = string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)
                 ? InputPath
                 : null;
-            foreach (var validation in sheet.GetDataValidations(targetRange).Select(validation => ExcelRuleRecordService.CreateDataValidationRecord(validation, sheet.Name, path)))
+            foreach (var validation in GetDataValidations(sheet, targetRange).Select(validation => ExcelRuleRecordService.CreateDataValidationRecord(validation, sheet.Name, path)))
             {
                 WriteObject(validation);
             }
@@ -173,13 +178,43 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
             : null;
     }
 
-    private static bool ResolveUnboundDisplayFlag(bool? existingDisplayFlag, bool existingHadMessageText, string? title, string? message)
+    private static bool HasMessageText(string? title, string? message)
+        => !string.IsNullOrEmpty(title) || !string.IsNullOrEmpty(message);
+
+    private static ExcelDataValidationInfo? GetFirstDataValidation(ExcelSheet sheet, string targetRange)
+        => GetDataValidations(sheet, targetRange).FirstOrDefault();
+
+    private static IReadOnlyList<ExcelDataValidationInfo> GetDataValidations(ExcelSheet sheet, string targetRange)
     {
-        if (existingHadMessageText)
+        try
         {
-            return existingDisplayFlag ?? false;
+            var filtered = sheet.GetDataValidations(targetRange);
+            if (filtered.Count > 0)
+            {
+                return filtered;
+            }
+        }
+        catch (ArgumentException)
+        {
         }
 
-        return !string.IsNullOrEmpty(title) || !string.IsNullOrEmpty(message);
+        return sheet.GetDataValidations()
+            .Where(validation => ExcelDataValidationMessageDisplayState.ReferenceListOverlapsTarget(validation.Range, targetRange))
+            .ToArray();
+    }
+
+    private static void SetDataValidationMessages(ExcelSheet sheet, string targetRange, ExcelDataValidationMessageOptions options)
+    {
+        try
+        {
+            sheet.SetDataValidationMessages(targetRange, options);
+        }
+        catch (ArgumentException)
+        {
+            if (!GetDataValidations(sheet, targetRange).Any())
+            {
+                throw;
+            }
+        }
     }
 }

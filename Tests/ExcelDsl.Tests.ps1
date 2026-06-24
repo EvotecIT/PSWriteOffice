@@ -2788,6 +2788,76 @@ Describe 'Excel DSL surface' {
         $secondRule.Error | Should -Be 'South error'
     }
 
+    It 'preserves data validation display flags per matched rule' {
+        $path = Join-Path $TestDrive 'DslExcelDataValidationMessages.PerRuleFlags.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100 }
+            [PSCustomObject]@{ Region = 'EMEA'; Sales = 200 }
+            [PSCustomObject]@{ Region = 'APAC'; Sales = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+                Add-OfficeExcelValidationWholeNumber -Range 'B2:B3' -Operator Between -Formula1 1 -Formula2 1000
+                Add-OfficeExcelValidationWholeNumber -Range 'B4:B4' -Operator Between -Formula1 1 -Formula2 1000
+            }
+        }
+
+        Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range 'B2:B3' -PromptTitle 'Hidden sales' -Prompt 'Keep this hidden' -ShowInputMessage:$false
+
+        $updated = @(Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range 'B2:B4' -Prompt 'Shared prompt' -PassThru)
+        $updated.Count | Should -Be 2
+
+        $worksheet = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $validations = @($worksheet.GetElementsByTagName('dataValidation', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'))
+        $hiddenRule = @($validations | Where-Object { $_.sqref -eq 'B2:B3' })[0]
+        $newMessageRule = @($validations | Where-Object { $_.sqref -eq 'B4:B4' })[0]
+
+        $hiddenRule.promptTitle | Should -Be 'Hidden sales'
+        $hiddenRule.prompt | Should -Be 'Shared prompt'
+        $hiddenRule.showInputMessage | Should -Match '^(0|false)$'
+        $newMessageRule.promptTitle | Should -BeNullOrEmpty
+        $newMessageRule.prompt | Should -Be 'Shared prompt'
+        $newMessageRule.showInputMessage | Should -Match '^(1|true)$'
+    }
+
+    It 'updates message display state for full-column and full-row validation ranges' {
+        $path = Join-Path $TestDrive 'DslExcelDataValidationMessages.FullRanges.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Region = 'NA'; Sales = 100; Status = 'New' }
+            [PSCustomObject]@{ Region = 'EMEA'; Sales = 200; Status = 'Done' }
+            [PSCustomObject]@{ Region = 'APAC'; Sales = 150; Status = 'New' }
+            [PSCustomObject]@{ Region = 'LATAM'; Sales = 250; Status = 'Done' }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales'
+                Add-OfficeExcelValidationWholeNumber -Range 'B2:B5' -Operator Between -Formula1 1 -Formula2 1000
+                Add-OfficeExcelValidationList -Range 'C5:D5' -Values 'New','Done'
+            }
+        }
+
+        $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $worksheetXml = $worksheetXml -replace 'sqref="B2:B5"', 'sqref="B:B"'
+        $worksheetXml = $worksheetXml -replace 'sqref="C5:D5"', 'sqref="5:5"'
+        Set-XlsxEntryTextLocal -Path $path -Entry 'xl/worksheets/sheet1.xml' -Text $worksheetXml
+
+        Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range 'B:B' -Prompt 'Whole column prompt'
+        Set-OfficeExcelDataValidationMessage -Path $path -Sheet Data -Range '5:5' -ErrorMessage 'Whole row error'
+
+        $worksheet = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $validations = @($worksheet.GetElementsByTagName('dataValidation', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'))
+        $columnRule = @($validations | Where-Object { $_.sqref -eq 'B:B' })[0]
+        $rowRule = @($validations | Where-Object { $_.sqref -eq '5:5' })[0]
+
+        $columnRule.prompt | Should -Be 'Whole column prompt'
+        $columnRule.showInputMessage | Should -Match '^(1|true)$'
+        $rowRule.error | Should -Be 'Whole row error'
+        $rowRule.showErrorMessage | Should -Match '^(1|true)$'
+    }
+
     It 'clears range contents and attached metadata through a thin range command' {
         $path = Join-Path $TestDrive 'DslExcelRangeClear.xlsx'
         $rows = @(

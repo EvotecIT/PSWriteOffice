@@ -12,6 +12,8 @@ internal sealed class ExcelDataValidationMessageDisplayState
     // OfficeIMO 0.6.48 updates message text through a public API, but it does not expose
     // the existing showInputMessage/showErrorMessage flags in its validation snapshot.
     private static readonly PropertyInfo? WorksheetRootProperty = typeof(ExcelSheet).GetProperty("WorksheetRoot", BindingFlags.Instance | BindingFlags.NonPublic);
+    private const int MaxExcelRow = 1048576;
+    private const int MaxExcelColumn = 16384;
 
     private readonly List<DataValidationDisplaySnapshot> _snapshots;
 
@@ -19,14 +21,6 @@ internal sealed class ExcelDataValidationMessageDisplayState
     {
         _snapshots = snapshots;
     }
-
-    public bool? FirstShowInputMessage => _snapshots.Count == 0 ? null : _snapshots[0].ShowInputMessage ?? false;
-
-    public bool? FirstShowErrorMessage => _snapshots.Count == 0 ? null : _snapshots[0].ShowErrorMessage ?? false;
-
-    public bool FirstHasInputMessageText => _snapshots.Count > 0 && _snapshots[0].HasInputMessageText;
-
-    public bool FirstHasErrorMessageText => _snapshots.Count > 0 && _snapshots[0].HasErrorMessageText;
 
     public static ExcelDataValidationMessageDisplayState Capture(ExcelSheet sheet, string targetRange)
     {
@@ -62,13 +56,20 @@ internal sealed class ExcelDataValidationMessageDisplayState
         return new ExcelDataValidationMessageDisplayState(snapshots);
     }
 
+    public static bool ReferenceListOverlapsTarget(string referenceList, string targetRange)
+        => ReferenceListOverlaps(referenceList, ParseReferenceArgument(targetRange));
+
     public void Restore(
         ExcelSheet sheet,
         string targetRange,
-        bool restorePromptTitle,
-        bool restorePrompt,
-        bool restoreErrorTitle,
-        bool restoreError,
+        string? promptTitle,
+        bool setPromptTitle,
+        string? prompt,
+        bool setPrompt,
+        string? errorTitle,
+        bool setErrorTitle,
+        string? error,
+        bool setError,
         bool? showInputMessage,
         bool? showErrorMessage)
     {
@@ -97,29 +98,44 @@ internal sealed class ExcelDataValidationMessageDisplayState
             }
 
             DataValidationDisplaySnapshot? snapshot = snapshotIndex >= 0 ? _snapshots[snapshotIndex] : null;
-            if (snapshot != null)
+            if (setPromptTitle)
             {
-                if (restorePromptTitle)
-                {
-                    changed |= SetString(validation, MessageField.PromptTitle, snapshot.PromptTitle);
-                }
-
-                if (restorePrompt)
-                {
-                    changed |= SetString(validation, MessageField.Prompt, snapshot.Prompt);
-                }
-
-                if (restoreErrorTitle)
-                {
-                    changed |= SetString(validation, MessageField.ErrorTitle, snapshot.ErrorTitle);
-                }
-
-                if (restoreError)
-                {
-                    changed |= SetString(validation, MessageField.Error, snapshot.Error);
-                }
+                changed |= SetString(validation, MessageField.PromptTitle, promptTitle);
+            }
+            else if (snapshot != null)
+            {
+                changed |= SetString(validation, MessageField.PromptTitle, snapshot.PromptTitle);
             }
 
+            if (setPrompt)
+            {
+                changed |= SetString(validation, MessageField.Prompt, prompt);
+            }
+            else if (snapshot != null)
+            {
+                changed |= SetString(validation, MessageField.Prompt, snapshot.Prompt);
+            }
+
+            if (setErrorTitle)
+            {
+                changed |= SetString(validation, MessageField.ErrorTitle, errorTitle);
+            }
+            else if (snapshot != null)
+            {
+                changed |= SetString(validation, MessageField.ErrorTitle, snapshot.ErrorTitle);
+            }
+
+            if (setError)
+            {
+                changed |= SetString(validation, MessageField.Error, error);
+            }
+            else if (snapshot != null)
+            {
+                changed |= SetString(validation, MessageField.Error, snapshot.Error);
+            }
+
+            bool hasInputMessageText = HasMessageText(validation.PromptTitle?.Value, validation.Prompt?.Value);
+            bool hasErrorMessageText = HasMessageText(validation.ErrorTitle?.Value, validation.Error?.Value);
             if (showInputMessage.HasValue)
             {
                 changed |= SetBoolean(validation, isInputMessage: true, showInputMessage);
@@ -127,6 +143,10 @@ internal sealed class ExcelDataValidationMessageDisplayState
             else if (snapshot?.HasInputMessageText == true)
             {
                 changed |= SetBoolean(validation, isInputMessage: true, snapshot.ShowInputMessage);
+            }
+            else
+            {
+                changed |= SetBoolean(validation, isInputMessage: true, hasInputMessageText);
             }
 
             if (showErrorMessage.HasValue)
@@ -136,6 +156,10 @@ internal sealed class ExcelDataValidationMessageDisplayState
             else if (snapshot?.HasErrorMessageText == true)
             {
                 changed |= SetBoolean(validation, isInputMessage: false, snapshot.ShowErrorMessage);
+            }
+            else
+            {
+                changed |= SetBoolean(validation, isInputMessage: false, hasErrorMessageText);
             }
         }
 
@@ -232,6 +256,9 @@ internal sealed class ExcelDataValidationMessageDisplayState
         return true;
     }
 
+    private static bool HasMessageText(string? title, string? message)
+        => !string.IsNullOrEmpty(title) || !string.IsNullOrEmpty(message);
+
     private static (int r1, int c1, int r2, int c2) ParseReferenceArgument(string reference)
     {
         if (TryParseReference(reference, out var bounds))
@@ -276,16 +303,41 @@ internal sealed class ExcelDataValidationMessageDisplayState
             return false;
         }
 
-        if (!TryParseCellReference(parts[0], out int r1, out int c1))
+        if (!TryParseReferenceEndpoint(parts[0], out ReferenceEndpoint first))
         {
             return false;
         }
 
-        int r2 = r1;
-        int c2 = c1;
-        if (parts.Length == 2 && !TryParseCellReference(parts[1], out r2, out c2))
+        ReferenceEndpoint second = first;
+        if (parts.Length == 2 && !TryParseReferenceEndpoint(parts[1], out second))
         {
             return false;
+        }
+
+        int r1;
+        int c1;
+        int r2;
+        int c2;
+        if (first.Row.HasValue || second.Row.HasValue)
+        {
+            r1 = first.Row ?? 1;
+            r2 = second.Row ?? MaxExcelRow;
+        }
+        else
+        {
+            r1 = 1;
+            r2 = MaxExcelRow;
+        }
+
+        if (first.Column.HasValue || second.Column.HasValue)
+        {
+            c1 = first.Column ?? 1;
+            c2 = second.Column ?? MaxExcelColumn;
+        }
+        else
+        {
+            c1 = 1;
+            c2 = MaxExcelColumn;
         }
 
         if (r2 < r1)
@@ -302,10 +354,9 @@ internal sealed class ExcelDataValidationMessageDisplayState
         return true;
     }
 
-    private static bool TryParseCellReference(string reference, out int row, out int column)
+    private static bool TryParseReferenceEndpoint(string reference, out ReferenceEndpoint endpoint)
     {
-        row = 0;
-        column = 0;
+        endpoint = default;
         if (string.IsNullOrWhiteSpace(reference))
         {
             return false;
@@ -313,17 +364,14 @@ internal sealed class ExcelDataValidationMessageDisplayState
 
         string normalized = reference.Trim().Replace("$", string.Empty);
         int index = 0;
+        int column = 0;
         while (index < normalized.Length && char.IsLetter(normalized[index]))
         {
             column = (column * 26) + (char.ToUpperInvariant(normalized[index]) - 'A' + 1);
             index++;
         }
 
-        if (column == 0 || index == normalized.Length)
-        {
-            return false;
-        }
-
+        int row = 0;
         for (; index < normalized.Length; index++)
         {
             if (!char.IsDigit(normalized[index]))
@@ -334,7 +382,13 @@ internal sealed class ExcelDataValidationMessageDisplayState
             row = (row * 10) + (normalized[index] - '0');
         }
 
-        return row > 0;
+        if (row == 0 && column == 0)
+        {
+            return false;
+        }
+
+        endpoint = new ReferenceEndpoint(row == 0 ? null : row, column == 0 ? null : column);
+        return true;
     }
 
     private static bool RangesOverlapInclusive((int r1, int c1, int r2, int c2) first, (int r1, int c1, int r2, int c2) second)
@@ -384,5 +438,18 @@ internal sealed class ExcelDataValidationMessageDisplayState
         public bool HasInputMessageText { get; }
 
         public bool HasErrorMessageText { get; }
+    }
+
+    private readonly struct ReferenceEndpoint
+    {
+        public ReferenceEndpoint(int? row, int? column)
+        {
+            Row = row;
+            Column = column;
+        }
+
+        public int? Row { get; }
+
+        public int? Column { get; }
     }
 }
