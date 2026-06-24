@@ -42,6 +42,10 @@ public sealed class SetOfficeExcelPageSetupCommand : PSCmdlet
     [Parameter]
     public uint? Scale { get; set; }
 
+    /// <summary>Multi-page print order.</summary>
+    [Parameter]
+    public ExcelPageOrder? PageOrder { get; set; }
+
     /// <summary>Emit the worksheet after applying settings.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -49,13 +53,13 @@ public sealed class SetOfficeExcelPageSetupCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (FitToWidth == null && FitToHeight == null && Scale == null)
+        if (FitToWidth == null && FitToHeight == null && Scale == null && PageOrder == null)
         {
-            throw new PSArgumentException("Provide FitToWidth, FitToHeight, or Scale.");
+            throw new PSArgumentException("Provide FitToWidth, FitToHeight, Scale, or PageOrder.");
         }
 
         var sheet = ResolveSheet();
-        sheet.SetPageSetup(FitToWidth, FitToHeight, Scale);
+        sheet.SetPageSetup(FitToWidth, FitToHeight, Scale, PageOrder);
 
         if (PassThru.IsPresent)
         {

@@ -11,12 +11,12 @@ Adds a pivot table to a worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelPivotTable -SourceRange <string> -DestinationCell <string> [-Name <string>] [-RowField <string[]>] [-ColumnField <string[]>] [-PageField <string[]>] [-DataField <string[]>] [-DataFunction <string[]>] [-DataDisplayName <string[]>] [-DataNumberFormat <string[]>] [-NoRowGrandTotals] [-NoColumnGrandTotals] [-PivotStyle <string>] [-Layout <string>] [-DataOnRows] [-DataOnColumns] [-ShowHeaders] [-HideHeaders] [-ShowEmptyRows] [-HideEmptyRows] [-ShowEmptyColumns] [-HideEmptyColumns] [-ShowDrill] [-HideDrill] [-RowHeaderCaption <string>] [-ColumnHeaderCaption <string>] [-GrandTotalCaption <string>] [-MissingCaption <string>] [-ErrorCaption <string>] [-ShowDataDropDown] [-HideDataDropDown] [-ShowDropZones] [-HideDropZones] [-ShowDataTips] [-HideDataTips] [-ShowMemberPropertyTips] [-HideMemberPropertyTips] [-FieldListSortAscending] [-FieldListSortDescending] [-CustomListSort] [-NoCustomListSort] [-FieldSort <hashtable>] [-FieldHiddenItems <hashtable>] [-FieldVisibleItems <hashtable>] [-PageFieldSelection <hashtable>] [-FieldNoDefaultSubtotal <string[]>] [-FieldSubtotalTop <string[]>] [-FieldInsertBlankRow <string[]>] [-FieldInsertPageBreak <string[]>] [-FieldCompact <string[]>] [-FieldOutline <string[]>] [-FieldHideDropDowns <string[]>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPivotTable -SourceRange <string> -DestinationCell <string> [-Name <string>] [-RowField <string[]>] [-ColumnField <string[]>] [-PageField <string[]>] [-DataField <string[]>] [-DataFunction <string[]>] [-DataDisplayName <string[]>] [-DataNumberFormat <string[]>] [-NoRowGrandTotals] [-NoColumnGrandTotals] [-PivotStyle <string>] [-Layout <string>] [-DataOnRows] [-DataOnColumns] [-ShowHeaders] [-HideHeaders] [-ShowEmptyRows] [-HideEmptyRows] [-ShowEmptyColumns] [-HideEmptyColumns] [-ShowDrill] [-HideDrill] [-RowHeaderCaption <string>] [-ColumnHeaderCaption <string>] [-GrandTotalCaption <string>] [-MissingCaption <string>] [-ErrorCaption <string>] [-ShowDataDropDown] [-HideDataDropDown] [-ShowDropZones] [-HideDropZones] [-ShowDataTips] [-HideDataTips] [-ShowMemberPropertyTips] [-HideMemberPropertyTips] [-FieldListSortAscending] [-FieldListSortDescending] [-CustomListSort] [-NoCustomListSort] [-FieldSort <hashtable>] [-FieldHiddenItems <hashtable>] [-FieldVisibleItems <hashtable>] [-PageFieldSelection <hashtable>] [-FieldNoDefaultSubtotal <string[]>] [-FieldSubtotalTop <string[]>] [-FieldInsertBlankRow <string[]>] [-FieldInsertPageBreak <string[]>] [-FieldCompact <string[]>] [-FieldOutline <string[]>] [-FieldHideDropDowns <string[]>] [-RefreshOnOpen] [-NoRefreshOnOpen] [-SaveSourceData] [-NoSaveSourceData] [-PreserveFormatting] [-NoPreserveFormatting] [-EnableDrill] [-DisableDrill] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelPivotTable -Document <ExcelDocument> -SourceRange <string> -DestinationCell <string> [-Sheet <string>] [-SheetIndex <int>] [-Name <string>] [-RowField <string[]>] [-ColumnField <string[]>] [-PageField <string[]>] [-DataField <string[]>] [-DataFunction <string[]>] [-DataDisplayName <string[]>] [-DataNumberFormat <string[]>] [-NoRowGrandTotals] [-NoColumnGrandTotals] [-PivotStyle <string>] [-Layout <string>] [-DataOnRows] [-DataOnColumns] [-ShowHeaders] [-HideHeaders] [-ShowEmptyRows] [-HideEmptyRows] [-ShowEmptyColumns] [-HideEmptyColumns] [-ShowDrill] [-HideDrill] [-RowHeaderCaption <string>] [-ColumnHeaderCaption <string>] [-GrandTotalCaption <string>] [-MissingCaption <string>] [-ErrorCaption <string>] [-ShowDataDropDown] [-HideDataDropDown] [-ShowDropZones] [-HideDropZones] [-ShowDataTips] [-HideDataTips] [-ShowMemberPropertyTips] [-HideMemberPropertyTips] [-FieldListSortAscending] [-FieldListSortDescending] [-CustomListSort] [-NoCustomListSort] [-FieldSort <hashtable>] [-FieldHiddenItems <hashtable>] [-FieldVisibleItems <hashtable>] [-PageFieldSelection <hashtable>] [-FieldNoDefaultSubtotal <string[]>] [-FieldSubtotalTop <string[]>] [-FieldInsertBlankRow <string[]>] [-FieldInsertPageBreak <string[]>] [-FieldCompact <string[]>] [-FieldOutline <string[]>] [-FieldHideDropDowns <string[]>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPivotTable -Document <ExcelDocument> -SourceRange <string> -DestinationCell <string> [-Sheet <string>] [-SheetIndex <int>] [-Name <string>] [-RowField <string[]>] [-ColumnField <string[]>] [-PageField <string[]>] [-DataField <string[]>] [-DataFunction <string[]>] [-DataDisplayName <string[]>] [-DataNumberFormat <string[]>] [-NoRowGrandTotals] [-NoColumnGrandTotals] [-PivotStyle <string>] [-Layout <string>] [-DataOnRows] [-DataOnColumns] [-ShowHeaders] [-HideHeaders] [-ShowEmptyRows] [-HideEmptyRows] [-ShowEmptyColumns] [-HideEmptyColumns] [-ShowDrill] [-HideDrill] [-RowHeaderCaption <string>] [-ColumnHeaderCaption <string>] [-GrandTotalCaption <string>] [-MissingCaption <string>] [-ErrorCaption <string>] [-ShowDataDropDown] [-HideDataDropDown] [-ShowDropZones] [-HideDropZones] [-ShowDataTips] [-HideDataTips] [-ShowMemberPropertyTips] [-HideMemberPropertyTips] [-FieldListSortAscending] [-FieldListSortDescending] [-CustomListSort] [-NoCustomListSort] [-FieldSort <hashtable>] [-FieldHiddenItems <hashtable>] [-FieldVisibleItems <hashtable>] [-PageFieldSelection <hashtable>] [-FieldNoDefaultSubtotal <string[]>] [-FieldSubtotalTop <string[]>] [-FieldInsertBlankRow <string[]>] [-FieldInsertPageBreak <string[]>] [-FieldCompact <string[]>] [-FieldOutline <string[]>] [-FieldHideDropDowns <string[]>] [-RefreshOnOpen] [-NoRefreshOnOpen] [-SaveSourceData] [-NoSaveSourceData] [-PreserveFormatting] [-NoPreserveFormatting] [-EnableDrill] [-DisableDrill] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -203,6 +203,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -DisableDrill
+Disable pivot detail drill interaction in Excel.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Document
 Workbook to operate on outside the DSL context.
 
@@ -216,6 +232,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -EnableDrill
+Allow users to drill into pivot details in Excel.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -651,8 +683,56 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -NoPreserveFormatting
+Do not preserve pivot formatting when Excel refreshes the pivot table.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoRefreshOnOpen
+Do not refresh the pivot cache when the workbook opens.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -NoRowGrandTotals
 Disable row grand totals.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoSaveSourceData
+Do not save pivot source cache records in the workbook package.
 
 ```yaml
 Type: SwitchParameter
@@ -731,6 +811,38 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -PreserveFormatting
+Preserve pivot formatting when Excel refreshes the pivot table.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -RefreshOnOpen
+Refresh the pivot cache when the workbook opens.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -RowField
 Row fields (header names).
 
@@ -752,6 +864,22 @@ Optional row header caption.
 
 ```yaml
 Type: String
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SaveSourceData
+Save pivot source cache records in the workbook package.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:

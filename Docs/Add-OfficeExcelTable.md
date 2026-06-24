@@ -11,7 +11,7 @@ Writes tabular data to the current worksheet and formats it as an Excel table.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelTable [-InputObject] <Object> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-View <OfficeTableView>] [-TableName <string>] [-TableStyle <string>] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTable [-InputObject] <Object> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-View <OfficeTableView>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -93,8 +93,72 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -NoRowStripes
+Disable alternating row stripes for the created table.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -PassThru
 Return the created range string.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShowColumnStripes
+Enable alternating column stripes for the created table.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShowFirstColumn
+Emphasize the first table column when the selected style supports it.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShowLastColumn
+Emphasize the last table column when the selected style supports it.
 
 ```yaml
 Type: SwitchParameter
