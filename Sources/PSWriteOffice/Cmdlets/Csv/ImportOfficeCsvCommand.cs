@@ -30,7 +30,7 @@ namespace PSWriteOffice.Cmdlets.Csv;
 /// </example>
 [Cmdlet(VerbsData.Import, "OfficeCsv", DefaultParameterSetName = ParameterSetPathDelimiter)]
 [Alias("Get-OfficeCsvData", "ConvertFrom-OfficeCsv")]
-public sealed class GetOfficeCsvDataCommand : PSCmdlet
+public sealed class ImportOfficeCsvCommand : PSCmdlet
 {
     private const string ParameterSetPathDelimiter = "PathDelimiter";
     private const string ParameterSetPathCulture = "PathCulture";
