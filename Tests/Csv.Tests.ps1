@@ -67,7 +67,7 @@ Describe 'CSV cmdlets' {
         $csvText = [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
             ConvertTo-OfficeCsv -UseCulture -Culture $culture
 
-        $csvText | Should -Match '"Name";"Value"'
+        $csvText | Should -Match 'Name;Value'
     }
 
     It 'uses the selected culture list separator when reading CSV data' {
@@ -233,15 +233,16 @@ Describe 'CSV cmdlets' {
         $csvText | Should -Match "'=1\+1"
     }
 
-    It 'supports PowerShell-style quote policies and selected quote fields' {
+    It 'uses AsNeeded quoting by default and supports PowerShell-style quote policies' {
         $row = [pscustomobject]@{ Name = 'Alpha'; Value = 'A,B'; Note = 'plain' }
 
-        $asNeeded = $row | ConvertTo-OfficeCsv -UseQuotes AsNeeded
-        $always = $row | ConvertTo-OfficeCsv
+        $default = $row | ConvertTo-OfficeCsv
+        $always = $row | ConvertTo-OfficeCsv -UseQuotes Always
         $never = $row | ConvertTo-OfficeCsv -UseQuotes Never
         $quoteFields = $row | ConvertTo-OfficeCsv -QuoteFields Name, Note
 
-        $asNeeded | Should -Match 'Alpha,"A,B",plain'
+        $default | Should -Match 'Name,Value,Note'
+        $default | Should -Match 'Alpha,"A,B",plain'
         $always | Should -Match '"Name","Value","Note"'
         $always | Should -Match '"Alpha","A,B","plain"'
         $never | Should -Match 'Alpha,A,B,plain'
@@ -251,7 +252,7 @@ Describe 'CSV cmdlets' {
 
     It 'quotes empty values when the quote policy is Always' {
         $csvText = [pscustomobject]@{ Name = 'Alpha'; Value = $null } |
-            ConvertTo-OfficeCsv
+            ConvertTo-OfficeCsv -UseQuotes Always
 
         $csvText | Should -Match '"Alpha",""'
     }
@@ -267,7 +268,7 @@ Describe 'CSV cmdlets' {
         $rows | Export-OfficeCsv -Path $path -NoHeader
 
         $csvText | Should -Not -Match 'Name'
-        $csvText | Should -Match '"Alpha","1"'
+        $csvText | Should -Match 'Alpha,1'
         (Get-Content -LiteralPath $path -Raw) | Should -Not -Match 'Name'
     }
 }

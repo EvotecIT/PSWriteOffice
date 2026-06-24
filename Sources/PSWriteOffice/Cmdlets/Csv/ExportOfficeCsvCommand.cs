@@ -95,12 +95,12 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public CsvFormulaInjectionPolicy FormulaInjectionPolicy { get; set; } = CsvFormulaInjectionPolicy.Preserve;
 
-    /// <summary>Controls when CSV fields are quoted.</summary>
+    /// <summary>Controls when CSV fields are quoted. Defaults to quoting only fields that need it.</summary>
     [Parameter(ParameterSetName = ParameterSetInputObjectPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetInputObjectPathCulture)]
     [Parameter(ParameterSetName = ParameterSetDocumentPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetDocumentPathCulture)]
-    public CsvQuoteMode UseQuotes { get; set; } = CsvQuoteMode.Always;
+    public CsvQuoteMode UseQuotes { get; set; } = CsvQuoteMode.AsNeeded;
 
     /// <summary>Field names that should always be quoted when <see cref="UseQuotes"/> is AsNeeded.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectPathDelimiterQuoteFields)]

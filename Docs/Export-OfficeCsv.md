@@ -263,7 +263,7 @@ Accept wildcard characters: True
 ```
 
 ### -UseQuotes
-Controls when CSV fields are quoted.
+Controls when CSV fields are quoted. Defaults to quoting only fields that need it.
 
 ```yaml
 Type: CsvQuoteMode
