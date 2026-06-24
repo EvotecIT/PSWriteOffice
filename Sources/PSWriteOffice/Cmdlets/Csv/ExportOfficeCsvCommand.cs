@@ -26,6 +26,7 @@ namespace PSWriteOffice.Cmdlets.Csv;
 [OutputType(typeof(FileInfo))]
 public sealed class ExportOfficeCsvCommand : PSCmdlet
 {
+    private const int StreamWriterBufferSize = 64 * 1024;
     private const string ParameterSetInputObjectPathDelimiter = "InputObjectPathDelimiter";
     private const string ParameterSetInputObjectPathCulture = "InputObjectPathCulture";
     private const string ParameterSetInputObjectPathDelimiterQuoteFields = "InputObjectPathDelimiterQuoteFields";
@@ -211,7 +212,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
         var options = CreateSaveOptions();
         var encoding = options.Encoding ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-        var fileWriter = new StreamWriter(_resolvedPath!, append: false, encoding, bufferSize: 256 * 1024);
+        var fileWriter = new StreamWriter(_resolvedPath!, append: false, encoding, bufferSize: StreamWriterBufferSize);
         _streamingWriter = new CsvObjectWriter(fileWriter, options);
         _wroteOutput = true;
         return _streamingWriter;
