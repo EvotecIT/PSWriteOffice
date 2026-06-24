@@ -130,7 +130,12 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     public CultureInfo? Culture { get; set; }
 
     /// <summary>Encoding used when reading the file.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public Encoding? Encoding { get; set; }
 
     /// <inheritdoc />

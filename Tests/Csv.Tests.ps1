@@ -243,6 +243,15 @@ Describe 'CSV cmdlets' {
         } | Should -Throw
     }
 
+    It 'keeps file-only encoding off text parameter sets' {
+        $textSets = (Get-Command Get-OfficeCsv).ParameterSets |
+            Where-Object Name -like 'Text*'
+
+        foreach ($set in $textSets) {
+            $set.Parameters.Name | Should -Not -Contain 'Encoding'
+        }
+    }
+
     It 'lets QuoteFields compose with UseQuotes' {
         $path = Join-Path $TestDrive 'quoted-fields.csv'
 
