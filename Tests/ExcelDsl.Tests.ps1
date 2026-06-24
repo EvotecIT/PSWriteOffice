@@ -3659,6 +3659,127 @@ Describe 'Excel DSL surface' {
         $chartOuterXml | Should -Match 'C00000'
     }
 
+    It 'exports readable collection values and handles failing script properties' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelPowerShellProjection.xlsx'
+        $row = [PSCustomObject]@{
+            Name = 'Alpha'
+            Tags = @('one', 'two')
+        }
+        $row | Add-Member -MemberType ScriptProperty -Name Broken -Value { throw 'boom' }
+        $row | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Rows'
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $imported.Count | Should -Be 1
+        $imported[0].Name | Should -Be 'Alpha'
+        $imported[0].Tags | Should -Be 'one, two'
+        $imported[0].PSObject.Properties.Name | Should -Not -Contain 'Broken'
+
+        $strictPath = Join-Path $TestDrive 'ExportOfficeExcelPowerShellProjectionStrict.xlsx'
+        { $row | Export-OfficeExcel -Path $strictPath -PropertyConversionErrorAction Stop -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage "*Unable to read PowerShell property 'Broken'*"
+
+        $placeholderPath = Join-Path $TestDrive 'ExportOfficeExcelPowerShellProjectionPlaceholder.xlsx'
+        $row | Export-OfficeExcel -Path $placeholderPath -IncludeUnexportableProperties
+        $placeholder = @(Import-OfficeExcel -Path $placeholderPath -WorksheetName 'Sheet1')
+        $placeholder[0].Broken | Should -BeLike 'Property export failed:*boom*'
+    }
+
+    It 'sets category date-axis scale values through the chart axis cmdlet' {
+        $path = Join-Path $TestDrive 'DslExcelCategoryAxisScale.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Date = [datetime] '2026-01-01'; Revenue = 100 }
+            [PSCustomObject]@{ Date = [datetime] '2026-01-15'; Revenue = 200 }
+            [PSCustomObject]@{ Date = [datetime] '2026-02-01'; Revenue = 150 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -AutoFit
+                $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Line -Title 'Revenue Trend' -PassThru
+                $chart |
+                    Set-OfficeExcelChartAxis -CategoryNumberFormat 'yyyy-mm-dd' -CategoryMinimum 46000 -CategoryMaximum 46100 -CategoryMajorUnit 14 -CategoryMinorUnit 7 |
+                    Out-Null
+            }
+        } | Out-Null
+
+        $chartXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/drawings/charts/chart1.xml'
+        $dateAxis = $chartXml.SelectSingleNode("//*[local-name()='dateAx']")
+        $dateAxis | Should -Not -BeNullOrEmpty
+        $dateAxis.SelectSingleNode("*[local-name()='scaling']/*[local-name()='min']").GetAttribute('val') | Should -Be '46000'
+        $dateAxis.SelectSingleNode("*[local-name()='scaling']/*[local-name()='max']").GetAttribute('val') | Should -Be '46100'
+        $dateAxis.SelectSingleNode("*[local-name()='majorUnit']").GetAttribute('val') | Should -Be '14'
+        $dateAxis.SelectSingleNode("*[local-name()='minorUnit']").GetAttribute('val') | Should -Be '7'
+    }
+
+    It 'imports all sheets and can emit columns' {
+        $path = Join-Path $TestDrive 'DslExcelImportAllSheetsByColumn.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Sales' -Content {
+                Add-OfficeExcelTable -InputObject @(
+                    [PSCustomObject]@{ Name = 'Alpha'; Value = 10; WorksheetName = 'SourceColumn' }
+                ) -TableName 'SalesRows'
+            }
+            Add-OfficeExcelSheet -Name 'Inventory' -Content {
+                Add-OfficeExcelTable -InputObject @(
+                    [PSCustomObject]@{ Name = 'Widget'; Value = 4 }
+                ) -TableName 'InventoryRows'
+            }
+        } | Out-Null
+
+        $allRows = @(Import-OfficeExcel -Path $path -AllSheets)
+        $allRows.Count | Should -Be 2
+        @($allRows | Select-Object -ExpandProperty WorksheetName | Sort-Object) | Should -Be @('Inventory', 'Sales')
+        ($allRows | Where-Object WorksheetName -eq 'Sales').WorksheetNameValue | Should -Be 'SourceColumn'
+
+        $allRowsAsHashtable = @(Import-OfficeExcel -Path $path -AllSheets -AsHashtable)
+        ($allRowsAsHashtable | Where-Object { $_['WorksheetName'] -eq 'Sales' })['WorksheetNameValue'] | Should -Be 'SourceColumn'
+
+        $columns = @(Import-OfficeExcel -Path $path -WorksheetName 'Sales' -ByColumn)
+        $columns.Count | Should -Be 3
+        $columns[0].ColumnName | Should -Be 'Name'
+        $columns[0].ColumnIndex | Should -Be 1
+        @($columns[0].Values)[0] | Should -Be 'Alpha'
+        $columns[1].ColumnName | Should -Be 'Value'
+        @($columns[1].Values)[0] | Should -Be 10
+    }
+
+    It 'surfaces table style, number format, runtime, and write-reservation diagnostics' {
+        $path = Join-Path $TestDrive 'DslExcelDiagnostics.xlsx'
+
+        $styles = @(Get-OfficeExcelTableStyle -RecommendedOnly)
+        $styles.Count | Should -BeGreaterThan 0
+        ($styles | Where-Object Name -eq 'TableStyleMedium2').IsRecommended | Should -BeTrue
+
+        $currency = Get-OfficeExcelNumberFormatPreset -CultureName en-US -Decimals 2 |
+            Where-Object Name -eq 'Currency' |
+            Select-Object -First 1
+        $currency.FormatCode | Should -Be '"$"#,##0.00'
+
+        $runtime = Get-OfficeExcelRuntimePreflight
+        $runtime.FrameworkDescription | Should -Not -BeNullOrEmpty
+        $runtime.PSObject.Properties.Name | Should -Contain 'Warnings'
+        @($runtime.Warnings).Count | Should -BeGreaterOrEqual 0
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Ready'
+            }
+        } | Out-Null
+
+        $reservation = Set-OfficeExcelWriteReservation -Path $path -ReadOnlyRecommended -UserName 'Reporting Team' -LegacyPasswordHash 'CAFE' -PassThru
+        $reservation.Exists | Should -BeTrue
+        $reservation.ReadOnlyRecommended | Should -BeTrue
+        $reservation.UserName | Should -Be 'Reporting Team'
+        $reservation.HasPasswordHash | Should -BeTrue
+
+        $loaded = Get-OfficeExcelWriteReservation -Path $path
+        $loaded.LegacyPasswordHash | Should -Be 'CAFE'
+
+        $cleared = Clear-OfficeExcelWriteReservation -Path $path -PassThru
+        $cleared.Exists | Should -BeFalse
+    }
+
     It 'supports url images and smart hyperlink helpers' {
         $path = Join-Path $TestDrive 'DslExcelLinksAndImages.xlsx'
         $imagePath = New-TestOfficeImageFile -Directory $TestDrive
