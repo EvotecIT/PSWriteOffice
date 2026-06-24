@@ -166,14 +166,23 @@ internal static class ExcelColumnFormatPlanService
             case "DATELONG":
                 preset = ExcelNumberPreset.DateLong;
                 return true;
+            case "DATETIME":
+                preset = ExcelNumberPreset.DateTime;
+                return true;
+            case "TIME":
+                preset = ExcelNumberPreset.Time;
+                return true;
             case "DURATION":
             case "DURATIONHOURS":
             case "ELAPSED":
                 preset = ExcelNumberPreset.DurationHours;
                 return true;
+            case "TEXT":
+                preset = ExcelNumberPreset.Text;
+                return true;
         }
 
-        return Enum.TryParse(text, ignoreCase: true, out preset);
+        return Enum.TryParse(normalized, ignoreCase: true, out preset);
     }
 
     private static bool IsCustomFormatStyle(string style)

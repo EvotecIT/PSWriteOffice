@@ -540,6 +540,24 @@ Describe 'Excel DSL surface' {
         $customFormats = @($customStylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
         $customFormats | Should -Contain '00000'
 
+        $friendlyPresetPath = Join-Path $TestDrive 'ExportOfficeExcelFriendlyPresetColumnFormats.xlsx'
+        [PSCustomObject]@{ Created = [DateTime] '2026-06-24'; Updated = [DateTime] '2026-06-25' } |
+            Export-OfficeExcel -Path $friendlyPresetPath -ColumnFormat @{ Created = 'Date Time'; Updated = @{ Style = 'Date-Time' } }
+        $friendlyPresetStylesXml = Get-ZipXmlDocumentLocal -Path $friendlyPresetPath -Entry 'xl/styles.xml'
+        $friendlyPresetFormats = @($friendlyPresetStylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
+        ($friendlyPresetFormats -join '|') | Should -Match 'yyyy-mm-dd hh:mm:ss'
+        $friendlyPresetFormats | Should -Not -Contain 'Date Time'
+        $friendlyPresetFormats | Should -Not -Contain 'Date-Time'
+
+        $appendNoHeaderExistingTablePath = Join-Path $TestDrive 'ExportOfficeExcelAppendNoHeaderExistingTableColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'NA'; Revenue = 123.45 }) |
+            Export-OfficeExcel -Path $appendNoHeaderExistingTablePath -WorksheetName 'Data' -TableName 'Sales'
+        [PSCustomObject]@{ Region = 'EMEA'; Revenue = 987.65 } |
+            Export-OfficeExcel -Path $appendNoHeaderExistingTablePath -WorksheetName 'Data' -TableName 'Sales' -Append -NoHeader -CurrencyColumn Revenue -FormatCultureName en-US
+        $appendNoHeaderExistingTableSheetXml = Get-ZipXmlDocumentLocal -Path $appendNoHeaderExistingTablePath -Entry 'xl/worksheets/sheet1.xml'
+        $appendNoHeaderExistingTableRevenueCell = $appendNoHeaderExistingTableSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+        $appendNoHeaderExistingTableRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
         $dataSet = [System.Data.DataSet]::new('Mixed')
         $sales = [System.Data.DataTable]::new('Sales')
         $null = $sales.Columns.Add('Region', [string])

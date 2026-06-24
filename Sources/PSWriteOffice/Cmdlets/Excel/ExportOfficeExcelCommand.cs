@@ -805,12 +805,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return null;
         }
 
+        var tableHeaderRow = ResolveExistingTableHeaderRow(document, sheet, appendTableName);
         if (NoHeader.IsPresent)
         {
-            return null;
+            return tableHeaderRow;
         }
 
-        var tableHeaderRow = ResolveExistingTableHeaderRow(document, sheet, appendTableName);
         return tableHeaderRow ?? FindExistingHeaderRow(sheet, plan, allowPartialMatch: IgnoreMissingColumnFormat.IsPresent);
     }
 
