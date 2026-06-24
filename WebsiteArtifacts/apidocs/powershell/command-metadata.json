@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-24T06:54:51.4196508+00:00",
+  "generatedAt": "2026-06-24T07:11:30.2378726+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -1067,6 +1067,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelRangeCommand.cs#L18"
     },
     {
+      "name": "Clear-OfficeExcelWriteReservation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelWriteReservationCommand.cs",
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ClearOfficeExcelWriteReservationCommand.cs#L16"
+    },
+    {
       "name": "Clear-OfficePdfBackgroundShape",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1544,6 +1552,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelNamedRangeCommand.cs#L23"
     },
     {
+      "name": "Get-OfficeExcelNumberFormatPreset",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelNumberFormatPresetCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelNumberFormatPresetCommand.cs#L17"
+    },
+    {
       "name": "Get-OfficeExcelPageBreak",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1584,6 +1600,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRichTextCommand.cs#L19"
     },
     {
+      "name": "Get-OfficeExcelRuntimePreflight",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRuntimePreflightCommand.cs",
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelRuntimePreflightCommand.cs#L16"
+    },
+    {
       "name": "Get-OfficeExcelStreamingContract",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1608,6 +1632,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTableCommand.cs#L21"
     },
     {
+      "name": "Get-OfficeExcelTableStyle",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTableStyleCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelTableStyleCommand.cs#L18"
+    },
+    {
       "name": "Get-OfficeExcelTemplateMarker",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1630,6 +1662,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelWorksheetViewCommand.cs",
       "sourceLine": 20,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelWorksheetViewCommand.cs#L20"
+    },
+    {
+      "name": "Get-OfficeExcelWriteReservation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelWriteReservationCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelWriteReservationCommand.cs#L17"
     },
     {
       "name": "Get-OfficeMarkdown",
@@ -2052,8 +2092,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs",
-      "sourceLine": 23,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs#L23"
+      "sourceLine": 38,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/ImportOfficeExcelCommand.cs#L38"
     },
     {
       "name": "Import-OfficeExcelDelimitedText",
@@ -2440,8 +2480,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartAxisCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartAxisCommand.cs#L17"
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartAxisCommand.cs#L24"
     },
     {
       "name": "Set-OfficeExcelChartDataLabels",
@@ -2754,6 +2794,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelWorksheetViewCommand.cs",
       "sourceLine": 16,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelWorksheetViewCommand.cs#L16"
+    },
+    {
+      "name": "Set-OfficeExcelWriteReservation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelWriteReservationCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelWriteReservationCommand.cs#L17"
     },
     {
       "name": "Set-OfficePdfBackground",
