@@ -12,7 +12,7 @@ using PSWriteOffice.Services.Excel;
 namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Exports PowerShell objects to an Excel workbook using an operator-friendly surface.</summary>
-/// <para>Provides an ImportExcel-style fast path while keeping OfficeIMO as the workbook engine.</para>
+/// <para>Provides a fast PowerShell export path while keeping OfficeIMO as the workbook engine.</para>
 /// <example>
 ///   <summary>Export objects to a table.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -123,6 +123,14 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     /// <summary>Exclude specific properties from exported objects.</summary>
     [Parameter]
     public string[]? ExcludeProperty { get; set; }
+
+    /// <summary>Include properties that cannot be read by exporting a descriptive placeholder value.</summary>
+    [Parameter]
+    public SwitchParameter IncludeUnexportableProperties { get; set; }
+
+    /// <summary>Controls how unreadable PowerShell properties are handled while projecting export rows.</summary>
+    [Parameter]
+    public ActionPreference PropertyConversionErrorAction { get; set; } = ActionPreference.SilentlyContinue;
 
     /// <summary>Open the workbook after saving.</summary>
     [Parameter]
@@ -467,8 +475,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     {
         foreach (var item in items)
         {
-            if (item is PSObject ||
-                item is Dictionary<string, object?> ||
+            if (item is PSObject)
+            {
+                return false;
+            }
+
+            if (item is Dictionary<string, object?> ||
                 item is IReadOnlyDictionary<string, object?> ||
                 item is IDictionary<string, object?> ||
                 item is IDictionary)
@@ -628,8 +640,25 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private DataTable BuildDataTable()
     {
-        var table = ExcelTabularInputService.ToDataTable(_input, TableName, copyExistingTables: ExcludeProperty is { Length: > 0 });
+        var table = ExcelTabularInputService.ToDataTable(
+            _input,
+            TableName,
+            copyExistingTables: ExcludeProperty is { Length: > 0 },
+            normalizerOptions: CreateNormalizerOptions());
         return ApplyExcludedColumns(table);
+    }
+
+    private PowerShellObjectNormalizerOptions CreateNormalizerOptions()
+    {
+        return new PowerShellObjectNormalizerOptions
+        {
+            IncludeUnexportableProperties = IncludeUnexportableProperties.IsPresent,
+            PropertyErrorAction = PropertyConversionErrorAction,
+            PropertyErrorCallback = PropertyConversionErrorAction == ActionPreference.Continue
+                ? (name, exception) => WriteWarning($"Skipping property '{name}' because it could not be read: {exception.Message}")
+                : null,
+            UnexportablePropertyValueFactory = static (_, exception) => $"Property export failed: {exception.Message}"
+        };
     }
 
     private DataTable ApplyExcludedColumns(DataTable table)

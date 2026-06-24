@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Management.Automation;
@@ -53,7 +54,13 @@ internal static class ExcelReadOutputService
         return reader.GetSheet(1);
     }
 
-    public static void WriteOutput(PSCmdlet cmdlet, DataTable table, bool asDataTable, bool asHashtable)
+    public static void WriteOutput(
+        PSCmdlet cmdlet,
+        DataTable table,
+        bool asDataTable,
+        bool asHashtable,
+        bool byColumn = false,
+        string? worksheetName = null)
     {
         if (cmdlet == null)
         {
@@ -70,8 +77,19 @@ internal static class ExcelReadOutputService
             throw new PSArgumentException("Specify either -AsDataTable or -AsHashtable, but not both.");
         }
 
+        if (asDataTable && byColumn)
+        {
+            throw new PSArgumentException("Specify either -AsDataTable or -ByColumn, but not both.");
+        }
+
         if (asDataTable)
         {
+            if (!string.IsNullOrWhiteSpace(worksheetName))
+            {
+                table.TableName = worksheetName!;
+                table.ExtendedProperties["WorksheetName"] = worksheetName!;
+            }
+
             cmdlet.WriteObject(table, enumerateCollection: false);
             return;
         }
@@ -82,16 +100,28 @@ internal static class ExcelReadOutputService
         {
             columnNames[i] = table.Columns[i].ColumnName;
         }
+        var rowOutputColumnNames = CreateRowOutputColumnNames(columnNames, !string.IsNullOrWhiteSpace(worksheetName));
+
+        if (byColumn)
+        {
+            WriteColumnOutput(cmdlet, table, columnNames, asHashtable, worksheetName);
+            return;
+        }
 
         foreach (DataRow row in table.Rows)
         {
             if (asHashtable)
             {
-                var hashtable = new Hashtable(columnCount, StringComparer.OrdinalIgnoreCase);
+                var hashtable = new Hashtable(columnCount + (worksheetName == null ? 0 : 1), StringComparer.OrdinalIgnoreCase);
+                if (!string.IsNullOrWhiteSpace(worksheetName))
+                {
+                    hashtable["WorksheetName"] = worksheetName!;
+                }
+
                 for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
                 {
                     var value = row[columnIndex];
-                    hashtable[columnNames[columnIndex]] = value is DBNull ? null : value;
+                    hashtable[rowOutputColumnNames[columnIndex]] = value is DBNull ? null : value;
                 }
 
                 cmdlet.WriteObject(hashtable);
@@ -99,12 +129,100 @@ internal static class ExcelReadOutputService
             else
             {
                 var psObject = new PSObject();
+                if (!string.IsNullOrWhiteSpace(worksheetName))
+                {
+                    psObject.Properties.Add(new PSNoteProperty("WorksheetName", worksheetName!));
+                }
+
                 for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
                 {
                     var value = row[columnIndex];
-                    psObject.Properties.Add(new PSNoteProperty(columnNames[columnIndex], value is DBNull ? null : value));
+                    psObject.Properties.Add(new PSNoteProperty(rowOutputColumnNames[columnIndex], value is DBNull ? null : value));
                 }
 
+                cmdlet.WriteObject(psObject);
+            }
+        }
+    }
+
+    private static string[] CreateRowOutputColumnNames(string[] columnNames, bool hasWorksheetMetadata)
+    {
+        if (!hasWorksheetMetadata)
+        {
+            return columnNames;
+        }
+
+        var outputNames = new string[columnNames.Length];
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "WorksheetName"
+        };
+
+        for (var i = 0; i < columnNames.Length; i++)
+        {
+            var candidate = columnNames[i];
+            if (used.Add(candidate))
+            {
+                outputNames[i] = candidate;
+                continue;
+            }
+
+            outputNames[i] = CreateUniqueColumnName(candidate, used);
+        }
+
+        return outputNames;
+    }
+
+    private static string CreateUniqueColumnName(string columnName, ISet<string> used)
+    {
+        var baseName = string.IsNullOrWhiteSpace(columnName) ? "Column" : columnName;
+        var candidate = $"{baseName}Value";
+        var index = 2;
+        while (!used.Add(candidate))
+        {
+            candidate = $"{baseName}Value{index++}";
+        }
+
+        return candidate;
+    }
+
+    private static void WriteColumnOutput(PSCmdlet cmdlet, DataTable table, string[] columnNames, bool asHashtable, string? worksheetName)
+    {
+        for (var columnIndex = 0; columnIndex < columnNames.Length; columnIndex++)
+        {
+            var values = new object?[table.Rows.Count];
+            for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
+            {
+                var value = table.Rows[rowIndex][columnIndex];
+                values[rowIndex] = value is DBNull ? null : value;
+            }
+
+            if (asHashtable)
+            {
+                var hashtable = new Hashtable(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["ColumnName"] = columnNames[columnIndex],
+                    ["ColumnIndex"] = columnIndex + 1,
+                    ["Values"] = values
+                };
+                if (!string.IsNullOrWhiteSpace(worksheetName))
+                {
+                    hashtable["WorksheetName"] = worksheetName!;
+                }
+
+                cmdlet.WriteObject(hashtable);
+            }
+            else
+            {
+                var psObject = new PSObject();
+                if (!string.IsNullOrWhiteSpace(worksheetName))
+                {
+                    psObject.Properties.Add(new PSNoteProperty("WorksheetName", worksheetName!));
+                }
+
+                psObject.Properties.Add(new PSNoteProperty("ColumnName", columnNames[columnIndex]));
+                psObject.Properties.Add(new PSNoteProperty("ColumnIndex", columnIndex + 1));
+                psObject.Properties.Add(new PSNoteProperty("Values", values));
                 cmdlet.WriteObject(psObject);
             }
         }
