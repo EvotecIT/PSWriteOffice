@@ -12,6 +12,7 @@ namespace PSWriteOffice.Services;
 internal static class PowerShellObjectNormalizer
 {
     private static readonly ConcurrentDictionary<Type, bool> ClrProjectionCandidateCache = new();
+    private static readonly ConcurrentDictionary<Type, ClrProjectionPlan> ClrProjectionPlanCache = new();
 
     public static IReadOnlyList<object?> NormalizeItems(IEnumerable<object?> items, PowerShellObjectNormalizerOptions? options = null)
     {
@@ -48,12 +49,81 @@ internal static class PowerShellObjectNormalizer
             return dict;
         }
 
-        if (ClrProjectionCandidateCache.GetOrAdd(item.GetType(), CanUseClrObjectProjection))
+        if (TryGetClrProjectionPlan(item.GetType(), out _))
         {
             return item;
         }
 
         return NormalizePSObject(PSObject.AsPSObject(item), options);
+    }
+
+    public static bool TryProjectItem(object? item, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions? options = null)
+    {
+        options ??= PowerShellObjectNormalizerOptions.Default;
+        projectedColumns = columns ?? Array.Empty<string>();
+        values = Array.Empty<object?>();
+
+        if (item == null)
+        {
+            return false;
+        }
+
+        if (item is PSObject psObject)
+        {
+            return TryProjectPSObject(psObject, columns, out projectedColumns, out values, options);
+        }
+
+        if (item is IDictionary dictionary)
+        {
+            ProjectDictionary(dictionary, columns, out projectedColumns, out values);
+            return true;
+        }
+
+        if (TryGetClrProjectionPlan(item.GetType(), out var plan))
+        {
+            ProjectClrObject(item, plan, columns, out projectedColumns, out values);
+            return true;
+        }
+
+        return TryProjectPSObject(PSObject.AsPSObject(item), columns, out projectedColumns, out values, options);
+    }
+
+    public static bool TryProjectItemInto(object? item, string[] columns, object?[] values, PowerShellObjectNormalizerOptions? options = null)
+    {
+        if (columns == null) throw new ArgumentNullException(nameof(columns));
+        if (values == null) throw new ArgumentNullException(nameof(values));
+        if (values.Length != columns.Length)
+        {
+            throw new ArgumentException("The value buffer length must match the column count.", nameof(values));
+        }
+
+        options ??= PowerShellObjectNormalizerOptions.Default;
+
+        if (item == null)
+        {
+            return false;
+        }
+
+        if (item is PSObject psObject)
+        {
+            ProjectPSObjectInto(psObject, columns, values, options);
+            return true;
+        }
+
+        if (item is IDictionary dictionary)
+        {
+            ProjectDictionaryInto(dictionary, columns, values);
+            return true;
+        }
+
+        if (TryGetClrProjectionPlan(item.GetType(), out var plan))
+        {
+            ProjectClrObjectInto(item, plan, columns, values);
+            return true;
+        }
+
+        ProjectPSObjectInto(PSObject.AsPSObject(item), columns, values, options);
+        return true;
     }
 
     private static object? NormalizePSObject(PSObject ps, PowerShellObjectNormalizerOptions options)
@@ -105,6 +175,219 @@ internal static class PowerShellObjectNormalizer
         return ps.BaseObject;
     }
 
+    private static bool TryProjectPSObject(PSObject ps, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
+    {
+        if (ps.BaseObject is IDictionary dictionary)
+        {
+            ProjectDictionary(dictionary, columns, out projectedColumns, out values);
+            return true;
+        }
+
+        if (columns == null)
+        {
+            var names = new List<string>();
+            var rowValues = new List<object?>();
+            foreach (var property in ps.Properties)
+            {
+                if (!ShouldExportProperty(property) || string.IsNullOrWhiteSpace(property.Name))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var value = NormalizeCellValue(property.Value, options);
+                    names.Add(property.Name);
+                    rowValues.Add(value);
+                }
+                catch (Exception exception) when (exception is not PipelineStoppedException)
+                {
+                    if (options.PropertyErrorAction == ActionPreference.Stop)
+                    {
+                        throw new InvalidOperationException($"Unable to read PowerShell property '{property.Name}'.", exception);
+                    }
+
+                    options.PropertyErrorCallback?.Invoke(property.Name, exception);
+                    if (options.IncludeUnexportableProperties)
+                    {
+                        names.Add(property.Name);
+                        rowValues.Add(options.UnexportablePropertyValueFactory?.Invoke(property.Name, exception) ?? string.Empty);
+                    }
+                }
+            }
+
+            projectedColumns = names.ToArray();
+            values = rowValues.ToArray();
+            return names.Count > 0;
+        }
+
+        projectedColumns = columns;
+        values = new object?[columns.Length];
+        for (var i = 0; i < columns.Length; i++)
+        {
+            var property = ps.Properties[columns[i]];
+            if (property == null || !ShouldExportProperty(property))
+            {
+                values[i] = null;
+                continue;
+            }
+
+            try
+            {
+                values[i] = NormalizeCellValue(property.Value, options);
+            }
+            catch (Exception exception) when (exception is not PipelineStoppedException)
+            {
+                if (options.PropertyErrorAction == ActionPreference.Stop)
+                {
+                    throw new InvalidOperationException($"Unable to read PowerShell property '{columns[i]}'.", exception);
+                }
+
+                options.PropertyErrorCallback?.Invoke(columns[i], exception);
+                if (options.IncludeUnexportableProperties)
+                {
+                    values[i] = options.UnexportablePropertyValueFactory?.Invoke(columns[i], exception) ?? string.Empty;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static void ProjectPSObjectInto(PSObject ps, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
+    {
+        if (ps.BaseObject is IDictionary dictionary)
+        {
+            ProjectDictionaryInto(dictionary, columns, values);
+            return;
+        }
+
+        for (var i = 0; i < columns.Length; i++)
+        {
+            var property = ps.Properties[columns[i]];
+            if (property == null || !ShouldExportProperty(property))
+            {
+                values[i] = null;
+                continue;
+            }
+
+            try
+            {
+                values[i] = NormalizeCellValue(property.Value, options);
+            }
+            catch (Exception exception) when (exception is not PipelineStoppedException)
+            {
+                if (options.PropertyErrorAction == ActionPreference.Stop)
+                {
+                    throw new InvalidOperationException($"Unable to read PowerShell property '{columns[i]}'.", exception);
+                }
+
+                options.PropertyErrorCallback?.Invoke(columns[i], exception);
+                if (options.IncludeUnexportableProperties)
+                {
+                    values[i] = options.UnexportablePropertyValueFactory?.Invoke(columns[i], exception) ?? string.Empty;
+                }
+                else
+                {
+                    values[i] = null;
+                }
+            }
+        }
+    }
+
+    private static void ProjectDictionary(IDictionary dictionary, string[]? columns, out string[] projectedColumns, out object?[] values)
+    {
+        if (columns == null)
+        {
+            var names = new List<string>();
+            var rowValues = new List<object?>();
+            foreach (DictionaryEntry entry in dictionary)
+            {
+                var key = entry.Key?.ToString();
+                if (string.IsNullOrWhiteSpace(key))
+                {
+                    continue;
+                }
+
+                names.Add(key!);
+                rowValues.Add(entry.Value);
+            }
+
+            projectedColumns = names.ToArray();
+            values = rowValues.ToArray();
+            return;
+        }
+
+        projectedColumns = columns;
+        values = new object?[columns.Length];
+        for (var i = 0; i < columns.Length; i++)
+        {
+            values[i] = GetDictionaryValue(dictionary, columns[i]);
+        }
+    }
+
+    private static void ProjectDictionaryInto(IDictionary dictionary, string[] columns, object?[] values)
+    {
+        for (var i = 0; i < columns.Length; i++)
+        {
+            values[i] = GetDictionaryValue(dictionary, columns[i]);
+        }
+    }
+
+    private static void ProjectClrObject(object item, ClrProjectionPlan plan, string[]? columns, out string[] projectedColumns, out object?[] values)
+    {
+        if (columns == null)
+        {
+            projectedColumns = plan.ColumnNames;
+            values = new object?[plan.Properties.Count];
+            for (var i = 0; i < plan.Properties.Count; i++)
+            {
+                values[i] = plan.Properties[i].GetValue(item);
+            }
+
+            return;
+        }
+
+        projectedColumns = columns;
+        values = new object?[columns.Length];
+        for (var i = 0; i < columns.Length; i++)
+        {
+            var property = plan.PropertiesByName.TryGetValue(columns[i], out var candidate)
+                ? candidate
+                : null;
+            values[i] = property?.GetValue(item);
+        }
+    }
+
+    private static void ProjectClrObjectInto(object item, ClrProjectionPlan plan, string[] columns, object?[] values)
+    {
+        for (var i = 0; i < columns.Length; i++)
+        {
+            var property = plan.PropertiesByName.TryGetValue(columns[i], out var candidate)
+                ? candidate
+                : null;
+            values[i] = property?.GetValue(item);
+        }
+    }
+
+    private static object? GetDictionaryValue(IDictionary dictionary, string column)
+    {
+        if (dictionary.Contains(column))
+        {
+            return dictionary[column];
+        }
+
+        foreach (DictionaryEntry entry in dictionary)
+        {
+            if (string.Equals(entry.Key?.ToString(), column, StringComparison.OrdinalIgnoreCase))
+            {
+                return entry.Value;
+            }
+        }
+
+        return null;
+    }
+
     private static bool ShouldExportProperty(PSPropertyInfo property)
     {
         if (!property.IsGettable)
@@ -154,6 +437,18 @@ internal static class PowerShellObjectNormalizer
         return LanguagePrimitives.ConvertTo(value, typeof(string), CultureInfo.InvariantCulture) as string ?? string.Empty;
     }
 
+    private static bool TryGetClrProjectionPlan(Type type, out ClrProjectionPlan plan)
+    {
+        if (!ClrProjectionCandidateCache.GetOrAdd(type, CanUseClrObjectProjection))
+        {
+            plan = ClrProjectionPlan.Empty;
+            return false;
+        }
+
+        plan = ClrProjectionPlanCache.GetOrAdd(type, CreateClrProjectionPlan);
+        return plan.Properties.Count > 0;
+    }
+
     private static bool CanUseClrObjectProjection(Type type)
     {
         if (type == typeof(string) ||
@@ -171,6 +466,45 @@ internal static class PowerShellObjectNormalizer
         return type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Any(static property => property.CanRead && property.GetIndexParameters().Length == 0);
     }
+
+    private static ClrProjectionPlan CreateClrProjectionPlan(Type type)
+    {
+        var properties = type
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .Where(static property => property.CanRead && property.GetIndexParameters().Length == 0)
+            .OrderBy(static property => property.MetadataToken)
+            .ToArray();
+
+        return new ClrProjectionPlan(properties);
+    }
+
+    private sealed class ClrProjectionPlan
+    {
+        public static readonly ClrProjectionPlan Empty = new(Array.Empty<PropertyInfo>());
+
+        public ClrProjectionPlan(IReadOnlyList<PropertyInfo> properties)
+        {
+            Properties = properties;
+            var columnNames = new string[properties.Count];
+            var propertiesByName = new Dictionary<string, PropertyInfo>(properties.Count, StringComparer.Ordinal);
+            for (var i = 0; i < properties.Count; i++)
+            {
+                var property = properties[i];
+                columnNames[i] = property.Name;
+                propertiesByName[property.Name] = property;
+            }
+
+            ColumnNames = columnNames;
+            PropertiesByName = propertiesByName;
+        }
+
+        public IReadOnlyList<PropertyInfo> Properties { get; }
+
+        public string[] ColumnNames { get; }
+
+        public IReadOnlyDictionary<string, PropertyInfo> PropertiesByName { get; }
+    }
+
 }
 
 internal sealed class PowerShellObjectNormalizerOptions

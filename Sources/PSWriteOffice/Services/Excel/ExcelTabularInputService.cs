@@ -100,8 +100,69 @@ internal static class ExcelTabularInputService
             }
         }
 
+        if (TryProjectToDataTable(items, tableName, normalizerOptions, out var projectedTable))
+        {
+            return projectedTable;
+        }
+
         var normalized = PowerShellObjectNormalizer.NormalizeItems(items, normalizerOptions);
         return ObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
+    }
+
+    private static bool TryProjectToDataTable(
+        IReadOnlyList<object?> items,
+        string? tableName,
+        PowerShellObjectNormalizerOptions? normalizerOptions,
+        out DataTable table)
+    {
+        table = string.IsNullOrWhiteSpace(tableName)
+            ? new DataTable()
+            : new DataTable(tableName);
+
+        string[]? columns = null;
+        table.MinimumCapacity = Math.Max(table.MinimumCapacity, items.Count);
+        table.BeginLoadData();
+        try
+        {
+            foreach (var item in items)
+            {
+                if (!PowerShellObjectNormalizer.TryProjectItem(item, columns, out var projectedColumns, out var values, normalizerOptions))
+                {
+                    table.EndLoadData();
+                    table = null!;
+                    return false;
+                }
+
+                if (columns == null)
+                {
+                    columns = projectedColumns;
+                    if (columns.Length == 0)
+                    {
+                        table.EndLoadData();
+                        table = null!;
+                        return false;
+                    }
+
+                    foreach (var column in columns)
+                    {
+                        table.Columns.Add(column, typeof(object));
+                    }
+                }
+
+                for (var i = 0; i < values.Length; i++)
+                {
+                    values[i] ??= DBNull.Value;
+                }
+
+                table.Rows.Add(values);
+            }
+        }
+        finally
+        {
+            table?.EndLoadData();
+        }
+
+        return columns != null;
     }
 
     public static DataSet? TryGetSingleDataSet(IEnumerable<object?> input)
