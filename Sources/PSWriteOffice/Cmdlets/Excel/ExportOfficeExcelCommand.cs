@@ -19,6 +19,12 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>$rows | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -TableName Data -AutoFit -FreezeTopRow</code>
 ///   <para>Creates a workbook, writes the objects as a table, auto-fits columns, and freezes the header row.</para>
 /// </example>
+/// <example>
+///   <summary>Export objects with report-friendly column formats.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$rows | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -TableName Sales -TextColumn Id -CurrencyColumn Revenue -ColumnFormat @{ Rate = @{ Style = 'Percent'; Decimals = 1 }; Created = 'Date' } -FormatCultureName en-US -AutoFitFormattedColumn</code>
+///   <para>Formats ID values as text, Revenue as currency, Rate as a one-decimal percentage, and Created as a short date while keeping formatting logic in OfficeIMO.</para>
+/// </example>
 [Cmdlet(VerbsData.Export, "OfficeExcel")]
 [Alias("ExcelExport")]
 public sealed class ExportOfficeExcelCommand : PSCmdlet
@@ -123,6 +129,58 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     /// <summary>Exclude specific properties from exported objects.</summary>
     [Parameter]
     public string[]? ExcludeProperty { get; set; }
+
+    /// <summary>Header-to-format map. Values may be preset names such as Text, Currency, Percent, Date, or custom Excel number formats.</summary>
+    [Parameter]
+    public Hashtable? ColumnFormat { get; set; }
+
+    /// <summary>Headers that should be formatted as text, useful for IDs, zip codes, and leading-zero values.</summary>
+    [Parameter]
+    public string[]? TextColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as decimal numbers.</summary>
+    [Parameter]
+    public string[]? NumberColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as whole numbers.</summary>
+    [Parameter]
+    public string[]? IntegerColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as percentages.</summary>
+    [Parameter]
+    public string[]? PercentColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as currency.</summary>
+    [Parameter]
+    public string[]? CurrencyColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as dates.</summary>
+    [Parameter]
+    public string[]? DateColumn { get; set; }
+
+    /// <summary>Headers that should be formatted as date/time values.</summary>
+    [Parameter]
+    public string[]? DateTimeColumn { get; set; }
+
+    /// <summary>Decimal places used by friendly number, percent, and currency column presets.</summary>
+    [Parameter]
+    public int FormatDecimals { get; set; } = 2;
+
+    /// <summary>Culture used by friendly currency column presets, such as en-US or pl-PL.</summary>
+    [Parameter]
+    public string? FormatCultureName { get; set; }
+
+    /// <summary>Include header cells when applying export-time column formats.</summary>
+    [Parameter]
+    public SwitchParameter IncludeHeaderInColumnFormat { get; set; }
+
+    /// <summary>Auto-fit only columns that receive export-time column formats.</summary>
+    [Parameter]
+    public SwitchParameter AutoFitFormattedColumn { get; set; }
+
+    /// <summary>Continue when a requested export-time column format header is missing.</summary>
+    [Parameter]
+    public SwitchParameter IgnoreMissingColumnFormat { get; set; }
 
     /// <summary>Include properties that cannot be read by exporting a descriptive placeholder value.</summary>
     [Parameter]
@@ -257,6 +315,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }
 
+        var columnFormatPlan = BuildColumnFormatPlan();
+
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var directory = System.IO.Path.GetDirectoryName(resolvedPath);
         if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
@@ -307,7 +367,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var dataSet = ExcelTabularInputService.TryGetSingleDataSet(_input);
             if (dataSet != null)
             {
-                ExportDataSet(document, dataSet, style);
+                ExportDataSet(document, dataSet, style, columnFormatPlan);
                 ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, saveOptions: saveOptions);
                 WritePassThru(resolvedPath);
                 return;
@@ -323,7 +383,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             if (reader != null && CanExportReaderDirectly(isAppendingToExistingSheet))
             {
                 var readerSheet = PrepareSheet(document);
-                var readerRange = ExportDataReader(readerSheet, reader, style);
+                var readerRange = ExportDataReader(readerSheet, reader, style, columnFormatPlan);
                 if (!string.IsNullOrWhiteSpace(readerRange))
                 {
                     WriteVerbose($"Exported data reader to {readerSheet.Name}!{readerRange}.");
@@ -345,6 +405,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 dataStartRow,
                 includeHeaders,
                 style,
+                columnFormatPlan,
                 out var objectRange))
             {
                 if (!string.IsNullOrWhiteSpace(objectRange))
@@ -372,6 +433,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
             var range = WriteData(sheet, data, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, ResolveTableName(data));
+            ApplyColumnFormatPlan(
+                sheet,
+                columnFormatPlan,
+                ResolveColumnFormatHeaderRow(document, sheet, columnFormatPlan, isAppendingToExistingSheet, appendTableName, includeHeaders, dataStartRow),
+                requireExplicitHeaderRow: !includeHeaders);
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -421,10 +487,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         int dataStartRow,
         bool includeHeaders,
         TableStyle style,
+        ExcelColumnFormatPlan? columnFormatPlan,
         out string range)
     {
         range = string.Empty;
-        if (!CanExportObjectsThroughOfficeImoObjectPath(isAppendingToExistingSheet, preserveWorkbook, dataStartRow, includeHeaders))
+        if (!CanExportObjectsThroughOfficeImoObjectPath(isAppendingToExistingSheet, preserveWorkbook, dataStartRow, includeHeaders, columnFormatPlan))
         {
             return false;
         }
@@ -453,10 +520,16 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             ApplyTableStyleOptions(sheet, range, style);
         }
 
+        ApplyColumnFormatPlan(sheet, columnFormatPlan, includeHeaders ? dataStartRow : null);
         return true;
     }
 
-    private bool CanExportObjectsThroughOfficeImoObjectPath(bool isAppendingToExistingSheet, bool preserveWorkbook, int dataStartRow, bool includeHeaders)
+    private bool CanExportObjectsThroughOfficeImoObjectPath(
+        bool isAppendingToExistingSheet,
+        bool preserveWorkbook,
+        int dataStartRow,
+        bool includeHeaders,
+        ExcelColumnFormatPlan? columnFormatPlan)
     {
         return !isAppendingToExistingSheet &&
             !preserveWorkbook &&
@@ -466,6 +539,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             string.IsNullOrWhiteSpace(Title) &&
             ExcludeProperty is not { Length: > 0 } &&
             !AutoFit.IsPresent &&
+            !AutoFitFormattedColumn.IsPresent &&
+            !ColumnFormatRequiresMaterializedCells(columnFormatPlan) &&
             !BoldTopRow.IsPresent &&
             !FreezeTopRow.IsPresent &&
             !FreezeFirstColumn.IsPresent;
@@ -494,9 +569,79 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return items.Count > 0;
     }
 
-    private string ExportDataReader(ExcelSheet sheet, IDataReader reader, TableStyle style)
+    private ExcelColumnFormatPlan? BuildColumnFormatPlan()
+        => ExcelColumnFormatPlanService.Build(
+            ColumnFormat,
+            TextColumn,
+            NumberColumn,
+            IntegerColumn,
+            PercentColumn,
+            CurrencyColumn,
+            DateColumn,
+            DateTimeColumn,
+            FormatDecimals,
+            FormatCultureName);
+
+    private IReadOnlyList<ExcelColumnFormatResult> ApplyColumnFormatPlan(
+        ExcelSheet sheet,
+        ExcelColumnFormatPlan? plan,
+        int? headerRow = null,
+        bool throwOnMissing = true,
+        bool requireExplicitHeaderRow = false)
+    {
+        if (plan == null)
+        {
+            return Array.Empty<ExcelColumnFormatResult>();
+        }
+
+        if (requireExplicitHeaderRow && !headerRow.HasValue)
+        {
+            var headers = string.Join(", ", GetColumnFormatHeaders(plan));
+            WriteVerbose($"Column format headers were not applied on worksheet '{sheet.Name}' because no header row was emitted.");
+            if (throwOnMissing && !IgnoreMissingColumnFormat.IsPresent)
+            {
+                throw new PSArgumentException($"Column format headers were not found on worksheet '{sheet.Name}': {headers}. Export-time column formats require a header row; remove -NoHeader or use -IgnoreMissingColumnFormat for optional columns.");
+            }
+
+            return Array.Empty<ExcelColumnFormatResult>();
+        }
+
+        var results = sheet.ApplyColumnFormatPlan(
+            plan,
+            includeHeader: IncludeHeaderInColumnFormat.IsPresent,
+            autoFit: AutoFitFormattedColumn.IsPresent,
+            headerRow: headerRow);
+        var missing = results.Where(static result => !result.Applied).ToArray();
+        foreach (var result in missing)
+        {
+            WriteVerbose(result.Warning);
+        }
+
+        if (missing.Length > 0 && throwOnMissing && !IgnoreMissingColumnFormat.IsPresent)
+        {
+            var headers = string.Join(", ", missing.Select(static result => result.Header));
+            throw new PSArgumentException($"Column format headers were not found on worksheet '{sheet.Name}': {headers}. Use -IgnoreMissingColumnFormat for optional columns.");
+        }
+
+        return results;
+    }
+
+    private static string[] GetColumnFormatHeaders(ExcelColumnFormatPlan plan)
+        => plan.Rules
+            .Select(static rule => rule.Header.Trim())
+            .Where(static header => header.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+    private bool ColumnFormatRequiresMaterializedCells(ExcelColumnFormatPlan? plan)
+    {
+        return IncludeHeaderInColumnFormat.IsPresent || (plan?.Rules.Any(static rule => rule.IncludeHeader) ?? false);
+    }
+
+    private string ExportDataReader(ExcelSheet sheet, IDataReader reader, TableStyle style, ExcelColumnFormatPlan? columnFormatPlan)
     {
         var dataStartRow = StartRow;
+        var fieldCount = reader.FieldCount;
         if (!string.IsNullOrWhiteSpace(Title))
         {
             sheet.Cell(dataStartRow, StartColumn, Title!);
@@ -513,10 +658,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             style: style,
             includeAutoFilter: !NoAutoFilter.IsPresent,
             createTable: !NoTable.IsPresent,
-            autoFit: AutoFit.IsPresent);
+            autoFit: false);
 
         if (!string.IsNullOrWhiteSpace(range))
         {
+            ApplyColumnFormatPlan(sheet, columnFormatPlan, !NoHeader.IsPresent ? dataStartRow : null, requireExplicitHeaderRow: NoHeader.IsPresent);
+
             if (!NoTable.IsPresent)
             {
                 ApplyTableStyleOptions(sheet, range, style);
@@ -524,7 +671,12 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             if (BoldTopRow.IsPresent && !NoHeader.IsPresent)
             {
-                BoldRow(sheet, dataStartRow, StartColumn, reader.FieldCount);
+                BoldRow(sheet, dataStartRow, StartColumn, fieldCount);
+            }
+
+            if (AutoFit.IsPresent)
+            {
+                sheet.AutoFitColumnsFor(Enumerable.Range(StartColumn, fieldCount));
             }
 
             if (FreezeTopRow.IsPresent || FreezeFirstColumn.IsPresent)
@@ -538,7 +690,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return range;
     }
 
-    private void ExportDataSet(ExcelDocument document, DataSet dataSet, TableStyle style)
+    private void ExportDataSet(ExcelDocument document, DataSet dataSet, TableStyle style, ExcelColumnFormatPlan? columnFormatPlan)
     {
         if (dataSet.Tables.Count == 0)
         {
@@ -547,6 +699,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         var sheetNames = BuildDataSetWorksheetNames(document, dataSet, Append.IsPresent || ClearSheet.IsPresent);
         var usedTableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var formattedHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var tableIndex = 1;
         foreach (DataTable sourceTable in dataSet.Tables)
         {
@@ -572,6 +725,18 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var appendTableName = ResolveAppendTableName(document, sheet, isAppendingToExistingSheet);
             var tableName = ResolveDataSetTableName(table, usedTableNames);
             var range = WriteData(sheet, table, dataStartRow, includeHeaders, style, isAppendingToExistingSheet, appendTableName, tableName);
+            foreach (var result in ApplyColumnFormatPlan(
+                         sheet,
+                         columnFormatPlan,
+                         ResolveColumnFormatHeaderRow(document, sheet, columnFormatPlan, isAppendingToExistingSheet, appendTableName, includeHeaders, dataStartRow),
+                         throwOnMissing: false,
+                         requireExplicitHeaderRow: !includeHeaders))
+            {
+                if (result.Applied)
+                {
+                    formattedHeaders.Add(result.Header);
+                }
+            }
 
             if (BoldTopRow.IsPresent && includeHeaders)
             {
@@ -597,6 +762,28 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
             tableIndex++;
         }
+
+        ThrowForDataSetColumnFormatsMissingEverywhere(columnFormatPlan, formattedHeaders);
+    }
+
+    private void ThrowForDataSetColumnFormatsMissingEverywhere(ExcelColumnFormatPlan? plan, HashSet<string> formattedHeaders)
+    {
+        if (plan == null || IgnoreMissingColumnFormat.IsPresent)
+        {
+            return;
+        }
+
+        var missingEverywhere = plan.Rules
+            .Select(static rule => rule.Header)
+            .Where(header => !formattedHeaders.Contains(header))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (missingEverywhere.Length == 0)
+        {
+            return;
+        }
+
+        throw new PSArgumentException($"Column format headers were not found in any DataSet worksheet: {string.Join(", ", missingEverywhere)}. Use -IgnoreMissingColumnFormat for optional columns.");
     }
 
     private DataTable PrepareDataTableForExport(DataTable sourceTable)
@@ -793,6 +980,86 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         }
 
         return null;
+    }
+
+    private int? ResolveColumnFormatHeaderRow(
+        ExcelDocument document,
+        ExcelSheet sheet,
+        ExcelColumnFormatPlan? plan,
+        bool appendToExistingSheet,
+        string? appendTableName,
+        bool includeHeaders,
+        int dataStartRow)
+    {
+        if (includeHeaders)
+        {
+            return dataStartRow;
+        }
+
+        if (!appendToExistingSheet || plan == null)
+        {
+            return null;
+        }
+
+        var tableHeaderRow = ResolveExistingTableHeaderRow(document, sheet, appendTableName);
+        if (NoHeader.IsPresent)
+        {
+            return tableHeaderRow;
+        }
+
+        return tableHeaderRow ?? FindExistingHeaderRow(sheet, plan, allowPartialMatch: IgnoreMissingColumnFormat.IsPresent);
+    }
+
+    private int? ResolveExistingTableHeaderRow(ExcelDocument document, ExcelSheet sheet, string? tableName)
+    {
+        if (string.IsNullOrWhiteSpace(tableName))
+        {
+            return null;
+        }
+
+        var table = document.GetTables().FirstOrDefault(candidate =>
+            string.Equals(candidate.SheetName, sheet.Name, StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(candidate.Name, tableName, StringComparison.OrdinalIgnoreCase));
+        if (table != null && table.HasHeaderRow && !string.IsNullOrWhiteSpace(table.Range) &&
+            A1.TryParseRange(table.Range, out var tableStartRow, out _, out _, out _))
+        {
+            return Math.Max(1, tableStartRow);
+        }
+
+        return null;
+    }
+
+    private static int? FindExistingHeaderRow(ExcelSheet sheet, ExcelColumnFormatPlan plan, bool allowPartialMatch)
+    {
+        var requestedHeaders = GetColumnFormatHeaders(plan);
+        if (requestedHeaders.Length == 0)
+        {
+            return null;
+        }
+
+        var usedRange = sheet.GetUsedRangeA1();
+        if (!A1.TryParseRange(usedRange, out var firstRow, out var firstColumn, out var lastRow, out var lastColumn))
+        {
+            var (row, column) = A1.ParseCellRef(usedRange);
+            firstRow = lastRow = row;
+            firstColumn = lastColumn = column;
+        }
+
+        var headerRow = Math.Max(1, firstRow);
+        var rowHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        for (var column = Math.Max(1, firstColumn); column <= lastColumn; column++)
+        {
+            if (sheet.TryGetCellText(headerRow, column, out var text) && !string.IsNullOrWhiteSpace(text))
+            {
+                rowHeaders.Add(text.Trim());
+            }
+        }
+
+        var hasRequestedHeader = allowPartialMatch
+            ? requestedHeaders.Any(rowHeaders.Contains)
+            : requestedHeaders.All(rowHeaders.Contains);
+
+        return hasRequestedHeader ? headerRow : null;
     }
 
     private string? ResolveTableName(DataTable table, bool allowExplicitOverride = true)

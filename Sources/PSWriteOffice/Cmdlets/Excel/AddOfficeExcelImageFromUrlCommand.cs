@@ -6,12 +6,18 @@ using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
-/// <summary>Adds an image from a URL anchored to a worksheet cell.</summary>
+/// <summary>Adds an image from a URL anchored to a worksheet cell or range.</summary>
 /// <example>
-///   <summary>Insert an image from a URL at B2.</summary>
+///   <summary>Insert a scaled image from a URL at B2.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>ExcelSheet 'Data' { Add-OfficeExcelImageFromUrl -Address 'B2' -Url 'https://example.org/logo.png' -WidthPixels 120 -HeightPixels 40 }</code>
-///   <para>Downloads the remote image and anchors it to cell B2.</para>
+///   <code>ExcelSheet 'Data' { Add-OfficeExcelImageFromUrl -Address 'B2' -Url 'https://example.org/logo.png' -ScalePercent 20 -Name Logo -AltText 'Company logo' }</code>
+///   <para>Downloads the remote image, sizes it to 20 percent of its original dimensions, and anchors it to cell B2.</para>
+/// </example>
+/// <example>
+///   <summary>Pin a URL image to a worksheet range.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>ExcelSheet 'Data' { Add-OfficeExcelImageFromUrl -Range 'A1:C15' -Url 'https://example.org/logo.png' -Placement MoveAndSize }</code>
+///   <para>Uses Excel's two-cell anchor so the image moves and resizes with the cells in A1:C15.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelImageFromUrl", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelImageFromUrl")]
@@ -46,15 +52,26 @@ public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
 
     /// <summary>A1-style cell address (e.g., A1, C5).</summary>
     [Parameter]
+    [Alias("Cell")]
     public string? Address { get; set; }
+
+    /// <summary>A1-style range (for example, A1:C15) for a two-cell anchor that can move and resize with cells.</summary>
+    [Parameter]
+    public string? Range { get; set; }
 
     /// <summary>Image width in pixels.</summary>
     [Parameter]
+    [Alias("Width")]
     public int WidthPixels { get; set; } = 96;
 
     /// <summary>Image height in pixels.</summary>
     [Parameter]
+    [Alias("Height")]
     public int HeightPixels { get; set; } = 32;
+
+    /// <summary>Percentage of the original image size. Cannot be combined with WidthPixels or HeightPixels.</summary>
+    [Parameter]
+    public double? ScalePercent { get; set; }
 
     /// <summary>Horizontal offset in pixels from the cell origin.</summary>
     [Parameter]
@@ -64,6 +81,42 @@ public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
     [Parameter]
     public int OffsetYPixels { get; set; }
 
+    /// <summary>Horizontal offset in pixels for the range end marker when using Range.</summary>
+    [Parameter]
+    public int EndOffsetXPixels { get; set; }
+
+    /// <summary>Vertical offset in pixels for the range end marker when using Range.</summary>
+    [Parameter]
+    public int EndOffsetYPixels { get; set; }
+
+    /// <summary>Optional drawing name used by Excel's selection pane.</summary>
+    [Parameter]
+    public string? Name { get; set; }
+
+    /// <summary>Optional alternative text description for accessibility.</summary>
+    [Parameter]
+    public string? AltText { get; set; }
+
+    /// <summary>Optional alternative text title.</summary>
+    [Parameter]
+    public string? Title { get; set; }
+
+    /// <summary>Marks the image as decorative by clearing alternative text metadata.</summary>
+    [Parameter]
+    public SwitchParameter Decorative { get; set; }
+
+    /// <summary>Do not lock the image aspect ratio in Excel.</summary>
+    [Parameter]
+    public SwitchParameter NoLockAspectRatio { get; set; }
+
+    /// <summary>How a range-anchored image behaves when cells move or resize.</summary>
+    [Parameter]
+    public ExcelImagePlacement Placement { get; set; } = ExcelImagePlacement.MoveAndSize;
+
+    /// <summary>Clockwise image rotation in degrees.</summary>
+    [Parameter]
+    public double RotationDegrees { get; set; }
+
     /// <summary>Emit the worksheet after inserting the image.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -71,13 +124,9 @@ public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (WidthPixels <= 0 || HeightPixels <= 0)
-        {
-            throw new PSArgumentException("WidthPixels and HeightPixels must be greater than zero.");
-        }
+        ValidateImageOptions();
 
         var sheet = ResolveSheet();
-        var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
 
         if (TryGetLocalFilePath(Url, out var localPath))
         {
@@ -86,12 +135,11 @@ public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
                 throw new FileNotFoundException($"Image file '{localPath}' was not found.", localPath);
             }
 
-            var bytes = File.ReadAllBytes(localPath);
-            sheet.AddImageAt(row, column, bytes, GetContentType(localPath), WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+            AddLocalImage(sheet, localPath);
         }
         else
         {
-            sheet.AddImageFromUrlAt(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+            AddRemoteImage(sheet);
         }
 
         if (PassThru.IsPresent)
@@ -116,6 +164,99 @@ public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
         return context.RequireSheet();
     }
 
+    private void AddLocalImage(ExcelSheet sheet, string path)
+    {
+        ExcelImage image;
+        if (!string.IsNullOrWhiteSpace(Range))
+        {
+            image = sheet.AddImageFromFileToRange(Range!, path, OffsetXPixels, OffsetYPixels, EndOffsetXPixels, EndOffsetYPixels,
+                Name, Decorative.IsPresent ? null : AltText, Title, !NoLockAspectRatio.IsPresent, Placement, RotationDegrees);
+        }
+        else
+        {
+            var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
+            var (width, height) = ResolveCellImageSize();
+            image = sheet.AddImageFromFile(row, column, path, width, height, ScalePercent, OffsetXPixels, OffsetYPixels,
+                Name, Decorative.IsPresent ? null : AltText, Title, !NoLockAspectRatio.IsPresent, RotationDegrees);
+        }
+
+        if (Decorative.IsPresent)
+        {
+            image.Decorative();
+        }
+    }
+
+    private void AddRemoteImage(ExcelSheet sheet)
+    {
+        ExcelImage? image;
+        if (!string.IsNullOrWhiteSpace(Range))
+        {
+            image = sheet.AddImageFromUrlToRange(Range!, Url, OffsetXPixels, OffsetYPixels, EndOffsetXPixels, EndOffsetYPixels,
+                Name, Decorative.IsPresent ? null : AltText, Title, !NoLockAspectRatio.IsPresent, Placement, RotationDegrees);
+        }
+        else
+        {
+            var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
+            var (width, height) = ResolveCellImageSize();
+            image = sheet.AddImageFromUrl(row, column, Url, width, height, ScalePercent, OffsetXPixels, OffsetYPixels,
+                Name, Decorative.IsPresent ? null : AltText, Title, !NoLockAspectRatio.IsPresent, RotationDegrees);
+        }
+
+        if (Decorative.IsPresent)
+        {
+            image?.Decorative();
+        }
+    }
+
+    private void ValidateImageOptions()
+    {
+        bool widthBound = MyInvocation.BoundParameters.ContainsKey(nameof(WidthPixels));
+        bool heightBound = MyInvocation.BoundParameters.ContainsKey(nameof(HeightPixels));
+        bool rangeBound = !string.IsNullOrWhiteSpace(Range);
+
+        if (WidthPixels <= 0 || HeightPixels <= 0)
+        {
+            throw new PSArgumentException("WidthPixels and HeightPixels must be greater than zero.");
+        }
+
+        if (ScalePercent.HasValue && (ScalePercent.Value <= 0 || double.IsNaN(ScalePercent.Value) || double.IsInfinity(ScalePercent.Value)))
+        {
+            throw new PSArgumentException("ScalePercent must be a positive finite number.");
+        }
+
+        if (ScalePercent.HasValue && (widthBound || heightBound))
+        {
+            throw new PSArgumentException("ScalePercent cannot be combined with WidthPixels or HeightPixels.");
+        }
+
+        if (rangeBound && (Row.HasValue || Column.HasValue || !string.IsNullOrWhiteSpace(Address)))
+        {
+            throw new PSArgumentException("Use either Range or Row/Column/Address, not both.");
+        }
+
+        if (rangeBound && (ScalePercent.HasValue || widthBound || heightBound))
+        {
+            throw new PSArgumentException("Range determines the image size. Do not combine Range with ScalePercent, WidthPixels, or HeightPixels.");
+        }
+
+        if (Decorative.IsPresent && (!string.IsNullOrWhiteSpace(AltText) || !string.IsNullOrWhiteSpace(Title)))
+        {
+            throw new PSArgumentException("Decorative images cannot also define AltText or Title.");
+        }
+    }
+
+    private (int? Width, int? Height) ResolveCellImageSize()
+    {
+        if (ScalePercent.HasValue)
+        {
+            return (null, null);
+        }
+
+        bool widthBound = MyInvocation.BoundParameters.ContainsKey(nameof(WidthPixels));
+        bool heightBound = MyInvocation.BoundParameters.ContainsKey(nameof(HeightPixels));
+        return (widthBound ? WidthPixels : 96, heightBound ? HeightPixels : 32);
+    }
+
     private static bool TryGetLocalFilePath(string url, out string path)
     {
         path = string.Empty;
@@ -126,18 +267,5 @@ public sealed class AddOfficeExcelImageFromUrlCommand : PSCmdlet
 
         path = uri.LocalPath;
         return !string.IsNullOrWhiteSpace(path);
-    }
-
-    private static string GetContentType(string path)
-    {
-        var ext = System.IO.Path.GetExtension(path)?.ToLowerInvariant();
-        return ext switch
-        {
-            ".jpg" or ".jpeg" => "image/jpeg",
-            ".gif" => "image/gif",
-            ".bmp" => "image/bmp",
-            ".tif" or ".tiff" => "image/tiff",
-            _ => "image/png"
-        };
     }
 }

@@ -363,6 +363,21 @@ function Get-BenchmarkSmallSheetGroups {
     }
 }
 
+function Get-BenchmarkWorkbookMergeInput {
+    param(
+        [object[]] $Rows,
+        [string] $BasePath
+    )
+
+    $firstCount = [math]::Max(1, [math]::Floor($Rows.Count / 2))
+    [pscustomobject]@{
+        SourceA = [IO.Path]::Combine([IO.Path]::GetDirectoryName($BasePath), ([IO.Path]::GetFileNameWithoutExtension($BasePath) + '.source-a.xlsx'))
+        SourceB = [IO.Path]::Combine([IO.Path]::GetDirectoryName($BasePath), ([IO.Path]::GetFileNameWithoutExtension($BasePath) + '.source-b.xlsx'))
+        RowsA = @($Rows | Select-Object -First $firstCount)
+        RowsB = @($Rows | Select-Object -Skip $firstCount)
+    }
+}
+
 function Get-RowCount {
     param([object] $Rows)
 
@@ -718,6 +733,45 @@ function Get-ExcelBenchmarkScenarios {
                 if ($excel) {
                     Close-ExcelPackage -ExcelPackage $excel
                 }
+            }
+        }
+        New-ExportScenario -Key 'workbook-package-merge' -Name 'Merge workbook sheets with package copy' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-workbook-package-merge' -Script {
+            param($Context)
+
+            $input = Get-BenchmarkWorkbookMergeInput -Rows $Context.Data -BasePath $Context.Path
+            $input.RowsA | Export-OfficeExcel -Path $input.SourceA -WorksheetName 'Data' -TableName 'DataA'
+            $input.RowsB | Export-OfficeExcel -Path $input.SourceB -WorksheetName 'Data' -TableName 'DataB'
+            Join-OfficeExcelWorkbook -Path $Context.Path -SourcePath @($input.SourceA, $input.SourceB) -CopyMode Package -SheetNamePrefix 'Merged' | Out-Null
+        }
+        New-ExportScenario -Key 'workbook-package-merge' -Name 'Merge workbook sheets with package copy' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-workbook-package-merge' -Script {
+            param($Context)
+
+            $input = Get-BenchmarkWorkbookMergeInput -Rows $Context.Data -BasePath $Context.Path
+            $input.RowsA | Export-Excel -Path $input.SourceA -WorksheetName 'Data' -TableName 'DataA' -AutoFilter
+            $input.RowsB | Export-Excel -Path $input.SourceB -WorksheetName 'Data' -TableName 'DataB' -AutoFilter
+
+            $targetPackage = [OfficeOpenXml.ExcelPackage]::new([IO.FileInfo]$Context.Path)
+            try {
+                foreach ($item in @(
+                    [pscustomobject]@{ Path = $input.SourceA; Name = 'MergedDataA' }
+                    [pscustomobject]@{ Path = $input.SourceB; Name = 'MergedDataB' }
+                )) {
+                    $sourcePackage = [OfficeOpenXml.ExcelPackage]::new([IO.FileInfo]$item.Path)
+                    try {
+                        $sourceSheet = $sourcePackage.Workbook.Worksheets['Data']
+                        if ($null -eq $sourceSheet) {
+                            throw "Source worksheet 'Data' was not found in '$($item.Path)'."
+                        }
+
+                        $null = $targetPackage.Workbook.Worksheets.Add($item.Name, $sourceSheet)
+                    } finally {
+                        $sourcePackage.Dispose()
+                    }
+                }
+
+                $targetPackage.Save()
+            } finally {
+                $targetPackage.Dispose()
             }
         }
         New-ExportScenario -Key 'named-range-workbook' -Name 'Export workbook with named data range' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-named-range-workbook' -FollowUps @($defaultImport, $namedRangeRead) -Script {
@@ -1097,6 +1151,26 @@ function Get-BenchmarkModuleDetails {
     }
 }
 
+function Get-LoadedAssemblyDetails {
+    param([string] $Name)
+
+    $assembly = [AppDomain]::CurrentDomain.GetAssemblies() |
+        Where-Object { $_.GetName().Name -eq $Name } |
+        Sort-Object { $_.GetName().Version } -Descending |
+        Select-Object -First 1
+
+    if (-not $assembly) {
+        return $null
+    }
+
+    [pscustomobject]@{
+        Name = $assembly.GetName().Name
+        Version = $assembly.GetName().Version.ToString()
+        Location = $assembly.Location
+        FullName = $assembly.FullName
+    }
+}
+
 function Get-BenchmarkEnvironment {
     $processor = $null
     $computerSystem = $null
@@ -1467,6 +1541,10 @@ $moduleDetails = [ordered]@{
     ImportExcel = Get-BenchmarkModuleDetails -Name ImportExcel
     ExcelFast = Get-BenchmarkModuleDetails -Name ExcelFast
 }
+$assemblyDetails = [ordered]@{
+    OfficeOpenXml = Get-LoadedAssemblyDetails -Name OfficeOpenXml
+    OfficeIMOExcel = Get-LoadedAssemblyDetails -Name OfficeIMO.Excel
+}
 
 [pscustomobject]@{
     PowerShellVersion = $PSVersionTable.PSVersion.ToString()
@@ -1477,6 +1555,7 @@ $moduleDetails = [ordered]@{
     ExcelFast = if ($moduleDetails.ExcelFast) { $moduleDetails.ExcelFast.DisplayVersion } else { $null }
     PSWriteOffice = if ($moduleDetails.PSWriteOffice) { $moduleDetails.PSWriteOffice.DisplayVersion } else { $null }
     Modules = $moduleDetails
+    Assemblies = $assemblyDetails
     OfficeIMOExcelAssembly = $officeIMOExcelAssemblyVersion
     OfficeIMOExcelAssemblyPath = if (Test-Path $officeIMOExcelAssemblyPath) { $officeIMOExcelAssemblyPath } else { $null }
     Engines = $Engine

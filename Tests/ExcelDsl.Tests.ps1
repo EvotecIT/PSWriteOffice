@@ -794,6 +794,12 @@ Describe 'Excel DSL surface' {
         Test-Path $path | Should -BeTrue
     }
 
+    It 'exports workbook merge aliases from the manifest' {
+        (Get-Alias -Name Merge-OfficeExcelWorkbook -ErrorAction Stop).ResolvedCommandName | Should -Be 'Join-OfficeExcelWorkbook'
+        (Get-Alias -Name ExcelWorkbookJoin -ErrorAction Stop).ResolvedCommandName | Should -Be 'Join-OfficeExcelWorkbook'
+        (Get-Alias -Name ExcelWorkbookMerge -ErrorAction Stop).ResolvedCommandName | Should -Be 'Join-OfficeExcelWorkbook'
+    }
+
     It 'preserves legacy Excel table data parameter aliases' {
         $path = Join-Path $TestDrive 'DslExcelTableDataAliases.xlsx'
         $rows = @(
@@ -1051,6 +1057,136 @@ Describe 'Excel DSL surface' {
         $imported[1].Region | Should -Be 'EMEA'
         $imported[1].Revenue | Should -Be 200
         $imported[1].Enabled | Should -BeFalse
+    }
+
+    It 'applies export-time column formats by header' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelColumnFormats.xlsx'
+        $rows = @(
+            [PSCustomObject]@{ Id = '00042'; Revenue = 1234.5; Rate = 0.125; Created = [DateTime] '2026-06-23' }
+        )
+
+        $rows | Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -TextColumn Id -CurrencyColumn Revenue -ColumnFormat @{
+            Rate = @{ Style = 'Percent'; Decimals = 1 }
+            Created = 'Date'
+        } -FormatCultureName en-US -AutoFitFormattedColumn
+
+        $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $idCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='A2']")
+        $revenueCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='B2']")
+        $rateCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='C2']")
+        $createdCell = $sheetXml.SelectSingleNode("//*[local-name()='c' and @r='D2']")
+
+        $idCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $revenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $rateCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $createdCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
+        $stylesXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/styles.xml'
+        $formats = @($stylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
+        $formats | Should -Contain '@'
+        ($formats -join '|') | Should -Match '\$'
+        ($formats -join '|') | Should -Match '0\.0%'
+        ($formats -join '|') | Should -Match 'yyyy-mm-dd'
+
+        { $rows | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelMissingColumnFormat.xlsx') -ColumnFormat @{ Missing = 'Integer' } -ErrorAction Stop } |
+            Should -Throw '*Column format headers were not found*'
+
+        { $rows | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelNoHeaderColumnFormat.xlsx') -NoHeader -CurrencyColumn Revenue -ErrorAction Stop } |
+            Should -Throw '*require a header row*'
+
+        $rawAppendPath = Join-Path $TestDrive 'ExportOfficeExcelRawAppendMissingHeader.xlsx'
+        @([PSCustomObject]@{ Region = 'Revenue'; Amount = 100 }) |
+            Export-OfficeExcel -Path $rawAppendPath -WorksheetName 'Data' -NoTable
+        { [PSCustomObject]@{ Region = 'EMEA'; Amount = 200 } | Export-OfficeExcel -Path $rawAppendPath -WorksheetName 'Data' -Append -NoTable -CurrencyColumn Revenue -ErrorAction Stop } |
+            Should -Throw '*Column format headers were not found*'
+
+        $rawAppendFormatPath = Join-Path $TestDrive 'ExportOfficeExcelRawAppendColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'NA'; Revenue = 123.45 }) |
+            Export-OfficeExcel -Path $rawAppendFormatPath -WorksheetName 'Data' -NoTable
+        [PSCustomObject]@{ Region = 'EMEA'; Revenue = 987.65 } |
+            Export-OfficeExcel -Path $rawAppendFormatPath -WorksheetName 'Data' -Append -NoTable -CurrencyColumn Revenue -FormatCultureName en-US
+        $rawAppendSheetXml = Get-ZipXmlDocumentLocal -Path $rawAppendFormatPath -Entry 'xl/worksheets/sheet1.xml'
+        $rawAppendRevenueCell = $rawAppendSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+        $rawAppendRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
+        $rawAppendPartialFormatPath = Join-Path $TestDrive 'ExportOfficeExcelRawAppendPartialColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'NA'; Revenue = 123.45 }) |
+            Export-OfficeExcel -Path $rawAppendPartialFormatPath -WorksheetName 'Data' -NoTable
+        [PSCustomObject]@{ Region = 'EMEA'; Revenue = 987.65 } |
+            Export-OfficeExcel -Path $rawAppendPartialFormatPath -WorksheetName 'Data' -Append -NoTable -CurrencyColumn Revenue -IntegerColumn Missing -IgnoreMissingColumnFormat -FormatCultureName en-US
+        $rawAppendPartialSheetXml = Get-ZipXmlDocumentLocal -Path $rawAppendPartialFormatPath -Entry 'xl/worksheets/sheet1.xml'
+        $rawAppendPartialRevenueCell = $rawAppendPartialSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+        $rawAppendPartialRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
+        $headerlessTableAppendPath = Join-Path $TestDrive 'ExportOfficeExcelHeaderlessTableAppendColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'Revenue'; Amount = 100 }) |
+            Export-OfficeExcel -Path $headerlessTableAppendPath -WorksheetName 'Data' -TableName 'Sales' -NoHeader
+        { [PSCustomObject]@{ Region = 'EMEA'; Amount = 200 } | Export-OfficeExcel -Path $headerlessTableAppendPath -WorksheetName 'Data' -TableName 'Sales' -Append -NoHeader -CurrencyColumn Revenue -ErrorAction Stop } |
+            Should -Throw '*require a header row*'
+
+        $headerlessRawAppendPath = Join-Path $TestDrive 'ExportOfficeExcelHeaderlessRawAppendColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'Revenue'; Amount = 100 }) |
+            Export-OfficeExcel -Path $headerlessRawAppendPath -WorksheetName 'Data' -NoTable -NoHeader
+        { [PSCustomObject]@{ Region = 'EMEA'; Amount = 200 } | Export-OfficeExcel -Path $headerlessRawAppendPath -WorksheetName 'Data' -Append -NoTable -NoHeader -CurrencyColumn Revenue -ErrorAction Stop } |
+            Should -Throw '*require a header row*'
+
+        $titlePath = Join-Path $TestDrive 'ExportOfficeExcelColumnFormatsWithTitle.xlsx'
+        $rows | Export-OfficeExcel -Path $titlePath -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export' -CurrencyColumn Revenue -FormatCultureName en-US
+        $titleSheetXml = Get-ZipXmlDocumentLocal -Path $titlePath -Entry 'xl/worksheets/sheet1.xml'
+        $titleRevenueCell = $titleSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+        $titleRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
+        $appendTitlePath = Join-Path $TestDrive 'ExportOfficeExcelAppendColumnFormatsWithTitle.xlsx'
+        $rows | Export-OfficeExcel -Path $appendTitlePath -WorksheetName 'Data' -TableName 'Sales' -Title 'Sales Export'
+        [PSCustomObject]@{ Id = '00043'; Revenue = 987.65; Rate = 0.2; Created = [DateTime] '2026-06-24' } |
+            Export-OfficeExcel -Path $appendTitlePath -WorksheetName 'Data' -TableName 'Sales' -Append -CurrencyColumn Revenue -FormatCultureName en-US
+        $appendTitleSheetXml = Get-ZipXmlDocumentLocal -Path $appendTitlePath -Entry 'xl/worksheets/sheet1.xml'
+        $appendTitleRevenueCell = $appendTitleSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B4']")
+        $appendTitleRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+        $appendTitleStylesXml = Get-ZipXmlDocumentLocal -Path $appendTitlePath -Entry 'xl/styles.xml'
+        $appendTitleFormats = @($appendTitleStylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
+        ($appendTitleFormats -join '|') | Should -Match '\$'
+
+        $customPath = Join-Path $TestDrive 'ExportOfficeExcelNumericCustomFormat.xlsx'
+        [PSCustomObject]@{ Count = 42 } | Export-OfficeExcel -Path $customPath -ColumnFormat @{ Count = '00000' }
+        $customStylesXml = Get-ZipXmlDocumentLocal -Path $customPath -Entry 'xl/styles.xml'
+        $customFormats = @($customStylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
+        $customFormats | Should -Contain '00000'
+
+        $friendlyPresetPath = Join-Path $TestDrive 'ExportOfficeExcelFriendlyPresetColumnFormats.xlsx'
+        [PSCustomObject]@{ Created = [DateTime] '2026-06-24'; Updated = [DateTime] '2026-06-25' } |
+            Export-OfficeExcel -Path $friendlyPresetPath -ColumnFormat @{ Created = 'Date Time'; Updated = @{ Style = 'Date-Time' } }
+        $friendlyPresetStylesXml = Get-ZipXmlDocumentLocal -Path $friendlyPresetPath -Entry 'xl/styles.xml'
+        $friendlyPresetFormats = @($friendlyPresetStylesXml.SelectNodes("//*[local-name()='numFmt']") | ForEach-Object { $_.GetAttribute('formatCode') })
+        ($friendlyPresetFormats -join '|') | Should -Match 'yyyy-mm-dd hh:mm:ss'
+        $friendlyPresetFormats | Should -Not -Contain 'Date Time'
+        $friendlyPresetFormats | Should -Not -Contain 'Date-Time'
+
+        $appendNoHeaderExistingTablePath = Join-Path $TestDrive 'ExportOfficeExcelAppendNoHeaderExistingTableColumnFormats.xlsx'
+        @([PSCustomObject]@{ Region = 'NA'; Revenue = 123.45 }) |
+            Export-OfficeExcel -Path $appendNoHeaderExistingTablePath -WorksheetName 'Data' -TableName 'Sales'
+        [PSCustomObject]@{ Region = 'EMEA'; Revenue = 987.65 } |
+            Export-OfficeExcel -Path $appendNoHeaderExistingTablePath -WorksheetName 'Data' -TableName 'Sales' -Append -NoHeader -CurrencyColumn Revenue -FormatCultureName en-US
+        $appendNoHeaderExistingTableSheetXml = Get-ZipXmlDocumentLocal -Path $appendNoHeaderExistingTablePath -Entry 'xl/worksheets/sheet1.xml'
+        $appendNoHeaderExistingTableRevenueCell = $appendNoHeaderExistingTableSheetXml.SelectSingleNode("//*[local-name()='c' and @r='B3']")
+        $appendNoHeaderExistingTableRevenueCell.GetAttribute('s') | Should -Not -BeNullOrEmpty
+
+        $dataSet = [System.Data.DataSet]::new('Mixed')
+        $sales = [System.Data.DataTable]::new('Sales')
+        $null = $sales.Columns.Add('Region', [string])
+        $null = $sales.Columns.Add('Revenue', [decimal])
+        $null = $sales.Rows.Add('NA', 100.5)
+        $inventory = [System.Data.DataTable]::new('Inventory')
+        $null = $inventory.Columns.Add('Item', [string])
+        $null = $inventory.Columns.Add('Count', [int])
+        $null = $inventory.Rows.Add('Widget', 3)
+        $dataSet.Tables.Add($sales)
+        $dataSet.Tables.Add($inventory)
+
+        { $dataSet | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelDataSetColumnFormats.xlsx') -CurrencyColumn Revenue -IntegerColumn Count -ErrorAction Stop } |
+            Should -Not -Throw
+        { $dataSet | Export-OfficeExcel -Path (Join-Path $TestDrive 'ExportOfficeExcelDataSetMissingColumnFormat.xlsx') -ColumnFormat @{ Missing = 'Integer' } -ErrorAction Stop } |
+            Should -Throw '*not found in any DataSet worksheet*'
     }
 
     It 'appends rows without rewriting headers' {
@@ -3276,7 +3412,7 @@ Describe 'Excel DSL surface' {
 
         Copy-OfficeExcelSheet -Path $path -SourceSheet 'Data' -NewName 'DataCopy' | Should -Not -BeNullOrEmpty
         Move-OfficeExcelSheet -Path $path -Sheet 'DataCopy' -Index 0
-        Copy-OfficeExcelSheet -Path $path -SourcePath $sourcePath -SourceSheet 'External' -NewName 'ExternalCopy' | Should -Not -BeNullOrEmpty
+        Copy-OfficeExcelSheet -Path $path -SourcePath $sourcePath -SourceSheet 'External' -NewName 'ExternalCopy' -CopyMode Package | Should -Not -BeNullOrEmpty
         $join = Join-OfficeExcelSheet -Path $path -TargetSheet 'Data' -SourceSheet 'More' -MatchColumnsByHeader
         Set-OfficeExcelPrintArea -Path $path -Sheet 'Data' -Range 'A1:B4'
         Set-OfficeExcelPrintTitles -Path $path -Sheet 'Data' -FirstRow 1 -LastRow 1
@@ -3302,6 +3438,41 @@ Describe 'Excel DSL surface' {
         $names = @(Get-OfficeExcelNamedRange -Path $path -Sheet 'Data')
         @($names | Where-Object Name -eq '_xlnm.Print_Area').Count | Should -Be 1
         @($names | Where-Object Name -eq '_xlnm.Print_Titles').Count | Should -Be 1
+    }
+
+    It 'merges workbooks through the package copy fast path' {
+        $targetPath = Join-Path $TestDrive 'ExcelWorkbookPackageMerge.xlsx'
+        $sourceAPath = Join-Path $TestDrive 'ExcelWorkbookPackageMerge-A.xlsx'
+        $sourceBPath = Join-Path $TestDrive 'ExcelWorkbookPackageMerge-B.xlsx'
+
+        New-OfficeExcel -Path $sourceAPath {
+            Add-OfficeExcelSheet -Name 'First' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Name'
+                Set-OfficeExcelCell -Address 'A2' -Value 'Alpha'
+            }
+        }
+        New-OfficeExcel -Path $sourceBPath {
+            Add-OfficeExcelSheet -Name 'Second' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Name'
+                Set-OfficeExcelCell -Address 'A2' -Value 'Beta'
+            }
+        }
+
+        $results = @(Join-OfficeExcelWorkbook -Path $targetPath -SourcePath @($sourceAPath, $sourceBPath) -CopyMode Package -SheetNamePrefix 'Merged')
+        $results.Count | Should -Be 2
+        $results[0].SheetCount | Should -Be 1
+        $results[1].SheetCount | Should -Be 1
+        $results[0].TargetSheets | Should -Contain 'MergedFirst'
+        $results[1].TargetSheets | Should -Contain 'MergedSecond'
+
+        $summary = Get-OfficeExcelSummary -Path $targetPath -IncludeSheets
+        $summary.Sheets.Name | Should -Contain 'MergedFirst'
+        $summary.Sheets.Name | Should -Contain 'MergedSecond'
+
+        $first = @(Import-OfficeExcel -Path $targetPath -WorksheetName 'MergedFirst' -Range 'A1:A2')
+        $second = @(Import-OfficeExcel -Path $targetPath -WorksheetName 'MergedSecond' -Range 'A1:A2')
+        $first[0].Name | Should -Be 'Alpha'
+        $second[0].Name | Should -Be 'Beta'
     }
 
     It 'finds, replaces, and edits Excel row values' {
@@ -3814,6 +3985,38 @@ Describe 'Excel DSL surface' {
         $sheetXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/worksheets/sheet1.xml'
         $hyperlinks = $sheetXml.SelectNodes("/*[local-name()='worksheet']/*[local-name()='hyperlinks']/*[local-name()='hyperlink']")
         $hyperlinks.Count | Should -Be 2
+    }
+
+    It 'supports scaled and range-anchored worksheet images' {
+        $path = Join-Path $TestDrive 'DslExcelImagePlacement.xlsx'
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Images' -Content {
+                Add-OfficeExcelImage -Range 'A1:C3' -Path $imagePath -Name 'RangeLogo' -AltText 'Logo pinned to report header' -Title 'Pinned logo' -Placement MoveAndSize
+                Add-OfficeExcelImage -Address 'E2' -Path $imagePath -ScalePercent 100 -Name 'ScaledLogo' -AltText 'Scaled logo' -RotationDegrees 12
+            }
+        } | Out-Null
+
+        $drawingXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/drawings/drawing1.xml'
+        $twoCellAnchor = $drawingXml.SelectSingleNode("/*[local-name()='wsDr']/*[local-name()='twoCellAnchor']")
+        $twoCellAnchor | Should -Not -BeNullOrEmpty
+        $twoCellAnchor.SelectSingleNode("*[local-name()='from']/*[local-name()='col']").InnerText | Should -Be '0'
+        $twoCellAnchor.SelectSingleNode("*[local-name()='from']/*[local-name()='row']").InnerText | Should -Be '0'
+        $twoCellAnchor.SelectSingleNode("*[local-name()='to']/*[local-name()='col']").InnerText | Should -Be '3'
+        $twoCellAnchor.SelectSingleNode("*[local-name()='to']/*[local-name()='row']").InnerText | Should -Be '3'
+
+        $rangeProperties = $twoCellAnchor.SelectSingleNode(".//*[local-name()='cNvPr']")
+        $rangeProperties.GetAttribute('name') | Should -Be 'RangeLogo'
+        $rangeProperties.GetAttribute('descr') | Should -Be 'Logo pinned to report header'
+        $rangeProperties.GetAttribute('title') | Should -Be 'Pinned logo'
+
+        $oneCellAnchor = $drawingXml.SelectSingleNode("/*[local-name()='wsDr']/*[local-name()='oneCellAnchor']")
+        $oneCellAnchor | Should -Not -BeNullOrEmpty
+        $scaledProperties = $oneCellAnchor.SelectSingleNode(".//*[local-name()='cNvPr']")
+        $scaledProperties.GetAttribute('name') | Should -Be 'ScaledLogo'
+        $scaledProperties.GetAttribute('descr') | Should -Be 'Scaled logo'
+        $oneCellAnchor.SelectSingleNode(".//*[local-name()='xfrm']").GetAttribute('rot') | Should -Be '720000'
     }
 
     It 'supports internal link helpers for summary sheets' {
