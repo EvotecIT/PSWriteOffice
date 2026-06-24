@@ -219,11 +219,18 @@ Describe 'CSV cmdlets' {
         } | Should -Throw
     }
 
-    It 'lets parameter binding reject UseQuotes and QuoteFields together' {
-        {
-            [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
-                ConvertTo-OfficeCsv -UseQuotes AsNeeded -QuoteFields Name
-        } | Should -Throw
+    It 'lets QuoteFields compose with UseQuotes' {
+        $path = Join-Path $TestDrive 'quoted-fields.csv'
+
+        $csvText = [pscustomobject]@{ Name = 'Alpha'; Value = 1; Note = 'plain' } |
+            ConvertTo-OfficeCsv -UseQuotes AsNeeded -QuoteFields Name
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1; Note = 'plain' } |
+            Export-OfficeCsv -Path $path -UseQuotes AsNeeded -QuoteFields Name
+
+        $csvText | Should -Match '"Name",Value,Note'
+        $csvText | Should -Match '"Alpha",1,plain'
+        (Get-Content -LiteralPath $path -Raw) | Should -Match '"Alpha",1,plain'
     }
 
     It 'escapes formula-like values when requested' {

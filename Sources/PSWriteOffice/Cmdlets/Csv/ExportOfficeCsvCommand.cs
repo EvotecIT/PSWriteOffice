@@ -29,12 +29,8 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     private const int StreamWriterBufferSize = 32 * 1024;
     private const string ParameterSetInputObjectPathDelimiter = "InputObjectPathDelimiter";
     private const string ParameterSetInputObjectPathCulture = "InputObjectPathCulture";
-    private const string ParameterSetInputObjectPathDelimiterQuoteFields = "InputObjectPathDelimiterQuoteFields";
-    private const string ParameterSetInputObjectPathCultureQuoteFields = "InputObjectPathCultureQuoteFields";
     private const string ParameterSetDocumentPathDelimiter = "DocumentPathDelimiter";
     private const string ParameterSetDocumentPathCulture = "DocumentPathCulture";
-    private const string ParameterSetDocumentPathDelimiterQuoteFields = "DocumentPathDelimiterQuoteFields";
-    private const string ParameterSetDocumentPathCultureQuoteFields = "DocumentPathCultureQuoteFields";
     private CsvObjectWriter? _streamingWriter;
     private string[]? _streamingColumns;
     private object?[]? _streamingValues;
@@ -45,15 +41,11 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     /// <summary>Objects to export into CSV rows.</summary>
     [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectPathDelimiter)]
     [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectPathCulture)]
-    [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectPathDelimiterQuoteFields)]
-    [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectPathCultureQuoteFields)]
     public object? InputObject { get; set; }
 
     /// <summary>CSV document to export.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentPathDelimiter)]
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentPathCulture)]
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentPathDelimiterQuoteFields)]
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentPathCultureQuoteFields)]
     public CsvDocument Document { get; set; } = null!;
 
     /// <summary>Destination CSV path.</summary>
@@ -64,15 +56,11 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     /// <summary>Field delimiter character.</summary>
     [Parameter(ParameterSetName = ParameterSetInputObjectPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetDocumentPathDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetInputObjectPathDelimiterQuoteFields)]
-    [Parameter(ParameterSetName = ParameterSetDocumentPathDelimiterQuoteFields)]
     public char Delimiter { get; set; } = ',';
 
     /// <summary>Use the list separator from the selected or current culture as the delimiter.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectPathCulture)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentPathCulture)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectPathCultureQuoteFields)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentPathCultureQuoteFields)]
     public SwitchParameter UseCulture { get; set; }
 
     /// <summary>Omit the header row from the output.</summary>
@@ -96,17 +84,11 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     public CsvFormulaInjectionPolicy FormulaInjectionPolicy { get; set; } = CsvFormulaInjectionPolicy.Preserve;
 
     /// <summary>Controls when CSV fields are quoted. Defaults to quoting only fields that need it.</summary>
-    [Parameter(ParameterSetName = ParameterSetInputObjectPathDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetInputObjectPathCulture)]
-    [Parameter(ParameterSetName = ParameterSetDocumentPathDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetDocumentPathCulture)]
+    [Parameter]
     public CsvQuoteMode UseQuotes { get; set; } = CsvQuoteMode.AsNeeded;
 
     /// <summary>Field names that should always be quoted when <see cref="UseQuotes"/> is AsNeeded.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectPathDelimiterQuoteFields)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectPathCultureQuoteFields)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentPathDelimiterQuoteFields)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentPathCultureQuoteFields)]
+    [Parameter]
     public string[]? QuoteFields { get; set; }
 
     /// <summary>Emit a <see cref="FileInfo"/> for the exported file.</summary>
@@ -272,7 +254,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
-            QuoteMode = QuoteFields is { Length: > 0 } ? CsvQuoteMode.AsNeeded : UseQuotes,
+            QuoteMode = UseQuotes,
             QuoteFields = QuoteFields
         };
 
@@ -286,7 +268,5 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
     private bool IsDocumentParameterSet() =>
         string.Equals(ParameterSetName, ParameterSetDocumentPathDelimiter, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(ParameterSetName, ParameterSetDocumentPathCulture, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(ParameterSetName, ParameterSetDocumentPathDelimiterQuoteFields, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(ParameterSetName, ParameterSetDocumentPathCultureQuoteFields, StringComparison.OrdinalIgnoreCase);
+        string.Equals(ParameterSetName, ParameterSetDocumentPathCulture, StringComparison.OrdinalIgnoreCase);
 }

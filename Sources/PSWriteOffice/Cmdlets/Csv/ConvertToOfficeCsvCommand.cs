@@ -40,38 +40,26 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     private const string ParameterSetInputObjectCulture = "InputObjectCulture";
     private const string ParameterSetDocumentDelimiter = "DocumentDelimiter";
     private const string ParameterSetDocumentCulture = "DocumentCulture";
-    private const string ParameterSetInputObjectDelimiterQuoteFields = "InputObjectDelimiterQuoteFields";
-    private const string ParameterSetInputObjectCultureQuoteFields = "InputObjectCultureQuoteFields";
-    private const string ParameterSetDocumentDelimiterQuoteFields = "DocumentDelimiterQuoteFields";
-    private const string ParameterSetDocumentCultureQuoteFields = "DocumentCultureQuoteFields";
     private readonly List<object?> _items = new();
 
     /// <summary>CSV document to serialize.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentDelimiter)]
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentCulture)]
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentDelimiterQuoteFields)]
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentCultureQuoteFields)]
     public CsvDocument Document { get; set; } = null!;
 
     /// <summary>Objects to convert into CSV rows.</summary>
     [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectDelimiter)]
     [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectCulture)]
-    [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectDelimiterQuoteFields)]
-    [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectCultureQuoteFields)]
     public object? InputObject { get; set; }
 
     /// <summary>Field delimiter character.</summary>
     [Parameter(ParameterSetName = ParameterSetInputObjectDelimiter)]
     [Parameter(ParameterSetName = ParameterSetDocumentDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetInputObjectDelimiterQuoteFields)]
-    [Parameter(ParameterSetName = ParameterSetDocumentDelimiterQuoteFields)]
     public char Delimiter { get; set; } = ',';
 
     /// <summary>Use the list separator from the selected or current culture as the delimiter.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectCulture)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentCulture)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectCultureQuoteFields)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentCultureQuoteFields)]
     public SwitchParameter UseCulture { get; set; }
 
     /// <summary>Omit the header row from the output.</summary>
@@ -95,17 +83,11 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     public CsvFormulaInjectionPolicy FormulaInjectionPolicy { get; set; } = CsvFormulaInjectionPolicy.Preserve;
 
     /// <summary>Controls when CSV fields are quoted. Defaults to quoting only fields that need it.</summary>
-    [Parameter(ParameterSetName = ParameterSetInputObjectDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetInputObjectCulture)]
-    [Parameter(ParameterSetName = ParameterSetDocumentDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetDocumentCulture)]
+    [Parameter]
     public CsvQuoteMode UseQuotes { get; set; } = CsvQuoteMode.AsNeeded;
 
     /// <summary>Field names that should always be quoted when <see cref="UseQuotes"/> is AsNeeded.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectDelimiterQuoteFields)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectCultureQuoteFields)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentDelimiterQuoteFields)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentCultureQuoteFields)]
+    [Parameter]
     public string[]? QuoteFields { get; set; }
 
     /// <inheritdoc />
@@ -173,7 +155,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
-            QuoteMode = QuoteFields is { Length: > 0 } ? CsvQuoteMode.AsNeeded : UseQuotes,
+            QuoteMode = UseQuotes,
             QuoteFields = QuoteFields
         };
 
@@ -187,7 +169,5 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
     private bool IsDocumentParameterSet() =>
         string.Equals(ParameterSetName, ParameterSetDocumentDelimiter, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(ParameterSetName, ParameterSetDocumentCulture, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(ParameterSetName, ParameterSetDocumentDelimiterQuoteFields, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(ParameterSetName, ParameterSetDocumentCultureQuoteFields, StringComparison.OrdinalIgnoreCase);
+        string.Equals(ParameterSetName, ParameterSetDocumentCulture, StringComparison.OrdinalIgnoreCase);
 }
