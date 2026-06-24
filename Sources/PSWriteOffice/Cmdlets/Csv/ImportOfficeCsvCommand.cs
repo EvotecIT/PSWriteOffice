@@ -42,6 +42,8 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private const string ParameterSetTextCulture = "TextCulture";
     private const string ParameterSetTextDetect = "TextDetect";
     private const string ParameterSetDocument = "Document";
+    private readonly StringBuilder _textInput = new();
+    private bool _hasTextInput;
     private bool _prevalidatedOutputProperties;
 
     /// <summary>CSV document to read when already loaded.</summary>
@@ -240,6 +242,18 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (IsTextParameterSet())
+        {
+            if (_hasTextInput)
+            {
+                _textInput.AppendLine();
+            }
+
+            _textInput.Append(Text ?? string.Empty);
+            _hasTextInput = true;
+            return;
+        }
+
         var document = Document;
 
         if (document == null)
@@ -247,36 +261,49 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             ApplyCultureDelimiter();
             var options = CreateLoadOptions();
 
-            if (IsTextParameterSet())
+            var unresolvedPath = IsLiteralPathParameterSet() ? LiteralPath : Path;
+            var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(unresolvedPath!);
+            if (!File.Exists(resolved))
             {
-                if (Mode == CsvLoadMode.Stream)
-                {
-                    using var reader = new StringReader(Text ?? string.Empty);
-                    CsvDocument.ReadRows(reader, WriteRow, options);
-                    return;
-                }
-
-                document = CsvDocument.Parse(Text ?? string.Empty, options);
+                throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
             }
-            else
+
+            if (Mode == CsvLoadMode.Stream)
             {
-                var unresolvedPath = IsLiteralPathParameterSet() ? LiteralPath : Path;
-                var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(unresolvedPath!);
-                if (!File.Exists(resolved))
-                {
-                    throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
-                }
-
-                if (Mode == CsvLoadMode.Stream)
-                {
-                    CsvDocument.ReadRows(resolved, WriteRow, options);
-                    return;
-                }
-
-                document = CsvDocument.Load(resolved, options);
+                CsvDocument.ReadRows(resolved, WriteRow, options);
+                return;
             }
+
+            document = CsvDocument.Load(resolved, options);
         }
 
+        WriteDocumentRows(document);
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        if (!IsTextParameterSet())
+        {
+            return;
+        }
+
+        ApplyCultureDelimiter();
+        var options = CreateLoadOptions();
+        var csvText = _textInput.ToString();
+
+        if (Mode == CsvLoadMode.Stream)
+        {
+            using var reader = new StringReader(csvText);
+            CsvDocument.ReadRows(reader, WriteRow, options);
+            return;
+        }
+
+        WriteDocumentRows(CsvDocument.Parse(csvText, options));
+    }
+
+    private void WriteDocumentRows(CsvDocument document)
+    {
         var header = document.Header;
         foreach (var row in document.AsEnumerable())
         {

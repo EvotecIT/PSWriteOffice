@@ -116,6 +116,16 @@ Describe 'CSV cmdlets' {
         $data[0].Value | Should -Be '1'
     }
 
+    It 'parses piped CSV text as one stream' {
+        $data = "Name,Value", "Alpha,1", "Beta,2" | ConvertFrom-OfficeCsv
+
+        $data.Count | Should -Be 2
+        $data[0].Name | Should -Be 'Alpha'
+        $data[0].Value | Should -Be '1'
+        $data[1].Name | Should -Be 'Beta'
+        $data[1].Value | Should -Be '2'
+    }
+
     It 'loads CSV documents from literal paths' {
         $path = Join-Path $TestDrive 'literal[1].csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
