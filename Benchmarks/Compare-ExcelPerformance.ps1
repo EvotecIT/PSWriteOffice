@@ -738,7 +738,7 @@ function Get-ExcelBenchmarkScenarios {
     @(
         New-ExportScenario -Key 'csv-write' -Name 'Write CSV file' -Suites $csvSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-csv-write' -FileExtension 'csv' -ValidateWorkbook $false -FollowUps @($csvImport) -Script {
             param($Context)
-            $Context.Data | ConvertTo-OfficeCsv -OutputPath $Context.Path
+            $Context.Data | Export-OfficeCsv -Path $Context.Path
         }
         New-ExportScenario -Key 'csv-write' -Name 'Write CSV file' -Suites $csvSuites -Engine 'NativeCsv' -Profile 'MixedObjects' -FileStem 'nativecsv-csv-write' -FileExtension 'csv' -ValidateWorkbook $false -FollowUps @($csvImport) -Script {
             param($Context)

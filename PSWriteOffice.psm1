@@ -1,17 +1,13 @@
 ﻿# to speed up development adding direct path to binaries, instead of the the Lib folder
+$DevelopmentBasePath = Join-Path (Join-Path (Join-Path $PSScriptRoot 'Sources') 'PSWriteOffice') 'bin'
 $DevelopmentConfiguration = if ($env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION -in @('Debug', 'Release')) {
     $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION
+} elseif (Test-Path (Join-Path $DevelopmentBasePath 'Release')) {
+    'Release'
 } else {
     'Debug'
 }
-$DevelopmentBasePath = Join-Path (Join-Path (Join-Path $PSScriptRoot 'Sources') 'PSWriteOffice') 'bin'
 $DevelopmentPath = Join-Path $DevelopmentBasePath $DevelopmentConfiguration
-if (-not (Test-Path $DevelopmentPath) -and
-    [string]::IsNullOrWhiteSpace($env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION) -and
-    (Test-Path (Join-Path $DevelopmentBasePath 'Release'))) {
-    $DevelopmentConfiguration = 'Release'
-    $DevelopmentPath = Join-Path $DevelopmentBasePath $DevelopmentConfiguration
-}
 $Development = if ($env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES -eq 'false') {
     $false
 } else {

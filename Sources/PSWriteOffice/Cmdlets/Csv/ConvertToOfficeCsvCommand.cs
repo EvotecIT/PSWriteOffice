@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Management.Automation;
 using System.Text;
 using OfficeIMO.CSV;
@@ -9,8 +8,8 @@ using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Csv;
 
-/// <summary>Converts objects or a CSV document into CSV text or a file.</summary>
-/// <para>By default returns CSV text; use <c>-OutputPath</c> to save to disk.</para>
+/// <summary>Converts objects or a CSV document into CSV text.</summary>
+/// <para>Use <c>Export-OfficeCsv</c> when the destination is a file.</para>
 /// <example>
 ///   <summary>Convert objects to CSV text.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -24,17 +23,17 @@ namespace PSWriteOffice.Cmdlets.Csv;
 ///     [ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
 ///     [ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
 ///   )
-///   $rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'</code>
+///   $csv = $rows | ConvertTo-OfficeCsv -Delimiter ';'</code>
 ///   <para>Uses ordered dictionaries to enforce column order and a custom delimiter.</para>
 /// </example>
 /// <example>
 ///   <summary>Write CSV without headers.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$data | ConvertTo-OfficeCsv -IncludeHeader:$false -OutputPath .\noheader.csv</code>
+///   <code>$csv = $data | ConvertTo-OfficeCsv -IncludeHeader:$false</code>
 ///   <para>Writes rows only when a downstream system expects headerless CSV.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficeCsv", DefaultParameterSetName = ParameterSetInputObjectDelimiter, SupportsShouldProcess = true)]
-[OutputType(typeof(string), typeof(FileInfo))]
+[Cmdlet(VerbsData.ConvertTo, "OfficeCsv", DefaultParameterSetName = ParameterSetInputObjectDelimiter)]
+[OutputType(typeof(string))]
 public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 {
     private const string ParameterSetInputObjectDelimiter = "InputObjectDelimiter";
@@ -46,12 +45,6 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     private const string ParameterSetDocumentDelimiterQuoteFields = "DocumentDelimiterQuoteFields";
     private const string ParameterSetDocumentCultureQuoteFields = "DocumentCultureQuoteFields";
     private readonly List<object?> _items = new();
-    private CsvObjectWriter? _streamingWriter;
-    private string[]? _streamingColumns;
-    private object?[]? _streamingValues;
-    private string? _streamingOutputPath;
-    private bool _skipStreamingOutput;
-    private bool _wroteOutputPath;
 
     /// <summary>CSV document to serialize.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentDelimiter)]
@@ -93,7 +86,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter]
     public CultureInfo? Culture { get; set; }
 
-    /// <summary>Encoding used when writing files.</summary>
+    /// <summary>Encoding carried into the CSV save options.</summary>
     [Parameter]
     public Encoding? Encoding { get; set; }
 
@@ -115,28 +108,10 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentCultureQuoteFields)]
     public string[]? QuoteFields { get; set; }
 
-    /// <summary>Optional output path for the CSV file.</summary>
-    [Parameter]
-    [Alias("Path", "OutPath")]
-    public string? OutputPath { get; set; }
-
-    /// <summary>Emit a <see cref="FileInfo"/> when saving to disk.</summary>
-    [Parameter]
-    public SwitchParameter PassThru { get; set; }
-
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
-        if (UseCulture.IsPresent)
-        {
-            var separator = (Culture ?? CultureInfo.CurrentCulture).TextInfo.ListSeparator;
-            if (string.IsNullOrEmpty(separator) || separator.Length != 1)
-            {
-                throw new PSArgumentException("The selected culture must provide a single-character list separator.");
-            }
-
-            Delimiter = separator[0];
-        }
+        ApplyCultureDelimiter();
     }
 
     /// <inheritdoc />
@@ -148,12 +123,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             {
                 EmitCsv(Document);
             }
-            return;
-        }
 
-        if (!string.IsNullOrWhiteSpace(OutputPath))
-        {
-            WriteStreamingInputObject(InputObject);
             return;
         }
 
@@ -163,149 +133,35 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     /// <inheritdoc />
     protected override void EndProcessing()
     {
-        if (IsDocumentParameterSet())
-        {
-            return;
-        }
-
-        if (_streamingWriter != null)
-        {
-            DisposeStreamingWriter();
-            WriteStreamingPassThru();
-            return;
-        }
-
-        if (_skipStreamingOutput)
-        {
-            return;
-        }
-
-        if (_items.Count == 0)
+        if (IsDocumentParameterSet() || _items.Count == 0)
         {
             return;
         }
 
         var normalized = PowerShellObjectNormalizer.NormalizeItems(_items);
-        if (!string.IsNullOrWhiteSpace(OutputPath))
-        {
-            EmitObjectsCsv(normalized);
-            return;
-        }
-
         var document = CsvDocument.FromObjects(normalized, Delimiter, Culture, Encoding);
         EmitCsv(document);
     }
 
-    /// <inheritdoc />
-    protected override void StopProcessing()
+    private void ApplyCultureDelimiter()
     {
-        DisposeStreamingWriter();
+        if (!UseCulture.IsPresent)
+        {
+            return;
+        }
+
+        var separator = (Culture ?? CultureInfo.CurrentCulture).TextInfo.ListSeparator;
+        if (string.IsNullOrEmpty(separator) || separator.Length != 1)
+        {
+            throw new PSArgumentException("The selected culture must provide a single-character list separator.");
+        }
+
+        Delimiter = separator[0];
     }
 
     private void EmitCsv(CsvDocument document)
     {
-        var options = CreateSaveOptions();
-
-        if (!string.IsNullOrWhiteSpace(OutputPath))
-        {
-            WriteCsvFile(resolved => document.Save(resolved, options));
-        }
-        else
-        {
-            WriteObject(document.ToString(options));
-        }
-    }
-
-    private void EmitObjectsCsv(IReadOnlyList<object?> items)
-    {
-        var options = CreateSaveOptions();
-        WriteCsvFile(resolved => CsvDocument.SaveObjects(resolved, items, options));
-    }
-
-    private void WriteStreamingInputObject(object? value)
-    {
-        var writer = EnsureStreamingWriter();
-        if (writer == null)
-        {
-            return;
-        }
-
-        if (_streamingColumns != null && _streamingValues != null &&
-            PowerShellObjectNormalizer.TryProjectItemInto(value, _streamingColumns, _streamingValues))
-        {
-            writer.WriteRow(_streamingColumns, _streamingValues);
-            return;
-        }
-
-        if (PowerShellObjectNormalizer.TryProjectItem(value, null, out var columns, out var values))
-        {
-            _streamingColumns = columns;
-            _streamingValues = new object?[columns.Length];
-            writer.WriteRow(_streamingColumns, values);
-            return;
-        }
-
-        writer.WriteObject(PowerShellObjectNormalizer.NormalizeItem(value));
-    }
-
-    private CsvObjectWriter? EnsureStreamingWriter()
-    {
-        if (_streamingWriter != null)
-        {
-            return _streamingWriter;
-        }
-
-        if (_skipStreamingOutput)
-        {
-            return null;
-        }
-
-        if (_wroteOutputPath)
-        {
-            WriteError(new ErrorRecord(
-                new InvalidOperationException("OutputPath can only be used once per invocation."),
-                "CsvOutputAlreadyWritten",
-                ErrorCategory.InvalidOperation,
-                OutputPath));
-            _skipStreamingOutput = true;
-            return null;
-        }
-
-        var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath!);
-        if (!ShouldProcess(resolved, "Write CSV"))
-        {
-            _skipStreamingOutput = true;
-            return null;
-        }
-
-        var directory = Path.GetDirectoryName(resolved);
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        var options = CreateSaveOptions();
-        var encoding = options.Encoding ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-        var fileWriter = new StreamWriter(resolved, append: false, encoding, bufferSize: 256 * 1024);
-        _streamingWriter = new CsvObjectWriter(fileWriter, options);
-        _streamingOutputPath = resolved;
-        _wroteOutputPath = true;
-        return _streamingWriter;
-    }
-
-    private void DisposeStreamingWriter()
-    {
-        _streamingWriter?.Dispose();
-        _streamingWriter = null;
-        _streamingValues = null;
-    }
-
-    private void WriteStreamingPassThru()
-    {
-        if (PassThru.IsPresent && !string.IsNullOrWhiteSpace(_streamingOutputPath))
-        {
-            WriteObject(new FileInfo(_streamingOutputPath!));
-        }
+        WriteObject(document.ToString(CreateSaveOptions()));
     }
 
     private CsvSaveOptions CreateSaveOptions()
@@ -334,42 +190,4 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         string.Equals(ParameterSetName, ParameterSetDocumentCulture, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetDocumentDelimiterQuoteFields, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetDocumentCultureQuoteFields, StringComparison.OrdinalIgnoreCase);
-
-    private void WriteCsvFile(Action<string> writeFile)
-    {
-        if (string.IsNullOrWhiteSpace(OutputPath))
-        {
-            return;
-        }
-
-        if (_wroteOutputPath)
-        {
-            WriteError(new ErrorRecord(
-                new InvalidOperationException("OutputPath can only be used once per invocation."),
-                "CsvOutputAlreadyWritten",
-                ErrorCategory.InvalidOperation,
-                OutputPath));
-            return;
-        }
-
-        var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-        if (!ShouldProcess(resolved, "Write CSV"))
-        {
-            return;
-        }
-
-        var directory = Path.GetDirectoryName(resolved);
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        writeFile(resolved);
-        _wroteOutputPath = true;
-
-        if (PassThru.IsPresent)
-        {
-            WriteObject(new FileInfo(resolved));
-        }
-    }
 }

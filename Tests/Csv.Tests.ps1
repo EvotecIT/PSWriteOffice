@@ -30,7 +30,7 @@ Describe 'CSV cmdlets' {
         $csvText | Should -Match 'Revenue'
 
         $path = Join-Path $TestDrive 'data.csv'
-        $rows | ConvertTo-OfficeCsv -OutputPath $path | Out-Null
+        $rows | Export-OfficeCsv -Path $path | Out-Null
 
         Test-Path $path | Should -BeTrue
 
@@ -43,7 +43,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'path-alias.csv'
 
         [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
-            ConvertTo-OfficeCsv -Path $path
+            Export-OfficeCsv -Path $path
 
         Test-Path $path | Should -BeTrue
         Get-Content -Path $path -Raw | Should -Match 'Alpha'

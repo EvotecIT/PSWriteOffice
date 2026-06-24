@@ -19,12 +19,12 @@ BeforeAll {
 }
 
 Describe 'CSV and Excel mutation contracts' {
-    It 'does not create a CSV file when ConvertTo-OfficeCsv is invoked with WhatIf' {
+    It 'does not create a CSV file when Export-OfficeCsv is invoked with WhatIf' {
         $path = Join-Path $TestDrive 'whatif.csv'
 
         1..3 |
             ForEach-Object { [pscustomobject]@{ Name = "Row$_"; Value = $_ } } |
-            ConvertTo-OfficeCsv -OutputPath $path -WhatIf
+            Export-OfficeCsv -Path $path -WhatIf
 
         Test-Path -LiteralPath $path | Should -BeFalse
     }
