@@ -60,6 +60,76 @@ function Get-ZipXmlDocumentLocal {
     }
 }
 
+function Read-XlsxEntryText {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Path,
+
+        [Parameter(Mandatory)]
+        [string] $Entry
+    )
+
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($Path)
+    try {
+        $zipEntry = $archive.GetEntry($Entry)
+        if (-not $zipEntry) {
+            throw "Zip entry '$Entry' not found in '$Path'."
+        }
+
+        $stream = $zipEntry.Open()
+        try {
+            $reader = [System.IO.StreamReader]::new($stream)
+            try {
+                return $reader.ReadToEnd()
+            } finally {
+                $reader.Dispose()
+            }
+        } finally {
+            $stream.Dispose()
+        }
+    } finally {
+        $archive.Dispose()
+    }
+}
+
+function Set-XlsxEntryTextLocal {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Path,
+
+        [Parameter(Mandatory)]
+        [string] $Entry,
+
+        [Parameter(Mandatory)]
+        [string] $Text
+    )
+
+    $archive = [System.IO.Compression.ZipFile]::Open($Path, [System.IO.Compression.ZipArchiveMode]::Update)
+    try {
+        $zipEntry = $archive.GetEntry($Entry)
+        if (-not $zipEntry) {
+            throw "Zip entry '$Entry' not found in '$Path'."
+        }
+
+        $zipEntry.Delete()
+        $newEntry = $archive.CreateEntry($Entry)
+        $stream = $newEntry.Open()
+        try {
+            $encoding = [System.Text.UTF8Encoding]::new($false)
+            $writer = [System.IO.StreamWriter]::new($stream, $encoding)
+            try {
+                $writer.Write($Text)
+            } finally {
+                $writer.Dispose()
+            }
+        } finally {
+            $stream.Dispose()
+        }
+    } finally {
+        $archive.Dispose()
+    }
+}
+
 function Get-ZipEntriesLocal {
     param(
         [Parameter(Mandatory)]

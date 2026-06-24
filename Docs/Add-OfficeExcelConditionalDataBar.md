@@ -11,12 +11,12 @@ Adds a data bar conditional format to a range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelConditionalDataBar [-Range] <string> [-Color] <string> [-PassThru] [<CommonParameters>]
+Add-OfficeExcelConditionalDataBar [[-Range] <string>] [-Color] <string> [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelConditionalDataBar [-Range] <string> [-Color] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelConditionalDataBar [[-Range] <string>] [-Color] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -65,8 +65,88 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -HeaderName
+Header or table column name used to resolve the target range.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
+Aliases: ColumnName
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -HeaderRow
+Worksheet header row used when resolving HeaderName without a table. Use 0 for the first row of the used range.
+
+```yaml
+Type: Int32
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IncludeHeader
+Include the header cell in the resolved range.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -PassThru
 Emit the range after applying the format.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PivotTableName
+Pivot table name used to resolve the target range.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PivotWholeTable
+Use the full pivot output range instead of the default data body range.
 
 ```yaml
 Type: SwitchParameter
@@ -90,7 +170,7 @@ Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
-Required: True
+Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
@@ -119,6 +199,22 @@ Worksheet index (0-based) when using Document.
 ```yaml
 Type: Nullable`1
 Parameter Sets: Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TableName
+Optional table name for header-based range resolution.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
@@ -80,6 +81,15 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter NumericAsDecimal { get; set; }
 
+    /// <summary>Formula read mode. CachedValue returns workbook cached results; FormulaText returns formula expressions when present.</summary>
+    [Parameter]
+    [ValidateSet("CachedValue", "FormulaText")]
+    public string FormulaMode { get; set; } = "CachedValue";
+
+    /// <summary>Culture used when parsing numbers and dates stored as text.</summary>
+    [Parameter]
+    public string? CultureName { get; set; }
+
     /// <summary>Emit rows as hashtables instead of PSCustomObjects.</summary>
     [Parameter]
     public SwitchParameter AsHashtable { get; set; }
@@ -96,7 +106,10 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("Specify either -Range or coordinate bounds, but not both.");
         }
 
-        var options = ExcelReadOutputService.CreateOptions(NumericAsDecimal.IsPresent);
+        var options = ExcelReadOutputService.CreateOptions(
+            NumericAsDecimal.IsPresent,
+            useCachedFormulaResult: !string.Equals(FormulaMode, "FormulaText", StringComparison.OrdinalIgnoreCase),
+            culture: ResolveCulture());
         using var reader = CreateReader(options);
         var sheet = ExcelReadOutputService.ResolveSheetReader(reader, WorksheetName, SheetIndex);
         var range = ResolveRange(sheet);
@@ -179,5 +192,15 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     private bool HasCoordinateRange()
     {
         return StartRow.HasValue || EndRow.HasValue || StartColumn.HasValue || EndColumn.HasValue;
+    }
+
+    private CultureInfo ResolveCulture()
+    {
+        if (string.IsNullOrWhiteSpace(CultureName))
+        {
+            return CultureInfo.InvariantCulture;
+        }
+
+        return CultureInfo.GetCultureInfo(CultureName!);
     }
 }

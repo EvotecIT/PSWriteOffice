@@ -11,17 +11,17 @@ Gets the OfficeIMO.Markdown object tree from Markdown content.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeMarkdownNode [-InputPath] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-NodeType <string>] [-MaxDepth <int>] [-CaseSensitive] [-Raw] [<CommonParameters>]
+Get-OfficeMarkdownNode [-InputPath] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <int>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <bool>] [-AllowDataUrls <bool>] [-AllowMailtoUrls <bool>] [-AllowProtocolRelativeUrls <bool>] [-RestrictUrlSchemes <bool>] [-AllowedUrlScheme <string[]>] [-NodeType <string>] [-MaxDepth <int>] [-CaseSensitive] [-Raw] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeMarkdownNode -Document <MarkdownDoc> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-NodeType <string>] [-MaxDepth <int>] [-CaseSensitive] [-Raw] [<CommonParameters>]
+Get-OfficeMarkdownNode -Document <MarkdownDoc> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <int>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <bool>] [-AllowDataUrls <bool>] [-AllowMailtoUrls <bool>] [-AllowProtocolRelativeUrls <bool>] [-RestrictUrlSchemes <bool>] [-AllowedUrlScheme <string[]>] [-NodeType <string>] [-MaxDepth <int>] [-CaseSensitive] [-Raw] [<CommonParameters>]
 ```
 
 ### Text
 ```powershell
-Get-OfficeMarkdownNode -Text <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-NodeType <string>] [-MaxDepth <int>] [-CaseSensitive] [-Raw] [<CommonParameters>]
+Get-OfficeMarkdownNode -Text <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <int>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <bool>] [-AllowDataUrls <bool>] [-AllowMailtoUrls <bool>] [-AllowProtocolRelativeUrls <bool>] [-RestrictUrlSchemes <bool>] [-AllowedUrlScheme <string[]>] [-NodeType <string>] [-MaxDepth <int>] [-CaseSensitive] [-Raw] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,11 +45,107 @@ Returns matching nodes from an existing Markdown document.
 
 ## PARAMETERS
 
+### -AllowDataUrls
+Allow data URLs while parsing Markdown links and images.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AllowedUrlScheme
+Allowed URL schemes when URL scheme restriction is enabled.
+
+```yaml
+Type: String[]
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AllowMailtoUrls
+Allow mailto URLs while parsing Markdown links.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AllowProtocolRelativeUrls
+Allow protocol-relative URLs while parsing Markdown links and images.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -BaseUri
+Base URI used to resolve and restrict relative Markdown links and images.
+
+```yaml
+Type: String
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -CaseSensitive
 Use case-sensitive matching for node type filters.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DisallowFileUrls
+Block file URLs while parsing Markdown links and images.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: Path, Document, Text
 Aliases: None
 Possible values:
@@ -109,11 +205,43 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -MaxInputCharacters
+Maximum Markdown input length accepted by the reader.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -NodeType
 Optional wildcard pattern matched against node type names.
 
 ```yaml
 Type: String
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NormalizeInput
+Applies a built-in Markdown input normalization preset before parsing.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: Path, Document, Text
 Aliases: None
 Possible values:
@@ -131,7 +259,7 @@ Optional reader options used when parsing path or text input.
 ```yaml
 Type: MarkdownReaderOptions
 Parameter Sets: Path, Document, Text
-Aliases: None
+Aliases: ReaderOptions
 Possible values:
 
 Required: False
@@ -162,6 +290,22 @@ Emit raw OfficeIMO.Markdown node objects instead of PowerShell-friendly records.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -RestrictUrlSchemes
+Restrict parsed URL schemes to the allow-list.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: Path, Document, Text
 Aliases: None
 Possible values:

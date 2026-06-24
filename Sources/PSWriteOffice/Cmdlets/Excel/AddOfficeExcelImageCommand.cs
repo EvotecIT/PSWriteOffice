@@ -81,6 +81,18 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
     [Parameter]
     public int OffsetYPixels { get; set; }
 
+    /// <summary>Optional drawing name.</summary>
+    [Parameter]
+    public string? Name { get; set; }
+
+    /// <summary>Optional alternative text description.</summary>
+    [Parameter]
+    public string? AltText { get; set; }
+
+    /// <summary>Prevent Excel from changing the image aspect ratio.</summary>
+    [Parameter]
+    public SwitchParameter LockAspectRatio { get; set; }
+
     /// <summary>Emit the worksheet after inserting the image.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -109,7 +121,7 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
             }
             else
             {
-                sheet.AddImageFromUrlAt(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+                sheet.AddImageFromUrl(row, column, Url, WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels, Name, AltText, ResolveLockAspectRatio());
             }
         }
 
@@ -143,8 +155,13 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
         }
 
         var bytes = File.ReadAllBytes(path);
-        sheet.AddImageAt(row, column, bytes, GetContentType(path), WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels);
+        sheet.AddImage(row, column, bytes, GetContentType(path), WidthPixels, HeightPixels, OffsetXPixels, OffsetYPixels, Name, AltText, ResolveLockAspectRatio());
     }
+
+    private bool ResolveLockAspectRatio()
+        => MyInvocation.BoundParameters.ContainsKey(nameof(LockAspectRatio))
+            ? LockAspectRatio.IsPresent
+            : true;
 
     private static bool TryGetLocalFilePath(string url, out string path)
     {

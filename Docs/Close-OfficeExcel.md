@@ -11,7 +11,7 @@ Closes an Excel workbook and optionally saves it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Show] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [<CommonParameters>]
+Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Show] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,6 +35,54 @@ Saves pending changes through OfficeIMO's normal save path, validates the packag
 
 ## PARAMETERS
 
+### -ClearCachedFormulaResults
+Remove cached formula results before saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DateSystem
+Workbook date system for Excel date serials.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 1900, 1904, NineteenHundred, NineteenFour
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DisableFastPackageWriter
+Disable OfficeIMO fast package writers for this save.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Document
 Workbook to close.
 
@@ -48,6 +96,54 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -EvaluateFormulas
+Evaluate supported formulas and write cached values before saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ForceFullCalculationOnOpen
+Request a full workbook recalculation when opened in Excel-compatible applications.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MarkFormulasDirty
+Mark formula cells dirty before saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

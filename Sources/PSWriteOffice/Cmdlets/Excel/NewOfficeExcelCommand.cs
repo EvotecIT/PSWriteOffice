@@ -28,6 +28,11 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     [Parameter(Position = 1)]
     public ScriptBlock? Content { get; set; }
 
+    /// <summary>Optional workbook template package copied before running the DSL.</summary>
+    [Parameter]
+    [Alias("Template")]
+    public string? TemplatePath { get; set; }
+
     /// <summary>Opt into OfficeIMO automatic saves during operations.</summary>
     [Parameter]
     public SwitchParameter AutoSave { get; set; }
@@ -56,6 +61,31 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter ValidateOpenXml { get; set; }
 
+    /// <summary>Disable OfficeIMO fast package writers for this save.</summary>
+    [Parameter]
+    public SwitchParameter DisableFastPackageWriter { get; set; }
+
+    /// <summary>Evaluate supported formulas and write cached values before saving.</summary>
+    [Parameter]
+    public SwitchParameter EvaluateFormulas { get; set; }
+
+    /// <summary>Remove cached formula results before saving.</summary>
+    [Parameter]
+    public SwitchParameter ClearCachedFormulaResults { get; set; }
+
+    /// <summary>Mark formula cells dirty before saving.</summary>
+    [Parameter]
+    public SwitchParameter MarkFormulasDirty { get; set; }
+
+    /// <summary>Request a full workbook recalculation when opened in Excel-compatible applications.</summary>
+    [Parameter]
+    public SwitchParameter ForceFullCalculationOnOpen { get; set; }
+
+    /// <summary>Workbook date system for Excel date serials.</summary>
+    [Parameter]
+    [ValidateSet("1900", "1904", "NineteenHundred", "NineteenFour")]
+    public string? DateSystem { get; set; }
+
     /// <summary>Optional PDF path to create from the same workbook before closing it.</summary>
     [Parameter]
     public string? PdfPath { get; set; }
@@ -63,6 +93,46 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     /// <summary>Emit a <see cref="FileInfo"/> for convenience.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
+
+    /// <summary>Workbook document title metadata.</summary>
+    [Parameter]
+    public string? DocumentTitle { get; set; }
+
+    /// <summary>Workbook author metadata.</summary>
+    [Parameter]
+    public string? Author { get; set; }
+
+    /// <summary>Workbook subject metadata.</summary>
+    [Parameter]
+    public string? Subject { get; set; }
+
+    /// <summary>Workbook keyword metadata.</summary>
+    [Parameter]
+    public string? Keywords { get; set; }
+
+    /// <summary>Workbook description metadata.</summary>
+    [Parameter]
+    public string? Description { get; set; }
+
+    /// <summary>Workbook category metadata.</summary>
+    [Parameter]
+    public string? Category { get; set; }
+
+    /// <summary>Workbook company metadata.</summary>
+    [Parameter]
+    public string? Company { get; set; }
+
+    /// <summary>Workbook manager metadata.</summary>
+    [Parameter]
+    public string? Manager { get; set; }
+
+    /// <summary>Workbook application-name metadata.</summary>
+    [Parameter]
+    public string? ApplicationName { get; set; }
+
+    /// <summary>Workbook last-modified-by metadata.</summary>
+    [Parameter]
+    public string? LastModifiedBy { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
@@ -74,9 +144,28 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
             Directory.CreateDirectory(directory);
         }
 
-        var document = ExcelDocumentService.CreateDocument(resolvedPath, AutoSave.IsPresent);
+        var document = string.IsNullOrWhiteSpace(TemplatePath)
+            ? ExcelDocumentService.CreateDocument(resolvedPath, AutoSave.IsPresent)
+            : ExcelDocumentService.CreateDocumentFromTemplate(
+                SessionState.Path.GetUnresolvedProviderPathFromPSPath(TemplatePath!),
+                resolvedPath,
+                AutoSave.IsPresent);
         try
         {
+            ExcelDateSystemService.ApplyIfSpecified(document, DateSystem, nameof(DateSystem));
+            ExcelDocumentPropertyService.ApplyCommonProperties(
+                document,
+                DocumentTitle,
+                Author,
+                Subject,
+                Keywords,
+                Description,
+                Category,
+                Company,
+                Manager,
+                ApplicationName,
+                LastModifiedBy);
+
             using (ExcelDslContext.Enter(document))
             {
                 Content?.InvokeReturnAsIs();
@@ -91,7 +180,12 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
                 var saveOptions = ExcelDocumentService.CreateSaveOptions(
                     SafePreflight.IsPresent,
                     SafeRepairDefinedNames.IsPresent,
-                    ValidateOpenXml.IsPresent);
+                    ValidateOpenXml.IsPresent,
+                    DisableFastPackageWriter.IsPresent,
+                    EvaluateFormulas.IsPresent,
+                    ClearCachedFormulaResults.IsPresent,
+                    MarkFormulasDirty.IsPresent,
+                    ForceFullCalculationOnOpen.IsPresent);
                 SavePdfIfRequested(document);
                 ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, Password, saveOptions);
             }

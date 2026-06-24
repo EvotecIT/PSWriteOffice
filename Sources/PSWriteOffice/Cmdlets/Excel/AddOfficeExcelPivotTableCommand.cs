@@ -254,6 +254,38 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
     [Parameter]
     public string[]? FieldHideDropDowns { get; set; }
 
+    /// <summary>Refresh the pivot cache when the workbook opens.</summary>
+    [Parameter]
+    public SwitchParameter RefreshOnOpen { get; set; }
+
+    /// <summary>Do not refresh the pivot cache when the workbook opens.</summary>
+    [Parameter]
+    public SwitchParameter NoRefreshOnOpen { get; set; }
+
+    /// <summary>Save pivot source cache records in the workbook package.</summary>
+    [Parameter]
+    public SwitchParameter SaveSourceData { get; set; }
+
+    /// <summary>Do not save pivot source cache records in the workbook package.</summary>
+    [Parameter]
+    public SwitchParameter NoSaveSourceData { get; set; }
+
+    /// <summary>Preserve pivot formatting when Excel refreshes the pivot table.</summary>
+    [Parameter]
+    public SwitchParameter PreserveFormatting { get; set; }
+
+    /// <summary>Do not preserve pivot formatting when Excel refreshes the pivot table.</summary>
+    [Parameter]
+    public SwitchParameter NoPreserveFormatting { get; set; }
+
+    /// <summary>Allow users to drill into pivot details in Excel.</summary>
+    [Parameter]
+    public SwitchParameter EnableDrill { get; set; }
+
+    /// <summary>Disable pivot detail drill interaction in Excel.</summary>
+    [Parameter]
+    public SwitchParameter DisableDrill { get; set; }
+
     /// <summary>Emit the worksheet after creating the pivot table.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -279,6 +311,13 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         var showMemberPropertyTips = ResolveToggle(ShowMemberPropertyTips, HideMemberPropertyTips, "ShowMemberPropertyTips/HideMemberPropertyTips");
         var fieldListSortAscending = ResolveToggle(FieldListSortAscending, FieldListSortDescending, "FieldListSortAscending/FieldListSortDescending");
         var customListSort = ResolveToggle(CustomListSort, NoCustomListSort, "CustomListSort/NoCustomListSort");
+        var pivotOptions = new ExcelPivotTableOptions
+        {
+            RefreshOnOpen = ResolveToggle(RefreshOnOpen, NoRefreshOnOpen, "RefreshOnOpen/NoRefreshOnOpen"),
+            SaveSourceData = ResolveToggle(SaveSourceData, NoSaveSourceData, "SaveSourceData/NoSaveSourceData"),
+            PreserveFormatting = ResolveToggle(PreserveFormatting, NoPreserveFormatting, "PreserveFormatting/NoPreserveFormatting"),
+            EnableDrill = ResolveToggle(EnableDrill, DisableDrill, "EnableDrill/DisableDrill")
+        };
 
         InvokeAddPivotTable(
             sheet,
@@ -294,7 +333,8 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
             showDataTips,
             showMemberPropertyTips,
             fieldListSortAscending,
-            customListSort);
+            customListSort,
+            HasAnyOption(pivotOptions) ? pivotOptions : null);
 
         if (PassThru.IsPresent)
         {
@@ -369,7 +409,8 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         bool? showDataTips,
         bool? showMemberPropertyTips,
         bool? fieldListSortAscending,
-        bool? customListSort)
+        bool? customListSort,
+        ExcelPivotTableOptions? pivotOptions)
     {
         sheet.AddPivotTable(
             SourceRange,
@@ -399,7 +440,16 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
             showDataTips: showDataTips,
             showMemberPropertyTips: showMemberPropertyTips,
             fieldListSortAscending: fieldListSortAscending,
-            customListSort: customListSort);
+            customListSort: customListSort,
+            options: pivotOptions);
+    }
+
+    private static bool HasAnyOption(ExcelPivotTableOptions options)
+    {
+        return options.RefreshOnOpen.HasValue
+            || options.SaveSourceData.HasValue
+            || options.PreserveFormatting.HasValue
+            || options.EnableDrill.HasValue;
     }
 
     private IEnumerable<ExcelPivotFieldOptions>? BuildFieldOptions()

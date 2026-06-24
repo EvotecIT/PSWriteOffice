@@ -140,6 +140,10 @@ public sealed class GetOfficeExcelPivotTableCommand : PSCmdlet
         record.Properties.Add(new PSNoteProperty("ShowEmptyRows", pivot.ShowEmptyRows));
         record.Properties.Add(new PSNoteProperty("ShowEmptyColumns", pivot.ShowEmptyColumns));
         record.Properties.Add(new PSNoteProperty("ShowDrill", pivot.ShowDrill));
+        record.Properties.Add(new PSNoteProperty("RefreshOnOpen", pivot.RefreshOnOpen));
+        record.Properties.Add(new PSNoteProperty("SaveSourceData", pivot.SaveSourceData));
+        record.Properties.Add(new PSNoteProperty("PreserveFormatting", pivot.PreserveFormatting));
+        record.Properties.Add(new PSNoteProperty("EnableDrill", pivot.EnableDrill));
         record.Properties.Add(new PSNoteProperty("RowFields", pivot.RowFields.ToArray()));
         record.Properties.Add(new PSNoteProperty("ColumnFields", pivot.ColumnFields.ToArray()));
         record.Properties.Add(new PSNoteProperty("PageFields", pivot.PageFields.ToArray()));
