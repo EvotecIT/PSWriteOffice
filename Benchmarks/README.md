@@ -4,6 +4,12 @@
 
 The script uses published OfficeIMO packages by default by setting `OfficeIMORoot` to `.missing-officeimo`, so PSWriteOffice measures the package-mode path instead of a local OfficeIMO checkout.
 
+Use `-OfficeIMORoot` when validating unreleased OfficeIMO source changes:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -OfficeIMORoot C:\Support\GitHub\OfficeIMO
+```
+
 PSWriteOffice is built and imported from local development binaries for benchmark runs. The benchmark uses `-PSWriteOfficeConfiguration Release` by default so local source is compared in release mode; use `-PSWriteOfficeConfiguration Debug` for development diagnostics or `-SkipPSWriteOfficeBuild` only when intentionally reusing an existing build.
 
 This is the PowerShell/user-workflow scoreboard. .NET engine comparisons against ClosedXML, current EPPlus, legacy EPPlus, MiniExcel, LargeXlsx, ExcelDataReader, and Sylvan.Data.Excel live in the OfficeIMO benchmark harness. Keep the two views separate: PSWriteOffice measures cmdlet ergonomics and module-level workflows, while OfficeIMO measures raw engine/library paths.

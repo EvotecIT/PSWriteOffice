@@ -24,6 +24,8 @@ param(
 
     [switch] $SkipCsvHelperInstall,
 
+    [string] $OfficeIMORoot,
+
     [ValidateSet('Debug', 'Release')]
     [string] $PSWriteOfficeConfiguration = 'Release',
 
@@ -1697,7 +1699,9 @@ if (-not ($Engine -contains 'ExcelFast')) {
 }
 
 if (($Engine -contains 'PSWriteOffice') -or (-not $SkipWorkbookValidation.IsPresent)) {
-    if (-not $env:OfficeIMORoot) {
+    if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
+        $env:OfficeIMORoot = $OfficeIMORoot
+    } elseif (-not $env:OfficeIMORoot) {
         $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
     }
 
