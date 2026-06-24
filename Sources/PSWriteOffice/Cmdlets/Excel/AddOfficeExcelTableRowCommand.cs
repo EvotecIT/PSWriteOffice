@@ -39,7 +39,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// Add-OfficeExcelTableRow -Path .\Readiness.xlsx -Sheet Readiness -TableName ServiceReadiness -InputObject $rows</code>
 ///   <para>Opens the workbook from disk, appends both objects to the named table, and saves the file.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelTableRow", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelTableRow", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [OutputType(typeof(ExcelTable))]
 public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
 {
@@ -121,11 +121,21 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
         if (ParameterSetName == ParameterSetTable)
         {
             table = Table ?? throw new PSArgumentException("Provide an Excel table.", nameof(Table));
+            if (!ExcelShouldProcessService.ShouldProcessTarget(this, "Excel table", "Append Excel table rows"))
+            {
+                return;
+            }
+
             table.AppendDataTable(data);
         }
         else
         {
             using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+            if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Append Excel table rows"))
+            {
+                return;
+            }
+
             table = ResolveTable(workbook.Document);
             table.AppendDataTable(data);
             if (saveOwnedWorkbook)

@@ -21,7 +21,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>New-OfficeWord -TemplatePath .\Template.docx -Path .\Report.docx { WordParagraph -Text 'Generated content' -StyleId 'ReportBody' }</code>
 ///   <para>Copies the template to the output path, runs the DSL against the copied document, and saves it.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficeWord")]
+[Cmdlet(VerbsCommon.New, "OfficeWord", SupportsShouldProcess = true)]
 public sealed class NewOfficeWordCommand : PSCmdlet
 {
     /// <summary>Destination path for the document.</summary>
@@ -74,10 +74,18 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var fullPath = GetResolvedPath();
-        var directory = Path.GetDirectoryName(fullPath);
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        if (!NoSave.IsPresent && Content != null)
         {
-            Directory.CreateDirectory(directory);
+            if (!PdfCommandUtilities.ShouldWrite(this, fullPath, "Write new Word document"))
+            {
+                return;
+            }
+
+            var directory = Path.GetDirectoryName(fullPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
         }
 
         var document = CreateOrLoadDocument(fullPath);
@@ -92,13 +100,12 @@ public sealed class NewOfficeWordCommand : PSCmdlet
 
         if (NoSave.IsPresent)
         {
-            document.Dispose();
+            WriteObject(document);
+            return;
         }
-        else
-        {
-            SavePdfIfRequested(document);
-            WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
-        }
+
+        SavePdfIfRequested(document);
+        WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
 
         if (PassThru.IsPresent)
         {
@@ -151,6 +158,11 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         }
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Word PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         if (PdfAllowSystemFontEmbedding.IsPresent || !string.IsNullOrWhiteSpace(PdfFontFamily))
         {

@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object SheetName, View, TopLeftCell</code>
 ///   <para>Updates workbook view state so spreadsheet applications open on Summary.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficeExcelActiveSheet", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Set, "OfficeExcelActiveSheet", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelActiveSheet")]
 [OutputType(typeof(ExcelSheet), typeof(PSObject))]
 public sealed class SetOfficeExcelActiveSheetCommand : PSCmdlet
@@ -56,6 +56,15 @@ public sealed class SetOfficeExcelActiveSheetCommand : PSCmdlet
         }
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+
+        {
+
+            return;
+
+        }
+
         ExcelSheet sheet = ResolveTargetSheet(workbook.Document);
         workbook.Document.SetActiveWorksheet(sheet);
         workbook.SaveIfOwned();

@@ -15,7 +15,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   <code>$doc | Save-OfficeMarkdown -Path .\Report.md -PdfPath .\Report.pdf</code>
 ///   <para>Writes both artifacts from the same Markdown document model.</para>
 /// </example>
-[Cmdlet(VerbsData.Save, "OfficeMarkdown")]
+[Cmdlet(VerbsData.Save, "OfficeMarkdown", SupportsShouldProcess = true)]
 [OutputType(typeof(MarkdownDoc), typeof(FileInfo))]
 public sealed class SaveOfficeMarkdownCommand : PSCmdlet
     , IMarkdownWriteOptionSource
@@ -153,10 +153,20 @@ public sealed class SaveOfficeMarkdownCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(PdfPath) && !PassThru.IsPresent)
+        {
+            throw new PSInvalidOperationException("Use -Path, -PdfPath, or -PassThru when saving a Markdown document.");
+        }
+
         FileInfo? savedFile = null;
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var fullPath = PdfCommandUtilities.ResolvePath(this, Path!);
+            if (!PdfCommandUtilities.ShouldWrite(this, fullPath, "Save Markdown document"))
+            {
+                return;
+            }
+
             PdfCommandUtilities.EnsureDirectory(fullPath);
             File.WriteAllText(fullPath, Document.ToMarkdown(MarkdownOptionUtilities.BuildWriteOptions(this)), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
             savedFile = new FileInfo(fullPath);
@@ -165,6 +175,11 @@ public sealed class SaveOfficeMarkdownCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(PdfPath))
         {
             var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+            if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Markdown PDF"))
+            {
+                return;
+            }
+
             PdfCommandUtilities.EnsureDirectory(pdfPath);
             var options = MarkdownOptionUtilities.BuildPdfOptions(this, this, ResolvePdfBaseDirectory(savedFile));
             Document.SaveAsPdf(pdfPath, options);

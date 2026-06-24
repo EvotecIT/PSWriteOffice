@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>$workbook | Save-OfficeExcel</code>
 ///   <para>Writes pending changes to disk and keeps the workbook open.</para>
 /// </example>
-[Cmdlet(VerbsData.Save, "OfficeExcel")]
+[Cmdlet(VerbsData.Save, "OfficeExcel", SupportsShouldProcess = true)]
 [OutputType(typeof(ExcelDocument))]
 public sealed class SaveOfficeExcelCommand : PSCmdlet
 {
@@ -107,6 +107,11 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Save Excel workbook"))
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(Password))
             {
                 OfficeEncryptedPackageService.SaveExcel(Document, resolvedPath, Password!, false, saveOptions);
@@ -123,6 +128,11 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
         }
         else
         {
+            if (!PdfCommandUtilities.ShouldWrite(this, Document.FilePath!, "Save Excel workbook"))
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(Password))
             {
                 OfficeEncryptedPackageService.SaveExcel(Document, Document.FilePath!, Password!, false, saveOptions);
@@ -161,6 +171,11 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
         }
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Excel PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         Document.SaveAsPdf(pdfPath);
     }

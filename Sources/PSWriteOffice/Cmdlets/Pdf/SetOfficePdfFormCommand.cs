@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// Set-OfficePdfForm -Path .\Examples\Documents\Request.pdf -OutputPath .\Examples\Documents\Request-FilledFlat.pdf -Field $fields -Flatten</code>
 ///   <para>Fills simple AcroForm fields and writes a flattened PDF.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficePdfForm")]
+[Cmdlet(VerbsCommon.Set, "OfficePdfForm", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class SetOfficePdfFormCommand : PSCmdlet
 {
@@ -77,6 +77,11 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
                 throw new PSArgumentException("Provide -Field values when using -Incremental.", nameof(Field));
             }
 
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write incrementally updated PDF form"))
+            {
+                return;
+            }
+
             PdfCommandUtilities.EnsureDirectory(outputPath);
             var options = new PdfIncrementalFormFieldUpdateOptions
             {
@@ -117,6 +122,11 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
                     ? document.Forms.Fill(values)
                     : document.Forms.Fill(values, formOptions);
             }
+        }
+
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated PDF form"))
+        {
+            return;
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);

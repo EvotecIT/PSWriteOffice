@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $pdf | Save-OfficePdf -Path .\QueuedReport.pdf</code>
 ///   <para>Creates a PDF document object first, then saves it to disk.</para>
 /// </example>
-[Cmdlet(VerbsData.Save, "OfficePdf")]
+[Cmdlet(VerbsData.Save, "OfficePdf", SupportsShouldProcess = true)]
 [OutputType(typeof(PdfDocument), typeof(FileInfo))]
 public sealed class SaveOfficePdfCommand : PSCmdlet
 {
@@ -57,6 +57,11 @@ public sealed class SaveOfficePdfCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var fullPath = PdfCommandUtilities.ResolvePath(this, Path);
+        if (!PdfCommandUtilities.ShouldWrite(this, fullPath, "Save PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(fullPath);
         PdfCommandUtilities.ApplyEncryption(Document, Password, OwnerPassword, Permission);
         Document.Save(fullPath);

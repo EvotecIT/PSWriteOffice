@@ -41,7 +41,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   }</code>
 ///   <para>Shows the preferred high-level PDF report authoring shape.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficePdf", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.New, "OfficePdf", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [OutputType(typeof(PdfDocument), typeof(FileInfo))]
 public sealed class NewOfficePdfCommand : PSCmdlet
 {
@@ -204,6 +204,11 @@ public sealed class NewOfficePdfCommand : PSCmdlet
         }
 
         var fullPath = PdfCommandUtilities.ResolvePath(this, Path!);
+        if (!PdfCommandUtilities.ShouldWrite(this, fullPath, "Write new PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(fullPath);
         document.Save(fullPath);
 

@@ -41,6 +41,11 @@ internal static class PdfCommandUtilities
         }
     }
 
+    internal static bool ShouldWrite(PSCmdlet cmdlet, string path, string action)
+    {
+        return cmdlet.ShouldProcess(path, action);
+    }
+
     internal static string GetSafeFileName(string fileName)
     {
         var invalid = Path.GetInvalidFileNameChars();

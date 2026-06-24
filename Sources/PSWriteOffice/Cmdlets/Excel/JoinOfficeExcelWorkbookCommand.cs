@@ -23,7 +23,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object Path, WorksheetCount</code>
 ///   <para>Copies selected worksheets from Source.xlsx into Target.xlsx using OfficeIMO workbook merge logic.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Join, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Join, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Merge-OfficeExcelWorkbook", "ExcelWorkbookJoin", "ExcelWorkbookMerge")]
 [OutputType(typeof(ExcelWorkbookMergeResult))]
 public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
@@ -78,6 +78,18 @@ public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
         if (SourceDocument == null && (SourcePath == null || SourcePath.Length == 0))
         {
             throw new PSArgumentException("Provide SourceDocument or SourcePath.");
+        }
+
+        if (string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase))
+        {
+            var resolvedTargetPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+            var action = File.Exists(resolvedTargetPath)
+                ? "Update Excel workbook with merged sheets"
+                : "Write Excel workbook with merged sheets";
+            if (!ShouldProcess(resolvedTargetPath, action))
+            {
+                return;
+            }
         }
 
         using var targetWorkbook = ResolveTargetWorkbook();

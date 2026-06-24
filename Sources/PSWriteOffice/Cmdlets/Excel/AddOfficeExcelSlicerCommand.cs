@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object -ExpandProperty SlicerCacheCount</code>
 ///   <para>Writes slicer cache package metadata through OfficeIMO. Excel may still be required to materialize full slicer UI shapes.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelSlicer", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelSlicer", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelSlicer")]
 [OutputType(typeof(PSObject))]
 public sealed class AddOfficeExcelSlicerCommand : PSCmdlet
@@ -56,6 +56,11 @@ public sealed class AddOfficeExcelSlicerCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         ExtendedPart part = workbook.Document.AddWorkbookSlicerCache(new ExcelSlicerCacheOptions
         {
             Name = Name,

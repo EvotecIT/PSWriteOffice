@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object Path, WorksheetCount</code>
 ///   <para>Writes the built-in OfficeIMO workbook theme and updates its theme name.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficeExcelTheme", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Set, "OfficeExcelTheme", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelTheme")]
 [OutputType(typeof(PSObject))]
 public sealed class SetOfficeExcelThemeCommand : PSCmdlet
@@ -56,6 +56,11 @@ public sealed class SetOfficeExcelThemeCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
 
         string? xml = ResolveThemeXml();
         if (Default.IsPresent)

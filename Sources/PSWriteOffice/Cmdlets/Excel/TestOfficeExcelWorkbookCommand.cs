@@ -19,7 +19,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// }</code>
 ///   <para>Returns OfficeIMO workbook diagnostics for defined names, formulas, tables, drawings, connections, and package validation.</para>
 /// </example>
-[Cmdlet(VerbsDiagnostic.Test, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsDiagnostic.Test, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ExcelWorkbookDoctor", "ExcelDoctor")]
 [OutputType(typeof(PSObject))]
 public sealed class TestOfficeExcelWorkbookCommand : PSCmdlet
@@ -49,6 +49,12 @@ public sealed class TestOfficeExcelWorkbookCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: !RepairDefinedNames.IsPresent);
+        if (RepairDefinedNames.IsPresent &&
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Repair Excel workbook diagnostics"))
+        {
+            return;
+        }
+
         var report = workbook.Document.RunWorkbookDoctor(new ExcelWorkbookDoctorOptions
         {
             ValidateOpenXml = !SkipOpenXmlValidation.IsPresent,

@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// $diagram | Save-OfficeVisio -Path .\ServiceMap-copy.vsdx -PassThru</code>
 ///   <para>Saves an existing OfficeIMO.Visio document to another .vsdx file.</para>
 /// </example>
-[Cmdlet(VerbsData.Save, "OfficeVisio")]
+[Cmdlet(VerbsData.Save, "OfficeVisio", SupportsShouldProcess = true)]
 [Alias("VisioSave")]
 [OutputType(typeof(VisioDocument), typeof(FileInfo))]
 public sealed class SaveOfficeVisioCommand : PSCmdlet
@@ -41,12 +41,22 @@ public sealed class SaveOfficeVisioCommand : PSCmdlet
     {
         if (string.IsNullOrWhiteSpace(Path))
         {
+            if (!ShouldProcess("Visio document", "Save"))
+            {
+                return;
+            }
+
             Document.Save();
             WriteObject(Document);
             return;
         }
 
         var fullPath = VisioCommandUtilities.ResolvePath(this, Path!);
+        if (!ShouldProcess(fullPath, "Save Visio document"))
+        {
+            return;
+        }
+
         VisioCommandUtilities.EnsureDirectory(fullPath);
         Document.Save(fullPath);
 

@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>ExcelSheet 'Data' { Add-OfficeExcelPageBreak -Row 25,50 -Column 8 }</code>
 ///   <para>Adds row page breaks after rows 25 and 50 and a column page break after column 8.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelPageBreak", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelPageBreak", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPageBreak")]
 public sealed class AddOfficeExcelPageBreakCommand : PSCmdlet
 {
@@ -58,6 +58,15 @@ public sealed class AddOfficeExcelPageBreakCommand : PSCmdlet
         }
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+
+        {
+
+            return;
+
+        }
+
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
 
         foreach (var row in Row)

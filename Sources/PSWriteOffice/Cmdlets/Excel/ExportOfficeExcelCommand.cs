@@ -25,10 +25,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>$rows | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName Data -TableName Sales -TextColumn Id -CurrencyColumn Revenue -ColumnFormat @{ Rate = @{ Style = 'Percent'; Decimals = 1 }; Created = 'Date' } -FormatCultureName en-US -AutoFitFormattedColumn</code>
 ///   <para>Formats ID values as text, Revenue as currency, Rate as a one-decimal percentage, and Created as a short date while keeping formatting logic in OfficeIMO.</para>
 /// </example>
-[Cmdlet(VerbsData.Export, "OfficeExcel")]
+[Cmdlet(VerbsData.Export, "OfficeExcel", DefaultParameterSetName = ParameterSetCreate, SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium)]
 [Alias("ExcelExport")]
 public sealed class ExportOfficeExcelCommand : PSCmdlet
 {
+    private const string ParameterSetCreate = "Create";
+    private const string ParameterSetAppend = "Append";
+    private const string ParameterSetClearSheet = "ClearSheet";
     private readonly List<object?> _input = new();
 
     /// <summary>Destination workbook path.</summary>
@@ -111,19 +114,19 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     public string? Title { get; set; }
 
     /// <summary>Append rows to an existing worksheet when the workbook exists.</summary>
-    [Parameter]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetAppend)]
     public SwitchParameter Append { get; set; }
 
     /// <summary>Require append operations to extend an existing Excel table instead of writing after the used range.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetAppend)]
     public SwitchParameter AppendToTable { get; set; }
 
     /// <summary>Replace the target worksheet inside an existing workbook.</summary>
-    [Parameter]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetClearSheet)]
     public SwitchParameter ClearSheet { get; set; }
 
     /// <summary>Do not overwrite an existing workbook unless appending or clearing a sheet.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetCreate)]
     public SwitchParameter NoClobber { get; set; }
 
     /// <summary>Exclude specific properties from exported objects.</summary>
@@ -318,18 +321,26 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         var columnFormatPlan = BuildColumnFormatPlan();
 
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-        var directory = System.IO.Path.GetDirectoryName(resolvedPath);
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
         if (File.Exists(resolvedPath) && NoClobber.IsPresent && !Append.IsPresent && !ClearSheet.IsPresent)
         {
             throw new IOException($"File '{resolvedPath}' already exists.");
         }
 
         var preserveWorkbook = File.Exists(resolvedPath) && (Append.IsPresent || ClearSheet.IsPresent);
+        var action = preserveWorkbook
+            ? Append.IsPresent ? "Update existing Excel workbook" : "Replace worksheet in existing Excel workbook"
+            : File.Exists(resolvedPath) ? "Overwrite Excel workbook" : "Write new Excel workbook";
+        if (!ShouldProcess(resolvedPath, action))
+        {
+            return;
+        }
+
+        var directory = System.IO.Path.GetDirectoryName(resolvedPath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
         if (File.Exists(resolvedPath) && !preserveWorkbook)
         {
             File.Delete(resolvedPath);

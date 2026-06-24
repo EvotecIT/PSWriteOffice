@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// $proof</code>
 ///   <para>Moves Summary to the first worksheet tab and reads back the first sheets from workbook summary.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Move, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Move, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("Set-OfficeExcelSheetOrder", "ExcelSheetOrder")]
 public sealed class MoveOfficeExcelSheetCommand : PSCmdlet
 {
@@ -56,6 +56,11 @@ public sealed class MoveOfficeExcelSheetCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         var document = workbook.Document;
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
         document.ReorderWorksheet(sheet, Index);

@@ -15,7 +15,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>$rows | New-OfficeExcelDashboard -Title 'Sales Dashboard' -TableName Sales -ChartPreset CompactComparison</code>
 ///   <para>Writes a table and chart into the current Excel DSL worksheet.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficeExcelDashboard", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.New, "OfficeExcelDashboard", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelDashboard")]
 [OutputType(typeof(PSObject))]
 public sealed class NewOfficeExcelDashboardCommand : PSCmdlet
@@ -124,6 +124,15 @@ public sealed class NewOfficeExcelDashboardCommand : PSCmdlet
         }
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+
+        {
+
+            return;
+
+        }
+
         ExcelSheet sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
         ExcelDashboardResult result = sheet.AddDashboard(table, new ExcelDashboardOptions
         {

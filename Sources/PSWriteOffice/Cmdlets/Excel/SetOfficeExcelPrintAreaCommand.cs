@@ -15,7 +15,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// $proof</code>
 ///   <para>Stores the worksheet-local Excel print area and repeats the report header rows for printing.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficeExcelPrintArea", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Set, "OfficeExcelPrintArea", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPrintArea")]
 public sealed class SetOfficeExcelPrintAreaCommand : PSCmdlet
 {
@@ -53,6 +53,11 @@ public sealed class SetOfficeExcelPrintAreaCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         var document = workbook.Document;
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
         document.SetPrintArea(sheet, Range, save: false);

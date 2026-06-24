@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $proof</code>
 ///   <para>Copies selected pages and inspects the resulting PDF.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Copy, "OfficePdfPage")]
+[Cmdlet(VerbsCommon.Copy, "OfficePdfPage", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class CopyOfficePdfPageCommand : PSCmdlet
 {
@@ -37,6 +37,11 @@ public sealed class CopyOfficePdfPageCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write copied PDF pages"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Extract(PageRange).Save(outputPath);
         WriteObject(new FileInfo(outputPath));

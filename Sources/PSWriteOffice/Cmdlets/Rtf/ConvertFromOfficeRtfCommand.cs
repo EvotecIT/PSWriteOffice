@@ -32,7 +32,7 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 ///   <code>ConvertFrom-OfficeRtf -Path .\Report.rtf -As Pdf -OutputPath .\Report.pdf</code>
 ///   <para>Uses OfficeIMO.Rtf.Pdf to save a PDF file.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertFrom, "OfficeRtf", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsData.ConvertFrom, "OfficeRtf", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-Rtf")]
 [OutputType(typeof(WordDocument), typeof(string), typeof(PdfDocument), typeof(FileInfo))]
 public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
@@ -147,6 +147,12 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
         }
 
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write Word document converted from RTF"))
+        {
+            document.Dispose();
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         try
         {
@@ -174,6 +180,11 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
         }
 
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write HTML converted from RTF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         document.SaveAsHtml(outputPath, options);
         if (PassThru.IsPresent)
@@ -196,6 +207,11 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
             var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF converted from RTF"))
+            {
+                return;
+            }
+
             PdfCommandUtilities.EnsureDirectory(outputPath);
             if (ParameterSetName == ParameterSetPath)
             {

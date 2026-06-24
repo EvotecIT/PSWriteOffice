@@ -15,7 +15,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>$doc | Save-OfficeWord</code>
 ///   <para>Persists pending changes and keeps the document open.</para>
 /// </example>
-[Cmdlet(VerbsData.Save, "OfficeWord")]
+[Cmdlet(VerbsData.Save, "OfficeWord", SupportsShouldProcess = true)]
 [OutputType(typeof(WordDocument))]
 public sealed class SaveOfficeWordCommand : PSCmdlet
 {
@@ -69,6 +69,11 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Save Word document"))
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(Password))
             {
                 OfficeEncryptedPackageService.SaveWord(Document, resolvedPath, Password!, false);
@@ -85,6 +90,11 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
         }
         else
         {
+            if (!PdfCommandUtilities.ShouldWrite(this, Document.FilePath!, "Save Word document"))
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(Password))
             {
                 OfficeEncryptedPackageService.SaveWord(Document, Document.FilePath!, Password!, false);
@@ -116,6 +126,11 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
         }
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Word PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         if (PdfAllowSystemFontEmbedding.IsPresent || !string.IsNullOrWhiteSpace(PdfFontFamily))
         {

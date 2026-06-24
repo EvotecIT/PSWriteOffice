@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>Edit-OfficeExcelRow -Path .\Report.xlsx -Sheet Data -ScriptBlock { param($row) if ($row.Get[string]('Status') -eq 'Draft') { $row.Set('Status', 'Ready') } }</code>
 ///   <para>Loads editable row handles, lets the script update cells, and saves the workbook.</para>
 /// </example>
-[Cmdlet(VerbsData.Edit, "OfficeExcelRow", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsData.Edit, "OfficeExcelRow", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Edit-ExcelRow", "ExcelRowEdit")]
 [OutputType(typeof(RowEdit))]
 public sealed class EditOfficeExcelRowCommand : PSCmdlet
@@ -58,6 +58,11 @@ public sealed class EditOfficeExcelRowCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         var document = workbook.Document;
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
         var options = ExcelReadOutputService.CreateOptions(NumericAsDecimal.IsPresent);

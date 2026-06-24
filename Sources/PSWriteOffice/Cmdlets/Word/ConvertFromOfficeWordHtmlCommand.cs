@@ -21,7 +21,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>$doc = ConvertFrom-OfficeWordHtml -Path .\snippet.html</code>
 ///   <para>Returns a Word document instance for further edits.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertFrom, "OfficeWordHtml", DefaultParameterSetName = ParameterSetHtml)]
+[Cmdlet(VerbsData.ConvertFrom, "OfficeWordHtml", DefaultParameterSetName = ParameterSetHtml, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-WordHtml")]
 [OutputType(typeof(WordDocument), typeof(FileInfo))]
 public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
@@ -176,6 +176,12 @@ public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+                if (!ShouldProcess(resolvedOutput, "Write Word document converted from HTML"))
+                {
+                    document.Dispose();
+                    return;
+                }
+
                 var directory = Path.GetDirectoryName(resolvedOutput);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {

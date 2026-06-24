@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>ExcelSheet 'Report' { Set-OfficeExcelPrintLayout -Preset Report -PrintArea A1:H40 }</code>
 ///   <para>Applies landscape orientation, narrow margins, one-page-wide scaling, and repeated header row.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficeExcelPrintLayout", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Set, "OfficeExcelPrintLayout", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPrintLayout")]
 [OutputType(typeof(ExcelSheet), typeof(PSObject))]
 public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
@@ -99,6 +99,11 @@ public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         var document = workbook.Document;
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
         sheet.ApplyPrintLayout(new ExcelPrintLayoutOptions

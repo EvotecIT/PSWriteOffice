@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// Get-OfficePdfInfo -Path .\Examples\Documents\Combined.pdf | Select-Object PageCount</code>
 ///   <para>Writes a single PDF containing the input documents in the requested order, then checks the result.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Join, "OfficePdf")]
+[Cmdlet(VerbsCommon.Join, "OfficePdf", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class JoinOfficePdfCommand : PSCmdlet
 {
@@ -65,6 +65,11 @@ public sealed class JoinOfficePdfCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write joined PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         var resizeOptions = PdfCommandUtilities.CreatePageResizeOptions(
             PageSize,

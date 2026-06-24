@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// Get-Content $markdownPath -TotalCount 20</code>
 ///   <para>Writes Markdown readback for selected pages to a file.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficePdfMarkdown")]
+[Cmdlet(VerbsData.ConvertTo, "OfficePdfMarkdown", SupportsShouldProcess = true)]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet
 {
@@ -46,6 +46,11 @@ public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
             var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF Markdown"))
+            {
+                return;
+            }
+
             PdfCommandUtilities.EnsureDirectory(outputPath);
             File.WriteAllText(outputPath, markdown);
             WriteObject(new FileInfo(outputPath));

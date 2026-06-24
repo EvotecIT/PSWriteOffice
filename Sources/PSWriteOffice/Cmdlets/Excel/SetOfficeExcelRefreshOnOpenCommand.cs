@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object ConnectionPartCount, QueryTablePartCount</code>
 ///   <para>Sets workbook metadata through OfficeIMO so pivot caches refresh on open.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficeExcelRefreshOnOpen", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Set, "OfficeExcelRefreshOnOpen", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelRefreshOnOpen")]
 [OutputType(typeof(PSObject))]
 public sealed class SetOfficeExcelRefreshOnOpenCommand : PSCmdlet
@@ -59,6 +59,11 @@ public sealed class SetOfficeExcelRefreshOnOpenCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
 
         bool targetPivotTables = PivotTables.IsPresent || !Connections.IsPresent;
         bool targetConnections = Connections.IsPresent || !PivotTables.IsPresent;

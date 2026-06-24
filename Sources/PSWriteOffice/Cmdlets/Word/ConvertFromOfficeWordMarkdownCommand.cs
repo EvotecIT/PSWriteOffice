@@ -30,7 +30,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>ConvertFrom-OfficeWordMarkdown -Path .\SOP.md -TemplatePath .\Template.docx -BookmarkName MainContent -OutputPath .\SOP.docx</code>
 ///   <para>Copies the template and replaces the bookmark paragraph with generated Markdown content.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertFrom, "OfficeWordMarkdown", DefaultParameterSetName = ParameterSetMarkdown)]
+[Cmdlet(VerbsData.ConvertFrom, "OfficeWordMarkdown", DefaultParameterSetName = ParameterSetMarkdown, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-WordMarkdown")]
 [OutputType(typeof(WordDocument), typeof(FileInfo))]
 public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
@@ -221,6 +221,12 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+                if (!ShouldProcess(resolvedOutput, "Write Word document converted from Markdown"))
+                {
+                    document.Dispose();
+                    return;
+                }
+
                 var directory = Path.GetDirectoryName(resolvedOutput);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {

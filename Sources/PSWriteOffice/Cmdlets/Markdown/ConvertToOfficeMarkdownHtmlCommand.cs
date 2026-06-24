@@ -20,7 +20,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   <code>ConvertTo-OfficeMarkdownHtml -Path .\Report.md -DocumentMode -Title 'Weekly Report' -Style Clean -OutputPath .\Report.html -PassThru</code>
 ///   <para>Generates a full HTML file with title and CSS styling.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficeMarkdownHtml", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsData.ConvertTo, "OfficeMarkdownHtml", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ConvertTo-MarkdownHtml")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
@@ -222,6 +222,11 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
             var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+            if (!ShouldProcess(resolvedOutput, "Write HTML converted from Markdown"))
+            {
+                return;
+            }
+
             var directory = Path.GetDirectoryName(resolvedOutput);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {

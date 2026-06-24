@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object Passed, ProtectionSummary</code>
 ///   <para>Writes workbook-level structure protection metadata and saves the workbook.</para>
 /// </example>
-[Cmdlet(VerbsSecurity.Protect, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsSecurity.Protect, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelWorkbookProtect")]
 [OutputType(typeof(ExcelDocument), typeof(FileInfo))]
 public sealed class ProtectOfficeExcelWorkbookCommand : PSCmdlet
@@ -67,6 +67,15 @@ public sealed class ProtectOfficeExcelWorkbookCommand : PSCmdlet
             : null;
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+
+        {
+
+            return;
+
+        }
+
         var document = workbook.Document;
         document.ProtectWorkbook(new ExcelWorkbookProtectionOptions
         {
