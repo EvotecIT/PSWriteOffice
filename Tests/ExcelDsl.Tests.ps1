@@ -3987,6 +3987,38 @@ Describe 'Excel DSL surface' {
         $hyperlinks.Count | Should -Be 2
     }
 
+    It 'supports scaled and range-anchored worksheet images' {
+        $path = Join-Path $TestDrive 'DslExcelImagePlacement.xlsx'
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Images' -Content {
+                Add-OfficeExcelImage -Range 'A1:C3' -Path $imagePath -Name 'RangeLogo' -AltText 'Logo pinned to report header' -Title 'Pinned logo' -Placement MoveAndSize
+                Add-OfficeExcelImage -Address 'E2' -Path $imagePath -ScalePercent 100 -Name 'ScaledLogo' -AltText 'Scaled logo' -RotationDegrees 12
+            }
+        } | Out-Null
+
+        $drawingXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'xl/drawings/drawing1.xml'
+        $twoCellAnchor = $drawingXml.SelectSingleNode("/*[local-name()='wsDr']/*[local-name()='twoCellAnchor']")
+        $twoCellAnchor | Should -Not -BeNullOrEmpty
+        $twoCellAnchor.SelectSingleNode("*[local-name()='from']/*[local-name()='col']").InnerText | Should -Be '0'
+        $twoCellAnchor.SelectSingleNode("*[local-name()='from']/*[local-name()='row']").InnerText | Should -Be '0'
+        $twoCellAnchor.SelectSingleNode("*[local-name()='to']/*[local-name()='col']").InnerText | Should -Be '3'
+        $twoCellAnchor.SelectSingleNode("*[local-name()='to']/*[local-name()='row']").InnerText | Should -Be '3'
+
+        $rangeProperties = $twoCellAnchor.SelectSingleNode(".//*[local-name()='cNvPr']")
+        $rangeProperties.GetAttribute('name') | Should -Be 'RangeLogo'
+        $rangeProperties.GetAttribute('descr') | Should -Be 'Logo pinned to report header'
+        $rangeProperties.GetAttribute('title') | Should -Be 'Pinned logo'
+
+        $oneCellAnchor = $drawingXml.SelectSingleNode("/*[local-name()='wsDr']/*[local-name()='oneCellAnchor']")
+        $oneCellAnchor | Should -Not -BeNullOrEmpty
+        $scaledProperties = $oneCellAnchor.SelectSingleNode(".//*[local-name()='cNvPr']")
+        $scaledProperties.GetAttribute('name') | Should -Be 'ScaledLogo'
+        $scaledProperties.GetAttribute('descr') | Should -Be 'Scaled logo'
+        $oneCellAnchor.SelectSingleNode(".//*[local-name()='xfrm']").GetAttribute('rot') | Should -Be '720000'
+    }
+
     It 'supports internal link helpers for summary sheets' {
         $path = Join-Path $TestDrive 'DslExcelInternalLinks.xlsx'
         $rows = @(
