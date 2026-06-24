@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-24T07:37:30.7702802+00:00",
+  "generatedAt": "2026-06-24T07:58:32.6683193+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -1201,6 +1201,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/ConvertToOfficeMarkdownHtmlCommand.cs#L26"
     },
     {
+      "name": "ConvertTo-OfficePdfFlatAnnotation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfFlatAnnotationCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfFlatAnnotationCommand.cs#L17"
+    },
+    {
       "name": "ConvertTo-OfficePdfFlatForm",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1225,6 +1233,22 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfMarkdownCommand.cs",
       "sourceLine": 19,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfMarkdownCommand.cs#L19"
+    },
+    {
+      "name": "ConvertTo-OfficePdfOptimized",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfOptimizedCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfOptimizedCommand.cs#L18"
+    },
+    {
+      "name": "ConvertTo-OfficePdfRedacted",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfRedactedCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfRedactedCommand.cs#L17"
     },
     {
       "name": "ConvertTo-OfficeRtf",
@@ -1720,6 +1744,22 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfCommand.cs#L17"
     },
     {
+      "name": "Get-OfficePdfAnnotation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfAnnotationCommand.cs",
+      "sourceLine": 10,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfAnnotationCommand.cs#L10"
+    },
+    {
+      "name": "Get-OfficePdfAppendOnlyMutation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfAppendOnlyMutationCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfAppendOnlyMutationCommand.cs#L18"
+    },
+    {
       "name": "Get-OfficePdfAttachment",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1734,6 +1774,22 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfComplianceCommand.cs",
       "sourceLine": 20,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfComplianceCommand.cs#L20"
+    },
+    {
+      "name": "Get-OfficePdfDiagnostic",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfDiagnosticCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfDiagnosticCommand.cs#L18"
+    },
+    {
+      "name": "Get-OfficePdfFont",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfFontCommand.cs",
+      "sourceLine": 10,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfFontCommand.cs#L10"
     },
     {
       "name": "Get-OfficePdfFormField",
@@ -1760,6 +1816,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfInfoCommand.cs#L22"
     },
     {
+      "name": "Get-OfficePdfOptimization",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfOptimizationCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfOptimizationCommand.cs#L18"
+    },
+    {
       "name": "Get-OfficePdfPreflight",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1768,12 +1832,36 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfPreflightCommand.cs#L18"
     },
     {
+      "name": "Get-OfficePdfRedactionPlan",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfRedactionPlanCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfRedactionPlanCommand.cs#L19"
+    },
+    {
+      "name": "Get-OfficePdfSignature",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfSignatureCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfSignatureCommand.cs#L22"
+    },
+    {
       "name": "Get-OfficePdfText",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfTextCommand.cs",
-      "sourceLine": 20,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfTextCommand.cs#L20"
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfTextCommand.cs#L21"
+    },
+    {
+      "name": "Get-OfficePdfTextDiagnostic",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfTextDiagnosticCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfTextDiagnosticCommand.cs#L17"
     },
     {
       "name": "Get-OfficePowerPoint",
@@ -2266,6 +2354,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfCommand.cs#L46"
     },
     {
+      "name": "New-OfficePdfSignature",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfSignatureCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfSignatureCommand.cs#L22"
+    },
+    {
       "name": "New-OfficePowerPoint",
       "kind": "Cmdlet",
       "aliases": [],
@@ -2354,6 +2450,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelNamedRangeCommand.cs",
       "sourceLine": 20,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/RemoveOfficeExcelNamedRangeCommand.cs#L20"
+    },
+    {
+      "name": "Remove-OfficePdfAnnotation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/RemoveOfficePdfAnnotationCommand.cs",
+      "sourceLine": 12,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/RemoveOfficePdfAnnotationCommand.cs#L12"
     },
     {
       "name": "Remove-OfficePdfPage",
@@ -2804,6 +2908,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelWriteReservationCommand.cs#L17"
     },
     {
+      "name": "Set-OfficePdfAnnotation",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfAnnotationCommand.cs",
+      "sourceLine": 12,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfAnnotationCommand.cs#L12"
+    },
+    {
       "name": "Set-OfficePdfBackground",
       "kind": "Cmdlet",
       "aliases": [],
@@ -2826,6 +2938,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfComplianceCommand.cs",
       "sourceLine": 21,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfComplianceCommand.cs#L21"
+    },
+    {
+      "name": "Set-OfficePdfElectronicInvoice",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfElectronicInvoiceCommand.cs",
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfElectronicInvoiceCommand.cs#L21"
     },
     {
       "name": "Set-OfficePdfFooter",
@@ -2864,8 +2984,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfPageCommand.cs",
-      "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfPageCommand.cs#L21"
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfPageCommand.cs#L23"
     },
     {
       "name": "Set-OfficePdfPageBorder",
@@ -2882,6 +3002,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfPageSetupCommand.cs",
       "sourceLine": 21,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfPageSetupCommand.cs#L21"
+    },
+    {
+      "name": "Set-OfficePdfSignature",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfSignatureCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfSignatureCommand.cs#L18"
     },
     {
       "name": "Set-OfficePdfTheme",
@@ -3104,8 +3232,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SplitOfficePdfCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SplitOfficePdfCommand.cs#L19"
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SplitOfficePdfCommand.cs#L22"
     },
     {
       "name": "Test-OfficeExcelAccessibility",
