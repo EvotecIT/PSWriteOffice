@@ -19,6 +19,18 @@
 }
 
 Describe 'CSV cmdlets' {
+    It 'exposes NoHeader instead of bool header toggles on CSV commands' {
+        (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
+        (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
+        (Get-Command Get-OfficeCsvData).Parameters.Keys | Should -Contain 'NoHeader'
+
+        (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
+        (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Not -Contain 'HasHeaderRow'
+        (Get-Command Get-OfficeCsvData).Parameters.Keys | Should -Not -Contain 'HasHeaderRow'
+    }
+
     It 'converts objects to CSV and reads them back' {
         $rows = @(
             [pscustomobject]@{ Region = 'NA'; Revenue = 100 }

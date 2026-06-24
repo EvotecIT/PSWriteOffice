@@ -13,7 +13,7 @@ $rows = @(
     [PSCustomObject]@{ Name = 'Beta'; Value = 2 }
 )
 
-$rows | ConvertTo-OfficeCsv -OutputPath $path | Out-Null
+$rows | Export-OfficeCsv -Path $path
 
 $data = Get-OfficeCsvData -Path $path
 $data | Format-Table

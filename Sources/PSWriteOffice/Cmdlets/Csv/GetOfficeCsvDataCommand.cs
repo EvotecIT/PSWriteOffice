@@ -58,15 +58,6 @@ public sealed class GetOfficeCsvDataCommand : PSCmdlet
     [Alias("PSPath", "LP")]
     public string? LiteralPath { get; set; }
 
-    /// <summary>Indicates whether the first record is a header row.</summary>
-    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetPathCulture)]
-    [Parameter(ParameterSetName = ParameterSetPathDetect)]
-    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
-    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
-    public bool HasHeaderRow { get; set; } = true;
-
     /// <summary>Treat the first record as data and generate default column names.</summary>
     [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetPathCulture)]
@@ -210,7 +201,7 @@ public sealed class GetOfficeCsvDataCommand : PSCmdlet
 
             var options = new CsvLoadOptions
             {
-                HasHeaderRow = Header is null && !NoHeader.IsPresent && HasHeaderRow,
+                HasHeaderRow = Header is null && !NoHeader.IsPresent,
                 Header = Header,
                 Delimiter = Delimiter,
                 DetectDelimiter = DetectDelimiter.IsPresent,

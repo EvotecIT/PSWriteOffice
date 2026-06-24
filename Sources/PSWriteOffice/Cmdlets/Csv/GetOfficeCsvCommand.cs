@@ -61,10 +61,6 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetTextDetect)]
     public string Text { get; set; } = string.Empty;
 
-    /// <summary>Indicates whether the first record is a header row.</summary>
-    [Parameter]
-    public bool HasHeaderRow { get; set; } = true;
-
     /// <summary>Treat the first record as data and generate default column names.</summary>
     [Parameter]
     public SwitchParameter NoHeader { get; set; }
@@ -153,7 +149,7 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
 
         var options = new CsvLoadOptions
         {
-            HasHeaderRow = Header is null && !NoHeader.IsPresent && HasHeaderRow,
+            HasHeaderRow = Header is null && !NoHeader.IsPresent,
             Header = Header,
             Delimiter = Delimiter,
             DetectDelimiter = DetectDelimiter.IsPresent,

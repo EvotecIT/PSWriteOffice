@@ -75,10 +75,6 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentPathCultureQuoteFields)]
     public SwitchParameter UseCulture { get; set; }
 
-    /// <summary>Include the header row in the output.</summary>
-    [Parameter]
-    public bool IncludeHeader { get; set; } = true;
-
     /// <summary>Omit the header row from the output.</summary>
     [Parameter]
     public SwitchParameter NoHeader { get; set; }
@@ -272,7 +268,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         var options = new CsvSaveOptions
         {
             Delimiter = Delimiter,
-            IncludeHeader = IncludeHeader && !NoHeader.IsPresent,
+            IncludeHeader = !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
