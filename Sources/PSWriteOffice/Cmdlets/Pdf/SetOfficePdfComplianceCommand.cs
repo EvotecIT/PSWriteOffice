@@ -51,8 +51,10 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
         {
             ApplyGroundwork(document);
         }
-
-        document.Compliance(Profile);
+        else
+        {
+            document.Compliance(Profile);
+        }
         if (PassThru.IsPresent)
         {
             WriteObject(document);
@@ -64,7 +66,8 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
         switch (Profile)
         {
             case PdfComplianceProfile.PdfUa1:
-                document.ConfigurePdfUaGroundwork(Language);
+            case PdfComplianceProfile.PdfUa2:
+                document.ConfigurePdfUaGroundwork(Profile, Language);
                 break;
             case PdfComplianceProfile.PdfA2B:
             case PdfComplianceProfile.PdfA2U:
@@ -72,6 +75,9 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
             case PdfComplianceProfile.PdfA3B:
             case PdfComplianceProfile.PdfA3U:
             case PdfComplianceProfile.PdfA3A:
+            case PdfComplianceProfile.PdfA4:
+            case PdfComplianceProfile.PdfA4E:
+            case PdfComplianceProfile.PdfA4F:
                 document.ConfigurePdfAGroundwork(Profile, Language);
                 break;
             default:

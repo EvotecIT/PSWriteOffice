@@ -40,6 +40,15 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
     [Parameter]
     public string? PdfPath { get; set; }
 
+    /// <summary>Optional default font family used by the native Word PDF converter.</summary>
+    [Parameter]
+    public string? PdfFontFamily { get; set; }
+
+    /// <summary>Allow the native Word PDF converter to embed installed system fonts used by the document.</summary>
+    [Parameter]
+    [Alias("AllowSystemFontEmbedding")]
+    public SwitchParameter PdfAllowSystemFontEmbedding { get; set; }
+
     /// <summary>Emit the document object for further processing.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -108,6 +117,16 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
         PdfCommandUtilities.EnsureDirectory(pdfPath);
+        if (PdfAllowSystemFontEmbedding.IsPresent || !string.IsNullOrWhiteSpace(PdfFontFamily))
+        {
+            Document.SaveAsPdf(pdfPath, new PdfSaveOptions
+            {
+                FontFamily = PdfFontFamily,
+                AllowSystemFontEmbedding = PdfAllowSystemFontEmbedding.IsPresent
+            });
+            return;
+        }
+
         Document.SaveAsPdf(pdfPath);
     }
 }

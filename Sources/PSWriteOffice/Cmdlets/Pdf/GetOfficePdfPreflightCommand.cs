@@ -22,9 +22,13 @@ public sealed class GetOfficePdfPreflightCommand : PSCmdlet
     [Alias("FilePath")]
     public string Path { get; set; } = string.Empty;
 
+    /// <summary>Password used to preflight a Standard password-encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        WriteObject(PdfInspector.Preflight(PdfCommandUtilities.ResolvePath(this, Path)));
+        WriteObject(PdfInspector.Preflight(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)));
     }
 }

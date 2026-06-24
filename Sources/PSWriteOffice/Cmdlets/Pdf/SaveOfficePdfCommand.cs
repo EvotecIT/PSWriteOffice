@@ -39,11 +39,26 @@ public sealed class SaveOfficePdfCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <summary>Password required to open the generated PDF.</summary>
+    [Parameter]
+    [Alias("UserPassword")]
+    public string? Password { get; set; }
+
+    /// <summary>Optional owner password for the generated encrypted PDF.</summary>
+    [Parameter]
+    public string? OwnerPassword { get; set; }
+
+    /// <summary>Raw PDF Standard security permission bit mask. Defaults to allowing all standard operations.</summary>
+    [Parameter]
+    [Alias("Permissions")]
+    public int? Permission { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var fullPath = PdfCommandUtilities.ResolvePath(this, Path);
         PdfCommandUtilities.EnsureDirectory(fullPath);
+        PdfCommandUtilities.ApplyEncryption(Document, Password, OwnerPassword, Permission);
         Document.Save(fullPath);
 
         if (Show.IsPresent)

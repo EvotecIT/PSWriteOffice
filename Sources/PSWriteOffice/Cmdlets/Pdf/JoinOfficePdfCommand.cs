@@ -33,12 +33,66 @@ public sealed class JoinOfficePdfCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <summary>Flatten visual annotation appearances before merging.</summary>
+    [Parameter]
+    public SwitchParameter FlattenVisualAnnotations { get; set; }
+
+    /// <summary>Resize each merged page to a known OfficeIMO page size such as A4, Letter, or Custom.</summary>
+    [Parameter]
+    public string? PageSize { get; set; }
+
+    /// <summary>Custom output page width in points when -PageSize Custom is used.</summary>
+    [Parameter]
+    public double? Width { get; set; }
+
+    /// <summary>Custom output page height in points when -PageSize Custom is used.</summary>
+    [Parameter]
+    public double? Height { get; set; }
+
+    /// <summary>Use the landscape orientation of the selected output page size.</summary>
+    [Parameter]
+    public SwitchParameter Landscape { get; set; }
+
+    /// <summary>How source page content is fitted into the resized output page.</summary>
+    [Parameter]
+    public PdfPageResizeMode ResizeMode { get; set; } = PdfPageResizeMode.Fit;
+
+    /// <summary>Margin, in points, reserved around resized page content.</summary>
+    [Parameter]
+    public double? ResizeMargin { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfMerger.MergeFiles(Path.Select(path => PdfCommandUtilities.ResolvePath(this, path)), outputPath);
+        var resizeOptions = PdfCommandUtilities.CreatePageResizeOptions(
+            PageSize,
+            Width,
+            Height,
+            Landscape.IsPresent,
+            ResizeMode,
+            ResizeMargin,
+            MyInvocation.BoundParameters.ContainsKey(nameof(PageSize)) ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(Width)) ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(Height)) ||
+            Landscape.IsPresent ||
+            MyInvocation.BoundParameters.ContainsKey(nameof(ResizeMode)) ||
+            ResizeMargin.HasValue);
+
+        if (FlattenVisualAnnotations.IsPresent || resizeOptions != null)
+        {
+            PdfMerger.MergeFiles(new PdfMergeOptions
+            {
+                FlattenVisualAnnotations = FlattenVisualAnnotations.IsPresent,
+                ResizePages = resizeOptions
+            }, Path.Select(path => PdfCommandUtilities.ResolvePath(this, path)), outputPath);
+        }
+        else
+        {
+            PdfMerger.MergeFiles(Path.Select(path => PdfCommandUtilities.ResolvePath(this, path)), outputPath);
+        }
+
         if (PassThru.IsPresent)
         {
             WriteObject(new FileInfo(outputPath));

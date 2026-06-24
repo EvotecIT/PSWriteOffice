@@ -103,6 +103,88 @@ public sealed class NewOfficePdfCommand : PSCmdlet
     [Parameter]
     public string? BoldItalicFontPath { get; set; }
 
+    /// <summary>PDF file header version emitted by OfficeIMO.Pdf.</summary>
+    [Parameter]
+    public PdfFileVersion? FileVersion { get; set; }
+
+    /// <summary>Create PDF outline/bookmark entries from heading elements.</summary>
+    [Parameter]
+    public SwitchParameter CreateOutlineFromHeadings { get; set; }
+
+    /// <summary>Initial outline expansion level when heading outlines are created.</summary>
+    [Parameter]
+    public int? OutlineExpansionLevel { get; set; }
+
+    /// <summary>Catalog page mode hint emitted for generated PDFs.</summary>
+    [Parameter]
+    public PdfCatalogPageMode? PageMode { get; set; }
+
+    /// <summary>Catalog page layout hint emitted for generated PDFs.</summary>
+    [Parameter]
+    public PdfCatalogPageLayout? PageLayout { get; set; }
+
+    /// <summary>Emit generated catalog page labels.</summary>
+    [Parameter]
+    public SwitchParameter IncludePageLabels { get; set; }
+
+    /// <summary>Optional generated page-label prefix.</summary>
+    [Parameter]
+    public string? PageLabelPrefix { get; set; }
+
+    /// <summary>Initial one-based page shown by PDF viewers that honor open actions.</summary>
+    [Parameter]
+    public int? OpenActionPage { get; set; }
+
+    /// <summary>Open-action destination mode.</summary>
+    [Parameter]
+    public PdfOpenActionDestinationMode? OpenActionMode { get; set; }
+
+    /// <summary>Optional open-action top coordinate.</summary>
+    [Parameter]
+    public double? OpenActionTop { get; set; }
+
+    /// <summary>Request PDF viewers to display the document title instead of the file name.</summary>
+    [Parameter]
+    public SwitchParameter DisplayDocTitle { get; set; }
+
+    /// <summary>Request PDF viewers to fit the document window to the first displayed page.</summary>
+    [Parameter]
+    public SwitchParameter FitWindow { get; set; }
+
+    /// <summary>Request PDF viewers to center the document window on screen.</summary>
+    [Parameter]
+    public SwitchParameter CenterWindow { get; set; }
+
+    /// <summary>Request PDF viewers to hide the toolbar.</summary>
+    [Parameter]
+    public SwitchParameter HideToolbar { get; set; }
+
+    /// <summary>Request PDF viewers to hide the menu bar.</summary>
+    [Parameter]
+    public SwitchParameter HideMenubar { get; set; }
+
+    /// <summary>Request PDF viewers to hide user-interface elements.</summary>
+    [Parameter]
+    public SwitchParameter HideWindowUI { get; set; }
+
+    /// <summary>Flatten generated FreeText and Highlight annotations into static page content.</summary>
+    [Parameter]
+    public SwitchParameter FlattenVisualAnnotations { get; set; }
+
+    /// <summary>Password required to open the generated PDF.</summary>
+    [Parameter]
+    [Alias("UserPassword")]
+    public string? Password { get; set; }
+
+    /// <summary>Optional owner password for the generated encrypted PDF.</summary>
+    [Parameter]
+    public string? OwnerPassword { get; set; }
+
+    /// <summary>Raw PDF Standard security permission bit mask. Defaults to allowing all standard operations.</summary>
+    [Parameter]
+    [Alias("Permissions")]
+    public int? Permission { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -154,6 +236,47 @@ public sealed class NewOfficePdfCommand : PSCmdlet
             options.ApplyTheme(PdfThemeUtilities.ResolveTheme(Theme.Value));
         }
 
+        if (FileVersion.HasValue)
+        {
+            options.FileVersion = FileVersion.Value;
+        }
+
+        if (CreateOutlineFromHeadings.IsPresent)
+        {
+            options.CreateOutlineFromHeadings = true;
+        }
+
+        if (OutlineExpansionLevel.HasValue)
+        {
+            options.OutlineExpansionLevel = OutlineExpansionLevel.Value;
+        }
+
+        if (PageMode.HasValue || PageLayout.HasValue)
+        {
+            options.SetCatalogView(PageMode, PageLayout);
+        }
+
+        if (IncludePageLabels.IsPresent || !string.IsNullOrWhiteSpace(PageLabelPrefix))
+        {
+            options.SetPageLabels(true, PageLabelPrefix);
+        }
+
+        if (OpenActionPage.HasValue || OpenActionMode.HasValue || OpenActionTop.HasValue)
+        {
+            options.SetOpenAction(
+                OpenActionPage ?? 1,
+                OpenActionTop,
+                OpenActionMode ?? PdfOpenActionDestinationMode.Xyz);
+        }
+
+        if (FlattenVisualAnnotations.IsPresent)
+        {
+            options.SetFlattenVisualAnnotations();
+        }
+
+        ConfigureViewerPreferences(options);
+        PdfCommandUtilities.ApplyEncryption(options, Password, OwnerPassword, Permission);
+
         if (!string.IsNullOrWhiteSpace(FontFamily))
         {
             if (string.IsNullOrWhiteSpace(RegularFontPath))
@@ -170,6 +293,52 @@ public sealed class NewOfficePdfCommand : PSCmdlet
         }
 
         return options;
+    }
+
+    private void ConfigureViewerPreferences(PdfOptions options)
+    {
+        if (!DisplayDocTitle.IsPresent &&
+            !FitWindow.IsPresent &&
+            !CenterWindow.IsPresent &&
+            !HideToolbar.IsPresent &&
+            !HideMenubar.IsPresent &&
+            !HideWindowUI.IsPresent)
+        {
+            return;
+        }
+
+        options.ConfigureViewerPreferences(preferences =>
+        {
+            if (DisplayDocTitle.IsPresent)
+            {
+                preferences.DisplayDocTitle = true;
+            }
+
+            if (FitWindow.IsPresent)
+            {
+                preferences.FitWindow = true;
+            }
+
+            if (CenterWindow.IsPresent)
+            {
+                preferences.CenterWindow = true;
+            }
+
+            if (HideToolbar.IsPresent)
+            {
+                preferences.HideToolbar = true;
+            }
+
+            if (HideMenubar.IsPresent)
+            {
+                preferences.HideMenubar = true;
+            }
+
+            if (HideWindowUI.IsPresent)
+            {
+                preferences.HideWindowUI = true;
+            }
+        });
     }
 
     private string? ResolveOptionalFontPath(string? path)

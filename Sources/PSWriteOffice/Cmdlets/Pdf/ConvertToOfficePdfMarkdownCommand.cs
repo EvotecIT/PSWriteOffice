@@ -27,6 +27,10 @@ public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet
     [Parameter]
     public string? PageRange { get; set; }
 
+    /// <summary>Password used to read a Standard password-encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
     /// <summary>Optional output Markdown file path.</summary>
     [Parameter]
     public string? OutputPath { get; set; }
@@ -34,7 +38,7 @@ public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
         var markdown = string.IsNullOrWhiteSpace(PageRange)
             ? document.Read.Markdown()
             : document.Read.Markdown(PageRange!);

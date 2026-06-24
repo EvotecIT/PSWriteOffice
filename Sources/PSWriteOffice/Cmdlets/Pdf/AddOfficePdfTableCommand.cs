@@ -151,6 +151,14 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     [Parameter]
     public SwitchParameter RightAlignNumeric { get; set; }
 
+    /// <summary>Reduce table text size when needed so cell text fits within the resolved cell width.</summary>
+    [Parameter]
+    public SwitchParameter ShrinkTextToFit { get; set; }
+
+    /// <summary>Smallest font size, in points, used by -ShrinkTextToFit.</summary>
+    [Parameter]
+    public double? MinimumShrinkFontSize { get; set; }
+
     /// <summary>Keep the table together when possible.</summary>
     [Parameter]
     public SwitchParameter KeepTogether { get; set; }
@@ -260,6 +268,8 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
             ColumnAlign = ColumnAlign,
             AutoFitColumns = AutoFitColumns.IsPresent,
             RightAlignNumeric = RightAlignNumeric.IsPresent,
+            ShrinkTextToFit = ShrinkTextToFit.IsPresent,
+            MinimumShrinkFontSize = MinimumShrinkFontSize,
             KeepTogether = KeepTogether.IsPresent,
             KeepWithNext = KeepWithNext.IsPresent,
             NoBorder = NoBorder.IsPresent,

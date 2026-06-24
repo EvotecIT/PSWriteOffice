@@ -39,10 +39,57 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Flatten { get; set; }
 
+    /// <summary>True to keep /NeedAppearances enabled for legacy PDF viewers after filling fields.</summary>
+    [Parameter]
+    public SwitchParameter KeepNeedAppearances { get; set; }
+
+    /// <summary>Append simple form field values as an incremental PDF revision instead of rewriting the existing PDF.</summary>
+    [Parameter]
+    public SwitchParameter Incremental { get; set; }
+
+    /// <summary>TrueType or OpenType/CFF font file used to synthesize Unicode form field appearances.</summary>
+    [Parameter]
+    public string? AppearanceFontPath { get; set; }
+
+    /// <summary>PDF font family name used for the supplied appearance font.</summary>
+    [Parameter]
+    public string? AppearanceFontFamilyName { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (Incremental.IsPresent)
+        {
+            if (Flatten.IsPresent)
+            {
+                throw new PSArgumentException("-Incremental cannot be combined with -Flatten because flattening requires a full rewrite.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(AppearanceFontPath))
+            {
+                throw new PSArgumentException("-Incremental uses built-in Helvetica appearance streams; use -KeepNeedAppearances or a full rewrite when custom appearance fonts are required.");
+            }
+
+            if (Field == null || Field.Count == 0)
+            {
+                throw new PSArgumentException("Provide -Field values when using -Incremental.", nameof(Field));
+            }
+
+            PdfCommandUtilities.EnsureDirectory(outputPath);
+            var options = new PdfIncrementalFormFieldUpdateOptions
+            {
+                KeepNeedAppearances = KeepNeedAppearances.IsPresent,
+                GenerateAppearanceStreams = !KeepNeedAppearances.IsPresent
+            };
+            PdfIncrementalUpdater.UpdateFormFields(inputPath, outputPath, PdfCommandUtilities.ConvertFieldValues(Field), options);
+            WriteObject(new FileInfo(outputPath));
+            return;
+        }
+
+        var document = PdfDocument.Open(inputPath);
+        var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
         PdfDocument result;
         if (Field == null || Field.Count == 0)
         {
@@ -51,17 +98,27 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
                 throw new PSArgumentException("Provide -Field values or use -Flatten.", nameof(Field));
             }
 
-            result = document.Forms.Flatten();
+            result = formOptions == null
+                ? document.Forms.Flatten()
+                : document.Forms.Flatten(formOptions);
         }
         else
         {
             var values = PdfCommandUtilities.ConvertFieldValues(Field);
-            result = Flatten.IsPresent
-                ? document.Forms.FillAndFlatten(values)
-                : document.Forms.Fill(values);
+            if (Flatten.IsPresent)
+            {
+                result = formOptions == null
+                    ? document.Forms.FillAndFlatten(values)
+                    : document.Forms.FillAndFlatten(values, formOptions);
+            }
+            else
+            {
+                result = formOptions == null
+                    ? document.Forms.Fill(values)
+                    : document.Forms.Fill(values, formOptions);
+            }
         }
 
-        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath);
         WriteObject(new FileInfo(outputPath));

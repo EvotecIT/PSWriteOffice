@@ -76,6 +76,67 @@ internal static class PdfCommandUtilities
             : PdfDslContext.Require(cmdlet).Document;
     }
 
+    internal static PdfReadOptions? CreateReadOptions(string? password)
+    {
+        return string.IsNullOrEmpty(password)
+            ? null
+            : new PdfReadOptions { Password = password };
+    }
+
+    internal static PdfFormFillerOptions? CreateFormFillerOptions(PSCmdlet cmdlet, string? appearanceFontPath, string? appearanceFontFamilyName, bool keepNeedAppearances)
+    {
+        if (string.IsNullOrWhiteSpace(appearanceFontPath) && !keepNeedAppearances)
+        {
+            return null;
+        }
+
+        var options = new PdfFormFillerOptions
+        {
+            KeepNeedAppearances = keepNeedAppearances
+        };
+
+        if (!string.IsNullOrWhiteSpace(appearanceFontPath))
+        {
+            var fontPath = ResolvePath(cmdlet, appearanceFontPath!);
+            var familyName = string.IsNullOrWhiteSpace(appearanceFontFamilyName)
+                ? Path.GetFileNameWithoutExtension(fontPath)
+                : appearanceFontFamilyName!;
+            options.UseAppearanceFontFile(familyName, fontPath);
+        }
+
+        return options;
+    }
+
+    internal static void ApplyEncryption(PdfOptions options, string? password, string? ownerPassword, int? permissions)
+    {
+        if (string.IsNullOrEmpty(password))
+        {
+            if (!string.IsNullOrEmpty(ownerPassword) || permissions.HasValue)
+            {
+                throw new PSArgumentException("-OwnerPassword and -Permission require -Password.");
+            }
+
+            return;
+        }
+
+        options.SetEncryption(password!, ownerPassword, permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions);
+    }
+
+    internal static void ApplyEncryption(PdfDocument document, string? password, string? ownerPassword, int? permissions)
+    {
+        if (string.IsNullOrEmpty(password))
+        {
+            if (!string.IsNullOrEmpty(ownerPassword) || permissions.HasValue)
+            {
+                throw new PSArgumentException("-OwnerPassword and -Permission require -Password.");
+            }
+
+            return;
+        }
+
+        document.Encryption(password!, ownerPassword, permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions);
+    }
+
     internal static PdfColor? ParseColor(string? color)
     {
         if (string.IsNullOrWhiteSpace(color))
@@ -102,19 +163,39 @@ internal static class PdfCommandUtilities
 
     internal static PageSize ResolvePageSize(string? pageSize, double? width, double? height, bool landscape)
     {
-        PageSize size = (pageSize ?? "Letter").Trim().ToUpperInvariant() switch
+        var pageSizeName = (pageSize ?? "Letter").Trim();
+        PageSize size = pageSizeName.ToUpperInvariant() switch
         {
-            "A4" => PageSizes.A4,
-            "A5" => PageSizes.A5,
-            "LEGAL" => PageSizes.Legal,
-            "LETTER" => PageSizes.Letter,
             "CUSTOM" => width.HasValue && height.HasValue
                 ? new PageSize(width.Value, height.Value)
                 : throw new PSArgumentException("Custom page size requires -Width and -Height."),
-            _ => throw new PSArgumentException("PageSize must be A4, A5, Letter, Legal, or Custom.", nameof(pageSize))
+            _ => PageSizes.TryGet(pageSizeName, out var resolved)
+                ? resolved
+                : throw new PSArgumentException("PageSize must be a known OfficeIMO page size name or Custom.", nameof(pageSize))
         };
 
         return landscape ? size.Landscape() : size.Portrait();
+    }
+
+    internal static PdfPageResizeOptions? CreatePageResizeOptions(string? pageSize, double? width, double? height, bool landscape, PdfPageResizeMode mode, double? margin, bool requested)
+    {
+        if (!requested)
+        {
+            return null;
+        }
+
+        var resolvedPageSize = ResolvePageSize(pageSize ?? (width.HasValue || height.HasValue ? "Custom" : "Letter"), width, height, landscape);
+        var options = new PdfPageResizeOptions(resolvedPageSize)
+        {
+            Mode = mode
+        };
+
+        if (margin.HasValue)
+        {
+            options.Margin = margin.Value;
+        }
+
+        return options;
     }
 
     internal static string[][] ConvertToTableRows(object[] inputObject, string[]? property, string[]? header)

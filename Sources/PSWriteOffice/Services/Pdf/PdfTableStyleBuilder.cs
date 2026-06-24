@@ -35,6 +35,7 @@ internal sealed class PdfTableStyleOptions
     internal double? CaptionSpacingAfter { get; set; }
     internal double? MaxWidth { get; set; }
     internal double? LeftIndent { get; set; }
+    internal double? MinimumShrinkFontSize { get; set; }
     internal double[]? ColumnWidthPoints { get; set; }
     internal double[]? ColumnMinWidthPoints { get; set; }
     internal double[]? ColumnMaxWidthPoints { get; set; }
@@ -42,6 +43,7 @@ internal sealed class PdfTableStyleOptions
     internal PdfColumnAlign[]? ColumnAlign { get; set; }
     internal bool AutoFitColumns { get; set; }
     internal bool RightAlignNumeric { get; set; }
+    internal bool ShrinkTextToFit { get; set; }
     internal bool KeepTogether { get; set; }
     internal bool KeepWithNext { get; set; }
     internal bool NoBorder { get; set; }
@@ -77,6 +79,7 @@ internal sealed class PdfTableStyleOptions
         CaptionSpacingAfter.HasValue ||
         MaxWidth.HasValue ||
         LeftIndent.HasValue ||
+        MinimumShrinkFontSize.HasValue ||
         HasValues(ColumnWidthPoints) ||
         HasValues(ColumnMinWidthPoints) ||
         HasValues(ColumnMaxWidthPoints) ||
@@ -84,6 +87,7 @@ internal sealed class PdfTableStyleOptions
         HasValues(ColumnAlign) ||
         AutoFitColumns ||
         RightAlignNumeric ||
+        ShrinkTextToFit ||
         KeepTogether ||
         KeepWithNext ||
         NoBorder ||
@@ -131,6 +135,7 @@ internal static class PdfTableStyleBuilder
         if (options.CaptionSpacingAfter.HasValue) style.CaptionSpacingAfter = options.CaptionSpacingAfter.Value;
         if (options.MaxWidth.HasValue) style.MaxWidth = options.MaxWidth.Value;
         if (options.LeftIndent.HasValue) style.LeftIndent = options.LeftIndent.Value;
+        if (options.MinimumShrinkFontSize.HasValue) style.MinimumShrinkFontSize = options.MinimumShrinkFontSize.Value;
         if (options.ColumnWidthPoints is { Length: > 0 }) style.ColumnWidthPoints = options.ColumnWidthPoints.Select(value => (double?)value).ToList();
         if (options.ColumnMinWidthPoints is { Length: > 0 }) style.ColumnMinWidthPoints = options.ColumnMinWidthPoints.Select(value => (double?)value).ToList();
         if (options.ColumnMaxWidthPoints is { Length: > 0 }) style.ColumnMaxWidthPoints = options.ColumnMaxWidthPoints.Select(value => (double?)value).ToList();
@@ -138,6 +143,7 @@ internal static class PdfTableStyleBuilder
         if (options.ColumnAlign is { Length: > 0 }) style.Alignments = options.ColumnAlign.ToList();
         if (options.AutoFitColumns) style.AutoFitColumns = true;
         if (options.RightAlignNumeric) style.RightAlignNumeric = true;
+        if (options.ShrinkTextToFit) style.ShrinkTextToFit = true;
         if (options.KeepTogether) style.KeepTogether = true;
         if (options.KeepWithNext) style.KeepWithNext = true;
         if (options.NoBorder)
@@ -177,11 +183,13 @@ internal static class PdfTableStyleBuilder
             CaptionAlign = GetEnum<PdfAlign>(specification, "CaptionAlign"),
             CaptionColor = GetString(specification, "CaptionColor"),
             CaptionFontSize = GetDouble(specification, "CaptionFontSize"),
+            MinimumShrinkFontSize = GetDouble(specification, "MinimumShrinkFontSize", "MinShrinkFontSize"),
             ColumnWidthPoints = GetDoubleArray(specification, "ColumnWidthPoints", "ColumnWidths"),
             ColumnWidthWeights = GetDoubleArray(specification, "ColumnWidthWeights", "ColumnWeights"),
             ColumnAlign = GetEnumArray<PdfColumnAlign>(specification, "ColumnAlign", "ColumnAlignment"),
             AutoFitColumns = GetBool(specification, "AutoFitColumns"),
             RightAlignNumeric = GetBool(specification, "RightAlignNumeric"),
+            ShrinkTextToFit = GetBool(specification, "ShrinkTextToFit", "FitTextToCell"),
             KeepTogether = GetBool(specification, "KeepTogether"),
             KeepWithNext = GetBool(specification, "KeepWithNext"),
             NoBorder = GetBool(specification, "NoBorder"),
