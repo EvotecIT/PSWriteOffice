@@ -7,7 +7,7 @@
     Copyright              = '(c) 2011 - 2026 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description            = 'PowerShell module to create, convert, read, and export Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Reader, and Visio documents without Microsoft Office installed. Powered by OfficeIMO.*.'
     DotNetFrameworkVersion = '4.7.2'
-    FunctionsToExport      = @('Import-PSWriteOfficeDevelopmentBinaryModule')
+    FunctionsToExport      = @()
     GUID                   = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
     ModuleVersion          = '1.0.3'
     PowerShellVersion      = '5.1'

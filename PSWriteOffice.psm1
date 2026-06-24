@@ -1,6 +1,22 @@
 ﻿# to speed up development adding direct path to binaries, instead of the the Lib folder
-$DevelopmentPath = Join-Path (Join-Path (Join-Path (Join-Path $PSScriptRoot 'Sources') 'PSWriteOffice') 'bin') 'Debug'
-$Development = $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES -eq 'true' -and (Test-Path $DevelopmentPath)
+$DevelopmentConfiguration = if ($env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION -in @('Debug', 'Release')) {
+    $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION
+} else {
+    'Debug'
+}
+$DevelopmentBasePath = Join-Path (Join-Path (Join-Path $PSScriptRoot 'Sources') 'PSWriteOffice') 'bin'
+$DevelopmentPath = Join-Path $DevelopmentBasePath $DevelopmentConfiguration
+if (-not (Test-Path $DevelopmentPath) -and
+    [string]::IsNullOrWhiteSpace($env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION) -and
+    (Test-Path (Join-Path $DevelopmentBasePath 'Release'))) {
+    $DevelopmentConfiguration = 'Release'
+    $DevelopmentPath = Join-Path $DevelopmentBasePath $DevelopmentConfiguration
+}
+$Development = if ($env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES -eq 'false') {
+    $false
+} else {
+    Test-Path $DevelopmentPath
+}
 $DevelopmentFolderCore = "net8.0"
 $DevelopmentFolderDefault = "net472"
 $BinaryModules = @(
@@ -164,6 +180,44 @@ if (-not (Test-Path variable:Enums)) { $Enums = @() }
 if (-not (Test-Path variable:Private)) { $Private = @() }
 if (-not (Test-Path variable:Public)) { $Public = @() }
 
+# Lets find which libraries we need to load
+$Default = $false
+$Core = $false
+$Standard = $false
+foreach ($A in $AssemblyFolders.Name) {
+    if ($A -eq 'Default') {
+        $Default = $true
+    } elseif ($A -eq 'Core') {
+        $Core = $true
+    } elseif ($A -eq 'Standard') {
+        $Standard = $true
+    }
+}
+if ($Standard -and $Core -and $Default) {
+    $FrameworkNet = 'Default'
+    $Framework = 'Standard'
+} elseif ($Standard -and $Core) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Standard'
+} elseif ($Core -and $Default) {
+    $Framework = 'Core'
+    $FrameworkNet = 'Default'
+} elseif ($Standard -and $Default) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Default'
+} elseif ($Standard) {
+    $Framework = 'Standard'
+    $FrameworkNet = 'Standard'
+} elseif ($Core) {
+    $Framework = 'Core'
+    $FrameworkNet = ''
+} elseif ($Default) {
+    $Framework = ''
+    $FrameworkNet = 'Default'
+} else {
+    #Write-Error -Message 'No assemblies found'
+}
+
 # Ensure native runtime libraries are discoverable on Windows
 if ($IsWindows) {
     $arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
@@ -210,55 +264,21 @@ if ($IsWindows) {
     }
 }
 
-# Lets find which libraries we need to load
-$Default = $false
-$Core = $false
-$Standard = $false
-foreach ($A in $AssemblyFolders.Name) {
-    if ($A -eq 'Default') {
-        $Default = $true
-    } elseif ($A -eq 'Core') {
-        $Core = $true
-    } elseif ($A -eq 'Standard') {
-        $Standard = $true
-    }
-}
-if ($Standard -and $Core -and $Default) {
-    $FrameworkNet = 'Default'
-    $Framework = 'Standard'
-} elseif ($Standard -and $Core) {
-    $Framework = 'Standard'
-    $FrameworkNet = 'Standard'
-} elseif ($Core -and $Default) {
-    $Framework = 'Core'
-    $FrameworkNet = 'Default'
-} elseif ($Standard -and $Default) {
-    $Framework = 'Standard'
-    $FrameworkNet = 'Default'
-} elseif ($Standard) {
-    $Framework = 'Standard'
-    $FrameworkNet = 'Standard'
-} elseif ($Core) {
-    $Framework = 'Core'
-    $FrameworkNet = ''
-} elseif ($Default) {
-    $Framework = ''
-    $FrameworkNet = 'Default'
-} else {
-    #Write-Error -Message 'No assemblies found'
-}
-
-$BinaryDev = @(
-    foreach ($BinaryModule in $BinaryModules) {
-        if ($PSEdition -eq 'Core') {
-            $Variable = Resolve-Path (Join-Path (Join-Path $DevelopmentPath $DevelopmentFolderCore) $BinaryModule)
-        } else {
-            $Variable = Resolve-Path (Join-Path (Join-Path $DevelopmentPath $DevelopmentFolderDefault) $BinaryModule)
+$BinaryDev = if ($Development) {
+    @(
+        foreach ($BinaryModule in $BinaryModules) {
+            if ($PSEdition -eq 'Core') {
+                $Variable = Resolve-Path (Join-Path (Join-Path $DevelopmentPath $DevelopmentFolderCore) $BinaryModule)
+            } else {
+                $Variable = Resolve-Path (Join-Path (Join-Path $DevelopmentPath $DevelopmentFolderDefault) $BinaryModule)
+            }
+            $Variable
+            Write-Verbose "Development mode: Using binaries from $Variable"
         }
-        $Variable
-        Write-Verbose "Development mode: Using binaries from $Variable"
-    }
-)
+    )
+} else {
+    @()
+}
 
 $FoundErrors = @(
     if ($Development) {
@@ -308,7 +328,7 @@ if ($FoundErrors.Count -gt 0) {
     #break
 }
 
-foreach ($cmdlet in Get-Command -Module PSWriteOffice -CommandType Cmdlet -ErrorAction SilentlyContinue) {
+foreach ($cmdlet in $ExecutionContext.SessionState.Module.ExportedCmdlets.Values) {
     if ($null -eq $cmdlet.ImplementingType) {
         continue
     }
@@ -325,4 +345,4 @@ foreach ($cmdlet in Get-Command -Module PSWriteOffice -CommandType Cmdlet -Error
     }
 }
 
-Export-ModuleMember -Function '*' -Alias '*' -Cmdlet '*'
+Export-ModuleMember -Alias '*' -Cmdlet '*'
