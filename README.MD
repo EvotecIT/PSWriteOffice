@@ -5,7 +5,6 @@ PowerShell-first document automation for Word, Excel, PowerPoint, PDF, RTF, Mark
 📦 PowerShell Gallery
 
 [![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSWriteOffice.svg)](https://www.powershellgallery.com/packages/PSWriteOffice)
-[![PowerShell Gallery Preview](https://img.shields.io/powershellgallery/vpre/PSWriteOffice.svg?label=preview)](https://www.powershellgallery.com/packages/PSWriteOffice)
 [![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/PSWriteOffice.svg)](https://www.powershellgallery.com/packages/PSWriteOffice)
 [![PowerShell Gallery Platforms](https://img.shields.io/powershellgallery/p/PSWriteOffice.svg)](https://www.powershellgallery.com/packages/PSWriteOffice)
 
