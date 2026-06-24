@@ -11,7 +11,7 @@ Creates an RTF document with plain paragraph content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeRtf [-OutputPath] <string> [[-Text] <string[]>] [-PassThru] [-NoSave] [<CommonParameters>]
+New-OfficeRtf [-OutputPath] <string> [[-Text] <string[]>] [-PassThru] [-NoSave] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

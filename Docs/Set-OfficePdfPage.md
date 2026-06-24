@@ -11,7 +11,7 @@ Sets page-level PDF properties and writes a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfPage -Path <string> -Rotation <int> -OutputPath <string> [-PageRange <string>] [<CommonParameters>]
+Set-OfficePdfPage -Path <string> -OutputPath <string> [-PageRange <string>] [-Rotation <int>] [-BoxName <string>] [-Left <double>] [-Bottom <double>] [-Right <double>] [-Top <double>] [-PageSize <string>] [-Width <double>] [-Height <double>] [-Landscape] [-ResizeMode <PdfPageResizeMode>] [-ResizeMargin <double>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,6 +31,86 @@ $proof
 Rotates selected pages and writes a new PDF.
 
 ## PARAMETERS
+
+### -Bottom
+Bottom coordinate for the page boundary box.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -BoxName
+Page boundary box to set. Supported values are MediaBox, CropBox, BleedBox, TrimBox, and ArtBox.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: MediaBox, CropBox, BleedBox, TrimBox, ArtBox
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Height
+Custom page height in points when -PageSize Custom is used.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Landscape
+Use the landscape orientation of the selected page size.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Left
+Left coordinate for the page boundary box.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -OutputPath
 Output PDF path.
@@ -64,6 +144,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -PageSize
+Resize selected pages to a known OfficeIMO page size such as A4, Letter, or Custom.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Path
 Input PDF path.
 
@@ -80,6 +176,54 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -ResizeMargin
+Margin, in points, reserved around resized page content.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ResizeMode
+How source page content is fitted into the resized output page.
+
+```yaml
+Type: PdfPageResizeMode
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Fit, Fill, Stretch
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Right
+Right coordinate for the page boundary box.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Rotation
 Rotation in degrees. Supported values are 0, 90, 180, and 270.
 
@@ -89,7 +233,39 @@ Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: 0, 90, 180, 270
 
-Required: True
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Top
+Top coordinate for the page boundary box.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Width
+Custom page width in points when -PageSize Custom is used.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

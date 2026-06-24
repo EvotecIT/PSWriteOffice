@@ -11,7 +11,7 @@ Gets or extracts embedded file attachments from a PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfAttachment [-Path] <string> [-Name <string>] [-OutputDirectory <string>] [<CommonParameters>]
+Get-OfficePdfAttachment [-Path] <string> [-Name <string>] [-OutputDirectory <string>] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,6 +50,22 @@ Accept wildcard characters: True
 
 ### -OutputDirectory
 Optional directory where attachments should be written.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to read a Standard password-encrypted PDF.
 
 ```yaml
 Type: String

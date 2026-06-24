@@ -11,17 +11,17 @@ Sets or resets the workbook theme package part for an Excel workbook.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelTheme [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <string>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelTheme [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelTheme [-InputPath] <string> [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <string>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelTheme [-InputPath] <string> [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelTheme -Document <ExcelDocument> [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <string>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelTheme -Document <ExcelDocument> [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

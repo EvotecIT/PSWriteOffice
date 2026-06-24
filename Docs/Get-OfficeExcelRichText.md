@@ -9,7 +9,12 @@ schema: 2.0.0
 Gets mixed-format rich text runs from an Excel cell.
 
 ## SYNTAX
-### Path (Default)
+### Context (Default)
+```powershell
+Get-OfficeExcelRichText [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [<CommonParameters>]
+```
+
+### Path
 ```powershell
 Get-OfficeExcelRichText [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [<CommonParameters>]
 ```
@@ -17,11 +22,6 @@ Get-OfficeExcelRichText [-InputPath] <string> [-Sheet <string>] [-SheetIndex <in
 ### Document
 ```powershell
 Get-OfficeExcelRichText -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [<CommonParameters>]
-```
-
-### Context
-```powershell
-Get-OfficeExcelRichText [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,7 +45,7 @@ A1-style cell address.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document, Context
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -61,7 +61,7 @@ Accept wildcard characters: True
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document, Context
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -109,7 +109,7 @@ Accept wildcard characters: True
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document, Context
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -125,7 +125,7 @@ Worksheet name. Defaults to the current sheet inside an ExcelSheet block.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document, Context
+Parameter Sets: Context, Path, Document
 Aliases: WorksheetName
 Possible values:
 
@@ -141,7 +141,7 @@ Worksheet index when using a workbook object or path.
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document, Context
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 

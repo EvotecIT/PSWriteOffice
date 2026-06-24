@@ -11,7 +11,7 @@ Moves selected pages before another page and writes a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Move-OfficePdfPage -Path <string> -PageRange <string> -BeforePage <int> -OutputPath <string> [<CommonParameters>]
+Move-OfficePdfPage -Path <string> -PageRange <string> -BeforePage <int> -OutputPath <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

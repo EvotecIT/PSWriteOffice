@@ -11,17 +11,17 @@ Protects workbook structure or windows metadata. This is not file encryption.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Protect-OfficeExcelWorkbook [-NoStructure] [-ProtectWindows] [-Password <string>] [-LegacyPasswordHash <string>] [-PassThru] [<CommonParameters>]
+Protect-OfficeExcelWorkbook [-NoStructure] [-ProtectWindows] [-Password <string>] [-LegacyPasswordHash <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Protect-OfficeExcelWorkbook [-InputPath] <string> [-NoStructure] [-ProtectWindows] [-Password <string>] [-LegacyPasswordHash <string>] [-PassThru] [<CommonParameters>]
+Protect-OfficeExcelWorkbook [-InputPath] <string> [-NoStructure] [-ProtectWindows] [-Password <string>] [-LegacyPasswordHash <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Protect-OfficeExcelWorkbook -Document <ExcelDocument> [-NoStructure] [-ProtectWindows] [-Password <string>] [-LegacyPasswordHash <string>] [-PassThru] [<CommonParameters>]
+Protect-OfficeExcelWorkbook -Document <ExcelDocument> [-NoStructure] [-ProtectWindows] [-Password <string>] [-LegacyPasswordHash <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -161,7 +161,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `OfficeIMO.Excel.ExcelDocument
+System.IO.FileInfo`
 
 ## RELATED LINKS
 

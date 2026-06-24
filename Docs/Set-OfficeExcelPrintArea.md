@@ -11,17 +11,17 @@ Sets the print area for a worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelPrintArea [-Range] <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintArea [-Range] <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelPrintArea [-InputPath] <string> [-Range] <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintArea [-InputPath] <string> [-Range] <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelPrintArea [-Range] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintArea [-Range] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

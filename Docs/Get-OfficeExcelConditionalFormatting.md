@@ -9,7 +9,12 @@ schema: 2.0.0
 Gets conditional formatting rules from one or more Excel worksheets.
 
 ## SYNTAX
-### Path (Default)
+### Context (Default)
+```powershell
+Get-OfficeExcelConditionalFormatting [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [<CommonParameters>]
+```
+
+### Path
 ```powershell
 Get-OfficeExcelConditionalFormatting [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [<CommonParameters>]
 ```
@@ -55,7 +60,7 @@ Header or table column name used to resolve the range filter.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: ColumnName
 Possible values:
 
@@ -71,7 +76,7 @@ Worksheet header row used when resolving HeaderName without a table. Use 0 for t
 
 ```yaml
 Type: Int32
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -87,7 +92,7 @@ Include the header cell in the resolved range.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -119,7 +124,7 @@ Optional A1 range filter.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -135,7 +140,7 @@ Worksheet name to inspect. Defaults to the current DSL sheet or all workbook she
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -151,7 +156,7 @@ Worksheet index (0-based) to inspect. Defaults to the current DSL sheet or all w
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -167,7 +172,7 @@ Optional table name for header-based range resolution.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 

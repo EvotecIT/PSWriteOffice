@@ -11,17 +11,17 @@ Appends or merges rows from one worksheet into another.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Join-OfficeExcelSheet -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [<CommonParameters>]
+Join-OfficeExcelSheet -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Join-OfficeExcelSheet [-InputPath] <string> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [<CommonParameters>]
+Join-OfficeExcelSheet [-InputPath] <string> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Join-OfficeExcelSheet -Document <ExcelDocument> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [<CommonParameters>]
+Join-OfficeExcelSheet -Document <ExcelDocument> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

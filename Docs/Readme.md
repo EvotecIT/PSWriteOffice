@@ -38,10 +38,10 @@ Adds a dashboard-ready chart using an OfficeIMO chart preset.
 Writes every table in a DataSet to separate Excel worksheets.
 
 ### [Add-OfficeExcelImage](Add-OfficeExcelImage.md)
-Adds an image anchored to a worksheet cell.
+Adds an image anchored to a worksheet cell or range.
 
 ### [Add-OfficeExcelImageFromUrl](Add-OfficeExcelImageFromUrl.md)
-Adds an image from a URL anchored to a worksheet cell.
+Adds an image from a URL anchored to a worksheet cell or range.
 
 ### [Add-OfficeExcelPackageMetadata](Add-OfficeExcelPackageMetadata.md)
 Adds explicit workbook package metadata such as connection or query-table XML.
@@ -418,6 +418,9 @@ Clears manual row or column page breaks from an Excel worksheet.
 ### [Clear-OfficeExcelRange](Clear-OfficeExcelRange.md)
 Clears values, formulas, styles, and range metadata from an Excel worksheet range.
 
+### [Clear-OfficeExcelWriteReservation](Clear-OfficeExcelWriteReservation.md)
+Clears workbook write-reservation metadata.
+
 ### [Clear-OfficePdfBackgroundShape](Clear-OfficePdfBackgroundShape.md)
 Clears generated PDF page background shapes.
 
@@ -452,13 +455,16 @@ Creates a Word document from HTML.
 Creates a Word document from Markdown.
 
 ### [ConvertTo-OfficeCsv](ConvertTo-OfficeCsv.md)
-Converts objects or a CSV document into CSV text or a file.
+Converts objects or a CSV document into CSV text.
 
 ### [ConvertTo-OfficeMarkdown](ConvertTo-OfficeMarkdown.md)
 Converts objects into a Markdown table.
 
 ### [ConvertTo-OfficeMarkdownHtml](ConvertTo-OfficeMarkdownHtml.md)
 Converts Markdown content to HTML.
+
+### [ConvertTo-OfficePdfFlatAnnotation](ConvertTo-OfficePdfFlatAnnotation.md)
+Flattens supported visual PDF annotations into static page content.
 
 ### [ConvertTo-OfficePdfFlatForm](ConvertTo-OfficePdfFlatForm.md)
 Converts a PDF with simple AcroForm fields into a flat PDF.
@@ -468,6 +474,12 @@ Converts a PDF file to HTML through the first-party OfficeIMO HTML/PDF adapter.
 
 ### [ConvertTo-OfficePdfMarkdown](ConvertTo-OfficePdfMarkdown.md)
 Converts PDF logical text readback to Markdown.
+
+### [ConvertTo-OfficePdfOptimized](ConvertTo-OfficePdfOptimized.md)
+Applies lossless PDF optimization actions and writes a new PDF.
+
+### [ConvertTo-OfficePdfRedacted](ConvertTo-OfficePdfRedacted.md)
+Applies rectangle-based PDF redactions and writes a new PDF.
 
 ### [ConvertTo-OfficeRtf](ConvertTo-OfficeRtf.md)
 Converts Word, HTML, or PDF input to RTF.
@@ -498,6 +510,9 @@ Copies an existing slide within a PowerPoint presentation.
 
 ### [Edit-OfficeExcelRow](Edit-OfficeExcelRow.md)
 Runs a script block against editable worksheet rows.
+
+### [Export-OfficeCsv](Export-OfficeCsv.md)
+Exports objects or a CSV document to a CSV file.
 
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
 Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
@@ -580,6 +595,9 @@ Gets workbook formula references, functions, volatile formulas, and external lin
 ### [Get-OfficeExcelNamedRange](Get-OfficeExcelNamedRange.md)
 Gets defined names (named ranges) from an Excel workbook.
 
+### [Get-OfficeExcelNumberFormatPreset](Get-OfficeExcelNumberFormatPreset.md)
+Lists OfficeIMO Excel number format presets and their format codes.
+
 ### [Get-OfficeExcelPageBreak](Get-OfficeExcelPageBreak.md)
 Gets manual row and column page breaks from Excel worksheets.
 
@@ -595,6 +613,9 @@ Reads an explicit A1 range from an Excel workbook.
 ### [Get-OfficeExcelRichText](Get-OfficeExcelRichText.md)
 Gets mixed-format rich text runs from an Excel cell.
 
+### [Get-OfficeExcelRuntimePreflight](Get-OfficeExcelRuntimePreflight.md)
+Inspects the current process for runtime settings that affect Excel workflows.
+
 ### [Get-OfficeExcelStreamingContract](Get-OfficeExcelStreamingContract.md)
 Reports large-workbook streaming and direct-writer suitability.
 
@@ -604,6 +625,9 @@ Gets a compact structural summary of an Excel workbook.
 ### [Get-OfficeExcelTable](Get-OfficeExcelTable.md)
 Gets Excel tables defined in a workbook.
 
+### [Get-OfficeExcelTableStyle](Get-OfficeExcelTableStyle.md)
+Lists built-in Excel table styles and compatibility recommendations.
+
 ### [Get-OfficeExcelTemplateMarker](Get-OfficeExcelTemplateMarker.md)
 Lists Excel template markers such as {{Name}} and optionally shows whether supplied values bind to them.
 
@@ -612,6 +636,9 @@ Reads the used range from an Excel workbook.
 
 ### [Get-OfficeExcelWorksheetView](Get-OfficeExcelWorksheetView.md)
 Gets worksheet view settings such as frozen panes and gridline visibility.
+
+### [Get-OfficeExcelWriteReservation](Get-OfficeExcelWriteReservation.md)
+Gets workbook write-reservation metadata.
 
 ### [Get-OfficeMarkdown](Get-OfficeMarkdown.md)
 Parses Markdown text or files into a Markdown document model.
@@ -631,11 +658,23 @@ Gets Markdown tables from a Markdown document.
 ### [Get-OfficePdf](Get-OfficePdf.md)
 Opens an existing PDF as an OfficeIMO.Pdf document.
 
+### [Get-OfficePdfAnnotation](Get-OfficePdfAnnotation.md)
+Gets page annotations and action evidence from a PDF.
+
+### [Get-OfficePdfAppendOnlyMutation](Get-OfficePdfAppendOnlyMutation.md)
+Gets append-only PDF mutation support and blockers for an existing PDF.
+
 ### [Get-OfficePdfAttachment](Get-OfficePdfAttachment.md)
 Gets or extracts embedded file attachments from a PDF.
 
 ### [Get-OfficePdfCompliance](Get-OfficePdfCompliance.md)
 Gets a generated PDF document compliance readiness report.
+
+### [Get-OfficePdfDiagnostic](Get-OfficePdfDiagnostic.md)
+Gets PDF diagnostics, stream statistics, feature markers, and read/rewrite blockers.
+
+### [Get-OfficePdfFont](Get-OfficePdfFont.md)
+Gets PDF font diagnostics for embedding and ToUnicode repair-readiness workflows.
 
 ### [Get-OfficePdfFormField](Get-OfficePdfFormField.md)
 Gets simple AcroForm fields from a PDF.
@@ -646,11 +685,23 @@ Gets or extracts image resources from a PDF.
 ### [Get-OfficePdfInfo](Get-OfficePdfInfo.md)
 Gets PDF metadata, page information, forms, links, and structural flags.
 
+### [Get-OfficePdfOptimization](Get-OfficePdfOptimization.md)
+Gets lossless PDF optimization opportunities without modifying the file.
+
 ### [Get-OfficePdfPreflight](Get-OfficePdfPreflight.md)
 Reports whether OfficeIMO.Pdf can read or rewrite a PDF safely.
 
+### [Get-OfficePdfRedactionPlan](Get-OfficePdfRedactionPlan.md)
+Previews text and annotations intersecting rectangle-based redaction areas.
+
+### [Get-OfficePdfSignature](Get-OfficePdfSignature.md)
+Gets lightweight PDF signature structure and preservation validation.
+
 ### [Get-OfficePdfText](Get-OfficePdfText.md)
 Extracts text or Markdown from a PDF.
+
+### [Get-OfficePdfTextDiagnostic](Get-OfficePdfTextDiagnostic.md)
+Gets PDF text encoding and advanced-layout diagnostics for generated text before rendering.
 
 ### [Get-OfficePowerPoint](Get-OfficePowerPoint.md)
 Loads an existing PowerPoint presentation.
@@ -806,7 +857,7 @@ Executes a simple mail merge against MERGEFIELD values in a Word document.
 Appends or merges rows from one worksheet into another.
 
 ### [Join-OfficeExcelWorkbook](Join-OfficeExcelWorkbook.md)
-Imports selected or all worksheets from one Excel workbook into another.
+Merges worksheets from one or more workbooks into a target workbook.
 
 ### [Join-OfficePdf](Join-OfficePdf.md)
 Joins multiple PDF files into a single PDF.
@@ -831,6 +882,9 @@ Creates a Markdown document using a DSL scriptblock.
 
 ### [New-OfficePdf](New-OfficePdf.md)
 Creates a PDF document using the OfficeIMO.Pdf composition engine.
+
+### [New-OfficePdfSignature](New-OfficePdfSignature.md)
+Prepares an existing PDF for external digital signing by appending a signature field, /ByteRange, and reserved /Contents placeholder.
 
 ### [New-OfficePowerPoint](New-OfficePowerPoint.md)
 Creates a PowerPoint presentation using the DSL.
@@ -864,6 +918,9 @@ Removes a comment (note) from a worksheet cell.
 
 ### [Remove-OfficeExcelNamedRange](Remove-OfficeExcelNamedRange.md)
 Removes a workbook or sheet-scoped Excel named range.
+
+### [Remove-OfficePdfAnnotation](Remove-OfficePdfAnnotation.md)
+Removes PDF annotations matching friendly filters.
 
 ### [Remove-OfficePdfPage](Remove-OfficePdfPage.md)
 Removes selected pages from a PDF and writes a new PDF.
@@ -1030,6 +1087,12 @@ Converts cells under a header into external URL hyperlinks.
 ### [Set-OfficeExcelWorksheetView](Set-OfficeExcelWorksheetView.md)
 Sets worksheet view options such as gridlines, direction, zoom, and view mode.
 
+### [Set-OfficeExcelWriteReservation](Set-OfficeExcelWriteReservation.md)
+Sets workbook write-reservation metadata.
+
+### [Set-OfficePdfAnnotation](Set-OfficePdfAnnotation.md)
+Updates a single indirect PDF annotation.
+
 ### [Set-OfficePdfBackground](Set-OfficePdfBackground.md)
 Sets or clears the generated PDF page background color.
 
@@ -1038,6 +1101,9 @@ Sets or clears a generated PDF page background image.
 
 ### [Set-OfficePdfCompliance](Set-OfficePdfCompliance.md)
 Sets generated PDF compliance profile and readiness groundwork.
+
+### [Set-OfficePdfElectronicInvoice](Set-OfficePdfElectronicInvoice.md)
+Configures Factur-X/ZUGFeRD e-invoice groundwork on a generated PDF document.
 
 ### [Set-OfficePdfFooter](Set-OfficePdfFooter.md)
 Sets running PDF footer text.
@@ -1059,6 +1125,9 @@ Sets or clears the generated PDF page border decoration.
 
 ### [Set-OfficePdfPageSetup](Set-OfficePdfPageSetup.md)
 Sets PDF page size, orientation, and margins.
+
+### [Set-OfficePdfSignature](Set-OfficePdfSignature.md)
+Injects externally produced CMS, CAdES, or timestamp signature bytes into a prepared PDF signature placeholder.
 
 ### [Set-OfficePdfTheme](Set-OfficePdfTheme.md)
 Applies an OfficeIMO.Pdf theme preset to a generated PDF document.
@@ -1142,7 +1211,7 @@ Sets properties on a table of contents in a Word document.
 Updates styling on Word text.
 
 ### [Split-OfficePdf](Split-OfficePdf.md)
-Splits a PDF into one file per page.
+Splits a PDF into page, range, count, or bookmark files.
 
 ### [Test-OfficeExcelAccessibility](Test-OfficeExcelAccessibility.md)
 Checks workbook accessibility and compliance signals.

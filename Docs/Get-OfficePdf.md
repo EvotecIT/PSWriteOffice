@@ -11,7 +11,7 @@ Opens an existing PDF as an OfficeIMO.Pdf document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdf [-Path] <string> [<CommonParameters>]
+Get-OfficePdf [-Path] <string> [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,6 +28,22 @@ $pdf.Read.Text() | Select-Object -First 1
 Returns the OfficeIMO.Pdf document object for advanced readback or operations.
 
 ## PARAMETERS
+
+### -Password
+Password used to open a Standard password-encrypted PDF for readback operations.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Path
 PDF file path.

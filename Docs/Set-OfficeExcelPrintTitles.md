@@ -11,17 +11,17 @@ Sets or clears repeating print title rows and columns for a worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelPrintTitles [-Sheet <string>] [-SheetIndex <int>] [-FirstRow <int>] [-LastRow <int>] [-FirstColumn <int>] [-LastColumn <int>] [-Clear] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintTitles [-Sheet <string>] [-SheetIndex <int>] [-FirstRow <int>] [-LastRow <int>] [-FirstColumn <int>] [-LastColumn <int>] [-Clear] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelPrintTitles [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-FirstRow <int>] [-LastRow <int>] [-FirstColumn <int>] [-LastColumn <int>] [-Clear] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintTitles [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-FirstRow <int>] [-LastRow <int>] [-FirstColumn <int>] [-LastColumn <int>] [-Clear] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelPrintTitles -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-FirstRow <int>] [-LastRow <int>] [-FirstColumn <int>] [-LastColumn <int>] [-Clear] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintTitles -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-FirstRow <int>] [-LastRow <int>] [-FirstColumn <int>] [-LastColumn <int>] [-Clear] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

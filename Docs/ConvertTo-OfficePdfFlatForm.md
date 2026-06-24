@@ -11,7 +11,7 @@ Converts a PDF with simple AcroForm fields into a flat PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfFlatForm [-Path] <string> [-OutputPath] <string> [<CommonParameters>]
+ConvertTo-OfficePdfFlatForm [-Path] <string> [-OutputPath] <string> [-AppearanceFontPath <string>] [-AppearanceFontFamilyName <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,6 +31,38 @@ ConvertTo-OfficePdfFlatForm -Path .\Examples\Documents\Request-Filled.pdf -Outpu
 Turns simple form fields into static page content.
 
 ## PARAMETERS
+
+### -AppearanceFontFamilyName
+PDF font family name used for the supplied appearance font.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AppearanceFontPath
+TrueType or OpenType/CFF font file used to synthesize Unicode form field appearances while flattening.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -OutputPath
 Output PDF path.

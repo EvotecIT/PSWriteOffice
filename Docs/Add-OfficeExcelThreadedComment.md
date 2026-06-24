@@ -11,17 +11,17 @@ Adds a threaded comment or reply to an Excel worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelThreadedComment -Address <string> -Text <string> [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelThreadedComment -Address <string> -Text <string> [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Add-OfficeExcelThreadedComment [-InputPath] <string> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <int>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-NoSave] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelThreadedComment [-InputPath] <string> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <int>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelThreadedComment -Document <ExcelDocument> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <int>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelThreadedComment -Document <ExcelDocument> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <int>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

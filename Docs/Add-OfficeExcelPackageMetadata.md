@@ -11,17 +11,17 @@ Adds explicit workbook package metadata such as connection or query-table XML.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelPackageMetadata -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPackageMetadata -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Add-OfficeExcelPackageMetadata [-InputPath] <string> -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPackageMetadata [-InputPath] <string> -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelPackageMetadata -Document <ExcelDocument> -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPackageMetadata -Document <ExcelDocument> -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

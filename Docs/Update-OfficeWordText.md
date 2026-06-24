@@ -11,17 +11,17 @@ Replaces text in a Word document.
 ## SYNTAX
 ### Auto (Default)
 ```powershell
-Update-OfficeWordText -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [<CommonParameters>]
+Update-OfficeWordText -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Update-OfficeWordText -OldValue <string> -NewValue <string> [-Document <WordDocument>] [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [<CommonParameters>]
+Update-OfficeWordText -OldValue <string> -NewValue <string> [-Document <WordDocument>] [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Update-OfficeWordText [-InputPath] <string> -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-Show] [<CommonParameters>]
+Update-OfficeWordText [-InputPath] <string> -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

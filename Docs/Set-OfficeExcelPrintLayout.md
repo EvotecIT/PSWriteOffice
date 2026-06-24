@@ -11,17 +11,17 @@ Applies a reusable worksheet print layout preset.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelPrintLayout [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintLayout [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelPrintLayout [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintLayout [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelPrintLayout -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPrintLayout -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -335,7 +335,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `OfficeIMO.Excel.ExcelSheet
+System.Management.Automation.PSObject`
 
 ## RELATED LINKS
 

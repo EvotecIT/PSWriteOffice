@@ -11,7 +11,7 @@ Creates a Word document using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeWord [-OutputPath] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-PassThru] [-Open] [-NoSave] [-AutoSave] [-Password <string>] [-PdfPath <string>] [<CommonParameters>]
+New-OfficeWord [-OutputPath] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-PassThru] [-Open] [-NoSave] [-AutoSave] [-Password <string>] [-PdfPath <string>] [-PdfFontFamily <string>] [-PdfAllowSystemFontEmbedding] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -133,6 +133,38 @@ Accept wildcard characters: True
 
 ### -Password
 Password used to save the document as an encrypted package.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PdfAllowSystemFontEmbedding
+Allow the native Word PDF converter to embed installed system fonts used by the document.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: AllowSystemFontEmbedding
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PdfFontFamily
+Optional default font family used by the native Word PDF converter.
 
 ```yaml
 Type: String

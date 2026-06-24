@@ -11,12 +11,12 @@ Creates a PDF document using the OfficeIMO.Pdf composition engine.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-New-OfficePdf [[-Path] <string>] [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [<CommonParameters>]
+New-OfficePdf [[-Path] <string>] [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [-FileVersion <PdfFileVersion>] [-CreateOutlineFromHeadings] [-OutlineExpansionLevel <int>] [-PageMode <PdfCatalogPageMode>] [-PageLayout <PdfCatalogPageLayout>] [-IncludePageLabels] [-PageLabelPrefix <string>] [-OpenActionPage <int>] [-OpenActionMode <PdfOpenActionDestinationMode>] [-OpenActionTop <double>] [-DisplayDocTitle] [-FitWindow] [-CenterWindow] [-HideToolbar] [-HideMenubar] [-HideWindowUI] [-FlattenVisualAnnotations] [-Password <string>] [-OwnerPassword <string>] [-Permission <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Content
 ```powershell
-New-OfficePdf [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [<CommonParameters>]
+New-OfficePdf [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [-FileVersion <PdfFileVersion>] [-CreateOutlineFromHeadings] [-OutlineExpansionLevel <int>] [-PageMode <PdfCatalogPageMode>] [-PageLayout <PdfCatalogPageLayout>] [-IncludePageLabels] [-PageLabelPrefix <string>] [-OpenActionPage <int>] [-OpenActionMode <PdfOpenActionDestinationMode>] [-OpenActionTop <double>] [-DisplayDocTitle] [-FitWindow] [-CenterWindow] [-HideToolbar] [-HideMenubar] [-HideWindowUI] [-FlattenVisualAnnotations] [-Password <string>] [-OwnerPassword <string>] [-Permission <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -91,6 +91,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -CenterWindow
+Request PDF viewers to center the document window on screen.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Content
 DSL script block describing generated PDF content.
 
@@ -102,6 +118,22 @@ Possible values:
 
 Required: False
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CreateOutlineFromHeadings
+Create PDF outline/bookmark entries from heading elements.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
@@ -139,11 +171,139 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -DisplayDocTitle
+Request PDF viewers to display the document title instead of the file name.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FileVersion
+PDF file header version emitted by OfficeIMO.Pdf.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FitWindow
+Request PDF viewers to fit the document window to the first displayed page.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FlattenVisualAnnotations
+Flatten generated FreeText and Highlight annotations into static page content.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -FontFamily
 Embedded TrueType font family name for generated text.
 
 ```yaml
 Type: String
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -HideMenubar
+Request PDF viewers to hide the menu bar.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -HideToolbar
+Request PDF viewers to hide the toolbar.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -HideWindowUI
+Request PDF viewers to hide user-interface elements.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IncludePageLabels
+Emit generated catalog page labels.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Path, Content
 Aliases: None
 Possible values:
@@ -187,6 +347,134 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -OpenActionMode
+Open-action destination mode.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OpenActionPage
+Initial one-based page shown by PDF viewers that honor open actions.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OpenActionTop
+Optional open-action top coordinate.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutlineExpansionLevel
+Initial outline expansion level when heading outlines are created.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OwnerPassword
+Optional owner password for the generated encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PageLabelPrefix
+Optional generated page-label prefix.
+
+```yaml
+Type: String
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PageLayout
+Catalog page layout hint emitted for generated PDFs.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PageMode
+Catalog page mode hint emitted for generated PDFs.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Content
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -PassThru
 Emit the generated document or saved file for chaining.
 
@@ -194,6 +482,22 @@ Emit the generated document or saved file for chaining.
 Type: SwitchParameter
 Parameter Sets: Path, Content
 Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password required to open the generated PDF.
+
+```yaml
+Type: String
+Parameter Sets: Path, Content
+Aliases: UserPassword
 Possible values:
 
 Required: False
@@ -214,6 +518,22 @@ Possible values:
 
 Required: False
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Permission
+Raw PDF Standard security permission bit mask. Defaults to allowing all standard operations.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Content
+Aliases: Permissions
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

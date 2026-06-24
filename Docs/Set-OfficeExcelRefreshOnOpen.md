@@ -11,17 +11,17 @@ Configures workbook data refresh metadata for Excel-compatible applications to r
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelRefreshOnOpen [-PivotTables] [-Connections] [-Disable] [-SavePivotSourceData] [-NoSavePivotSourceData] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelRefreshOnOpen [-PivotTables] [-Connections] [-Disable] [-SavePivotSourceData] [-NoSavePivotSourceData] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelRefreshOnOpen [-InputPath] <string> [-PivotTables] [-Connections] [-Disable] [-SavePivotSourceData] [-NoSavePivotSourceData] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelRefreshOnOpen [-InputPath] <string> [-PivotTables] [-Connections] [-Disable] [-SavePivotSourceData] [-NoSavePivotSourceData] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelRefreshOnOpen -Document <ExcelDocument> [-PivotTables] [-Connections] [-Disable] [-SavePivotSourceData] [-NoSavePivotSourceData] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelRefreshOnOpen -Document <ExcelDocument> [-PivotTables] [-Connections] [-Disable] [-SavePivotSourceData] [-NoSavePivotSourceData] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

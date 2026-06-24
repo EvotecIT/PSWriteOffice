@@ -11,12 +11,12 @@ Runs OfficeIMO safe workbook repairs for common package, table, view, print, dra
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Repair-OfficeExcelWorkbook [-InputPath] <string> [-SkipDefinedNames] [-SkipTables] [-SkipSheetViews] [-SkipPrintSettings] [-SkipDrawings] [-SkipCalculation] [-NoSave] [-PassThru] [<CommonParameters>]
+Repair-OfficeExcelWorkbook [-InputPath] <string> [-SkipDefinedNames] [-SkipTables] [-SkipSheetViews] [-SkipPrintSettings] [-SkipDrawings] [-SkipCalculation] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Repair-OfficeExcelWorkbook -Document <ExcelDocument> [-SkipDefinedNames] [-SkipTables] [-SkipSheetViews] [-SkipPrintSettings] [-SkipDrawings] [-SkipCalculation] [-NoSave] [-PassThru] [<CommonParameters>]
+Repair-OfficeExcelWorkbook -Document <ExcelDocument> [-SkipDefinedNames] [-SkipTables] [-SkipSheetViews] [-SkipPrintSettings] [-SkipDrawings] [-SkipCalculation] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

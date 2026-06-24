@@ -11,7 +11,7 @@ Configures common Excel chart axis titles, formats, scale, and gridlines.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelChartAxis -Chart <ExcelChart> [-AxisGroup <ExcelChartAxisGroup>] [-CategoryTitle <string>] [-ValueTitle <string>] [-CategoryNumberFormat <string>] [-ValueNumberFormat <string>] [-SourceLinked <bool>] [-ValueMinimum <double>] [-ValueMaximum <double>] [-ValueMajorUnit <double>] [-ValueMinorUnit <double>] [-ShowCategoryMajorGridlines] [-ShowCategoryMinorGridlines] [-ShowValueMajorGridlines] [-ShowValueMinorGridlines] [-CategoryGridlineColor <string>] [-ValueGridlineColor <string>] [-GridlineWidthPoints <double>] [<CommonParameters>]
+Set-OfficeExcelChartAxis -Chart <ExcelChart> [-AxisGroup <ExcelChartAxisGroup>] [-CategoryTitle <string>] [-ValueTitle <string>] [-CategoryNumberFormat <string>] [-ValueNumberFormat <string>] [-SourceLinked <bool>] [-ValueMinimum <double>] [-ValueMaximum <double>] [-ValueMajorUnit <double>] [-ValueMinorUnit <double>] [-CategoryMinimum <double>] [-CategoryMaximum <double>] [-CategoryMajorUnit <double>] [-CategoryMinorUnit <double>] [-ShowCategoryMajorGridlines] [-ShowCategoryMinorGridlines] [-ShowValueMajorGridlines] [-ShowValueMinorGridlines] [-CategoryGridlineColor <string>] [-ValueGridlineColor <string>] [-GridlineWidthPoints <double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -25,6 +25,14 @@ PS> $chart | Set-OfficeExcelChartAxis -CategoryTitle 'Month' -ValueTitle 'Revenu
 ```
 
 Sets axis titles, value formatting, scale, and major value gridlines.
+
+### EXAMPLE 2
+```powershell
+PS> $chart |
+                Set-OfficeExcelChartAxis -CategoryTitle 'Week' -CategoryNumberFormat 'yyyy-mm-dd' -CategoryMinimum 46000 -CategoryMaximum 46090 -CategoryMajorUnit 14 -CategoryMinorUnit 7
+```
+
+Configures the chart's X axis through OfficeIMO's category/date-axis scale support while keeping the workbook chart object on the pipeline.
 
 ## PARAMETERS
 
@@ -49,6 +57,70 @@ Optional category gridline color in hex format.
 
 ```yaml
 Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CategoryMajorUnit
+Category/date axis major unit.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CategoryMaximum
+Category/date axis maximum.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CategoryMinimum
+Category/date axis minimum.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CategoryMinorUnit
+Category/date axis minor unit.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

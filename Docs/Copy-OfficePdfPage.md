@@ -11,7 +11,7 @@ Copies selected PDF pages into a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Copy-OfficePdfPage -Path <string> -PageRange <string> -OutputPath <string> [<CommonParameters>]
+Copy-OfficePdfPage -Path <string> -PageRange <string> -OutputPath <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

@@ -11,17 +11,17 @@ Sets the worksheet that opens as the active sheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelActiveSheet [-PassThru] [<CommonParameters>]
+Set-OfficeExcelActiveSheet [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelActiveSheet [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelActiveSheet [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelActiveSheet -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelActiveSheet -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -129,7 +129,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `OfficeIMO.Excel.ExcelSheet
+System.Management.Automation.PSObject`
 
 ## RELATED LINKS
 

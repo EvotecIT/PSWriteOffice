@@ -11,12 +11,12 @@ Removes a workbook or sheet-scoped Excel named range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Remove-OfficeExcelNamedRange [-Name] <string> [-Global] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-OfficeExcelNamedRange [-Name] <string> [-Global] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Remove-OfficeExcelNamedRange [-Name] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-OfficeExcelNamedRange [-Name] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -85,6 +85,22 @@ Accept wildcard characters: True
 
 ### -PassThru
 Emit a result object.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Save
+Save the workbook immediately after removing the name.
 
 ```yaml
 Type: SwitchParameter

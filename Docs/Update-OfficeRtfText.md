@@ -11,7 +11,7 @@ Applies lossless text and metadata edits to an RTF document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Update-OfficeRtfText [-Path] <string> -OutputPath <string> [-OldText <string>] [-NewText <string>] [-CaseInsensitive] [-AppendParagraph <string[]>] [-DocumentProperty <IDictionary>] [-UserProperty <IDictionary>] [-DocumentVariable <IDictionary>] [-PassThru] [<CommonParameters>]
+Update-OfficeRtfText [-Path] <string> -OutputPath <string> [-OldText <string>] [-NewText <string>] [-CaseInsensitive] [-AppendParagraph <string[]>] [-DocumentProperty <IDictionary>] [-UserProperty <IDictionary>] [-DocumentVariable <IDictionary>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

@@ -11,17 +11,17 @@ Moves a worksheet to a new workbook position.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Move-OfficeExcelSheet -Index <int> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Move-OfficeExcelSheet -Index <int> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Move-OfficeExcelSheet [-InputPath] <string> -Index <int> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Move-OfficeExcelSheet [-InputPath] <string> -Index <int> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Move-OfficeExcelSheet -Document <ExcelDocument> -Index <int> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Move-OfficeExcelSheet -Document <ExcelDocument> -Index <int> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

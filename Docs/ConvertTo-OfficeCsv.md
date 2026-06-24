@@ -6,21 +6,51 @@ schema: 2.0.0
 ---
 # ConvertTo-OfficeCsv
 ## SYNOPSIS
-Converts objects or a CSV document into CSV text or a file.
+Converts objects or a CSV document into CSV text.
 
 ## SYNTAX
-### InputObject (Default)
+### InputObjectDelimiter (Default)
 ```powershell
-ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-IncludeHeader <bool>] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-OutputPath <string>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [<CommonParameters>]
 ```
 
-### Document
+### DocumentDelimiter
 ```powershell
-ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-IncludeHeader <bool>] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-OutputPath <string>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [<CommonParameters>]
+```
+
+### DocumentCulture
+```powershell
+ConvertTo-OfficeCsv -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [<CommonParameters>]
+```
+
+### DocumentDelimiterQuoteFields
+```powershell
+ConvertTo-OfficeCsv -Document <CsvDocument> -QuoteFields <string[]> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [<CommonParameters>]
+```
+
+### DocumentCultureQuoteFields
+```powershell
+ConvertTo-OfficeCsv -Document <CsvDocument> -UseCulture -QuoteFields <string[]> [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [<CommonParameters>]
+```
+
+### InputObjectCulture
+```powershell
+ConvertTo-OfficeCsv -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [<CommonParameters>]
+```
+
+### InputObjectDelimiterQuoteFields
+```powershell
+ConvertTo-OfficeCsv -QuoteFields <string[]> [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [<CommonParameters>]
+```
+
+### InputObjectCultureQuoteFields
+```powershell
+ConvertTo-OfficeCsv -UseCulture -QuoteFields <string[]> [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-By default returns CSV text; use -OutputPath to save to disk.
+Use Export-OfficeCsv when the destination is a file.
 
 ## EXAMPLES
 
@@ -37,14 +67,14 @@ PS> $rows = @(
   [ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
   [ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
 )
-$rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'
+$csv = $rows | ConvertTo-OfficeCsv -Delimiter ';'
 ```
 
 Uses ordered dictionaries to enforce column order and a custom delimiter.
 
 ### EXAMPLE 3
 ```powershell
-PS> $data | ConvertTo-OfficeCsv -IncludeHeader:$false -OutputPath .\noheader.csv
+PS> $csv = $data | ConvertTo-OfficeCsv -NoHeader
 ```
 
 Writes rows only when a downstream system expects headerless CSV.
@@ -56,7 +86,7 @@ Culture used for value formatting.
 
 ```yaml
 Type: CultureInfo
-Parameter Sets: InputObject, Document
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
 Aliases: None
 Possible values:
 
@@ -72,7 +102,7 @@ Field delimiter character.
 
 ```yaml
 Type: Char
-Parameter Sets: InputObject, Document
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentDelimiterQuoteFields, InputObjectDelimiterQuoteFields
 Aliases: None
 Possible values:
 
@@ -88,7 +118,7 @@ CSV document to serialize.
 
 ```yaml
 Type: CsvDocument
-Parameter Sets: Document
+Parameter Sets: DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields
 Aliases: None
 Possible values:
 
@@ -100,11 +130,11 @@ Accept wildcard characters: True
 ```
 
 ### -Encoding
-Encoding used when writing files.
+Encoding carried into the CSV save options.
 
 ```yaml
 Type: Encoding
-Parameter Sets: InputObject, Document
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
 Aliases: None
 Possible values:
 
@@ -115,14 +145,14 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -IncludeHeader
-Include the header row in the output.
+### -FormulaInjectionPolicy
+Controls how formula-like values are written.
 
 ```yaml
-Type: Boolean
-Parameter Sets: InputObject, Document
+Type: CsvFormulaInjectionPolicy
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
 Aliases: None
-Possible values:
+Possible values: Preserve, Escape
 
 Required: False
 Position: named
@@ -136,7 +166,7 @@ Objects to convert into CSV rows.
 
 ```yaml
 Type: Object
-Parameter Sets: InputObject
+Parameter Sets: InputObjectDelimiter, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
 Aliases: None
 Possible values:
 
@@ -152,7 +182,7 @@ Override the newline sequence.
 
 ```yaml
 Type: String
-Parameter Sets: InputObject, Document
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
 Aliases: None
 Possible values:
 
@@ -163,30 +193,62 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -OutputPath
-Optional output path for the CSV file.
-
-```yaml
-Type: String
-Parameter Sets: InputObject, Document
-Aliases: OutPath
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -PassThru
-Emit a FileInfo when saving to disk.
+### -NoHeader
+Omit the header row from the output.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: InputObject, Document
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectCulture, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -QuoteFields
+Field names that should always be quoted when UseQuotes is AsNeeded.
+
+```yaml
+Type: String[]
+Parameter Sets: DocumentDelimiterQuoteFields, DocumentCultureQuoteFields, InputObjectDelimiterQuoteFields, InputObjectCultureQuoteFields
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UseCulture
+Use the list separator from the selected or current culture as the delimiter.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: DocumentCulture, DocumentCultureQuoteFields, InputObjectCulture, InputObjectCultureQuoteFields
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UseQuotes
+Controls when CSV fields are quoted.
+
+```yaml
+Type: CsvQuoteMode
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
+Aliases: None
+Possible values: AsNeeded, Always, Never
 
 Required: False
 Position: named
@@ -205,8 +267,7 @@ System.Object`
 
 ## OUTPUTS
 
-- `System.String
-System.IO.FileInfo`
+- `System.String`
 
 ## RELATED LINKS
 

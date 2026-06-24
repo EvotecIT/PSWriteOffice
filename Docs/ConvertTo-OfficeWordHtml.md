@@ -11,12 +11,12 @@ Converts a Word document to HTML.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeWordHtml [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-ExcludeFootnotes] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeWordHtml [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-ExcludeFootnotes] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertTo-OfficeWordHtml -Document <WordDocument> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-ExcludeFootnotes] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeWordHtml -Document <WordDocument> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-ExcludeFootnotes] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

@@ -11,17 +11,17 @@ Builds a worksheet dashboard from tabular data using OfficeIMO dashboard default
 ## SYNTAX
 ### Context (Default)
 ```powershell
-New-OfficeExcelDashboard [-InputObject] <Object> [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [<CommonParameters>]
+New-OfficeExcelDashboard [-InputObject] <Object> [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-New-OfficeExcelDashboard [-InputObject] <Object> -InputPath <string> [-Sheet <string>] [-SheetIndex <int>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [<CommonParameters>]
+New-OfficeExcelDashboard [-InputObject] <Object> -InputPath <string> [-Sheet <string>] [-SheetIndex <int>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-New-OfficeExcelDashboard [-InputObject] <Object> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [<CommonParameters>]
+New-OfficeExcelDashboard [-InputObject] <Object> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -114,7 +114,7 @@ Possible values:
 Required: True
 Position: named
 Default value: None
-Accept pipeline input: True (ByPropertyName)
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -347,8 +347,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.Excel.ExcelDocument
-System.Object`
+- `System.Object`
 
 ## OUTPUTS
 

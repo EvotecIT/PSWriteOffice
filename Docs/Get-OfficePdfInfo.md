@@ -11,7 +11,7 @@ Gets PDF metadata, page information, forms, links, and structural flags.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfInfo [-Path] <string> [<CommonParameters>]
+Get-OfficePdfInfo [-Path] <string> [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,22 @@ $info.LinkUris
 Reads page count and link information from the PDF.
 
 ## PARAMETERS
+
+### -Password
+Password used to inspect a Standard password-encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Path
 PDF file path.

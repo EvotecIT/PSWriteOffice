@@ -11,12 +11,12 @@ Exports a Visio document page to native dependency-free PNG.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeVisioPng [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <int>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <int>] [-Show] [<CommonParameters>]
+ConvertTo-OfficeVisioPng [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <int>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <int>] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertTo-OfficeVisioPng -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <int>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <int>] [-Show] [<CommonParameters>]
+ConvertTo-OfficeVisioPng -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <int>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <int>] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

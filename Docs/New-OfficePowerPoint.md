@@ -11,7 +11,7 @@ Creates a PowerPoint presentation using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficePowerPoint [-FilePath] <string> [[-Content] <scriptblock>] [-Open] [-NoSave] [-PassThru] [-Password <string>] [-PdfPath <string>] [<CommonParameters>]
+New-OfficePowerPoint [-FilePath] <string> [[-Content] <scriptblock>] [-Open] [-NoSave] [-PassThru] [-Password <string>] [-PdfPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

@@ -6,34 +6,59 @@ schema: 2.0.0
 ---
 # Join-OfficeExcelWorkbook
 ## SYNOPSIS
-Imports selected or all worksheets from one Excel workbook into another.
+Merges worksheets from one or more workbooks into a target workbook.
 
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Join-OfficeExcelWorkbook [-InputPath] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [<CommonParameters>]
+Join-OfficeExcelWorkbook [-InputPath] <string> [[-SourcePath] <string[]>] [-SourceDocument <ExcelDocument>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [-ValidationMode <SheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Join-OfficeExcelWorkbook -Document <ExcelDocument> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [<CommonParameters>]
+Join-OfficeExcelWorkbook [[-SourcePath] <string[]>] -Document <ExcelDocument> [-SourceDocument <ExcelDocument>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [-ValidationMode <SheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Imports selected or all worksheets from one Excel workbook into another.
+Merges worksheets from one or more workbooks into a target workbook.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
+```powershell
+PS> $sources = Get-ChildItem .\Incoming\*.xlsx | Select-Object -ExpandProperty FullName
+$results = Join-OfficeExcelWorkbook -Path .\Combined.xlsx -SourcePath $sources -CopyMode Package -SheetNamePrefix Import
+$results | Select-Object SheetCount, SourceSheets, TargetSheets
+```
+
+Copies worksheets between packages without importing rows into PowerShell objects, which is the preferred path for large workbook merge workflows.
+
+### EXAMPLE 2
 ```powershell
 PS> $merge = Join-OfficeExcelWorkbook -Path .\Target.xlsx -SourcePath .\Source.xlsx -SourceSheet Data,Summary -SheetNamePrefix 'Imported '
 Get-OfficeExcelSummary -Path .\Target.xlsx |
     Select-Object Path, WorksheetCount
 ```
 
-Copies worksheets from Source.xlsx into Target.xlsx using OfficeIMO workbook merge logic.
+Copies selected worksheets from Source.xlsx into Target.xlsx using OfficeIMO workbook merge logic.
 
 ## PARAMETERS
+
+### -CopyMode
+Controls whether cross-workbook copies use package-level copy or value materialization.
+
+```yaml
+Type: ExcelWorksheetCopyMode
+Parameter Sets: Path, Document
+Aliases: None
+Possible values: Values, Package
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Document
 Target workbook to update outside the DSL context.
@@ -52,12 +77,12 @@ Accept wildcard characters: True
 ```
 
 ### -InputPath
-Target workbook path to update.
+Target workbook path to create or update.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: Path, FilePath, OutputPath
 Possible values:
 
 Required: True
@@ -100,18 +125,18 @@ Accept wildcard characters: True
 ```
 
 ### -SourcePath
-Optional source workbook path.
+Source workbook paths to merge into the target workbook.
 
 ```yaml
-Type: String
+Type: String[]
 Parameter Sets: Path, Document
-Aliases: None
+Aliases: FullName, LiteralPath
 Possible values:
 
 Required: False
-Position: named
+Position: 1
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: True
 ```
 
@@ -121,8 +146,24 @@ Specific source worksheet names to import. Defaults to all source sheets.
 ```yaml
 Type: String[]
 Parameter Sets: Path, Document
-Aliases: None
+Aliases: SheetName, Sheet, WorksheetName
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ValidationMode
+Controls how invalid or duplicate destination sheet names are handled.
+
+```yaml
+Type: SheetNameValidationMode
+Parameter Sets: Path, Document
+Aliases: None
+Possible values: None, Sanitize, Strict
 
 Required: False
 Position: named
@@ -136,7 +177,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.Excel.ExcelDocument`
+- `OfficeIMO.Excel.ExcelDocument
+System.String[]`
 
 ## OUTPUTS
 

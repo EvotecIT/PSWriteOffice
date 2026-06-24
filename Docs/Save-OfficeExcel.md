@@ -11,7 +11,7 @@ Saves an Excel workbook without disposing it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeExcel [-Document] <ExcelDocument> [-Path <string>] [-Show] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-PdfPath <string>] [-DateSystem <string>] [-PassThru] [<CommonParameters>]
+Save-OfficeExcel [-Document] <ExcelDocument> [-Path <string>] [-Show] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-PdfPath <string>] [-DateSystem <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

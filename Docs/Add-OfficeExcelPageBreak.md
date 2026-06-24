@@ -11,17 +11,17 @@ Adds manual row or column page breaks to an Excel worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelPageBreak [-Sheet <string>] [-SheetIndex <int>] [-Row <int[]>] [-Column <int[]>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPageBreak [-Sheet <string>] [-SheetIndex <int>] [-Row <int[]>] [-Column <int[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Add-OfficeExcelPageBreak [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Row <int[]>] [-Column <int[]>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPageBreak [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Row <int[]>] [-Column <int[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelPageBreak -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int[]>] [-Column <int[]>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPageBreak -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int[]>] [-Column <int[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

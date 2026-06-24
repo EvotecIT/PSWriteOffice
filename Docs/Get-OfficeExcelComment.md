@@ -9,7 +9,12 @@ schema: 2.0.0
 Gets legacy worksheet comments (notes) from one or more worksheets.
 
 ## SYNTAX
-### Path (Default)
+### Context (Default)
+```powershell
+Get-OfficeExcelComment [-Sheet <string>] [-SheetIndex <int>] [-Address <string>] [-Range <string>] [-Author <string>] [-TextContains <string>] [<CommonParameters>]
+```
+
+### Path
 ```powershell
 Get-OfficeExcelComment [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Address <string>] [-Range <string>] [-Author <string>] [-TextContains <string>] [<CommonParameters>]
 ```
@@ -40,7 +45,7 @@ A1 cell address to match.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -56,7 +61,7 @@ Comment author to match, ignoring case.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -104,7 +109,7 @@ A1 cell or range to match.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -120,7 +125,7 @@ Worksheet name to inspect. Defaults to the current DSL sheet or all workbook she
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -136,7 +141,7 @@ Worksheet index (0-based) to inspect. Defaults to the current DSL sheet or all w
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -152,7 +157,7 @@ Text fragment to match, ignoring case.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 

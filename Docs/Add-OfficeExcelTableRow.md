@@ -11,17 +11,17 @@ Appends one or more data rows to an existing Excel table.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Add-OfficeExcelTableRow [-InputPath] <string> [-InputObject] <Object> -TableName <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTableRow [-InputPath] <string> [-InputObject] <Object> -TableName <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelTableRow [-InputObject] <Object> -Document <ExcelDocument> -TableName <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTableRow [-InputObject] <Object> -Document <ExcelDocument> -TableName <string> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Table
 ```powershell
-Add-OfficeExcelTableRow [-InputObject] <Object> -Table <ExcelTable> [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTableRow [-InputObject] <Object> -Table <ExcelTable> [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

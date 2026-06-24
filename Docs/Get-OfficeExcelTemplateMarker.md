@@ -9,7 +9,12 @@ schema: 2.0.0
 Lists Excel template markers such as {{Name}} and optionally shows whether supplied values bind to them.
 
 ## SYNTAX
-### Path (Default)
+### Context (Default)
+```powershell
+Get-OfficeExcelTemplateMarker [-Sheet <string>] [-SheetIndex <int>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
+```
+
+### Path
 ```powershell
 Get-OfficeExcelTemplateMarker [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
 ```
@@ -70,7 +75,7 @@ Only returns markers that are not supplied by -Value.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -86,7 +91,7 @@ Worksheet name to inspect. Defaults to the current DSL sheet or all workbook she
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -102,7 +107,7 @@ Worksheet index (0-based) to inspect. Defaults to the current DSL sheet or all w
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -118,7 +123,7 @@ Optional marker values used to report which markers are bound and which are stil
 
 ```yaml
 Type: Hashtable
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: Values
 Possible values:
 

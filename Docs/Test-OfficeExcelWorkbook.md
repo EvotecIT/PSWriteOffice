@@ -11,12 +11,12 @@ Runs OfficeIMO workbook diagnostics and optional safe repairs.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Test-OfficeExcelWorkbook [-InputPath] <string> [-RepairDefinedNames] [-SkipOpenXmlValidation] [-Quiet] [<CommonParameters>]
+Test-OfficeExcelWorkbook [-InputPath] <string> [-RepairDefinedNames] [-SkipOpenXmlValidation] [-Quiet] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Test-OfficeExcelWorkbook -Document <ExcelDocument> [-RepairDefinedNames] [-SkipOpenXmlValidation] [-Quiet] [<CommonParameters>]
+Test-OfficeExcelWorkbook -Document <ExcelDocument> [-RepairDefinedNames] [-SkipOpenXmlValidation] [-Quiet] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

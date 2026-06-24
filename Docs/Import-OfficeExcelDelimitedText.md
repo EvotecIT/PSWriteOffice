@@ -11,12 +11,12 @@ Imports normalized CSV/TSV text into an Excel workbook through OfficeIMO.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Import-OfficeExcelDelimitedText [-InputPath] <string> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-NoTable] [-NoTypeConversion] [-PassThru] [<CommonParameters>]
+Import-OfficeExcelDelimitedText [-InputPath] <string> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Import-OfficeExcelDelimitedText -Document <ExcelDocument> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-NoTable] [-NoTypeConversion] [-PassThru] [<CommonParameters>]
+Import-OfficeExcelDelimitedText -Document <ExcelDocument> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

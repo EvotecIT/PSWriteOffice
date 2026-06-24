@@ -11,12 +11,12 @@ Runs a script block against editable worksheet rows.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Edit-OfficeExcelRow [-InputPath] <string> [-ScriptBlock] <scriptblock> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-NumericAsDecimal] [-PassThru] [<CommonParameters>]
+Edit-OfficeExcelRow [-InputPath] <string> [-ScriptBlock] <scriptblock> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-NumericAsDecimal] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Edit-OfficeExcelRow [-ScriptBlock] <scriptblock> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-NumericAsDecimal] [-PassThru] [<CommonParameters>]
+Edit-OfficeExcelRow [-ScriptBlock] <scriptblock> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-NumericAsDecimal] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

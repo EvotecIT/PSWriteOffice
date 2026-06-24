@@ -11,7 +11,7 @@ Saves an OfficeIMO.Pdf document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficePdf [-Document] <PdfDocument> [-Path] <string> [-Show] [-PassThru] [<CommonParameters>]
+Save-OfficePdf [-Document] <PdfDocument> [-Path] <string> [-Show] [-PassThru] [-Password <string>] [-OwnerPassword <string>] [-Permission <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,6 +46,22 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -OwnerPassword
+Optional owner password for the generated encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -PassThru
 Emit the document instead of the saved file.
 
@@ -53,6 +69,22 @@ Emit the document instead of the saved file.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password required to open the generated PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: UserPassword
 Possible values:
 
 Required: False
@@ -73,6 +105,22 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Permission
+Raw PDF Standard security permission bit mask. Defaults to allowing all standard operations.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: Permissions
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

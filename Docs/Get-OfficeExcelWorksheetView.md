@@ -9,7 +9,12 @@ schema: 2.0.0
 Gets worksheet view settings such as frozen panes and gridline visibility.
 
 ## SYNTAX
-### Path (Default)
+### Context (Default)
+```powershell
+Get-OfficeExcelWorksheetView [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+```
+
+### Path
 ```powershell
 Get-OfficeExcelWorksheetView [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
 ```
@@ -72,7 +77,7 @@ Worksheet name to inspect. Defaults to the current DSL sheet or all workbook she
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -88,7 +93,7 @@ Worksheet index (0-based) to inspect. Defaults to the current DSL sheet or all w
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 

@@ -11,12 +11,12 @@ Appends one or more Word documents into a base Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Join-OfficeWordDocument [-InputPath] <string> [-AppendPath] <string[]> [-OutputPath <string>] [-Show] [-PassThru] [<CommonParameters>]
+Join-OfficeWordDocument [-InputPath] <string> [-AppendPath] <string[]> [-OutputPath <string>] [-Show] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Join-OfficeWordDocument [-AppendPath] <string[]> -Document <WordDocument> [-OutputPath <string>] [-Show] [-PassThru] [<CommonParameters>]
+Join-OfficeWordDocument [-AppendPath] <string[]> -Document <WordDocument> [-OutputPath <string>] [-Show] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
