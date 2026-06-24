@@ -33,8 +33,25 @@ public sealed class AddOfficeExcelValidationTextLengthCommand : PSCmdlet
     public int? SheetIndex { get; set; }
 
     /// <summary>Target range in A1 notation.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
-    public string Range { get; set; } = string.Empty;
+    [Parameter(Position = 0)]
+    public string? Range { get; set; }
+
+    /// <summary>Header or table column name used to resolve the target range.</summary>
+    [Parameter]
+    [Alias("ColumnName")]
+    public string? HeaderName { get; set; }
+
+    /// <summary>Optional table name for header-based range resolution.</summary>
+    [Parameter]
+    public string? TableName { get; set; }
+
+    /// <summary>Worksheet header row used when resolving HeaderName without a table. Use 0 for the first row of the used range.</summary>
+    [Parameter]
+    public int HeaderRow { get; set; }
+
+    /// <summary>Include the header cell in the resolved range.</summary>
+    [Parameter]
+    public SwitchParameter IncludeHeader { get; set; }
 
     /// <summary>Validation operator.</summary>
     [Parameter(Mandatory = true, Position = 1)]
@@ -73,11 +90,12 @@ public sealed class AddOfficeExcelValidationTextLengthCommand : PSCmdlet
         }
 
         var sheet = ResolveSheet();
-        sheet.ValidationTextLength(Range, op, Formula1, Formula2, AllowBlank, ErrorTitle, ErrorMessage);
+        string targetRange = ExcelTargetRangeResolver.Resolve(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent);
+        sheet.ValidationTextLength(targetRange, op, Formula1, Formula2, AllowBlank, ErrorTitle, ErrorMessage);
 
         if (PassThru.IsPresent)
         {
-            WriteObject(Range);
+            WriteObject(targetRange);
         }
     }
 

@@ -11,12 +11,12 @@ Gets a compact structural summary of an Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelSummary [-InputPath] <string> [-IncludeSheets] [<CommonParameters>]
+Get-OfficeExcelSummary [-InputPath] <string> [-IncludeSheets] [-IncludeSchema] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeExcelSummary -Document <ExcelDocument> [-IncludeSheets] [<CommonParameters>]
+Get-OfficeExcelSummary -Document <ExcelDocument> [-IncludeSheets] [-IncludeSchema] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,6 +50,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -IncludeSchema
+Include OfficeIMO inspection snapshot details for schema discovery.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

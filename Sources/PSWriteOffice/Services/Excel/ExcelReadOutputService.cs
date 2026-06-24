@@ -10,11 +10,12 @@ namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelReadOutputService
 {
-    public static ExcelReadOptions CreateOptions(bool numericAsDecimal)
+    public static ExcelReadOptions CreateOptions(bool numericAsDecimal, bool useCachedFormulaResult = true, CultureInfo? culture = null)
     {
         return new ExcelReadOptions {
             NumericAsDecimal = numericAsDecimal,
-            Culture = CultureInfo.InvariantCulture
+            UseCachedFormulaResult = useCachedFormulaResult,
+            Culture = culture ?? CultureInfo.InvariantCulture
         };
     }
 

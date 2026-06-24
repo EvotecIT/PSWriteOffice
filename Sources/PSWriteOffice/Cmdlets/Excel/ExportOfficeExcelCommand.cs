@@ -5,9 +5,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
-using System.Reflection;
-using System.Runtime.ExceptionServices;
-using System.Threading;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
@@ -26,13 +23,6 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Alias("ExcelExport")]
 public sealed class ExportOfficeExcelCommand : PSCmdlet
 {
-    private static readonly MethodInfo? AppendDataTableToTableMethod = typeof(ExcelSheet).GetMethod(
-        "AppendDataTableToTable",
-        BindingFlags.Instance | BindingFlags.Public,
-        binder: null,
-        types: new[] { typeof(DataTable), typeof(string), typeof(bool), typeof(ExecutionMode?), typeof(CancellationToken) },
-        modifiers: null);
-
     private readonly List<object?> _input = new();
 
     /// <summary>Destination workbook path.</summary>
@@ -56,6 +46,22 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     /// <summary>Built-in Excel table style name.</summary>
     [Parameter]
     public string TableStyle { get; set; } = "TableStyleMedium9";
+
+    /// <summary>Emphasize the first table column when the selected style supports it.</summary>
+    [Parameter]
+    public SwitchParameter ShowFirstColumn { get; set; }
+
+    /// <summary>Emphasize the last table column when the selected style supports it.</summary>
+    [Parameter]
+    public SwitchParameter ShowLastColumn { get; set; }
+
+    /// <summary>Disable alternating row stripes for newly created tables.</summary>
+    [Parameter]
+    public SwitchParameter NoRowStripes { get; set; }
+
+    /// <summary>Enable alternating column stripes for newly created tables.</summary>
+    [Parameter]
+    public SwitchParameter ShowColumnStripes { get; set; }
 
     /// <summary>Starting row for new exports. When appending and left at 1, rows are written after the used range.</summary>
     [Parameter]
@@ -102,6 +108,10 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Append { get; set; }
 
+    /// <summary>Require append operations to extend an existing Excel table instead of writing after the used range.</summary>
+    [Parameter]
+    public SwitchParameter AppendToTable { get; set; }
+
     /// <summary>Replace the target worksheet inside an existing workbook.</summary>
     [Parameter]
     public SwitchParameter ClearSheet { get; set; }
@@ -131,6 +141,83 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
+    /// <summary>Workbook document title metadata.</summary>
+    [Parameter]
+    public string? DocumentTitle { get; set; }
+
+    /// <summary>Workbook author metadata.</summary>
+    [Parameter]
+    public string? Author { get; set; }
+
+    /// <summary>Workbook subject metadata.</summary>
+    [Parameter]
+    public string? Subject { get; set; }
+
+    /// <summary>Workbook keyword metadata.</summary>
+    [Parameter]
+    public string? Keywords { get; set; }
+
+    /// <summary>Workbook description metadata.</summary>
+    [Parameter]
+    public string? Description { get; set; }
+
+    /// <summary>Workbook category metadata.</summary>
+    [Parameter]
+    public string? Category { get; set; }
+
+    /// <summary>Workbook company metadata.</summary>
+    [Parameter]
+    public string? Company { get; set; }
+
+    /// <summary>Workbook manager metadata.</summary>
+    [Parameter]
+    public string? Manager { get; set; }
+
+    /// <summary>Workbook application-name metadata.</summary>
+    [Parameter]
+    public string? ApplicationName { get; set; }
+
+    /// <summary>Workbook last-modified-by metadata.</summary>
+    [Parameter]
+    public string? LastModifiedBy { get; set; }
+
+    /// <summary>Run OfficeIMO worksheet preflight cleanup before saving.</summary>
+    [Parameter]
+    public SwitchParameter SafePreflight { get; set; }
+
+    /// <summary>Repair common defined-name issues before saving.</summary>
+    [Parameter]
+    public SwitchParameter SafeRepairDefinedNames { get; set; }
+
+    /// <summary>Validate the saved package with OpenXmlValidator and throw on errors.</summary>
+    [Parameter]
+    public SwitchParameter ValidateOpenXml { get; set; }
+
+    /// <summary>Disable OfficeIMO fast package writers for this save.</summary>
+    [Parameter]
+    public SwitchParameter DisableFastPackageWriter { get; set; }
+
+    /// <summary>Evaluate supported formulas and write cached values before saving.</summary>
+    [Parameter]
+    public SwitchParameter EvaluateFormulas { get; set; }
+
+    /// <summary>Remove cached formula results before saving.</summary>
+    [Parameter]
+    public SwitchParameter ClearCachedFormulaResults { get; set; }
+
+    /// <summary>Mark formula cells dirty before saving.</summary>
+    [Parameter]
+    public SwitchParameter MarkFormulasDirty { get; set; }
+
+    /// <summary>Request a full workbook recalculation when opened in Excel-compatible applications.</summary>
+    [Parameter]
+    public SwitchParameter ForceFullCalculationOnOpen { get; set; }
+
+    /// <summary>Workbook date system for Excel date serials.</summary>
+    [Parameter]
+    [ValidateSet("1900", "1904", "NineteenHundred", "NineteenFour")]
+    public string? DateSystem { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -153,6 +240,16 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         if (Append.IsPresent && ClearSheet.IsPresent)
         {
             throw new PSArgumentException("Specify either -Append or -ClearSheet, but not both.");
+        }
+
+        if (AppendToTable.IsPresent && !Append.IsPresent)
+        {
+            throw new PSArgumentException("Use -AppendToTable together with -Append.");
+        }
+
+        if (AppendToTable.IsPresent && NoTable.IsPresent)
+        {
+            throw new PSArgumentException("Use either -AppendToTable or -NoTable, but not both.");
         }
 
         if (!Enum.TryParse(TableStyle, ignoreCase: true, out TableStyle style))
@@ -181,19 +278,47 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         var document = preserveWorkbook
             ? ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false)
             : ExcelDocumentService.CreateDocument(resolvedPath, autoSave: false);
+        var saveOptions = ExcelDocumentService.CreateSaveOptions(
+            SafePreflight.IsPresent,
+            SafeRepairDefinedNames.IsPresent,
+            ValidateOpenXml.IsPresent,
+            DisableFastPackageWriter.IsPresent,
+            EvaluateFormulas.IsPresent,
+            ClearCachedFormulaResults.IsPresent,
+            MarkFormulasDirty.IsPresent,
+            ForceFullCalculationOnOpen.IsPresent);
 
         try
         {
+            ExcelDateSystemService.ApplyIfSpecified(document, DateSystem, nameof(DateSystem));
+            ExcelDocumentPropertyService.ApplyCommonProperties(
+                document,
+                DocumentTitle,
+                Author,
+                Subject,
+                Keywords,
+                Description,
+                Category,
+                Company,
+                Manager,
+                ApplicationName,
+                LastModifiedBy);
+
             var dataSet = ExcelTabularInputService.TryGetSingleDataSet(_input);
             if (dataSet != null)
             {
                 ExportDataSet(document, dataSet, style);
-                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, saveOptions: saveOptions);
                 WritePassThru(resolvedPath);
                 return;
             }
 
             var isAppendingToExistingSheet = Append.IsPresent && SheetExists(document, WorksheetName);
+            if (AppendToTable.IsPresent && !isAppendingToExistingSheet)
+            {
+                throw new PSArgumentException($"Worksheet '{WorksheetName}' must exist when using -AppendToTable.");
+            }
+
             var reader = ExcelTabularInputService.TryGetSingleDataReader(_input);
             if (reader != null && CanExportReaderDirectly(isAppendingToExistingSheet))
             {
@@ -204,7 +329,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                     WriteVerbose($"Exported data reader to {readerSheet.Name}!{readerRange}.");
                 }
 
-                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, saveOptions: saveOptions);
                 WritePassThru(resolvedPath);
                 return;
             }
@@ -227,7 +352,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                     WriteVerbose($"Exported data to {sheet.Name}!{objectRange}.");
                 }
 
-                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+                ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, saveOptions: saveOptions);
                 WritePassThru(resolvedPath);
                 return;
             }
@@ -270,7 +395,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 WriteVerbose($"Exported data to {sheet.Name}!{range}.");
             }
 
-            ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
+            ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, saveOptions: saveOptions);
         }
         catch
         {
@@ -325,6 +450,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         if (!NoTable.IsPresent)
         {
             sheet.AddTable(range, includeHeaders, TableName ?? string.Empty, style, includeAutoFilter: !NoAutoFilter.IsPresent);
+            ApplyTableStyleOptions(sheet, range, style);
         }
 
         return true;
@@ -391,6 +517,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(range))
         {
+            if (!NoTable.IsPresent)
+            {
+                ApplyTableStyleOptions(sheet, range, style);
+            }
+
             if (BoldTopRow.IsPresent && !NoHeader.IsPresent)
             {
                 BoldRow(sheet, dataStartRow, StartColumn, reader.FieldCount);
@@ -570,7 +701,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
         if (!NoTable.IsPresent && !appendRawRows)
         {
-            return sheet.InsertDataTableAsTable(
+            var range = sheet.InsertDataTableAsTable(
                 table,
                 startRow,
                 StartColumn,
@@ -578,6 +709,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
                 tableName,
                 style,
                 includeAutoFilter: !NoAutoFilter.IsPresent);
+            ApplyTableStyleOptions(sheet, range, style);
+            return range;
         }
 
         var cellCount = checked((table.Rows.Count + (includeHeaders ? 1 : 0)) * table.Columns.Count);
@@ -609,9 +742,31 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return $"{A1.CellReference(startRow, StartColumn)}:{A1.CellReference(endRow, endColumn)}";
     }
 
+    private void ApplyTableStyleOptions(ExcelSheet sheet, string? tableOrRange, TableStyle style)
+    {
+        ExcelTableStyleOptionService.Apply(
+            sheet,
+            tableOrRange,
+            style,
+            ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowFirstColumn), ShowFirstColumn),
+            ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowLastColumn), ShowLastColumn),
+            ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(NoRowStripes), NoRowStripes),
+            ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowColumnStripes), ShowColumnStripes));
+    }
+
     private string? ResolveAppendTableName(ExcelDocument document, ExcelSheet sheet, bool appendToExistingSheet)
     {
-        if (!appendToExistingSheet || NoTable.IsPresent)
+        if (!appendToExistingSheet)
+        {
+            if (AppendToTable.IsPresent)
+            {
+                throw new PSArgumentException($"Worksheet '{sheet.Name}' must exist when using -AppendToTable.");
+            }
+
+            return null;
+        }
+
+        if (NoTable.IsPresent)
         {
             return null;
         }
@@ -625,7 +780,19 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             .Where(table => string.Equals(table.SheetName, sheet.Name, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
-        return sheetTables.Count == 1 ? sheetTables[0].Name : null;
+        if (sheetTables.Count == 1)
+        {
+            return sheetTables[0].Name;
+        }
+
+        if (AppendToTable.IsPresent)
+        {
+            throw new PSArgumentException(sheetTables.Count == 0
+                ? $"Worksheet '{sheet.Name}' does not contain a table to append to. Provide -TableName or omit -AppendToTable."
+                : $"Worksheet '{sheet.Name}' contains multiple tables. Provide -TableName when using -AppendToTable.");
+        }
+
+        return null;
     }
 
     private string? ResolveTableName(DataTable table, bool allowExplicitOverride = true)
@@ -667,24 +834,8 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
 
     private bool TryAppendDataTableToTable(ExcelSheet sheet, DataTable table, string tableName, out string range)
     {
-        if (AppendDataTableToTableMethod == null)
-        {
-            WriteVerbose("The loaded OfficeIMO.Excel version does not expose AppendDataTableToTable; appending rows after the used range.");
-            range = string.Empty;
-            return false;
-        }
-
-        try
-        {
-            var result = AppendDataTableToTableMethod.Invoke(sheet, new object?[] { table, tableName, true, null, CancellationToken.None });
-            range = result as string ?? string.Empty;
-            return true;
-        }
-        catch (TargetInvocationException exception) when (exception.InnerException != null)
-        {
-            ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
-            throw;
-        }
+        range = sheet.AppendDataTableToTable(table, tableName, matchColumnsByHeader: true);
+        return true;
     }
 
     private int ResolveDataStartRow(ExcelSheet sheet, bool appendToExistingSheet)

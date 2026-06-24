@@ -11,12 +11,12 @@ Adds a list-based data validation to a worksheet range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelValidationList [-Range] <string> [-Values] <string[]> [-AllowBlank <bool>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelValidationList [[-Range] <string>] [-Values] <string[]> [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-AllowBlank <bool>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelValidationList [-Range] <string> [-Values] <string[]> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-AllowBlank <bool>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelValidationList [[-Range] <string>] [-Values] <string[]> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-AllowBlank <bool>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -65,6 +65,54 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -HeaderName
+Header or table column name used to resolve the target range.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
+Aliases: ColumnName
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -HeaderRow
+Worksheet header row used when resolving HeaderName without a table. Use 0 for the first row of the used range.
+
+```yaml
+Type: Int32
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IncludeHeader
+Include the header cell in the resolved range.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -PassThru
 Emit the range string after applying validation.
 
@@ -90,7 +138,7 @@ Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
-Required: True
+Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
@@ -119,6 +167,22 @@ Worksheet index (0-based) when using Document.
 ```yaml
 Type: Nullable`1
 Parameter Sets: Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TableName
+Optional table name for header-based range resolution.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 

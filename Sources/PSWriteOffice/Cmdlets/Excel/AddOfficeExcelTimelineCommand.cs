@@ -1,0 +1,79 @@
+using System.Management.Automation;
+using DocumentFormat.OpenXml.Packaging;
+using OfficeIMO.Excel;
+using PSWriteOffice.Services.Excel;
+
+namespace PSWriteOffice.Cmdlets.Excel;
+
+/// <summary>Adds workbook-level timeline cache metadata.</summary>
+/// <example>
+///   <summary>Add timeline cache metadata for a pivot date field.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$timeline = Add-OfficeExcelTimeline -Path .\Report.xlsx -Name OrderDateTimeline -SourceName OrderDate -PivotTableName SalesPivot -PassThru
+/// Get-OfficeExcelDataModel -Path .\Report.xlsx |
+///     Select-Object -ExpandProperty TimelineCacheCount</code>
+///   <para>Writes timeline cache package metadata through OfficeIMO. Excel may still be required to materialize full timeline UI shapes.</para>
+/// </example>
+[Cmdlet(VerbsCommon.Add, "OfficeExcelTimeline", DefaultParameterSetName = ParameterSetContext)]
+[Alias("ExcelTimeline")]
+[OutputType(typeof(PSObject))]
+public sealed class AddOfficeExcelTimelineCommand : PSCmdlet
+{
+    private const string ParameterSetContext = "Context";
+    private const string ParameterSetDocument = "Document";
+    private const string ParameterSetPath = "Path";
+
+    /// <summary>Workbook path to update.</summary>
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
+    [Alias("Path", "FilePath")]
+    public string InputPath { get; set; } = string.Empty;
+
+    /// <summary>Workbook to update outside the DSL context.</summary>
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    public ExcelDocument Document { get; set; } = null!;
+
+    /// <summary>Timeline cache name.</summary>
+    [Parameter(Mandatory = true)]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>Source date field, table column, or pivot field name.</summary>
+    [Parameter]
+    public string? SourceName { get; set; }
+
+    /// <summary>Pivot table name the timeline is intended to filter.</summary>
+    [Parameter]
+    public string? PivotTableName { get; set; }
+
+    /// <summary>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</summary>
+    [Parameter]
+    public string? Xml { get; set; }
+
+    /// <summary>Emit metadata about the added package part.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
+    /// <inheritdoc />
+    protected override void ProcessRecord()
+    {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        ExtendedPart part = workbook.Document.AddWorkbookTimelineCache(new ExcelTimelineCacheOptions
+        {
+            Name = Name,
+            SourceName = SourceName,
+            PivotTableName = PivotTableName,
+            Xml = Xml
+        });
+
+        string contentType = part.ContentType;
+        workbook.SaveIfOwned();
+
+        if (PassThru.IsPresent)
+        {
+            var result = new PSObject();
+            result.Properties.Add(new PSNoteProperty("Name", Name));
+            result.Properties.Add(new PSNoteProperty("Kind", "Timeline"));
+            result.Properties.Add(new PSNoteProperty("ContentType", contentType));
+            WriteObject(result);
+        }
+    }
+}
