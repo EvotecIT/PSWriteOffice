@@ -11,17 +11,17 @@ Creates a Word document from Markdown.
 ## SYNTAX
 ### Markdown (Default)
 ```powershell
-ConvertFrom-OfficeWordMarkdown [-Markdown] <string> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeWordMarkdown [-Markdown] <string> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-Theme <MarkdownVisualThemeKind>] [-AllowDataUriImages <bool>] [-MaxDataUriImageBytes <long>] [-PreferNarrativeSingleLineDefinitions] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-ConvertFrom-OfficeWordMarkdown [-FilePath] <string> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeWordMarkdown [-FilePath] <string> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-Theme <MarkdownVisualThemeKind>] [-AllowDataUriImages <bool>] [-MaxDataUriImageBytes <long>] [-PreferNarrativeSingleLineDefinitions] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertFrom-OfficeWordMarkdown -Document <MarkdownDoc> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeWordMarkdown -Document <MarkdownDoc> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-Theme <MarkdownVisualThemeKind>] [-AllowDataUriImages <bool>] [-MaxDataUriImageBytes <long>] [-PreferNarrativeSingleLineDefinitions] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <double>] [-MaxImageHeightPixels <double>] [-MaxImageWidthPercentOfContent <double>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,6 +51,22 @@ PS> ConvertFrom-OfficeWordMarkdown -Path .\SOP.md -TemplatePath .\Template.docx 
 Copies the template and replaces the bookmark paragraph with generated Markdown content.
 
 ## PARAMETERS
+
+### -AllowDataUriImages
+Allow data URI Markdown images to be embedded in Word output.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -AllowedImageDirectory
 Restrict local images to one or more directories.
@@ -276,6 +292,22 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -MaxDataUriImageBytes
+Maximum decoded size for one data URI image.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -MaxImageHeightPixels
 Optional hard cap for Markdown image height in pixels.
 
@@ -310,6 +342,22 @@ Accept wildcard characters: True
 
 ### -MaxImageWidthPixels
 Optional hard cap for Markdown image width in pixels.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NormalizeInput
+Applies a built-in Markdown input normalization preset before parsing.
 
 ```yaml
 Type: Nullable`1
@@ -372,6 +420,38 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -PreferNarrativeSingleLineDefinitions
+Prefer narrative paragraphs for isolated single-line definition-list patterns.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Profile
+Named Markdown reader profile used when ReaderOptions is not supplied.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Markdown, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -ReaderOptions
 Optional Markdown reader options used before Word conversion.
 
@@ -411,6 +491,22 @@ Optional Word template document to copy before inserting Markdown content.
 Type: String
 Parameter Sets: Markdown, Path, Document
 Aliases: Template
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Theme
+Shared Markdown visual theme for generated Word output.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Markdown, Path, Document
+Aliases: None
 Possible values:
 
 Required: False

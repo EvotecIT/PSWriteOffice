@@ -1,8 +1,10 @@
 # Excel Benchmarks
 
-`Compare-ExcelPerformance.ps1` compares PSWriteOffice against ImportExcel and ExcelFast across common workbook workflows. It writes raw results, a summary, one-line comparison outputs, and metadata under `Ignore\Benchmarks\ExcelPerformance\Run-*`.
+`Compare-ExcelPerformance.ps1` compares PSWriteOffice against ImportExcel and ExcelFast across common PowerShell workbook workflows. It writes raw results, a summary, one-line comparison outputs, and metadata under `Ignore\Benchmarks\ExcelPerformance\Run-*`.
 
 The script uses published OfficeIMO packages by default by setting `OfficeIMORoot` to `.missing-officeimo`, so PSWriteOffice measures the package-mode path instead of a local OfficeIMO checkout.
+
+This is the PowerShell/user-workflow scoreboard. .NET engine comparisons against ClosedXML, current EPPlus, legacy EPPlus, MiniExcel, LargeXlsx, ExcelDataReader, and Sylvan.Data.Excel live in the OfficeIMO benchmark harness. Keep the two views separate: PSWriteOffice measures cmdlet ergonomics and module-level workflows, while OfficeIMO measures raw engine/library paths.
 
 ## Common Runs
 
@@ -66,6 +68,14 @@ Run the append, update, many-sheet, read-focused, and chart/pivot split workflow
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario objects-default,append-existing-table,update-existing-workbook,many-small-sheets,named-range-workbook,chart-only-workbook,pivot-only-workbook -RowCount 1000,10000,25000 -RepeatCount 3
 ```
 
+Measure workbook package-copy merges without row-object materialization:
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario workbook-package-merge -RowCount 1000,10000,25000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel
+```
+
+The ImportExcel lane for `workbook-package-merge` intentionally uses the `OfficeOpenXml.ExcelPackage` API loaded by ImportExcel, not row-by-row `Import-Excel`/`Export-Excel`, because that is the fair fast path for workbook sheet copying. The run metadata records the loaded `OfficeOpenXml` assembly version so the result can be traced back to the actual EPPlus generation.
+
 Measure export creation without import follow-up timing:
 
 ```powershell
@@ -126,6 +136,7 @@ deltas, and workbook-validation pass/fail/skip counts.
 - Per-engine median file size and memory deltas.
 
 `metadata.json` records exact module versions including prerelease labels,
+loaded `OfficeOpenXml` and `OfficeIMO.Excel` assembly versions,
 machine/runtime details, selected engines/scenarios, module cache paths,
 OfficeIMO root, and output paths.
 

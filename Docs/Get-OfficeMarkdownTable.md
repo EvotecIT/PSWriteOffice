@@ -11,17 +11,17 @@ Gets Markdown tables from a Markdown document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeMarkdownTable [-InputPath] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-AsObject] [<CommonParameters>]
+Get-OfficeMarkdownTable [-InputPath] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <int>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <bool>] [-AllowDataUrls <bool>] [-AllowMailtoUrls <bool>] [-AllowProtocolRelativeUrls <bool>] [-RestrictUrlSchemes <bool>] [-AllowedUrlScheme <string[]>] [-AsObject] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeMarkdownTable -Document <MarkdownDoc> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-AsObject] [<CommonParameters>]
+Get-OfficeMarkdownTable -Document <MarkdownDoc> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <int>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <bool>] [-AllowDataUrls <bool>] [-AllowMailtoUrls <bool>] [-AllowProtocolRelativeUrls <bool>] [-RestrictUrlSchemes <bool>] [-AllowedUrlScheme <string[]>] [-AsObject] [<CommonParameters>]
 ```
 
 ### Text
 ```powershell
-Get-OfficeMarkdownTable -Text <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-AsObject] [<CommonParameters>]
+Get-OfficeMarkdownTable -Text <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <int>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <bool>] [-AllowDataUrls <bool>] [-AllowMailtoUrls <bool>] [-AllowProtocolRelativeUrls <bool>] [-RestrictUrlSchemes <bool>] [-AllowedUrlScheme <string[]>] [-AsObject] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,11 +38,107 @@ Returns table rows as PowerShell objects using the Markdown header row as proper
 
 ## PARAMETERS
 
+### -AllowDataUrls
+Allow data URLs while parsing Markdown links and images.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AllowedUrlScheme
+Allowed URL schemes when URL scheme restriction is enabled.
+
+```yaml
+Type: String[]
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AllowMailtoUrls
+Allow mailto URLs while parsing Markdown links.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AllowProtocolRelativeUrls
+Allow protocol-relative URLs while parsing Markdown links and images.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -AsObject
 Emit table rows as PowerShell objects instead of raw table blocks.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -BaseUri
+Base URI used to resolve and restrict relative Markdown links and images.
+
+```yaml
+Type: String
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DisallowFileUrls
+Block file URLs while parsing Markdown links and images.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: Path, Document, Text
 Aliases: None
 Possible values:
@@ -86,11 +182,11 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Options
-Optional reader options used when parsing path or text input.
+### -MaxInputCharacters
+Maximum Markdown input length accepted by the reader.
 
 ```yaml
-Type: MarkdownReaderOptions
+Type: Nullable`1
 Parameter Sets: Path, Document, Text
 Aliases: None
 Possible values:
@@ -102,8 +198,56 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -NormalizeInput
+Applies a built-in Markdown input normalization preset before parsing.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Options
+Optional reader options used when parsing path or text input.
+
+```yaml
+Type: MarkdownReaderOptions
+Parameter Sets: Path, Document, Text
+Aliases: ReaderOptions
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Profile
 Named reader profile used when Options is not supplied.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Path, Document, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -RestrictUrlSchemes
+Restrict parsed URL schemes to the allow-list.
 
 ```yaml
 Type: Nullable`1

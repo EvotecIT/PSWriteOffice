@@ -31,6 +31,9 @@ Adds an icon set conditional format to a range.
 ### [Add-OfficeExcelConditionalRule](Add-OfficeExcelConditionalRule.md)
 Adds a conditional formatting rule to the current worksheet.
 
+### [Add-OfficeExcelDashboardChart](Add-OfficeExcelDashboardChart.md)
+Adds a dashboard-ready chart using an OfficeIMO chart preset.
+
 ### [Add-OfficeExcelDataSet](Add-OfficeExcelDataSet.md)
 Writes every table in a DataSet to separate Excel worksheets.
 
@@ -40,8 +43,17 @@ Adds an image anchored to a worksheet cell.
 ### [Add-OfficeExcelImageFromUrl](Add-OfficeExcelImageFromUrl.md)
 Adds an image from a URL anchored to a worksheet cell.
 
+### [Add-OfficeExcelPackageMetadata](Add-OfficeExcelPackageMetadata.md)
+Adds explicit workbook package metadata such as connection or query-table XML.
+
+### [Add-OfficeExcelPageBreak](Add-OfficeExcelPageBreak.md)
+Adds manual row or column page breaks to an Excel worksheet.
+
 ### [Add-OfficeExcelPivotTable](Add-OfficeExcelPivotTable.md)
 Adds a pivot table to a worksheet.
+
+### [Add-OfficeExcelPowerQueryMetadata](Add-OfficeExcelPowerQueryMetadata.md)
+Adds safe Power Query/connection metadata for Excel-compatible applications to own and refresh.
 
 ### [Add-OfficeExcelReportCallout](Add-OfficeExcelReportCallout.md)
 Adds a colored callout block to the current Excel report sheet.
@@ -73,8 +85,14 @@ Adds a title block to the current Excel report sheet.
 ### [Add-OfficeExcelSheet](Add-OfficeExcelSheet.md)
 Adds or reuses a worksheet within the current Excel DSL scope.
 
+### [Add-OfficeExcelSlicer](Add-OfficeExcelSlicer.md)
+Adds workbook-level slicer cache metadata.
+
 ### [Add-OfficeExcelSparkline](Add-OfficeExcelSparkline.md)
 Adds sparklines to a worksheet.
+
+### [Add-OfficeExcelSubtotalSummary](Add-OfficeExcelSubtotalSummary.md)
+Adds grouped subtotal summary rows for a worksheet data range.
 
 ### [Add-OfficeExcelTable](Add-OfficeExcelTable.md)
 Writes tabular data to the current worksheet and formats it as an Excel table.
@@ -84,6 +102,12 @@ Adds or refreshes a workbook table of contents sheet.
 
 ### [Add-OfficeExcelTableRow](Add-OfficeExcelTableRow.md)
 Appends one or more data rows to an existing Excel table.
+
+### [Add-OfficeExcelThreadedComment](Add-OfficeExcelThreadedComment.md)
+Adds a threaded comment or reply to an Excel worksheet.
+
+### [Add-OfficeExcelTimeline](Add-OfficeExcelTimeline.md)
+Adds workbook-level timeline cache metadata.
 
 ### [Add-OfficeExcelValidationCustomFormula](Add-OfficeExcelValidationCustomFormula.md)
 Adds a custom-formula data validation rule to a worksheet range.
@@ -379,6 +403,21 @@ Adds a watermark to the current section or header.
 ### [Clear-OfficeExcelAutoFilter](Clear-OfficeExcelAutoFilter.md)
 Clears any AutoFilter on the current worksheet.
 
+### [Clear-OfficeExcelComment](Clear-OfficeExcelComment.md)
+Clears legacy worksheet comments (notes) that match a filter.
+
+### [Clear-OfficeExcelConditionalFormatting](Clear-OfficeExcelConditionalFormatting.md)
+Clears conditional formatting rules from one or more Excel worksheets.
+
+### [Clear-OfficeExcelDataValidation](Clear-OfficeExcelDataValidation.md)
+Clears data validation rules from one or more Excel worksheets.
+
+### [Clear-OfficeExcelPageBreak](Clear-OfficeExcelPageBreak.md)
+Clears manual row or column page breaks from an Excel worksheet.
+
+### [Clear-OfficeExcelRange](Clear-OfficeExcelRange.md)
+Clears values, formulas, styles, and range metadata from an Excel worksheet range.
+
 ### [Clear-OfficePdfBackgroundShape](Clear-OfficePdfBackgroundShape.md)
 Clears generated PDF page background shapes.
 
@@ -393,6 +432,9 @@ Closes one or more tracked Word documents, optionally saving them.
 
 ### [Compare-OfficeExcelRange](Compare-OfficeExcelRange.md)
 Compares two Excel worksheets or ranges and returns cell-level differences.
+
+### [Compare-OfficeExcelWorkbook](Compare-OfficeExcelWorkbook.md)
+Compares two workbooks by sheets, cells, formulas, styles, tables, comments, names, and worksheet metadata.
 
 ### [ConvertFrom-OfficeMarkdownHtml](ConvertFrom-OfficeMarkdownHtml.md)
 Converts HTML content to Markdown.
@@ -444,6 +486,9 @@ Converts a Word document to Markdown.
 
 ### [Copy-OfficeExcelSheet](Copy-OfficeExcelSheet.md)
 Copies a worksheet within a workbook or from another workbook.
+
+### [Copy-OfficeExcelWorkbook](Copy-OfficeExcelWorkbook.md)
+Copies a workbook package while preserving package parts.
 
 ### [Copy-OfficePdfPage](Copy-OfficePdfPage.md)
 Copies selected PDF pages into a new PDF.
@@ -508,17 +553,50 @@ Reads visual payloads discovered by OfficeIMO.Reader from a supported document.
 ### [Get-OfficeExcel](Get-OfficeExcel.md)
 Opens an existing Excel workbook.
 
+### [Get-OfficeExcelComment](Get-OfficeExcelComment.md)
+Gets legacy worksheet comments (notes) from one or more worksheets.
+
+### [Get-OfficeExcelCommentAudit](Get-OfficeExcelCommentAudit.md)
+Audits legacy notes and threaded comments preserved in an Excel workbook.
+
+### [Get-OfficeExcelConditionalFormatting](Get-OfficeExcelConditionalFormatting.md)
+Gets conditional formatting rules from one or more Excel worksheets.
+
 ### [Get-OfficeExcelData](Get-OfficeExcelData.md)
 Reads worksheet data as dictionaries or PSCustomObjects.
+
+### [Get-OfficeExcelDataModel](Get-OfficeExcelDataModel.md)
+Inspects workbook data model, query, connection, and external-link package parts.
+
+### [Get-OfficeExcelDataValidation](Get-OfficeExcelDataValidation.md)
+Gets data validation rules from one or more Excel worksheets.
+
+### [Get-OfficeExcelDocumentProperty](Get-OfficeExcelDocumentProperty.md)
+Gets built-in and application document properties from an Excel workbook.
+
+### [Get-OfficeExcelFormulaAnalysis](Get-OfficeExcelFormulaAnalysis.md)
+Gets workbook formula references, functions, volatile formulas, and external links.
 
 ### [Get-OfficeExcelNamedRange](Get-OfficeExcelNamedRange.md)
 Gets defined names (named ranges) from an Excel workbook.
 
+### [Get-OfficeExcelPageBreak](Get-OfficeExcelPageBreak.md)
+Gets manual row and column page breaks from Excel worksheets.
+
 ### [Get-OfficeExcelPivotTable](Get-OfficeExcelPivotTable.md)
 Gets pivot tables defined in a workbook.
 
+### [Get-OfficeExcelPreflight](Get-OfficeExcelPreflight.md)
+Runs OfficeIMO Excel feature and workflow preflight checks.
+
 ### [Get-OfficeExcelRange](Get-OfficeExcelRange.md)
 Reads an explicit A1 range from an Excel workbook.
+
+### [Get-OfficeExcelRichText](Get-OfficeExcelRichText.md)
+Gets mixed-format rich text runs from an Excel cell.
+
+### [Get-OfficeExcelStreamingContract](Get-OfficeExcelStreamingContract.md)
+Reports large-workbook streaming and direct-writer suitability.
 
 ### [Get-OfficeExcelSummary](Get-OfficeExcelSummary.md)
 Gets a compact structural summary of an Excel workbook.
@@ -526,8 +604,14 @@ Gets a compact structural summary of an Excel workbook.
 ### [Get-OfficeExcelTable](Get-OfficeExcelTable.md)
 Gets Excel tables defined in a workbook.
 
+### [Get-OfficeExcelTemplateMarker](Get-OfficeExcelTemplateMarker.md)
+Lists Excel template markers such as {{Name}} and optionally shows whether supplied values bind to them.
+
 ### [Get-OfficeExcelUsedRange](Get-OfficeExcelUsedRange.md)
 Reads the used range from an Excel workbook.
+
+### [Get-OfficeExcelWorksheetView](Get-OfficeExcelWorksheetView.md)
+Gets worksheet view settings such as frozen panes and gridline visibility.
 
 ### [Get-OfficeMarkdown](Get-OfficeMarkdown.md)
 Parses Markdown text or files into a Markdown document model.
@@ -688,6 +772,9 @@ Gets text segments from Word paragraphs.
 ### [Import-OfficeExcel](Import-OfficeExcel.md)
 Imports rows from an Excel workbook as PowerShell objects.
 
+### [Import-OfficeExcelDelimitedText](Import-OfficeExcelDelimitedText.md)
+Imports normalized CSV/TSV text into an Excel workbook through OfficeIMO.
+
 ### [Import-OfficePowerPointSlide](Import-OfficePowerPointSlide.md)
 Imports a slide from another PowerPoint presentation.
 
@@ -700,11 +787,26 @@ Automatically fits Excel row heights and/or column widths.
 ### [Invoke-OfficeExcelSort](Invoke-OfficeExcelSort.md)
 Sorts the used range on the current worksheet.
 
+### [Invoke-OfficeExcelTemplate](Invoke-OfficeExcelTemplate.md)
+Applies Excel template markers such as {{Name}} to one or more worksheets.
+
+### [Invoke-OfficeExcelTemplateOptionalRow](Invoke-OfficeExcelTemplateOptionalRow.md)
+Includes or removes an optional Excel template row block.
+
+### [Invoke-OfficeExcelTemplateRow](Invoke-OfficeExcelTemplateRow.md)
+Repeats an Excel template row for pipeline data and replaces markers in each inserted row.
+
+### [Invoke-OfficeExcelTemplateSheet](Invoke-OfficeExcelTemplateSheet.md)
+Repeats an Excel template worksheet for pipeline data and applies markers in each generated sheet.
+
 ### [Invoke-OfficeWordMailMerge](Invoke-OfficeWordMailMerge.md)
 Executes a simple mail merge against MERGEFIELD values in a Word document.
 
 ### [Join-OfficeExcelSheet](Join-OfficeExcelSheet.md)
 Appends or merges rows from one worksheet into another.
+
+### [Join-OfficeExcelWorkbook](Join-OfficeExcelWorkbook.md)
+Imports selected or all worksheets from one Excel workbook into another.
 
 ### [Join-OfficePdf](Join-OfficePdf.md)
 Joins multiple PDF files into a single PDF.
@@ -720,6 +822,9 @@ Moves selected pages before another page and writes a new PDF.
 
 ### [New-OfficeExcel](New-OfficeExcel.md)
 Creates a new Excel workbook using the DSL.
+
+### [New-OfficeExcelDashboard](New-OfficeExcelDashboard.md)
+Builds a worksheet dashboard from tabular data using OfficeIMO dashboard defaults.
 
 ### [New-OfficeMarkdown](New-OfficeMarkdown.md)
 Creates a Markdown document using a DSL scriptblock.
@@ -748,11 +853,17 @@ Creates a Word document using the DSL.
 ### [Protect-OfficeExcelSheet](Protect-OfficeExcelSheet.md)
 Protects the current worksheet.
 
+### [Protect-OfficeExcelWorkbook](Protect-OfficeExcelWorkbook.md)
+Protects workbook structure or windows metadata. This is not file encryption.
+
 ### [Protect-OfficeWordDocument](Protect-OfficeWordDocument.md)
 Protects a Word document with a password.
 
 ### [Remove-OfficeExcelComment](Remove-OfficeExcelComment.md)
 Removes a comment (note) from a worksheet cell.
+
+### [Remove-OfficeExcelNamedRange](Remove-OfficeExcelNamedRange.md)
+Removes a workbook or sheet-scoped Excel named range.
 
 ### [Remove-OfficePdfPage](Remove-OfficePdfPage.md)
 Removes selected pages from a PDF and writes a new PDF.
@@ -763,8 +874,14 @@ Removes a slide by index.
 ### [Remove-OfficeWordTableOfContent](Remove-OfficeWordTableOfContent.md)
 Removes the table of contents from a Word document.
 
+### [Rename-OfficeExcelNamedRange](Rename-OfficeExcelNamedRange.md)
+Renames a workbook or sheet-scoped Excel named range.
+
 ### [Rename-OfficePowerPointSection](Rename-OfficePowerPointSection.md)
 Renames a PowerPoint section.
+
+### [Repair-OfficeExcelWorkbook](Repair-OfficeExcelWorkbook.md)
+Runs OfficeIMO safe workbook repairs for common package, table, view, print, drawing, and calculation artifacts.
 
 ### [Save-OfficeExcel](Save-OfficeExcel.md)
 Saves an Excel workbook without disposing it.
@@ -784,6 +901,12 @@ Saves an OfficeIMO.Visio document.
 ### [Save-OfficeWord](Save-OfficeWord.md)
 Saves a Word document without disposing it.
 
+### [Set-OfficeExcelActiveSheet](Set-OfficeExcelActiveSheet.md)
+Sets the worksheet that opens as the active sheet.
+
+### [Set-OfficeExcelAutoFilter](Set-OfficeExcelAutoFilter.md)
+Applies a friendly AutoFilter condition by header name.
+
 ### [Set-OfficeExcelCell](Set-OfficeExcelCell.md)
 Sets a cell value, formula, or number format within the current worksheet.
 
@@ -795,6 +918,9 @@ Configures data labels and optional styling for an Excel chart.
 
 ### [Set-OfficeExcelChartLegend](Set-OfficeExcelChartLegend.md)
 Configures legend visibility and styling for an Excel chart.
+
+### [Set-OfficeExcelChartPoint](Set-OfficeExcelChartPoint.md)
+Configures fill and line styling for a single Excel chart data point.
 
 ### [Set-OfficeExcelChartSeries](Set-OfficeExcelChartSeries.md)
 Configures Excel chart series colors, line style, and markers.
@@ -808,8 +934,20 @@ Adds or replaces an Excel chart series trendline.
 ### [Set-OfficeExcelColumn](Set-OfficeExcelColumn.md)
 Writes values or formatting to a column in the current worksheet.
 
+### [Set-OfficeExcelColumnGroup](Set-OfficeExcelColumnGroup.md)
+Configures collapsible Excel outline grouping for worksheet columns.
+
 ### [Set-OfficeExcelColumnStyleByHeader](Set-OfficeExcelColumnStyleByHeader.md)
 Applies common number, fill, font, and status styles to a worksheet column resolved by header text.
+
+### [Set-OfficeExcelDataValidationMessage](Set-OfficeExcelDataValidationMessage.md)
+Sets prompt and error messages on existing Excel data validation rules.
+
+### [Set-OfficeExcelDateSystem](Set-OfficeExcelDateSystem.md)
+Sets the workbook date system used for numeric date serials.
+
+### [Set-OfficeExcelDocumentProperty](Set-OfficeExcelDocumentProperty.md)
+Sets a built-in or application document property on an Excel workbook.
 
 ### [Set-OfficeExcelExecutionPolicy](Set-OfficeExcelExecutionPolicy.md)
 Configures OfficeIMO Excel execution and validation behavior for a workbook.
@@ -853,11 +991,26 @@ Configures page setup options on a worksheet.
 ### [Set-OfficeExcelPrintArea](Set-OfficeExcelPrintArea.md)
 Sets the print area for a worksheet.
 
+### [Set-OfficeExcelPrintLayout](Set-OfficeExcelPrintLayout.md)
+Applies a reusable worksheet print layout preset.
+
 ### [Set-OfficeExcelPrintTitles](Set-OfficeExcelPrintTitles.md)
 Sets or clears repeating print title rows and columns for a worksheet.
 
+### [Set-OfficeExcelRefreshOnOpen](Set-OfficeExcelRefreshOnOpen.md)
+Configures workbook data refresh metadata for Excel-compatible applications to run when the file opens.
+
+### [Set-OfficeExcelRichText](Set-OfficeExcelRichText.md)
+Sets mixed-format rich text runs in an Excel cell.
+
 ### [Set-OfficeExcelRow](Set-OfficeExcelRow.md)
 Writes a row of values to the current worksheet.
+
+### [Set-OfficeExcelRowGroup](Set-OfficeExcelRowGroup.md)
+Configures collapsible Excel outline grouping for worksheet rows.
+
+### [Set-OfficeExcelSheetTabColor](Set-OfficeExcelSheetTabColor.md)
+Sets or clears the worksheet tab color.
 
 ### [Set-OfficeExcelSheetVisibility](Set-OfficeExcelSheetVisibility.md)
 Shows or hides a worksheet.
@@ -865,11 +1018,17 @@ Shows or hides a worksheet.
 ### [Set-OfficeExcelSmartHyperlink](Set-OfficeExcelSmartHyperlink.md)
 Sets an external hyperlink using a smart display strategy.
 
+### [Set-OfficeExcelTheme](Set-OfficeExcelTheme.md)
+Sets or resets the workbook theme package part for an Excel workbook.
+
 ### [Set-OfficeExcelUrlLinks](Set-OfficeExcelUrlLinks.md)
 Converts cells in a range into external URL hyperlinks.
 
 ### [Set-OfficeExcelUrlLinksByHeader](Set-OfficeExcelUrlLinksByHeader.md)
 Converts cells under a header into external URL hyperlinks.
+
+### [Set-OfficeExcelWorksheetView](Set-OfficeExcelWorksheetView.md)
+Sets worksheet view options such as gridlines, direction, zoom, and view mode.
 
 ### [Set-OfficePdfBackground](Set-OfficePdfBackground.md)
 Sets or clears the generated PDF page background color.
@@ -985,8 +1144,23 @@ Updates styling on Word text.
 ### [Split-OfficePdf](Split-OfficePdf.md)
 Splits a PDF into one file per page.
 
+### [Test-OfficeExcelAccessibility](Test-OfficeExcelAccessibility.md)
+Checks workbook accessibility and compliance signals.
+
+### [Test-OfficeExcelTemplateBinding](Test-OfficeExcelTemplateBinding.md)
+Validates Excel template markers against supplied bindings before applying a template.
+
+### [Test-OfficeExcelWorkbook](Test-OfficeExcelWorkbook.md)
+Runs OfficeIMO workbook diagnostics and optional safe repairs.
+
 ### [Unprotect-OfficeExcelSheet](Unprotect-OfficeExcelSheet.md)
 Removes worksheet protection.
+
+### [Unprotect-OfficeExcelWorkbook](Unprotect-OfficeExcelWorkbook.md)
+Removes workbook structure/window protection metadata.
+
+### [Update-OfficeExcelComment](Update-OfficeExcelComment.md)
+Updates legacy worksheet comments (notes) that match a filter.
 
 ### [Update-OfficeExcelText](Update-OfficeExcelText.md)
 Replaces text in worksheet values.

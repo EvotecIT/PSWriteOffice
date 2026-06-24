@@ -17,6 +17,13 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// $proof</code>
 ///   <para>Creates a copy of the Data worksheet and reads the workbook summary to verify the new tab.</para>
 /// </example>
+/// <example>
+///   <summary>Copy a worksheet from another workbook using the package fast path.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Copy-OfficeExcelSheet -Path .\Combined.xlsx -SourcePath .\Incoming.xlsx -SourceSheet RawData -NewName IncomingRaw -CopyMode Package
+/// Get-OfficeExcelUsedRange -Path .\Combined.xlsx -Sheet IncomingRaw</code>
+///   <para>Copies the source worksheet package directly so large workbook merges avoid converting rows into PowerShell objects. Use CopyMode Values only when you explicitly want the reader/writer fallback.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Copy, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelSheetCopy")]
 [OutputType(typeof(ExcelSheet))]
@@ -61,6 +68,10 @@ public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
     [Parameter]
     public SheetNameValidationMode ValidationMode { get; set; } = SheetNameValidationMode.Sanitize;
 
+    /// <summary>Controls whether cross-workbook copies use package-level copy or value materialization.</summary>
+    [Parameter]
+    public ExcelWorksheetCopyMode CopyMode { get; set; } = ExcelWorksheetCopyMode.Package;
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -71,7 +82,12 @@ public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
 
         var copied = sourceWorkbook.Document == target
             ? target.CopyWorksheet(sourceSheet, NewName, ValidationMode)
-            : target.CopyWorksheetFrom(sourceWorkbook.Document, sourceSheet, NewName, ValidationMode);
+            : target.CopyWorksheetFrom(
+                sourceWorkbook.Document,
+                sourceSheet,
+                NewName,
+                ValidationMode,
+                new ExcelWorksheetCopyOptions { CopyMode = CopyMode });
 
         targetWorkbook.SaveIfOwned();
         WriteObject(copied);

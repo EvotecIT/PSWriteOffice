@@ -1,3 +1,4 @@
+using System;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -29,6 +30,10 @@ public sealed class ProtectOfficeExcelSheetCommand : PSCmdlet
     /// <summary>Worksheet index (0-based) when using <see cref="Document"/>.</summary>
     [Parameter(ParameterSetName = ParameterSetDocument)]
     public int? SheetIndex { get; set; }
+
+    /// <summary>Allow common protected-table workflows: selecting cells, inserting rows, sorting, and filtering.</summary>
+    [Parameter]
+    public SwitchParameter AllowTableEditing { get; set; }
 
     /// <summary>Allow selecting locked cells.</summary>
     [Parameter]
@@ -90,22 +95,27 @@ public sealed class ProtectOfficeExcelSheetCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var sheet = ResolveSheet();
-        var options = new ExcelSheetProtectionOptions
-        {
-            AllowSelectLockedCells = AllowSelectLockedCells,
-            AllowSelectUnlockedCells = AllowSelectUnlockedCells,
-            AllowFormatCells = AllowFormatCells,
-            AllowFormatColumns = AllowFormatColumns,
-            AllowFormatRows = AllowFormatRows,
-            AllowInsertColumns = AllowInsertColumns,
-            AllowInsertRows = AllowInsertRows,
-            AllowInsertHyperlinks = AllowInsertHyperlinks,
-            AllowDeleteColumns = AllowDeleteColumns,
-            AllowDeleteRows = AllowDeleteRows,
-            AllowSort = AllowSort,
-            AllowAutoFilter = AllowAutoFilter,
-            AllowPivotTables = AllowPivotTables
-        };
+        var options = AllowTableEditing.IsPresent
+            ? ExcelSheetProtectionOptions.TableEditing()
+            : new ExcelSheetProtectionOptions
+            {
+                AllowSelectLockedCells = AllowSelectLockedCells,
+                AllowSelectUnlockedCells = AllowSelectUnlockedCells
+            };
+
+        ApplyBoundOption(options, nameof(AllowSelectLockedCells), value => options.AllowSelectLockedCells = value);
+        ApplyBoundOption(options, nameof(AllowSelectUnlockedCells), value => options.AllowSelectUnlockedCells = value);
+        ApplyBoundOption(options, nameof(AllowFormatCells), value => options.AllowFormatCells = value);
+        ApplyBoundOption(options, nameof(AllowFormatColumns), value => options.AllowFormatColumns = value);
+        ApplyBoundOption(options, nameof(AllowFormatRows), value => options.AllowFormatRows = value);
+        ApplyBoundOption(options, nameof(AllowInsertColumns), value => options.AllowInsertColumns = value);
+        ApplyBoundOption(options, nameof(AllowInsertRows), value => options.AllowInsertRows = value);
+        ApplyBoundOption(options, nameof(AllowInsertHyperlinks), value => options.AllowInsertHyperlinks = value);
+        ApplyBoundOption(options, nameof(AllowDeleteColumns), value => options.AllowDeleteColumns = value);
+        ApplyBoundOption(options, nameof(AllowDeleteRows), value => options.AllowDeleteRows = value);
+        ApplyBoundOption(options, nameof(AllowSort), value => options.AllowSort = value);
+        ApplyBoundOption(options, nameof(AllowAutoFilter), value => options.AllowAutoFilter = value);
+        ApplyBoundOption(options, nameof(AllowPivotTables), value => options.AllowPivotTables = value);
 
         sheet.Protect(options);
 
@@ -129,5 +139,13 @@ public sealed class ProtectOfficeExcelSheetCommand : PSCmdlet
 
         var context = ExcelDslContext.Require(this);
         return context.RequireSheet();
+    }
+
+    private void ApplyBoundOption(ExcelSheetProtectionOptions options, string parameterName, Action<bool> apply)
+    {
+        if (MyInvocation.BoundParameters.TryGetValue(parameterName, out var value) && value is bool enabled)
+        {
+            apply(enabled);
+        }
     }
 }

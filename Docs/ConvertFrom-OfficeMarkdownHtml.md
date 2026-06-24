@@ -11,12 +11,12 @@ Converts HTML content to Markdown.
 ## SYNTAX
 ### Html (Default)
 ```powershell
-ConvertFrom-OfficeMarkdownHtml [-Html] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <int>] [<CommonParameters>]
+ConvertFrom-OfficeMarkdownHtml [-Html] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <int>] [-Base64ImageHandling <HtmlBase64ImageHandling>] [-Base64ImageOutputDirectory <string>] [-ListingCardMetadataMode <HtmlListingCardMetadataMode>] [-MaxTableExpandedColumns <int>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-ConvertFrom-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <int>] [<CommonParameters>]
+ConvertFrom-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <int>] [-Base64ImageHandling <HtmlBase64ImageHandling>] [-Base64ImageOutputDirectory <string>] [-ListingCardMetadataMode <HtmlListingCardMetadataMode>] [-MaxTableExpandedColumns <int>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,6 +45,38 @@ Emit a Markdown document object instead of Markdown text.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Base64ImageHandling
+Controls how base64 data URI images are converted.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Base64ImageOutputDirectory
+Output directory for decoded base64 images when saving them to files.
+
+```yaml
+Type: String
 Parameter Sets: Html, Path
 Aliases: None
 Possible values:
@@ -120,6 +152,22 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -ImageRenderingMode
+Controls how generated Markdown images are serialized.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -IncludeDocumentChrome
 Convert the full HTML document instead of only body contents.
 
@@ -152,8 +200,56 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -LineEnding
+Markdown line ending: CRLF, LF, CR, or a literal line ending string.
+
+```yaml
+Type: String
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ListingCardMetadataMode
+Controls whether repeated listing-card metadata is preserved or suppressed.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -MaxInputCharacters
 Maximum input length, in characters, accepted by the converter.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxTableExpandedColumns
+Maximum logical columns produced by expanding HTML table spans.
 
 ```yaml
 Type: Nullable`1
@@ -237,6 +333,54 @@ Preserve script, style, noscript, and template elements.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UnorderedListMarker
+Unordered list marker: '-', '*', or '+'.
+
+```yaml
+Type: String
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -WriteOptions
+Optional Markdown writer options for generated Markdown text.
+
+```yaml
+Type: MarkdownWriteOptions
+Parameter Sets: Html, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -WriteProfile
+Friendly Markdown writer profile for generated Markdown text.
+
+```yaml
+Type: Nullable`1
 Parameter Sets: Html, Path
 Aliases: None
 Possible values:

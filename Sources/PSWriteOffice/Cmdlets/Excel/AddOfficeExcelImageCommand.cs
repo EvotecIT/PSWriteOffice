@@ -126,6 +126,10 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
     [Parameter]
     public SwitchParameter NoLockAspectRatio { get; set; }
 
+    /// <summary>Lock the image aspect ratio in Excel. This is the default unless NoLockAspectRatio is used.</summary>
+    [Parameter]
+    public SwitchParameter LockAspectRatio { get; set; }
+
     /// <summary>How a range-anchored image behaves when cells move or resize.</summary>
     [Parameter]
     public ExcelImagePlacement Placement { get; set; } = ExcelImagePlacement.MoveAndSize;
@@ -195,14 +199,14 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(Range))
         {
             image = sheet.AddImageFromFileToRange(Range!, path, OffsetXPixels, OffsetYPixels, EndOffsetXPixels, EndOffsetYPixels,
-                Name, Decorative.IsPresent ? null : AltText, Title, !NoLockAspectRatio.IsPresent, Placement, RotationDegrees);
+                Name, Decorative.IsPresent ? null : AltText, Title, ResolveLockAspectRatio(), Placement, RotationDegrees);
         }
         else
         {
             var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
             var (width, height) = ResolveCellImageSize();
             image = sheet.AddImageFromFile(row, column, path, width, height, ScalePercent, OffsetXPixels, OffsetYPixels,
-                Name, Decorative.IsPresent ? null : AltText, Title, !NoLockAspectRatio.IsPresent, RotationDegrees);
+                Name, Decorative.IsPresent ? null : AltText, Title, ResolveLockAspectRatio(), RotationDegrees);
         }
 
         if (Decorative.IsPresent)
@@ -217,14 +221,14 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(Range))
         {
             image = sheet.AddImageFromUrlToRange(Range!, url, OffsetXPixels, OffsetYPixels, EndOffsetXPixels, EndOffsetYPixels,
-                Name, Decorative.IsPresent ? null : AltText, Title, !NoLockAspectRatio.IsPresent, Placement, RotationDegrees);
+                Name, Decorative.IsPresent ? null : AltText, Title, ResolveLockAspectRatio(), Placement, RotationDegrees);
         }
         else
         {
             var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
             var (width, height) = ResolveCellImageSize();
             image = sheet.AddImageFromUrl(row, column, url, width, height, ScalePercent, OffsetXPixels, OffsetYPixels,
-                Name, Decorative.IsPresent ? null : AltText, Title, !NoLockAspectRatio.IsPresent, RotationDegrees);
+                Name, Decorative.IsPresent ? null : AltText, Title, ResolveLockAspectRatio(), RotationDegrees);
         }
 
         if (Decorative.IsPresent)
@@ -280,6 +284,16 @@ public sealed class AddOfficeExcelImageCommand : PSCmdlet
         bool widthBound = MyInvocation.BoundParameters.ContainsKey(nameof(WidthPixels));
         bool heightBound = MyInvocation.BoundParameters.ContainsKey(nameof(HeightPixels));
         return (widthBound ? WidthPixels : 96, heightBound ? HeightPixels : 32);
+    }
+
+    private bool ResolveLockAspectRatio()
+    {
+        if (NoLockAspectRatio.IsPresent)
+        {
+            return false;
+        }
+
+        return !MyInvocation.BoundParameters.ContainsKey(nameof(LockAspectRatio)) || LockAspectRatio.IsPresent;
     }
 
     private static bool TryGetLocalFilePath(string url, out string path)
