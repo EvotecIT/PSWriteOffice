@@ -11,7 +11,7 @@ Writes every table in a DataSet to separate Excel worksheets.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelDataSet [-DataSet] <DataSet> [-NoTable] [-NoHeader] [-TableStyle <string>] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelDataSet [-DataSet] <DataSet> [-NoTable] [-NoHeader] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -92,6 +92,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -NoRowStripes
+Disable alternating row stripes for created tables.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -NoTable
 Write plain ranges instead of Excel tables.
 
@@ -110,6 +126,54 @@ Accept wildcard characters: True
 
 ### -PassThru
 Return import metadata for each worksheet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShowColumnStripes
+Enable alternating column stripes for created tables.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShowFirstColumn
+Emphasize the first table column when the selected style supports it.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShowLastColumn
+Emphasize the last table column when the selected style supports it.
 
 ```yaml
 Type: SwitchParameter

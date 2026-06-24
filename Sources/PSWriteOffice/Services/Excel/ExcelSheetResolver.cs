@@ -34,4 +34,14 @@ internal static class ExcelSheetResolver
 
         return document.Sheets[0];
     }
+
+    public static ExcelSheet? ResolveOptional(ExcelDocument document, string? sheetName, int? sheetIndex)
+    {
+        if (string.IsNullOrWhiteSpace(sheetName) && !sheetIndex.HasValue)
+        {
+            return null;
+        }
+
+        return Resolve(document, sheetName, sheetIndex);
+    }
 }

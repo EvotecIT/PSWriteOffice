@@ -52,6 +52,22 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
     [Parameter]
     public string TableStyle { get; set; } = "TableStyleMedium9";
 
+    /// <summary>Emphasize the first table column when the selected style supports it.</summary>
+    [Parameter]
+    public SwitchParameter ShowFirstColumn { get; set; }
+
+    /// <summary>Emphasize the last table column when the selected style supports it.</summary>
+    [Parameter]
+    public SwitchParameter ShowLastColumn { get; set; }
+
+    /// <summary>Disable alternating row stripes for the created table.</summary>
+    [Parameter]
+    public SwitchParameter NoRowStripes { get; set; }
+
+    /// <summary>Enable alternating column stripes for the created table.</summary>
+    [Parameter]
+    public SwitchParameter ShowColumnStripes { get; set; }
+
     /// <summary>Disable AutoFilter dropdowns.</summary>
     [Parameter]
     public SwitchParameter NoAutoFilter { get; set; }
@@ -103,6 +119,14 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             tableName: resolvedTableName,
             style: style,
             includeAutoFilter: !NoAutoFilter.IsPresent);
+        ExcelTableStyleOptionService.Apply(
+            sheet,
+            range,
+            style,
+            ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowFirstColumn), ShowFirstColumn),
+            ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowLastColumn), ShowLastColumn),
+            ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(NoRowStripes), NoRowStripes),
+            ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowColumnStripes), ShowColumnStripes));
         context.RegisterTableRange(sheet, resolvedTableName, range);
 
         if (AutoFit.IsPresent)

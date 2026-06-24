@@ -45,6 +45,10 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IncludeSheets { get; set; }
 
+    /// <summary>Include OfficeIMO inspection snapshot details for schema discovery.</summary>
+    [Parameter]
+    public SwitchParameter IncludeSchema { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -80,7 +84,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
                 path = Document.FilePath;
             }
 
-            WriteObject(CreateSummary(spreadsheet, path, IncludeSheets.IsPresent));
+            WriteObject(CreateSummary(spreadsheet, path, IncludeSheets.IsPresent, IncludeSchema.IsPresent, loadedDocument ?? Document));
         }
         finally
         {
@@ -91,17 +95,25 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         }
     }
 
-    private static PSObject CreateSummary(SpreadsheetDocument spreadsheet, string? path, bool includeSheets)
+    private static PSObject CreateSummary(SpreadsheetDocument spreadsheet, string? path, bool includeSheets, bool includeSchema, ExcelDocument? document)
     {
         var workbookPart = spreadsheet.WorkbookPart ?? throw new InvalidOperationException("Workbook part was not found.");
         var workbook = workbookPart.Workbook ?? throw new InvalidOperationException("Workbook was not found.");
         var sheets = workbook.Sheets?.Elements<Sheet>().ToList() ?? new List<Sheet>();
-        var sheetSummaries = sheets.Select((sheet, index) => CreateSheetSummary(workbookPart, sheet, index + 1)).ToArray();
+        int? activeSheetIndex = GetActiveSheetIndex(workbook, sheets.Count);
+        var sheetSummaries = sheets.Select((sheet, index) => CreateSheetSummary(workbookPart, sheet, index + 1, activeSheetIndex == index)).ToArray();
         var namedRangeCount = workbook.DefinedNames?.Elements<DocumentFormat.OpenXml.Spreadsheet.DefinedName>().Count() ?? 0;
 
         var summary = new PSObject();
         summary.Properties.Add(new PSNoteProperty("Path", path));
+        ExcelWorkbookThemeInfo? theme = document?.GetWorkbookTheme();
+
+        summary.Properties.Add(new PSNoteProperty("DateSystem", ExcelDateSystemService.ToDisplayValue(document?.DateSystem ?? GetWorkbookDateSystem(workbook))));
+        summary.Properties.Add(new PSNoteProperty("HasTheme", theme?.HasTheme ?? workbookPart.GetPartsOfType<ThemePart>().Any()));
+        summary.Properties.Add(new PSNoteProperty("ThemeName", theme?.Name));
         summary.Properties.Add(new PSNoteProperty("SheetCount", sheetSummaries.Length));
+        summary.Properties.Add(new PSNoteProperty("ActiveSheetIndex", activeSheetIndex));
+        summary.Properties.Add(new PSNoteProperty("ActiveSheetName", activeSheetIndex.HasValue ? sheets[activeSheetIndex.Value].Name?.Value : null));
         summary.Properties.Add(new PSNoteProperty("VisibleSheetCount", sheetSummaries.Count(IsVisibleSheet)));
         summary.Properties.Add(new PSNoteProperty("HiddenSheetCount", sheetSummaries.Count(IsHiddenSheet)));
         summary.Properties.Add(new PSNoteProperty("VeryHiddenSheetCount", sheetSummaries.Count(IsVeryHiddenSheet)));
@@ -109,6 +121,10 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         summary.Properties.Add(new PSNoteProperty("ChartCount", sheetSummaries.Sum(GetIntProperty("ChartCount"))));
         summary.Properties.Add(new PSNoteProperty("PivotTableCount", sheetSummaries.Sum(GetIntProperty("PivotTableCount"))));
         summary.Properties.Add(new PSNoteProperty("SparklineGroupCount", sheetSummaries.Sum(GetIntProperty("SparklineGroupCount"))));
+        summary.Properties.Add(new PSNoteProperty("SlicerPartCount", CountPackagePartsByContentType(workbookPart, "slicer")));
+        summary.Properties.Add(new PSNoteProperty("TimelinePartCount", CountPackagePartsByContentType(workbookPart, "timeline")));
+        summary.Properties.Add(new PSNoteProperty("ConnectionPartCount", CountPackagePartsByContentType(workbookPart, "connections")));
+        summary.Properties.Add(new PSNoteProperty("QueryTablePartCount", CountPackagePartsByContentType(workbookPart, "queryTable")));
         summary.Properties.Add(new PSNoteProperty("HyperlinkCount", sheetSummaries.Sum(GetIntProperty("HyperlinkCount"))));
         summary.Properties.Add(new PSNoteProperty("CommentCount", sheetSummaries.Sum(GetIntProperty("CommentCount"))));
         summary.Properties.Add(new PSNoteProperty("NamedRangeCount", namedRangeCount));
@@ -118,16 +134,141 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
             summary.Properties.Add(new PSNoteProperty("Sheets", sheetSummaries));
         }
 
+        if (includeSchema && document != null)
+        {
+            summary.Properties.Add(new PSNoteProperty("Schema", CreateSchemaSummary(document.CreateInspectionSnapshot())));
+        }
+
         return summary;
     }
 
-    private static PSObject CreateSheetSummary(WorkbookPart workbookPart, Sheet sheet, int index)
+    private static PSObject CreateSchemaSummary(ExcelWorkbookSnapshot snapshot)
+    {
+        var schema = new PSObject();
+        schema.Properties.Add(new PSNoteProperty("ActiveWorksheetIndex", snapshot.ActiveWorksheetIndex));
+        schema.Properties.Add(new PSNoteProperty("ActiveWorksheetName", snapshot.ActiveWorksheetName));
+        schema.Properties.Add(new PSNoteProperty("DateSystem", ExcelDateSystemService.ToDisplayValue(snapshot.DateSystem)));
+        schema.Properties.Add(new PSNoteProperty("SlicerPartCount", snapshot.SlicerPartCount));
+        schema.Properties.Add(new PSNoteProperty("TimelinePartCount", snapshot.TimelinePartCount));
+        schema.Properties.Add(new PSNoteProperty("ConnectionPartCount", snapshot.ConnectionPartCount));
+        schema.Properties.Add(new PSNoteProperty("QueryTablePartCount", snapshot.QueryTablePartCount));
+        schema.Properties.Add(new PSNoteProperty("HasSlicers", snapshot.HasSlicers));
+        schema.Properties.Add(new PSNoteProperty("HasTimelines", snapshot.HasTimelines));
+        schema.Properties.Add(new PSNoteProperty("HasConnections", snapshot.HasConnections));
+        schema.Properties.Add(new PSNoteProperty("HasQueryTables", snapshot.HasQueryTables));
+        schema.Properties.Add(new PSNoteProperty("Worksheets", snapshot.Worksheets.Select(CreateSchemaWorksheet).ToArray()));
+        schema.Properties.Add(new PSNoteProperty("Tables", snapshot.Worksheets.SelectMany(CreateSchemaTables).ToArray()));
+        schema.Properties.Add(new PSNoteProperty("NamedRanges", snapshot.NamedRanges.Select(CreateSchemaNamedRange).ToArray()));
+        schema.Properties.Add(new PSNoteProperty("FormulaCells", snapshot.Worksheets.SelectMany(CreateSchemaFormulaCells).ToArray()));
+        schema.Properties.Add(new PSNoteProperty("Rows", snapshot.Worksheets.SelectMany(CreateSchemaRows).ToArray()));
+        schema.Properties.Add(new PSNoteProperty("Columns", snapshot.Worksheets.SelectMany(CreateSchemaColumns).ToArray()));
+        return schema;
+    }
+
+    private static PSObject CreateSchemaWorksheet(ExcelWorksheetSnapshot worksheet)
+    {
+        var record = new PSObject();
+        record.Properties.Add(new PSNoteProperty("Name", worksheet.Name));
+        record.Properties.Add(new PSNoteProperty("Index", worksheet.Index));
+        record.Properties.Add(new PSNoteProperty("Hidden", worksheet.Hidden));
+        record.Properties.Add(new PSNoteProperty("IsActive", worksheet.IsActive));
+        record.Properties.Add(new PSNoteProperty("UsedRange", worksheet.UsedRangeA1));
+        record.Properties.Add(new PSNoteProperty("TableCount", worksheet.Tables.Count));
+        record.Properties.Add(new PSNoteProperty("FormulaCount", worksheet.Cells.Count(cell => !string.IsNullOrWhiteSpace(cell.Formula))));
+        record.Properties.Add(new PSNoteProperty("DataValidationCount", worksheet.Validations.Count));
+        record.Properties.Add(new PSNoteProperty("FrozenRowCount", worksheet.FrozenRowCount));
+        record.Properties.Add(new PSNoteProperty("FrozenColumnCount", worksheet.FrozenColumnCount));
+        record.Properties.Add(new PSNoteProperty("ShowGridlines", worksheet.ShowGridlines));
+        record.Properties.Add(new PSNoteProperty("RightToLeft", worksheet.RightToLeft));
+        record.Properties.Add(new PSNoteProperty("View", worksheet.View));
+        record.Properties.Add(new PSNoteProperty("ZoomScale", worksheet.ZoomScale));
+        record.Properties.Add(new PSNoteProperty("ZoomScaleNormal", worksheet.ZoomScaleNormal));
+        record.Properties.Add(new PSNoteProperty("TabColorArgb", worksheet.TabColorArgb));
+        record.Properties.Add(new PSNoteProperty("OutlineSummaryBelow", worksheet.OutlineSummaryBelow));
+        record.Properties.Add(new PSNoteProperty("OutlineSummaryRight", worksheet.OutlineSummaryRight));
+        record.Properties.Add(new PSNoteProperty("Protection", worksheet.Protection != null));
+        return record;
+    }
+
+    private static IEnumerable<PSObject> CreateSchemaTables(ExcelWorksheetSnapshot worksheet)
+    {
+        foreach (var table in worksheet.Tables)
+        {
+            var record = new PSObject();
+            record.Properties.Add(new PSNoteProperty("SheetName", worksheet.Name));
+            record.Properties.Add(new PSNoteProperty("Name", table.Name));
+            record.Properties.Add(new PSNoteProperty("Range", table.A1Range));
+            record.Properties.Add(new PSNoteProperty("Style", table.StyleName));
+            record.Properties.Add(new PSNoteProperty("HasHeaderRow", table.HasHeaderRow));
+            record.Properties.Add(new PSNoteProperty("TotalsRowShown", table.TotalsRowShown));
+            record.Properties.Add(new PSNoteProperty("Columns", table.Columns.Select(column => column.Name).ToArray()));
+            yield return record;
+        }
+    }
+
+    private static PSObject CreateSchemaNamedRange(ExcelNamedRangeSnapshot namedRange)
+    {
+        var record = new PSObject();
+        record.Properties.Add(new PSNoteProperty("Name", namedRange.Name));
+        record.Properties.Add(new PSNoteProperty("SheetName", namedRange.SheetName));
+        record.Properties.Add(new PSNoteProperty("Reference", namedRange.ReferenceA1));
+        record.Properties.Add(new PSNoteProperty("IsBuiltIn", namedRange.IsBuiltIn));
+        return record;
+    }
+
+    private static IEnumerable<PSObject> CreateSchemaFormulaCells(ExcelWorksheetSnapshot worksheet)
+    {
+        foreach (var cell in worksheet.Cells.Where(cell => !string.IsNullOrWhiteSpace(cell.Formula)))
+        {
+            var record = new PSObject();
+            record.Properties.Add(new PSNoteProperty("SheetName", worksheet.Name));
+            record.Properties.Add(new PSNoteProperty("Address", A1.CellReference(cell.Row, cell.Column)));
+            record.Properties.Add(new PSNoteProperty("Formula", cell.Formula));
+            yield return record;
+        }
+    }
+
+    private static IEnumerable<PSObject> CreateSchemaRows(ExcelWorksheetSnapshot worksheet)
+    {
+        foreach (var row in worksheet.Rows)
+        {
+            var record = new PSObject();
+            record.Properties.Add(new PSNoteProperty("SheetName", worksheet.Name));
+            record.Properties.Add(new PSNoteProperty("Index", row.Index));
+            record.Properties.Add(new PSNoteProperty("Height", row.Height));
+            record.Properties.Add(new PSNoteProperty("Hidden", row.Hidden));
+            record.Properties.Add(new PSNoteProperty("CustomHeight", row.CustomHeight));
+            record.Properties.Add(new PSNoteProperty("OutlineLevel", row.OutlineLevel));
+            record.Properties.Add(new PSNoteProperty("Collapsed", row.Collapsed));
+            yield return record;
+        }
+    }
+
+    private static IEnumerable<PSObject> CreateSchemaColumns(ExcelWorksheetSnapshot worksheet)
+    {
+        foreach (var column in worksheet.Columns)
+        {
+            var record = new PSObject();
+            record.Properties.Add(new PSNoteProperty("SheetName", worksheet.Name));
+            record.Properties.Add(new PSNoteProperty("StartIndex", column.StartIndex));
+            record.Properties.Add(new PSNoteProperty("EndIndex", column.EndIndex));
+            record.Properties.Add(new PSNoteProperty("Width", column.Width));
+            record.Properties.Add(new PSNoteProperty("Hidden", column.Hidden));
+            record.Properties.Add(new PSNoteProperty("CustomWidth", column.CustomWidth));
+            record.Properties.Add(new PSNoteProperty("OutlineLevel", column.OutlineLevel));
+            record.Properties.Add(new PSNoteProperty("Collapsed", column.Collapsed));
+            yield return record;
+        }
+    }
+
+    private static PSObject CreateSheetSummary(WorkbookPart workbookPart, Sheet sheet, int index, bool isActive)
     {
         var state = NormalizeSheetState(sheet.State?.InnerText);
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Index", index));
         record.Properties.Add(new PSNoteProperty("Name", sheet.Name?.Value ?? string.Empty));
         record.Properties.Add(new PSNoteProperty("State", state));
+        record.Properties.Add(new PSNoteProperty("IsActive", isActive));
 
         if (sheet.Id?.Value == null)
         {
@@ -167,6 +308,31 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         return record;
     }
 
+    private static int? GetActiveSheetIndex(Workbook workbook, int sheetCount)
+    {
+        if (sheetCount <= 0)
+        {
+            return null;
+        }
+
+        var activeTab = workbook.GetFirstChild<BookViews>()?
+            .Elements<WorkbookView>()
+            .FirstOrDefault()?
+            .ActiveTab?.Value ?? 0U;
+
+        if (activeTab >= sheetCount)
+        {
+            return sheetCount - 1;
+        }
+
+        return checked((int)activeTab);
+    }
+
+    private static ExcelDateSystem GetWorkbookDateSystem(Workbook workbook)
+        => workbook.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.WorkbookProperties>()?.Date1904?.Value == true
+            ? ExcelDateSystem.NineteenFour
+            : ExcelDateSystem.NineteenHundred;
+
     private static void AddChartSheetCounts(PSObject record, ChartsheetPart chartsheetPart)
     {
         record.Properties.Add(new PSNoteProperty("UsedRange", null));
@@ -183,6 +349,21 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
     {
         return container.Parts.Sum(part =>
             (part.OpenXmlPart is ChartPart ? 1 : 0) + CountChartParts(part.OpenXmlPart));
+    }
+
+    private static int CountPackagePartsByContentType(OpenXmlPartContainer container, string marker)
+    {
+        if (string.IsNullOrWhiteSpace(marker))
+        {
+            return 0;
+        }
+
+        return container.Parts.Sum(part =>
+        {
+            var openXmlPart = part.OpenXmlPart;
+            var count = openXmlPart.ContentType.IndexOf(marker, StringComparison.OrdinalIgnoreCase) >= 0 ? 1 : 0;
+            return count + CountPackagePartsByContentType(openXmlPart, marker);
+        });
     }
 
     private static int CountComments(WorksheetPart worksheetPart)

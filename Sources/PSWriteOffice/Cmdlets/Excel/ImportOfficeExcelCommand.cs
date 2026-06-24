@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
@@ -7,7 +8,7 @@ using PSWriteOffice.Services.Excel;
 namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Imports rows from an Excel workbook as PowerShell objects.</summary>
-/// <para>Provides an ImportExcel-style read command over the OfficeIMO reader pipeline.</para>
+/// <para>Provides a fast PowerShell read command over the OfficeIMO reader pipeline.</para>
 /// <example>
 ///   <summary>Import worksheet rows and filter pending items.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -16,6 +17,21 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Where-Object Status -eq 'Pending' |
 ///     Export-Csv -Path .\PendingRows.csv -NoTypeInformation</code>
 ///   <para>Reads the used range on the Data worksheet, emits PSCustomObjects, and filters them in PowerShell.</para>
+/// </example>
+/// <example>
+///   <summary>Import every worksheet and keep the source sheet name.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$rows = Import-OfficeExcel -Path .\Workbook.xlsx -AllSheets
+/// $rows | Group-Object WorksheetName</code>
+///   <para>Reads the used range from each worksheet and adds a WorksheetName property to each emitted row.</para>
+/// </example>
+/// <example>
+///   <summary>Import a worksheet by column.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Import-OfficeExcel -Path .\Workbook.xlsx -WorksheetName Metrics -ByColumn |
+///     Where-Object ColumnName -eq 'Revenue' |
+///     Select-Object -ExpandProperty Values</code>
+///   <para>Returns one object per column with the column name, 1-based column index, and the column values as an array.</para>
 /// </example>
 [Cmdlet(VerbsData.Import, "OfficeExcel", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelImport")]
@@ -52,6 +68,10 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     [Parameter(ValueFromPipelineByPropertyName = true)]
     public int? SheetIndex { get; set; }
 
+    /// <summary>Import all worksheets. Each emitted row or column includes WorksheetName.</summary>
+    [Parameter]
+    public SwitchParameter AllSheets { get; set; }
+
     /// <summary>Optional A1 range to read. When omitted, the used range is imported.</summary>
     [Parameter(ValueFromPipelineByPropertyName = true)]
     public string? Range { get; set; }
@@ -80,6 +100,15 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter NumericAsDecimal { get; set; }
 
+    /// <summary>Formula read mode. CachedValue returns workbook cached results; FormulaText returns formula expressions when present.</summary>
+    [Parameter]
+    [ValidateSet("CachedValue", "FormulaText")]
+    public string FormulaMode { get; set; } = "CachedValue";
+
+    /// <summary>Culture used when parsing numbers and dates stored as text.</summary>
+    [Parameter]
+    public string? CultureName { get; set; }
+
     /// <summary>Emit rows as hashtables instead of PSCustomObjects.</summary>
     [Parameter]
     public SwitchParameter AsHashtable { get; set; }
@@ -87,6 +116,10 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     /// <summary>Emit a DataTable instead of enumerating row objects.</summary>
     [Parameter]
     public SwitchParameter AsDataTable { get; set; }
+
+    /// <summary>Emit one object per column with ColumnName, ColumnIndex, and Values instead of row objects.</summary>
+    [Parameter]
+    public SwitchParameter ByColumn { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
@@ -96,13 +129,40 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("Specify either -Range or coordinate bounds, but not both.");
         }
 
-        var options = ExcelReadOutputService.CreateOptions(NumericAsDecimal.IsPresent);
+        var options = ExcelReadOutputService.CreateOptions(
+            NumericAsDecimal.IsPresent,
+            useCachedFormulaResult: !string.Equals(FormulaMode, "FormulaText", StringComparison.OrdinalIgnoreCase),
+            culture: ResolveCulture());
         using var reader = CreateReader(options);
+        if (AllSheets.IsPresent)
+        {
+            if (!string.IsNullOrWhiteSpace(WorksheetName) || SheetIndex.HasValue)
+            {
+                throw new PSArgumentException("Specify either -AllSheets or a specific worksheet, not both.");
+            }
+
+            for (var index = 1; index <= reader.SheetCount; index++)
+            {
+                var currentSheet = reader.GetSheet(index);
+                var currentRange = ResolveRange(currentSheet);
+                var currentTable = currentSheet.ReadRangeAsDataTable(currentRange, headersInFirstRow: !NoHeader.IsPresent);
+                ExcelReadOutputService.WriteOutput(
+                    this,
+                    currentTable,
+                    AsDataTable.IsPresent,
+                    AsHashtable.IsPresent,
+                    ByColumn.IsPresent,
+                    currentSheet.Name);
+            }
+
+            return;
+        }
+
         var sheet = ExcelReadOutputService.ResolveSheetReader(reader, WorksheetName, SheetIndex);
         var range = ResolveRange(sheet);
         var table = sheet.ReadRangeAsDataTable(range, headersInFirstRow: !NoHeader.IsPresent);
 
-        ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent);
+        ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent, ByColumn.IsPresent, null);
     }
 
     private ExcelDocumentReader CreateReader(ExcelReadOptions options)
@@ -179,5 +239,15 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     private bool HasCoordinateRange()
     {
         return StartRow.HasValue || EndRow.HasValue || StartColumn.HasValue || EndColumn.HasValue;
+    }
+
+    private CultureInfo ResolveCulture()
+    {
+        if (string.IsNullOrWhiteSpace(CultureName))
+        {
+            return CultureInfo.InvariantCulture;
+        }
+
+        return CultureInfo.GetCultureInfo(CultureName!);
     }
 }

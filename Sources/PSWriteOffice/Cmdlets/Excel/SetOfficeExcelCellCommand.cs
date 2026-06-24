@@ -40,20 +40,56 @@ public sealed class SetOfficeExcelCellCommand : PSCmdlet
     [Parameter]
     public string? NumberFormat { get; set; }
 
+    /// <summary>Solid background color as #RRGGBB or #AARRGGBB.</summary>
+    [Parameter]
+    public string? BackgroundColor { get; set; }
+
+    /// <summary>Gradient start color as #RRGGBB or #AARRGGBB.</summary>
+    [Parameter]
+    public string? GradientFrom { get; set; }
+
+    /// <summary>Gradient end color as #RRGGBB or #AARRGGBB.</summary>
+    [Parameter]
+    public string? GradientTo { get; set; }
+
+    /// <summary>Linear gradient angle in degrees.</summary>
+    [Parameter]
+    public double GradientDegree { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var context = ExcelDslContext.Require(this);
         var sheet = context.RequireSheet();
         var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
+        var hasValueChange = Value != null || Formula != null || NumberFormat != null;
+        var hasStyleChange = !string.IsNullOrWhiteSpace(BackgroundColor)
+            || !string.IsNullOrWhiteSpace(GradientFrom)
+            || !string.IsNullOrWhiteSpace(GradientTo);
 
-        if (Value != null || Formula != null || NumberFormat != null)
+        if (!hasValueChange && !hasStyleChange)
+        {
+            throw new PSArgumentException("Provide -Value, -Formula, -NumberFormat, -BackgroundColor, or -GradientFrom/-GradientTo to modify the cell.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(GradientFrom) ^ !string.IsNullOrWhiteSpace(GradientTo))
+        {
+            throw new PSArgumentException("Specify both -GradientFrom and -GradientTo for a gradient fill.");
+        }
+
+        if (hasValueChange)
         {
             sheet.Cell(row, column, Value, Formula, NumberFormat);
         }
-        else
+
+        if (!string.IsNullOrWhiteSpace(BackgroundColor))
         {
-            throw new PSArgumentException("Provide -Value, -Formula, or -NumberFormat to modify the cell.");
+            sheet.CellBackground(row, column, BackgroundColor!);
+        }
+
+        if (!string.IsNullOrWhiteSpace(GradientFrom) && !string.IsNullOrWhiteSpace(GradientTo))
+        {
+            sheet.CellGradientBackground(row, column, GradientFrom!, GradientTo!, GradientDegree);
         }
     }
 }

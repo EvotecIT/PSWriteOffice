@@ -86,7 +86,7 @@ New-OfficeExcel -Path $path {
             Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
 
         if (Test-Path $logoPath) {
-            ExcelImage -Path $logoPath -Address 'J1' -WidthPixels 140 -HeightPixels 52 | Out-Null
+            ExcelImage -Path $logoPath -Address 'J1' -WidthPixels 140 -HeightPixels 52 -AltText 'PSWriteOffice operational dashboard logo' | Out-Null
         }
 
         ExcelHeaderFooter -HeaderCenter 'PSWriteOffice operational dashboard' -FooterRight 'Page &P of &N'
@@ -103,6 +103,7 @@ New-OfficeExcel -Path $path {
         ExcelConditionalDataBar -Range 'C2:C9' -Color '#5B9BD5'
         ExcelConditionalIconSet -Range 'B2:B9' -IconSet ThreeTrafficLights1 -Reverse $true
         ExcelUrlLinksByHeader -Header 'Evidence' -TableName 'ServiceHealth' -UrlScript { param($text) "https://evotec.xyz/docs/$text" } -TitleScript { param($text) "Open $text" }
+        ExcelPivotTable -SourceRange 'A1:F9' -DestinationCell 'J1' -Name 'ServiceStatusPivot' -RowField Status -DataField Incidents -DataDisplayName 'Total Incidents' -PivotStyle PivotStyleMedium9 -RefreshOnOpen
         ExcelChart -Range 'A1:C9' -Row 12 -Column 1 -Type BarClustered -Title 'Health Score and Incidents' -WidthPixels 760 -HeightPixels 340 |
             Set-OfficeExcelChartLegend -Position Bottom |
             Set-OfficeExcelChartDataLabels -ShowValue $true -Position OutsideEnd |
@@ -113,6 +114,12 @@ New-OfficeExcel -Path $path {
     ExcelSheet 'Trend' {
         ExcelTable -Data $trend -TableName 'TrendData' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium2' -AutoFit
         ExcelFreeze -TopRows 1
+        ExcelSparkline -DataRange 'B2:D2' -LocationRange 'E2'
+        ExcelSparkline -DataRange 'B3:D3' -LocationRange 'E3'
+        ExcelSparkline -DataRange 'B4:D4' -LocationRange 'E4'
+        ExcelSparkline -DataRange 'B5:D5' -LocationRange 'E5'
+        ExcelSparkline -DataRange 'B6:D6' -LocationRange 'E6'
+        ExcelSparkline -DataRange 'B7:D7' -LocationRange 'E7'
         ExcelChart -TableName 'TrendData' -Row 10 -Column 1 -Type Line -Title 'Availability, Incidents, and Automation' -WidthPixels 780 -HeightPixels 340 |
             Set-OfficeExcelChartLegend -Position Bottom |
             Set-OfficeExcelChartDataLabels -ShowValue $true -Position Top |
@@ -140,6 +147,26 @@ New-OfficeExcel -Path $path {
     ExcelTableOfContents -SheetName 'Index' -IncludeNamedRanges -AddBackLinks -BackLinkText 'Back to Index'
 } -Open:$Open
 
+$threaded = Add-OfficeExcelThreadedComment -Path $path -Sheet Summary -Address A2 -Text 'Review dashboard posture before sending to service owners.' -Author 'Automation Reviewer' -PassThru
+Add-OfficeExcelThreadedComment -Path $path -Sheet Summary -Address A2 -Text 'Ready for owner review.' -Author 'Report Owner' -ParentId $threaded.Id -Done | Out-Null
+
+Add-OfficeExcelPowerQueryMetadata -Path $path `
+    -Name 'OperationalDashboardQuery' `
+    -WorksheetName 'Services' `
+    -QueryTableName 'OperationalDashboardQueryTable' `
+    -CommandText 'let Source = Excel.CurrentWorkbook(){[Name="ServiceHealth"]}[Content] in Source' `
+    -Description 'Refresh metadata for Excel-compatible applications; PSWriteOffice does not execute Power Query.' `
+    -RefreshOnOpen `
+    -PassThru | Out-Null
+
+$doctor = Test-OfficeExcelWorkbook -Path $path -SkipOpenXmlValidation
+$accessibility = Test-OfficeExcelAccessibility -Path $path
+$streaming = Get-OfficeExcelStreamingContract -Path $path
+$commentAudit = Get-OfficeExcelCommentAudit -Path $path -IncludeComments
+$dataModel = Get-OfficeExcelDataModel -Path $path
+$repair = Repair-OfficeExcelWorkbook -Path $path -PassThru
 $summary = Get-OfficeExcelSummary -Path $path
+
 Write-Host "Workbook saved to $path"
 Write-Host "Workbook summary: $($summary.SheetCount) sheets, $($summary.TableCount) tables, $($summary.ChartCount) charts, $($summary.HyperlinkCount) links"
+Write-Host "Workbook checks: doctor=$($doctor.Passed), accessibility=$($accessibility.Passed), streamingSheets=$($streaming.WorksheetCount), comments=$($commentAudit.CommentCount)/threaded=$($commentAudit.ThreadedCommentCount), queries=$($dataModel.HasDataModelOrQueries), repairActions=$($repair.ActionCount)"

@@ -9,7 +9,11 @@ namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelTabularInputService
 {
-    public static DataTable ToDataTable(IEnumerable<object?> input, string? tableName = null, bool copyExistingTables = true)
+    public static DataTable ToDataTable(
+        IEnumerable<object?> input,
+        string? tableName = null,
+        bool copyExistingTables = true,
+        PowerShellObjectNormalizerOptions? normalizerOptions = null)
     {
         if (input == null)
         {
@@ -96,7 +100,7 @@ internal static class ExcelTabularInputService
             }
         }
 
-        var normalized = PowerShellObjectNormalizer.NormalizeItems(items);
+        var normalized = PowerShellObjectNormalizer.NormalizeItems(items, normalizerOptions);
         return ObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
     }
 
