@@ -92,10 +92,10 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Rtf.Pdf\OfficeIMO.Rtf.Pdf.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
-        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.21" />
+        <PackageReference Include="OfficeIMO.Drawing" Version="1.0.23" />
         <PackageReference Include="OfficeIMO.Word" Version="1.0.68" />
         <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.43" />
-        <PackageReference Include="OfficeIMO.Excel" Version="0.6.47" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.49" />
         <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.42" />
         <PackageReference Include="OfficeIMO.Markdown" Version="0.6.34" />
         <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.34" />
