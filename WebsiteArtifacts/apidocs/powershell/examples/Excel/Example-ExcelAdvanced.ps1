@@ -35,7 +35,7 @@ New-OfficeExcel -Path $path {
         ExcelComment -Cell 'C2' -Text 'Review this value'
 
         if (Test-Path $imagePath) {
-            ExcelImage -Path $imagePath -Cell 'I8' -Width 120 -Height 90 | Out-Null
+            ExcelImage -Path $imagePath -Range 'I8:J12' -Name 'OfficeIMOLogo' -AltText 'OfficeIMO logo' | Out-Null
         }
     }
 
