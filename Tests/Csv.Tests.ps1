@@ -122,6 +122,20 @@ Describe 'CSV cmdlets' {
         $data[1].Value | Should -Be '2'
     }
 
+    It 'supports NoHeader when reading CSV data and documents' {
+        $path = Join-Path $TestDrive 'no-header-read.csv'
+        Set-Content -LiteralPath $path -Value "Alpha,1`nBeta,2" -Encoding UTF8
+
+        $data = Get-OfficeCsvData -Path $path -NoHeader
+        $document = Get-OfficeCsv -Path $path -NoHeader
+
+        $data.Count | Should -Be 2
+        $data[0].Column1 | Should -Be 'Alpha'
+        $data[0].Column2 | Should -Be '1'
+        $document.Header | Should -Be @('Column1', 'Column2')
+        @($document.AsEnumerable()).Count | Should -Be 2
+    }
+
     It 'generates missing header names and tolerates uneven rows by default' {
         $path = Join-Path $TestDrive 'uneven.csv'
         Set-Content -LiteralPath $path -Value "Name,,Value`nAlpha,Ignored`nBeta,Ignored,2,Extra" -Encoding UTF8
@@ -228,5 +242,20 @@ Describe 'CSV cmdlets' {
             ConvertTo-OfficeCsv
 
         $csvText | Should -Match '"Alpha",""'
+    }
+
+    It 'supports NoHeader when converting and exporting CSV' {
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+        $path = Join-Path $TestDrive 'no-header-export.csv'
+
+        $csvText = $rows | ConvertTo-OfficeCsv -NoHeader
+        $rows | Export-OfficeCsv -Path $path -NoHeader
+
+        $csvText | Should -Not -Match 'Name'
+        $csvText | Should -Match '"Alpha","1"'
+        (Get-Content -LiteralPath $path -Raw) | Should -Not -Match 'Name'
     }
 }

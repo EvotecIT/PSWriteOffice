@@ -29,7 +29,7 @@ namespace PSWriteOffice.Cmdlets.Csv;
 /// <example>
 ///   <summary>Write CSV without headers.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$csv = $data | ConvertTo-OfficeCsv -IncludeHeader:$false</code>
+///   <code>$csv = $data | ConvertTo-OfficeCsv -NoHeader</code>
 ///   <para>Writes rows only when a downstream system expects headerless CSV.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficeCsv", DefaultParameterSetName = ParameterSetInputObjectDelimiter)]
@@ -77,6 +77,10 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     /// <summary>Include the header row in the output.</summary>
     [Parameter]
     public bool IncludeHeader { get; set; } = true;
+
+    /// <summary>Omit the header row from the output.</summary>
+    [Parameter]
+    public SwitchParameter NoHeader { get; set; }
 
     /// <summary>Override the newline sequence.</summary>
     [Parameter]
@@ -169,7 +173,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         var options = new CsvSaveOptions
         {
             Delimiter = Delimiter,
-            IncludeHeader = IncludeHeader,
+            IncludeHeader = IncludeHeader && !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
             FormulaInjectionPolicy = FormulaInjectionPolicy,

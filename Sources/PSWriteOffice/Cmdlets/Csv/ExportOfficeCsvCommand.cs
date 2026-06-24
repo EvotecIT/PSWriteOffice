@@ -78,6 +78,10 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public bool IncludeHeader { get; set; } = true;
 
+    /// <summary>Omit the header row from the output.</summary>
+    [Parameter]
+    public SwitchParameter NoHeader { get; set; }
+
     /// <summary>Override the newline sequence.</summary>
     [Parameter]
     public string? NewLine { get; set; }
@@ -267,7 +271,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         var options = new CsvSaveOptions
         {
             Delimiter = Delimiter,
-            IncludeHeader = IncludeHeader,
+            IncludeHeader = IncludeHeader && !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
             FormulaInjectionPolicy = FormulaInjectionPolicy,

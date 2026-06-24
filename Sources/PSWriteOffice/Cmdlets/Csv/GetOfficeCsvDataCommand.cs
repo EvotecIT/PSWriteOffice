@@ -25,7 +25,7 @@ namespace PSWriteOffice.Cmdlets.Csv;
 /// <example>
 ///   <summary>Read semicolon-delimited data without headers.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeCsvData -Path .\data.csv -Delimiter ';' -HasHeaderRow:$false</code>
+///   <code>Get-OfficeCsvData -Path .\data.csv -Delimiter ';' -NoHeader</code>
 ///   <para>Reads CSV files that lack a header row and use a custom delimiter.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeCsvData", DefaultParameterSetName = ParameterSetPathDelimiter)]
@@ -66,6 +66,15 @@ public sealed class GetOfficeCsvDataCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public bool HasHeaderRow { get; set; } = true;
+
+    /// <summary>Treat the first record as data and generate default column names.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
+    public SwitchParameter NoHeader { get; set; }
 
     /// <summary>Explicit header names to use; when provided, the first CSV record is treated as data.</summary>
     [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
@@ -201,7 +210,7 @@ public sealed class GetOfficeCsvDataCommand : PSCmdlet
 
             var options = new CsvLoadOptions
             {
-                HasHeaderRow = HasHeaderRow,
+                HasHeaderRow = Header is null && !NoHeader.IsPresent && HasHeaderRow,
                 Header = Header,
                 Delimiter = Delimiter,
                 DetectDelimiter = DetectDelimiter.IsPresent,
