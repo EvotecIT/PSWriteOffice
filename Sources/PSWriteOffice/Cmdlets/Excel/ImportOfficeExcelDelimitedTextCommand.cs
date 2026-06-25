@@ -53,6 +53,10 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
     /// <summary>Treat the first row as data.</summary>
     [Parameter]
     public SwitchParameter NoHeader { get; set; }
+    /// <summary>Number of parsed delimited records to skip before header discovery or data import.</summary>
+    [Parameter]
+    [ValidateRange(0, int.MaxValue)]
+    public int SkipRows { get; set; }
     /// <summary>Import rows without creating an Excel table.</summary>
     [Parameter]
     public SwitchParameter NoTable { get; set; }
@@ -83,6 +87,7 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
             Delimiter = Delimiter,
             SheetName = SheetName,
             HeadersInFirstRow = !NoHeader.IsPresent,
+            SkipInitialRecords = SkipRows,
             CreateTable = !NoTable.IsPresent,
             ConvertNumbersAndDates = !NoTypeConversion.IsPresent,
             Culture = string.IsNullOrWhiteSpace(CultureName) ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(CultureName!)

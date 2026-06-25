@@ -70,6 +70,11 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [Parameter]
     public string[]? Header { get; set; }
 
+    /// <summary>Number of parsed CSV records to skip before header discovery or data output.</summary>
+    [Parameter]
+    [ValidateRange(0, int.MaxValue)]
+    public int SkipRows { get; set; }
+
     /// <summary>Field delimiter character.</summary>
     [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
@@ -157,6 +162,7 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
         {
             HasHeaderRow = Header is null && !NoHeader.IsPresent,
             Header = Header,
+            SkipInitialRecords = SkipRows,
             Delimiter = Delimiter,
             DetectDelimiter = DetectDelimiter.IsPresent,
             DelimiterCandidates = DelimiterCandidates,
