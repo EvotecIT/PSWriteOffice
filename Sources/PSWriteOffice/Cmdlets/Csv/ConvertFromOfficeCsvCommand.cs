@@ -142,7 +142,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
             return;
         }
 
-        _rowWriter.WriteDocumentRows(CsvDocument.Parse(csvText, options), _asHashtable, WriteObject);
+        _rowWriter.WriteDocumentRows(CsvDocument.Parse(csvText, options), _asHashtable, this);
     }
 
     private void ApplyCultureDelimiter()
@@ -191,6 +191,6 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
 
     private void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row)
     {
-        _rowWriter.WriteRow(header, row, _asHashtable, WriteObject);
+        _rowWriter.WriteRow(header, row, _asHashtable, this);
     }
 }

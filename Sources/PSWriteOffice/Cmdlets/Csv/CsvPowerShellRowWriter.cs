@@ -18,7 +18,7 @@ internal sealed class CsvPowerShellRowWriter
         _prevalidatedOutputProperties = false;
     }
 
-    public void WriteDocumentRows(CsvDocument document, bool asHashtable, Action<object?> writeObject)
+    public void WriteDocumentRows(CsvDocument document, bool asHashtable, PSCmdlet cmdlet)
     {
         var header = document.Header;
         foreach (var row in document.AsEnumerable())
@@ -31,7 +31,7 @@ internal sealed class CsvPowerShellRowWriter
                     rowValues.Add(header[i], row[i]);
                 }
 
-                writeObject(rowValues);
+                cmdlet.WriteObject(rowValues);
                 continue;
             }
 
@@ -44,37 +44,87 @@ internal sealed class CsvPowerShellRowWriter
                 psObj.Properties.Add(new PSNoteProperty(outputHeader[i], row[i]), prevalidated);
             }
 
-            writeObject(psObj);
+            cmdlet.WriteObject(psObj);
         }
     }
 
-    public void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row, bool asHashtable, Action<object?> writeObject)
+    public void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row, bool asHashtable, PSCmdlet cmdlet)
     {
-        var headerCount = header.Count;
+        var outputHeader = GetOutputHeader(header);
+        var headerCount = outputHeader.Length;
         var rowCount = row.Count;
         var valueCount = rowCount < headerCount ? rowCount : headerCount;
 
         if (asHashtable)
         {
             var rowValues = new Dictionary<string, object?>(valueCount, StringComparer.OrdinalIgnoreCase);
-            for (var i = 0; i < valueCount; i++)
-            {
-                rowValues.Add(header[i], row[i]);
-            }
+            AddHashtableValues(rowValues, outputHeader, row, valueCount);
 
-            writeObject(rowValues);
+            cmdlet.WriteObject(rowValues);
             return;
         }
 
-        var outputHeader = GetOutputHeader(header);
         var psObj = PowerShellObjectFactory.Create(valueCount);
         var prevalidated = _prevalidatedOutputProperties;
-        for (var i = 0; i < valueCount; i++)
+        AddNoteProperties(psObj, outputHeader, row, valueCount, prevalidated);
+
+        cmdlet.WriteObject(psObj);
+    }
+
+    private static void AddHashtableValues(Dictionary<string, object?> rowValues, string[] header, IReadOnlyList<string> row, int valueCount)
+    {
+        if (row is List<string> list)
         {
-            psObj.Properties.Add(new PSNoteProperty(outputHeader[i], row[i]), prevalidated);
+            for (var i = 0; i < valueCount; i++)
+            {
+                rowValues.Add(header[i], list[i]);
+            }
+
+            return;
         }
 
-        writeObject(psObj);
+        if (row is string[] array)
+        {
+            for (var i = 0; i < valueCount; i++)
+            {
+                rowValues.Add(header[i], array[i]);
+            }
+
+            return;
+        }
+
+        for (var i = 0; i < valueCount; i++)
+        {
+            rowValues.Add(header[i], row[i]);
+        }
+    }
+
+    private static void AddNoteProperties(PSObject psObj, string[] header, IReadOnlyList<string> row, int valueCount, bool prevalidated)
+    {
+        if (row is List<string> list)
+        {
+            for (var i = 0; i < valueCount; i++)
+            {
+                psObj.Properties.Add(new PSNoteProperty(header[i], list[i]), prevalidated);
+            }
+
+            return;
+        }
+
+        if (row is string[] array)
+        {
+            for (var i = 0; i < valueCount; i++)
+            {
+                psObj.Properties.Add(new PSNoteProperty(header[i], array[i]), prevalidated);
+            }
+
+            return;
+        }
+
+        for (var i = 0; i < valueCount; i++)
+        {
+            psObj.Properties.Add(new PSNoteProperty(header[i], row[i]), prevalidated);
+        }
     }
 
     private string[] GetOutputHeader(IReadOnlyList<string> header)

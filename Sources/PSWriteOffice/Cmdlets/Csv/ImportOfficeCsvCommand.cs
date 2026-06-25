@@ -239,7 +239,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteDocumentRows(CsvDocument document)
     {
-        _rowWriter.WriteDocumentRows(document, _asHashtable, WriteObject);
+        _rowWriter.WriteDocumentRows(document, _asHashtable, this);
     }
 
     private void ApplyCultureDelimiter()
@@ -326,6 +326,6 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row)
     {
-        _rowWriter.WriteRow(header, row, _asHashtable, WriteObject);
+        _rowWriter.WriteRow(header, row, _asHashtable, this);
     }
 }
