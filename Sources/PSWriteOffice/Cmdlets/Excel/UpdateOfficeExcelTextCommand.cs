@@ -84,6 +84,12 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
         var replacements = 0;
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
         var document = workbook.Document;
+        if (ParameterSetName != ParameterSetPath &&
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, document, null, "Update Excel workbook text"))
+        {
+            return;
+        }
+
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
             replacements += ReplaceInSheet(document, sheet);

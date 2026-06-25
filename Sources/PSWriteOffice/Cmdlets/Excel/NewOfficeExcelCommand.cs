@@ -138,9 +138,12 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
-        if (!NoSave.IsPresent)
+        if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath))
         {
-            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Write new Excel workbook"))
+            var action = NoSave.IsPresent
+                ? "Create Excel workbook from template"
+                : "Write new Excel workbook";
+            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, action))
             {
                 return;
             }

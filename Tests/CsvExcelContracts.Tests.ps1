@@ -29,6 +29,32 @@ Describe 'CSV and Excel mutation contracts' {
         Test-Path -LiteralPath $path | Should -BeFalse
     }
 
+    It 'does not copy an Excel template when New-OfficeExcel NoSave is invoked with WhatIf' {
+        $template = Join-Path $TestDrive 'template.xlsx'
+        $target = Join-Path $TestDrive 'target.xlsx'
+        New-OfficeExcel -Path $template {
+            ExcelSheet -Name Data {
+                ExcelCell -Address A1 -Value 'Template'
+            }
+        }
+
+        New-OfficeExcel -TemplatePath $template -Path $target -NoSave -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $target | Should -BeFalse
+    }
+
+    It 'does not copy a Word template when New-OfficeWord is invoked with WhatIf' {
+        $template = Join-Path $TestDrive 'template.docx'
+        $target = Join-Path $TestDrive 'target.docx'
+        New-OfficeWord -Path $template {
+            WordParagraph -Text 'Template'
+        }
+
+        New-OfficeWord -TemplatePath $template -Path $target -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $target | Should -BeFalse
+    }
+
     It 'imports a CSV source into a new Excel workbook' {
         $csv = Join-Path $TestDrive 'source.csv'
         $xlsx = Join-Path $TestDrive 'created.xlsx'

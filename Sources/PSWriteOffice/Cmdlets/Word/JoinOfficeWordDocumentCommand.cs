@@ -91,7 +91,13 @@ public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(saveTarget) && !ShouldProcess(saveTarget, "Write joined Word document"))
+            var processTarget = !string.IsNullOrWhiteSpace(saveTarget)
+                ? saveTarget!
+                : document.FilePath ?? "Word document";
+            var processAction = !string.IsNullOrWhiteSpace(saveTarget)
+                ? "Write joined Word document"
+                : "Join Word documents";
+            if (!ShouldProcess(processTarget, processAction))
             {
                 return;
             }

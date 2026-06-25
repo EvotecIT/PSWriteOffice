@@ -10,6 +10,8 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
     private readonly PSCmdlet _cmdlet;
     private readonly StringBuilder _line = new();
     private bool _pendingCarriageReturn;
+    private bool _inQuotes;
+    private bool _pendingQuoteInQuotedField;
 
     public CsvPowerShellLineWriter(PSCmdlet cmdlet)
     {
@@ -20,17 +22,53 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
 
     public override void Write(char value)
     {
+        if (ResolvePendingQuote(value))
+        {
+            return;
+        }
+
         if (_pendingCarriageReturn)
         {
             if (value == '\n')
             {
-                EmitLine();
+                if (_inQuotes)
+                {
+                    _line.Append("\r\n");
+                }
+                else
+                {
+                    EmitLine();
+                }
+
                 _pendingCarriageReturn = false;
                 return;
             }
 
-            EmitLine();
+            if (_inQuotes)
+            {
+                _line.Append('\r');
+            }
+            else
+            {
+                EmitLine();
+            }
+
             _pendingCarriageReturn = false;
+        }
+
+        if (value == '"')
+        {
+            _line.Append(value);
+            if (_inQuotes)
+            {
+                _pendingQuoteInQuotedField = true;
+            }
+            else
+            {
+                _inQuotes = true;
+            }
+
+            return;
         }
 
         if (value == '\r')
@@ -41,7 +79,15 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
 
         if (value == '\n')
         {
-            EmitLine();
+            if (_inQuotes)
+            {
+                _line.Append(value);
+            }
+            else
+            {
+                EmitLine();
+            }
+
             return;
         }
 
@@ -82,7 +128,15 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
         {
             if (_pendingCarriageReturn)
             {
-                EmitLine();
+                if (_inQuotes)
+                {
+                    _line.Append('\r');
+                }
+                else
+                {
+                    EmitLine();
+                }
+
                 _pendingCarriageReturn = false;
             }
 
@@ -99,5 +153,25 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
     {
         _cmdlet.WriteObject(_line.ToString());
         _line.Clear();
+        _inQuotes = false;
+        _pendingQuoteInQuotedField = false;
+    }
+
+    private bool ResolvePendingQuote(char value)
+    {
+        if (!_pendingQuoteInQuotedField)
+        {
+            return false;
+        }
+
+        _pendingQuoteInQuotedField = false;
+        if (value == '"')
+        {
+            _line.Append(value);
+            return true;
+        }
+
+        _inQuotes = false;
+        return false;
     }
 }

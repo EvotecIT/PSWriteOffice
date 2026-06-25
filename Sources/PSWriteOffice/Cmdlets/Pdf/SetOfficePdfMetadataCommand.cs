@@ -98,6 +98,11 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
         }
 
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
+        if (!ShouldProcess("PDF document", "Set PDF metadata"))
+        {
+            return;
+        }
+
         document.Meta(Title, Author, Subject, Keywords);
         if (PassThru.IsPresent)
         {

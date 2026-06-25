@@ -316,6 +316,10 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         _appendHeader = _appendToExistingFile && !NoHeader.IsPresent
             ? ReadAppendHeader(_resolvedPath)
             : null;
+        if (_appendToExistingFile)
+        {
+            EnsureAppendStartsOnNewRecord(_resolvedPath);
+        }
 
         return true;
     }
@@ -392,6 +396,27 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         var mode = append ? FileMode.Append : FileMode.Create;
         var stream = new FileStream(_resolvedPath!, mode, FileAccess.Write, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
         return new StreamWriter(stream, encoding, bufferSize: StreamWriterBufferSize);
+    }
+
+    private void EnsureAppendStartsOnNewRecord(string path)
+    {
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
+        if (stream.Length == 0)
+        {
+            return;
+        }
+
+        stream.Position = stream.Length - 1;
+        var lastByte = stream.ReadByte();
+        if (lastByte == '\n' || lastByte == '\r')
+        {
+            return;
+        }
+
+        stream.Position = stream.Length;
+        var encoding = (Encoding ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        var newLineBytes = encoding.GetBytes(CreateSaveOptions().NewLine);
+        stream.Write(newLineBytes, 0, newLineBytes.Length);
     }
 
     private string[] ReadAppendHeader(string path)

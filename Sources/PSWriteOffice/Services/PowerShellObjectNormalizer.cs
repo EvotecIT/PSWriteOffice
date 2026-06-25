@@ -507,7 +507,7 @@ internal static class PowerShellObjectNormalizer
         {
             Properties = properties;
             var columnNames = new string[properties.Count];
-            var propertiesByName = new Dictionary<string, PropertyInfo>(properties.Count, StringComparer.Ordinal);
+            var propertiesByName = new Dictionary<string, PropertyInfo>(properties.Count, StringComparer.OrdinalIgnoreCase);
             for (var i = 0; i < properties.Count; i++)
             {
                 var property = properties[i];

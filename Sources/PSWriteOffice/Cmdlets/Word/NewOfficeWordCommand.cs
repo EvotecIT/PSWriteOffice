@@ -74,9 +74,12 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var fullPath = GetResolvedPath();
-        if (!NoSave.IsPresent && Content != null)
+        if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath))
         {
-            if (!PdfCommandUtilities.ShouldWrite(this, fullPath, "Write new Word document"))
+            var action = NoSave.IsPresent
+                ? "Create Word document from template"
+                : "Write new Word document";
+            if (!PdfCommandUtilities.ShouldWrite(this, fullPath, action))
             {
                 return;
             }

@@ -108,6 +108,45 @@ Describe 'CSV cmdlets' {
         $data[1].Value | Should -Be '2'
     }
 
+    It 'starts appended rows on a new record when the existing file has no trailing newline' {
+        $path = Join-Path $TestDrive 'append-no-newline.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -NoNewline -Encoding UTF8
+
+        [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+            Export-OfficeCsv -Path $path -Append
+
+        $raw = Get-Content -LiteralPath $path -Raw
+        $raw | Should -Match "Alpha,1(`r`n|`n|`r)Beta,2"
+        $data = @(Import-OfficeCsv -Path $path)
+        $data.Count | Should -Be 2
+        $data[1].Name | Should -Be 'Beta'
+    }
+
+    It 'appends CLR object rows using existing header casing insensitively' {
+        $path = Join-Path $TestDrive 'append-clr-case.csv'
+        Set-Content -LiteralPath $path -Value "name,value`nAlpha,1" -Encoding UTF8
+        $type = 'PSWriteOffice.Tests.CsvAppendCaseRow' -as [type]
+        if (-not $type) {
+            Add-Type -TypeDefinition @'
+namespace PSWriteOffice.Tests {
+    public sealed class CsvAppendCaseRow {
+        public string Name { get; set; }
+        public int Value { get; set; }
+    }
+}
+'@
+            $type = 'PSWriteOffice.Tests.CsvAppendCaseRow' -as [type]
+        }
+
+        $row = [Activator]::CreateInstance($type)
+        $row.Name = 'Beta'
+        $row.Value = 2
+
+        $row | Export-OfficeCsv -Path $path -Append
+
+        Get-Content -LiteralPath $path | Should -Be @('name,value', 'Alpha,1', 'Beta,2')
+    }
+
     It 'requires existing append columns unless Force is specified' {
         $path = Join-Path $TestDrive 'append-force.csv'
         [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
@@ -442,6 +481,15 @@ Describe 'CSV cmdlets' {
         $roundTrip.Count | Should -Be 2
         $roundTrip[1].Name | Should -Be 'Beta'
         $roundTrip[1].Value | Should -Be '2'
+    }
+
+    It 'keeps quoted embedded newlines inside one ConvertTo-OfficeCsv record object' {
+        $csvLines = @([pscustomobject]@{ Name = 'Alpha'; Note = "one`ntwo" } | ConvertTo-OfficeCsv)
+
+        $csvLines.Count | Should -Be 2
+        $csvLines[0] | Should -Be 'Name,Note'
+        $csvLines[1] | Should -Be "Alpha,`"one`ntwo`""
+        @($csvLines | ConvertFrom-OfficeCsv)[0].Note | Should -Be "one`ntwo"
     }
 
     It 'lets QuoteFields compose with UseQuotes' {
