@@ -68,7 +68,6 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory);
-        Directory.CreateDirectory(outputDirectory);
         var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
         var outputs = CreateOutputs(document);
         foreach (var output in outputs)
@@ -79,6 +78,7 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
                 continue;
             }
 
+            PdfCommandUtilities.EnsureOutputDirectory(outputDirectory);
             output.Document.Save(outputPath);
             WriteObject(new FileInfo(outputPath));
         }

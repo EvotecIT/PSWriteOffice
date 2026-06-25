@@ -122,6 +122,17 @@ Describe 'CSV cmdlets' {
         $data[1].Name | Should -Be 'Beta'
     }
 
+    It 'reuses existing header order when appending without writing a header' {
+        $path = Join-Path $TestDrive 'append-no-header-existing-header.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        [pscustomobject]@{ Value = 2; Name = 'Beta' } |
+            Export-OfficeCsv -Path $path -Append -NoHeader
+
+        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
+    }
+
     It 'appends CLR object rows using existing header casing insensitively' {
         $path = Join-Path $TestDrive 'append-clr-case.csv'
         Set-Content -LiteralPath $path -Value "name,value`nAlpha,1" -Encoding UTF8
@@ -164,6 +175,19 @@ namespace PSWriteOffice.Tests {
         $data.Count | Should -Be 2
         $data[1].Name | Should -Be 'Beta'
         $data[1].Value | Should -Be ''
+    }
+
+    It 'validates every appended row against existing columns unless Force is specified' {
+        $path = Join-Path $TestDrive 'append-validate-every-row.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        {
+            @(
+                [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+                [pscustomobject]@{ Name = 'Gamma' }
+            ) | Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*missing*Value*'
     }
 
     It 'appends CSV documents without writing duplicate headers' {

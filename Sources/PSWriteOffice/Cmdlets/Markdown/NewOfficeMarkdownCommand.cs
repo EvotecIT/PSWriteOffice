@@ -171,6 +171,11 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var fullPath = GetResolvedPath();
+        if (!NoSave.IsPresent && !PdfCommandUtilities.ShouldWrite(this, fullPath, "Write new Markdown document"))
+        {
+            return;
+        }
+
         var document = MarkdownDoc.Create();
         if (Content != null)
         {
@@ -183,11 +188,6 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
         if (NoSave.IsPresent)
         {
             WriteObject(document);
-            return;
-        }
-
-        if (!PdfCommandUtilities.ShouldWrite(this, fullPath, "Write new Markdown document"))
-        {
             return;
         }
 

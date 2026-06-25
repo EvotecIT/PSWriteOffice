@@ -249,7 +249,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
             if (_appendHeader is { Length: > 0 })
             {
-                _objectProjector.UseColumns(_appendHeader, validateFirstRowColumns: !Force.IsPresent);
+                _objectProjector.UseColumns(_appendHeader, validateColumns: !Force.IsPresent);
             }
         }
 
@@ -313,7 +313,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         }
 
         _appendToExistingFile = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
-        _appendHeader = _appendToExistingFile && !NoHeader.IsPresent
+        _appendHeader = _appendToExistingFile
             ? ReadAppendHeader(_resolvedPath)
             : null;
         if (_appendToExistingFile)

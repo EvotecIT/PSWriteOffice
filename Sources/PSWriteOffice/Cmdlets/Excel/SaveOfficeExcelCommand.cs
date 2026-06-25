@@ -92,8 +92,6 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             throw new PSInvalidOperationException("No file path provided. Use -Path or open the workbook from disk.");
         }
 
-        ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
-
         var saveOptions = ExcelDocumentService.CreateSaveOptions(
             SafePreflight.IsPresent,
             SafeRepairDefinedNames.IsPresent,
@@ -112,6 +110,7 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
                 return;
             }
 
+            ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
             if (!string.IsNullOrEmpty(Password))
             {
                 OfficeEncryptedPackageService.SaveExcel(Document, resolvedPath, Password!, false, saveOptions);
@@ -133,6 +132,7 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
                 return;
             }
 
+            ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
             if (!string.IsNullOrEmpty(Password))
             {
                 OfficeEncryptedPackageService.SaveExcel(Document, Document.FilePath!, Password!, false, saveOptions);

@@ -279,6 +279,22 @@ Describe 'Excel DSL surface' {
         $summary.DateSystem | Should -Be '1900'
     }
 
+    It 'does not mutate the in-memory date system when Save-OfficeExcel is invoked with WhatIf' {
+        $path = Join-Path $TestDrive 'SaveOfficeExcelDateSystemWhatIf.xlsx'
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data'
+        }
+
+        $document = Get-OfficeExcel -Path $path
+        try {
+            $before = $document.DateSystem
+            $document | Save-OfficeExcel -DateSystem 1904 -WhatIf
+            $document.DateSystem | Should -Be $before
+        } finally {
+            $document | Close-OfficeExcel
+        }
+    }
+
     It 'sets workbook theme metadata through the thin command surface' {
         $path = Join-Path $TestDrive 'DslExcelTheme.xlsx'
 

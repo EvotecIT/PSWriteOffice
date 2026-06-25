@@ -151,6 +151,19 @@ Describe 'Markdown cmdlets' {
         [System.IO.File]::ReadAllText($path) | Should -Be ''
     }
 
+    It 'does not run the Markdown DSL when WhatIf skips saving' {
+        $path = Join-Path $TestDrive 'MarkdownWhatIf.md'
+        $script:MarkdownWhatIfDslRan = $false
+
+        New-OfficeMarkdown -Path $path -WhatIf {
+            $script:MarkdownWhatIfDslRan = $true
+            MarkdownParagraph -Text 'Should not run'
+        } | Out-Null
+
+        $script:MarkdownWhatIfDslRan | Should -BeFalse
+        Test-Path -LiteralPath $path | Should -BeFalse
+    }
+
     It 'supports transposed Markdown tables' {
         $path = Join-Path $TestDrive 'MarkdownTransposedTable.md'
         $rows = @(

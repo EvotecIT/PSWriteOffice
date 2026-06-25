@@ -10,16 +10,16 @@ internal sealed class CsvPowerShellObjectProjector
 {
     private string[]? _columns;
     private object?[]? _values;
-    private bool _validateFirstRowColumns;
+    private bool _validateColumns;
 
     public void Reset()
     {
         _columns = null;
         _values = null;
-        _validateFirstRowColumns = false;
+        _validateColumns = false;
     }
 
-    public void UseColumns(IReadOnlyList<string> columns, bool validateFirstRowColumns)
+    public void UseColumns(IReadOnlyList<string> columns, bool validateColumns)
     {
         if (columns == null)
         {
@@ -28,7 +28,7 @@ internal sealed class CsvPowerShellObjectProjector
 
         _columns = columns.ToArray();
         _values = new object?[_columns.Length];
-        _validateFirstRowColumns = validateFirstRowColumns;
+        _validateColumns = validateColumns;
     }
 
     public void WriteObject(object? value, CsvObjectWriter writer)
@@ -54,10 +54,9 @@ internal sealed class CsvPowerShellObjectProjector
 
     private bool TryProjectIntoExistingColumns(object? value, string[] columns, object?[] values)
     {
-        if (_validateFirstRowColumns)
+        if (_validateColumns)
         {
             ValidateFirstRowColumns(value, columns);
-            _validateFirstRowColumns = false;
         }
 
         return PowerShellObjectNormalizer.TryProjectItemInto(value, columns, values);
