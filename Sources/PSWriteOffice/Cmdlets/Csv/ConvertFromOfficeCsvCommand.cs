@@ -112,6 +112,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
+        CsvCommandValidation.EnsureHeaderOptions(NoHeader, Header);
         _asHashtable = AsHashtable.IsPresent;
     }
 

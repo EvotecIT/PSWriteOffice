@@ -147,6 +147,8 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        CsvCommandValidation.EnsureHeaderOptions(NoHeader, Header);
+
         if (UseCulture.IsPresent)
         {
             var separator = (Culture ?? CultureInfo.CurrentCulture).TextInfo.ListSeparator;

@@ -409,6 +409,15 @@ Describe 'CSV cmdlets' {
         } | Should -Throw
     }
 
+    It 'rejects Header and NoHeader together on CSV read surfaces' {
+        $path = Join-Path $TestDrive 'header-noheader.csv'
+        Set-Content -LiteralPath $path -Value "Alpha,1" -Encoding UTF8
+
+        { Import-OfficeCsv -Path $path -Header Name, Value -NoHeader -ErrorAction Stop } | Should -Throw '*Header*NoHeader*'
+        { Get-OfficeCsv -Path $path -Header Name, Value -NoHeader -ErrorAction Stop } | Should -Throw '*Header*NoHeader*'
+        { ConvertFrom-OfficeCsv -Text "Alpha,1" -Header Name, Value -NoHeader -ErrorAction Stop } | Should -Throw '*Header*NoHeader*'
+    }
+
     It 'keeps file-only encoding off text parameter sets' {
         $textSets = (Get-Command Get-OfficeCsv).ParameterSets |
             Where-Object Name -like 'Text*'

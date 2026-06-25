@@ -198,6 +198,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
+        CsvCommandValidation.EnsureHeaderOptions(NoHeader, Header);
         _asHashtable = AsHashtable.IsPresent;
     }
 
