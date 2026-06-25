@@ -34,7 +34,7 @@ Describe 'CSV cmdlets' {
     It 'exposes CSV row import with idiomatic command names' {
         (Get-Command Import-OfficeCsv).CommandType | Should -Be 'Cmdlet'
         (Get-Command Get-OfficeCsvData).ResolvedCommandName | Should -Be 'Import-OfficeCsv'
-        (Get-Command ConvertFrom-OfficeCsv).ResolvedCommandName | Should -Be 'Import-OfficeCsv'
+        (Get-Command ConvertFrom-OfficeCsv).CommandType | Should -Be 'Cmdlet'
     }
 
     It 'converts objects to CSV and reads them back' {
@@ -84,6 +84,7 @@ Describe 'CSV cmdlets' {
         $data = Import-OfficeCsv -Path $path -UseCulture -Culture $culture
 
         $data.Count | Should -Be 1
+        $data[0].GetType().FullName | Should -Be 'System.Management.Automation.PSCustomObject'
         $data[0].Name | Should -Be 'Alpha'
         $data[0].Value | Should -Be '1'
     }
@@ -124,6 +125,16 @@ Describe 'CSV cmdlets' {
         $data[0].Value | Should -Be '1'
         $data[1].Name | Should -Be 'Beta'
         $data[1].Value | Should -Be '2'
+    }
+
+    It 'imports piped file paths as paths rather than CSV text' {
+        $path = Join-Path $TestDrive 'piped-path.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
+
+        $data = $path | Import-OfficeCsv
+
+        $data.Count | Should -Be 1
+        $data[0].Name | Should -Be 'Alpha'
     }
 
     It 'loads CSV documents from literal paths' {
@@ -195,6 +206,13 @@ Describe 'CSV cmdlets' {
         { Import-OfficeCsv -Path $path -ErrorAction Stop } | Should -Throw
     }
 
+    It 'rejects duplicate hashtable headers instead of overwriting values' {
+        $path = Join-Path $TestDrive 'duplicate-hashtable-header.csv'
+        Set-Content -LiteralPath $path -Value "Name,Name`nAlpha,1" -Encoding UTF8
+
+        { Import-OfficeCsv -Path $path -AsHashtable -ErrorAction Stop } | Should -Throw
+    }
+
     It 'supports NoHeader when reading CSV data and documents' {
         $path = Join-Path $TestDrive 'no-header-read.csv'
         Set-Content -LiteralPath $path -Value "Alpha,1`nBeta,2" -Encoding UTF8
@@ -216,6 +234,7 @@ Describe 'CSV cmdlets' {
         $data = Import-OfficeCsv -Path $path
 
         $data.Count | Should -Be 2
+        $data[0].GetType().FullName | Should -Be 'System.Management.Automation.PSCustomObject'
         $data[0].H1 | Should -Be 'Ignored'
         $data[0].Value | Should -Be ''
         $data[1].Value | Should -Be '2'

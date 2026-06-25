@@ -439,6 +439,9 @@ Compares two Excel worksheets or ranges and returns cell-level differences.
 ### [Compare-OfficeExcelWorkbook](Compare-OfficeExcelWorkbook.md)
 Compares two workbooks by sheets, cells, formulas, styles, tables, comments, names, and worksheet metadata.
 
+### [ConvertFrom-OfficeCsv](ConvertFrom-OfficeCsv.md)
+Converts CSV text to PSCustomObjects or dictionaries.
+
 ### [ConvertFrom-OfficeMarkdownHtml](ConvertFrom-OfficeMarkdownHtml.md)
 Converts HTML content to Markdown.
 
