@@ -389,7 +389,9 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     private StreamWriter CreateTextWriter(bool append, CsvSaveOptions options)
     {
         var encoding = options.Encoding ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-        return new StreamWriter(_resolvedPath!, append, encoding, bufferSize: StreamWriterBufferSize);
+        var mode = append ? FileMode.Append : FileMode.Create;
+        var stream = new FileStream(_resolvedPath!, mode, FileAccess.Write, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
+        return new StreamWriter(stream, encoding, bufferSize: StreamWriterBufferSize);
     }
 
     private string[] ReadAppendHeader(string path)
