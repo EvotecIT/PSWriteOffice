@@ -69,6 +69,75 @@ Describe 'CSV cmdlets' {
         Get-Content -Path $path -Raw | Should -Match 'Alpha'
     }
 
+    It 'writes to literal file paths without wildcard expansion' {
+        $path = Join-Path $TestDrive 'literal[export].csv'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -LiteralPath $path
+
+        Test-Path -LiteralPath $path | Should -BeTrue
+        (Import-OfficeCsv -LiteralPath $path)[0].Name | Should -Be 'Alpha'
+    }
+
+    It 'does not overwrite an existing CSV file when NoClobber is specified' {
+        $path = Join-Path $TestDrive 'no-clobber.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nOriginal,1" -Encoding UTF8
+
+        {
+            [pscustomobject]@{ Name = 'New'; Value = 2 } |
+                Export-OfficeCsv -Path $path -NoClobber -ErrorAction Stop
+        } | Should -Throw
+
+        (Import-OfficeCsv -Path $path)[0].Name | Should -Be 'Original'
+    }
+
+    It 'appends object rows using the existing CSV header order' {
+        $path = Join-Path $TestDrive 'append-order.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        [pscustomobject]@{ Value = 2; Name = 'Beta'; Extra = 'Ignored' } |
+            Export-OfficeCsv -Path $path -Append
+
+        $raw = Get-Content -LiteralPath $path
+        $data = Import-OfficeCsv -Path $path
+
+        $raw | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
+        $data.Count | Should -Be 2
+        $data[1].Name | Should -Be 'Beta'
+        $data[1].Value | Should -Be '2'
+    }
+
+    It 'requires existing append columns unless Force is specified' {
+        $path = Join-Path $TestDrive 'append-force.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        {
+            [pscustomobject]@{ Name = 'Beta' } |
+                Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw
+
+        [pscustomobject]@{ Name = 'Beta' } |
+            Export-OfficeCsv -Path $path -Append -Force
+
+        $data = Import-OfficeCsv -Path $path
+        $data.Count | Should -Be 2
+        $data[1].Name | Should -Be 'Beta'
+        $data[1].Value | Should -Be ''
+    }
+
+    It 'appends CSV documents without writing duplicate headers' {
+        $path = Join-Path $TestDrive 'append-document.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        $document = Get-OfficeCsv -Text "Name,Value`nBeta,2"
+        Export-OfficeCsv -Document $document -Path $path -Append
+
+        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
+    }
+
     It 'uses the selected culture list separator when UseCulture is specified' {
         $culture = [System.Globalization.CultureInfo]::GetCultureInfo('pl-PL')
 
