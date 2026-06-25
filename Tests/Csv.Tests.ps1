@@ -43,9 +43,11 @@ Describe 'CSV cmdlets' {
             [pscustomobject]@{ Region = 'EMEA'; Revenue = 200 }
         )
 
-        $csvText = $rows | ConvertTo-OfficeCsv
-        $csvText | Should -Match 'Region'
-        $csvText | Should -Match 'Revenue'
+        $csvText = @($rows | ConvertTo-OfficeCsv)
+        $csvText.Count | Should -Be 3
+        $csvText[0] | Should -Be 'Region,Revenue'
+        $csvText[1] | Should -Be 'NA,100'
+        $csvText[2] | Should -Be 'EMEA,200'
 
         $path = Join-Path $TestDrive 'data.csv'
         $rows | Export-OfficeCsv -Path $path | Out-Null
@@ -73,7 +75,7 @@ Describe 'CSV cmdlets' {
         $csvText = [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
             ConvertTo-OfficeCsv -UseCulture -Culture $culture
 
-        $csvText | Should -Match 'Name;Value'
+        $csvText | Should -Contain 'Name;Value'
     }
 
     It 'uses the selected culture list separator when reading CSV data' {
@@ -332,6 +334,23 @@ Describe 'CSV cmdlets' {
         foreach ($set in $textSets) {
             $set.Parameters.Name | Should -Not -Contain 'Encoding'
         }
+
+        (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'Encoding'
+    }
+
+    It 'streams ConvertTo-OfficeCsv output as CSV records that ConvertFrom-OfficeCsv can read' {
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        $csvLines = @($rows | ConvertTo-OfficeCsv)
+        $roundTrip = $csvLines | ConvertFrom-OfficeCsv
+
+        $csvLines | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
+        $roundTrip.Count | Should -Be 2
+        $roundTrip[1].Name | Should -Be 'Beta'
+        $roundTrip[1].Value | Should -Be '2'
     }
 
     It 'lets QuoteFields compose with UseQuotes' {
@@ -343,8 +362,8 @@ Describe 'CSV cmdlets' {
         [pscustomobject]@{ Name = 'Alpha'; Value = 1; Note = 'plain' } |
             Export-OfficeCsv -Path $path -UseQuotes AsNeeded -QuoteFields Name
 
-        $csvText | Should -Match '"Name",Value,Note'
-        $csvText | Should -Match '"Alpha",1,plain'
+        $csvText | Should -Contain '"Name",Value,Note'
+        $csvText | Should -Contain '"Alpha",1,plain'
         (Get-Content -LiteralPath $path -Raw) | Should -Match '"Alpha",1,plain'
     }
 
@@ -352,7 +371,7 @@ Describe 'CSV cmdlets' {
         $csvText = [pscustomobject]@{ Name = 'Alpha'; Value = '=1+1' } |
             ConvertTo-OfficeCsv -FormulaInjectionPolicy Escape
 
-        $csvText | Should -Match "'=1\+1"
+        ($csvText -join "`n") | Should -Match "'=1\+1"
     }
 
     It 'uses AsNeeded quoting by default and supports PowerShell-style quote policies' {
@@ -363,20 +382,20 @@ Describe 'CSV cmdlets' {
         $never = $row | ConvertTo-OfficeCsv -UseQuotes Never
         $quoteFields = $row | ConvertTo-OfficeCsv -QuoteFields Name, Note
 
-        $default | Should -Match 'Name,Value,Note'
-        $default | Should -Match 'Alpha,"A,B",plain'
-        $always | Should -Match '"Name","Value","Note"'
-        $always | Should -Match '"Alpha","A,B","plain"'
-        $never | Should -Match 'Alpha,A,B,plain'
-        $quoteFields | Should -Match '"Name",Value,"Note"'
-        $quoteFields | Should -Match '"Alpha","A,B","plain"'
+        $default | Should -Contain 'Name,Value,Note'
+        $default | Should -Contain 'Alpha,"A,B",plain'
+        $always | Should -Contain '"Name","Value","Note"'
+        $always | Should -Contain '"Alpha","A,B","plain"'
+        $never | Should -Contain 'Alpha,A,B,plain'
+        $quoteFields | Should -Contain '"Name",Value,"Note"'
+        $quoteFields | Should -Contain '"Alpha","A,B","plain"'
     }
 
     It 'quotes empty values when the quote policy is Always' {
         $csvText = [pscustomobject]@{ Name = 'Alpha'; Value = $null } |
             ConvertTo-OfficeCsv -UseQuotes Always
 
-        $csvText | Should -Match '"Alpha",""'
+        $csvText | Should -Contain '"Alpha",""'
     }
 
     It 'supports NoHeader when converting and exporting CSV' {
@@ -389,8 +408,8 @@ Describe 'CSV cmdlets' {
         $csvText = $rows | ConvertTo-OfficeCsv -NoHeader
         $rows | Export-OfficeCsv -Path $path -NoHeader
 
-        $csvText | Should -Not -Match 'Name'
-        $csvText | Should -Match 'Alpha,1'
+        ($csvText -join "`n") | Should -Not -Match 'Name'
+        $csvText | Should -Contain 'Alpha,1'
         (Get-Content -LiteralPath $path -Raw) | Should -Not -Match 'Name'
     }
 }

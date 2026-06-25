@@ -4,7 +4,6 @@ using System.IO;
 using System.Management.Automation;
 using System.Text;
 using OfficeIMO.CSV;
-using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Csv;
 
@@ -26,14 +25,13 @@ namespace PSWriteOffice.Cmdlets.Csv;
 [OutputType(typeof(FileInfo))]
 public sealed class ExportOfficeCsvCommand : PSCmdlet
 {
-    private const int StreamWriterBufferSize = 64 * 1024;
+    private const int StreamWriterBufferSize = 256 * 1024;
     private const string ParameterSetInputObjectPathDelimiter = "InputObjectPathDelimiter";
     private const string ParameterSetInputObjectPathCulture = "InputObjectPathCulture";
     private const string ParameterSetDocumentPathDelimiter = "DocumentPathDelimiter";
     private const string ParameterSetDocumentPathCulture = "DocumentPathCulture";
     private CsvObjectWriter? _streamingWriter;
-    private string[]? _streamingColumns;
-    private object?[]? _streamingValues;
+    private readonly CsvPowerShellObjectProjector _objectProjector = new();
     private string? _resolvedPath;
     private bool _skipOutput;
     private bool _wroteOutput;
@@ -158,22 +156,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             return;
         }
 
-        if (_streamingColumns != null && _streamingValues != null &&
-            PowerShellObjectNormalizer.TryProjectItemInto(value, _streamingColumns, _streamingValues))
-        {
-            writer.WriteRow(_streamingColumns, _streamingValues);
-            return;
-        }
-
-        if (PowerShellObjectNormalizer.TryProjectItem(value, null, out var columns, out var values))
-        {
-            _streamingColumns = columns;
-            _streamingValues = new object?[columns.Length];
-            writer.WriteRow(_streamingColumns, values);
-            return;
-        }
-
-        writer.WriteObject(PowerShellObjectNormalizer.NormalizeItem(value));
+        _objectProjector.WriteObject(value, writer);
     }
 
     private CsvObjectWriter? EnsureStreamingWriter()
@@ -234,7 +217,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     {
         _streamingWriter?.Dispose();
         _streamingWriter = null;
-        _streamingValues = null;
+        _objectProjector.Reset();
     }
 
     private void WritePassThru()

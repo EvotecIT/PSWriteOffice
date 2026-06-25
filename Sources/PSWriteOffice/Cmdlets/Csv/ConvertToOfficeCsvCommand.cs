@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation;
-using System.Text;
 using OfficeIMO.CSV;
-using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Csv;
 
@@ -40,7 +37,9 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     private const string ParameterSetInputObjectCulture = "InputObjectCulture";
     private const string ParameterSetDocumentDelimiter = "DocumentDelimiter";
     private const string ParameterSetDocumentCulture = "DocumentCulture";
-    private readonly List<object?> _items = new();
+    private readonly CsvPowerShellObjectProjector _objectProjector = new();
+    private CsvPowerShellLineWriter? _lineWriter;
+    private CsvObjectWriter? _csvWriter;
 
     /// <summary>CSV document to serialize.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentDelimiter)]
@@ -74,10 +73,6 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter]
     public CultureInfo? Culture { get; set; }
 
-    /// <summary>Encoding carried into the CSV save options.</summary>
-    [Parameter]
-    public Encoding? Encoding { get; set; }
-
     /// <summary>Controls how formula-like values are written.</summary>
     [Parameter]
     public CsvFormulaInjectionPolicy FormulaInjectionPolicy { get; set; } = CsvFormulaInjectionPolicy.Preserve;
@@ -109,20 +104,13 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             return;
         }
 
-        _items.Add(InputObject);
+        _objectProjector.WriteObject(InputObject, EnsureObjectWriter());
     }
 
     /// <inheritdoc />
     protected override void EndProcessing()
     {
-        if (IsDocumentParameterSet() || _items.Count == 0)
-        {
-            return;
-        }
-
-        var normalized = PowerShellObjectNormalizer.NormalizeItems(_items);
-        var document = CsvDocument.FromObjects(normalized, Delimiter, Culture, Encoding);
-        EmitCsv(document);
+        DisposeObjectWriter();
     }
 
     private void ApplyCultureDelimiter()
@@ -143,7 +131,28 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
     private void EmitCsv(CsvDocument document)
     {
-        WriteObject(document.ToString(CreateSaveOptions()));
+        using var writer = new CsvPowerShellLineWriter(this);
+        writer.Write(document.ToString(CreateSaveOptions()));
+    }
+
+    private CsvObjectWriter EnsureObjectWriter()
+    {
+        if (_csvWriter != null)
+        {
+            return _csvWriter;
+        }
+
+        _lineWriter = new CsvPowerShellLineWriter(this);
+        _csvWriter = new CsvObjectWriter(_lineWriter, CreateSaveOptions());
+        return _csvWriter;
+    }
+
+    private void DisposeObjectWriter()
+    {
+        _csvWriter?.Dispose();
+        _csvWriter = null;
+        _lineWriter = null;
+        _objectProjector.Reset();
     }
 
     private CsvSaveOptions CreateSaveOptions()
@@ -153,7 +162,6 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             Delimiter = Delimiter,
             IncludeHeader = !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
-            Encoding = Encoding,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
             QuoteMode = UseQuotes,
             QuoteFields = QuoteFields
