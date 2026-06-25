@@ -3869,6 +3869,37 @@ Describe 'Excel DSL surface' {
         $row | Export-OfficeExcel -Path $placeholderPath -IncludeUnexportableProperties
         $placeholder = @(Import-OfficeExcel -Path $placeholderPath -WorksheetName 'Sheet1')
         $placeholder[0].Broken | Should -BeLike 'Property export failed:*boom*'
+
+        if (-not ('PSWriteOffice.Tests.ExcelClrProjectionRow' -as [type])) {
+            Add-Type -TypeDefinition @'
+namespace PSWriteOffice.Tests {
+    using System;
+
+    public sealed class ExcelClrProjectionRow {
+        public string Name { get { return "Alpha"; } }
+        public string Broken { get { throw new InvalidOperationException("boom"); } }
+        public string[] Tags { get { return new[] { "one", "two" }; } }
+    }
+}
+'@
+        }
+
+        $clrRow = [PSWriteOffice.Tests.ExcelClrProjectionRow]::new()
+        $clrPath = Join-Path $TestDrive 'ExportOfficeExcelClrProjection.xlsx'
+        $clrRow | Export-OfficeExcel -Path $clrPath -WorksheetName 'Data' -TableName 'Rows'
+        $clrImported = @(Import-OfficeExcel -Path $clrPath -WorksheetName 'Data')
+        $clrImported[0].Name | Should -Be 'Alpha'
+        $clrImported[0].Tags | Should -Be 'one, two'
+        $clrImported[0].PSObject.Properties.Name | Should -Not -Contain 'Broken'
+
+        $clrStrictPath = Join-Path $TestDrive 'ExportOfficeExcelClrProjectionStrict.xlsx'
+        { $clrRow | Export-OfficeExcel -Path $clrStrictPath -PropertyConversionErrorAction Stop -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage "*Unable to read CLR property 'Broken'*"
+
+        $clrPlaceholderPath = Join-Path $TestDrive 'ExportOfficeExcelClrProjectionPlaceholder.xlsx'
+        $clrRow | Export-OfficeExcel -Path $clrPlaceholderPath -IncludeUnexportableProperties
+        $clrPlaceholder = @(Import-OfficeExcel -Path $clrPlaceholderPath -WorksheetName 'Sheet1')
+        $clrPlaceholder[0].Broken | Should -BeLike 'Property export failed:*boom*'
     }
 
     It 'sets category date-axis scale values through the chart axis cmdlet' {

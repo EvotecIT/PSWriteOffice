@@ -108,6 +108,11 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                 throw new InvalidOperationException("Specify -Document, -Path, or run inside New-OfficeWord.");
             }
 
+            if (ParameterSetName != ParameterSetPath && !ShouldProcess(GetDocumentTarget(document), "Update Word document text"))
+            {
+                return;
+            }
+
             var comparison = CaseSensitive.IsPresent ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
             var replacement = NewValue ?? string.Empty;
             var replacements = document.FindAndReplace(OldValue, replacement, comparison);
@@ -132,6 +137,13 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                 WordDocumentService.CloseDocument(document);
             }
         }
+    }
+
+    private static string GetDocumentTarget(WordDocument document)
+    {
+        return !string.IsNullOrWhiteSpace(document.FilePath)
+            ? document.FilePath
+            : "Word document";
     }
 
     private int ReplaceHyperlinks(WordDocument document, string oldValue, string newValue, StringComparison comparison)

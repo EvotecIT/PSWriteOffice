@@ -207,7 +207,7 @@ function Ensure-CsvHelper {
     $globalPackageRoot = if ($env:NUGET_PACKAGES) {
         $env:NUGET_PACKAGES
     } else {
-        Join-Path $HOME '.nuget\packages'
+        Join-Path (Join-Path $HOME '.nuget') 'packages'
     }
 
     $packageFolder = Join-Path $globalPackageRoot ($packageName.ToLowerInvariant())
@@ -261,7 +261,7 @@ function Get-CsvHelperAssemblyPath {
 
     foreach ($versionFolder in $versionFolders) {
         foreach ($framework in $frameworkPreference) {
-            $candidate = Join-Path $versionFolder.FullName "lib\$framework\CsvHelper.dll"
+            $candidate = Join-Path (Join-Path (Join-Path $versionFolder.FullName 'lib') $framework) 'CsvHelper.dll'
             if (Test-Path $candidate) {
                 return $candidate
             }

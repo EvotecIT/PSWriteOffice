@@ -557,6 +557,27 @@ namespace PSWriteOffice.Tests {
         $csvLines | Should -Be @('Name,Note', 'Alpha,a"b', 'Beta,plain')
     }
 
+    It 'normalizes CLR projection values and skips failing CLR getters' {
+        if (-not ('PSWriteOffice.Tests.CsvClrProjectionRow' -as [type])) {
+            Add-Type -TypeDefinition @'
+namespace PSWriteOffice.Tests {
+    using System;
+
+    public sealed class CsvClrProjectionRow {
+        public string Name { get { return "Alpha"; } }
+        public string Broken { get { throw new InvalidOperationException("boom"); } }
+        public string[] Tags { get { return new[] { "one", "two" }; } }
+    }
+}
+'@
+        }
+
+        $row = [PSWriteOffice.Tests.CsvClrProjectionRow]::new()
+        $csvLines = @($row | ConvertTo-OfficeCsv)
+
+        $csvLines | Should -Be @('Name,Tags', 'Alpha,"one, two"')
+    }
+
     It 'lets QuoteFields compose with UseQuotes' {
         $path = Join-Path $TestDrive 'quoted-fields.csv'
 

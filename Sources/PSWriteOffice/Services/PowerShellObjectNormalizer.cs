@@ -81,7 +81,7 @@ internal static class PowerShellObjectNormalizer
 
         if (TryGetClrProjectionPlan(item.GetType(), out var plan))
         {
-            ProjectClrObject(item, plan, columns, out projectedColumns, out values);
+            ProjectClrObject(item, plan, columns, out projectedColumns, out values, options);
             return true;
         }
 
@@ -118,7 +118,7 @@ internal static class PowerShellObjectNormalizer
 
         if (TryGetClrProjectionPlan(item.GetType(), out var plan))
         {
-            ProjectClrObjectInto(item, plan, columns, values);
+            ProjectClrObjectInto(item, plan, columns, values, options);
             return true;
         }
 
@@ -334,17 +334,23 @@ internal static class PowerShellObjectNormalizer
         }
     }
 
-    private static void ProjectClrObject(object item, ClrProjectionPlan plan, string[]? columns, out string[] projectedColumns, out object?[] values)
+    private static void ProjectClrObject(object item, ClrProjectionPlan plan, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
     {
         if (columns == null)
         {
-            projectedColumns = plan.ColumnNames;
-            values = new object?[plan.Properties.Count];
-            for (var i = 0; i < plan.Properties.Count; i++)
+            var names = new List<string>(plan.Properties.Count);
+            var rowValues = new List<object?>(plan.Properties.Count);
+            foreach (var property in plan.Properties)
             {
-                values[i] = plan.Properties[i].GetValue(item);
+                if (TryReadClrProperty(item, property, property.Name, options, out var value))
+                {
+                    names.Add(property.Name);
+                    rowValues.Add(value);
+                }
             }
 
+            projectedColumns = names.ToArray();
+            values = rowValues.ToArray();
             return;
         }
 
@@ -355,20 +361,62 @@ internal static class PowerShellObjectNormalizer
             var property = plan.PropertiesByName.TryGetValue(columns[i], out var candidate)
                 ? candidate
                 : null;
-            values[i] = property?.GetValue(item);
+            if (property == null || !TryReadClrProperty(item, property, columns[i], options, out var value))
+            {
+                values[i] = null;
+                continue;
+            }
+
+            values[i] = value;
         }
     }
 
-    private static void ProjectClrObjectInto(object item, ClrProjectionPlan plan, string[] columns, object?[] values)
+    private static void ProjectClrObjectInto(object item, ClrProjectionPlan plan, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
     {
         for (var i = 0; i < columns.Length; i++)
         {
             var property = plan.PropertiesByName.TryGetValue(columns[i], out var candidate)
                 ? candidate
                 : null;
-            values[i] = property?.GetValue(item);
+            if (property == null || !TryReadClrProperty(item, property, columns[i], options, out var value))
+            {
+                values[i] = null;
+                continue;
+            }
+
+            values[i] = value;
         }
     }
+
+    private static bool TryReadClrProperty(object item, PropertyInfo property, string name, PowerShellObjectNormalizerOptions options, out object? value)
+    {
+        try
+        {
+            value = NormalizeCellValue(property.GetValue(item), options);
+            return true;
+        }
+        catch (Exception exception) when (exception is not PipelineStoppedException)
+        {
+            exception = UnwrapClrPropertyException(exception);
+            if (options.PropertyErrorAction == ActionPreference.Stop)
+            {
+                throw new InvalidOperationException($"Unable to read CLR property '{name}'.", exception);
+            }
+
+            options.PropertyErrorCallback?.Invoke(name, exception);
+            if (options.IncludeUnexportableProperties)
+            {
+                value = options.UnexportablePropertyValueFactory?.Invoke(name, exception) ?? string.Empty;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+    }
+
+    private static Exception UnwrapClrPropertyException(Exception exception) =>
+        exception is TargetInvocationException { InnerException: not null } ? exception.InnerException : exception;
 
     private static object? GetDictionaryValue(IDictionary dictionary, string column)
     {
