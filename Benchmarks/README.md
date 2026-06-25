@@ -99,12 +99,14 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
 Measure CSV write/read and CSV-source-to-workbook conversion:
 
 ```powershell
-pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario csv-write,csv-read,csv-to-excel -RowCount 10000,100000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel,NativeCsv,CsvHelper
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario csv-write,csv-read,csv-read-source,csv-to-excel -RowCount 10000,100000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel,NativeCsv,CsvHelper
 ```
 
 The CsvHelper lane is benchmark-only. It measures the cost of using CsvHelper from the same PowerShell-shaped object workflow as the other CSV lanes, so it is useful for user-facing comparison but should not be read as a pure typed C# CsvHelper microbenchmark.
 
 The NativeCsv write lane uses `Export-Csv -UseQuotes AsNeeded` so it is compared against PSWriteOffice's default compact CSV output instead of PowerShell's legacy quote-every-field default.
+
+Use `csv-read-source` when you want to time only the read path from the same external CSV shape for every engine. The older `csv-read` row remains a follow-up read of each engine's `csv-write` output, which is useful workflow evidence but couples the read measurement to a parent write scenario.
 
 ## Scenario Suites
 

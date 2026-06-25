@@ -750,6 +750,27 @@ function Get-ExcelBenchmarkScenarios {
             param($Context)
             Write-CsvHelperFile -Path $Context.Path -Data $Context.Data
         }
+        New-ExportScenario -Key 'csv-read-source' -Name 'Read external CSV source' -Suites $csvSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-csv-read-source' -FileExtension 'csv' -ValidateWorkbook $false -Setup {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        } -Script {
+            param($Context)
+            Import-OfficeCsv -Path $Context.SourcePath
+        }
+        New-ExportScenario -Key 'csv-read-source' -Name 'Read external CSV source' -Suites $csvSuites -Engine 'NativeCsv' -Profile 'MixedObjects' -FileStem 'nativecsv-csv-read-source' -FileExtension 'csv' -ValidateWorkbook $false -Setup {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        } -Script {
+            param($Context)
+            Import-Csv -Path $Context.SourcePath
+        }
+        New-ExportScenario -Key 'csv-read-source' -Name 'Read external CSV source' -Suites $csvSuites -Engine 'CsvHelper' -Profile 'MixedObjects' -FileStem 'csvhelper-csv-read-source' -FileExtension 'csv' -ValidateWorkbook $false -Setup {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        } -Script {
+            param($Context)
+            Read-CsvHelperFile -Path $Context.SourcePath
+        }
         New-ExportScenario -Key 'csv-to-excel' -Name 'Create workbook from CSV source' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-csv-to-excel' -Setup {
             param($Context)
             $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8
