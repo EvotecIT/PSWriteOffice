@@ -158,6 +158,13 @@ Describe 'CSV cmdlets' {
         $data[1].Value | Should -Be '2'
     }
 
+    It 'rejects duplicate object headers before using the optimized output path' {
+        $path = Join-Path $TestDrive 'duplicate-header.csv'
+        Set-Content -LiteralPath $path -Value "Name,Name`nAlpha,1" -Encoding UTF8
+
+        { Import-OfficeCsv -Path $path -ErrorAction Stop } | Should -Throw
+    }
+
     It 'supports NoHeader when reading CSV data and documents' {
         $path = Join-Path $TestDrive 'no-header-read.csv'
         Set-Content -LiteralPath $path -Value "Alpha,1`nBeta,2" -Encoding UTF8

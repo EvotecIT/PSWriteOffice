@@ -46,6 +46,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private bool _asHashtable;
     private bool _hasTextInput;
     private bool _prevalidatedOutputProperties;
+    private string[]? _outputHeader;
 
     /// <summary>CSV document to read when already loaded.</summary>
     [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -277,6 +278,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
             if (Mode == CsvLoadMode.Stream)
             {
+                ResetOutputHeaderValidation();
                 CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
                 return;
             }
@@ -284,6 +286,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             document = CsvDocument.Load(resolved, options);
         }
 
+        ResetOutputHeaderValidation();
         WriteDocumentRows(document);
     }
 
@@ -302,10 +305,12 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
         if (Mode == CsvLoadMode.Stream)
         {
             using var reader = new StringReader(csvText);
+            ResetOutputHeaderValidation();
             CsvDocument.ReadRowsReusable(reader, WriteRow, options);
             return;
         }
 
+        ResetOutputHeaderValidation();
         WriteDocumentRows(CsvDocument.Parse(csvText, options));
     }
 
@@ -326,13 +331,15 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             }
             else
             {
-                var psObj = new PSObject(header.Count);
-                for (var i = 0; i < header.Count && i < row.FieldCount; i++)
+                var outputHeader = GetOutputHeader(header);
+                var psObj = new PSObject(outputHeader.Length);
+                var valueCount = outputHeader.Length < row.FieldCount ? outputHeader.Length : row.FieldCount;
+                var prevalidated = _prevalidatedOutputProperties;
+                for (var i = 0; i < valueCount; i++)
                 {
-                    psObj.Properties.Add(new PSNoteProperty(header[i], row[i]), _prevalidatedOutputProperties);
+                    psObj.Properties.Add(new PSNoteProperty(outputHeader[i], row[i]), prevalidated);
                 }
 
-                _prevalidatedOutputProperties = true;
                 WriteObject(psObj);
             }
         }
@@ -414,14 +421,52 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             return;
         }
 
-        var psObj = new PSObject(headerCount);
+        var outputHeader = GetOutputHeader(header);
+        var psObj = new PSObject(outputHeader.Length);
         var prevalidated = _prevalidatedOutputProperties;
         for (var i = 0; i < valueCount; i++)
         {
-            psObj.Properties.Add(new PSNoteProperty(header[i], row[i]), prevalidated);
+            psObj.Properties.Add(new PSNoteProperty(outputHeader[i], row[i]), prevalidated);
         }
 
-        _prevalidatedOutputProperties = true;
         WriteObject(psObj);
+    }
+
+    private void ResetOutputHeaderValidation()
+    {
+        _outputHeader = null;
+        _prevalidatedOutputProperties = false;
+    }
+
+    private string[] GetOutputHeader(IReadOnlyList<string> header)
+    {
+        if (_outputHeader is not null)
+        {
+            return _outputHeader;
+        }
+
+        var outputHeader = new string[header.Count];
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var canPrevalidate = true;
+        for (var i = 0; i < header.Count; i++)
+        {
+            var name = header[i] ?? string.Empty;
+            outputHeader[i] = name;
+
+            if (string.IsNullOrEmpty(name))
+            {
+                canPrevalidate = false;
+                continue;
+            }
+
+            if (!seen.Add(name))
+            {
+                throw new ExtendedTypeSystemException($"The member '{name}' is already present.");
+            }
+        }
+
+        _prevalidatedOutputProperties = canPrevalidate;
+        _outputHeader = outputHeader;
+        return outputHeader;
     }
 }
