@@ -95,7 +95,7 @@
         <PackageReference Include="OfficeIMO.Drawing" Version="1.0.23" />
         <PackageReference Include="OfficeIMO.Word" Version="1.0.70" />
         <PackageReference Include="OfficeIMO.Word.Markdown" Version="1.0.45" />
-        <PackageReference Include="OfficeIMO.Excel" Version="0.6.49" />
+        <PackageReference Include="OfficeIMO.Excel" Version="0.6.50" />
         <PackageReference Include="OfficeIMO.PowerPoint" Version="1.0.44" />
         <PackageReference Include="OfficeIMO.Markdown" Version="0.6.36" />
         <PackageReference Include="OfficeIMO.Markdown.Html" Version="0.1.36" />
@@ -105,7 +105,7 @@
         <PackageReference Include="OfficeIMO.Markdown.Pdf" Version="1.0.9" />
         <PackageReference Include="OfficeIMO.Html.Pdf" Version="1.0.7" />
         <PackageReference Include="OfficeIMO.PowerPoint.Pdf" Version="1.0.9" />
-        <PackageReference Include="OfficeIMO.CSV" Version="0.1.49" />
+        <PackageReference Include="OfficeIMO.CSV" Version="0.1.50" />
         <PackageReference Include="OfficeIMO.Word.Html" Version="1.0.43" />
         <PackageReference Include="OfficeIMO.Reader" Version="0.1.44" />
         <PackageReference Include="OfficeIMO.Reader.Pdf" Version="0.0.8" />
