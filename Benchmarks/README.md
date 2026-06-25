@@ -99,12 +99,14 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
 Measure CSV write/read and CSV-source-to-workbook conversion:
 
 ```powershell
-pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario csv-write,csv-read,csv-read-source,csv-to-excel -RowCount 10000,100000 -RepeatCount 3 -Engine PSWriteOffice,ImportExcel,NativeCsv,CsvHelper
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Scenario csv-write,csv-read,csv-read-source,csv-to-excel -RowCount 10000,100000 -Engine PSWriteOffice,ImportExcel,NativeCsv,CsvHelper
 ```
 
 The CsvHelper lane is benchmark-only. It measures the cost of using CsvHelper from the same PowerShell-shaped object workflow as the other CSV lanes, so it is useful for user-facing comparison but should not be read as a pure typed C# CsvHelper microbenchmark.
 
 The NativeCsv write lane uses `Export-Csv -UseQuotes AsNeeded` so it is compared against PSWriteOffice's default compact CSV output instead of PowerShell's legacy quote-every-field default.
+
+CSV read/write microbenchmarks are short enough that three repeats are too noisy. When `-RepeatCount` is not provided, the harness raises CSV read/write scenarios to a suite-specific minimum repeat count (`Smoke` 11, `Standard`/`Full` 51, `Large` 11, `SuperLarge` 3). Explicit `-RepeatCount` values are respected exactly. The effective per-scenario policy is recorded in `metadata.json`.
 
 Use `csv-read-source` when you want to time only the read path from the same external CSV shape for every engine. The older `csv-read` row remains a follow-up read of each engine's `csv-write` output, which is useful workflow evidence but couples the read measurement to a parent write scenario.
 
@@ -128,7 +130,7 @@ Every run writes these files:
 - `excel-performance-comparison.json`: nested comparison data with per-engine rank, timing ratio, file-size ratio, and memory fields.
 - `excel-performance-summary.csv`: median/min/max data grouped by engine and scenario, including median working-set, peak working-set, and managed-memory deltas.
 - `excel-performance-results.csv`: raw per-iteration results, including failures, file size, working-set before/after, peak working set, and managed-memory delta.
-- `metadata.json`: exact module versions including prerelease labels, machine/runtime details, selected suite, engines, filters, module cache paths, and output paths.
+- `metadata.json`: exact module versions including prerelease labels, machine/runtime details, selected suite, engines, filters, repeat policy, module cache paths, and output paths.
 
 For quick reading, start with `excel-performance-comparison.csv`. See
 [Artifact Schema](#artifact-schema) when you need exact column meanings.
@@ -157,8 +159,8 @@ deltas, and workbook-validation pass/fail/skip counts.
 
 `metadata.json` records exact module versions including prerelease labels,
 loaded `OfficeOpenXml` and `OfficeIMO.Excel` assembly versions,
-machine/runtime details, selected engines/scenarios, module cache paths,
-OfficeIMO root, and output paths.
+machine/runtime details, selected engines/scenarios, repeat policy, module
+cache paths, OfficeIMO root, and output paths.
 
 ## Notes
 

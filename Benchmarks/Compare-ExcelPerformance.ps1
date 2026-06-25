@@ -1651,6 +1651,53 @@ if ($RepeatCount -le 0) {
         'SuperLarge' { 1 }
     }
 }
+$repeatCountExplicit = $PSBoundParameters.ContainsKey('RepeatCount') -and [int]$PSBoundParameters['RepeatCount'] -gt 0
+
+function Test-CsvMicroBenchmarkScenario {
+    param([object] $ScenarioObject)
+
+    $key = [string]$ScenarioObject.Key
+    return $key -eq 'csv-read' -or
+        $key -eq 'csv-read-source' -or
+        $key -eq 'csv-write'
+}
+
+function Get-CsvMicroBenchmarkRepeatCount {
+    param(
+        [string] $SuiteName,
+        [int] $BaseRepeatCount
+    )
+
+    $minimum = switch ($SuiteName) {
+        'Smoke' { 11 }
+        'Standard' { 51 }
+        'Full' { 51 }
+        'Large' { 11 }
+        'SuperLarge' { 3 }
+    }
+
+    [math]::Max($BaseRepeatCount, $minimum)
+}
+
+function Get-BenchmarkScenarioIdentity {
+    param([object] $ScenarioObject)
+
+    '{0}|{1}|{2}|{3}' -f $ScenarioObject.Engine, $ScenarioObject.Key, $ScenarioObject.Profile, $ScenarioObject.FileStem
+}
+
+function Get-BenchmarkScenarioRepeatCount {
+    param([object] $ScenarioObject)
+
+    if ($repeatCountExplicit) {
+        return $RepeatCount
+    }
+
+    if (Test-CsvMicroBenchmarkScenario -ScenarioObject $ScenarioObject) {
+        return Get-CsvMicroBenchmarkRepeatCount -SuiteName $Suite -BaseRepeatCount $RepeatCount
+    }
+
+    return $RepeatCount
+}
 
 $allScenarios = @(
     Get-ExcelBenchmarkScenarios |
@@ -1741,11 +1788,27 @@ if ($Engine -contains 'ExcelFast') {
     Import-Module ExcelFast -Force -ErrorAction Stop
 }
 
+$scenarioRepeatCounts = @{}
+foreach ($benchmarkScenario in $selectedScenarios) {
+    $scenarioRepeatCounts[(Get-BenchmarkScenarioIdentity -ScenarioObject $benchmarkScenario)] = Get-BenchmarkScenarioRepeatCount -ScenarioObject $benchmarkScenario
+}
+
+$maxRepeatCount = if ($scenarioRepeatCounts.Count -gt 0) {
+    [int](($scenarioRepeatCounts.Values | Measure-Object -Maximum).Maximum)
+} else {
+    $RepeatCount
+}
+
 $results = [Collections.Generic.List[object]]::new()
 foreach ($rows in $RowCount) {
     $profileCache = @{}
-    for ($iteration = 1; $iteration -le $RepeatCount; $iteration++) {
+    for ($iteration = 1; $iteration -le $maxRepeatCount; $iteration++) {
         foreach ($benchmarkScenario in $selectedScenarios) {
+            $scenarioRepeatCount = [int]$scenarioRepeatCounts[(Get-BenchmarkScenarioIdentity -ScenarioObject $benchmarkScenario)]
+            if ($iteration -gt $scenarioRepeatCount) {
+                continue
+            }
+
             if (-not $profileCache.ContainsKey($benchmarkScenario.Profile)) {
                 $profileCache[$benchmarkScenario.Profile] = Get-BenchmarkData -Profile $benchmarkScenario.Profile -Count $rows
             }
@@ -1889,6 +1952,27 @@ $assemblyDetails = [ordered]@{
     ScenarioFilter = $Scenario
     RowCount = $RowCount
     RepeatCount = $RepeatCount
+    RepeatCountExplicit = $repeatCountExplicit
+    MaxRepeatCount = $maxRepeatCount
+    ScenarioRepeatPolicy = @(
+        $selectedScenarios |
+            Sort-Object Key, Engine, Profile |
+            ForEach-Object {
+                [pscustomobject]@{
+                    Key = $_.Key
+                    Engine = $_.Engine
+                    Profile = $_.Profile
+                    RepeatCount = [int]$scenarioRepeatCounts[(Get-BenchmarkScenarioIdentity -ScenarioObject $_)]
+                    Reason = if (-not $repeatCountExplicit -and (Test-CsvMicroBenchmarkScenario -ScenarioObject $_)) {
+                        'csv microbenchmark default'
+                    } elseif ($repeatCountExplicit) {
+                        'explicit RepeatCount'
+                    } else {
+                        'suite default'
+                    }
+                }
+            }
+    )
     SkipFollowUps = $SkipFollowUps.IsPresent
     SkipWorkbookValidation = $SkipWorkbookValidation.IsPresent
     ScenarioCount = $selectedScenarios.Count
