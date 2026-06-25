@@ -408,6 +408,27 @@ internal static class PowerShellObjectNormalizer
             return value;
         }
 
+        if (value is bool ||
+            value is char ||
+            value is byte ||
+            value is sbyte ||
+            value is short ||
+            value is ushort ||
+            value is int ||
+            value is uint ||
+            value is long ||
+            value is ulong ||
+            value is float ||
+            value is double ||
+            value is decimal ||
+            value is DateTime ||
+            value is DateTimeOffset ||
+            value is TimeSpan ||
+            value is Guid)
+        {
+            return value;
+        }
+
         if (value is IDictionary)
         {
             return value;
