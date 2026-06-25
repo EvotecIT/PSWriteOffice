@@ -40,6 +40,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     private readonly CsvPowerShellObjectProjector _objectProjector = new();
     private string? _resolvedPath;
     private string[]? _appendHeader;
+    private Encoding? _appendEncoding;
     private bool _appendToExistingFile;
     private bool _skipOutput;
     private bool _wroteOutput;
@@ -313,7 +314,10 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         }
 
         _appendToExistingFile = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
-        _appendHeader = _appendToExistingFile
+        _appendEncoding = _appendToExistingFile && Encoding == null
+            ? TryDetectEncodingFromBom(_resolvedPath)
+            : null;
+        _appendHeader = _appendToExistingFile && !NoHeader.IsPresent
             ? ReadAppendHeader(_resolvedPath)
             : null;
         if (_appendToExistingFile)
@@ -329,6 +333,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         _streamingWriter?.Dispose();
         _streamingWriter = null;
         _appendHeader = null;
+        _appendEncoding = null;
         _appendToExistingFile = false;
         _objectProjector.Reset();
     }
@@ -392,11 +397,14 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
     private StreamWriter CreateTextWriter(bool append, CsvSaveOptions options)
     {
-        var encoding = options.Encoding ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+        var encoding = ResolveOutputEncoding(append, options);
         var mode = append ? FileMode.Append : FileMode.Create;
         var stream = new FileStream(_resolvedPath!, mode, FileAccess.Write, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
         return new StreamWriter(stream, encoding, bufferSize: StreamWriterBufferSize);
     }
+
+    private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>
+        options.Encoding ?? (append ? _appendEncoding : null) ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
     private void EnsureAppendStartsOnNewRecord(string path)
     {
@@ -406,15 +414,13 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             return;
         }
 
-        stream.Position = stream.Length - 1;
-        var lastByte = stream.ReadByte();
-        if (lastByte == '\n' || lastByte == '\r')
+        var encoding = ResolveOutputEncoding(append: true, CreateSaveOptions());
+        if (StreamEndsWithNewLine(stream, encoding))
         {
             return;
         }
 
         stream.Position = stream.Length;
-        var encoding = (Encoding ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         var newLineBytes = encoding.GetBytes(CreateSaveOptions().NewLine);
         stream.Write(newLineBytes, 0, newLineBytes.Length);
     }
@@ -424,12 +430,88 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         var options = new CsvLoadOptions
         {
             Delimiter = Delimiter,
-            Encoding = Encoding,
+            Encoding = Encoding ?? _appendEncoding,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Mode = CsvLoadMode.Stream
         };
 
         return CsvDocument.Load(path, options).Header.ToArray();
+    }
+
+    private static Encoding? TryDetectEncodingFromBom(string path)
+    {
+        var bom = new byte[4];
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, bufferSize: 4, FileOptions.SequentialScan);
+        var read = stream.Read(bom, 0, bom.Length);
+        if (read >= 4 && bom[0] == 0xFF && bom[1] == 0xFE && bom[2] == 0x00 && bom[3] == 0x00)
+        {
+            return new UTF32Encoding(bigEndian: false, byteOrderMark: true);
+        }
+
+        if (read >= 4 && bom[0] == 0x00 && bom[1] == 0x00 && bom[2] == 0xFE && bom[3] == 0xFF)
+        {
+            return new UTF32Encoding(bigEndian: true, byteOrderMark: true);
+        }
+
+        if (read >= 3 && bom[0] == 0xEF && bom[1] == 0xBB && bom[2] == 0xBF)
+        {
+            return new UTF8Encoding(encoderShouldEmitUTF8Identifier: true);
+        }
+
+        if (read >= 2 && bom[0] == 0xFF && bom[1] == 0xFE)
+        {
+            return System.Text.Encoding.Unicode;
+        }
+
+        if (read >= 2 && bom[0] == 0xFE && bom[1] == 0xFF)
+        {
+            return System.Text.Encoding.BigEndianUnicode;
+        }
+
+        return null;
+    }
+
+    private static bool StreamEndsWithNewLine(FileStream stream, Encoding encoding)
+    {
+        if (stream.Length == 0)
+        {
+            return false;
+        }
+
+        if (encoding.CodePage == System.Text.Encoding.Unicode.CodePage ||
+            encoding.CodePage == System.Text.Encoding.BigEndianUnicode.CodePage)
+        {
+            return StreamEndsWithEncodedNewLine(stream, encoding, byteCount: 2);
+        }
+
+        if (encoding.CodePage == System.Text.Encoding.UTF32.CodePage ||
+            encoding.CodePage == new UTF32Encoding(bigEndian: true, byteOrderMark: true).CodePage)
+        {
+            return StreamEndsWithEncodedNewLine(stream, encoding, byteCount: 4);
+        }
+
+        stream.Position = stream.Length - 1;
+        var lastByte = stream.ReadByte();
+        return lastByte == '\n' || lastByte == '\r';
+    }
+
+    private static bool StreamEndsWithEncodedNewLine(FileStream stream, Encoding encoding, int byteCount)
+    {
+        if (stream.Length < byteCount)
+        {
+            return false;
+        }
+
+        var buffer = new byte[byteCount];
+        stream.Position = stream.Length - byteCount;
+        var read = stream.Read(buffer, 0, buffer.Length);
+        if (read != buffer.Length)
+        {
+            return false;
+        }
+
+        var value = encoding.GetString(buffer);
+        return value.Length > 0 && (value[value.Length - 1] == '\n' || value[value.Length - 1] == '\r');
     }
 
     private void ValidateDocumentAppendHeader(CsvDocument document, IReadOnlyList<string> appendHeader)

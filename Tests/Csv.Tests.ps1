@@ -122,15 +122,30 @@ Describe 'CSV cmdlets' {
         $data[1].Name | Should -Be 'Beta'
     }
 
-    It 'reuses existing header order when appending without writing a header' {
-        $path = Join-Path $TestDrive 'append-no-header-existing-header.csv'
+    It 'does not infer headers when appending to a headerless CSV' {
+        $path = Join-Path $TestDrive 'append-headerless.csv'
         [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
-            Export-OfficeCsv -Path $path
+            Export-OfficeCsv -Path $path -NoHeader
 
-        [pscustomobject]@{ Value = 2; Name = 'Beta' } |
+        [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
             Export-OfficeCsv -Path $path -Append -NoHeader
 
-        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
+        Get-Content -LiteralPath $path | Should -Be @('Alpha,1', 'Beta,2')
+    }
+
+    It 'preserves BOM-detected CSV encoding when appending' {
+        $path = Join-Path $TestDrive 'append-utf16.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`r`nZażółć,1" -NoNewline -Encoding Unicode
+
+        [pscustomobject]@{ Name = 'Łódź'; Value = 2 } |
+            Export-OfficeCsv -Path $path -Append
+
+        $bytes = [System.IO.File]::ReadAllBytes($path)
+        $bytes[0] | Should -Be 0xFF
+        $bytes[1] | Should -Be 0xFE
+        $text = [System.Text.Encoding]::Unicode.GetString($bytes)
+        $text | Should -Match 'Zażółć,1'
+        $text | Should -Match 'Łódź,2'
     }
 
     It 'appends CLR object rows using existing header casing insensitively' {

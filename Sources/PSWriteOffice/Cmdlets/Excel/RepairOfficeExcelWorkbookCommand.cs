@@ -68,16 +68,25 @@ public sealed class RepairOfficeExcelWorkbookCommand : PSCmdlet
 
     protected override void ProcessRecord()
     {
-        if (!NoSave.IsPresent && ParameterSetName == ParameterSetPath)
+        var shouldProcessChecked = false;
+        if (ParameterSetName == ParameterSetPath)
         {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
             if (!ShouldProcess(resolvedPath, "Repair Excel workbook"))
             {
                 return;
             }
+
+            shouldProcessChecked = true;
         }
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!shouldProcessChecked &&
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Repair Excel workbook"))
+        {
+            return;
+        }
+
         var report = workbook.Document.RepairWorkbook(new ExcelWorkbookRepairOptions
         {
             DefinedNames = !SkipDefinedNames.IsPresent,

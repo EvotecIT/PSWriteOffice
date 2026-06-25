@@ -93,6 +93,12 @@ public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
         }
 
         using var targetWorkbook = ResolveTargetWorkbook();
+        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase) &&
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, InputPath, "Merge Excel workbook sheets"))
+        {
+            return;
+        }
+
         var results = new List<ExcelWorkbookMergeResult>();
 
         if (SourceDocument != null)

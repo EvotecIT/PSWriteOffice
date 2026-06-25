@@ -103,6 +103,11 @@ public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet
         ExcelSheet sheet = ParameterSetName == ParameterSetDocument
             ? ExcelSheetResolver.Resolve(Document, Sheet, SheetIndex)
             : ExcelDslContext.Require(this).RequireSheet();
+        if (!ExcelShouldProcessService.ShouldProcessTarget(this, sheet.Name, "Add Excel threaded comment"))
+        {
+            return;
+        }
+
         WriteResult(AddComment(sheet));
     }
 

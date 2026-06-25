@@ -127,4 +127,56 @@ Describe 'CSV and Excel mutation contracts' {
         $rows.Count | Should -Be 1
         $rows[0].Name | Should -Be 'Row1'
     }
+
+    It 'does not add threaded comments to live Excel documents when WhatIf is used' {
+        $xlsx = Join-Path $TestDrive 'threaded-comment-whatif.xlsx'
+        New-OfficeExcel -Path $xlsx {
+            Add-OfficeExcelSheet -Name Data
+        }
+
+        $document = Get-OfficeExcel -Path $xlsx
+        try {
+            $document | Add-OfficeExcelThreadedComment -Sheet Data -Address A1 -Text 'Nope' -Author Reviewer -WhatIf
+            $audit = $document | Get-OfficeExcelCommentAudit -IncludeComments
+            $audit.ThreadedCommentCount | Should -Be 0
+        } finally {
+            $document | Close-OfficeExcel
+        }
+    }
+
+    It 'does not join workbooks into live Excel documents when WhatIf is used' {
+        $target = Join-Path $TestDrive 'join-target-whatif.xlsx'
+        $source = Join-Path $TestDrive 'join-source-whatif.xlsx'
+        New-OfficeExcel -Path $target {
+            Add-OfficeExcelSheet -Name Target
+        }
+        New-OfficeExcel -Path $source {
+            Add-OfficeExcelSheet -Name Source
+        }
+
+        $document = Get-OfficeExcel -Path $target
+        try {
+            $document | Join-OfficeExcelWorkbook -SourcePath $source -WhatIf | Should -BeNullOrEmpty
+            $summary = $document | Get-OfficeExcelSummary -IncludeSheets
+            $summary.SheetCount | Should -Be 1
+            $summary.Sheets.Name | Should -Contain 'Target'
+            $summary.Sheets.Name | Should -Not -Contain 'Source'
+        } finally {
+            $document | Close-OfficeExcel
+        }
+    }
+
+    It 'does not repair live Excel documents when WhatIf is used' {
+        $xlsx = Join-Path $TestDrive 'repair-whatif.xlsx'
+        New-OfficeExcel -Path $xlsx {
+            Add-OfficeExcelSheet -Name Data
+        }
+
+        $document = Get-OfficeExcel -Path $xlsx
+        try {
+            $document | Repair-OfficeExcelWorkbook -PassThru -WhatIf | Should -BeNullOrEmpty
+        } finally {
+            $document | Close-OfficeExcel
+        }
+    }
 }
