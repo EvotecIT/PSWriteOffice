@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
@@ -41,19 +42,19 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     private const string ParameterSetTextCulture = "TextCulture";
     private const string ParameterSetTextDetect = "TextDetect";
 
-    /// <summary>Path to the CSV file.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathDelimiter)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathCulture)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathDetect)]
+    /// <summary>Path to one or more CSV files. Wildcards are supported.</summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathDetect)]
     [Alias("FilePath")]
-    public string Path { get; set; } = string.Empty;
+    public string[]? Path { get; set; }
 
-    /// <summary>Literal path to the CSV file.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetLiteralPathDelimiter)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetLiteralPathCulture)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetLiteralPathDetect)]
+    /// <summary>Literal path to one or more CSV files.</summary>
+    [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetLiteralPathDetect)]
     [Alias("PSPath", "LP")]
-    public string LiteralPath { get; set; } = string.Empty;
+    public string[]? LiteralPath { get; set; }
 
     /// <summary>CSV text to parse.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetTextDelimiter)]
@@ -179,33 +180,34 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             options.Encoding = Encoding;
         }
 
-        CsvDocument document;
         if (IsPathParameterSet())
         {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-            if (!File.Exists(resolvedPath))
+            foreach (var resolvedPath in ResolveInputPaths())
             {
-                throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-            }
+                if (!File.Exists(resolvedPath))
+                {
+                    throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
+                }
 
-            document = CsvDocument.Load(resolvedPath, options);
+                WriteObject(CsvDocument.Load(resolvedPath, options));
+            }
         }
         else if (IsLiteralPathParameterSet())
         {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(LiteralPath);
-            if (!File.Exists(resolvedPath))
+            foreach (var resolvedPath in ResolveInputPaths())
             {
-                throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-            }
+                if (!File.Exists(resolvedPath))
+                {
+                    throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
+                }
 
-            document = CsvDocument.Load(resolvedPath, options);
+                WriteObject(CsvDocument.Load(resolvedPath, options));
+            }
         }
         else
         {
-            document = CsvDocument.Parse(Text ?? string.Empty, options);
+            WriteObject(CsvDocument.Parse(Text ?? string.Empty, options));
         }
-
-        WriteObject(document);
     }
 
     private bool IsPathParameterSet() =>
@@ -217,4 +219,32 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
         string.Equals(ParameterSetName, ParameterSetLiteralPathDelimiter, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetLiteralPathCulture, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetLiteralPathDetect, StringComparison.OrdinalIgnoreCase);
+
+    private IEnumerable<string> ResolveInputPaths()
+    {
+        if (IsLiteralPathParameterSet())
+        {
+            foreach (var literalPath in LiteralPath ?? Array.Empty<string>())
+            {
+                yield return SessionState.Path.GetUnresolvedProviderPathFromPSPath(literalPath);
+            }
+
+            yield break;
+        }
+
+        foreach (var path in Path ?? Array.Empty<string>())
+        {
+            if (!WildcardPattern.ContainsWildcardCharacters(path))
+            {
+                yield return SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
+                continue;
+            }
+
+            var resolvedPaths = SessionState.Path.GetResolvedProviderPathFromPSPath(path, out _);
+            foreach (var resolvedPath in resolvedPaths)
+            {
+                yield return resolvedPath;
+            }
+        }
+    }
 }

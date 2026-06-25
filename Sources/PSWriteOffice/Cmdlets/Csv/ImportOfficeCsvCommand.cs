@@ -52,19 +52,19 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public CsvDocument? Document { get; set; }
 
-    /// <summary>Path to a CSV file.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathDelimiter)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathCulture)]
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathDetect)]
+    /// <summary>Path to one or more CSV files. Wildcards are supported.</summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathDetect)]
     [Alias("FilePath")]
-    public string? Path { get; set; }
+    public string[]? Path { get; set; }
 
-    /// <summary>Literal path to a CSV file.</summary>
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetLiteralPathDelimiter)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetLiteralPathCulture)]
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetLiteralPathDetect)]
+    /// <summary>Literal path to one or more CSV files.</summary>
+    [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetLiteralPathDetect)]
     [Alias("PSPath", "LP")]
-    public string? LiteralPath { get; set; }
+    public string[]? LiteralPath { get; set; }
 
     /// <summary>CSV text to parse.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetTextDelimiter)]
@@ -269,21 +269,26 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             ApplyCultureDelimiter();
             var options = CreateLoadOptions();
 
-            var unresolvedPath = IsLiteralPathParameterSet() ? LiteralPath : Path;
-            var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(unresolvedPath!);
-            if (!File.Exists(resolved))
+            foreach (var resolved in ResolveInputPaths())
             {
-                throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
-            }
+                if (!File.Exists(resolved))
+                {
+                    throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
+                }
 
-            if (Mode == CsvLoadMode.Stream)
-            {
+                if (Mode == CsvLoadMode.Stream)
+                {
+                    ResetOutputHeaderValidation();
+                    CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
+                    continue;
+                }
+
+                document = CsvDocument.Load(resolved, options);
                 ResetOutputHeaderValidation();
-                CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
-                return;
+                WriteDocumentRows(document);
             }
 
-            document = CsvDocument.Load(resolved, options);
+            return;
         }
 
         ResetOutputHeaderValidation();
@@ -365,6 +370,34 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
         string.Equals(ParameterSetName, ParameterSetLiteralPathDelimiter, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetLiteralPathCulture, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetLiteralPathDetect, StringComparison.OrdinalIgnoreCase);
+
+    private IEnumerable<string> ResolveInputPaths()
+    {
+        if (IsLiteralPathParameterSet())
+        {
+            foreach (var literalPath in LiteralPath ?? Array.Empty<string>())
+            {
+                yield return SessionState.Path.GetUnresolvedProviderPathFromPSPath(literalPath);
+            }
+
+            yield break;
+        }
+
+        foreach (var path in Path ?? Array.Empty<string>())
+        {
+            if (!WildcardPattern.ContainsWildcardCharacters(path))
+            {
+                yield return SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
+                continue;
+            }
+
+            var resolvedPaths = SessionState.Path.GetResolvedProviderPathFromPSPath(path, out _);
+            foreach (var resolvedPath in resolvedPaths)
+            {
+                yield return resolvedPath;
+            }
+        }
+    }
 
     private bool IsTextParameterSet() =>
         string.Equals(ParameterSetName, ParameterSetTextDelimiter, StringComparison.OrdinalIgnoreCase) ||

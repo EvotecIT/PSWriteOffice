@@ -136,6 +136,36 @@ Describe 'CSV cmdlets' {
         $document.AsEnumerable().Count | Should -Be 1
     }
 
+    It 'expands Path wildcards when importing CSV rows' {
+        $folder = Join-Path $TestDrive 'wildcard-import'
+        New-Item -Path $folder -ItemType Directory | Out-Null
+        Set-Content -LiteralPath (Join-Path $folder 'a.csv') -Value "Name,Value`nAlpha,1" -Encoding UTF8
+        Set-Content -LiteralPath (Join-Path $folder 'b.csv') -Value "Name,Value`nBeta,2" -Encoding UTF8
+
+        $data = Import-OfficeCsv -Path (Join-Path $folder '*.csv') | Sort-Object Name
+
+        $data.Count | Should -Be 2
+        $data[0].Name | Should -Be 'Alpha'
+        $data[1].Name | Should -Be 'Beta'
+    }
+
+    It 'loads multiple CSV documents from Path values' {
+        $folder = Join-Path $TestDrive 'multi-document'
+        New-Item -Path $folder -ItemType Directory | Out-Null
+        $paths = @(
+            Join-Path $folder 'first.csv'
+            Join-Path $folder 'second.csv'
+        )
+        Set-Content -LiteralPath $paths[0] -Value "Name,Value`nAlpha,1" -Encoding UTF8
+        Set-Content -LiteralPath $paths[1] -Value "Name,Value`nBeta,2" -Encoding UTF8
+
+        $documents = @(Get-OfficeCsv -Path $paths)
+
+        $documents.Count | Should -Be 2
+        $documents[0].Header | Should -Be @('Name', 'Value')
+        @($documents[1].AsEnumerable())[0]['Name'] | Should -Be 'Beta'
+    }
+
     It 'preserves unquoted whitespace by default and trims when requested' {
         $path = Join-Path $TestDrive 'whitespace.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,  spaced  " -Encoding UTF8
