@@ -200,12 +200,17 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     private void AppendDocument(CsvDocument document)
     {
         var options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
+
+        if (_appendHeader is { Length: > 0 })
+        {
+            ValidateDocumentAppendHeader(document, _appendHeader);
+        }
+
         using var writer = CreateTextWriter(append: true, options);
         using var csvWriter = new CsvObjectWriter(writer, options);
 
         if (_appendHeader is { Length: > 0 })
         {
-            ValidateDocumentAppendHeader(document, _appendHeader);
             WriteDocumentRows(document, csvWriter, _appendHeader, projectByName: true);
             return;
         }
@@ -215,7 +220,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
     private void WriteStreamingInputObject(object? value)
     {
-        var writer = EnsureStreamingWriter();
+        var writer = EnsureStreamingWriter(value);
         if (writer == null)
         {
             return;
@@ -232,7 +237,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         }
     }
 
-    private CsvObjectWriter? EnsureStreamingWriter()
+    private CsvObjectWriter? EnsureStreamingWriter(object? firstValue)
     {
         if (_streamingWriter != null)
         {
@@ -250,6 +255,11 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
             if (_appendHeader is { Length: > 0 })
             {
+                if (!Force.IsPresent)
+                {
+                    _objectProjector.ValidateObjectColumns(firstValue, _appendHeader);
+                }
+
                 _objectProjector.UseColumns(_appendHeader, validateColumns: !Force.IsPresent);
             }
         }
@@ -320,10 +330,6 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         _appendHeader = _appendToExistingFile && !NoHeader.IsPresent
             ? ReadAppendHeader(_resolvedPath)
             : null;
-        if (_appendToExistingFile)
-        {
-            EnsureAppendStartsOnNewRecord(_resolvedPath);
-        }
 
         return true;
     }
@@ -399,6 +405,11 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     {
         var encoding = ResolveOutputEncoding(append, options);
         var mode = append ? FileMode.Append : FileMode.Create;
+        if (append && _appendToExistingFile)
+        {
+            EnsureAppendStartsOnNewRecord(_resolvedPath!, options);
+        }
+
         var stream = new FileStream(_resolvedPath!, mode, FileAccess.Write, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
         return new StreamWriter(stream, encoding, bufferSize: StreamWriterBufferSize);
     }
@@ -406,7 +417,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>
         options.Encoding ?? (append ? _appendEncoding : null) ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
-    private void EnsureAppendStartsOnNewRecord(string path)
+    private void EnsureAppendStartsOnNewRecord(string path, CsvSaveOptions options)
     {
         using var stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
         if (stream.Length == 0)
@@ -414,14 +425,14 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             return;
         }
 
-        var encoding = ResolveOutputEncoding(append: true, CreateSaveOptions());
+        var encoding = ResolveOutputEncoding(append: true, options);
         if (StreamEndsWithNewLine(stream, encoding))
         {
             return;
         }
 
         stream.Position = stream.Length;
-        var newLineBytes = encoding.GetBytes(CreateSaveOptions().NewLine);
+        var newLineBytes = encoding.GetBytes(options.NewLine);
         stream.Write(newLineBytes, 0, newLineBytes.Length);
     }
 

@@ -167,7 +167,6 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
                 return;
             }
 
-            var markdown = html.ToMarkdown(options);
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
@@ -176,6 +175,7 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
                     return;
                 }
 
+                var markdown = html.ToMarkdown(options);
                 var directory = Path.GetDirectoryName(resolvedOutput);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
@@ -190,6 +190,7 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
             }
             else
             {
+                var markdown = html.ToMarkdown(options);
                 WriteObject(markdown);
             }
         }

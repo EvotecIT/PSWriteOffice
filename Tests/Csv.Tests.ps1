@@ -192,6 +192,20 @@ namespace PSWriteOffice.Tests {
         $data[1].Value | Should -Be ''
     }
 
+    It 'does not touch an append target when first row validation fails' {
+        $path = Join-Path $TestDrive 'append-validation-preserve.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -NoNewline -Encoding UTF8
+        $before = [System.IO.File]::ReadAllBytes($path)
+
+        {
+            [pscustomobject]@{ Name = 'Beta' } |
+                Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*missing*Value*'
+
+        $after = [System.IO.File]::ReadAllBytes($path)
+        [Convert]::ToBase64String($after) | Should -Be ([Convert]::ToBase64String($before))
+    }
+
     It 'validates every appended row against existing columns unless Force is specified' {
         $path = Join-Path $TestDrive 'append-validate-every-row.csv'
         [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
@@ -529,6 +543,18 @@ namespace PSWriteOffice.Tests {
         $csvLines[0] | Should -Be 'Name,Note'
         $csvLines[1] | Should -Be "Alpha,`"one`ntwo`""
         @($csvLines | ConvertFrom-OfficeCsv)[0].Note | Should -Be "one`ntwo"
+    }
+
+    It 'keeps separate records when unquoted values contain quote characters' {
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Note = 'a"b' }
+            [pscustomobject]@{ Name = 'Beta'; Note = 'plain' }
+        )
+
+        $csvLines = @($rows | ConvertTo-OfficeCsv -UseQuotes Never)
+
+        $csvLines.Count | Should -Be 3
+        $csvLines | Should -Be @('Name,Note', 'Alpha,a"b', 'Beta,plain')
     }
 
     It 'lets QuoteFields compose with UseQuotes' {

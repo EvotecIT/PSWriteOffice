@@ -117,6 +117,17 @@ Describe 'Markdown cmdlets' {
         (Get-Content -Path $path -Raw) | Should -Match '# Title'
     }
 
+    It 'does not extract HTML data URI images when WhatIf skips saving' {
+        $path = Join-Path $TestDrive 'converted-whatif.md'
+        $imageDirectory = Join-Path $TestDrive 'images'
+        $html = '<p><img alt="Tiny" src="data:image/png;base64,AQID" /></p>'
+
+        ConvertFrom-OfficeMarkdownHtml -Html $html -OutputPath $path -Base64ImageHandling SaveToFile -Base64ImageOutputDirectory $imageDirectory -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $path | Should -BeFalse
+        Test-Path -LiteralPath $imageDirectory | Should -BeFalse
+    }
+
     It 'builds Markdown via DSL helpers' {
         $path = Join-Path $TestDrive 'MarkdownDsl.md'
         $rows = @(

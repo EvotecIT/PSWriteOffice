@@ -8,14 +8,17 @@ namespace PSWriteOffice.Cmdlets.Csv;
 internal sealed class CsvPowerShellLineWriter : TextWriter
 {
     private readonly PSCmdlet _cmdlet;
+    private readonly char _delimiter;
     private readonly StringBuilder _line = new();
     private bool _pendingCarriageReturn;
     private bool _inQuotes;
     private bool _pendingQuoteInQuotedField;
+    private bool _atFieldStart = true;
 
-    public CsvPowerShellLineWriter(PSCmdlet cmdlet)
+    public CsvPowerShellLineWriter(PSCmdlet cmdlet, char delimiter)
     {
         _cmdlet = cmdlet ?? throw new ArgumentNullException(nameof(cmdlet));
+        _delimiter = delimiter;
     }
 
     public override Encoding Encoding => Encoding.UTF8;
@@ -63,11 +66,12 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
             {
                 _pendingQuoteInQuotedField = true;
             }
-            else
+            else if (_atFieldStart)
             {
                 _inQuotes = true;
             }
 
+            _atFieldStart = false;
             return;
         }
 
@@ -92,6 +96,7 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
         }
 
         _line.Append(value);
+        _atFieldStart = value == _delimiter && !_inQuotes;
     }
 
     public override void Write(string? value)
@@ -155,6 +160,7 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
         _line.Clear();
         _inQuotes = false;
         _pendingQuoteInQuotedField = false;
+        _atFieldStart = true;
     }
 
     private bool ResolvePendingQuote(char value)
@@ -168,10 +174,12 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
         if (value == '"')
         {
             _line.Append(value);
+            _atFieldStart = false;
             return true;
         }
 
         _inQuotes = false;
+        _atFieldStart = value == _delimiter;
         return false;
     }
 }

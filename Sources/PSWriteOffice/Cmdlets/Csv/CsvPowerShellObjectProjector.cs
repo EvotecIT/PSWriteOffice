@@ -31,6 +31,16 @@ internal sealed class CsvPowerShellObjectProjector
         _validateColumns = validateColumns;
     }
 
+    public void ValidateObjectColumns(object? value, IReadOnlyList<string> columns)
+    {
+        if (columns == null)
+        {
+            throw new ArgumentNullException(nameof(columns));
+        }
+
+        ValidateFirstRowColumns(value, columns);
+    }
+
     public void WriteObject(object? value, CsvObjectWriter writer)
     {
         if (_columns != null &&
@@ -62,7 +72,7 @@ internal sealed class CsvPowerShellObjectProjector
         return PowerShellObjectNormalizer.TryProjectItemInto(value, columns, values);
     }
 
-    private static void ValidateFirstRowColumns(object? value, string[] columns)
+    private static void ValidateFirstRowColumns(object? value, IReadOnlyList<string> columns)
     {
         if (!PowerShellObjectNormalizer.TryProjectItem(value, null, out var sourceColumns, out _))
         {
