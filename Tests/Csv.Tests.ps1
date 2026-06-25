@@ -33,8 +33,8 @@ Describe 'CSV cmdlets' {
 
     It 'exposes CSV row import with idiomatic command names' {
         (Get-Command Import-OfficeCsv).CommandType | Should -Be 'Cmdlet'
-        (Get-Command Get-OfficeCsvData).ResolvedCommandName | Should -Be 'Import-OfficeCsv'
         (Get-Command ConvertFrom-OfficeCsv).CommandType | Should -Be 'Cmdlet'
+        { Get-Command Get-OfficeCsvData -ErrorAction Stop } | Should -Throw
     }
 
     It 'converts objects to CSV and reads them back' {

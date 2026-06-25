@@ -23,7 +23,6 @@ namespace PSWriteOffice.Cmdlets.Csv;
 ///   <para>Uses hashtables for dynamic schemas or key-based access.</para>
 /// </example>
 [Cmdlet(VerbsData.Import, "OfficeCsv", DefaultParameterSetName = ParameterSetPathDelimiter)]
-[Alias("Get-OfficeCsvData")]
 public sealed class ImportOfficeCsvCommand : PSCmdlet
 {
     private const string ParameterSetPathDelimiter = "PathDelimiter";
