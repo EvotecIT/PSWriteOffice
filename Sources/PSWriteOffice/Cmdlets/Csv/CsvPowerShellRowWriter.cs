@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Management.Automation;
+using System.Reflection;
 using OfficeIMO.CSV;
 
 namespace PSWriteOffice.Cmdlets.Csv;
@@ -34,8 +36,8 @@ internal sealed class CsvPowerShellRowWriter
             }
 
             var outputHeader = GetOutputHeader(header);
-            var psObj = new PSObject();
             var valueCount = outputHeader.Length < row.FieldCount ? outputHeader.Length : row.FieldCount;
+            var psObj = PowerShellObjectFactory.Create(valueCount);
             var prevalidated = _prevalidatedOutputProperties;
             for (var i = 0; i < valueCount; i++)
             {
@@ -65,7 +67,7 @@ internal sealed class CsvPowerShellRowWriter
         }
 
         var outputHeader = GetOutputHeader(header);
-        var psObj = new PSObject();
+        var psObj = PowerShellObjectFactory.Create(valueCount);
         var prevalidated = _prevalidatedOutputProperties;
         for (var i = 0; i < valueCount; i++)
         {
@@ -105,5 +107,42 @@ internal sealed class CsvPowerShellRowWriter
         _prevalidatedOutputProperties = canPrevalidate;
         _outputHeader = outputHeader;
         return outputHeader;
+    }
+
+    private static class PowerShellObjectFactory
+    {
+        // PowerShell 7+ exposes PSObject(int) for initial member capacity, but PowerShellStandard also exposes
+        // PSObject(object). Use reflection so older runtimes fall back without wrapping the integer as BaseObject.
+        private static readonly Func<int, PSObject>? CapacityFactory = CreateCapacityFactory();
+
+        public static PSObject Create(int capacity)
+        {
+            return CapacityFactory?.Invoke(capacity) ?? new PSObject();
+        }
+
+        private static Func<int, PSObject>? CreateCapacityFactory()
+        {
+            var constructor = typeof(PSObject).GetConstructor(
+                BindingFlags.Public | BindingFlags.Instance,
+                binder: null,
+                types: new[] { typeof(int) },
+                modifiers: null);
+            if (constructor is null)
+            {
+                return null;
+            }
+
+            try
+            {
+                var capacity = Expression.Parameter(typeof(int), "capacity");
+                return Expression.Lambda<Func<int, PSObject>>(
+                    Expression.New(constructor, capacity),
+                    capacity).Compile();
+            }
+            catch
+            {
+                return capacity => (PSObject)constructor.Invoke(new object[] { capacity });
+            }
+        }
     }
 }
