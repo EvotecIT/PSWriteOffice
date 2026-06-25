@@ -95,7 +95,7 @@ public sealed class GetOfficeExcelDataCommand : PSCmdlet
                 }
                 else
                 {
-                    var psObj = new PSObject(row.Count);
+                    var psObj = new PSObject();
                     foreach (KeyValuePair<string, object?> kv in row)
                     {
                         psObj.Properties.Add(new PSNoteProperty(kv.Key, kv.Value), prevalidatedOutputProperties);

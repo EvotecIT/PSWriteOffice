@@ -62,6 +62,20 @@ Describe 'CSV and Excel mutation contracts' {
         $rows[1].PSObject.Properties.Name | Should -Not -Contain 'Extra'
     }
 
+    It 'reads Excel data rows as real custom objects' {
+        $xlsx = Join-Path $TestDrive 'excel-data-rows.xlsx'
+
+        [pscustomobject]@{ Name = 'Row1'; Value = 1 } |
+            Export-OfficeExcel -Path $xlsx -WorksheetName Data -TableName Data
+
+        $rows = @(Get-OfficeExcelData -Path $xlsx -Sheet Data)
+
+        $rows.Count | Should -Be 1
+        $rows[0].GetType().FullName | Should -Be 'System.Management.Automation.PSCustomObject'
+        $rows[0].Name | Should -Be 'Row1'
+        $rows[0].Value | Should -Be 1
+    }
+
     It 'does not append Excel table rows when Add-OfficeExcelTableRow is invoked with WhatIf' {
         $xlsx = Join-Path $TestDrive 'table.xlsx'
         [pscustomobject]@{ Name = 'Row1'; Value = 1 } |
