@@ -43,6 +43,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private const string ParameterSetTextDetect = "TextDetect";
     private const string ParameterSetDocument = "Document";
     private readonly StringBuilder _textInput = new();
+    private bool _asHashtable;
     private bool _hasTextInput;
     private bool _prevalidatedOutputProperties;
 
@@ -240,6 +241,12 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     public SwitchParameter AsHashtable { get; set; }
 
     /// <inheritdoc />
+    protected override void BeginProcessing()
+    {
+        _asHashtable = AsHashtable.IsPresent;
+    }
+
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         if (IsTextParameterSet())
@@ -270,7 +277,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
             if (Mode == CsvLoadMode.Stream)
             {
-                CsvDocument.ReadRows(resolved, WriteRow, options);
+                CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
                 return;
             }
 
@@ -295,7 +302,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
         if (Mode == CsvLoadMode.Stream)
         {
             using var reader = new StringReader(csvText);
-            CsvDocument.ReadRows(reader, WriteRow, options);
+            CsvDocument.ReadRowsReusable(reader, WriteRow, options);
             return;
         }
 
@@ -391,10 +398,14 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row)
     {
-        if (AsHashtable.IsPresent)
+        var headerCount = header.Count;
+        var rowCount = row.Count;
+        var valueCount = rowCount < headerCount ? rowCount : headerCount;
+
+        if (_asHashtable)
         {
-            var rowValues = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-            for (var i = 0; i < header.Count && i < row.Count; i++)
+            var rowValues = new Dictionary<string, object?>(valueCount, StringComparer.OrdinalIgnoreCase);
+            for (var i = 0; i < valueCount; i++)
             {
                 rowValues[header[i]] = row[i];
             }
@@ -403,10 +414,11 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             return;
         }
 
-        var psObj = new PSObject(header.Count);
-        for (var i = 0; i < header.Count && i < row.Count; i++)
+        var psObj = new PSObject(headerCount);
+        var prevalidated = _prevalidatedOutputProperties;
+        for (var i = 0; i < valueCount; i++)
         {
-            psObj.Properties.Add(new PSNoteProperty(header[i], row[i]), _prevalidatedOutputProperties);
+            psObj.Properties.Add(new PSNoteProperty(header[i], row[i]), prevalidated);
         }
 
         _prevalidatedOutputProperties = true;
