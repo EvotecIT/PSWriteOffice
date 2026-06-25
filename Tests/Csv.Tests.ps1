@@ -360,6 +360,19 @@ Describe 'CSV cmdlets' {
         $row['#Name'] | Should -Be 'Alpha'
     }
 
+    It 'does not treat quoted comment-character headers as comments' {
+        $path = Join-Path $TestDrive 'quoted-comment-header.csv'
+        Set-Content -LiteralPath $path -Value '"#Tag",Name', '10,Alpha' -Encoding UTF8
+
+        $data = Import-OfficeCsv -Path $path
+        $document = Get-OfficeCsv -Path $path
+
+        $document.Header | Should -Be @('#Tag', 'Name')
+        $data.Count | Should -Be 1
+        $data[0].'#Tag' | Should -Be '10'
+        $data[0].Name | Should -Be 'Alpha'
+    }
+
     It 'can skip comment rows throughout the file' {
         $path = Join-Path $TestDrive 'comments.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`n# ignored`nBeta,2" -Encoding UTF8
