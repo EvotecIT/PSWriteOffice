@@ -78,8 +78,7 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
         }
 
         using var workbook = ResolveWorkbook(target);
-        var text = File.ReadAllText(source);
-        var result = workbook.Document.ImportDelimitedText(text, new ExcelDelimitedImportOptions
+        var result = workbook.Document.ImportDelimitedFile(source, new ExcelDelimitedImportOptions
         {
             Delimiter = Delimiter,
             SheetName = SheetName,
