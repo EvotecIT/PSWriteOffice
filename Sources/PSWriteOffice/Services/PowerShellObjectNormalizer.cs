@@ -188,12 +188,20 @@ internal static class PowerShellObjectNormalizer
             ? baseObject
             : item;
 
-        if (!IsScalarClrType(value.GetType()) || columns.Length != 1)
+        if (!IsScalarClrType(value.GetType()))
         {
             return false;
         }
 
-        values[0] = NormalizeCellValue(value, options);
+        var targetIndex = columns.Length == 1
+            ? 0
+            : Array.FindIndex(columns, static column => string.Equals(column, "Value", StringComparison.OrdinalIgnoreCase));
+        if (targetIndex < 0)
+        {
+            return false;
+        }
+
+        values[targetIndex] = NormalizeCellValue(value, options);
         return true;
     }
 

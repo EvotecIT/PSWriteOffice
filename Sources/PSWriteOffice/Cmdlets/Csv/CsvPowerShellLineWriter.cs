@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using OfficeIMO.CSV;
 
 namespace PSWriteOffice.Cmdlets.Csv;
 
@@ -9,16 +10,18 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
 {
     private readonly PSCmdlet _cmdlet;
     private readonly char _delimiter;
+    private readonly bool _parseQuotedRecords;
     private readonly StringBuilder _line = new();
     private bool _pendingCarriageReturn;
     private bool _inQuotes;
     private bool _pendingQuoteInQuotedField;
     private bool _atFieldStart = true;
 
-    public CsvPowerShellLineWriter(PSCmdlet cmdlet, char delimiter)
+    public CsvPowerShellLineWriter(PSCmdlet cmdlet, char delimiter, CsvQuoteMode quoteMode)
     {
         _cmdlet = cmdlet ?? throw new ArgumentNullException(nameof(cmdlet));
         _delimiter = delimiter;
+        _parseQuotedRecords = quoteMode != CsvQuoteMode.Never;
     }
 
     public override Encoding Encoding => Encoding.UTF8;
@@ -62,7 +65,11 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
         if (value == '"')
         {
             _line.Append(value);
-            if (_inQuotes)
+            if (!_parseQuotedRecords)
+            {
+                _atFieldStart = false;
+            }
+            else if (_inQuotes)
             {
                 _pendingQuoteInQuotedField = true;
             }

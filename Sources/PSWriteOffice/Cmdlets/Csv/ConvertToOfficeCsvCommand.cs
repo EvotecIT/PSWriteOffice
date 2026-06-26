@@ -138,7 +138,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     private void EmitCsv(CsvDocument document)
     {
         var options = CreateSaveOptions();
-        using var writer = new CsvPowerShellLineWriter(this, options.Delimiter);
+        using var writer = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
         writer.Write(document.ToString(options));
     }
 
@@ -168,7 +168,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
-        _lineWriter = new CsvPowerShellLineWriter(this, options.Delimiter);
+        _lineWriter = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
         _csvWriter = new CsvObjectWriter(_lineWriter, options);
         return _csvWriter;
     }

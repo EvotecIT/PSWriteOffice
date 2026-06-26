@@ -203,6 +203,19 @@ namespace PSWriteOffice.Tests {
         $data[1].Value | Should -Be ''
     }
 
+    It 'projects forced scalar appends into an existing Value column' {
+        $path = Join-Path $TestDrive 'append-force-scalar.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        'Beta' | Export-OfficeCsv -Path $path -Append -Force
+
+        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', ',Beta')
+        $data = Import-OfficeCsv -Path $path
+        $data[1].Name | Should -Be ''
+        $data[1].Value | Should -Be 'Beta'
+    }
+
     It 'does not touch an append target when first row validation fails' {
         $path = Join-Path $TestDrive 'append-validation-preserve.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -NoNewline -Encoding UTF8
@@ -585,6 +598,18 @@ namespace PSWriteOffice.Tests {
 
         $csvLines.Count | Should -Be 3
         $csvLines | Should -Be @('Name,Note', 'Alpha,a"b', 'Beta,plain')
+    }
+
+    It 'keeps separate records when unquoted values start with quote characters' {
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Note = '"starts' }
+            [pscustomobject]@{ Name = 'Beta'; Note = 'plain' }
+        )
+
+        $csvLines = @($rows | ConvertTo-OfficeCsv -UseQuotes Never)
+
+        $csvLines.Count | Should -Be 3
+        $csvLines | Should -Be @('Name,Note', 'Alpha,"starts', 'Beta,plain')
     }
 
     It 'normalizes CLR projection values and skips failing CLR getters' {
