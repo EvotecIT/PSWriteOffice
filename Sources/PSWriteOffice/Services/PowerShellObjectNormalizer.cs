@@ -55,6 +55,11 @@ internal static class PowerShellObjectNormalizer
             return dict;
         }
 
+        if (IsScalarClrType(item.GetType()))
+        {
+            return NormalizeCellValue(item, options);
+        }
+
         if (TryGetClrProjectionPlan(item.GetType(), out _))
         {
             return item;
@@ -72,6 +77,11 @@ internal static class PowerShellObjectNormalizer
         if (item == null)
         {
             return false;
+        }
+
+        if (TryProjectScalar(item, columns, out projectedColumns, out values, options))
+        {
+            return true;
         }
 
         if (TryGetDataRow(item, out var dataRow))
@@ -116,6 +126,11 @@ internal static class PowerShellObjectNormalizer
             return false;
         }
 
+        if (TryProjectScalarInto(item, columns, values, options))
+        {
+            return true;
+        }
+
         if (TryGetDataRow(item, out var dataRow))
         {
             ProjectDataRowInto(dataRow, columns, values, options);
@@ -141,6 +156,44 @@ internal static class PowerShellObjectNormalizer
         }
 
         ProjectPSObjectInto(PSObject.AsPSObject(item), columns, values, options);
+        return true;
+    }
+
+    private static bool TryProjectScalar(object item, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
+    {
+        var value = item is PSObject { BaseObject: { } baseObject } && IsScalarClrType(baseObject.GetType())
+            ? baseObject
+            : item;
+
+        if (!IsScalarClrType(value.GetType()))
+        {
+            projectedColumns = columns ?? Array.Empty<string>();
+            values = Array.Empty<object?>();
+            return false;
+        }
+
+        projectedColumns = columns ?? new[] { "Value" };
+        values = new object?[projectedColumns.Length];
+        if (values.Length > 0)
+        {
+            values[0] = NormalizeCellValue(value, options);
+        }
+
+        return true;
+    }
+
+    private static bool TryProjectScalarInto(object item, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
+    {
+        var value = item is PSObject { BaseObject: { } baseObject } && IsScalarClrType(baseObject.GetType())
+            ? baseObject
+            : item;
+
+        if (!IsScalarClrType(value.GetType()) || columns.Length != 1)
+        {
+            return false;
+        }
+
+        values[0] = NormalizeCellValue(value, options);
         return true;
     }
 
@@ -622,13 +675,7 @@ internal static class PowerShellObjectNormalizer
 
     private static bool CanUseClrObjectProjection(Type type)
     {
-        if (type == typeof(string) ||
-            type.IsPrimitive ||
-            type.IsEnum ||
-            type == typeof(decimal) ||
-            type == typeof(DateTime) ||
-            type == typeof(DateTimeOffset) ||
-            type == typeof(TimeSpan) ||
+        if (IsScalarClrType(type) ||
             typeof(DataRow).IsAssignableFrom(type) ||
             typeof(DataRowView).IsAssignableFrom(type) ||
             typeof(IEnumerable).IsAssignableFrom(type))
@@ -639,6 +686,16 @@ internal static class PowerShellObjectNormalizer
         return type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Any(static property => property.CanRead && property.GetIndexParameters().Length == 0);
     }
+
+    private static bool IsScalarClrType(Type type) =>
+        type == typeof(string) ||
+        type.IsPrimitive ||
+        type.IsEnum ||
+        type == typeof(decimal) ||
+        type == typeof(DateTime) ||
+        type == typeof(DateTimeOffset) ||
+        type == typeof(Guid) ||
+        type == typeof(TimeSpan);
 
     private static ClrProjectionPlan CreateClrProjectionPlan(Type type)
     {

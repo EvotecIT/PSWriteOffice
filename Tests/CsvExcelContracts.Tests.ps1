@@ -55,6 +55,16 @@ Describe 'CSV and Excel mutation contracts' {
         Test-Path -LiteralPath $target | Should -BeFalse
     }
 
+    It 'does not create a Word package when New-OfficeWord NoSave is invoked with WhatIf' {
+        $target = Join-Path $TestDrive 'nosave-whatif.docx'
+
+        New-OfficeWord -Path $target -NoSave -WhatIf {
+            WordParagraph -Text 'Draft'
+        } | Out-Null
+
+        Test-Path -LiteralPath $target | Should -BeFalse
+    }
+
     It 'imports a CSV source into a new Excel workbook' {
         $csv = Join-Path $TestDrive 'source.csv'
         $xlsx = Join-Path $TestDrive 'created.xlsx'

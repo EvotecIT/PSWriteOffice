@@ -158,6 +158,12 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             return;
         }
 
+        if (TryGetCsvDocument(InputObject, out var csvDocument))
+        {
+            ExportDocument(csvDocument);
+            return;
+        }
+
         WriteStreamingInputObject(InputObject);
     }
 
@@ -195,6 +201,24 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
         _wroteOutput = true;
         WritePassThru();
+    }
+
+    private static bool TryGetCsvDocument(object? value, out CsvDocument document)
+    {
+        if (value is CsvDocument csvDocument)
+        {
+            document = csvDocument;
+            return true;
+        }
+
+        if (value is PSObject { BaseObject: CsvDocument psObjectDocument })
+        {
+            document = psObjectDocument;
+            return true;
+        }
+
+        document = null!;
+        return false;
     }
 
     private void AppendDocument(CsvDocument document)

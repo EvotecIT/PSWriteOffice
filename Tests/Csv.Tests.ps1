@@ -241,6 +241,25 @@ namespace PSWriteOffice.Tests {
         Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
     }
 
+    It 'serializes piped CSV documents as rows instead of object properties' {
+        $path = Join-Path $TestDrive 'piped-document.csv'
+        $document = Get-OfficeCsv -Text "Name,Value`nAlpha,1"
+
+        $csvText = @($document | ConvertTo-OfficeCsv)
+        $document | Export-OfficeCsv -Path $path
+
+        $csvText | Should -Be @('Name,Value', 'Alpha,1')
+        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1')
+    }
+
+    It 'treats top-level Guid values as scalar CSV values' {
+        $guid = [guid]::Parse('00112233-4455-6677-8899-aabbccddeeff')
+
+        $csvText = @($guid | ConvertTo-OfficeCsv -NoHeader)
+
+        $csvText | Should -Be '00112233-4455-6677-8899-aabbccddeeff'
+    }
+
     It 'uses the selected culture list separator when UseCulture is specified' {
         $culture = [System.Globalization.CultureInfo]::GetCultureInfo('pl-PL')
 

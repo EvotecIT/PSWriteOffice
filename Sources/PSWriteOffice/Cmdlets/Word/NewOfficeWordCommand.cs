@@ -74,16 +74,18 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var fullPath = GetResolvedPath();
+        var action = NoSave.IsPresent
+            ? string.IsNullOrWhiteSpace(TemplatePath)
+                ? "Create in-memory Word document"
+                : "Create Word document from template"
+            : "Write new Word document";
+        if (!PdfCommandUtilities.ShouldWrite(this, fullPath, action))
+        {
+            return;
+        }
+
         if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath))
         {
-            var action = NoSave.IsPresent
-                ? "Create Word document from template"
-                : "Write new Word document";
-            if (!PdfCommandUtilities.ShouldWrite(this, fullPath, action))
-            {
-                return;
-            }
-
             var directory = Path.GetDirectoryName(fullPath);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
@@ -128,6 +130,11 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     {
         if (string.IsNullOrWhiteSpace(TemplatePath))
         {
+            if (NoSave.IsPresent)
+            {
+                return WordDocumentService.CreateInMemoryDocument();
+            }
+
             return WordDocumentService.CreateDocument(fullPath, AutoSave.IsPresent);
         }
 

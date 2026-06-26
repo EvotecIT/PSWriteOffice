@@ -104,6 +104,12 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             return;
         }
 
+        if (TryGetCsvDocument(InputObject, out var csvDocument))
+        {
+            EmitCsv(csvDocument);
+            return;
+        }
+
         _objectProjector.WriteObject(InputObject, EnsureObjectWriter());
     }
 
@@ -134,6 +140,24 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         var options = CreateSaveOptions();
         using var writer = new CsvPowerShellLineWriter(this, options.Delimiter);
         writer.Write(document.ToString(options));
+    }
+
+    private static bool TryGetCsvDocument(object? value, out CsvDocument document)
+    {
+        if (value is CsvDocument csvDocument)
+        {
+            document = csvDocument;
+            return true;
+        }
+
+        if (value is PSObject { BaseObject: CsvDocument psObjectDocument })
+        {
+            document = psObjectDocument;
+            return true;
+        }
+
+        document = null!;
+        return false;
     }
 
     private CsvObjectWriter EnsureObjectWriter()
