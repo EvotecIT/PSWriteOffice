@@ -1322,6 +1322,13 @@ function Invoke-BenchmarkOperation {
     $process.Refresh()
     $afterWorkingSet = $process.WorkingSet64
     $afterPeakWorkingSet = $process.PeakWorkingSet64
+    $artifactPath = if (Test-Path -LiteralPath $Context.Path) {
+        $Context.Path
+    } elseif ($Context.PSObject.Properties['SourcePath'] -and (Test-Path -LiteralPath $Context.SourcePath)) {
+        $Context.SourcePath
+    } else {
+        $null
+    }
     $workbookValidation = if ($ValidateWorkbook -and $status -eq 'Passed') {
         Test-BenchmarkWorkbook -Path $Context.Path
     } else {
@@ -1345,7 +1352,7 @@ function Invoke-BenchmarkOperation {
         Iteration         = $Context.Iteration
         Milliseconds      = [math]::Round($stopwatch.Elapsed.TotalMilliseconds, 3)
         ResultCount       = $resultCount
-        FileBytes         = if (Test-Path $Context.Path) { [long](Get-Item $Context.Path).Length } else { 0L }
+        FileBytes         = if ($artifactPath) { [long](Get-Item -LiteralPath $artifactPath).Length } else { 0L }
         WorkingSetBeforeMB = [math]::Round($beforeWorkingSet / 1MB, 3)
         WorkingSetAfterMB = [math]::Round($afterWorkingSet / 1MB, 3)
         WorkingSetDeltaMB = [math]::Round(($afterWorkingSet - $beforeWorkingSet) / 1MB, 3)
@@ -1749,10 +1756,12 @@ if ($selectedScenarios.Count -eq 0) {
 
 $null = New-Item -ItemType Directory -Force -Path $moduleRoot, $workRoot
 
-if ($Engine -contains 'ImportExcel') {
+$selectedEngines = @($selectedScenarios | Select-Object -ExpandProperty Engine -Unique)
+
+if ($selectedEngines -contains 'ImportExcel') {
     Ensure-ImportExcel
 }
-if ($Engine -contains 'ExcelFast') {
+if ($selectedEngines -contains 'ExcelFast') {
     Ensure-ExcelFast
 }
 $requiresCsvHelper = @($selectedScenarios | Where-Object { $_.Engine -eq 'CsvHelper' }).Count -gt 0
@@ -1766,6 +1775,8 @@ if (-not ($Engine -contains 'ExcelFast')) {
         throw 'No benchmark scenarios matched after removing unavailable ExcelFast.'
     }
 }
+
+$selectedEngines = @($selectedScenarios | Select-Object -ExpandProperty Engine -Unique)
 
 $requiresPSWriteOfficeModule = @($selectedScenarios | Where-Object { $_.Engine -eq 'PSWriteOffice' }).Count -gt 0
 $requiresWorkbookValidation = (-not $SkipWorkbookValidation.IsPresent) -and
@@ -1786,10 +1797,10 @@ if ($requiresPSWriteOfficeModule -or $requiresWorkbookValidation) {
     $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION = $PSWriteOfficeConfiguration
     Import-Module (Join-Path $repoRoot 'PSWriteOffice.psd1') -Force -ErrorAction Stop
 }
-if ($Engine -contains 'ImportExcel') {
+if ($selectedEngines -contains 'ImportExcel') {
     Import-Module ImportExcel -Force -ErrorAction Stop
 }
-if ($Engine -contains 'ExcelFast') {
+if ($selectedEngines -contains 'ExcelFast') {
     Import-Module ExcelFast -Force -ErrorAction Stop
 }
 
