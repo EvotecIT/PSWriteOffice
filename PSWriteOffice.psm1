@@ -8,13 +8,19 @@ $DevelopmentConfiguration = if ($env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION -in
     'Debug'
 }
 $DevelopmentPath = Join-Path $DevelopmentBasePath $DevelopmentConfiguration
+$DevelopmentFolderCore = "net8.0"
+$DevelopmentFolderDefault = "net472"
+$DevelopmentFramework = if ($PSVersionTable.PSEdition -eq 'Core') {
+    $DevelopmentFolderCore
+} else {
+    $DevelopmentFolderDefault
+}
+$DevelopmentBinaryPath = Join-Path (Join-Path $DevelopmentPath $DevelopmentFramework) 'PSWriteOffice.dll'
 $Development = if ($env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES -eq 'false') {
     $false
 } else {
-    Test-Path $DevelopmentPath
+    Test-Path $DevelopmentBinaryPath
 }
-$DevelopmentFolderCore = "net8.0"
-$DevelopmentFolderDefault = "net472"
 $BinaryModules = @(
     "PSWriteOffice.dll"
 )
