@@ -43,6 +43,16 @@ Describe 'CSV and Excel mutation contracts' {
         Test-Path -LiteralPath $target | Should -BeFalse
     }
 
+    It 'does not create an Excel package when New-OfficeExcel NoSave is invoked with WhatIf' {
+        $target = Join-Path $TestDrive 'nosave-whatif.xlsx'
+
+        New-OfficeExcel -Path $target -NoSave -WhatIf {
+            ExcelSheet -Name Data
+        } | Out-Null
+
+        Test-Path -LiteralPath $target | Should -BeFalse
+    }
+
     It 'does not copy a Word template when New-OfficeWord is invoked with WhatIf' {
         $template = Join-Path $TestDrive 'template.docx'
         $target = Join-Path $TestDrive 'target.docx'
@@ -133,7 +143,7 @@ Describe 'CSV and Excel mutation contracts' {
         [pscustomobject]@{ Name = 'Row2'; Value = 2 } |
             Add-OfficeExcelTableRow -Path $xlsx -Sheet Data -TableName Data -WhatIf
 
-        $rows = Import-OfficeExcel -Path $xlsx -WorksheetName Data
+        $rows = @(Import-OfficeExcel -Path $xlsx -WorksheetName Data)
         $rows.Count | Should -Be 1
         $rows[0].Name | Should -Be 'Row1'
     }

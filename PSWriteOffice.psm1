@@ -276,6 +276,7 @@ $BinaryDev = if ($Development) {
     @()
 }
 
+$ImportedBinaryModules = @()
 $FoundErrors = @(
     if ($Development) {
         foreach ($BinaryModule in $BinaryDev) {
@@ -295,10 +296,16 @@ $FoundErrors = @(
         foreach ($BinaryModule in $BinaryModules) {
             try {
                 if ($Framework -and $PSEdition -eq 'Core') {
-                    Import-Module -Name "$PSScriptRoot\Lib\$Framework\$BinaryModule" -Force -ErrorAction Stop
+                    $importedModule = Import-Module -Name "$PSScriptRoot\Lib\$Framework\$BinaryModule" -Force -PassThru -ErrorAction Stop
+                    if ($importedModule) {
+                        $ImportedBinaryModules += $importedModule
+                    }
                 }
                 if ($FrameworkNet -and $PSEdition -ne 'Core') {
-                    Import-Module -Name "$PSScriptRoot\Lib\$FrameworkNet\$BinaryModule" -Force -ErrorAction Stop
+                    $importedModule = Import-Module -Name "$PSScriptRoot\Lib\$FrameworkNet\$BinaryModule" -Force -PassThru -ErrorAction Stop
+                    if ($importedModule) {
+                        $ImportedBinaryModules += $importedModule
+                    }
                 }
             } catch {
                 Write-Warning "Failed to import module $($BinaryModule): $($_.Exception.Message)"
@@ -324,11 +331,16 @@ if ($FoundErrors.Count -gt 0) {
     #break
 }
 
-foreach ($cmdlet in $ExecutionContext.SessionState.Module.ExportedCmdlets.Values) {
-    if ($null -eq $cmdlet.ImplementingType) {
-        continue
+$cmdletsForAliasExport = @(
+    $ExecutionContext.SessionState.Module.ExportedCmdlets.Values
+    foreach ($importedModule in $ImportedBinaryModules) {
+        $importedModule.ExportedCmdlets.Values
     }
+) | Where-Object {
+    $null -ne $_ -and $null -ne $_.ImplementingType
+} | Sort-Object -Property Name -Unique
 
+foreach ($cmdlet in $cmdletsForAliasExport) {
     $aliasAttributes = $cmdlet.ImplementingType.GetCustomAttributes([System.Management.Automation.AliasAttribute], $true)
     foreach ($attribute in $aliasAttributes) {
         foreach ($aliasName in $attribute.AliasNames) {

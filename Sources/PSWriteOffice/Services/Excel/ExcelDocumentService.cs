@@ -17,6 +17,11 @@ internal static class ExcelDocumentService
         return ExcelDocument.Create(Path.GetFullPath(filePath), autoSave);
     }
 
+    public static ExcelDocument CreateInMemoryDocument()
+    {
+        return ExcelDocument.Create(Stream.Null, autoSave: false);
+    }
+
     public static ExcelDocument CreateDocumentFromTemplate(string templatePath, string filePath, bool autoSave)
     {
         if (string.IsNullOrWhiteSpace(templatePath))

@@ -42,6 +42,7 @@ Add-Type -Path `$conflictOpenXmlPath -ErrorAction Stop
 
 Import-Module PSWriteOffice -Force
 `$command = Get-Command New-OfficeWord -ErrorAction Stop
+`$excelSheetAlias = Get-Alias ExcelSheet -ErrorAction Stop
 `$commandAssembly = `$command.ImplementingType.Assembly
 `$commandAlc = [System.Runtime.Loader.AssemblyLoadContext]::GetLoadContext(`$commandAssembly)
 `$loadedAssemblies = [System.Runtime.Loader.AssemblyLoadContext]::All |
@@ -66,6 +67,7 @@ Import-Module PSWriteOffice -Force
     DefaultOpenXmlALC = `$defaultOpenXmlAlc.Name
     DefaultOpenXmlALCIsDefault = [object]::ReferenceEquals(`$defaultOpenXmlAlc, [System.Runtime.Loader.AssemblyLoadContext]::Default)
     NewOfficeWordAssembly = `$commandAssembly.Location
+    ExcelSheetAliasTarget = `$excelSheetAlias.ResolvedCommandName
     NewOfficeWordALC = `$commandAlc.Name
     NewOfficeWordALCIsDefault = [object]::ReferenceEquals(`$commandAlc, [System.Runtime.Loader.AssemblyLoadContext]::Default)
     LoadedAssemblies = @(`$loadedAssemblies)
@@ -82,6 +84,7 @@ Import-Module PSWriteOffice -Force
         $result.DefaultOpenXmlAssembly | Should -Be $conflictOpenXmlPath
         $result.DefaultOpenXmlALCIsDefault | Should -BeTrue
         $result.NewOfficeWordAssembly | Should -BeLike '*\Artefacts\Unpacked\Modules\PSWriteOffice\Lib\Core\PSWriteOffice.dll'
+        $result.ExcelSheetAliasTarget | Should -Be 'Add-OfficeExcelSheet'
         $result.NewOfficeWordALC | Should -Be 'PSWriteOffice'
         $result.NewOfficeWordALCIsDefault | Should -BeFalse
 

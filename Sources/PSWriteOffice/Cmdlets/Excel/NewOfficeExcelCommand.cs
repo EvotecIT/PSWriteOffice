@@ -138,16 +138,18 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
+        var action = NoSave.IsPresent
+            ? string.IsNullOrWhiteSpace(TemplatePath)
+                ? "Create in-memory Excel workbook"
+                : "Create Excel workbook from template"
+            : "Write new Excel workbook";
+        if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, action))
+        {
+            return;
+        }
+
         if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath))
         {
-            var action = NoSave.IsPresent
-                ? "Create Excel workbook from template"
-                : "Write new Excel workbook";
-            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, action))
-            {
-                return;
-            }
-
             var directory = Path.GetDirectoryName(resolvedPath);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
@@ -156,7 +158,9 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
         }
 
         var document = string.IsNullOrWhiteSpace(TemplatePath)
-            ? ExcelDocumentService.CreateDocument(resolvedPath, AutoSave.IsPresent)
+            ? NoSave.IsPresent
+                ? ExcelDocumentService.CreateInMemoryDocument()
+                : ExcelDocumentService.CreateDocument(resolvedPath, AutoSave.IsPresent)
             : ExcelDocumentService.CreateDocumentFromTemplate(
                 SessionState.Path.GetUnresolvedProviderPathFromPSPath(TemplatePath!),
                 resolvedPath,
