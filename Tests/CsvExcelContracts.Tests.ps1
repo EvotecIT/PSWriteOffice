@@ -53,6 +53,23 @@ Describe 'CSV and Excel mutation contracts' {
         Test-Path -LiteralPath $target | Should -BeFalse
     }
 
+    It 'returns a NoSave Excel workbook that can be saved later' {
+        $target = Join-Path $TestDrive 'nosave-later-save.xlsx'
+
+        $document = New-OfficeExcel -Path $target -NoSave {
+            ExcelSheet -Name Data {
+                ExcelCell -Address A1 -Value 'Ready'
+            }
+        }
+        try {
+            $document.Save($target)
+        } finally {
+            $document.Dispose()
+        }
+
+        Test-Path -LiteralPath $target | Should -BeTrue
+    }
+
     It 'does not copy a Word template when New-OfficeWord is invoked with WhatIf' {
         $template = Join-Path $TestDrive 'template.docx'
         $target = Join-Path $TestDrive 'target.docx'
@@ -89,6 +106,25 @@ Describe 'CSV and Excel mutation contracts' {
         $rows = Import-OfficeExcel -Path $xlsx -WorksheetName Import
         $rows.Count | Should -Be 3
         $rows[0].Name | Should -Be 'Row1'
+    }
+
+    It 'projects scalar Excel table rows into the existing Value column' {
+        $xlsx = Join-Path $TestDrive 'scalar-table-row.xlsx'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            'Beta'
+        )
+
+        New-OfficeExcel -Path $xlsx {
+            ExcelSheet -Name Data {
+                Add-OfficeExcelTable -InputObject $rows -TableName Rows
+            }
+        }
+
+        $data = Import-OfficeExcel -Path $xlsx -WorksheetName Data
+        $data.Count | Should -Be 2
+        $data[1].Name | Should -Be ''
+        $data[1].Value | Should -Be 'Beta'
     }
 
     It 'imports a CSV source into Excel after skipping preamble rows' {

@@ -128,6 +128,15 @@ Describe 'Markdown cmdlets' {
         Test-Path -LiteralPath $imageDirectory | Should -BeFalse
     }
 
+    It 'does not extract HTML data URI images from no-output conversions when WhatIf is used' {
+        $imageDirectory = Join-Path $TestDrive 'images-no-output'
+        $html = '<p><img alt="Tiny" src="data:image/png;base64,AQID" /></p>'
+
+        ConvertFrom-OfficeMarkdownHtml -Html $html -Base64ImageHandling SaveToFile -Base64ImageOutputDirectory $imageDirectory -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $imageDirectory | Should -BeFalse
+    }
+
     It 'builds Markdown via DSL helpers' {
         $path = Join-Path $TestDrive 'MarkdownDsl.md'
         $rows = @(

@@ -254,6 +254,18 @@ namespace PSWriteOffice.Tests {
         Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
     }
 
+    It 'appends multiple piped CSV documents to the same path' {
+        $path = Join-Path $TestDrive 'append-piped-documents.csv'
+        $documents = @(
+            Get-OfficeCsv -Text "Name,Value`nAlpha,1"
+            Get-OfficeCsv -Text "Name,Value`nBeta,2"
+        )
+
+        $documents | Export-OfficeCsv -Path $path -Append
+
+        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
+    }
+
     It 'serializes piped CSV documents as rows instead of object properties' {
         $path = Join-Path $TestDrive 'piped-document.csv'
         $document = Get-OfficeCsv -Text "Name,Value`nAlpha,1"
@@ -271,6 +283,15 @@ namespace PSWriteOffice.Tests {
         $csvText = @($guid | ConvertTo-OfficeCsv -NoHeader)
 
         $csvText | Should -Be '00112233-4455-6677-8899-aabbccddeeff'
+    }
+
+    It 'preserves ETS members added to scalar CSV values' {
+        $value = 'Alpha' | Add-Member -NotePropertyName Name -NotePropertyValue 'Decorated' -PassThru
+
+        $csvText = @($value | ConvertTo-OfficeCsv)
+
+        $csvText[0] | Should -BeLike '*Name*'
+        $csvText[1] | Should -BeLike '*Decorated*'
     }
 
     It 'uses the selected culture list separator when UseCulture is specified' {

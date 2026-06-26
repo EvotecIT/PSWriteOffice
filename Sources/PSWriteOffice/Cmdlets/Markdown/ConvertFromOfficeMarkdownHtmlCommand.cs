@@ -161,6 +161,13 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
             }
 
             var options = BuildOptions(htmlFileDirectory);
+            if (string.IsNullOrWhiteSpace(OutputPath) &&
+                RequiresImageExtraction(options) &&
+                !ShouldProcess(options.Base64ImageOutputDirectory, "Extract Markdown images from HTML"))
+            {
+                return;
+            }
+
             if (AsDocument.IsPresent)
             {
                 WriteObject(html.LoadFromHtml(options));
@@ -255,4 +262,8 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
 
         return options;
     }
+
+    private static bool RequiresImageExtraction(HtmlToMarkdownOptions options)
+        => options.Base64Images == HtmlBase64ImageHandling.SaveToFile &&
+           !string.IsNullOrWhiteSpace(options.Base64ImageOutputDirectory);
 }

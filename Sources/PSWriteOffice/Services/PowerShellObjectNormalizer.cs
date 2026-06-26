@@ -161,6 +161,13 @@ internal static class PowerShellObjectNormalizer
 
     private static bool TryProjectScalar(object item, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
     {
+        if (item is PSObject psObject && HasExportableExtendedProperties(psObject))
+        {
+            projectedColumns = columns ?? Array.Empty<string>();
+            values = Array.Empty<object?>();
+            return false;
+        }
+
         var value = item is PSObject { BaseObject: { } baseObject } && IsScalarClrType(baseObject.GetType())
             ? baseObject
             : item;
@@ -174,9 +181,15 @@ internal static class PowerShellObjectNormalizer
 
         projectedColumns = columns ?? new[] { "Value" };
         values = new object?[projectedColumns.Length];
+        var targetIndex = ResolveScalarProjectionIndex(projectedColumns);
+        if (targetIndex < 0)
+        {
+            return false;
+        }
+
         if (values.Length > 0)
         {
-            values[0] = NormalizeCellValue(value, options);
+            values[targetIndex] = NormalizeCellValue(value, options);
         }
 
         return true;
@@ -184,6 +197,11 @@ internal static class PowerShellObjectNormalizer
 
     private static bool TryProjectScalarInto(object item, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
     {
+        if (item is PSObject psObject && HasExportableExtendedProperties(psObject))
+        {
+            return false;
+        }
+
         var value = item is PSObject { BaseObject: { } baseObject } && IsScalarClrType(baseObject.GetType())
             ? baseObject
             : item;
@@ -193,17 +211,52 @@ internal static class PowerShellObjectNormalizer
             return false;
         }
 
-        var targetIndex = columns.Length == 1
-            ? 0
-            : Array.FindIndex(columns, static column => string.Equals(column, "Value", StringComparison.OrdinalIgnoreCase));
+        var targetIndex = ResolveScalarProjectionIndex(columns);
         if (targetIndex < 0)
         {
             return false;
         }
 
+        Array.Clear(values, 0, values.Length);
         values[targetIndex] = NormalizeCellValue(value, options);
         return true;
     }
+
+    private static int ResolveScalarProjectionIndex(IReadOnlyList<string> columns)
+    {
+        if (columns.Count == 0)
+        {
+            return -1;
+        }
+
+        if (columns.Count == 1)
+        {
+            return 0;
+        }
+
+        for (var i = 0; i < columns.Count; i++)
+        {
+            if (string.Equals(columns[i], "Value", StringComparison.OrdinalIgnoreCase))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private static bool HasExportableExtendedProperties(PSObject psObject)
+        => psObject.Properties.Any(static property =>
+            IsExtendedProperty(property) &&
+            !string.IsNullOrWhiteSpace(property.Name));
+
+    private static bool IsExtendedProperty(PSPropertyInfo property)
+        => property.IsInstance &&
+           property.IsGettable &&
+           (property.MemberType == PSMemberTypes.AliasProperty ||
+            property.MemberType == PSMemberTypes.NoteProperty ||
+            property.MemberType == PSMemberTypes.ScriptProperty ||
+            property.MemberType == PSMemberTypes.CodeProperty);
 
     private static object? NormalizePSObject(PSObject ps, PowerShellObjectNormalizerOptions options)
     {
@@ -606,7 +659,8 @@ internal static class PowerShellObjectNormalizer
             return false;
         }
 
-        return property.MemberType == PSMemberTypes.NoteProperty ||
+        return property.MemberType == PSMemberTypes.AliasProperty ||
+            property.MemberType == PSMemberTypes.NoteProperty ||
             property.MemberType == PSMemberTypes.Property ||
             property.MemberType == PSMemberTypes.ScriptProperty ||
             property.MemberType == PSMemberTypes.CodeProperty;

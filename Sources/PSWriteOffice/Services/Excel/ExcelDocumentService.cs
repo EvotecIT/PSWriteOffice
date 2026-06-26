@@ -19,7 +19,7 @@ internal static class ExcelDocumentService
 
     public static ExcelDocument CreateInMemoryDocument()
     {
-        return ExcelDocument.Create(Stream.Null, autoSave: false);
+        return ExcelDocument.Create(new MemoryStream(), autoSave: false);
     }
 
     public static ExcelDocument CreateDocumentFromTemplate(string templatePath, string filePath, bool autoSave)

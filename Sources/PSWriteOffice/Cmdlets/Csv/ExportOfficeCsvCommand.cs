@@ -185,7 +185,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
     private void ExportDocument(CsvDocument document)
     {
-        if (document == null || !TryPrepareOutput("Write CSV"))
+        if (document == null || !TryPrepareOutput("Write CSV", allowAdditionalAppend: Append.IsPresent))
         {
             return;
         }
@@ -294,14 +294,14 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         return _streamingWriter;
     }
 
-    private bool TryPrepareOutput(string action)
+    private bool TryPrepareOutput(string action, bool allowAdditionalAppend = false)
     {
         if (_skipOutput)
         {
             return false;
         }
 
-        if (_wroteOutput)
+        if (_wroteOutput && !(allowAdditionalAppend && Append.IsPresent))
         {
             WriteError(new ErrorRecord(
                 new InvalidOperationException("Path can only be written once per invocation."),
