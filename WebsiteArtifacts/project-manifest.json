@@ -7,8 +7,8 @@
   "status": "active",
   "listed": false,
   "version": "1.0.3",
-  "generatedAt": "2026-06-25T23:25:45.4194973+02:00",
-  "sourceRef": "feature/csv-excel-performance-api",
+  "generatedAt": "2026-06-26T02:55:44.5860324+02:00",
+  "sourceRef": "main",
   "links": {
     "source": "https://github.com/EvotecIT/PSWriteOffice"
   },

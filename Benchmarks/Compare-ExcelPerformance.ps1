@@ -1766,7 +1766,11 @@ if (-not ($Engine -contains 'ExcelFast')) {
     }
 }
 
-if (($Engine -contains 'PSWriteOffice') -or (-not $SkipWorkbookValidation.IsPresent)) {
+$requiresPSWriteOfficeModule = @($selectedScenarios | Where-Object { $_.Engine -eq 'PSWriteOffice' }).Count -gt 0
+$requiresWorkbookValidation = (-not $SkipWorkbookValidation.IsPresent) -and
+    @($selectedScenarios | Where-Object { [bool]$_.ValidateWorkbook }).Count -gt 0
+
+if ($requiresPSWriteOfficeModule -or $requiresWorkbookValidation) {
     if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
         $env:OfficeIMORoot = $OfficeIMORoot
     } elseif (-not $env:OfficeIMORoot) {
