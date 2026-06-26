@@ -275,6 +275,14 @@ $data | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data' -TableName 
 Import-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data'
 ```
 
+### Excel and database round trip
+
+PSWriteOffice owns the workbook side of the flow. Database access, provider-specific bulk writes, table creation, and verification belong to DbaClientX. The example below exports SQL Server rows to Excel, imports the workbook back as a `DataTable`, writes it to a destination table with DbaClientX, and verifies row counts.
+
+```powershell
+.\Examples\Excel\Example-ExcelDbaClientXRoundTrip.ps1 -Server localhost -Database tempdb -RowCount 100
+```
+
 ### Excel benchmark snapshot
 
 The benchmark harness in `Benchmarks\Compare-ExcelPerformance.ps1` compares
