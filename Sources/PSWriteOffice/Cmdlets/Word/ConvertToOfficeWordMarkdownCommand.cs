@@ -130,6 +130,13 @@ public sealed class ConvertToOfficeWordMarkdownCommand : PSCmdlet
             }
             else
             {
+                if (options.ImageExportMode == ImageExportMode.File && !string.IsNullOrWhiteSpace(options.ImageDirectory) &&
+                    !ShouldProcess(options.ImageDirectory, "Export Word images while converting to Markdown"))
+                {
+                    options.ImageExportMode = ImageExportMode.Base64;
+                    options.ImageDirectory = null;
+                }
+
                 WriteObject(document.ToMarkdown(options));
             }
         }

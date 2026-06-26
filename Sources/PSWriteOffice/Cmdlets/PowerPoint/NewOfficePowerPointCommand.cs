@@ -71,12 +71,12 @@ public class NewOfficePowerPointCommand : PSCmdlet
             {
                 return;
             }
+        }
 
-            var directory = Path.GetDirectoryName(resolvedPath);
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
+        var directory = Path.GetDirectoryName(resolvedPath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
         }
 
         PowerPointPresentation? presentation = null;

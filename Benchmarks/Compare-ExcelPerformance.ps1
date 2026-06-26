@@ -1755,7 +1755,8 @@ if ($Engine -contains 'ImportExcel') {
 if ($Engine -contains 'ExcelFast') {
     Ensure-ExcelFast
 }
-if ($Engine -contains 'CsvHelper') {
+$requiresCsvHelper = @($selectedScenarios | Where-Object { $_.Engine -eq 'CsvHelper' }).Count -gt 0
+if ($requiresCsvHelper) {
     Ensure-CsvHelper
 }
 
