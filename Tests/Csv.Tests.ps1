@@ -173,6 +173,17 @@ namespace PSWriteOffice.Tests {
         Get-Content -LiteralPath $path | Should -Be @('name,value', 'Alpha,1', 'Beta,2')
     }
 
+    It 'preserves DataRow adapter columns when converting CSV' {
+        $table = [System.Data.DataTable]::new()
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Alpha', 1)
+
+        $csvText = @($table.Rows | ConvertTo-OfficeCsv)
+
+        $csvText | Should -Be @('Name,Value', 'Alpha,1')
+    }
+
     It 'requires existing append columns unless Force is specified' {
         $path = Join-Path $TestDrive 'append-force.csv'
         [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |

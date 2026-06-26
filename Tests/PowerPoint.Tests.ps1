@@ -30,6 +30,14 @@ BeforeAll {
 }
 
 Describe 'PowerPoint cmdlets' {
+    It 'does not create a NoSave presentation when WhatIf skips creation' {
+        $path = Join-Path $TestDrive 'PowerPointNoSaveWhatIf.pptx'
+
+        New-OfficePowerPoint -FilePath $path -NoSave -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $path | Should -BeFalse
+    }
+
     It 'closes a presentation through a PowerShell cmdlet' {
         $path = Join-Path $TestDrive 'PowerPointClose.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path

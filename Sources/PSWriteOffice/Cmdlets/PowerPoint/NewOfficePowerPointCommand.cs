@@ -58,7 +58,14 @@ public class NewOfficePowerPointCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
-        if (!NoSave.IsPresent)
+        if (NoSave.IsPresent)
+        {
+            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Create PowerPoint presentation"))
+            {
+                return;
+            }
+        }
+        else
         {
             if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Write new PowerPoint presentation"))
             {
