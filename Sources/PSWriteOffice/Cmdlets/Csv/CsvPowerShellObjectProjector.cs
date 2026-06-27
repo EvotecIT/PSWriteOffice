@@ -44,9 +44,13 @@ internal sealed class CsvPowerShellObjectProjector
     public void WriteObject(object? value, CsvObjectWriter writer)
     {
         if (_columns != null &&
-            _values != null &&
-            TryProjectIntoExistingColumns(value, _columns, _values))
+            _values != null)
         {
+            if (!TryProjectIntoExistingColumns(value, _columns, _values))
+            {
+                Array.Clear(_values, 0, _values.Length);
+            }
+
             writer.WriteRow(_columns, _values);
             return;
         }

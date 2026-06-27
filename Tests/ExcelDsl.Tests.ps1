@@ -1075,6 +1075,22 @@ Describe 'Excel DSL surface' {
         $imported[1].Enabled | Should -BeFalse
     }
 
+    It 'allows NoClobber as a safety option when appending Excel rows' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelAppendNoClobber.xlsx'
+
+        [PSCustomObject]@{ Region = 'NA'; Revenue = 100 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales'
+
+        [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -Append -NoClobber
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $imported.Count | Should -Be 2
+        $imported[0].Region | Should -Be 'NA'
+        $imported[1].Region | Should -Be 'EMEA'
+        $imported[1].Revenue | Should -Be 200
+    }
+
     It 'applies export-time column formats by header' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelColumnFormats.xlsx'
         $rows = @(

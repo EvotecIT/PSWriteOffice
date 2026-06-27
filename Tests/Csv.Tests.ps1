@@ -213,6 +213,29 @@ Describe 'CSV cmdlets' {
         $data[1].Value | Should -Be 'Beta'
     }
 
+    It 'keeps forced scalar appends on the existing CSV schema without a Value column' {
+        $path = Join-Path $TestDrive 'append-force-scalar-schema.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Other = 'One' } |
+            Export-OfficeCsv -Path $path
+
+        'Beta' | Export-OfficeCsv -Path $path -Append -Force
+
+        Get-Content -LiteralPath $path | Should -Be @('Name,Other', 'Alpha,One', ',')
+        $data = @(Import-OfficeCsv -Path $path)
+        $data.Count | Should -Be 2
+        $data[1].Name | Should -Be ''
+        $data[1].Other | Should -Be ''
+    }
+
+    It 'keeps mixed scalar conversions on the first row schema without a Value column' {
+        $csvText = @(
+            [pscustomobject]@{ Name = 'Alpha'; Other = 'One' }
+            'Beta'
+        ) | ConvertTo-OfficeCsv
+
+        $csvText | Should -Be @('Name,Other', 'Alpha,One', ',')
+    }
+
     It 'does not touch an append target when first row validation fails' {
         $path = Join-Path $TestDrive 'append-validation-preserve.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -NoNewline -Encoding UTF8
