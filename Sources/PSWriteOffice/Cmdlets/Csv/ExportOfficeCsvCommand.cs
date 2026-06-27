@@ -349,10 +349,11 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             }
         }
 
-        _appendToExistingFile = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
-        _appendEncoding = _appendToExistingFile && Encoding == null
+        var appendTargetHasBytes = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
+        _appendEncoding = appendTargetHasBytes && Encoding == null
             ? TryDetectEncodingFromBom(_resolvedPath)
             : null;
+        _appendToExistingFile = appendTargetHasBytes && ContainsCsvContent(_resolvedPath, Encoding ?? _appendEncoding);
         _appendHeader = _appendToExistingFile
             ? ReadAppendHeader(_resolvedPath)
             : null;
@@ -430,8 +431,9 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     private StreamWriter CreateTextWriter(bool append, CsvSaveOptions options)
     {
         var encoding = ResolveOutputEncoding(append, options);
-        var mode = append ? FileMode.Append : FileMode.Create;
-        if (append && _appendToExistingFile)
+        var appendToContent = append && _appendToExistingFile;
+        var mode = appendToContent ? FileMode.Append : FileMode.Create;
+        if (appendToContent)
         {
             EnsureAppendStartsOnNewRecord(_resolvedPath!, options);
         }
@@ -442,6 +444,21 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>
         options.Encoding ?? (append ? _appendEncoding : null) ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+
+    private static bool ContainsCsvContent(string path, Encoding? encoding)
+    {
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, StreamWriterBufferSize, FileOptions.SequentialScan);
+        using var reader = new StreamReader(stream, encoding ?? Encoding.UTF8, detectEncodingFromByteOrderMarks: true, bufferSize: StreamWriterBufferSize, leaveOpen: false);
+        while (reader.Read() is var value && value != -1)
+        {
+            if (!char.IsWhiteSpace((char)value))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private void EnsureAppendStartsOnNewRecord(string path, CsvSaveOptions options)
     {

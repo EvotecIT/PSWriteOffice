@@ -128,6 +128,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     /// <summary>Do not overwrite an existing workbook unless appending or clearing a sheet.</summary>
     [Parameter(ParameterSetName = ParameterSetCreate)]
     [Parameter(ParameterSetName = ParameterSetAppend)]
+    [Parameter(ParameterSetName = ParameterSetClearSheet)]
     public SwitchParameter NoClobber { get; set; }
 
     /// <summary>Exclude specific properties from exported objects.</summary>

@@ -133,6 +133,16 @@ Describe 'CSV cmdlets' {
         $data[1].Name | Should -Be 'Beta'
     }
 
+    It 'treats whitespace-only append targets as new CSV files' {
+        $path = Join-Path $TestDrive 'append-empty-target.csv'
+        Set-Content -LiteralPath $path -Value "`r`n" -NoNewline -Encoding UTF8
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -Append
+
+        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1')
+    }
+
     It 'does not infer headers when appending to a headerless CSV' {
         $path = Join-Path $TestDrive 'append-headerless.csv'
         [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |

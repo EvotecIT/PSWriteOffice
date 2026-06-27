@@ -1091,6 +1091,21 @@ Describe 'Excel DSL surface' {
         $imported[1].Revenue | Should -Be 200
     }
 
+    It 'allows NoClobber as a safety option when clearing an Excel sheet' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelClearSheetNoClobber.xlsx'
+
+        [PSCustomObject]@{ Region = 'NA'; Revenue = 100 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales'
+
+        [PSCustomObject]@{ Region = 'APAC'; Revenue = 300 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -ClearSheet -NoClobber
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $imported.Count | Should -Be 1
+        $imported[0].Region | Should -Be 'APAC'
+        $imported[0].Revenue | Should -Be 300
+    }
+
     It 'applies export-time column formats by header' {
         $path = Join-Path $TestDrive 'ExportOfficeExcelColumnFormats.xlsx'
         $rows = @(
