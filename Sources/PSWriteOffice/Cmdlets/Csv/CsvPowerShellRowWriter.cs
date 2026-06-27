@@ -172,11 +172,17 @@ internal sealed class CsvPowerShellRowWriter
 
         private static Func<int, PSObject>? CreateCapacityFactory()
         {
-            var constructor = typeof(PSObject).GetConstructor(
-                BindingFlags.Public | BindingFlags.Instance,
-                binder: null,
-                types: new[] { typeof(int) },
-                modifiers: null);
+            ConstructorInfo? constructor = null;
+            foreach (var candidate in typeof(PSObject).GetConstructors(BindingFlags.Public | BindingFlags.Instance))
+            {
+                var parameters = candidate.GetParameters();
+                if (parameters.Length == 1 && parameters[0].ParameterType == typeof(int))
+                {
+                    constructor = candidate;
+                    break;
+                }
+            }
+
             if (constructor is null)
             {
                 return null;
