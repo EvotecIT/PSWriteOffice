@@ -224,18 +224,19 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     private void AppendDocument(CsvDocument document)
     {
         var options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
+        var appendHeader = GetEffectiveAppendHeader(document);
 
-        if (_appendHeader is { Length: > 0 })
+        if (appendHeader is { Length: > 0 })
         {
-            ValidateDocumentAppendHeader(document, _appendHeader);
+            ValidateDocumentAppendHeader(document, appendHeader);
         }
 
         using var writer = CreateTextWriter(append: true, options);
         using var csvWriter = new CsvObjectWriter(writer, options);
 
-        if (_appendHeader is { Length: > 0 })
+        if (appendHeader is { Length: > 0 })
         {
-            WriteDocumentRows(document, csvWriter, _appendHeader, projectByName: true);
+            WriteDocumentRows(document, csvWriter, appendHeader, projectByName: true);
             return;
         }
 
@@ -277,14 +278,15 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         if (Append.IsPresent)
         {
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
-            if (_appendHeader is { Length: > 0 })
+            var appendHeader = GetEffectiveAppendHeader(firstValue);
+            if (appendHeader is { Length: > 0 })
             {
                 if (!Force.IsPresent)
                 {
-                    _objectProjector.ValidateObjectColumns(firstValue, _appendHeader);
+                    _objectProjector.ValidateObjectColumns(firstValue, appendHeader);
                 }
 
-                _objectProjector.UseColumns(_appendHeader, validateColumns: !Force.IsPresent);
+                _objectProjector.UseColumns(appendHeader, validateColumns: !Force.IsPresent);
             }
         }
 
@@ -351,7 +353,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         _appendEncoding = _appendToExistingFile && Encoding == null
             ? TryDetectEncodingFromBom(_resolvedPath)
             : null;
-        _appendHeader = _appendToExistingFile && !NoHeader.IsPresent
+        _appendHeader = _appendToExistingFile
             ? ReadAppendHeader(_resolvedPath)
             : null;
 
@@ -564,6 +566,37 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
                 throw new CsvException($"Cannot append CSV because the document is missing the existing column '{column}'. Use -Force to append with blank values for missing columns.");
             }
         }
+    }
+
+    private string[]? GetEffectiveAppendHeader(object? firstValue)
+    {
+        if (_appendHeader is not { Length: > 0 })
+        {
+            return null;
+        }
+
+        if (!NoHeader.IsPresent || _objectProjector.CanProjectColumns(firstValue, _appendHeader))
+        {
+            return _appendHeader;
+        }
+
+        return null;
+    }
+
+    private string[]? GetEffectiveAppendHeader(CsvDocument document)
+    {
+        if (_appendHeader is not { Length: > 0 })
+        {
+            return null;
+        }
+
+        if (!NoHeader.IsPresent)
+        {
+            return _appendHeader;
+        }
+
+        var documentHeader = new HashSet<string>(document.Header, StringComparer.OrdinalIgnoreCase);
+        return _appendHeader.All(documentHeader.Contains) ? _appendHeader : null;
     }
 
     private static void WriteDocumentRows(CsvDocument document, CsvObjectWriter writer, IReadOnlyList<string> columns, bool projectByName)

@@ -108,6 +108,17 @@ Describe 'CSV cmdlets' {
         $data[1].Value | Should -Be '2'
     }
 
+    It 'uses existing CSV header order when appending without writing headers' {
+        $path = Join-Path $TestDrive 'append-order-no-header.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        [pscustomobject]@{ Value = 2; Name = 'Beta' } |
+            Export-OfficeCsv -Path $path -Append -NoHeader
+
+        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', 'Beta,2')
+    }
+
     It 'starts appended rows on a new record when the existing file has no trailing newline' {
         $path = Join-Path $TestDrive 'append-no-newline.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -NoNewline -Encoding UTF8

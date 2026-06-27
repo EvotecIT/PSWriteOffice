@@ -41,6 +41,16 @@ internal sealed class CsvPowerShellObjectProjector
         ValidateFirstRowColumns(value, columns);
     }
 
+    public bool CanProjectColumns(object? value, IReadOnlyList<string> columns)
+    {
+        if (columns == null)
+        {
+            throw new ArgumentNullException(nameof(columns));
+        }
+
+        return TryGetProjectableColumns(value, columns, out _);
+    }
+
     public void WriteObject(object? value, CsvObjectWriter writer)
     {
         if (_columns != null &&
@@ -78,9 +88,23 @@ internal sealed class CsvPowerShellObjectProjector
 
     private static void ValidateFirstRowColumns(object? value, IReadOnlyList<string> columns)
     {
-        if (!PowerShellObjectNormalizer.TryProjectItem(value, null, out var sourceColumns, out _))
+        if (TryGetProjectableColumns(value, columns, out var missingColumn))
         {
             return;
+        }
+
+        if (missingColumn != null)
+        {
+            throw new CsvException($"Cannot append CSV because the input object is missing the existing column '{missingColumn}'. Use -Force to append with blank values for missing columns.");
+        }
+    }
+
+    private static bool TryGetProjectableColumns(object? value, IReadOnlyList<string> columns, out string? missingColumn)
+    {
+        missingColumn = null;
+        if (!PowerShellObjectNormalizer.TryProjectItem(value, null, out var sourceColumns, out _))
+        {
+            return false;
         }
 
         var sourceColumnSet = new HashSet<string>(sourceColumns, StringComparer.OrdinalIgnoreCase);
@@ -88,8 +112,11 @@ internal sealed class CsvPowerShellObjectProjector
         {
             if (!sourceColumnSet.Contains(column))
             {
-                throw new CsvException($"Cannot append CSV because the input object is missing the existing column '{column}'. Use -Force to append with blank values for missing columns.");
+                missingColumn = column;
+                return false;
             }
         }
+
+        return true;
     }
 }
