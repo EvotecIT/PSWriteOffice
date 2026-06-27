@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-26T02:55:44.4330702+02:00",
+  "generatedAt": "2026-06-27T20:17:11.1150548+00:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
