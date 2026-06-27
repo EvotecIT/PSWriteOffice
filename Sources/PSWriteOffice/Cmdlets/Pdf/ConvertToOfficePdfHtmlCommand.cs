@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// ConvertTo-OfficePdfHtml -Path .\report.pdf -OutputPath .\report.html</code>
 ///   <para>Writes HTML generated from the OfficeIMO logical PDF read model.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficePdfHtml")]
+[Cmdlet(VerbsData.ConvertTo, "OfficePdfHtml", SupportsShouldProcess = true)]
 [Alias("ConvertTo-PdfHtml")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
@@ -95,6 +95,11 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 string outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+                if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF HTML"))
+                {
+                    return;
+                }
+
                 PdfCommandUtilities.EnsureDirectory(outputPath);
                 File.WriteAllText(outputPath, html, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
                 WriteObject(new FileInfo(outputPath));

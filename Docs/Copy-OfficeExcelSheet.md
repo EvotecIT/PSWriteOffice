@@ -11,17 +11,17 @@ Copies a worksheet within a workbook or from another workbook.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Copy-OfficeExcelSheet [[-SourceSheet] <string>] [-NewName] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <SheetNameValidationMode>] [<CommonParameters>]
+Copy-OfficeExcelSheet [[-SourceSheet] <string>] [-NewName] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <SheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Copy-OfficeExcelSheet [-InputPath] <string> [[-SourceSheet] <string>] [-NewName] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <SheetNameValidationMode>] [<CommonParameters>]
+Copy-OfficeExcelSheet [-InputPath] <string> [[-SourceSheet] <string>] [-NewName] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <SheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Copy-OfficeExcelSheet [[-SourceSheet] <string>] [-NewName] <string> -Document <ExcelDocument> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <SheetNameValidationMode>] [<CommonParameters>]
+Copy-OfficeExcelSheet [[-SourceSheet] <string>] [-NewName] <string> -Document <ExcelDocument> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <SheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,7 +42,31 @@ $proof
 
 Creates a copy of the Data worksheet and reads the workbook summary to verify the new tab.
 
+### EXAMPLE 2
+```powershell
+PS> Copy-OfficeExcelSheet -Path .\Combined.xlsx -SourcePath .\Incoming.xlsx -SourceSheet RawData -NewName IncomingRaw -CopyMode Package
+            Get-OfficeExcelUsedRange -Path .\Combined.xlsx -Sheet IncomingRaw
+```
+
+Copies the source worksheet package directly so large workbook merges avoid converting rows into PowerShell objects. Use CopyMode Values only when you explicitly want the reader/writer fallback.
+
 ## PARAMETERS
+
+### -CopyMode
+Controls whether cross-workbook copies use package-level copy or value materialization.
+
+```yaml
+Type: ExcelWorksheetCopyMode
+Parameter Sets: Context, Path, Document
+Aliases: None
+Possible values: Values, Package
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Document
 Target workbook to update outside the DSL context.

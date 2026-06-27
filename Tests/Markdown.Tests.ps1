@@ -117,6 +117,26 @@ Describe 'Markdown cmdlets' {
         (Get-Content -Path $path -Raw) | Should -Match '# Title'
     }
 
+    It 'does not extract HTML data URI images when WhatIf skips saving' {
+        $path = Join-Path $TestDrive 'converted-whatif.md'
+        $imageDirectory = Join-Path $TestDrive 'images'
+        $html = '<p><img alt="Tiny" src="data:image/png;base64,AQID" /></p>'
+
+        ConvertFrom-OfficeMarkdownHtml -Html $html -OutputPath $path -Base64ImageHandling SaveToFile -Base64ImageOutputDirectory $imageDirectory -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $path | Should -BeFalse
+        Test-Path -LiteralPath $imageDirectory | Should -BeFalse
+    }
+
+    It 'does not extract HTML data URI images from no-output conversions when WhatIf is used' {
+        $imageDirectory = Join-Path $TestDrive 'images-no-output'
+        $html = '<p><img alt="Tiny" src="data:image/png;base64,AQID" /></p>'
+
+        ConvertFrom-OfficeMarkdownHtml -Html $html -Base64ImageHandling SaveToFile -Base64ImageOutputDirectory $imageDirectory -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $imageDirectory | Should -BeFalse
+    }
+
     It 'builds Markdown via DSL helpers' {
         $path = Join-Path $TestDrive 'MarkdownDsl.md'
         $rows = @(
@@ -149,6 +169,19 @@ Describe 'Markdown cmdlets' {
         $file | Should -BeOfType System.IO.FileInfo
         Test-Path -LiteralPath $path | Should -BeTrue
         [System.IO.File]::ReadAllText($path) | Should -Be ''
+    }
+
+    It 'does not run the Markdown DSL when WhatIf skips saving' {
+        $path = Join-Path $TestDrive 'MarkdownWhatIf.md'
+        $script:MarkdownWhatIfDslRan = $false
+
+        New-OfficeMarkdown -Path $path -WhatIf {
+            $script:MarkdownWhatIfDslRan = $true
+            MarkdownParagraph -Text 'Should not run'
+        } | Out-Null
+
+        $script:MarkdownWhatIfDslRan | Should -BeFalse
+        Test-Path -LiteralPath $path | Should -BeFalse
     }
 
     It 'supports transposed Markdown tables' {

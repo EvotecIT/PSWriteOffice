@@ -9,14 +9,49 @@ schema: 2.0.0
 Loads a CSV document from disk or parses CSV text.
 
 ## SYNTAX
-### Path (Default)
+### PathDelimiter (Default)
 ```powershell
-Get-OfficeCsv [-InputPath] <string> [-HasHeaderRow <bool>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [<CommonParameters>]
+Get-OfficeCsv [-Path] <string[]> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [<CommonParameters>]
 ```
 
-### Text
+### PathCulture
 ```powershell
-Get-OfficeCsv -Text <string> [-HasHeaderRow <bool>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [<CommonParameters>]
+Get-OfficeCsv [-Path] <string[]> -UseCulture [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [<CommonParameters>]
+```
+
+### PathDetect
+```powershell
+Get-OfficeCsv [-Path] <string[]> -DetectDelimiter [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-DelimiterCandidates <char[]>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [<CommonParameters>]
+```
+
+### LiteralPathDelimiter
+```powershell
+Get-OfficeCsv -LiteralPath <string[]> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [<CommonParameters>]
+```
+
+### LiteralPathCulture
+```powershell
+Get-OfficeCsv -LiteralPath <string[]> -UseCulture [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [<CommonParameters>]
+```
+
+### LiteralPathDetect
+```powershell
+Get-OfficeCsv -LiteralPath <string[]> -DetectDelimiter [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-DelimiterCandidates <char[]>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [<CommonParameters>]
+```
+
+### TextDelimiter
+```powershell
+Get-OfficeCsv -Text <string> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [<CommonParameters>]
+```
+
+### TextCulture
+```powershell
+Get-OfficeCsv -Text <string> -UseCulture [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [<CommonParameters>]
+```
+
+### TextDetect
+```powershell
+Get-OfficeCsv -Text <string> -DetectDelimiter [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-DelimiterCandidates <char[]>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -52,7 +87,39 @@ Allow empty lines in the input.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Path, Text
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ColumnCountMismatchPolicy
+Controls how rows with fewer or more fields than the header are handled.
+
+```yaml
+Type: CsvColumnCountMismatchPolicy
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
+Aliases: None
+Possible values: Strict, PadMissingFieldsAndIgnoreExtraFields
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CommentCharacter
+Character that identifies comment rows.
+
+```yaml
+Type: Char
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
 Aliases: None
 Possible values:
 
@@ -68,7 +135,7 @@ Culture used for type conversions.
 
 ```yaml
 Type: CultureInfo
-Parameter Sets: Path, Text
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
 Aliases: None
 Possible values:
 
@@ -84,11 +151,43 @@ Field delimiter character.
 
 ```yaml
 Type: Char
-Parameter Sets: Path, Text
+Parameter Sets: PathDelimiter, LiteralPathDelimiter, TextDelimiter
 Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DelimiterCandidates
+Delimiter candidates to consider when detecting the delimiter.
+
+```yaml
+Type: Char[]
+Parameter Sets: PathDetect, LiteralPathDetect, TextDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DetectDelimiter
+Detect the delimiter from the first meaningful records.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathDetect, LiteralPathDetect, TextDetect
+Aliases: None
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -100,7 +199,7 @@ Encoding used when reading the file.
 
 ```yaml
 Type: Encoding
-Parameter Sets: Path, Text
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values:
 
@@ -111,12 +210,12 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -HasHeaderRow
-Indicates whether the first record is a header row.
+### -Header
+Explicit header names to use; when provided, the first CSV record is treated as data.
 
 ```yaml
-Type: Boolean
-Parameter Sets: Path, Text
+Type: String[]
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
 Aliases: None
 Possible values:
 
@@ -127,19 +226,19 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -InputPath
-Path to the CSV file.
+### -LiteralPath
+Literal path to one or more CSV files.
 
 ```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
+Type: String[]
+Parameter Sets: LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: PSPath, LP
 Possible values:
 
 Required: True
-Position: 0
+Position: named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: True
 ```
 
@@ -148,9 +247,105 @@ Load mode controlling materialization.
 
 ```yaml
 Type: CsvLoadMode
-Parameter Sets: Path, Text
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
 Aliases: None
 Possible values: InMemory, Stream
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoHeader
+Treat the first record as data and generate default column names.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Path
+Path to one or more CSV files. Wildcards are supported.
+
+```yaml
+Type: String[]
+Parameter Sets: PathDelimiter, PathCulture, PathDetect
+Aliases: FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue, ByPropertyName)
+Accept wildcard characters: True
+```
+
+### -RecognizeW3CFieldsHeader
+Recognize W3C Extended Log File Format #Fields: rows as headers.
+
+```yaml
+Type: Boolean
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SkipCommentRows
+Skip comment rows throughout the file.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SkipCommentRowsBeforeHeader
+Skip comment rows starting with # while discovering the header.
+
+```yaml
+Type: Boolean
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SkipRows
+Number of parsed CSV records to skip before header discovery or data output.
+
+```yaml
+Type: Int32
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -164,7 +359,7 @@ CSV text to parse.
 
 ```yaml
 Type: String
-Parameter Sets: Text
+Parameter Sets: TextDelimiter, TextCulture, TextDetect
 Aliases: None
 Possible values:
 
@@ -180,11 +375,27 @@ Trim whitespace around unquoted fields.
 
 ```yaml
 Type: Boolean
-Parameter Sets: Path, Text
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect, TextDelimiter, TextCulture, TextDetect
 Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UseCulture
+Use the list separator from the selected or current culture as the delimiter.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathCulture, LiteralPathCulture, TextCulture
+Aliases: None
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -196,7 +407,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.String[]`
 
 ## OUTPUTS
 

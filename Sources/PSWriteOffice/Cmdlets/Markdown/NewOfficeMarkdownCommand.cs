@@ -28,7 +28,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   }</code>
 ///   <para>Creates a report with two tables separated by headings.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficeMarkdown")]
+[Cmdlet(VerbsCommon.New, "OfficeMarkdown", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo), typeof(MarkdownDoc))]
 public sealed class NewOfficeMarkdownCommand : PSCmdlet
     , IMarkdownWriteOptionSource
@@ -171,10 +171,9 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var fullPath = GetResolvedPath();
-        var directory = Path.GetDirectoryName(fullPath);
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        if (!NoSave.IsPresent && !PdfCommandUtilities.ShouldWrite(this, fullPath, "Write new Markdown document"))
         {
-            Directory.CreateDirectory(directory);
+            return;
         }
 
         var document = MarkdownDoc.Create();
@@ -190,6 +189,12 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
         {
             WriteObject(document);
             return;
+        }
+
+        var directory = Path.GetDirectoryName(fullPath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
         }
 
         File.WriteAllText(fullPath, document.ToMarkdown(MarkdownOptionUtilities.BuildWriteOptions(this)), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
@@ -217,6 +222,11 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
         }
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Markdown PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         var options = MarkdownOptionUtilities.BuildPdfOptions(this, this, fallbackBaseDirectory);
         document.SaveAsPdf(pdfPath, options);

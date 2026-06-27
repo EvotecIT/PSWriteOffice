@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $pages | Select-Object Name, Length</code>
 ///   <para>Creates one output PDF for each page and returns the written files.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Split, "OfficePdf")]
+[Cmdlet(VerbsCommon.Split, "OfficePdf", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class SplitOfficePdfCommand : PSCmdlet
 {
@@ -68,12 +68,17 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory);
-        Directory.CreateDirectory(outputDirectory);
         var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
         var outputs = CreateOutputs(document);
         foreach (var output in outputs)
         {
             var outputPath = PdfCommandUtilities.GetUniquePath(outputDirectory, Prefix + "-" + output.Name + ".pdf");
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write split PDF"))
+            {
+                continue;
+            }
+
+            PdfCommandUtilities.EnsureOutputDirectory(outputDirectory);
             output.Document.Save(outputPath);
             WriteObject(new FileInfo(outputPath));
         }

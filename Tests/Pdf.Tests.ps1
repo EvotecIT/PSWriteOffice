@@ -51,6 +51,19 @@ Describe 'PDF cmdlets' {
         Get-OfficePdfText -Path $savedPath -Password 'open' | Should -Match 'Saved encrypted PDF text'
     }
 
+    It 'does not run the PDF DSL when WhatIf skips saving' {
+        $path = Join-Path $TestDrive 'PdfWhatIf.pdf'
+        $script:PdfWhatIfDslRan = $false
+
+        New-OfficePdf -Path $path -WhatIf {
+            $script:PdfWhatIfDslRan = $true
+            PdfParagraph 'Should not run'
+        } | Out-Null
+
+        $script:PdfWhatIfDslRan | Should -BeFalse
+        Test-Path -LiteralPath $path | Should -BeFalse
+    }
+
     It 'builds a composed PDF and extracts text' {
         $path = Join-Path $TestDrive 'report.pdf'
         $rows = @(
@@ -367,6 +380,20 @@ Describe 'PDF cmdlets' {
         $outputs[1].Name | Should -Be 'page-002.pdf'
         $outputs[2].Name | Should -Be 'page-003.pdf'
         Get-OfficePdfText -Path $outputs[1].FullName | Should -Match 'Encrypted page two'
+    }
+
+    It 'does not create split output directories when WhatIf skips writes' {
+        $path = Join-Path $TestDrive 'split-whatif-source.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'Page one'
+            PdfPageBreak
+            PdfParagraph 'Page two'
+        } | Out-Null
+
+        $outputDirectory = Join-Path $TestDrive 'split-whatif-output'
+        Split-OfficePdf -Path $path -OutputDirectory $outputDirectory -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $outputDirectory | Should -BeFalse
     }
 
     It 'merges and resizes PDFs to fixed paper sizes' {

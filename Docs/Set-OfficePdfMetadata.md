@@ -11,22 +11,22 @@ Sets PDF document metadata on generated documents or existing PDF files.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficePdfMetadata [-Title <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfMetadata [-Title <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficePdfMetadata -Document <PdfDocument> [-Title <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfMetadata -Document <PdfDocument> [-Title <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### File
 ```powershell
-Set-OfficePdfMetadata -Path <string> -OutputPath <string> [-Title <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfMetadata -Path <string> -OutputPath <string> [-Title <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-PassThru] [-Incremental] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 In a New-OfficePdf script block this command updates the generated document metadata.
-With -Path and -OutputPath, it rewrites an existing PDF with updated metadata.
+With -Path and -OutputPath, it rewrites an existing PDF with updated metadata unless -Incremental is used.
 
 ## EXAMPLES
 
@@ -78,6 +78,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Incremental
+Append a metadata-only incremental PDF revision instead of rewriting the existing PDF bytes.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: File
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

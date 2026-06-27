@@ -11,12 +11,12 @@ Imports normalized CSV/TSV text into an Excel workbook through OfficeIMO.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Import-OfficeExcelDelimitedText [-InputPath] <string> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-NoTable] [-NoTypeConversion] [-PassThru] [<CommonParameters>]
+Import-OfficeExcelDelimitedText [-InputPath] <string> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-SkipRows <int>] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Import-OfficeExcelDelimitedText -Document <ExcelDocument> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-NoTable] [-NoTypeConversion] [-PassThru] [<CommonParameters>]
+Import-OfficeExcelDelimitedText -Document <ExcelDocument> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-SkipRows <int>] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -172,6 +172,22 @@ Worksheet name to create or inspect.
 
 ```yaml
 Type: String
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SkipRows
+Number of parsed delimited records to skip before header discovery or data import.
+
+```yaml
+Type: Int32
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:

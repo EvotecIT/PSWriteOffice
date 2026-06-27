@@ -11,7 +11,7 @@ Removes selected pages from a PDF and writes a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Remove-OfficePdfPage -Path <string> -PageRange <string> -OutputPath <string> [<CommonParameters>]
+Remove-OfficePdfPage -Path <string> -PageRange <string> -OutputPath <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

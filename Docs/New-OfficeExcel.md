@@ -11,7 +11,7 @@ Creates a new Excel workbook using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeExcel [-FilePath] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-AutoSave] [-NoSave] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-PdfPath <string>] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [<CommonParameters>]
+New-OfficeExcel [-FilePath] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-AutoSave] [-NoSave] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-PdfPath <string>] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

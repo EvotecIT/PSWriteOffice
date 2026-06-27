@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 /// Update-OfficeRtfText -Path .\Input.rtf -OutputPath .\Output.rtf -OldText Draft -NewText Final -PassThru</code>
 ///   <para>Uses OfficeIMO.Rtf's lossless editor to update visible text while preserving untouched RTF syntax.</para>
 /// </example>
-[Cmdlet(VerbsData.Update, "OfficeRtfText")]
+[Cmdlet(VerbsData.Update, "OfficeRtfText", SupportsShouldProcess = true)]
 [Alias("Replace-OfficeRtfText", "RtfText")]
 [OutputType(typeof(FileInfo))]
 public sealed class UpdateOfficeRtfTextCommand : PSCmdlet
@@ -72,7 +72,10 @@ public sealed class UpdateOfficeRtfTextCommand : PSCmdlet
 
         var sourcePath = PdfCommandUtilities.ResolvePath(this, Path);
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        PdfCommandUtilities.EnsureDirectory(outputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated RTF document"))
+        {
+            return;
+        }
 
         var editor = RtfDocument.Load(sourcePath).EditLossless();
         if (!string.IsNullOrEmpty(OldText))
@@ -95,6 +98,7 @@ public sealed class UpdateOfficeRtfTextCommand : PSCmdlet
         ApplyUserProperties(editor);
         ApplyDocumentVariables(editor);
 
+        PdfCommandUtilities.EnsureDirectory(outputPath);
         editor.SaveLossless(outputPath);
         if (PassThru.IsPresent)
         {

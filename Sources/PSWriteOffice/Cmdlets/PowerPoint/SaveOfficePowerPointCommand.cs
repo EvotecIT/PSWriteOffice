@@ -69,6 +69,11 @@ public class SaveOfficePowerPointCommand : PSCmdlet
         }
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write PowerPoint PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         Presentation.SaveAsPdf(pdfPath);
     }

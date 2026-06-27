@@ -11,7 +11,7 @@ Saves an OfficeIMO.Visio document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeVisio [-Document] <VisioDocument> [[-Path] <string>] [-Show] [-PassThru] [<CommonParameters>]
+Save-OfficeVisio [-Document] <VisioDocument> [[-Path] <string>] [-Show] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

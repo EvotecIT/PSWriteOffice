@@ -22,7 +22,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   <code>$doc = ConvertFrom-OfficeMarkdownHtml -Path .\report.html -AsDocument</code>
 ///   <para>Returns a Markdown document for further editing or rendering.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertFrom, "OfficeMarkdownHtml", DefaultParameterSetName = ParameterSetHtml)]
+[Cmdlet(VerbsData.ConvertFrom, "OfficeMarkdownHtml", DefaultParameterSetName = ParameterSetHtml, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-MarkdownHtml")]
 [OutputType(typeof(string), typeof(FileInfo), typeof(MarkdownDoc))]
 public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
@@ -161,16 +161,28 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
             }
 
             var options = BuildOptions(htmlFileDirectory);
+            if (string.IsNullOrWhiteSpace(OutputPath) &&
+                RequiresImageExtraction(options) &&
+                !ShouldProcess(options.Base64ImageOutputDirectory, "Extract Markdown images from HTML"))
+            {
+                return;
+            }
+
             if (AsDocument.IsPresent)
             {
                 WriteObject(html.LoadFromHtml(options));
                 return;
             }
 
-            var markdown = html.ToMarkdown(options);
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+                if (!ShouldProcess(resolvedOutput, "Write Markdown converted from HTML"))
+                {
+                    return;
+                }
+
+                var markdown = html.ToMarkdown(options);
                 var directory = Path.GetDirectoryName(resolvedOutput);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
@@ -185,6 +197,7 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
             }
             else
             {
+                var markdown = html.ToMarkdown(options);
                 WriteObject(markdown);
             }
         }
@@ -249,4 +262,8 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
 
         return options;
     }
+
+    private static bool RequiresImageExtraction(HtmlToMarkdownOptions options)
+        => options.Base64Images == HtmlBase64ImageHandling.SaveToFile &&
+           !string.IsNullOrWhiteSpace(options.Base64ImageOutputDirectory);
 }

@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// ConvertTo-OfficeVisioSvg -Path .\ServiceMap.vsdx -OutputPath .\ServiceMap.svg -Transparent</code>
 ///   <para>Creates a diagram and exports the first page to dependency-free SVG.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficeVisioSvg", DefaultParameterSetName = PathParameterSet)]
+[Cmdlet(VerbsData.ConvertTo, "OfficeVisioSvg", DefaultParameterSetName = PathParameterSet, SupportsShouldProcess = true)]
 [Alias("ConvertTo-VisioSvg")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet
@@ -94,6 +94,11 @@ public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
             var fullPath = VisioCommandUtilities.ResolvePath(this, OutputPath!);
+            if (!ShouldProcess(fullPath, "Write Visio SVG"))
+            {
+                return;
+            }
+
             VisioCommandUtilities.EnsureDirectory(fullPath);
             document.SaveAsSvg(fullPath, options);
 

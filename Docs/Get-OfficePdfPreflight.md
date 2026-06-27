@@ -11,7 +11,7 @@ Reports whether OfficeIMO.Pdf can read or rewrite a PDF safely.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfPreflight [-Path] <string> [<CommonParameters>]
+Get-OfficePdfPreflight [-Path] <string> [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,22 @@ $preflight.HasRewriteBlockers
 Checks whether OfficeIMO.Pdf can read or rewrite the PDF safely.
 
 ## PARAMETERS
+
+### -Password
+Password used to preflight a Standard password-encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Path
 PDF file path.

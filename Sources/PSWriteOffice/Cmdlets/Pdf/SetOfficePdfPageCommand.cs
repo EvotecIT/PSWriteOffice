@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $proof</code>
 ///   <para>Rotates selected pages and writes a new PDF.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficePdfPage")]
+[Cmdlet(VerbsCommon.Set, "OfficePdfPage", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class SetOfficePdfPageCommand : PSCmdlet
 {
@@ -89,6 +89,11 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated PDF pages"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         int[] pages = string.IsNullOrWhiteSpace(PageRange)

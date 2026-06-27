@@ -37,6 +37,12 @@ public static partial class WordDocumentService
         return RegisterDocument(WordDocument.Create(Path.GetFullPath(filePath), autoSave));
     }
 
+    /// <summary>Creates a new in-memory Word document without creating a package on disk.</summary>
+    public static WordDocument CreateInMemoryDocument()
+    {
+        return RegisterDocument(WordDocument.Create());
+    }
+
     /// <summary>Disposes the Word document.</summary>
     public static void CloseDocument(WordDocument document)
     {

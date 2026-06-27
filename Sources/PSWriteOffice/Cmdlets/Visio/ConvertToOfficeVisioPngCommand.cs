@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// ConvertTo-OfficeVisioPng -Path .\ServiceMap.vsdx -OutputPath .\ServiceMap.png -PixelsPerInch 144</code>
 ///   <para>Creates a diagram and exports the first page to a PNG preview.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficeVisioPng", DefaultParameterSetName = PathParameterSet)]
+[Cmdlet(VerbsData.ConvertTo, "OfficeVisioPng", DefaultParameterSetName = PathParameterSet, SupportsShouldProcess = true)]
 [Alias("ConvertTo-VisioPng")]
 [OutputType(typeof(byte[]), typeof(FileInfo))]
 public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
@@ -110,6 +110,11 @@ public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
             var fullPath = VisioCommandUtilities.ResolvePath(this, OutputPath!);
+            if (!ShouldProcess(fullPath, "Write Visio PNG"))
+            {
+                return;
+            }
+
             VisioCommandUtilities.EnsureDirectory(fullPath);
             document.SaveAsPng(fullPath, options);
 

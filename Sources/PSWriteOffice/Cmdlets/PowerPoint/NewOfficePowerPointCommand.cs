@@ -22,7 +22,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <code>New-OfficePowerPoint -Path .\deck.pptx { PptSlide { PptTitle -Title 'Status Update' } } -Open</code>
 ///   <para>Creates, saves, and opens a deck with one titled slide.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficePowerPoint")]
+[Cmdlet(VerbsCommon.New, "OfficePowerPoint", SupportsShouldProcess = true)]
 public class NewOfficePowerPointCommand : PSCmdlet
 {
     /// <summary>Destination path for the new .pptx.</summary>
@@ -58,6 +58,21 @@ public class NewOfficePowerPointCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
+        if (NoSave.IsPresent)
+        {
+            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Create PowerPoint presentation"))
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Write new PowerPoint presentation"))
+            {
+                return;
+            }
+        }
+
         var directory = Path.GetDirectoryName(resolvedPath);
         if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
         {
@@ -89,7 +104,7 @@ public class NewOfficePowerPointCommand : PSCmdlet
 
             if (NoSave.IsPresent)
             {
-                presentation.Dispose();
+                WriteObject(presentation);
                 return;
             }
 
@@ -121,6 +136,11 @@ public class NewOfficePowerPointCommand : PSCmdlet
         }
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write PowerPoint PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         presentation.SaveAsPdf(pdfPath);
     }

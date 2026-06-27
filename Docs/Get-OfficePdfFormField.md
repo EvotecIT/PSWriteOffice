@@ -11,7 +11,7 @@ Gets simple AcroForm fields from a PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfFormField [-Path] <string> [-Name <string>] [<CommonParameters>]
+Get-OfficePdfFormField [-Path] <string> [-Name <string>] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,6 +32,22 @@ Reads form field names so the fill hashtable can use the right keys.
 
 ### -Name
 Optional field name filter.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to inspect a Standard password-encrypted PDF.
 
 ```yaml
 Type: String

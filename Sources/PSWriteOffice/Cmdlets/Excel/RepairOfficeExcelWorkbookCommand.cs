@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// }</code>
 ///   <para>Uses the reusable OfficeIMO repair pipeline. The command normalizes safe workbook artifacts and returns before/after diagnostics when -PassThru is used.</para>
 /// </example>
-[Cmdlet(VerbsDiagnostic.Repair, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsDiagnostic.Repair, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ExcelWorkbookRepair", "ExcelRepair")]
 [OutputType(typeof(PSObject))]
 public sealed class RepairOfficeExcelWorkbookCommand : PSCmdlet
@@ -68,7 +68,25 @@ public sealed class RepairOfficeExcelWorkbookCommand : PSCmdlet
 
     protected override void ProcessRecord()
     {
+        var shouldProcessChecked = false;
+        if (ParameterSetName == ParameterSetPath)
+        {
+            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+            if (!ShouldProcess(resolvedPath, "Repair Excel workbook"))
+            {
+                return;
+            }
+
+            shouldProcessChecked = true;
+        }
+
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!shouldProcessChecked &&
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Repair Excel workbook"))
+        {
+            return;
+        }
+
         var report = workbook.Document.RepairWorkbook(new ExcelWorkbookRepairOptions
         {
             DefinedNames = !SkipDefinedNames.IsPresent,

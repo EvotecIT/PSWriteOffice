@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>New-OfficeExcel -Path .\report.xlsx { ExcelSheet 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }</code>
 ///   <para>Creates <c>report.xlsx</c> and writes “Region” into cell A1 on the Data worksheet.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficeExcel")]
+[Cmdlet(VerbsCommon.New, "OfficeExcel", SupportsShouldProcess = true)]
 public sealed class NewOfficeExcelCommand : PSCmdlet
 {
     /// <summary>Destination path for the workbook.</summary>
@@ -138,14 +138,29 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
-        var directory = Path.GetDirectoryName(resolvedPath);
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        var action = NoSave.IsPresent
+            ? string.IsNullOrWhiteSpace(TemplatePath)
+                ? "Create in-memory Excel workbook"
+                : "Create Excel workbook from template"
+            : "Write new Excel workbook";
+        if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, action))
         {
-            Directory.CreateDirectory(directory);
+            return;
+        }
+
+        if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath))
+        {
+            var directory = Path.GetDirectoryName(resolvedPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
         }
 
         var document = string.IsNullOrWhiteSpace(TemplatePath)
-            ? ExcelDocumentService.CreateDocument(resolvedPath, AutoSave.IsPresent)
+            ? NoSave.IsPresent
+                ? ExcelDocumentService.CreateInMemoryDocument()
+                : ExcelDocumentService.CreateDocument(resolvedPath, AutoSave.IsPresent)
             : ExcelDocumentService.CreateDocumentFromTemplate(
                 SessionState.Path.GetUnresolvedProviderPathFromPSPath(TemplatePath!),
                 resolvedPath,
@@ -191,7 +206,8 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
             }
             else
             {
-                document.Dispose();
+                WriteObject(document);
+                return;
             }
         }
         catch
@@ -214,6 +230,11 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
         }
 
         var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Excel PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         document.SaveAsPdf(pdfPath);
     }

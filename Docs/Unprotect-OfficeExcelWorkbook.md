@@ -11,17 +11,17 @@ Removes workbook structure/window protection metadata.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Unprotect-OfficeExcelWorkbook [-PassThru] [<CommonParameters>]
+Unprotect-OfficeExcelWorkbook [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Unprotect-OfficeExcelWorkbook [-InputPath] <string> [-PassThru] [<CommonParameters>]
+Unprotect-OfficeExcelWorkbook [-InputPath] <string> [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Unprotect-OfficeExcelWorkbook -Document <ExcelDocument> [-PassThru] [<CommonParameters>]
+Unprotect-OfficeExcelWorkbook -Document <ExcelDocument> [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -97,7 +97,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `OfficeIMO.Excel.ExcelDocument
+System.IO.FileInfo`
 
 ## RELATED LINKS
 

@@ -28,7 +28,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///     Save-OfficeWord -Path .\Combined.docx</code>
 ///   <para>Keeps the wrapper thin by piping the OfficeIMO document object through append and save commands.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Join, "OfficeWordDocument", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.Join, "OfficeWordDocument", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Merge-OfficeWordDocument", "WordDocumentJoin")]
 [OutputType(typeof(WordDocument))]
 public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
@@ -70,15 +70,36 @@ public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
 
         try
         {
+            string? saveTarget = null;
             if (ParameterSetName == ParameterSetPath)
             {
                 var resolvedPath = ResolveExistingPath(InputPath);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false);
                 dispose = true;
+                saveTarget = string.IsNullOrWhiteSpace(OutputPath) ? resolvedPath : ResolveOutputPath(OutputPath!);
             }
             else
             {
                 document = Document;
+                if (!string.IsNullOrWhiteSpace(OutputPath))
+                {
+                    saveTarget = ResolveOutputPath(OutputPath!);
+                }
+                else if (Show.IsPresent)
+                {
+                    saveTarget = document.FilePath ?? throw new InvalidOperationException("No saved file path was available.");
+                }
+            }
+
+            var processTarget = !string.IsNullOrWhiteSpace(saveTarget)
+                ? saveTarget!
+                : document.FilePath ?? "Word document";
+            var processAction = !string.IsNullOrWhiteSpace(saveTarget)
+                ? "Write joined Word document"
+                : "Join Word documents";
+            if (!ShouldProcess(processTarget, processAction))
+            {
+                return;
             }
 
             foreach (var sourcePath in AppendPath)
@@ -91,17 +112,17 @@ public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
 
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
-                savedPath = ResolveOutputPath(OutputPath!);
-                document.Save(savedPath, false);
+                savedPath = saveTarget;
+                document.Save(savedPath!, false);
             }
             else if (ParameterSetName == ParameterSetPath)
             {
                 document.Save(false);
-                savedPath = document.FilePath;
+                savedPath = saveTarget;
             }
             else if (Show.IsPresent)
             {
-                savedPath = document.FilePath ?? throw new InvalidOperationException("No saved file path was available.");
+                savedPath = saveTarget;
                 document.Save(false);
             }
 

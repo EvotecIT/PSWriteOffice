@@ -11,27 +11,27 @@ Converts Word, HTML, or PDF input to RTF.
 ## SYNTAX
 ### WordPath (Default)
 ```powershell
-ConvertTo-OfficeRtf -WordPath <string> [-OutputPath <string>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeRtf -WordPath <string> [-OutputPath <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### WordDocument
 ```powershell
-ConvertTo-OfficeRtf -WordDocument <WordDocument> [-OutputPath <string>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeRtf -WordDocument <WordDocument> [-OutputPath <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Html
 ```powershell
-ConvertTo-OfficeRtf -Html <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeRtf -Html <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### HtmlPath
 ```powershell
-ConvertTo-OfficeRtf -HtmlPath <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeRtf -HtmlPath <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### PdfPath
 ```powershell
-ConvertTo-OfficeRtf -PdfPath <string> [-OutputPath <string>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeRtf -PdfPath <string> [-OutputPath <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

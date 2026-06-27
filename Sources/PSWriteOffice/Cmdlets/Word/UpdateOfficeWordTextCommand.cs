@@ -19,7 +19,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Update-OfficeWordText -Path .\Report.docx -OldValue 'old.example.com' -NewValue 'new.example.com' -IncludeHyperlinkUri</code>
 ///   <para>Loads the document, updates matching hyperlink URLs, saves the file, and closes it.</para>
 /// </example>
-[Cmdlet(VerbsData.Update, "OfficeWordText", DefaultParameterSetName = ParameterSetAuto)]
+[Cmdlet(VerbsData.Update, "OfficeWordText", DefaultParameterSetName = ParameterSetAuto, SupportsShouldProcess = true)]
 [Alias("Replace-OfficeWordText")]
 [OutputType(typeof(int))]
 public sealed class UpdateOfficeWordTextCommand : PSCmdlet
@@ -90,6 +90,11 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                     break;
                 case ParameterSetPath:
                     var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+                    if (!ShouldProcess(resolvedPath, "Update Word document text"))
+                    {
+                        return;
+                    }
+
                     document = WordDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false);
                     dispose = true;
                     break;
@@ -101,6 +106,11 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
             if (document == null)
             {
                 throw new InvalidOperationException("Specify -Document, -Path, or run inside New-OfficeWord.");
+            }
+
+            if (ParameterSetName != ParameterSetPath && !ShouldProcess(GetDocumentTarget(document), "Update Word document text"))
+            {
+                return;
             }
 
             var comparison = CaseSensitive.IsPresent ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
@@ -127,6 +137,13 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                 WordDocumentService.CloseDocument(document);
             }
         }
+    }
+
+    private static string GetDocumentTarget(WordDocument document)
+    {
+        return !string.IsNullOrWhiteSpace(document.FilePath)
+            ? document.FilePath
+            : "Word document";
     }
 
     private int ReplaceHyperlinks(WordDocument document, string oldValue, string newValue, StringComparison comparison)

@@ -20,7 +20,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// $result | Format-List SheetName,Range,RowCount,ColumnCount,Delimiter</code>
 ///   <para>Normalizes delimited text through OfficeIMO, performs culture-aware value conversion, and writes the result as an Excel table unless -NoTable is used.</para>
 /// </example>
-[Cmdlet(VerbsData.Import, "OfficeExcelDelimitedText", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsData.Import, "OfficeExcelDelimitedText", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium)]
 [Alias("ExcelDelimitedImport", "ExcelCsvImport")]
 [OutputType(typeof(PSObject))]
 public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
@@ -53,6 +53,10 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
     /// <summary>Treat the first row as data.</summary>
     [Parameter]
     public SwitchParameter NoHeader { get; set; }
+    /// <summary>Number of parsed delimited records to skip before header discovery or data import.</summary>
+    [Parameter]
+    [ValidateRange(0, int.MaxValue)]
+    public int SkipRows { get; set; }
     /// <summary>Import rows without creating an Excel table.</summary>
     [Parameter]
     public SwitchParameter NoTable { get; set; }
@@ -71,13 +75,19 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
             throw new FileNotFoundException($"Delimited text file '{source}' was not found.", source);
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        var text = File.ReadAllText(source);
-        var result = workbook.Document.ImportDelimitedText(text, new ExcelDelimitedImportOptions
+        var target = ResolveTargetPath();
+        if (!ShouldProcess(target ?? "Excel document", "Import delimited text into Excel workbook"))
+        {
+            return;
+        }
+
+        using var workbook = ResolveWorkbook(target);
+        var result = workbook.Document.ImportDelimitedFile(source, new ExcelDelimitedImportOptions
         {
             Delimiter = Delimiter,
             SheetName = SheetName,
             HeadersInFirstRow = !NoHeader.IsPresent,
+            SkipInitialRecords = SkipRows,
             CreateTable = !NoTable.IsPresent,
             ConvertNumbersAndDates = !NoTypeConversion.IsPresent,
             Culture = string.IsNullOrWhiteSpace(CultureName) ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(CultureName!)
@@ -96,6 +106,42 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
             output.Properties.Add(new PSNoteProperty("Warnings", result.Warnings));
             WriteObject(output);
         }
+    }
+
+    private string? ResolveTargetPath()
+    {
+        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase))
+        {
+            return Document.FilePath;
+        }
+
+        return SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+    }
+
+    private ExcelWorkbookCommandScope ResolveWorkbook(string? targetPath)
+    {
+        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase))
+        {
+            return new ExcelWorkbookCommandScope(Document, ownsDocument: false);
+        }
+
+        if (string.IsNullOrWhiteSpace(targetPath))
+        {
+            throw new PSArgumentException("Specify a workbook path.", nameof(InputPath));
+        }
+
+        var resolvedPath = targetPath!;
+        var directory = Path.GetDirectoryName(resolvedPath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        var document = File.Exists(resolvedPath)
+            ? ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false)
+            : ExcelDocumentService.CreateDocument(resolvedPath, autoSave: false);
+
+        return new ExcelWorkbookCommandScope(document, ownsDocument: true);
     }
 }
 #pragma warning restore CS1591

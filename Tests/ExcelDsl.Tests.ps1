@@ -279,6 +279,22 @@ Describe 'Excel DSL surface' {
         $summary.DateSystem | Should -Be '1900'
     }
 
+    It 'does not mutate the in-memory date system when Save-OfficeExcel is invoked with WhatIf' {
+        $path = Join-Path $TestDrive 'SaveOfficeExcelDateSystemWhatIf.xlsx'
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data'
+        }
+
+        $document = Get-OfficeExcel -Path $path
+        try {
+            $before = $document.DateSystem
+            $document | Save-OfficeExcel -DateSystem 1904 -WhatIf
+            $document.DateSystem | Should -Be $before
+        } finally {
+            $document | Close-OfficeExcel
+        }
+    }
+
     It 'sets workbook theme metadata through the thin command surface' {
         $path = Join-Path $TestDrive 'DslExcelTheme.xlsx'
 
@@ -1057,6 +1073,37 @@ Describe 'Excel DSL surface' {
         $imported[1].Region | Should -Be 'EMEA'
         $imported[1].Revenue | Should -Be 200
         $imported[1].Enabled | Should -BeFalse
+    }
+
+    It 'allows NoClobber as a safety option when appending Excel rows' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelAppendNoClobber.xlsx'
+
+        [PSCustomObject]@{ Region = 'NA'; Revenue = 100 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales'
+
+        [PSCustomObject]@{ Region = 'EMEA'; Revenue = 200 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -Append -NoClobber
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $imported.Count | Should -Be 2
+        $imported[0].Region | Should -Be 'NA'
+        $imported[1].Region | Should -Be 'EMEA'
+        $imported[1].Revenue | Should -Be 200
+    }
+
+    It 'allows NoClobber as a safety option when clearing an Excel sheet' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelClearSheetNoClobber.xlsx'
+
+        [PSCustomObject]@{ Region = 'NA'; Revenue = 100 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales'
+
+        [PSCustomObject]@{ Region = 'APAC'; Revenue = 300 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'Sales' -ClearSheet -NoClobber
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $imported.Count | Should -Be 1
+        $imported[0].Region | Should -Be 'APAC'
+        $imported[0].Revenue | Should -Be 300
     }
 
     It 'applies export-time column formats by header' {
@@ -3853,6 +3900,37 @@ Describe 'Excel DSL surface' {
         $row | Export-OfficeExcel -Path $placeholderPath -IncludeUnexportableProperties
         $placeholder = @(Import-OfficeExcel -Path $placeholderPath -WorksheetName 'Sheet1')
         $placeholder[0].Broken | Should -BeLike 'Property export failed:*boom*'
+
+        if (-not ('PSWriteOffice.Tests.ExcelClrProjectionRow' -as [type])) {
+            Add-Type -TypeDefinition @'
+namespace PSWriteOffice.Tests {
+    using System;
+
+    public sealed class ExcelClrProjectionRow {
+        public string Name { get { return "Alpha"; } }
+        public string Broken { get { throw new InvalidOperationException("boom"); } }
+        public string[] Tags { get { return new[] { "one", "two" }; } }
+    }
+}
+'@
+        }
+
+        $clrRow = [PSWriteOffice.Tests.ExcelClrProjectionRow]::new()
+        $clrPath = Join-Path $TestDrive 'ExportOfficeExcelClrProjection.xlsx'
+        $clrRow | Export-OfficeExcel -Path $clrPath -WorksheetName 'Data' -TableName 'Rows'
+        $clrImported = @(Import-OfficeExcel -Path $clrPath -WorksheetName 'Data')
+        $clrImported[0].Name | Should -Be 'Alpha'
+        $clrImported[0].Tags | Should -Be 'one, two'
+        $clrImported[0].PSObject.Properties.Name | Should -Not -Contain 'Broken'
+
+        $clrStrictPath = Join-Path $TestDrive 'ExportOfficeExcelClrProjectionStrict.xlsx'
+        { $clrRow | Export-OfficeExcel -Path $clrStrictPath -PropertyConversionErrorAction Stop -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage "*Unable to read CLR property 'Broken'*"
+
+        $clrPlaceholderPath = Join-Path $TestDrive 'ExportOfficeExcelClrProjectionPlaceholder.xlsx'
+        $clrRow | Export-OfficeExcel -Path $clrPlaceholderPath -IncludeUnexportableProperties
+        $clrPlaceholder = @(Import-OfficeExcel -Path $clrPlaceholderPath -WorksheetName 'Sheet1')
+        $clrPlaceholder[0].Broken | Should -BeLike 'Property export failed:*boom*'
     }
 
     It 'sets category date-axis scale values through the chart axis cmdlet' {

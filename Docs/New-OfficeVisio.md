@@ -11,7 +11,7 @@ Creates a new OfficeIMO.Visio document with an initial page and optional DSL con
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeVisio [-Path] <string> [[-Content] <scriptblock>] [-PageName <string>] [-Width <double>] [-Height <double>] [-Unit <VisioMeasurementUnit>] [-Title <string>] [-Author <string>] [-RequestRecalcOnOpen] [-UseMastersByDefault] [-NoSave] [-Show] [-PassThru] [<CommonParameters>]
+New-OfficeVisio [-Path] <string> [[-Content] <scriptblock>] [-PageName <string>] [-Width <double>] [-Height <double>] [-Unit <VisioMeasurementUnit>] [-Title <string>] [-Author <string>] [-RequestRecalcOnOpen] [-UseMastersByDefault] [-NoSave] [-Show] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

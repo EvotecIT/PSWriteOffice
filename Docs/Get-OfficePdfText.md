@@ -11,7 +11,7 @@ Extracts text or Markdown from a PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfText [-Path] <string> [-PageRange <string>] [-AsMarkdown] [-OutputPath <string>] [<CommonParameters>]
+Get-OfficePdfText [-Path] <string> [-PageRange <string>] [-AsMarkdown] [-ByPage] [-AsTextBlock] [-Password <string>] [-OutputPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,6 +48,38 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -AsTextBlock
+Return line-level logical text blocks with page and coordinate metadata.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ByPage
+Return one object per page with PageNumber and Text properties.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -OutputPath
 Optional output text file path.
 
@@ -66,6 +98,22 @@ Accept wildcard characters: True
 
 ### -PageRange
 Optional page ranges such as 1-3,5.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to extract from a Standard password-encrypted PDF.
 
 ```yaml
 Type: String

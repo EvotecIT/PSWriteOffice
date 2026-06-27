@@ -11,7 +11,7 @@ Converts a PDF file to HTML through the first-party OfficeIMO HTML/PDF adapter.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfHtml [-Path] <string> [-PageRange <string>] [-OutputPath <string>] [-Profile <PdfHtmlProfile>] [-ImageExportMode <PdfHtmlImageExportMode>] [-MaxEmbeddedImageBytes <long>] [-NoMetadata] [-NoPageContainers] [-NoImagePlaceholders] [-IncludeLinkAnnotations] [-IncludeFormWidgets] [-Fragment] [-DocumentTitleFallback <string>] [-Options <PdfHtmlSaveOptions>] [<CommonParameters>]
+ConvertTo-OfficePdfHtml [-Path] <string> [-PageRange <string>] [-Password <string>] [-OutputPath <string>] [-Profile <PdfHtmlProfile>] [-ImageExportMode <PdfHtmlImageExportMode>] [-MaxEmbeddedImageBytes <long>] [-NoMetadata] [-NoPageContainers] [-NoImagePlaceholders] [-IncludeLinkAnnotations] [-IncludeFormWidgets] [-Fragment] [-DocumentTitleFallback <string>] [-Options <PdfHtmlSaveOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -207,6 +207,22 @@ Accept wildcard characters: True
 
 ### -PageRange
 Optional page ranges such as 1-3,5.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to read a Standard password-encrypted PDF.
 
 ```yaml
 Type: String

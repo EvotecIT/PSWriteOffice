@@ -11,12 +11,12 @@ Converts HTML content to Markdown.
 ## SYNTAX
 ### Html (Default)
 ```powershell
-ConvertFrom-OfficeMarkdownHtml [-Html] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <int>] [-Base64ImageHandling <HtmlBase64ImageHandling>] [-Base64ImageOutputDirectory <string>] [-ListingCardMetadataMode <HtmlListingCardMetadataMode>] [-MaxTableExpandedColumns <int>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [<CommonParameters>]
+ConvertFrom-OfficeMarkdownHtml [-Html] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <int>] [-Base64ImageHandling <HtmlBase64ImageHandling>] [-Base64ImageOutputDirectory <string>] [-ListingCardMetadataMode <HtmlListingCardMetadataMode>] [-MaxTableExpandedColumns <int>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-ConvertFrom-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <int>] [-Base64ImageHandling <HtmlBase64ImageHandling>] [-Base64ImageOutputDirectory <string>] [-ListingCardMetadataMode <HtmlListingCardMetadataMode>] [-MaxTableExpandedColumns <int>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [<CommonParameters>]
+ConvertFrom-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <int>] [-Base64ImageHandling <HtmlBase64ImageHandling>] [-Base64ImageOutputDirectory <string>] [-ListingCardMetadataMode <HtmlListingCardMetadataMode>] [-MaxTableExpandedColumns <int>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

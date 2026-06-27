@@ -27,7 +27,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// Add-OfficePdfStamp -Path .\Examples\Documents\Report.pdf -OutputPath .\Examples\Documents\Watermarked.pdf -Image $logo -Width 160 -Watermark</code>
 ///   <para>Adds a logo behind existing content as a watermark.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficePdfStamp", DefaultParameterSetName = ParameterSetText)]
+[Cmdlet(VerbsCommon.Add, "OfficePdfStamp", DefaultParameterSetName = ParameterSetText, SupportsShouldProcess = true)]
 [Alias("PdfStamp")]
 [OutputType(typeof(FileInfo))]
 public sealed class AddOfficePdfStampCommand : PSCmdlet
@@ -98,6 +98,11 @@ public sealed class AddOfficePdfStampCommand : PSCmdlet
             : StampText(document);
 
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write stamped PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath);
         WriteObject(new FileInfo(outputPath));

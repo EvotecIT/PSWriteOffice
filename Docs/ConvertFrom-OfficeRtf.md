@@ -11,12 +11,12 @@ Converts RTF input to Word, HTML, or PDF output.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertFrom-OfficeRtf [-Path] <string> -As <OfficeRtfConversionTarget> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-IncludeHiddenText] [-ExcludeImages] [-ExcludeTables] [-ExcludeHeaderFooters] [-ExcludeNotes] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeRtf [-Path] <string> -As <OfficeRtfConversionTarget> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-IncludeHiddenText] [-ExcludeImages] [-ExcludeTables] [-ExcludeHeaderFooters] [-ExcludeNotes] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Text
 ```powershell
-ConvertFrom-OfficeRtf -Text <string> -As <OfficeRtfConversionTarget> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-IncludeHiddenText] [-ExcludeImages] [-ExcludeTables] [-ExcludeHeaderFooters] [-ExcludeNotes] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeRtf -Text <string> -As <OfficeRtfConversionTarget> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-IncludeHiddenText] [-ExcludeImages] [-ExcludeTables] [-ExcludeHeaderFooters] [-ExcludeNotes] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

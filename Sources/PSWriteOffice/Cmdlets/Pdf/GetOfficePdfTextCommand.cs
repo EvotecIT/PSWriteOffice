@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $proof</code>
 ///   <para>Reads plain text directly and writes Markdown readback to a file.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Get, "OfficePdfText")]
+[Cmdlet(VerbsCommon.Get, "OfficePdfText", SupportsShouldProcess = true)]
 public sealed class GetOfficePdfTextCommand : PSCmdlet
 {
     /// <summary>PDF file path.</summary>
@@ -67,6 +67,11 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+                if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF text blocks"))
+                {
+                    return;
+                }
+
                 PdfCommandUtilities.EnsureDirectory(outputPath);
                 File.WriteAllLines(outputPath, blocks.Select(block => block.Text));
                 WriteObject(new FileInfo(outputPath));
@@ -91,6 +96,11 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+                if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF page text"))
+                {
+                    return;
+                }
+
                 PdfCommandUtilities.EnsureDirectory(outputPath);
                 File.WriteAllText(outputPath, string.Join("\f", pages));
                 WriteObject(new FileInfo(outputPath));
@@ -115,6 +125,11 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
             var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF text"))
+            {
+                return;
+            }
+
             PdfCommandUtilities.EnsureDirectory(outputPath);
             File.WriteAllText(outputPath, text);
             WriteObject(new FileInfo(outputPath));

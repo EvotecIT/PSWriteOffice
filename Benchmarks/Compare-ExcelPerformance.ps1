@@ -8,7 +8,7 @@ param(
 
     [string[]] $Scenario,
 
-    [string[]] $Engine = @('PSWriteOffice', 'ImportExcel', 'ExcelFast'),
+    [string[]] $Engine = @('PSWriteOffice', 'ImportExcel', 'ExcelFast', 'NativeCsv', 'CsvHelper'),
 
     [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\ExcelPerformance'),
 
@@ -20,7 +20,16 @@ param(
 
     [switch] $SkipImportExcelInstall,
 
-    [switch] $SkipExcelFastInstall
+    [switch] $SkipExcelFastInstall,
+
+    [switch] $SkipCsvHelperInstall,
+
+    [string] $OfficeIMORoot,
+
+    [ValidateSet('Debug', 'Release')]
+    [string] $PSWriteOfficeConfiguration = 'Release',
+
+    [switch] $SkipPSWriteOfficeBuild
 )
 
 Set-StrictMode -Version Latest
@@ -31,8 +40,9 @@ $invariantCulture = [Globalization.CultureInfo]::InvariantCulture
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $moduleRoot = Join-Path $OutputDirectory 'Modules'
+$packageRoot = Join-Path $OutputDirectory 'Packages'
 $workRoot = Join-Path $OutputDirectory ('Run-{0}-{1}' -f (Get-Date -Format 'yyyyMMdd-HHmmss'), $PID)
-$validEngines = @('PSWriteOffice', 'ImportExcel', 'ExcelFast')
+$validEngines = @('PSWriteOffice', 'ImportExcel', 'ExcelFast', 'NativeCsv', 'CsvHelper')
 
 function Resolve-EngineList {
     param([string[]] $Value)
@@ -125,6 +135,25 @@ function Add-ModulePath {
     }
 }
 
+function Invoke-PSWriteOfficeBuild {
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet('Debug', 'Release')]
+        [string] $Configuration
+    )
+
+    $projectPath = Join-Path (Join-Path (Join-Path $repoRoot 'Sources') 'PSWriteOffice') 'PSWriteOffice.csproj'
+    if (-not (Test-Path $projectPath)) {
+        throw "PSWriteOffice project was not found at '$projectPath'."
+    }
+
+    Write-Host "Building PSWriteOffice ($Configuration) before benchmark import..."
+    & dotnet build $projectPath -c $Configuration -v:minimal
+    if ($LASTEXITCODE -ne 0) {
+        throw "dotnet build failed for PSWriteOffice ($Configuration)."
+    }
+}
+
 function Ensure-ImportExcel {
     if (Get-Module -ListAvailable ImportExcel | Sort-Object Version -Descending | Select-Object -First 1) {
         return
@@ -157,8 +186,195 @@ function Ensure-ExcelFast {
         throw 'ExcelFast is not installed. Rerun without -SkipExcelFastInstall to save it under the benchmark module folder.'
     }
 
-    Save-Module -Name ExcelFast -Path $moduleRoot -Repository PSGallery -AllowPrerelease -Force
+    try {
+        Save-Module -Name ExcelFast -Path $moduleRoot -Repository PSGallery -AllowPrerelease -Force
+    } catch {
+        Write-Warning "ExcelFast could not be installed from PSGallery. Install it from https://github.com/JustinGrote/ExcelFast or place it on PSModulePath to include that lane. $($_.Exception.Message)"
+        $script:Engine = @($script:Engine | Where-Object { $_ -ne 'ExcelFast' })
+        return
+    }
+
     Add-ModulePath -Path $moduleRoot
+}
+
+function Ensure-CsvHelper {
+    if ([AppDomain]::CurrentDomain.GetAssemblies().GetName().Name -contains 'CsvHelper') {
+        return
+    }
+
+    $packageName = 'CsvHelper'
+    $packageVersion = '33.1.0'
+    $globalPackageRoot = if ($env:NUGET_PACKAGES) {
+        $env:NUGET_PACKAGES
+    } else {
+        Join-Path (Join-Path $HOME '.nuget') 'packages'
+    }
+
+    $packageFolder = Join-Path $globalPackageRoot ($packageName.ToLowerInvariant())
+    $targetPackageFolder = Join-Path $packageFolder $packageVersion
+    if (-not (Test-Path $targetPackageFolder)) {
+        if ($SkipCsvHelperInstall.IsPresent) {
+            throw "CsvHelper $packageVersion is not restored. Rerun without -SkipCsvHelperInstall to restore it into the NuGet package cache."
+        }
+
+        $cacheProjectRoot = Join-Path $packageRoot 'CsvHelperRestore'
+        $null = New-Item -ItemType Directory -Force -Path $cacheProjectRoot
+        $cacheProjectPath = Join-Path $cacheProjectRoot 'CsvHelperRestore.csproj'
+        @"
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="$packageName" Version="$packageVersion" />
+  </ItemGroup>
+</Project>
+"@ | Set-Content -Path $cacheProjectPath -Encoding UTF8
+
+        dotnet restore $cacheProjectPath --nologo | Write-Verbose
+        if ($LASTEXITCODE -ne 0) {
+            throw "dotnet restore failed while restoring CsvHelper $packageVersion."
+        }
+    }
+
+    $csvHelperAssemblyPath = Get-CsvHelperAssemblyPath -PackageFolder $packageFolder
+    if (-not $csvHelperAssemblyPath) {
+        throw "CsvHelper package was restored, but CsvHelper.dll could not be found under '$packageFolder'."
+    }
+
+    if (-not ([AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.Location -eq $csvHelperAssemblyPath })) {
+        [Reflection.Assembly]::LoadFrom($csvHelperAssemblyPath) | Out-Null
+    }
+
+}
+
+function Get-CsvHelperAssemblyPath {
+    param([string] $PackageFolder)
+
+    if (-not (Test-Path $PackageFolder)) {
+        return $null
+    }
+
+    $frameworkPreference = @('net8.0', 'net7.0', 'net6.0', 'netstandard2.1', 'netstandard2.0', 'net47', 'net45')
+    $versionFolders = Get-ChildItem -Path $PackageFolder -Directory |
+        Sort-Object { [version]($_.Name -replace '-.*$', '') } -Descending
+
+    foreach ($versionFolder in $versionFolders) {
+        foreach ($framework in $frameworkPreference) {
+            $candidate = Join-Path (Join-Path (Join-Path $versionFolder.FullName 'lib') $framework) 'CsvHelper.dll'
+            if (Test-Path $candidate) {
+                return $candidate
+            }
+        }
+    }
+
+    $fallback = Get-ChildItem -Path $PackageFolder -Recurse -Filter CsvHelper.dll |
+        Sort-Object FullName |
+        Select-Object -First 1
+    if ($fallback) {
+        return $fallback.FullName
+    }
+
+    $null
+}
+
+function Write-CsvHelperFile {
+    param(
+        [string] $Path,
+        [object[]] $Data
+    )
+
+    $encoding = [Text.UTF8Encoding]::new($false)
+    $writer = [IO.StreamWriter]::new($Path, $false, $encoding)
+    $csv = [CsvHelper.CsvWriter]::new($writer, [Globalization.CultureInfo]::InvariantCulture)
+    try {
+        $headers = $null
+        foreach ($item in $Data) {
+            $row = ConvertTo-CsvHelperRow -InputObject $item -Headers $headers
+            if ($null -eq $headers) {
+                $headers = $row.Headers
+                foreach ($header in $headers) {
+                    $csv.WriteField([string]$header)
+                }
+                $csv.NextRecord()
+            }
+
+            foreach ($value in $row.Values) {
+                $csv.WriteField($value)
+            }
+            $csv.NextRecord()
+        }
+    } finally {
+        $csv.Dispose()
+        $writer.Dispose()
+    }
+}
+
+function Read-CsvHelperFile {
+    param([string] $Path)
+
+    $reader = [IO.StreamReader]::new($Path, [Text.Encoding]::UTF8, $true)
+    $csv = [CsvHelper.CsvReader]::new($reader, [Globalization.CultureInfo]::InvariantCulture)
+    try {
+        $rows = [Collections.Generic.List[object]]::new()
+        if (-not $csv.Read()) {
+            return $rows
+        }
+
+        $csv.ReadHeader()
+        $headers = @($csv.HeaderRecord)
+        while ($csv.Read()) {
+            $row = [ordered]@{}
+            foreach ($header in $headers) {
+                $row[$header] = $csv.GetField([string]$header)
+            }
+
+            $rows.Add([pscustomobject]$row)
+        }
+
+        $rows
+    } finally {
+        $csv.Dispose()
+        $reader.Dispose()
+    }
+}
+
+function ConvertTo-CsvHelperRow {
+    param(
+        [object] $InputObject,
+        [string[]] $Headers
+    )
+
+    $psProperties = $InputObject.PSObject.Properties
+    if ($null -eq $Headers) {
+        $names = [Collections.Generic.List[string]]::new()
+        $values = [Collections.Generic.List[object]]::new()
+        foreach ($property in $psProperties) {
+            if (-not $property.IsGettable -or [string]::IsNullOrWhiteSpace($property.Name)) {
+                continue
+            }
+
+            $names.Add($property.Name)
+            $values.Add($property.Value)
+        }
+
+        [pscustomobject]@{
+            Headers = $names.ToArray()
+            Values = $values.ToArray()
+        }
+        return
+    }
+
+    $rowValues = New-Object object[] $Headers.Count
+    for ($i = 0; $i -lt $Headers.Count; $i++) {
+        $property = $psProperties[$Headers[$i]]
+        $rowValues[$i] = if ($property) { $property.Value } else { $null }
+    }
+
+    [pscustomobject]@{
+        Headers = $Headers
+        Values = $rowValues
+    }
 }
 
 function New-BenchmarkRows {
@@ -422,7 +638,10 @@ function New-ExportScenario {
         [string] $Profile,
         [string] $FileStem,
         [scriptblock] $Script,
-        [object[]] $FollowUps = @()
+        [object[]] $FollowUps = @(),
+        [scriptblock] $Setup,
+        [string] $FileExtension = 'xlsx',
+        [bool] $ValidateWorkbook = $true
     )
 
     [pscustomobject]@{
@@ -434,6 +653,9 @@ function New-ExportScenario {
         FileStem = $FileStem
         Script = $Script
         FollowUps = @($FollowUps)
+        Setup = $Setup
+        FileExtension = $FileExtension
+        ValidateWorkbook = $ValidateWorkbook
     }
 }
 
@@ -445,6 +667,7 @@ function Get-ExcelBenchmarkScenarios {
     $dataSetSuites = @('Large', 'Full')
     $reportSuites = @('Smoke', 'Standard', 'Large', 'Full')
     $workflowSuites = @('Standard', 'Large', 'Full')
+    $csvSuites = @('Smoke', 'Standard', 'Large', 'Full', 'SuperLarge')
 
     $defaultImport = New-FollowUpScenario -Key 'import-default-full' -Name 'Import full sheet from default export' -Suites $basicSuites -Script {
         param($Context)
@@ -504,7 +727,64 @@ function Get-ExcelBenchmarkScenarios {
         Get-OfficeExcelNamedRange -Path $Context.Path -Sheet $Context.WorksheetName
     }
 
+    $csvImport = New-FollowUpScenario -Key 'csv-read' -Name 'Read CSV file' -Suites $csvSuites -Engines @('PSWriteOffice', 'NativeCsv', 'CsvHelper') -Script {
+        param($Context)
+
+        switch ($Context.Engine) {
+            'PSWriteOffice' { Import-OfficeCsv -Path $Context.Path }
+            'NativeCsv' { Import-Csv -Path $Context.Path }
+            'CsvHelper' { Read-CsvHelperFile -Path $Context.Path }
+        }
+    }
+
     @(
+        New-ExportScenario -Key 'csv-write' -Name 'Write CSV file' -Suites $csvSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-csv-write' -FileExtension 'csv' -ValidateWorkbook $false -FollowUps @($csvImport) -Script {
+            param($Context)
+            $Context.Data | Export-OfficeCsv -Path $Context.Path
+        }
+        New-ExportScenario -Key 'csv-write' -Name 'Write CSV file' -Suites $csvSuites -Engine 'NativeCsv' -Profile 'MixedObjects' -FileStem 'nativecsv-csv-write' -FileExtension 'csv' -ValidateWorkbook $false -FollowUps @($csvImport) -Script {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.Path -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        }
+        New-ExportScenario -Key 'csv-write' -Name 'Write CSV file' -Suites $csvSuites -Engine 'CsvHelper' -Profile 'MixedObjects' -FileStem 'csvhelper-csv-write' -FileExtension 'csv' -ValidateWorkbook $false -FollowUps @($csvImport) -Script {
+            param($Context)
+            Write-CsvHelperFile -Path $Context.Path -Data $Context.Data
+        }
+        New-ExportScenario -Key 'csv-read-source' -Name 'Read external CSV source' -Suites $csvSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-csv-read-source' -FileExtension 'csv' -ValidateWorkbook $false -Setup {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        } -Script {
+            param($Context)
+            Import-OfficeCsv -Path $Context.SourcePath
+        }
+        New-ExportScenario -Key 'csv-read-source' -Name 'Read external CSV source' -Suites $csvSuites -Engine 'NativeCsv' -Profile 'MixedObjects' -FileStem 'nativecsv-csv-read-source' -FileExtension 'csv' -ValidateWorkbook $false -Setup {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        } -Script {
+            param($Context)
+            Import-Csv -Path $Context.SourcePath
+        }
+        New-ExportScenario -Key 'csv-read-source' -Name 'Read external CSV source' -Suites $csvSuites -Engine 'CsvHelper' -Profile 'MixedObjects' -FileStem 'csvhelper-csv-read-source' -FileExtension 'csv' -ValidateWorkbook $false -Setup {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        } -Script {
+            param($Context)
+            Read-CsvHelperFile -Path $Context.SourcePath
+        }
+        New-ExportScenario -Key 'csv-to-excel' -Name 'Create workbook from CSV source' -Suites $workflowSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-csv-to-excel' -Setup {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8
+        } -Script {
+            param($Context)
+            Import-OfficeExcelDelimitedText -Path $Context.Path -SourcePath $Context.SourcePath -SheetName $Context.WorksheetName
+        }
+        New-ExportScenario -Key 'csv-to-excel' -Name 'Create workbook from CSV source' -Suites $workflowSuites -Engine 'ImportExcel' -Profile 'MixedObjects' -FileStem 'importexcel-csv-to-excel' -Setup {
+            param($Context)
+            $Context.Data | Export-Csv -Path $Context.SourcePath -NoTypeInformation -Encoding utf8
+        } -Script {
+            param($Context)
+            Import-Csv -Path $Context.SourcePath | Export-Excel -Path $Context.Path -WorksheetName $Context.WorksheetName
+        }
         New-ExportScenario -Key 'objects-table' -Name 'Export objects as table' -Suites $tableSuites -Engine 'PSWriteOffice' -Profile 'MixedObjects' -FileStem 'pswriteoffice-objects-table' -FollowUps @($tableImport) -Script {
             param($Context)
             $Context.Data | Export-OfficeExcel -Path $Context.Path -WorksheetName $Context.WorksheetName -TableName Data
@@ -865,6 +1145,7 @@ function Get-ExcelBenchmarkScenarios {
                 $worksheet = $excel.Workbook.Worksheets[$Context.WorksheetName]
                 Add-ConditionalFormatting -Worksheet $worksheet -Address "G2:G$lastRow" -RuleType GreaterThan -ConditionValue 750 -BackgroundColor LightPink
                 Add-ConditionalFormatting -Worksheet $worksheet -Address "G2:G$lastRow" -DataBarColor Green
+                Add-ConditionalFormatting -Worksheet $worksheet -Address "I2:I$lastRow" -RuleType ThreeColorScale
                 Add-ConditionalFormatting -Worksheet $worksheet -Address "I2:I$lastRow" -ThreeIconsSet TrafficLights1
                 Add-ExcelDataValidationRule -Worksheet $worksheet -Range "D2:D$lastRow" -ValidationType List -ValueSet @('NA', 'EU', 'APAC', 'LATAM')
                 $worksheet.Cells["G2:G$lastRow"].Style.Numberformat.Format = '#,##0.000'
@@ -1041,6 +1322,13 @@ function Invoke-BenchmarkOperation {
     $process.Refresh()
     $afterWorkingSet = $process.WorkingSet64
     $afterPeakWorkingSet = $process.PeakWorkingSet64
+    $artifactPath = if (Test-Path -LiteralPath $Context.Path) {
+        $Context.Path
+    } elseif ($Context.PSObject.Properties['SourcePath'] -and (Test-Path -LiteralPath $Context.SourcePath)) {
+        $Context.SourcePath
+    } else {
+        $null
+    }
     $workbookValidation = if ($ValidateWorkbook -and $status -eq 'Passed') {
         Test-BenchmarkWorkbook -Path $Context.Path
     } else {
@@ -1064,12 +1352,12 @@ function Invoke-BenchmarkOperation {
         Iteration         = $Context.Iteration
         Milliseconds      = [math]::Round($stopwatch.Elapsed.TotalMilliseconds, 3)
         ResultCount       = $resultCount
-        FileBytes         = if (Test-Path $Context.Path) { (Get-Item $Context.Path).Length } else { 0 }
+        FileBytes         = if ($artifactPath) { [long](Get-Item -LiteralPath $artifactPath).Length } else { 0L }
         WorkingSetBeforeMB = [math]::Round($beforeWorkingSet / 1MB, 3)
         WorkingSetAfterMB = [math]::Round($afterWorkingSet / 1MB, 3)
         WorkingSetDeltaMB = [math]::Round(($afterWorkingSet - $beforeWorkingSet) / 1MB, 3)
         PeakWorkingSetMB = [math]::Round($afterPeakWorkingSet / 1MB, 3)
-        PeakWorkingSetDeltaMB = [math]::Round([math]::Max(0, $afterPeakWorkingSet - $beforePeakWorkingSet) / 1MB, 3)
+        PeakWorkingSetDeltaMB = [math]::Round([math]::Max(0L, [long]($afterPeakWorkingSet - $beforePeakWorkingSet)) / 1MB, 3)
         ManagedDeltaMB    = [math]::Round(([GC]::GetTotalMemory($false) - $beforeManaged) / 1MB, 3)
         WorkbookValidationStatus = $workbookValidation.Status
         WorkbookOpenStatus = $workbookValidation.OpenStatus
@@ -1320,7 +1608,7 @@ function New-BenchmarkComparison {
             Engines = $engineResults
         }
 
-        foreach ($engineName in @('PSWriteOffice', 'ImportExcel', 'ExcelFast')) {
+        foreach ($engineName in @('PSWriteOffice', 'ImportExcel', 'ExcelFast', 'NativeCsv', 'CsvHelper')) {
             $engineResult = @($engineResults | Where-Object Engine -eq $engineName | Select-Object -First 1)
             $engineSummary = @($group.Group | Where-Object Engine -eq $engineName | Select-Object -First 1)
             $prefix = $engineName -replace '[^A-Za-z0-9]', ''
@@ -1370,6 +1658,53 @@ if ($RepeatCount -le 0) {
         'SuperLarge' { 1 }
     }
 }
+$repeatCountExplicit = $PSBoundParameters.ContainsKey('RepeatCount') -and [int]$PSBoundParameters['RepeatCount'] -gt 0
+
+function Test-CsvMicroBenchmarkScenario {
+    param([object] $ScenarioObject)
+
+    $key = [string]$ScenarioObject.Key
+    return $key -eq 'csv-read' -or
+        $key -eq 'csv-read-source' -or
+        $key -eq 'csv-write'
+}
+
+function Get-CsvMicroBenchmarkRepeatCount {
+    param(
+        [string] $SuiteName,
+        [int] $BaseRepeatCount
+    )
+
+    $minimum = switch ($SuiteName) {
+        'Smoke' { 11 }
+        'Standard' { 51 }
+        'Full' { 51 }
+        'Large' { 11 }
+        'SuperLarge' { 3 }
+    }
+
+    [math]::Max($BaseRepeatCount, $minimum)
+}
+
+function Get-BenchmarkScenarioIdentity {
+    param([object] $ScenarioObject)
+
+    '{0}|{1}|{2}|{3}' -f $ScenarioObject.Engine, $ScenarioObject.Key, $ScenarioObject.Profile, $ScenarioObject.FileStem
+}
+
+function Get-BenchmarkScenarioRepeatCount {
+    param([object] $ScenarioObject)
+
+    if ($repeatCountExplicit) {
+        return $RepeatCount
+    }
+
+    if (Test-CsvMicroBenchmarkScenario -ScenarioObject $ScenarioObject) {
+        return Get-CsvMicroBenchmarkRepeatCount -SuiteName $Suite -BaseRepeatCount $RepeatCount
+    }
+
+    return $RepeatCount
+}
 
 $allScenarios = @(
     Get-ExcelBenchmarkScenarios |
@@ -1384,6 +1719,7 @@ if ($ListScenarios.IsPresent) {
                 Engine = $_.Engine
                 Name = $_.Name
                 Profile = $_.Profile
+                FileExtension = $_.FileExtension
                 Suites = ($_.Suites -join ', ')
                 FollowUps = (@($_.FollowUps | Where-Object { $_ -and $_.PSObject.Properties['Key'] } | ForEach-Object { $_.Key }) -join ', ')
             }
@@ -1405,6 +1741,10 @@ $selectedScenarios = @(
                 return $true
             }
 
+            if ($SkipFollowUps.IsPresent) {
+                return $false
+            }
+
             $matchingFollowUps = @(Get-SelectedFollowUps -ScenarioObject $_)
             return $matchingFollowUps.Count -gt 0
         }
@@ -1416,38 +1756,83 @@ if ($selectedScenarios.Count -eq 0) {
 
 $null = New-Item -ItemType Directory -Force -Path $moduleRoot, $workRoot
 
-if ($Engine -contains 'ImportExcel') {
+$selectedEngines = @($selectedScenarios | Select-Object -ExpandProperty Engine -Unique)
+
+if ($selectedEngines -contains 'ImportExcel') {
     Ensure-ImportExcel
 }
-if ($Engine -contains 'ExcelFast') {
+if ($selectedEngines -contains 'ExcelFast') {
     Ensure-ExcelFast
 }
+$requiresCsvHelper = @($selectedScenarios | Where-Object { $_.Engine -eq 'CsvHelper' }).Count -gt 0
+if ($requiresCsvHelper) {
+    Ensure-CsvHelper
+}
 
-if (($Engine -contains 'PSWriteOffice') -or (-not $SkipWorkbookValidation.IsPresent)) {
-    $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
-    if (-not $env:OfficeIMORoot) {
+if (-not ($Engine -contains 'ExcelFast')) {
+    $selectedScenarios = @($selectedScenarios | Where-Object { $_.Engine -ne 'ExcelFast' })
+    if ($selectedScenarios.Count -eq 0) {
+        throw 'No benchmark scenarios matched after removing unavailable ExcelFast.'
+    }
+}
+
+$selectedEngines = @($selectedScenarios | Select-Object -ExpandProperty Engine -Unique)
+
+$requiresPSWriteOfficeModule = @($selectedScenarios | Where-Object { $_.Engine -eq 'PSWriteOffice' }).Count -gt 0
+$requiresWorkbookValidation = (-not $SkipWorkbookValidation.IsPresent) -and
+    @($selectedScenarios | Where-Object { [bool]$_.ValidateWorkbook }).Count -gt 0
+
+if ($requiresPSWriteOfficeModule -or $requiresWorkbookValidation) {
+    if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
+        $env:OfficeIMORoot = $OfficeIMORoot
+    } elseif (-not $env:OfficeIMORoot) {
         $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
     }
+
+    if (-not $SkipPSWriteOfficeBuild.IsPresent) {
+        Invoke-PSWriteOfficeBuild -Configuration $PSWriteOfficeConfiguration
+    }
+
+    $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
+    $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION = $PSWriteOfficeConfiguration
     Import-Module (Join-Path $repoRoot 'PSWriteOffice.psd1') -Force -ErrorAction Stop
 }
-if ($Engine -contains 'ImportExcel') {
+if ($selectedEngines -contains 'ImportExcel') {
     Import-Module ImportExcel -Force -ErrorAction Stop
 }
-if ($Engine -contains 'ExcelFast') {
+if ($selectedEngines -contains 'ExcelFast') {
     Import-Module ExcelFast -Force -ErrorAction Stop
+}
+
+$scenarioRepeatCounts = @{}
+foreach ($benchmarkScenario in $selectedScenarios) {
+    $scenarioRepeatCounts[(Get-BenchmarkScenarioIdentity -ScenarioObject $benchmarkScenario)] = Get-BenchmarkScenarioRepeatCount -ScenarioObject $benchmarkScenario
+}
+
+$maxRepeatCount = if ($scenarioRepeatCounts.Count -gt 0) {
+    [int](($scenarioRepeatCounts.Values | Measure-Object -Maximum).Maximum)
+} else {
+    $RepeatCount
 }
 
 $results = [Collections.Generic.List[object]]::new()
 foreach ($rows in $RowCount) {
     $profileCache = @{}
-    for ($iteration = 1; $iteration -le $RepeatCount; $iteration++) {
+    for ($iteration = 1; $iteration -le $maxRepeatCount; $iteration++) {
         foreach ($benchmarkScenario in $selectedScenarios) {
+            $scenarioRepeatCount = [int]$scenarioRepeatCounts[(Get-BenchmarkScenarioIdentity -ScenarioObject $benchmarkScenario)]
+            if ($iteration -gt $scenarioRepeatCount) {
+                continue
+            }
+
             if (-not $profileCache.ContainsKey($benchmarkScenario.Profile)) {
                 $profileCache[$benchmarkScenario.Profile] = Get-BenchmarkData -Profile $benchmarkScenario.Profile -Count $rows
             }
 
             $profile = $profileCache[$benchmarkScenario.Profile]
-            $path = Join-Path $workRoot ('{0}-{1}-{2}.xlsx' -f $benchmarkScenario.FileStem, $rows, $iteration)
+            $extension = if ($benchmarkScenario.FileExtension) { $benchmarkScenario.FileExtension } else { 'xlsx' }
+            $path = Join-Path $workRoot ('{0}-{1}-{2}.{3}' -f $benchmarkScenario.FileStem, $rows, $iteration, $extension.TrimStart('.'))
+            $sourcePath = Join-Path $workRoot ('{0}-{1}-{2}.source.csv' -f $benchmarkScenario.FileStem, $rows, $iteration)
             $rangeEndColumn = ConvertTo-ExcelColumnName -ColumnNumber $profile.ColumnCount
             $context = [pscustomobject]@{
                 Engine = $benchmarkScenario.Engine
@@ -1458,6 +1843,7 @@ foreach ($rows in $RowCount) {
                 Iteration = $iteration
                 WorksheetName = $profile.WorksheetName
                 Path = $path
+                SourcePath = $sourcePath
                 Range = 'A1:{0}{1}' -f $rangeEndColumn, ($rows + 1)
                 RangeEndCell = '{0}{1}' -f $rangeEndColumn, ($rows + 1)
             }
@@ -1465,8 +1851,16 @@ foreach ($rows in $RowCount) {
             if (Test-Path $context.Path) {
                 Remove-Item $context.Path -Force
             }
+            if (Test-Path $context.SourcePath) {
+                Remove-Item $context.SourcePath -Force
+            }
 
-            $results.Add((Invoke-BenchmarkOperation -Context $context -ScenarioKey $benchmarkScenario.Key -ScenarioName $benchmarkScenario.Name -ScriptBlock $benchmarkScenario.Script -ValidateWorkbook (-not $SkipWorkbookValidation.IsPresent)))
+            if ($benchmarkScenario.Setup) {
+                & $benchmarkScenario.Setup $context
+            }
+
+            $validateWorkbook = (-not $SkipWorkbookValidation.IsPresent) -and [bool]$benchmarkScenario.ValidateWorkbook
+            $results.Add((Invoke-BenchmarkOperation -Context $context -ScenarioKey $benchmarkScenario.Key -ScenarioName $benchmarkScenario.Name -ScriptBlock $benchmarkScenario.Script -ValidateWorkbook $validateWorkbook))
 
             if ((-not $SkipFollowUps.IsPresent) -and (Test-Path $context.Path)) {
                 foreach ($followUp in (Get-SelectedFollowUps -ScenarioObject $benchmarkScenario)) {
@@ -1519,10 +1913,10 @@ $summary = $results |
 $summary | Export-Csv -NoTypeInformation -Path $summaryPath
 $comparison = @(New-BenchmarkComparison -Summary $summary)
 $comparison |
-    Select-Object ScenarioKey, Scenario, Profile, Rows, FastestEngine, FastestMs, PSWriteOfficeStatus, PSWriteOfficeMs, PSWriteOfficeRank, PSWriteOfficeVsFastest, PSWriteOfficeVsFastestText, LeadText, Rating, ImportExcelStatus, ImportExcelMs, ImportExcelVsFastest, ExcelFastStatus, ExcelFastMs, ExcelFastVsFastest, SmallestFileEngine, PSWriteOfficeFileKB, ImportExcelFileKB, ExcelFastFileKB, PSWriteOfficeWorkbookValidationStatus, ImportExcelWorkbookValidationStatus, ExcelFastWorkbookValidationStatus, PSWriteOfficeWorkbookValidationMs, ImportExcelWorkbookValidationMs, ExcelFastWorkbookValidationMs, PSWriteOfficeWorkingSetDeltaMB, ImportExcelWorkingSetDeltaMB, ExcelFastWorkingSetDeltaMB, PSWriteOfficePeakWorkingSetDeltaMB, ImportExcelPeakWorkingSetDeltaMB, ExcelFastPeakWorkingSetDeltaMB, PSWriteOfficeManagedDeltaMB, ImportExcelManagedDeltaMB, ExcelFastManagedDeltaMB |
+    Select-Object ScenarioKey, Scenario, Profile, Rows, FastestEngine, FastestMs, PSWriteOfficeStatus, PSWriteOfficeMs, PSWriteOfficeRank, PSWriteOfficeVsFastest, PSWriteOfficeVsFastestText, LeadText, Rating, ImportExcelStatus, ImportExcelMs, ImportExcelVsFastest, ExcelFastStatus, ExcelFastMs, ExcelFastVsFastest, NativeCsvStatus, NativeCsvMs, NativeCsvVsFastest, CsvHelperStatus, CsvHelperMs, CsvHelperVsFastest, SmallestFileEngine, PSWriteOfficeFileKB, ImportExcelFileKB, ExcelFastFileKB, NativeCsvFileKB, CsvHelperFileKB, PSWriteOfficeWorkbookValidationStatus, ImportExcelWorkbookValidationStatus, ExcelFastWorkbookValidationStatus, NativeCsvWorkbookValidationStatus, CsvHelperWorkbookValidationStatus, PSWriteOfficeWorkbookValidationMs, ImportExcelWorkbookValidationMs, ExcelFastWorkbookValidationMs, NativeCsvWorkbookValidationMs, CsvHelperWorkbookValidationMs, PSWriteOfficeWorkingSetDeltaMB, ImportExcelWorkingSetDeltaMB, ExcelFastWorkingSetDeltaMB, NativeCsvWorkingSetDeltaMB, CsvHelperWorkingSetDeltaMB, PSWriteOfficePeakWorkingSetDeltaMB, ImportExcelPeakWorkingSetDeltaMB, ExcelFastPeakWorkingSetDeltaMB, NativeCsvPeakWorkingSetDeltaMB, CsvHelperPeakWorkingSetDeltaMB, PSWriteOfficeManagedDeltaMB, ImportExcelManagedDeltaMB, ExcelFastManagedDeltaMB, NativeCsvManagedDeltaMB, CsvHelperManagedDeltaMB |
     Export-Csv -NoTypeInformation -Path $comparisonCsvPath
 $comparison | ConvertTo-Json -Depth 8 | Set-Content -Path $comparisonJsonPath -Encoding UTF8
-$officeIMOExcelAssemblyPath = Join-Path $repoRoot 'Sources\PSWriteOffice\bin\Debug\net8.0\OfficeIMO.Excel.dll'
+$officeIMOExcelAssemblyPath = Join-Path (Join-Path (Join-Path (Join-Path (Join-Path (Join-Path $repoRoot 'Sources') 'PSWriteOffice') 'bin') $PSWriteOfficeConfiguration) 'net8.0') 'OfficeIMO.Excel.dll'
 $officeIMOExcelAssemblyVersion = if (Test-Path $officeIMOExcelAssemblyPath) {
     [Reflection.AssemblyName]::GetAssemblyName($officeIMOExcelAssemblyPath).Version.ToString()
 } else {
@@ -1540,10 +1934,20 @@ $moduleDetails = [ordered]@{
     PSWriteOffice = Get-BenchmarkModuleDetails -Name PSWriteOffice
     ImportExcel = Get-BenchmarkModuleDetails -Name ImportExcel
     ExcelFast = Get-BenchmarkModuleDetails -Name ExcelFast
+    CsvHelper = Get-LoadedAssemblyDetails -Name CsvHelper
+    NativeCsv = [pscustomobject]@{
+        Name = 'Microsoft.PowerShell.Utility'
+        Version = $PSVersionTable.PSVersion.ToString()
+        Prerelease = $null
+        DisplayVersion = $PSVersionTable.PSVersion.ToString()
+        ModuleBase = $null
+        Path = $null
+    }
 }
 $assemblyDetails = [ordered]@{
     OfficeOpenXml = Get-LoadedAssemblyDetails -Name OfficeOpenXml
     OfficeIMOExcel = Get-LoadedAssemblyDetails -Name OfficeIMO.Excel
+    CsvHelper = Get-LoadedAssemblyDetails -Name CsvHelper
 }
 
 [pscustomobject]@{
@@ -1553,6 +1957,8 @@ $assemblyDetails = [ordered]@{
     Suite = $Suite
     ImportExcel = if ($moduleDetails.ImportExcel) { $moduleDetails.ImportExcel.DisplayVersion } else { $null }
     ExcelFast = if ($moduleDetails.ExcelFast) { $moduleDetails.ExcelFast.DisplayVersion } else { $null }
+    CsvHelper = if ($moduleDetails.CsvHelper) { $moduleDetails.CsvHelper.Version } else { $null }
+    NativeCsv = $moduleDetails.NativeCsv.DisplayVersion
     PSWriteOffice = if ($moduleDetails.PSWriteOffice) { $moduleDetails.PSWriteOffice.DisplayVersion } else { $null }
     Modules = $moduleDetails
     Assemblies = $assemblyDetails
@@ -1562,6 +1968,27 @@ $assemblyDetails = [ordered]@{
     ScenarioFilter = $Scenario
     RowCount = $RowCount
     RepeatCount = $RepeatCount
+    RepeatCountExplicit = $repeatCountExplicit
+    MaxRepeatCount = $maxRepeatCount
+    ScenarioRepeatPolicy = @(
+        $selectedScenarios |
+            Sort-Object Key, Engine, Profile |
+            ForEach-Object {
+                [pscustomobject]@{
+                    Key = $_.Key
+                    Engine = $_.Engine
+                    Profile = $_.Profile
+                    RepeatCount = [int]$scenarioRepeatCounts[(Get-BenchmarkScenarioIdentity -ScenarioObject $_)]
+                    Reason = if (-not $repeatCountExplicit -and (Test-CsvMicroBenchmarkScenario -ScenarioObject $_)) {
+                        'csv microbenchmark default'
+                    } elseif ($repeatCountExplicit) {
+                        'explicit RepeatCount'
+                    } else {
+                        'suite default'
+                    }
+                }
+            }
+    )
     SkipFollowUps = $SkipFollowUps.IsPresent
     SkipWorkbookValidation = $SkipWorkbookValidation.IsPresent
     ScenarioCount = $selectedScenarios.Count
@@ -1571,6 +1998,8 @@ $assemblyDetails = [ordered]@{
     ModuleCache = $moduleRoot
     OfficeIMORoot = $env:OfficeIMORoot
     PSWriteOfficeUseDevelopmentBinaries = $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES
+    PSWriteOfficeDevelopmentConfiguration = $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION
+    PSWriteOfficeBuildSkipped = $SkipPSWriteOfficeBuild.IsPresent
     ResultsPath = $resultsPath
     SummaryPath = $summaryPath
     ComparisonCsvPath = $comparisonCsvPath

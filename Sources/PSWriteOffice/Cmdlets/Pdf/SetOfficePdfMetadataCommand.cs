@@ -25,7 +25,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <code>Set-OfficePdfMetadata -Path .\Input.pdf -OutputPath .\Output.pdf -Title 'Reviewed package' -Author 'Operations'</code>
 ///   <para>Writes a new PDF with updated metadata.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficePdfMetadata", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Set, "OfficePdfMetadata", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("PdfMetadata")]
 [OutputType(typeof(PdfDocument), typeof(FileInfo))]
 public sealed class SetOfficePdfMetadataCommand : PSCmdlet
@@ -78,6 +78,11 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
         {
             var inputPath = PdfCommandUtilities.ResolvePath(this, Path!);
             var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF metadata"))
+            {
+                return;
+            }
+
             PdfCommandUtilities.EnsureDirectory(outputPath);
             if (Incremental.IsPresent)
             {
@@ -93,6 +98,11 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
         }
 
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
+        if (!ShouldProcess("PDF document", "Set PDF metadata"))
+        {
+            return;
+        }
+
         document.Meta(Title, Author, Subject, Keywords);
         if (PassThru.IsPresent)
         {

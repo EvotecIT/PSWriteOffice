@@ -11,17 +11,17 @@ Adds workbook-level slicer cache metadata.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelSlicer -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSlicer -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Add-OfficeExcelSlicer [-InputPath] <string> -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSlicer [-InputPath] <string> -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelSlicer -Document <ExcelDocument> -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSlicer -Document <ExcelDocument> -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

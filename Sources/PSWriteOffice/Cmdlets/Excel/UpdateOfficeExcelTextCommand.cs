@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// }</code>
 ///   <para>Updates matching text cells on a sheet, saves the workbook, and returns the replacement count.</para>
 /// </example>
-[Cmdlet(VerbsData.Update, "OfficeExcelText", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsData.Update, "OfficeExcelText", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Replace-OfficeExcelText")]
 [OutputType(typeof(int))]
 public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
@@ -72,9 +72,24 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (ParameterSetName == ParameterSetPath)
+        {
+            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+            if (!ShouldProcess(resolvedPath, "Update Excel workbook text"))
+            {
+                return;
+            }
+        }
+
         var replacements = 0;
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
         var document = workbook.Document;
+        if (ParameterSetName != ParameterSetPath &&
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, document, null, "Update Excel workbook text"))
+        {
+            return;
+        }
+
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
             replacements += ReplaceInSheet(document, sheet);

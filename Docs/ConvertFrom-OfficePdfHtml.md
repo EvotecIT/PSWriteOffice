@@ -11,12 +11,12 @@ Converts HTML content to a PDF through the first-party OfficeIMO HTML/PDF adapte
 ## SYNTAX
 ### Html (Default)
 ```powershell
-ConvertFrom-OfficePdfHtml [-Html] <string> [-OutputPath <string>] [-Profile <HtmlPdfProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficePdfHtml [-Html] <string> [-OutputPath <string>] [-Profile <HtmlPdfProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-ConvertFrom-OfficePdfHtml -InputPath <string> [-OutputPath <string>] [-Profile <HtmlPdfProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficePdfHtml -InputPath <string> [-OutputPath <string>] [-Profile <HtmlPdfProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

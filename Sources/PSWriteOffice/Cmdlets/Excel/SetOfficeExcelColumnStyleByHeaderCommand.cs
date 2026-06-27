@@ -126,7 +126,20 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
         }
 
         var sheet = ResolveSheet();
-        if (!sheet.TryGetColumnIndexByHeader(Header, out var columnIndex))
+        bool requiresCellMaterialization = Bold.IsPresent ||
+            !string.IsNullOrWhiteSpace(BackgroundColor) ||
+            !string.IsNullOrWhiteSpace(FontColor) ||
+            !string.IsNullOrWhiteSpace(Alignment) ||
+            BackgroundByText is { Count: > 0 } ||
+            FontColorByText is { Count: > 0 } ||
+            BoldByText is { Length: > 0 };
+
+        if (!sheet.TryGetColumnStyleByHeader(
+            Header,
+            IncludeHeader.IsPresent,
+            out var builder,
+            out var columnIndex,
+            preferDirectTabularMetadata: !requiresCellMaterialization))
         {
             if (IgnoreMissing.IsPresent)
             {
@@ -136,7 +149,6 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
             throw new PSArgumentException($"Header '{Header}' was not found on worksheet '{sheet.Name}'.", nameof(Header));
         }
 
-        var builder = sheet.ColumnStyleByHeader(Header, IncludeHeader.IsPresent);
         var hasAction = false;
 
         if (!string.IsNullOrWhiteSpace(Style))

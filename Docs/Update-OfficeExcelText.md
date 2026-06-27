@@ -11,12 +11,12 @@ Replaces text in worksheet values.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Update-OfficeExcelText [-InputPath] <string> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-CaseSensitive] [-Regex] [-Show] [<CommonParameters>]
+Update-OfficeExcelText [-InputPath] <string> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-CaseSensitive] [-Regex] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Update-OfficeExcelText -Document <ExcelDocument> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-CaseSensitive] [-Regex] [<CommonParameters>]
+Update-OfficeExcelText -Document <ExcelDocument> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-CaseSensitive] [-Regex] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// $proof</code>
 ///   <para>Stores Excel print titles for the Data worksheet and then reads back workbook structure as a quick proof step.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficeExcelPrintTitles", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Set, "OfficeExcelPrintTitles", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPrintTitles")]
 public sealed class SetOfficeExcelPrintTitlesCommand : PSCmdlet
 {
@@ -75,6 +75,15 @@ public sealed class SetOfficeExcelPrintTitlesCommand : PSCmdlet
         }
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+
+        {
+
+            return;
+
+        }
+
         var document = workbook.Document;
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
         document.SetPrintTitles(

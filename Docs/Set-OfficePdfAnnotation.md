@@ -4,46 +4,127 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Get-OfficeCsvData
+# Set-OfficePdfAnnotation
 ## SYNOPSIS
-Reads CSV rows as PSCustomObjects or dictionaries.
+Updates a single indirect PDF annotation.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeCsvData [[-InputPath] <string>] [-Document <CsvDocument>] [-HasHeaderRow <bool>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-AsHashtable] [<CommonParameters>]
+Set-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> -ObjectNumber <int> [-Contents <string>] [-Title <string>] [-Name <string>] [-Flags <int>] [-Color <string>] [-RemoveAction] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Uses the CSV header to map fields to property names.
+Updates a single indirect PDF annotation.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficeCsvData -Path .\data.csv | Format-Table
+Set-OfficePdfAnnotation -ObjectNumber 1
 ```
 
-Returns each row as a PSCustomObject.
-
-### EXAMPLE 2
-```powershell
-PS> Get-OfficeCsvData -Path .\data.csv -AsHashtable | ForEach-Object { $_['Name'] }
-```
-
-Uses hashtables for dynamic schemas or key-based access.
-
-### EXAMPLE 3
-```powershell
-PS> Get-OfficeCsvData -Path .\data.csv -Delimiter ';' -HasHeaderRow:$false
-```
-
-Reads CSV files that lack a header row and use a custom delimiter.
 
 ## PARAMETERS
 
-### -AllowEmptyLines
-Allow empty lines in the input.
+### -Color
+Replacement annotation color as #RRGGBB.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Contents
+Replacement annotation contents text.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Flags
+Replacement annotation flags.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Name
+Replacement annotation name.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ObjectNumber
+Indirect annotation object number to update.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -OutputPath
+Output PDF path.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThruReport
+Return the annotation edit result instead of the output file.
 
 ```yaml
 Type: SwitchParameter
@@ -58,75 +139,27 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -AsHashtable
-Emit dictionaries instead of PSCustomObjects.
+### -Path
+Input PDF path.
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: FilePath
 Possible values:
 
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Culture
-Culture used for type conversions.
-
-```yaml
-Type: CultureInfo
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Delimiter
-Field delimiter character.
-
-```yaml
-Type: Char
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Document
-CSV document to read when already loaded.
-
-```yaml
-Type: CsvDocument
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -Encoding
-Encoding used when reading the file.
+### -RemoveAction
+Remove /A and /AA action dictionaries from the annotation.
 
 ```yaml
-Type: Encoding
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -138,59 +171,11 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -HasHeaderRow
-Indicates whether the first record is a header row.
-
-```yaml
-Type: Boolean
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -InputPath
-Path to a CSV file.
+### -Title
+Replacement annotation title text.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
-Aliases: FilePath, Path
-Possible values:
-
-Required: False
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Mode
-Load mode controlling materialization.
-
-```yaml
-Type: CsvLoadMode
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: InMemory, Stream
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -TrimWhitespace
-Trim whitespace around unquoted fields.
-
-```yaml
-Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -207,11 +192,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.CSV.CsvDocument`
+- `System.String`
 
 ## OUTPUTS
 
-- `System.Object`
+- `System.IO.FileInfo
+OfficeIMO.Pdf.PdfAnnotationEditResult`
 
 ## RELATED LINKS
 

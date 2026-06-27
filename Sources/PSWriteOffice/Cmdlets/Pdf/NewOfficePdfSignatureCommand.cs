@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $plan.ComputeSha256Digest()</code>
 ///   <para>Writes a prepared PDF and returns the OfficeIMO.Pdf external signing preparation report.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficePdfSignature")]
+[Cmdlet(VerbsCommon.New, "OfficePdfSignature", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo), typeof(PdfExternalSignaturePreparation))]
 public sealed class NewOfficePdfSignatureCommand : PSCmdlet
 {
@@ -71,6 +71,11 @@ public sealed class NewOfficePdfSignatureCommand : PSCmdlet
     {
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write externally signable PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
 
         var options = new PdfExternalSignatureOptions

@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// Add-OfficeExcelPackageMetadata -Path .\Report.xlsx -Kind QueryTable -WorksheetName Data -Xml $queryTableXml</code>
 ///   <para>Adds caller-supplied XML metadata parts. OfficeIMO preserves these parts but does not refresh external queries.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelPackageMetadata", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelPackageMetadata", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPackageMetadata", "ExcelConnectionMetadata")]
 [OutputType(typeof(PSObject))]
 public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet
@@ -54,6 +54,11 @@ public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         var document = workbook.Document;
 
         string? sheetName = null;

@@ -11,7 +11,7 @@ Fills and optionally flattens simple AcroForm fields in an existing PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfForm -Path <string> -OutputPath <string> [-Field <hashtable>] [-Flatten] [<CommonParameters>]
+Set-OfficePdfForm -Path <string> -OutputPath <string> [-Field <hashtable>] [-Flatten] [-KeepNeedAppearances] [-Incremental] [-AppearanceFontPath <string>] [-AppearanceFontFamilyName <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -33,6 +33,38 @@ Fills simple AcroForm fields and writes a flattened PDF.
 
 ## PARAMETERS
 
+### -AppearanceFontFamilyName
+PDF font family name used for the supplied appearance font.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AppearanceFontPath
+TrueType or OpenType/CFF font file used to synthesize Unicode form field appearances.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Field
 Field values keyed by form field name.
 
@@ -51,6 +83,38 @@ Accept wildcard characters: True
 
 ### -Flatten
 Flatten simple form fields after filling, or flatten without filling when -Field is omitted.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Incremental
+Append simple form field values as an incremental PDF revision instead of rewriting the existing PDF.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -KeepNeedAppearances
+True to keep /NeedAppearances enabled for legacy PDF viewers after filling fields.
 
 ```yaml
 Type: SwitchParameter

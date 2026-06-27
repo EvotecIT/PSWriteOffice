@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// }</code>
 ///   <para>Stores inline rich text in the target cell using OfficeIMO's reusable rich-text cell model.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficeExcelRichText", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Set, "OfficeExcelRichText", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelRichText")]
 public sealed class SetOfficeExcelRichTextCommand : PSCmdlet
 {
@@ -71,6 +71,11 @@ public sealed class SetOfficeExcelRichTextCommand : PSCmdlet
     {
         var runs = ExcelRichTextRunService.ToRuns(Run);
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
         var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
         sheet.SetRichText(row, column, runs);

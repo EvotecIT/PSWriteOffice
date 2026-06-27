@@ -11,21 +11,21 @@ Imports rows from an Excel workbook as PowerShell objects.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Import-OfficeExcel [-Path] <string> [-WorksheetName <string>] [-SheetIndex <int>] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeExcel [-Path] <string> [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-ByColumn] [<CommonParameters>]
 ```
 
 ### Uri
 ```powershell
-Import-OfficeExcel [-Uri] <uri> [-AllowHttp] [-WorksheetName <string>] [-SheetIndex <int>] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeExcel [-Uri] <uri> [-AllowHttp] [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-ByColumn] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Import-OfficeExcel -Document <ExcelDocument> [-WorksheetName <string>] [-SheetIndex <int>] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeExcel -Document <ExcelDocument> [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-ByColumn] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Provides an ImportExcel-style read command over the OfficeIMO reader pipeline.
+Provides a fast PowerShell read command over the OfficeIMO reader pipeline.
 
 ## EXAMPLES
 
@@ -39,6 +39,23 @@ $rows |
 
 Reads the used range on the Data worksheet, emits PSCustomObjects, and filters them in PowerShell.
 
+### EXAMPLE 2
+```powershell
+PS> $rows = Import-OfficeExcel -Path .\Workbook.xlsx -AllSheets
+$rows | Group-Object WorksheetName
+```
+
+Reads the used range from each worksheet and adds a WorksheetName property to each emitted row.
+
+### EXAMPLE 3
+```powershell
+PS> Import-OfficeExcel -Path .\Workbook.xlsx -WorksheetName Metrics -ByColumn |
+                Where-Object ColumnName -eq 'Revenue' |
+                Select-Object -ExpandProperty Values
+```
+
+Returns one object per column with the column name, 1-based column index, and the column values as an array.
+
 ## PARAMETERS
 
 ### -AllowHttp
@@ -47,6 +64,22 @@ Allow HTTP workbook downloads in addition to HTTPS.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Uri
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -AllSheets
+Import all worksheets. Each emitted row or column includes WorksheetName.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Uri, Document
 Aliases: None
 Possible values:
 
@@ -75,6 +108,22 @@ Accept wildcard characters: True
 
 ### -AsHashtable
 Emit rows as hashtables instead of PSCustomObjects.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ByColumn
+Emit one object per column with ColumnName, ColumnIndex, and Values instead of row objects.
 
 ```yaml
 Type: SwitchParameter

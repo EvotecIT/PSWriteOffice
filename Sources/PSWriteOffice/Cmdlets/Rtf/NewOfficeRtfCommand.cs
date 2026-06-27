@@ -15,7 +15,7 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 /// Get-OfficeRtf -Path $file.FullName</code>
 ///   <para>Creates an RTF document with two paragraphs and returns the file.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficeRtf")]
+[Cmdlet(VerbsCommon.New, "OfficeRtf", SupportsShouldProcess = true)]
 [Alias("RtfNew")]
 [OutputType(typeof(FileInfo), typeof(RtfDocument))]
 public sealed class NewOfficeRtfCommand : PSCmdlet
@@ -64,6 +64,11 @@ public sealed class NewOfficeRtfCommand : PSCmdlet
         }
 
         var path = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, path, "Write new RTF document"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(path);
         document.Save(path, encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 

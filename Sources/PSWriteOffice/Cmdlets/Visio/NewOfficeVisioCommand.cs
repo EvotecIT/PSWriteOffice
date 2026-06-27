@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// }</code>
 ///   <para>Creates an editable .vsdx diagram with two shapes and a connector.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficeVisio")]
+[Cmdlet(VerbsCommon.New, "OfficeVisio", SupportsShouldProcess = true)]
 [Alias("VisioNew")]
 [OutputType(typeof(VisioDocument), typeof(FileInfo))]
 public sealed class NewOfficeVisioCommand : PSCmdlet
@@ -79,7 +79,15 @@ public sealed class NewOfficeVisioCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var fullPath = VisioCommandUtilities.ResolvePath(this, Path);
-        VisioCommandUtilities.EnsureDirectory(fullPath);
+        if (!NoSave.IsPresent)
+        {
+            if (!ShouldProcess(fullPath, "Write new Visio document"))
+            {
+                return;
+            }
+
+            VisioCommandUtilities.EnsureDirectory(fullPath);
+        }
 
         var document = VisioDocument.Create(fullPath);
         document.Title = Title;

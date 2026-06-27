@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// Get-OfficePdfSignature -Path .\Signed.pdf</code>
 ///   <para>Writes a PDF with the reserved /Contents hex slot patched in place.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficePdfSignature")]
+[Cmdlet(VerbsCommon.Set, "OfficePdfSignature", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo), typeof(PdfSignatureValidationReport))]
 public sealed class SetOfficePdfSignatureCommand : PSCmdlet
 {
@@ -40,6 +40,11 @@ public sealed class SetOfficePdfSignatureCommand : PSCmdlet
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         var signaturePath = PdfCommandUtilities.ResolvePath(this, SignaturePath);
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write signed PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
 
         PdfIncrementalUpdater.ApplyExternalSignature(inputPath, outputPath, File.ReadAllBytes(signaturePath));

@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object -ExpandProperty TimelineCacheCount</code>
 ///   <para>Writes timeline cache package metadata through OfficeIMO. Excel may still be required to materialize full timeline UI shapes.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelTimeline", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelTimeline", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelTimeline")]
 [OutputType(typeof(PSObject))]
 public sealed class AddOfficeExcelTimelineCommand : PSCmdlet
@@ -56,6 +56,11 @@ public sealed class AddOfficeExcelTimelineCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         ExtendedPart part = workbook.Document.AddWorkbookTimelineCache(new ExcelTimelineCacheOptions
         {
             Name = Name,

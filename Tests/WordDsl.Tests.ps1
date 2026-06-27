@@ -925,6 +925,38 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'does not mutate live Word documents when text update uses WhatIf' {
+        $path = Join-Path $TestDrive 'DslReplaceLiveWhatIf.docx'
+        $document = New-OfficeWord -Path $path
+
+        try {
+            $document.AddParagraph('FY24 live document') | Out-Null
+
+            Update-OfficeWordText -Document $document -OldValue 'FY24' -NewValue 'FY25' -WhatIf | Should -BeNullOrEmpty
+
+            (Find-OfficeWord -Document $document -Text 'FY24').Count | Should -Be 1
+            (Find-OfficeWord -Document $document -Text 'FY25').Count | Should -Be 0
+        } finally {
+            Close-OfficeWord -Document $document
+        }
+    }
+
+    It 'does not mutate the tracked Word document when text update uses WhatIf' {
+        $path = Join-Path $TestDrive 'DslReplaceTrackedWhatIf.docx'
+        $document = New-OfficeWord -Path $path
+
+        try {
+            $document.AddParagraph('FY24 tracked document') | Out-Null
+
+            Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' -WhatIf | Should -BeNullOrEmpty
+
+            (Find-OfficeWord -Document $document -Text 'FY24').Count | Should -Be 1
+            (Find-OfficeWord -Document $document -Text 'FY25').Count | Should -Be 0
+        } finally {
+            Close-OfficeWord -Document $document
+        }
+    }
+
     It 'tracks current Word documents for update and close operations' {
         $pathOne = Join-Path $TestDrive 'TrackedOne.docx'
         $pathTwo = Join-Path $TestDrive 'TrackedTwo.docx'

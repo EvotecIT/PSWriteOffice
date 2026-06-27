@@ -21,7 +21,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>ConvertTo-OfficeWordMarkdown -Path .\report.docx -OutputPath .\report.md -PassThru</code>
 ///   <para>Writes <c>report.md</c> and returns the file info.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficeWordMarkdown", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsData.ConvertTo, "OfficeWordMarkdown", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ConvertTo-WordMarkdown")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficeWordMarkdownCommand : PSCmdlet
@@ -111,6 +111,11 @@ public sealed class ConvertToOfficeWordMarkdownCommand : PSCmdlet
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+                if (!ShouldProcess(resolvedOutput, "Write Markdown converted from Word document"))
+                {
+                    return;
+                }
+
                 var directory = Path.GetDirectoryName(resolvedOutput);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
@@ -125,6 +130,13 @@ public sealed class ConvertToOfficeWordMarkdownCommand : PSCmdlet
             }
             else
             {
+                if (options.ImageExportMode == ImageExportMode.File && !string.IsNullOrWhiteSpace(options.ImageDirectory) &&
+                    !ShouldProcess(options.ImageDirectory, "Export Word images while converting to Markdown"))
+                {
+                    options.ImageExportMode = ImageExportMode.Base64;
+                    options.ImageDirectory = null;
+                }
+
                 WriteObject(document.ToMarkdown(options));
             }
         }

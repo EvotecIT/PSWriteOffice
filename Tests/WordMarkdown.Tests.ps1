@@ -5,6 +5,8 @@ BeforeAll {
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
     Import-Module $ModuleManifest -Global -ErrorAction Stop
+
+    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 }
 
 Describe 'Word Markdown conversions' {
@@ -24,6 +26,22 @@ Describe 'Word Markdown conversions' {
         $file = ConvertTo-OfficeWordMarkdown -Path $docPath -OutputPath $markdownPath -PassThru
         $file | Should -BeOfType System.IO.FileInfo
         (Get-Content -Path $markdownPath -Raw) | Should -Match 'Quarterly Report'
+    }
+
+    It 'does not export Word images to files when WhatIf skips file image export' {
+        $docPath = Join-Path $TestDrive 'MarkdownImageSource.docx'
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive
+        $imageDirectory = Join-Path $TestDrive 'images'
+
+        New-OfficeWord -Path $docPath {
+            WordParagraph {
+                WordImage -Path $imagePath | Out-Null
+            }
+        } | Out-Null
+
+        ConvertTo-OfficeWordMarkdown -Path $docPath -ImageExportMode File -ImageDirectory $imageDirectory -WhatIf | Out-Null
+
+        Test-Path -LiteralPath $imageDirectory | Should -BeFalse
     }
 
     It 'converts Markdown text and Markdown documents to Word' {

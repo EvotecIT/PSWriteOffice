@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     -PassThru</code>
 ///   <para>Writes package metadata only. OfficeIMO does not execute Power Query M; Excel-compatible applications perform refresh when opened.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelPowerQueryMetadata", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelPowerQueryMetadata", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPowerQueryMetadata", "ExcelQueryMetadata")]
 [OutputType(typeof(PSObject))]
 public sealed class AddOfficeExcelPowerQueryMetadataCommand : PSCmdlet
@@ -68,6 +68,11 @@ public sealed class AddOfficeExcelPowerQueryMetadataCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         string? sheetName = WorksheetName;
         if (string.IsNullOrWhiteSpace(sheetName) && string.Equals(ParameterSetName, ParameterSetContext, System.StringComparison.OrdinalIgnoreCase))
         {

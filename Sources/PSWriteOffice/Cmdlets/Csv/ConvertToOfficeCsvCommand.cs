@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Management.Automation;
-using System.Text;
 using OfficeIMO.CSV;
-using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Csv;
 
-/// <summary>Converts objects or a CSV document into CSV text or a file.</summary>
-/// <para>By default returns CSV text; use <c>-OutputPath</c> to save to disk.</para>
+/// <summary>Converts objects or a CSV document into CSV text.</summary>
+/// <para>Use <c>Export-OfficeCsv</c> when the destination is a file.</para>
 /// <example>
 ///   <summary>Convert objects to CSV text.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -24,39 +20,50 @@ namespace PSWriteOffice.Cmdlets.Csv;
 ///     [ordered]@{ Id = 1; Name = 'Alpha'; Total = 10.5 },
 ///     [ordered]@{ Id = 2; Name = 'Beta'; Total = 7.25 }
 ///   )
-///   $rows | ConvertTo-OfficeCsv -OutputPath .\export.csv -Delimiter ';'</code>
+///   $csv = $rows | ConvertTo-OfficeCsv -Delimiter ';'</code>
 ///   <para>Uses ordered dictionaries to enforce column order and a custom delimiter.</para>
 /// </example>
 /// <example>
 ///   <summary>Write CSV without headers.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$data | ConvertTo-OfficeCsv -IncludeHeader:$false -OutputPath .\noheader.csv</code>
+///   <code>$csv = $data | ConvertTo-OfficeCsv -NoHeader</code>
 ///   <para>Writes rows only when a downstream system expects headerless CSV.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficeCsv", DefaultParameterSetName = ParameterSetInputObject)]
-[OutputType(typeof(string), typeof(FileInfo))]
+[Cmdlet(VerbsData.ConvertTo, "OfficeCsv", DefaultParameterSetName = ParameterSetInputObjectDelimiter)]
+[OutputType(typeof(string))]
 public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 {
-    private const string ParameterSetInputObject = "InputObject";
-    private const string ParameterSetDocument = "Document";
-    private readonly List<object?> _items = new();
-    private bool _wroteOutputPath;
+    private const string ParameterSetInputObjectDelimiter = "InputObjectDelimiter";
+    private const string ParameterSetInputObjectCulture = "InputObjectCulture";
+    private const string ParameterSetDocumentDelimiter = "DocumentDelimiter";
+    private const string ParameterSetDocumentCulture = "DocumentCulture";
+    private readonly CsvPowerShellObjectProjector _objectProjector = new();
+    private CsvPowerShellLineWriter? _lineWriter;
+    private CsvObjectWriter? _csvWriter;
 
     /// <summary>CSV document to serialize.</summary>
-    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentDelimiter)]
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentCulture)]
     public CsvDocument Document { get; set; } = null!;
 
     /// <summary>Objects to convert into CSV rows.</summary>
-    [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObject)]
+    [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectDelimiter)]
+    [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetInputObjectCulture)]
     public object? InputObject { get; set; }
 
     /// <summary>Field delimiter character.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetInputObjectDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetDocumentDelimiter)]
     public char Delimiter { get; set; } = ',';
 
-    /// <summary>Include the header row in the output.</summary>
+    /// <summary>Use the list separator from the selected or current culture as the delimiter.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectCulture)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentCulture)]
+    public SwitchParameter UseCulture { get; set; }
+
+    /// <summary>Omit the header row from the output.</summary>
     [Parameter]
-    public bool IncludeHeader { get; set; } = true;
+    public SwitchParameter NoHeader { get; set; }
 
     /// <summary>Override the newline sequence.</summary>
     [Parameter]
@@ -66,60 +73,124 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter]
     public CultureInfo? Culture { get; set; }
 
-    /// <summary>Encoding used when writing files.</summary>
+    /// <summary>Controls how formula-like values are written.</summary>
     [Parameter]
-    public Encoding? Encoding { get; set; }
+    public CsvFormulaInjectionPolicy FormulaInjectionPolicy { get; set; } = CsvFormulaInjectionPolicy.Preserve;
 
-    /// <summary>Optional output path for the CSV file.</summary>
+    /// <summary>Controls when CSV fields are quoted. Defaults to quoting only fields that need it.</summary>
     [Parameter]
-    [Alias("OutPath")]
-    public string? OutputPath { get; set; }
+    public CsvQuoteMode UseQuotes { get; set; } = CsvQuoteMode.AsNeeded;
 
-    /// <summary>Emit a <see cref="FileInfo"/> when saving to disk.</summary>
+    /// <summary>Field names that should always be quoted when <see cref="UseQuotes"/> is AsNeeded.</summary>
     [Parameter]
-    public SwitchParameter PassThru { get; set; }
+    public string[]? QuoteFields { get; set; }
+
+    /// <inheritdoc />
+    protected override void BeginProcessing()
+    {
+        ApplyCultureDelimiter();
+    }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (ParameterSetName == ParameterSetDocument)
+        if (IsDocumentParameterSet())
         {
             if (Document != null)
             {
                 EmitCsv(Document);
             }
+
             return;
         }
 
-        _items.Add(InputObject);
+        if (TryGetCsvDocument(InputObject, out var csvDocument))
+        {
+            EmitCsv(csvDocument);
+            return;
+        }
+
+        _objectProjector.WriteObject(InputObject, EnsureObjectWriter());
     }
 
     /// <inheritdoc />
     protected override void EndProcessing()
     {
-        if (ParameterSetName == ParameterSetDocument)
+        DisposeObjectWriter();
+    }
+
+    private void ApplyCultureDelimiter()
+    {
+        if (!UseCulture.IsPresent)
         {
             return;
         }
 
-        if (_items.Count == 0)
+        var separator = (Culture ?? CultureInfo.CurrentCulture).TextInfo.ListSeparator;
+        if (string.IsNullOrEmpty(separator) || separator.Length != 1)
         {
-            return;
+            throw new PSArgumentException("The selected culture must provide a single-character list separator.");
         }
 
-        var normalized = PowerShellObjectNormalizer.NormalizeItems(_items);
-        var document = CsvDocument.FromObjects(normalized, Delimiter, Culture, Encoding);
-        EmitCsv(document);
+        Delimiter = separator[0];
     }
 
     private void EmitCsv(CsvDocument document)
     {
+        var options = CreateSaveOptions();
+        using var writer = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
+        writer.Write(document.ToString(options));
+    }
+
+    private static bool TryGetCsvDocument(object? value, out CsvDocument document)
+    {
+        if (value is CsvDocument csvDocument)
+        {
+            document = csvDocument;
+            return true;
+        }
+
+        if (value is PSObject { BaseObject: CsvDocument psObjectDocument })
+        {
+            document = psObjectDocument;
+            return true;
+        }
+
+        document = null!;
+        return false;
+    }
+
+    private CsvObjectWriter EnsureObjectWriter()
+    {
+        if (_csvWriter != null)
+        {
+            return _csvWriter;
+        }
+
+        var options = CreateSaveOptions();
+        _lineWriter = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
+        _csvWriter = new CsvObjectWriter(_lineWriter, options);
+        return _csvWriter;
+    }
+
+    private void DisposeObjectWriter()
+    {
+        _csvWriter?.Dispose();
+        _csvWriter = null;
+        _lineWriter = null;
+        _objectProjector.Reset();
+    }
+
+    private CsvSaveOptions CreateSaveOptions()
+    {
         var options = new CsvSaveOptions
         {
             Delimiter = Delimiter,
-            IncludeHeader = IncludeHeader,
+            IncludeHeader = !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
-            Encoding = Encoding
+            FormulaInjectionPolicy = FormulaInjectionPolicy,
+            QuoteMode = UseQuotes,
+            QuoteFields = QuoteFields
         };
 
         if (!string.IsNullOrEmpty(NewLine))
@@ -127,36 +198,10 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             options.NewLine = NewLine!;
         }
 
-        if (!string.IsNullOrWhiteSpace(OutputPath))
-        {
-            if (_wroteOutputPath)
-            {
-                WriteError(new ErrorRecord(
-                    new InvalidOperationException("OutputPath can only be used once per invocation."),
-                    "CsvOutputAlreadyWritten",
-                    ErrorCategory.InvalidOperation,
-                    OutputPath));
-                return;
-            }
-
-            var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-            var directory = Path.GetDirectoryName(resolved);
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            document.Save(resolved, options);
-            _wroteOutputPath = true;
-
-            if (PassThru.IsPresent)
-            {
-                WriteObject(new FileInfo(resolved));
-            }
-        }
-        else
-        {
-            WriteObject(document.ToString(options));
-        }
+        return options;
     }
+
+    private bool IsDocumentParameterSet() =>
+        string.Equals(ParameterSetName, ParameterSetDocumentDelimiter, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(ParameterSetName, ParameterSetDocumentCulture, StringComparison.OrdinalIgnoreCase);
 }

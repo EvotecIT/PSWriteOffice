@@ -11,17 +11,17 @@ Adds a table to a PDF document.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficePdfTable [-InputObject] <Object> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <double>] [-FontSize <double>] [-HeaderFontSize <double>] [-LineHeight <double>] [-CellPaddingX <double>] [-CellPaddingY <double>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <int>] [-RepeatHeaderRowCount <int>] [-FooterRowCount <int>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfTable [-InputObject] <Object> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <double>] [-FontSize <double>] [-HeaderFontSize <double>] [-LineHeight <double>] [-CellPaddingX <double>] [-CellPaddingY <double>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <int>] [-RepeatHeaderRowCount <int>] [-FooterRowCount <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <double>] [-FontSize <double>] [-HeaderFontSize <double>] [-LineHeight <double>] [-CellPaddingX <double>] [-CellPaddingY <double>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <int>] [-RepeatHeaderRowCount <int>] [-FooterRowCount <int>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <double>] [-FontSize <double>] [-HeaderFontSize <double>] [-LineHeight <double>] [-CellPaddingX <double>] [-CellPaddingY <double>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <int>] [-RepeatHeaderRowCount <int>] [-FooterRowCount <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ### PipelineDocument
 ```powershell
-Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <double>] [-FontSize <double>] [-HeaderFontSize <double>] [-LineHeight <double>] [-CellPaddingX <double>] [-CellPaddingY <double>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <int>] [-RepeatHeaderRowCount <int>] [-FooterRowCount <int>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <double>] [-FontSize <double>] [-HeaderFontSize <double>] [-LineHeight <double>] [-CellPaddingX <double>] [-CellPaddingY <double>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <int>] [-RepeatHeaderRowCount <int>] [-FooterRowCount <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -445,6 +445,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -MinimumShrinkFontSize
+Smallest font size, in points, used by -ShrinkTextToFit.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Context, Document, PipelineDocument
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -NoBorder
 Hide table borders.
 
@@ -562,6 +578,22 @@ Alternating body row fill color in #RRGGBB format.
 
 ```yaml
 Type: String
+Parameter Sets: Context, Document, PipelineDocument
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ShrinkTextToFit
+Reduce table text size when needed so cell text fits within the resolved cell width.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:

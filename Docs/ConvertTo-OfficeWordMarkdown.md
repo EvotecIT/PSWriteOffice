@@ -11,12 +11,12 @@ Converts a Word document to Markdown.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeWordMarkdown [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-EnableUnderline] [-EnableHighlight] [-ImageExportMode <ImageExportMode>] [-ImageDirectory <string>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeWordMarkdown [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-EnableUnderline] [-EnableHighlight] [-ImageExportMode <ImageExportMode>] [-ImageDirectory <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertTo-OfficeWordMarkdown -Document <WordDocument> [-OutputPath <string>] [-FontFamily <string>] [-EnableUnderline] [-EnableHighlight] [-ImageExportMode <ImageExportMode>] [-ImageDirectory <string>] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeWordMarkdown -Document <WordDocument> [-OutputPath <string>] [-FontFamily <string>] [-EnableUnderline] [-EnableHighlight] [-ImageExportMode <ImageExportMode>] [-ImageDirectory <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

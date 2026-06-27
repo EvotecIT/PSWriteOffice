@@ -24,7 +24,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// Get-OfficeExcelUsedRange -Path .\Combined.xlsx -Sheet IncomingRaw</code>
 ///   <para>Copies the source worksheet package directly so large workbook merges avoid converting rows into PowerShell objects. Use CopyMode Values only when you explicitly want the reader/writer fallback.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Copy, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Copy, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelSheetCopy")]
 [OutputType(typeof(ExcelSheet))]
 public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
@@ -76,6 +76,11 @@ public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var targetWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         var target = targetWorkbook.Document;
         var sourceSheet = ExcelWorkbookCommandService.ResolveSheetNameOrCurrent(this, target, ParameterSetName, SourceSheet);
         using var sourceWorkbook = ExcelWorkbookCommandService.ResolveSourceWorkbook(this, target, SourceDocument, SourcePath, readOnly: true);

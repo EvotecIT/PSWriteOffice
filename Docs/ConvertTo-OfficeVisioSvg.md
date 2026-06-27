@@ -11,12 +11,12 @@ Exports a Visio document page to dependency-free SVG.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeVisioSvg [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-IncludeXmlDeclaration] [-Show] [<CommonParameters>]
+ConvertTo-OfficeVisioSvg [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-IncludeXmlDeclaration] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertTo-OfficeVisioSvg -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-IncludeXmlDeclaration] [-Show] [<CommonParameters>]
+ConvertTo-OfficeVisioSvg -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-IncludeXmlDeclaration] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

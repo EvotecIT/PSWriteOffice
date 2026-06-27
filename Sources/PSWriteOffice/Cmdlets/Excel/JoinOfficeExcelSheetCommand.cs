@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object -Property SourceSheet, TargetSheet, RowsCopied, ColumnsCopied</code>
 ///   <para>Copies rows from Data into Combined, aligns columns by header, and returns the merge result.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Join, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Join, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("Merge-OfficeExcelSheet", "ExcelSheetJoin", "ExcelSheetMerge")]
 [OutputType(typeof(ExcelWorksheetMergeResult))]
 public sealed class JoinOfficeExcelSheetCommand : PSCmdlet
@@ -91,6 +91,11 @@ public sealed class JoinOfficeExcelSheetCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         using var targetWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, InputPath, "Update Excel workbook"))
+        {
+            return;
+        }
+
         var targetDocument = targetWorkbook.Document;
         var targetSheet = ExcelWorkbookCommandService.ResolveSheet(this, targetDocument, ParameterSetName, TargetSheet, TargetSheetIndex);
         using var sourceWorkbook = ExcelWorkbookCommandService.ResolveSourceWorkbook(this, targetDocument, SourceDocument, SourcePath, readOnly: true);

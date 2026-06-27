@@ -11,12 +11,12 @@ Creates a Word document from HTML.
 ## SYNTAX
 ### Html (Default)
 ```powershell
-ConvertFrom-OfficeWordHtml [-Html] <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-IncludeListStyles] [-ContinueNumbering] [-SupportsHeadingNumbering] [-RenderPreAsTable] [-TableCaptionPosition <TableCaptionPosition>] [-SectionTagHandling <SectionTagHandling>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeWordHtml [-Html] <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-IncludeListStyles] [-ContinueNumbering] [-SupportsHeadingNumbering] [-RenderPreAsTable] [-TableCaptionPosition <TableCaptionPosition>] [-SectionTagHandling <SectionTagHandling>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-ConvertFrom-OfficeWordHtml [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-IncludeListStyles] [-ContinueNumbering] [-SupportsHeadingNumbering] [-RenderPreAsTable] [-TableCaptionPosition <TableCaptionPosition>] [-SectionTagHandling <SectionTagHandling>] [-Open] [-PassThru] [<CommonParameters>]
+ConvertFrom-OfficeWordHtml [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-IncludeListStyles] [-ContinueNumbering] [-SupportsHeadingNumbering] [-RenderPreAsTable] [-TableCaptionPosition <TableCaptionPosition>] [-SectionTagHandling <SectionTagHandling>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

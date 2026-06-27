@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $proof</code>
 ///   <para>Deletes selected pages and preflights the rewritten PDF.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Remove, "OfficePdfPage")]
+[Cmdlet(VerbsCommon.Remove, "OfficePdfPage", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium)]
 [OutputType(typeof(FileInfo))]
 public sealed class RemoveOfficePdfPageCommand : PSCmdlet
 {
@@ -37,6 +37,11 @@ public sealed class RemoveOfficePdfPageCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF without selected pages"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Delete(PageRange).Save(outputPath);
         WriteObject(new FileInfo(outputPath));

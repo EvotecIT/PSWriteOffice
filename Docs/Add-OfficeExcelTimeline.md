@@ -11,17 +11,17 @@ Adds workbook-level timeline cache metadata.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelTimeline -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTimeline -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Add-OfficeExcelTimeline [-InputPath] <string> -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTimeline [-InputPath] <string> -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelTimeline -Document <ExcelDocument> -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTimeline -Document <ExcelDocument> -Name <string> [-SourceName <string>] [-PivotTableName <string>] [-Xml <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

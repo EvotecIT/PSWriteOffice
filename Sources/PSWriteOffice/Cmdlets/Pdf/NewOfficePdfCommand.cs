@@ -41,7 +41,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   }</code>
 ///   <para>Shows the preferred high-level PDF report authoring shape.</para>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficePdf", DefaultParameterSetName = ParameterSetPath)]
+[Cmdlet(VerbsCommon.New, "OfficePdf", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [OutputType(typeof(PdfDocument), typeof(FileInfo))]
 public sealed class NewOfficePdfCommand : PSCmdlet
 {
@@ -188,6 +188,14 @@ public sealed class NewOfficePdfCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        var savePath = string.IsNullOrWhiteSpace(Path) || NoSave.IsPresent
+            ? null
+            : PdfCommandUtilities.ResolvePath(this, Path!);
+        if (savePath != null && !PdfCommandUtilities.ShouldWrite(this, savePath, "Write new PDF"))
+        {
+            return;
+        }
+
         var document = PdfDocument.Create(CreateOptions());
         if (Content != null)
         {
@@ -203,18 +211,17 @@ public sealed class NewOfficePdfCommand : PSCmdlet
             return;
         }
 
-        var fullPath = PdfCommandUtilities.ResolvePath(this, Path!);
-        PdfCommandUtilities.EnsureDirectory(fullPath);
-        document.Save(fullPath);
+        PdfCommandUtilities.EnsureDirectory(savePath!);
+        document.Save(savePath!);
 
         if (Show.IsPresent)
         {
-            FileOpenService.Open(fullPath);
+            FileOpenService.Open(savePath!);
         }
 
         if (PassThru.IsPresent)
         {
-            WriteObject(new FileInfo(fullPath));
+            WriteObject(new FileInfo(savePath!));
         }
     }
 

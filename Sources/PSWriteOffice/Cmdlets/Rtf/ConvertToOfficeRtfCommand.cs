@@ -31,7 +31,7 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 ///   <code>ConvertTo-OfficeRtf -PdfPath .\Report.pdf -OutputPath .\Report.rtf</code>
 ///   <para>Uses OfficeIMO.Rtf.Pdf's semantic PDF reader to write RTF output.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficeRtf", DefaultParameterSetName = ParameterSetWordPath)]
+[Cmdlet(VerbsData.ConvertTo, "OfficeRtf", DefaultParameterSetName = ParameterSetWordPath, SupportsShouldProcess = true)]
 [Alias("ConvertTo-Rtf")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficeRtfCommand : PSCmdlet
@@ -205,6 +205,11 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
         }
 
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write RTF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         document.SaveAsRtf(outputPath, encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         if (PassThru.IsPresent)
@@ -223,6 +228,11 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
         }
 
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write RTF converted from PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         RtfPdfConverterExtensions.SavePdfFileAsRtf(sourcePath, outputPath);
         if (PassThru.IsPresent)

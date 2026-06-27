@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-24T08:05:00.9861905+00:00",
+  "generatedAt": "2026-06-26T02:55:44.4330702+02:00",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -1125,6 +1125,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/CompareOfficeExcelWorkbookCommand.cs#L24"
     },
     {
+      "name": "ConvertFrom-OfficeCsv",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/ConvertFromOfficeCsvCommand.cs",
+      "sourceLine": 26,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Csv/ConvertFromOfficeCsvCommand.cs#L26"
+    },
+    {
       "name": "ConvertFrom-OfficeMarkdownHtml",
       "kind": "Cmdlet",
       "aliases": [
@@ -1179,8 +1187,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/ConvertToOfficeCsvCommand.cs",
-      "sourceLine": 38,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Csv/ConvertToOfficeCsvCommand.cs#L38"
+      "sourceLine": 34,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Csv/ConvertToOfficeCsvCommand.cs#L34"
     },
     {
       "name": "ConvertTo-OfficeMarkdown",
@@ -1343,6 +1351,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/EditOfficeExcelRowCommand.cs#L17"
     },
     {
+      "name": "Export-OfficeCsv",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/ExportOfficeCsvCommand.cs",
+      "sourceLine": 28,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Csv/ExportOfficeCsvCommand.cs#L28"
+    },
+    {
       "name": "Export-OfficeExcel",
       "kind": "Cmdlet",
       "aliases": [],
@@ -1415,16 +1431,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvCommand.cs",
-      "sourceLine": 31,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvCommand.cs#L31"
-    },
-    {
-      "name": "Get-OfficeCsvData",
-      "kind": "Cmdlet",
-      "aliases": [],
-      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvDataCommand.cs",
-      "sourceLine": 32,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvDataCommand.cs#L32"
+      "sourceLine": 33,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Csv/GetOfficeCsvCommand.cs#L33"
     },
     {
       "name": "Get-OfficeDocument",
@@ -2174,6 +2182,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTextCommand.cs",
       "sourceLine": 19,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTextCommand.cs#L19"
+    },
+    {
+      "name": "Import-OfficeCsv",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Csv/ImportOfficeCsvCommand.cs",
+      "sourceLine": 26,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Csv/ImportOfficeCsvCommand.cs#L26"
     },
     {
       "name": "Import-OfficeExcel",

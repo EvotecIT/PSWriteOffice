@@ -81,6 +81,7 @@ public sealed class GetOfficeExcelDataCommand : PSCmdlet
                 rangeScope.NumericAsDecimal();
             }
 
+            var prevalidatedOutputProperties = false;
             foreach (var row in rangeScope.AsRows())
             {
                 if (row == null)
@@ -97,8 +98,10 @@ public sealed class GetOfficeExcelDataCommand : PSCmdlet
                     var psObj = new PSObject();
                     foreach (KeyValuePair<string, object?> kv in row)
                     {
-                        psObj.Properties.Add(new PSNoteProperty(kv.Key, kv.Value));
+                        psObj.Properties.Add(new PSNoteProperty(kv.Key, kv.Value), prevalidatedOutputProperties);
                     }
+
+                    prevalidatedOutputProperties = true;
                     WriteObject(psObj);
                 }
             }

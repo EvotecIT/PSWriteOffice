@@ -11,17 +11,17 @@ Sets mixed-format rich text runs in an Excel cell.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelRichText -Run <Object[]> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelRichText -Run <Object[]> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelRichText [-InputPath] <string> -Run <Object[]> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelRichText [-InputPath] <string> -Run <Object[]> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelRichText -Document <ExcelDocument> -Run <Object[]> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelRichText -Document <ExcelDocument> -Run <Object[]> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

@@ -11,12 +11,12 @@ Adds a text or image stamp to an existing PDF.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficePdfStamp -Path <string> -OutputPath <string> -Text <string> [-PageRange <string>] [-X <double>] [-Y <double>] [-FontSize <double>] [-Color <string>] [-Rotation <double>] [-Watermark] [<CommonParameters>]
+Add-OfficePdfStamp -Path <string> -OutputPath <string> -Text <string> [-PageRange <string>] [-X <double>] [-Y <double>] [-FontSize <double>] [-Color <string>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Image
 ```powershell
-Add-OfficePdfStamp -Path <string> -OutputPath <string> -Image <string> [-PageRange <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Rotation <double>] [-Watermark] [<CommonParameters>]
+Add-OfficePdfStamp -Path <string> -OutputPath <string> -Image <string> [-PageRange <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

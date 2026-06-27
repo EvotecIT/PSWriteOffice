@@ -9,14 +9,19 @@ schema: 2.0.0
 Adds safe Power Query/connection metadata for Excel-compatible applications to own and refresh.
 
 ## SYNTAX
-### Path (Default)
+### Context (Default)
 ```powershell
-Add-OfficeExcelPowerQueryMetadata [-InputPath] <string> -Name <string> [-WorksheetName <string>] [-QueryTableName <string>] [-Description <string>] [-CommandText <string>] [-RefreshOnOpen] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPowerQueryMetadata -Name <string> [-WorksheetName <string>] [-QueryTableName <string>] [-Description <string>] [-CommandText <string>] [-RefreshOnOpen] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
+### Path
+```powershell
+Add-OfficeExcelPowerQueryMetadata [-InputPath] <string> -Name <string> [-WorksheetName <string>] [-QueryTableName <string>] [-Description <string>] [-CommandText <string>] [-RefreshOnOpen] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelPowerQueryMetadata -Document <ExcelDocument> -Name <string> [-WorksheetName <string>] [-QueryTableName <string>] [-Description <string>] [-CommandText <string>] [-RefreshOnOpen] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelPowerQueryMetadata -Document <ExcelDocument> -Name <string> [-WorksheetName <string>] [-QueryTableName <string>] [-Description <string>] [-CommandText <string>] [-RefreshOnOpen] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,7 +49,7 @@ Power Query M expression stored as metadata.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -60,7 +65,7 @@ Connection description.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -108,7 +113,7 @@ Connection name stored in workbook metadata.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -124,7 +129,7 @@ Emit metadata about the authored package parts.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -140,7 +145,7 @@ Optional query-table name.
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -156,7 +161,7 @@ Request refresh-on-open metadata.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
 
@@ -172,7 +177,7 @@ Worksheet that should own query-table metadata. Defaults to the current DSL shee
 
 ```yaml
 Type: String
-Parameter Sets: Path, Document
+Parameter Sets: Context, Path, Document
 Aliases: Sheet, SheetName, Worksheet
 Possible values:
 

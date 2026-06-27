@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object -ExpandProperty ThreadedComments</code>
 ///   <para>Uses OfficeIMO threaded-comment metadata authoring, including workbook person metadata, and keeps legacy notes separate.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeExcelThreadedComment", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsCommon.Add, "OfficeExcelThreadedComment", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelThreadedComment")]
 [OutputType(typeof(PSObject))]
 public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet
@@ -85,6 +85,11 @@ public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet
         if (ParameterSetName == ParameterSetPath)
         {
             using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, null!, readOnly: false);
+            if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+            {
+                return;
+            }
+
             var result = AddComment(ExcelSheetResolver.Resolve(workbook.Document, Sheet, SheetIndex));
             if (!NoSave.IsPresent)
             {
@@ -98,6 +103,11 @@ public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet
         ExcelSheet sheet = ParameterSetName == ParameterSetDocument
             ? ExcelSheetResolver.Resolve(Document, Sheet, SheetIndex)
             : ExcelDslContext.Require(this).RequireSheet();
+        if (!ExcelShouldProcessService.ShouldProcessTarget(this, sheet.Name, "Add Excel threaded comment"))
+        {
+            return;
+        }
+
         WriteResult(AddComment(sheet));
     }
 

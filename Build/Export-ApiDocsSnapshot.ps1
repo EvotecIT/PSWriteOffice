@@ -282,6 +282,13 @@ Write-CommandMetadata -ModuleManifestPath $moduleManifestPath -RepoRoot $repoRoo
 
 if (Test-Path -LiteralPath $examplesSource -PathType Container) {
     Copy-Item -LiteralPath $examplesSource -Destination $examplesTarget -Recurse -Force
+
+    foreach ($generatedExamplesFolder in 'Documents', 'Output') {
+        $generatedExamplesPath = Join-Path $examplesTarget $generatedExamplesFolder
+        if (Test-Path -LiteralPath $generatedExamplesPath) {
+            Remove-Item -LiteralPath $generatedExamplesPath -Recurse -Force
+        }
+    }
 }
 
 $version = (Import-PowerShellDataFile -Path $moduleManifestPath).ModuleVersion.ToString()

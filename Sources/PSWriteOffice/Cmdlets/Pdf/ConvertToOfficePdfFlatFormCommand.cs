@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// ConvertTo-OfficePdfFlatForm -Path .\Examples\Documents\Request-Filled.pdf -OutputPath .\Examples\Documents\Request-Flat.pdf</code>
 ///   <para>Turns simple form fields into static page content.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficePdfFlatForm")]
+[Cmdlet(VerbsData.ConvertTo, "OfficePdfFlatForm", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
 {
@@ -46,6 +46,11 @@ public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
             ? document.Forms.Flatten()
             : document.Forms.Flatten(formOptions);
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write flattened form PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath);
         WriteObject(new FileInfo(outputPath));

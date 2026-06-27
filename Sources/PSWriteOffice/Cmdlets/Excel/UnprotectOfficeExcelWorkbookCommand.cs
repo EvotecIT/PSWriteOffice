@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///     Select-Object Passed, ProtectionSummary</code>
 ///   <para>Removes workbook structure/window protection metadata and saves the workbook.</para>
 /// </example>
-[Cmdlet(VerbsSecurity.Unprotect, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetContext)]
+[Cmdlet(VerbsSecurity.Unprotect, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelWorkbookUnprotect")]
 [OutputType(typeof(ExcelDocument), typeof(FileInfo))]
 public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet
@@ -45,6 +45,15 @@ public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet
             : null;
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
+
+        {
+
+            return;
+
+        }
+
         var document = workbook.Document;
         document.UnprotectWorkbook();
         workbook.SaveIfOwned();

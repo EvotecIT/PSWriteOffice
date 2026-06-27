@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <code>ConvertTo-OfficePdfFlatAnnotation -Path .\Reviewed.pdf -OutputPath .\Reviewed-Flat.pdf</code>
 ///   <para>Paints supported annotation appearance streams into page content and writes a new PDF.</para>
 /// </example>
-[Cmdlet(VerbsData.ConvertTo, "OfficePdfFlatAnnotation")]
+[Cmdlet(VerbsData.ConvertTo, "OfficePdfFlatAnnotation", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class ConvertToOfficePdfFlatAnnotationCommand : PSCmdlet
 {
@@ -30,6 +30,11 @@ public sealed class ConvertToOfficePdfFlatAnnotationCommand : PSCmdlet
     {
         var result = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).FlattenVisualAnnotations();
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write flattened annotation PDF"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath);
         WriteObject(new FileInfo(outputPath));

@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// $proof</code>
 ///   <para>Moves selected pages before a target one-based page number and writes a new PDF.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Move, "OfficePdfPage")]
+[Cmdlet(VerbsCommon.Move, "OfficePdfPage", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class MoveOfficePdfPageCommand : PSCmdlet
 {
@@ -41,6 +41,11 @@ public sealed class MoveOfficePdfPageCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write reordered PDF pages"))
+        {
+            return;
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
         PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Move(BeforePage, PageRange).Save(outputPath);
         WriteObject(new FileInfo(outputPath));

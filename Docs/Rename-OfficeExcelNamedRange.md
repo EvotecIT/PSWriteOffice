@@ -11,12 +11,12 @@ Renames a workbook or sheet-scoped Excel named range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Rename-OfficeExcelNamedRange [-Name] <string> [-NewName] <string> [-Global] [-ValidationMode <NameValidationMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Rename-OfficeExcelNamedRange [-Name] <string> [-NewName] <string> [-Global] [-ValidationMode <NameValidationMode>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Rename-OfficeExcelNamedRange [-Name] <string> [-NewName] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-ValidationMode <NameValidationMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Rename-OfficeExcelNamedRange [-Name] <string> [-NewName] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-ValidationMode <NameValidationMode>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -101,6 +101,22 @@ Accept wildcard characters: True
 
 ### -PassThru
 Emit a result object.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Save
+Save the workbook immediately after renaming the name.
 
 ```yaml
 Type: SwitchParameter
