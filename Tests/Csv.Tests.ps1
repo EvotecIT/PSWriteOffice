@@ -407,6 +407,16 @@ Describe 'CSV cmdlets' {
         $document.AsEnumerable().Count | Should -Be 1
     }
 
+    It 'loads CSV documents using the legacy InputPath alias' {
+        $path = Join-Path $TestDrive 'input-path-alias.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
+
+        $document = Get-OfficeCsv -InputPath $path
+
+        $document.Header | Should -Be @('Name', 'Value')
+        $document.AsEnumerable().Count | Should -Be 1
+    }
+
     It 'expands Path wildcards when importing CSV rows' {
         $folder = Join-Path $TestDrive 'wildcard-import'
         New-Item -Path $folder -ItemType Directory | Out-Null

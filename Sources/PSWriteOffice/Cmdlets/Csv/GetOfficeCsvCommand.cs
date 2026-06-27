@@ -46,7 +46,7 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathDelimiter)]
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathCulture)]
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathDetect)]
-    [Alias("FilePath")]
+    [Alias("FilePath", "InputPath")]
     public string[]? Path { get; set; }
 
     /// <summary>Literal path to one or more CSV files.</summary>
