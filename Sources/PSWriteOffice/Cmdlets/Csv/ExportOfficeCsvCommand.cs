@@ -592,7 +592,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             return null;
         }
 
-        if (!NoHeader.IsPresent || _objectProjector.CanProjectColumns(firstValue, _appendHeader))
+        if (!NoHeader.IsPresent || Force.IsPresent || _objectProjector.CanProjectColumns(firstValue, _appendHeader))
         {
             return _appendHeader;
         }

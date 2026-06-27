@@ -234,6 +234,19 @@ Describe 'CSV cmdlets' {
         $data[1].Value | Should -Be 'Beta'
     }
 
+    It 'projects forced no-header scalar appends into an existing Value column' {
+        $path = Join-Path $TestDrive 'append-force-scalar-no-header.csv'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        'Beta' | Export-OfficeCsv -Path $path -Append -NoHeader -Force
+
+        Get-Content -LiteralPath $path | Should -Be @('Name,Value', 'Alpha,1', ',Beta')
+        $data = Import-OfficeCsv -Path $path
+        $data[1].Name | Should -Be ''
+        $data[1].Value | Should -Be 'Beta'
+    }
+
     It 'keeps forced scalar appends on the existing CSV schema without a Value column' {
         $path = Join-Path $TestDrive 'append-force-scalar-schema.csv'
         [pscustomobject]@{ Name = 'Alpha'; Other = 'One' } |
