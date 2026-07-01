@@ -1,6 +1,11 @@
+param(
+    [ValidateSet('Manifest', 'Build', 'Publish')]
+    [string] $RunMode = 'Build'
+)
+
 Import-Module PSPublishModule -Force -ErrorAction Stop
 
-Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
+Build-Module -ModuleName 'PSWriteOffice' -RunMode $RunMode {
     # Usual defaults as per standard module
     $Manifest = [ordered] @{
         # Minimum version of the Windows PowerShell engine required by this module
@@ -79,23 +84,6 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
 
     New-ConfigurationImportModule -ImportSelf
 
-    $refreshPSD1Only = $false
-    if (-not [string]::IsNullOrWhiteSpace($env:RefreshPSD1Only)) {
-        switch -Regex ($env:RefreshPSD1Only.Trim()) {
-            '^(1|true|yes|on)$' {
-                $refreshPSD1Only = $true
-                break
-            }
-            '^(0|false|no|off)$' {
-                $refreshPSD1Only = $false
-                break
-            }
-            default {
-                throw "RefreshPSD1Only must be a boolean value or numeric flag, but received '$env:RefreshPSD1Only'."
-            }
-        }
-    }
-
     $newConfigurationBuildSplat = @{
         Enable                            = $true
         # lets sign module only on my machine for now
@@ -109,22 +97,21 @@ Invoke-ModuleBuild -ModuleName 'PSWriteOffice' {
         NETConfiguration                  = 'Release'
         NETFramework                      = 'net8.0', 'net472'
         NETHandleAssemblyWithSameName     = $true
-        NETProjectPath                    = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\Sources\PSWriteOffice\PSWriteOffice.csproj')).Path
+        NETProjectPath                    = 'Sources\PSWriteOffice\PSWriteOffice.csproj'
         NETAssemblyLoadContext            = $true
         #NETMergeLibraryDebugging          = $true
         DotSourceLibraries                = $true
         DotSourceClasses                  = $true
         DeleteTargetModuleBeforeBuild     = $true
         NETBinaryModuleDocumentation      = $true
-        RefreshPSD1Only                   = $refreshPSD1Only
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat
 
-    New-ConfigurationArtefact -Type Unpacked -Enable -Path "$PSScriptRoot\..\Artefacts\Unpacked" -ModulesPath "$PSScriptRoot\..\Artefacts\Unpacked\Modules" -RequiredModulesPath "$PSScriptRoot\..\Artefacts\Unpacked\Modules" -AddRequiredModules
-    New-ConfigurationArtefact -Type Packed -Enable -Path "$PSScriptRoot\..\Artefacts\Packed" -ArtefactName '<ModuleName>.v<ModuleVersion>.zip'
+    New-ConfigurationArtefact -Type Unpacked -Enable -Path 'Artefacts\Unpacked' -ModulesPath 'Modules' -RequiredModulesPath 'Modules' -AddRequiredModules -CopyFilesRelative
+    New-ConfigurationArtefact -Type Packed -Enable -Path 'Artefacts\Packed' -ArtefactName '<ModuleName>.v<ModuleVersion>.zip'
 
     # global options for publishing to github/psgallery
     #New-ConfigurationPublish -Type PowerShellGallery -FilePath 'C:\Support\Important\PowerShellGalleryAPI.txt' -Enabled:$true
     #New-ConfigurationPublish -Type GitHub -FilePath 'C:\Support\Important\GitHubAPI.txt' -UserName 'EvotecIT' -Enabled:$true
-}
+} -ExitCode

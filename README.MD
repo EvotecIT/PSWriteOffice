@@ -424,15 +424,13 @@ The generated command pages are built from XML comments in the cmdlet source. Pr
 ```powershell
 dotnet build .\Sources\PSWriteOffice.sln -c Debug
 pwsh -NoLogo -NoProfile -File .\PSWriteOffice.Tests.ps1
-pwsh -NoLogo -NoProfile -File .\Build\Validate-PackagedArtefact.ps1
+pwsh -NoLogo -NoProfile -File .\Build\Build-Module.ps1 -RunMode Build
 ```
 
-Regenerate the module manifest, generated help, packed artifacts, and website API payloads through the build-module lane:
+Regenerate the module manifest through the manifest lane:
 
 ```powershell
-pwsh -NoLogo -NoProfile -File .\Build\Manage-PSWriteOffice.ps1
-pwsh -NoLogo -NoProfile -File .\Build\Export-ApiDocsSnapshot.ps1
-pwsh -NoLogo -NoProfile -File .\Build\Measure-CmdletXmlExamples.ps1 -RequireExamples
+pwsh -NoLogo -NoProfile -File .\Build\Build-Module.ps1 -RunMode Manifest
 ```
 
 Development loading is handled through [PSWriteOffice.psm1](PSWriteOffice.psm1), which prefers the local debug build in `Sources\PSWriteOffice\bin\Debug\`.
