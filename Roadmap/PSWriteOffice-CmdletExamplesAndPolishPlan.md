@@ -195,7 +195,7 @@ For implementation PRs:
 
 - Build both target frameworks from `Sources/PSWriteOffice.sln`.
 - Run focused Pester tests for the touched family.
-- Run `Build/Validate-PackagedArtefact.ps1` before calling the module package
+- Run `Build/Build-Module.ps1 -RunMode Build` before calling the module package
   healthy.
 - For source-built checks, set `PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES=true`.
 - For packaged checks, import the unpacked artifact manifest.

@@ -40,13 +40,7 @@ jobs:
         shell: pwsh
 
       - name: Refresh module manifest
-        env:
-          RefreshPSD1Only: 'true'
-        run: ./Build/Manage-PSWriteOffice.ps1
-        shell: pwsh
-
-      - name: Refresh API snapshot
-        run: ./Build/Export-ApiDocsSnapshot.ps1
+        run: ./Build/Build-Module.ps1 -RunMode Manifest
         shell: pwsh
 
       - name: Commit refreshed PSD1
@@ -58,8 +52,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add PSWriteOffice.psd1
-          git add Docs/Generated/PSWriteOffice-help.xml
-          git add WebsiteArtifacts
           git commit -m "chore: regenerate psd1" || echo "No changes to commit"
           git push origin HEAD:$Env:HEAD_BRANCH
         shell: pwsh
@@ -69,18 +61,6 @@ jobs:
         with:
           name: psd1
           path: PSWriteOffice.psd1
-
-      - name: Upload API snapshot
-        uses: actions/upload-artifact@v7
-        with:
-          name: pswriteoffice-api-snapshot
-          path: Docs/Generated/PSWriteOffice-help.xml
-
-      - name: Upload website artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: pswriteoffice-website-artifacts
-          path: WebsiteArtifacts/**
 
   test-windows-ps5:
     needs: refresh-psd1
@@ -159,10 +139,6 @@ jobs:
         shell: pwsh
         run: .\PSWriteOffice.Tests.ps1
 
-      - name: Validate packaged artefact
-        shell: pwsh
-        run: .\Build\Validate-PackagedArtefact.ps1 -SkipBuild
-
       - name: Upload packaged artefacts
         if: always()
         uses: actions/upload-artifact@v7
@@ -193,7 +169,7 @@ jobs:
           }
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
           Install-Module -Name PSWriteColor -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
-          Install-Module -Name PSPublishModule -Repository PSGallery -MinimumVersion 3.0.5 -Force -SkipPublisherCheck -AllowClobber
+          Install-Module -Name PSPublishModule -Repository PSGallery -Force -SkipPublisherCheck -AllowClobber
 
       - name: Prepare default-context Open XML conflict
         shell: pwsh
@@ -211,12 +187,10 @@ jobs:
           "PSWRITEOFFICE_CONFLICT_OPENXML_PATH=$openXmlPath" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Build packaged module with ALC
-        env:
-          RefreshPSD1Only: 'false'
         shell: pwsh
         run: |
           $env:OfficeIMORoot = Join-Path (Get-Location) '.missing-officeimo'
-          ./Build/Manage-PSWriteOffice.ps1
+          ./Build/Build-Module.ps1 -RunMode Build
 
       - name: Run packaged ALC conflict test
         env:
