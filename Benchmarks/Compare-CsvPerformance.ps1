@@ -8,17 +8,11 @@ param(
 
     [string[]] $Scenario,
 
-    [string[]] $Engine = @('PSWriteOffice', 'ImportExcel', 'ExcelFast'),
+    [string[]] $Engine = @('PSWriteOffice', 'NativeCsv'),
 
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\ExcelPerformance'),
+    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\CsvPerformance'),
 
     [switch] $ListScenarios,
-
-    [switch] $SkipWorkbookValidation,
-
-    [switch] $SkipImportExcelInstall,
-
-    [switch] $SkipExcelFastInstall,
 
     [string] $OfficeIMORoot,
 
@@ -32,7 +26,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
-$specPath = Join-Path $PSScriptRoot 'Excel\excel-performance.benchmark.ps1'
+$specPath = Join-Path $PSScriptRoot 'Csv\csv-performance.benchmark.ps1'
 $projectPath = Join-Path $repoRoot 'Sources\PSWriteOffice\PSWriteOffice.csproj'
 $moduleManifest = Join-Path $repoRoot 'PSWriteOffice.psd1'
 
@@ -61,9 +55,6 @@ Import-Module $moduleManifest -Force -ErrorAction Stop
 $benchmarkVariables = @{
     Suite = $Suite
     RowCount = if ($RowCount) { ($RowCount -join ',') } else { $null }
-    SkipWorkbookValidation = [string]$SkipWorkbookValidation.IsPresent
-    SkipImportExcelInstall = [string]$SkipImportExcelInstall.IsPresent
-    SkipExcelFastInstall = [string]$SkipExcelFastInstall.IsPresent
 }
 
 $invokeSplat = @{
@@ -101,6 +92,6 @@ if ($summaryPath) {
     & (Join-Path $PSScriptRoot 'Update-PerformanceBenchmarkReadme.ps1') `
         -SummaryPath $summaryPath `
         -ReadmePath (Join-Path $PSScriptRoot 'README.md') `
-        -BlockId ExcelComparison
+        -BlockId CsvComparison
 }
 $result
