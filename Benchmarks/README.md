@@ -26,7 +26,8 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
     -Suite Standard `
     -RowCount 1000,5000,10000 `
     -RepeatCount 2 `
-    -Engine PSWriteOffice,ImportExcel,ExcelFast
+    -Engine PSWriteOffice,ImportExcel,ExcelFast `
+    -UpdateReadme
 ```
 
 <!-- BENCHMARK:ExcelComparison:START -->
@@ -127,25 +128,28 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
     -Suite Standard `
     -RowCount 1000,5000,10000 `
     -RepeatCount 3 `
-    -Engine PSWriteOffice,NativeCsv
+    -Engine PSWriteOffice,NativeCsv `
+    -UpdateReadme
 ```
 
 <!-- BENCHMARK:CsvComparison:START -->
 | Scenario | Rows | PSWriteOffice | NativeCsv | Result |
 | --- | ---: | ---: | ---: | --- |
-| csv-read-source | 1000 | 53.8 ms (1.00x) | 20.8 ms (0.39x faster) | NativeCsv fastest; PSWriteOffice 2.58x slower |
-| csv-read-source | 5000 | 61.8 ms (1.00x) | 16.7 ms (0.27x faster) | NativeCsv fastest; PSWriteOffice 3.70x slower |
+| csv-read-source | 1000 | 53.8 ms (1.00x) | 20.8 ms (2.58x faster) | NativeCsv fastest; PSWriteOffice 2.58x slower |
+| csv-read-source | 5000 | 61.8 ms (1.00x) | 16.7 ms (3.70x faster) | NativeCsv fastest; PSWriteOffice 3.70x slower |
 | csv-read-source | 10000 | 62.2 ms (1.00x) | 179.4 ms (2.89x slower) | PSWriteOffice fastest |
-| csv-write | 1000 | 60.0 ms (1.00x) | 51.1 ms (0.85x faster) | NativeCsv fastest; PSWriteOffice 1.17x slower |
-| csv-write | 5000 | 124.8 ms (1.00x) | 24.6 ms (0.20x faster) | NativeCsv fastest; PSWriteOffice 5.08x slower |
-| csv-write | 10000 | 238.6 ms (1.00x) | 77.3 ms (0.32x faster) | NativeCsv fastest; PSWriteOffice 3.09x slower |
+| csv-write | 1000 | 60.0 ms (1.00x) | 51.1 ms (1.17x faster) | NativeCsv fastest; PSWriteOffice 1.17x slower |
+| csv-write | 5000 | 124.8 ms (1.00x) | 24.6 ms (5.08x faster) | NativeCsv fastest; PSWriteOffice 5.08x slower |
+| csv-write | 10000 | 238.6 ms (1.00x) | 77.3 ms (3.09x faster) | NativeCsv fastest; PSWriteOffice 3.09x slower |
 <!-- BENCHMARK:CsvComparison:END -->
 
 ## Options
 
 The wrappers build PSWriteOffice in `Release` mode by default and import local
-development binaries. Use `-PSWriteOfficeConfiguration Debug` for diagnostics or
-`-SkipPSWriteOfficeBuild` when intentionally reusing a previous build.
+development binaries when a selected run includes `PSWriteOffice`. Use
+`-PSWriteOfficeConfiguration Debug` for diagnostics or `-SkipPSWriteOfficeBuild`
+when intentionally reusing a previous build. Quick and focused runs leave this
+README unchanged unless `-UpdateReadme` is specified.
 
 The scripts use published OfficeIMO packages by default by setting
 `OfficeIMORoot` to `.missing-officeimo`. Use `-OfficeIMORoot` when validating

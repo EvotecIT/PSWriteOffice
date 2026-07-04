@@ -76,7 +76,8 @@ function Format-BenchmarkRatio {
         return ([string]::Format([Globalization.CultureInfo]::InvariantCulture, '{0:n2}x slower', $ratio))
     }
 
-    return ([string]::Format([Globalization.CultureInfo]::InvariantCulture, '{0:n2}x faster', $ratio))
+    $speedup = $BaselineMilliseconds / $Milliseconds
+    return ([string]::Format([Globalization.CultureInfo]::InvariantCulture, '{0:n2}x faster', $speedup))
 }
 
 function Format-BenchmarkCell {

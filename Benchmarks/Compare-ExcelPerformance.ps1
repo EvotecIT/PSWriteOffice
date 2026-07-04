@@ -25,7 +25,9 @@ param(
     [ValidateSet('Debug', 'Release')]
     [string] $PSWriteOfficeConfiguration = 'Release',
 
-    [switch] $SkipPSWriteOfficeBuild
+    [switch] $SkipPSWriteOfficeBuild,
+
+    [switch] $UpdateReadme
 )
 
 Set-StrictMode -Version Latest
@@ -41,22 +43,49 @@ if (-not (Get-Command Invoke-BenchmarkSuite -ErrorAction SilentlyContinue)) {
     throw 'The imported PSPublishModule does not expose Invoke-BenchmarkSuite.'
 }
 
-if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
-    $env:OfficeIMORoot = $OfficeIMORoot
-} elseif (-not $env:OfficeIMORoot) {
-    $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
-}
+if (-not $ListScenarios.IsPresent -and (@($Engine) -contains 'ExcelFast')) {
+    $excelFastModuleRoot = Join-Path $OutputDirectory 'Modules'
+    New-Item -ItemType Directory -Force -Path $excelFastModuleRoot | Out-Null
+    if (-not (($env:PSModulePath -split [IO.Path]::PathSeparator) -contains $excelFastModuleRoot)) {
+        $env:PSModulePath = $excelFastModuleRoot + [IO.Path]::PathSeparator + $env:PSModulePath
+    }
 
-if (-not $SkipPSWriteOfficeBuild.IsPresent) {
-    & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet build failed for PSWriteOffice ($PSWriteOfficeConfiguration)."
+    try {
+        if (-not (Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1)) {
+            if ([bool]$SkipExcelFastInstall) {
+                throw 'ExcelFast is not installed and -SkipExcelFastInstall was specified.'
+            }
+            Save-Module -Name ExcelFast -Path $excelFastModuleRoot -Repository PSGallery -AllowPrerelease -Force -ErrorAction Stop
+        }
+        Import-Module ExcelFast -Force -ErrorAction Stop
+    } catch {
+        Write-Warning "Skipping ExcelFast benchmark lanes because ExcelFast could not be prepared. $($_.Exception.Message)"
+        $Engine = @($Engine | Where-Object { $_ -ne 'ExcelFast' })
+        if ($Engine.Count -eq 0) {
+            throw 'No benchmark engines remain after ExcelFast availability checks.'
+        }
     }
 }
 
-$env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
-$env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION = $PSWriteOfficeConfiguration
-Import-Module $moduleManifest -Force -ErrorAction Stop
+$requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (@($Engine) -contains 'PSWriteOffice')
+if ($requiresPSWriteOffice) {
+    if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
+        $env:OfficeIMORoot = $OfficeIMORoot
+    } elseif (-not $env:OfficeIMORoot) {
+        $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
+    }
+
+    if (-not $SkipPSWriteOfficeBuild.IsPresent) {
+        & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal
+        if ($LASTEXITCODE -ne 0) {
+            throw "dotnet build failed for PSWriteOffice ($PSWriteOfficeConfiguration)."
+        }
+    }
+
+    $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
+    $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION = $PSWriteOfficeConfiguration
+    Import-Module $moduleManifest -Force -ErrorAction Stop
+}
 
 $benchmarkVariables = @{
     Suite = $Suite
@@ -97,7 +126,7 @@ if ($ListScenarios.IsPresent) {
 
 $result = Invoke-BenchmarkSuite @invokeSplat
 $summaryPath = $result.Artifacts['summary.csv']
-if ($summaryPath) {
+if ($summaryPath -and $UpdateReadme.IsPresent) {
     & (Join-Path $PSScriptRoot 'Update-PerformanceBenchmarkReadme.ps1') `
         -SummaryPath $summaryPath `
         -ReadmePath (Join-Path $PSScriptRoot 'README.md') `

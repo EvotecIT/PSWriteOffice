@@ -19,7 +19,9 @@ param(
     [ValidateSet('Debug', 'Release')]
     [string] $PSWriteOfficeConfiguration = 'Release',
 
-    [switch] $SkipPSWriteOfficeBuild
+    [switch] $SkipPSWriteOfficeBuild,
+
+    [switch] $UpdateReadme
 )
 
 Set-StrictMode -Version Latest
@@ -35,22 +37,25 @@ if (-not (Get-Command Invoke-BenchmarkSuite -ErrorAction SilentlyContinue)) {
     throw 'The imported PSPublishModule does not expose Invoke-BenchmarkSuite.'
 }
 
-if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
-    $env:OfficeIMORoot = $OfficeIMORoot
-} elseif (-not $env:OfficeIMORoot) {
-    $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
-}
-
-if (-not $SkipPSWriteOfficeBuild.IsPresent) {
-    & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet build failed for PSWriteOffice ($PSWriteOfficeConfiguration)."
+$requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (@($Engine) -contains 'PSWriteOffice')
+if ($requiresPSWriteOffice) {
+    if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
+        $env:OfficeIMORoot = $OfficeIMORoot
+    } elseif (-not $env:OfficeIMORoot) {
+        $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
     }
-}
 
-$env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
-$env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION = $PSWriteOfficeConfiguration
-Import-Module $moduleManifest -Force -ErrorAction Stop
+    if (-not $SkipPSWriteOfficeBuild.IsPresent) {
+        & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal
+        if ($LASTEXITCODE -ne 0) {
+            throw "dotnet build failed for PSWriteOffice ($PSWriteOfficeConfiguration)."
+        }
+    }
+
+    $env:PSWRITEOFFICE_USE_DEVELOPMENT_BINARIES = 'true'
+    $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION = $PSWriteOfficeConfiguration
+    Import-Module $moduleManifest -Force -ErrorAction Stop
+}
 
 $benchmarkVariables = @{
     Suite = $Suite
@@ -88,7 +93,7 @@ if ($ListScenarios.IsPresent) {
 
 $result = Invoke-BenchmarkSuite @invokeSplat
 $summaryPath = $result.Artifacts['summary.csv']
-if ($summaryPath) {
+if ($summaryPath -and $UpdateReadme.IsPresent) {
     & (Join-Path $PSScriptRoot 'Update-PerformanceBenchmarkReadme.ps1') `
         -SummaryPath $summaryPath `
         -ReadmePath (Join-Path $PSScriptRoot 'README.md') `
