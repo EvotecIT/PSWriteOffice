@@ -13,9 +13,20 @@ function Invoke-ExcelBenchmarkOperation {
         ReadFullSheet { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode Full }
         ReadRange { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode Range }
         ReadNoHeaderRange { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode NoHeader }
-        ReadUsedRangeDataTable { Get-OfficeExcelUsedRange -Path $Run.Path -Sheet $Run.WorksheetName -AsDataTable | Out-Null }
-        ReadTableMetadata { Get-OfficeExcelTable -Path $Run.Path -Sheet $Run.WorksheetName | Out-Null }
-        ReadNamedRangeMetadata { Get-OfficeExcelNamedRange -Path $Run.Path -Sheet $Run.WorksheetName | Out-Null }
+        ReadUsedRangeDataTable {
+            $dataTable = Get-OfficeExcelUsedRange -Path $Run.Path -Sheet $Run.WorksheetName -AsDataTable
+            $Run.ActualRows = if ($dataTable -and $dataTable.Rows) { [int]$dataTable.Rows.Count } else { 0 }
+        }
+        ReadTableMetadata {
+            $tables = @(Get-OfficeExcelTable -Path $Run.Path -Sheet $Run.WorksheetName)
+            $Run.ActualTableCount = $tables.Count
+            $Run.ActualTableNames = @($tables | ForEach-Object { $_.Name })
+        }
+        ReadNamedRangeMetadata {
+            $ranges = @(Get-OfficeExcelNamedRange -Path $Run.Path -Sheet $Run.WorksheetName)
+            $Run.ActualNamedRangeCount = $ranges.Count
+            $Run.ActualNamedRangeNames = @($ranges | ForEach-Object { $_.Name })
+        }
         default { throw "Unknown benchmark operation '$($Case.OperationKey)'." }
     }
 }

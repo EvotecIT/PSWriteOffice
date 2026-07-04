@@ -37,6 +37,17 @@ if (-not (Get-Command Invoke-BenchmarkSuite -ErrorAction SilentlyContinue)) {
     throw 'The imported PSPublishModule does not expose Invoke-BenchmarkSuite.'
 }
 
+$Engine = @(
+    foreach ($engineName in @($Engine)) {
+        foreach ($part in ([string]$engineName -split ',')) {
+            $normalized = $part.Trim()
+            if (-not [string]::IsNullOrWhiteSpace($normalized)) {
+                $normalized
+            }
+        }
+    }
+) | Select-Object -Unique
+
 $requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (@($Engine) -contains 'PSWriteOffice')
 if ($requiresPSWriteOffice) {
     if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {

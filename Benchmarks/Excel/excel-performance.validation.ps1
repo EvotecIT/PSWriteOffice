@@ -75,6 +75,21 @@ function Test-ExcelBenchmarkOutput {
         assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
     }
 
+    if ($Case.OperationKey -eq 'ReadUsedRangeDataTable') {
+        $expectedRows = [int]$Run.ExpectedRows
+        assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+    }
+
+    if ($Case.OperationKey -eq 'ReadTableMetadata') {
+        assertValue ([int]$Run.ActualTableCount) 1 -Message 'Expected one workbook table metadata result.'
+        assertValue (@($Run.ActualTableNames) -contains 'Data') $true -Message "Expected table metadata to include 'Data'."
+    }
+
+    if ($Case.OperationKey -eq 'ReadNamedRangeMetadata') {
+        assertValue ([int]$Run.ActualNamedRangeCount) 1 -Message 'Expected one workbook named range metadata result.'
+        assertValue (@($Run.ActualNamedRangeNames) -contains 'SalesData') $true -Message "Expected named range metadata to include 'SalesData'."
+    }
+
     if ([bool]$Run.SkipWorkbookValidation) {
         return
     }
@@ -87,6 +102,7 @@ function Test-ExcelBenchmarkOutput {
     if ($document) {
         Close-OfficeExcel -Document $document
     }
+    Test-ExcelBenchmarkOpenXml -Path $Run.Path
 }
 
 function Test-CsvBenchmarkOutput {
@@ -102,4 +118,25 @@ function Test-CsvBenchmarkOutput {
     assertPath $path
     $actualRows = @(Import-Csv -Path $path).Count
     assertValue $actualRows $expectedRows -Message "Expected $expectedRows rows in '$path'."
+}
+
+function Test-ExcelBenchmarkOpenXml {
+    param([string] $Path)
+
+    $validatorType = 'DocumentFormat.OpenXml.Validation.OpenXmlValidator' -as [type]
+    $spreadsheetType = 'DocumentFormat.OpenXml.Packaging.SpreadsheetDocument' -as [type]
+    if ($null -eq $validatorType -or $null -eq $spreadsheetType) {
+        return
+    }
+
+    $document = $spreadsheetType::Open($Path, $false)
+    try {
+        $validator = [Activator]::CreateInstance($validatorType)
+        $errors = @($validator.Validate($document))
+        assertValue $errors.Count 0 -Message "Expected '$Path' to pass OpenXML validation."
+    } finally {
+        if ($document) {
+            $document.Dispose()
+        }
+    }
 }

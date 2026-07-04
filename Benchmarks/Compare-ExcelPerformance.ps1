@@ -43,6 +43,17 @@ if (-not (Get-Command Invoke-BenchmarkSuite -ErrorAction SilentlyContinue)) {
     throw 'The imported PSPublishModule does not expose Invoke-BenchmarkSuite.'
 }
 
+$Engine = @(
+    foreach ($engineName in @($Engine)) {
+        foreach ($part in ([string]$engineName -split ',')) {
+            $normalized = $part.Trim()
+            if (-not [string]::IsNullOrWhiteSpace($normalized)) {
+                $normalized
+            }
+        }
+    }
+) | Select-Object -Unique
+
 if (-not $ListScenarios.IsPresent -and (@($Engine) -contains 'ExcelFast')) {
     $excelFastModuleRoot = Join-Path $OutputDirectory 'Modules'
     New-Item -ItemType Directory -Force -Path $excelFastModuleRoot | Out-Null
