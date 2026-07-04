@@ -38,6 +38,7 @@ function Invoke-ExcelBenchmarkReadCsv {
         NativeCsv { @(Import-Csv -Path $Run.SourcePath) }
         default { throw "Engine '$Engine' does not support CSV read." }
     }
+    $Run.ActualRows = @($rows).Count
 }
 
 function Invoke-ExcelBenchmarkCsvToExcel {
@@ -76,6 +77,7 @@ function Invoke-ExcelBenchmarkReadWorkbook {
             }
         }
     }
+    $Run.ActualRows = @($rows).Count
 }
 function Invoke-ExcelBenchmarkWriteWorkbook {
     param([string] $Engine, [object] $Case, [object] $Run)

@@ -66,6 +66,15 @@ function Test-ExcelBenchmarkOutput {
         assertPath $Run.Path
     }
 
+    if ($Case.OperationKey -in @('ReadFullSheet', 'ReadRange', 'ReadNoHeaderRange')) {
+        $expectedRows = if ($Case.OperationKey -eq 'ReadNoHeaderRange') {
+            [int]$Run.ExpectedRows + 1
+        } else {
+            [int]$Run.ExpectedRows
+        }
+        assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+    }
+
     if ([bool]$Run.SkipWorkbookValidation) {
         return
     }
@@ -83,11 +92,14 @@ function Test-ExcelBenchmarkOutput {
 function Test-CsvBenchmarkOutput {
     param([object] $Case, [object] $Run)
 
-    $path = if ($Case.OperationKey -eq 'ReadCsvSource') { $Run.SourcePath } else { $Run.Path }
-    assertPath $path
-
     $expectedRows = [int]$Run.ExpectedRows
+    if ($Case.OperationKey -eq 'ReadCsvSource') {
+        assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+        return
+    }
 
+    $path = $Run.Path
+    assertPath $path
     $actualRows = @(Import-Csv -Path $path).Count
     assertValue $actualRows $expectedRows -Message "Expected $expectedRows rows in '$path'."
 }

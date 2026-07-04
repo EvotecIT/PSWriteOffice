@@ -67,7 +67,10 @@ if (-not $ListScenarios.IsPresent -and (@($Engine) -contains 'ExcelFast')) {
     }
 }
 
-$requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (@($Engine) -contains 'PSWriteOffice')
+$requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (
+    (@($Engine) -contains 'PSWriteOffice') -or
+    -not $SkipWorkbookValidation.IsPresent
+)
 if ($requiresPSWriteOffice) {
     if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
         $env:OfficeIMORoot = $OfficeIMORoot
