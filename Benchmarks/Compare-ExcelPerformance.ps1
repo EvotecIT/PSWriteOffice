@@ -54,6 +54,17 @@ $Engine = @(
     }
 ) | Select-Object -Unique
 
+$Scenario = @(
+    foreach ($scenarioName in @($Scenario)) {
+        foreach ($part in ([string]$scenarioName -split ',')) {
+            $normalized = $part.Trim()
+            if (-not [string]::IsNullOrWhiteSpace($normalized)) {
+                $normalized
+            }
+        }
+    }
+) | Select-Object -Unique
+
 if (-not $ListScenarios.IsPresent -and (@($Engine) -contains 'ExcelFast')) {
     $excelFastModuleRoot = Join-Path $OutputDirectory 'Modules'
     New-Item -ItemType Directory -Force -Path $excelFastModuleRoot | Out-Null

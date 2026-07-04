@@ -14,6 +14,12 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+function ConvertTo-BenchmarkDouble {
+    param([object] $Value)
+
+    [double]::Parse([string]$Value, [Globalization.CultureInfo]::InvariantCulture)
+}
+
 function Format-BenchmarkDuration {
     param([double] $Milliseconds)
 
@@ -33,7 +39,7 @@ function Format-BenchmarkResult {
     $successful = @(
         foreach ($entry in $ByEngine.GetEnumerator()) {
             if ($entry.Value.Status -eq 'Succeeded') {
-                [pscustomobject]@{ Engine = $entry.Key; MedianMs = [double]$entry.Value.MedianMs }
+                [pscustomobject]@{ Engine = $entry.Key; MedianMs = ConvertTo-BenchmarkDouble -Value $entry.Value.MedianMs }
             }
         }
     ) | Sort-Object MedianMs, Engine
@@ -48,7 +54,7 @@ function Format-BenchmarkResult {
     }
 
     if ($ByEngine.ContainsKey($Baseline) -and $ByEngine[$Baseline].Status -eq 'Succeeded') {
-        $ratio = [double]$ByEngine[$Baseline].MedianMs / [double]$winner.MedianMs
+        $ratio = (ConvertTo-BenchmarkDouble -Value $ByEngine[$Baseline].MedianMs) / [double]$winner.MedianMs
         return ([string]::Format([Globalization.CultureInfo]::InvariantCulture, '{0} fastest; {1} {2:n2}x slower', $winner.Engine, $Baseline, $ratio))
     }
 
@@ -100,12 +106,12 @@ function Format-BenchmarkCell {
         return 'Failed'
     }
 
-    $duration = Format-BenchmarkDuration -Milliseconds ([double]$Row.MedianMs)
+    $duration = Format-BenchmarkDuration -Milliseconds (ConvertTo-BenchmarkDouble -Value $Row.MedianMs)
     if ($null -eq $BaselineRow -or $BaselineRow.Status -ne 'Succeeded') {
         return $duration
     }
 
-    $ratio = Format-BenchmarkRatio -Milliseconds ([double]$Row.MedianMs) -BaselineMilliseconds ([double]$BaselineRow.MedianMs) -Engine $Engine -Baseline $Baseline
+    $ratio = Format-BenchmarkRatio -Milliseconds (ConvertTo-BenchmarkDouble -Value $Row.MedianMs) -BaselineMilliseconds (ConvertTo-BenchmarkDouble -Value $BaselineRow.MedianMs) -Engine $Engine -Baseline $Baseline
     if ([string]::IsNullOrWhiteSpace($ratio)) {
         return $duration
     }

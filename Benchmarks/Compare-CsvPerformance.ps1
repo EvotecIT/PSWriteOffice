@@ -48,6 +48,17 @@ $Engine = @(
     }
 ) | Select-Object -Unique
 
+$Scenario = @(
+    foreach ($scenarioName in @($Scenario)) {
+        foreach ($part in ([string]$scenarioName -split ',')) {
+            $normalized = $part.Trim()
+            if (-not [string]::IsNullOrWhiteSpace($normalized)) {
+                $normalized
+            }
+        }
+    }
+) | Select-Object -Unique
+
 $requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (@($Engine) -contains 'PSWriteOffice')
 if ($requiresPSWriteOffice) {
     if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
