@@ -148,7 +148,8 @@ function Test-ExcelBenchmarkEngineSupport {
                 $name -ne 'dataset-worksheets'
         }
         ExcelFast {
-            return $name -in @('objects-default', 'wide-objects-default', 'import-default-full', 'import-default-range', 'read-no-header-range')
+            return $name -in @('objects-default', 'wide-objects-default', 'import-default-full', 'import-default-range', 'read-no-header-range') -and
+                [bool](Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1)
         }
         NativeCsv { return $false }
         default { return $false }
@@ -209,10 +210,7 @@ function Initialize-ExcelBenchmarkEngine {
         }
         ExcelFast {
             if (-not (Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1)) {
-                if ([bool]$Run.SkipExcelFastInstall) {
-                    throw 'ExcelFast is not installed. Rerun without -SkipExcelFastInstall to save it under the benchmark module folder.'
-                }
-                Save-Module -Name ExcelFast -Path $script:ExcelBenchmarkModuleRoot -Repository PSGallery -AllowPrerelease -Force
+                throw 'ExcelFast is not available. Use Compare-ExcelPerformance.ps1 to prepare optional ExcelFast lanes, or run without the ExcelFast engine.'
             }
             Import-Module ExcelFast -Force -ErrorAction Stop
         }
