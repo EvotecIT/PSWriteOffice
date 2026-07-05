@@ -4,6 +4,7 @@ using System.Management.Automation;
 using System.Text;
 using OfficeIMO.Pdf;
 using OfficeIMO.Rtf;
+using OfficeIMO.Rtf.Markdown;
 using OfficeIMO.Rtf.Pdf;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Html;
@@ -12,7 +13,7 @@ using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Rtf;
 
-/// <summary>Converts RTF input to Word, HTML, or PDF output.</summary>
+/// <summary>Converts RTF input to Word, HTML, PDF, or Markdown output.</summary>
 /// <example>
 ///   <summary>Convert RTF to Word.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -31,6 +32,12 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>ConvertFrom-OfficeRtf -Path .\Report.rtf -As Pdf -OutputPath .\Report.pdf</code>
 ///   <para>Uses OfficeIMO.Rtf.Pdf to save a PDF file.</para>
+/// </example>
+/// <example>
+///   <summary>Convert RTF to Markdown.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>ConvertFrom-OfficeRtf -Path .\Report.rtf -As Markdown -OutputPath .\Report.md -PassThru</code>
+///   <para>Converts the RTF document to Markdown using OfficeIMO.Rtf.Markdown.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertFrom, "OfficeRtf", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-Rtf")]
@@ -86,7 +93,7 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
     [Parameter]
     public SwitchParameter UseImagePaths { get; set; }
 
-    /// <summary>Include hidden RTF text when converting to PDF.</summary>
+    /// <summary>Include hidden RTF text when converting to PDF or Markdown.</summary>
     [Parameter]
     public SwitchParameter IncludeHiddenText { get; set; }
 
@@ -105,6 +112,10 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
     /// <summary>Exclude RTF notes from PDF output.</summary>
     [Parameter]
     public SwitchParameter ExcludeNotes { get; set; }
+
+    /// <summary>Do not emit HTML comments for unsupported RTF features when converting to Markdown.</summary>
+    [Parameter]
+    public SwitchParameter NoUnsupportedHtmlComments { get; set; }
 
     /// <summary>Emit a FileInfo when saving to disk.</summary>
     [Parameter]
@@ -125,6 +136,9 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
                     break;
                 case OfficeRtfConversionTarget.Pdf:
                     ConvertToPdf();
+                    break;
+                case OfficeRtfConversionTarget.Markdown:
+                    ConvertToMarkdown();
                     break;
                 default:
                     throw new PSArgumentOutOfRangeException(nameof(As), As, "Unsupported RTF conversion target.");
@@ -234,6 +248,42 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
             ? PdfCommandUtilities.ResolvePath(this, Path).ToPdfDocumentFromRtfFile(options: options)
             : RtfDocument.Read(Text).Document.ToPdfDocument(options);
         WriteObject(document);
+    }
+
+    private void ConvertToMarkdown()
+    {
+        var options = new RtfToMarkdownOptions
+        {
+            IncludeHiddenText = IncludeHiddenText.IsPresent,
+            EmitUnsupportedHtmlComments = !NoUnsupportedHtmlComments.IsPresent
+        };
+
+        var markdown = LoadRtfDocument().ToMarkdown(options);
+        if (string.IsNullOrWhiteSpace(OutputPath))
+        {
+            WriteObject(markdown);
+            return;
+        }
+
+        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write Markdown converted from RTF"))
+        {
+            return;
+        }
+
+        PdfCommandUtilities.EnsureDirectory(outputPath);
+        File.WriteAllText(outputPath, markdown, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        if (PassThru.IsPresent)
+        {
+            WriteObject(new FileInfo(outputPath));
+        }
+    }
+
+    private RtfDocument LoadRtfDocument()
+    {
+        return ParameterSetName == ParameterSetPath
+            ? RtfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path), encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)).Document
+            : RtfDocument.Read(Text).Document;
     }
 
     private WordDocument LoadWordDocument()

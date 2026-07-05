@@ -1,10 +1,5 @@
-Import-Module PSParseHTML
-$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
-    $env:PSWRITEOFFICE_MODULE_MANIFEST
-} else {
-    Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1'
-}
-if (-not (Get-Module -Name PSWriteOffice)) { Import-Module $modulePath -ErrorAction Stop }
+Import-Module PSParseHTML -ErrorAction Stop
+Import-Module PSWriteOffice -ErrorAction Stop
 
 $outputDirectory = Join-Path $PSScriptRoot '..\Documents'
 New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null

@@ -9,6 +9,9 @@ param(
     [switch] $KeepArtifacts
 )
 
+Import-Module PSWriteOffice -ErrorAction Stop
+Import-Module DbaClientX -ErrorAction Stop
+
 if ($RowCount -lt 1) {
     throw 'RowCount must be greater than zero.'
 }

@@ -2,19 +2,13 @@ param(
     [switch] $Open
 )
 
-$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
-    $env:PSWRITEOFFICE_MODULE_MANIFEST
-} else {
-    (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1')
-}
-if (-not (Get-Module -Name PSWriteOffice)) { Import-Module $modulePath -ErrorAction Stop }
+Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
 New-Item -Path $documents -ItemType Directory -Force | Out-Null
 
 $path = Join-Path $documents 'Showcase-Excel-OperationalDashboard.xlsx'
-$officeimoRoot = Join-Path $PSScriptRoot '..\..\..\OfficeIMO'
-$logoPath = Join-Path (Join-Path $officeimoRoot 'Assets') 'OfficeIMO.png'
+$logoPath = Join-Path $PSScriptRoot '..\Word\Example-WordTableCells.fixture.png'
 
 $services = @(
     [pscustomobject]@{ Service = 'Identity'; Owner = 'Platform'; HealthScore = 96; Incidents = 1; SlaPercent = 0.999; Status = 'Healthy'; Evidence = 'identity-runbook' }

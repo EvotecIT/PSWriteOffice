@@ -1,23 +1,10 @@
-$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
-    $env:PSWRITEOFFICE_MODULE_MANIFEST
-} else {
-    (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1')
-}
-if (-not (Get-Module -Name PSWriteOffice)) { Import-Module $modulePath -ErrorAction Stop }
+Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
 New-Item -Path $documents -ItemType Directory -Force | Out-Null
 
 $path = Join-Path $documents 'Excel-Pictures.xlsx'
-$officeimoRoot = Join-Path $PSScriptRoot '..\..\..\OfficeIMO'
-$imageCandidates = @(
-    (Join-Path (Join-Path $officeimoRoot 'Assets') 'OfficeIMO.png')
-    (Join-Path (Join-Path $officeimoRoot 'OfficeIMO.Tests\Images') 'EvotecLogo.png')
-)
-$imagePath = $imageCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
-if (-not $imagePath) {
-    throw 'Could not find a sample image. Run this example from an EvotecIT checkout with OfficeIMO next to PSWriteOffice.'
-}
+$imagePath = Join-Path $PSScriptRoot '..\Word\Example-WordTableCells.fixture.png'
 
 New-OfficeExcel -Path $path {
     ExcelSheet 'Pictures' {

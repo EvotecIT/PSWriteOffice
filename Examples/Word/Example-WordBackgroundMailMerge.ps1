@@ -1,3 +1,5 @@
+Import-Module PSWriteOffice -ErrorAction Stop
+
 $Path = Join-Path $PSScriptRoot 'Example-WordBackgroundMailMerge.docx'
 
 New-OfficeWord -Path $Path {
