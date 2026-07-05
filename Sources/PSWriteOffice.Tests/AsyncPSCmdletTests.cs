@@ -29,6 +29,28 @@ public sealed class AsyncPSCmdletTests
         var item = Assert.Single(result);
         Assert.Equal("queued-output", item.BaseObject);
     }
+
+    [Fact]
+    public void AsyncPSCmdlet_routes_helper_writes_through_async_pipeline_interface()
+    {
+        var sessionState = InitialSessionState.CreateDefault();
+        sessionState.Commands.Add(new SessionStateCmdletEntry(
+            "Test-AsyncHelperQueuedOutput",
+            typeof(TestAsyncHelperQueuedOutputCommand),
+            helpFileName: null));
+
+        using var runspace = RunspaceFactory.CreateRunspace(sessionState);
+        runspace.Open();
+        using var powerShell = PowerShell.Create();
+        powerShell.Runspace = runspace;
+        powerShell.AddCommand("Test-AsyncHelperQueuedOutput");
+
+        var result = powerShell.Invoke();
+
+        Assert.False(powerShell.HadErrors, string.Join(Environment.NewLine, powerShell.Streams.Error.Select(static error => error.ToString())));
+        var item = Assert.Single(result);
+        Assert.Equal("helper-output", item.BaseObject);
+    }
 }
 
 [Cmdlet(VerbsDiagnostic.Test, "AsyncQueuedOutput")]
@@ -36,4 +58,17 @@ public sealed class TestAsyncQueuedOutputCommand : AsyncPSCmdlet
 {
     protected override Task ProcessRecordAsync()
         => Task.Run(() => WriteObject("queued-output"));
+}
+
+[Cmdlet(VerbsDiagnostic.Test, "AsyncHelperQueuedOutput")]
+public sealed class TestAsyncHelperQueuedOutputCommand : AsyncPSCmdlet
+{
+    protected override Task ProcessRecordAsync()
+        => Task.Run(() => AsyncPipelineHelper.WriteOutput(this));
+}
+
+internal static class AsyncPipelineHelper
+{
+    public static void WriteOutput(IAsyncCmdletPipeline pipeline)
+        => pipeline.WriteObject("helper-output");
 }
