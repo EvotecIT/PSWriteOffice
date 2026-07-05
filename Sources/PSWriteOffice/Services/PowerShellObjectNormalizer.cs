@@ -159,6 +159,203 @@ internal static class PowerShellObjectNormalizer
         return true;
     }
 
+    public static bool TryProjectPSObjectIntoKnownColumns(object? item, string[] columns, object?[] values, PowerShellObjectNormalizerOptions? options = null)
+    {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(columns);
+        ArgumentNullException.ThrowIfNull(values);
+#else
+        if (columns == null) throw new ArgumentNullException(nameof(columns));
+        if (values == null) throw new ArgumentNullException(nameof(values));
+#endif
+
+        if (values.Length != columns.Length)
+        {
+            throw new ArgumentException("The value buffer length must match the column count.", nameof(values));
+        }
+
+        options ??= PowerShellObjectNormalizerOptions.Default;
+
+        if (item == null || item is IDictionary)
+        {
+            return false;
+        }
+
+        if (item is not PSObject && item.GetType().FullName != "System.Management.Automation.PSCustomObject")
+        {
+            return false;
+        }
+
+        var ps = item as PSObject ?? PSObject.AsPSObject(item);
+        if (ps.BaseObject is IDictionary)
+        {
+            return false;
+        }
+
+        if (ps.BaseObject != null &&
+            IsScalarClrType(ps.BaseObject.GetType()) &&
+            !HasExportableExtendedProperties(ps))
+        {
+            return false;
+        }
+
+        if (TryProjectAlignedPSObject(ps, columns, values, options))
+        {
+            return true;
+        }
+
+        for (var i = 0; i < columns.Length; i++)
+        {
+            var property = ps.Properties[columns[i]];
+            if (property == null || !ShouldExportProperty(property))
+            {
+                values[i] = null;
+                continue;
+            }
+
+            try
+            {
+                values[i] = NormalizeCellValue(property.Value, options);
+            }
+            catch (Exception exception) when (exception is not PipelineStoppedException)
+            {
+                if (options.PropertyErrorAction == ActionPreference.Stop)
+                {
+                    throw new InvalidOperationException($"Unable to read PowerShell property '{property.Name}'.", exception);
+                }
+
+                options.PropertyErrorCallback?.Invoke(property.Name, exception);
+                values[i] = options.IncludeUnexportableProperties
+                    ? options.UnexportablePropertyValueFactory?.Invoke(property.Name, exception) ?? string.Empty
+                    : null;
+            }
+        }
+
+        return true;
+    }
+
+    public static bool TryProjectPSObjectTextIntoKnownColumns(object? item, string[] columns, string?[] values, PowerShellObjectNormalizerOptions? options = null)
+    {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(columns);
+        ArgumentNullException.ThrowIfNull(values);
+#else
+        if (columns == null) throw new ArgumentNullException(nameof(columns));
+        if (values == null) throw new ArgumentNullException(nameof(values));
+#endif
+
+        if (values.Length != columns.Length)
+        {
+            throw new ArgumentException("The value buffer length must match the column count.", nameof(values));
+        }
+
+        options ??= PowerShellObjectNormalizerOptions.Default;
+
+        if (item == null || item is IDictionary)
+        {
+            return false;
+        }
+
+        if (item is not PSObject && item.GetType().FullName != "System.Management.Automation.PSCustomObject")
+        {
+            return false;
+        }
+
+        var ps = item as PSObject ?? PSObject.AsPSObject(item);
+        if (ps.BaseObject is IDictionary)
+        {
+            return false;
+        }
+
+        if (ps.BaseObject != null &&
+            IsScalarClrType(ps.BaseObject.GetType()) &&
+            !HasExportableExtendedProperties(ps))
+        {
+            return false;
+        }
+
+        for (var i = 0; i < columns.Length; i++)
+        {
+            var property = ps.Properties[columns[i]];
+            if (property == null || !ShouldExportProperty(property))
+            {
+                values[i] = null;
+                continue;
+            }
+
+            try
+            {
+                values[i] = NormalizeCellValueToText(property.Value, options);
+            }
+            catch (Exception exception) when (exception is not PipelineStoppedException)
+            {
+                if (options.PropertyErrorAction == ActionPreference.Stop)
+                {
+                    throw new InvalidOperationException($"Unable to read PowerShell property '{property.Name}'.", exception);
+                }
+
+                options.PropertyErrorCallback?.Invoke(property.Name, exception);
+                values[i] = options.IncludeUnexportableProperties
+                    ? options.UnexportablePropertyValueFactory?.Invoke(property.Name, exception)?.ToString() ?? string.Empty
+                    : null;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool TryProjectAlignedPSObject(PSObject ps, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
+    {
+        var index = 0;
+        foreach (var property in ps.Properties)
+        {
+            if (!ShouldExportProperty(property))
+            {
+                continue;
+            }
+
+            if (!IsAlignedColumn(property.Name, columns, index))
+            {
+                return false;
+            }
+
+            if (property.MemberType == PSMemberTypes.NoteProperty &&
+                TryGetFastCellValue(property.Value, options, out values[index]))
+            {
+                index++;
+                continue;
+            }
+
+            try
+            {
+                values[index] = NormalizeCellValue(property.Value, options);
+            }
+            catch (Exception exception) when (exception is not PipelineStoppedException)
+            {
+                if (options.PropertyErrorAction == ActionPreference.Stop)
+                {
+                    throw new InvalidOperationException($"Unable to read PowerShell property '{property.Name}'.", exception);
+                }
+
+                options.PropertyErrorCallback?.Invoke(property.Name, exception);
+                values[index] = options.IncludeUnexportableProperties
+                    ? options.UnexportablePropertyValueFactory?.Invoke(property.Name, exception) ?? string.Empty
+                    : null;
+            }
+
+            index++;
+        }
+
+        return index == columns.Length;
+    }
+
+    private static bool IsAlignedColumn(string propertyName, string[] columns, int index)
+    {
+        return index < columns.Length &&
+            (string.Equals(propertyName, columns[index], StringComparison.Ordinal) ||
+             string.Equals(propertyName, columns[index], StringComparison.OrdinalIgnoreCase));
+    }
+
     private static bool TryProjectScalar(object item, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
     {
         if (item is PSObject psObject && HasExportableExtendedProperties(psObject))
@@ -668,30 +865,9 @@ internal static class PowerShellObjectNormalizer
 
     private static object? NormalizeCellValue(object? value, PowerShellObjectNormalizerOptions options)
     {
-        if (value == null || value is string || !options.NormalizeCollectionValues)
+        if (TryGetFastCellValue(value, options, out var normalized))
         {
-            return value;
-        }
-
-        if (value is bool ||
-            value is char ||
-            value is byte ||
-            value is sbyte ||
-            value is short ||
-            value is ushort ||
-            value is int ||
-            value is uint ||
-            value is long ||
-            value is ulong ||
-            value is float ||
-            value is double ||
-            value is decimal ||
-            value is DateTime ||
-            value is DateTimeOffset ||
-            value is TimeSpan ||
-            value is Guid)
-        {
-            return value;
+            return normalized;
         }
 
         if (value is IDictionary)
@@ -711,6 +887,91 @@ internal static class PowerShellObjectNormalizer
         }
 
         return value;
+    }
+
+    private static string? NormalizeCellValueToText(object? value, PowerShellObjectNormalizerOptions options)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        if (value is string text)
+        {
+            return text;
+        }
+
+        if (value is bool boolValue)
+        {
+            return boolValue ? "True" : "False";
+        }
+
+        if (value is decimal or int or DateTime or double or long or DateTimeOffset or Guid or TimeSpan or float or byte or sbyte or short or ushort or uint or ulong)
+        {
+            return value is IFormattable formattable
+                ? formattable.ToString(null, options.Culture)
+                : value.ToString();
+        }
+
+        if (value is char charValue)
+        {
+            return charValue.ToString();
+        }
+
+        if (value is IDictionary)
+        {
+            return value.ToString();
+        }
+
+        if (options.NormalizeCollectionValues && value is IEnumerable enumerable)
+        {
+            var values = new List<string>();
+            foreach (var item in enumerable)
+            {
+                values.Add(ConvertValueToString(item));
+            }
+
+            return string.Join(options.CollectionSeparator, values);
+        }
+
+        return value is IFormattable fallbackFormattable
+            ? fallbackFormattable.ToString(null, options.Culture)
+            : value.ToString();
+    }
+
+    private static bool TryGetFastCellValue(object? value, PowerShellObjectNormalizerOptions options, out object? normalized)
+    {
+        normalized = value;
+        if (value == null || value is string || !options.NormalizeCollectionValues)
+        {
+            return true;
+        }
+
+        if (value is bool boolValue)
+        {
+            normalized = options.FormatScalarValuesAsText ? boolValue ? "True" : "False" : value;
+            return true;
+        }
+
+        if (value is decimal or int or DateTime or double or long or DateTimeOffset or Guid or TimeSpan or float or byte or sbyte or short or ushort or uint or ulong)
+        {
+            if (options.FormatScalarValuesAsText)
+            {
+                normalized = value is IFormattable formattable
+                    ? formattable.ToString(null, options.Culture)
+                    : value.ToString();
+            }
+
+            return true;
+        }
+
+        if (value is char charValue)
+        {
+            normalized = options.FormatScalarValuesAsText ? charValue.ToString() : value;
+            return true;
+        }
+
+        return false;
     }
 
     private static string ConvertValueToString(object? value)
@@ -814,4 +1075,8 @@ internal sealed class PowerShellObjectNormalizerOptions
     public bool NormalizeCollectionValues { get; set; } = true;
 
     public string CollectionSeparator { get; set; } = ", ";
+
+    public CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
+
+    public bool FormatScalarValuesAsText { get; set; }
 }

@@ -168,6 +168,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
+        _objectProjector.UseCsvCulture(options.Culture);
         _lineWriter = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
         _csvWriter = new CsvObjectWriter(_lineWriter, options);
         return _csvWriter;

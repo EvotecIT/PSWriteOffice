@@ -27,7 +27,7 @@ namespace PSWriteOffice.Cmdlets.Csv;
 [OutputType(typeof(FileInfo))]
 public sealed class ExportOfficeCsvCommand : PSCmdlet
 {
-    private const int StreamWriterBufferSize = 256 * 1024;
+    private const int StreamWriterBufferSize = 64 * 1024;
     private const string ParameterSetInputObjectPathDelimiter = "InputObjectPathDelimiter";
     private const string ParameterSetInputObjectPathCulture = "InputObjectPathCulture";
     private const string ParameterSetInputObjectLiteralPathDelimiter = "InputObjectLiteralPathDelimiter";
@@ -275,9 +275,11 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
+        _objectProjector.UseCsvCulture(options.Culture);
         if (Append.IsPresent)
         {
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
+            _objectProjector.UseCsvCulture(options.Culture);
             var appendHeader = GetEffectiveAppendHeader(firstValue);
             if (appendHeader is { Length: > 0 })
             {

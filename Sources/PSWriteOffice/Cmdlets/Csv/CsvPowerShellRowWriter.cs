@@ -52,11 +52,10 @@ internal sealed class CsvPowerShellRowWriter
     {
         var outputHeader = GetOutputHeader(header);
         var headerCount = outputHeader.Length;
-        var rowCount = row.Count;
-        var valueCount = rowCount < headerCount ? rowCount : headerCount;
 
         if (asHashtable)
         {
+            var valueCount = GetValueCount(row, headerCount);
             var rowValues = new Dictionary<string, object?>(valueCount, StringComparer.OrdinalIgnoreCase);
             AddHashtableValues(rowValues, outputHeader, row, valueCount);
 
@@ -64,12 +63,65 @@ internal sealed class CsvPowerShellRowWriter
             return;
         }
 
-        var psObj = PowerShellObjectFactory.Create(valueCount);
+        WriteObjectRow(cmdlet, outputHeader, row, headerCount);
+    }
+
+    private void WriteObjectRow(PSCmdlet cmdlet, string[] header, IReadOnlyList<string> row, int headerCount)
+    {
+        var valueCount = GetValueCount(row, headerCount);
+        var psObj = PowerShellObjectFactory.Create(headerCount);
         var prevalidated = _prevalidatedOutputProperties;
-        AddNoteProperties(psObj, outputHeader, row, valueCount, prevalidated);
+
+        if (row is List<string> list)
+        {
+            for (var i = 0; i < valueCount; i++)
+            {
+                psObj.Properties.Add(new PSNoteProperty(header[i], list[i]), prevalidated);
+            }
+
+            if (valueCount < headerCount)
+            {
+                AddMissingNoteProperties(psObj, header, valueCount, headerCount, prevalidated);
+            }
+
+            cmdlet.WriteObject(psObj);
+            return;
+        }
+
+        if (row is string[] array)
+        {
+            for (var i = 0; i < valueCount; i++)
+            {
+                psObj.Properties.Add(new PSNoteProperty(header[i], array[i]), prevalidated);
+            }
+
+            if (valueCount < headerCount)
+            {
+                AddMissingNoteProperties(psObj, header, valueCount, headerCount, prevalidated);
+            }
+
+            cmdlet.WriteObject(psObj);
+            return;
+        }
+
+        for (var i = 0; i < valueCount; i++)
+        {
+            psObj.Properties.Add(new PSNoteProperty(header[i], row[i]), prevalidated);
+        }
+
+        if (valueCount < headerCount)
+        {
+            AddMissingNoteProperties(psObj, header, valueCount, headerCount, prevalidated);
+        }
 
         cmdlet.WriteObject(psObj);
     }
+
+    private static int GetValueCount(IReadOnlyCollection<string> row, int headerCount) =>
+        row.Count < headerCount ? row.Count : headerCount;
+
+    private static int GetValueCount(IReadOnlyList<string> row, int headerCount) =>
+        row.Count < headerCount ? row.Count : headerCount;
 
     private static void AddHashtableValues(Dictionary<string, object?> rowValues, string[] header, IReadOnlyList<string> row, int valueCount)
     {
@@ -99,31 +151,11 @@ internal sealed class CsvPowerShellRowWriter
         }
     }
 
-    private static void AddNoteProperties(PSObject psObj, string[] header, IReadOnlyList<string> row, int valueCount, bool prevalidated)
+    private static void AddMissingNoteProperties(PSObject psObj, string[] header, int startIndex, int headerCount, bool prevalidated)
     {
-        if (row is List<string> list)
+        for (var i = startIndex; i < headerCount; i++)
         {
-            for (var i = 0; i < valueCount; i++)
-            {
-                psObj.Properties.Add(new PSNoteProperty(header[i], list[i]), prevalidated);
-            }
-
-            return;
-        }
-
-        if (row is string[] array)
-        {
-            for (var i = 0; i < valueCount; i++)
-            {
-                psObj.Properties.Add(new PSNoteProperty(header[i], array[i]), prevalidated);
-            }
-
-            return;
-        }
-
-        for (var i = 0; i < valueCount; i++)
-        {
-            psObj.Properties.Add(new PSNoteProperty(header[i], row[i]), prevalidated);
+            psObj.Properties.Add(new PSNoteProperty(header[i], null), prevalidated);
         }
     }
 
