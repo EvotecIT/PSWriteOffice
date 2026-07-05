@@ -51,6 +51,29 @@ public sealed class AsyncPSCmdletTests
         var item = Assert.Single(result);
         Assert.Equal("helper-output", item.BaseObject);
     }
+
+    [Fact]
+    public async Task AsyncPSCmdlet_pumps_should_process_during_synchronous_worker_fan_out()
+    {
+        var sessionState = InitialSessionState.CreateDefault();
+        sessionState.Commands.Add(new SessionStateCmdletEntry(
+            "Test-AsyncSynchronousFanOut",
+            typeof(TestAsyncSynchronousFanOutCommand),
+            helpFileName: null));
+
+        using var runspace = RunspaceFactory.CreateRunspace(sessionState);
+        runspace.Open();
+        using var powerShell = PowerShell.Create();
+        powerShell.Runspace = runspace;
+        powerShell.AddCommand("Test-AsyncSynchronousFanOut");
+
+        var invokeTask = Task.Run(() => powerShell.Invoke());
+
+        var result = await invokeTask.WaitAsync(TimeSpan.FromSeconds(10));
+        Assert.False(powerShell.HadErrors, string.Join(Environment.NewLine, powerShell.Streams.Error.Select(static error => error.ToString())));
+        var item = Assert.Single(result);
+        Assert.Equal("fan-out-output", item.BaseObject);
+    }
 }
 
 [Cmdlet(VerbsDiagnostic.Test, "AsyncQueuedOutput")]
@@ -71,4 +94,22 @@ internal static class AsyncPipelineHelper
 {
     public static void WriteOutput(IAsyncCmdletPipeline pipeline)
         => pipeline.WriteObject("helper-output");
+}
+
+[Cmdlet(VerbsDiagnostic.Test, "AsyncSynchronousFanOut", SupportsShouldProcess = true)]
+public sealed class TestAsyncSynchronousFanOutCommand : AsyncPSCmdlet
+{
+    protected override Task ProcessRecordAsync()
+    {
+        var worker = Task.Run(() =>
+        {
+            if (ShouldProcess("fan-out-target", "write output"))
+            {
+                WriteObject("fan-out-output");
+            }
+        });
+
+        Task.WaitAll(worker);
+        return Task.CompletedTask;
+    }
 }

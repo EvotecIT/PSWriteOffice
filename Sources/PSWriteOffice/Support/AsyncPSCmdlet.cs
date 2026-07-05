@@ -249,29 +249,10 @@ public abstract class AsyncPSCmdlet : PSCmdlet, IAsyncCmdletPipeline, IDisposabl
             }
         }
 
-        void PumpQueuedItems() {
-            while (outPipe.TryTake(out var item)) {
-                PumpItem(item);
-            }
-        }
-
         _pipelineThreadId = Environment.CurrentManagedThreadId;
         _currentOutPipe = outPipe;
 
-        try {
-            blockTask = task();
-        } catch {
-            ClearPipes();
-            throw;
-        }
-
-        if (blockTask.IsCompleted) {
-            CompleteAddingIfNeeded(outPipe);
-            PumpQueuedItems();
-            ClearPipes();
-            blockTask.GetAwaiter().GetResult();
-            return;
-        }
+        blockTask = Task.Run(task, CancelToken);
 
         _ = blockTask.ContinueWith(
             _ => ClearPipes(),
