@@ -6,15 +6,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
-    $env:PSWRITEOFFICE_MODULE_MANIFEST
-} else {
-    Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1'
-}
-
-if (-not (Get-Module -Name PSWriteOffice)) {
-    Import-Module $modulePath -ErrorAction Stop
-}
+Import-Module PSWriteOffice -ErrorAction Stop
 
 $repoRoot = if ($env:EVOTEC_GITHUB_ROOT) {
     $env:EVOTEC_GITHUB_ROOT

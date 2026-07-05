@@ -1,9 +1,4 @@
-$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
-    $env:PSWRITEOFFICE_MODULE_MANIFEST
-} else {
-    (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1')
-}
-if (-not (Get-Module -Name PSWriteOffice)) { Import-Module $modulePath -ErrorAction Stop }
+Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
 New-Item -Path $documents -ItemType Directory -Force | Out-Null
 
@@ -17,8 +12,7 @@ $data = @(
     [pscustomobject]@{ Region = 'West'; Quarter = 'Q2'; Sales = 1100; Status = 'In Progress' }
 )
 
-$officeimoRoot = Join-Path $PSScriptRoot '..\..\..\OfficeIMO'
-$imagePath = Join-Path (Join-Path $officeimoRoot 'Assets') 'OfficeIMO.png'
+$imagePath = Join-Path $PSScriptRoot '..\Word\Example-WordTableCells.fixture.png'
 
 New-OfficeExcel -Path $path {
     ExcelSheet 'Data' {

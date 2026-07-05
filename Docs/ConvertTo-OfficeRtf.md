@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # ConvertTo-OfficeRtf
 ## SYNOPSIS
-Converts Word, HTML, or PDF input to RTF.
+Converts Word, HTML, PDF, or Markdown input to RTF.
 
 ## SYNTAX
 ### WordPath (Default)
@@ -34,8 +34,18 @@ ConvertTo-OfficeRtf -HtmlPath <string> [-OutputPath <string>] [-FontFamily <stri
 ConvertTo-OfficeRtf -PdfPath <string> [-OutputPath <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
+### Markdown
+```powershell
+ConvertTo-OfficeRtf -Markdown <string> [-OutputPath <string>] [-PreserveRawHtmlAsText] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
+### MarkdownPath
+```powershell
+ConvertTo-OfficeRtf -MarkdownPath <string> [-OutputPath <string>] [-PreserveRawHtmlAsText] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
 ## DESCRIPTION
-Converts Word, HTML, or PDF input to RTF.
+Converts Word, HTML, PDF, or Markdown input to RTF.
 
 ## EXAMPLES
 
@@ -60,6 +70,13 @@ PS> ConvertTo-OfficeRtf -PdfPath .\Report.pdf -OutputPath .\Report.rtf
 ```
 
 Uses OfficeIMO.Rtf.Pdf's semantic PDF reader to write RTF output.
+
+### EXAMPLE 4
+```powershell
+PS> ConvertTo-OfficeRtf -MarkdownPath .\Report.md -OutputPath .\Report.rtf -PassThru
+```
+
+Parses Markdown and writes RTF using OfficeIMO.Rtf.Markdown.
 
 ## PARAMETERS
 
@@ -127,12 +144,44 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -Markdown
+Markdown text to convert to RTF.
+
+```yaml
+Type: String
+Parameter Sets: Markdown
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MarkdownPath
+Path to a Markdown file to convert to RTF.
+
+```yaml
+Type: String
+Parameter Sets: MarkdownPath
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -OutputPath
 Optional destination RTF path. When omitted, raw RTF text is returned.
 
 ```yaml
 Type: String
-Parameter Sets: WordPath, WordDocument, Html, HtmlPath, PdfPath
+Parameter Sets: WordPath, WordDocument, Html, HtmlPath, PdfPath, Markdown, MarkdownPath
 Aliases: OutPath
 Possible values:
 
@@ -148,7 +197,7 @@ Emit a FileInfo when saving to disk.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: WordPath, WordDocument, Html, HtmlPath, PdfPath
+Parameter Sets: WordPath, WordDocument, Html, HtmlPath, PdfPath, Markdown, MarkdownPath
 Aliases: None
 Possible values:
 
@@ -169,6 +218,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PreserveRawHtmlAsText
+Preserve raw HTML Markdown blocks as plain text in the RTF output.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Markdown, MarkdownPath
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

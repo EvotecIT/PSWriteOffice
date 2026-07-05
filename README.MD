@@ -40,6 +40,13 @@ Start here when you want to create polished documents from PowerShell: workbooks
 
 ## Quick Start 🚀
 
+Install and import the module once in the session:
+
+```powershell
+Install-Module -Name PSWriteOffice -Scope CurrentUser
+Import-Module PSWriteOffice
+```
+
 ### Word
 
 ```powershell
@@ -414,8 +421,8 @@ Use the examples in this README for the first pass, then move to the generated c
 
 - [Docs/Readme.md](Docs/Readme.md) is the generated cmdlet index.
 - [Docs](Docs) contains one generated page per command.
-- [Examples](Examples) contains runnable scripts grouped by Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Visio, and shared samples.
-- [Roadmap/PSWriteOffice-CmdletExamplesAndPolishPlan.md](Roadmap/PSWriteOffice-CmdletExamplesAndPolishPlan.md) tracks the documentation quality bar and the next wrapper-polish priorities.
+- [Examples](Examples) contains runnable scripts grouped by Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Visio, showcase scenarios, and shared samples.
+- [Website/content/examples](Website/content/examples) contains the curated website examples for the project hub.
 
 The generated command pages are built from XML comments in the cmdlet source. Prefer contextual examples there too: small workflow snippets with real input data, generated artifacts, readback/validation where useful, and no fake PowerShell compatibility aliases.
 

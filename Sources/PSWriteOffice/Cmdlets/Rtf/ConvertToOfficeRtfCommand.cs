@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using OfficeIMO.Rtf.Markdown;
 using OfficeIMO.Rtf.Pdf;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Html;
@@ -11,7 +12,7 @@ using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Rtf;
 
-/// <summary>Converts Word, HTML, or PDF input to RTF.</summary>
+/// <summary>Converts Word, HTML, PDF, or Markdown input to RTF.</summary>
 /// <example>
 ///   <summary>Convert Word to RTF.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -31,6 +32,12 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 ///   <code>ConvertTo-OfficeRtf -PdfPath .\Report.pdf -OutputPath .\Report.rtf</code>
 ///   <para>Uses OfficeIMO.Rtf.Pdf's semantic PDF reader to write RTF output.</para>
 /// </example>
+/// <example>
+///   <summary>Convert Markdown to RTF.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>ConvertTo-OfficeRtf -MarkdownPath .\Report.md -OutputPath .\Report.rtf -PassThru</code>
+///   <para>Parses Markdown and writes RTF using OfficeIMO.Rtf.Markdown.</para>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficeRtf", DefaultParameterSetName = ParameterSetWordPath, SupportsShouldProcess = true)]
 [Alias("ConvertTo-Rtf")]
 [OutputType(typeof(string), typeof(FileInfo))]
@@ -41,6 +48,8 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
     private const string ParameterSetHtml = "Html";
     private const string ParameterSetHtmlPath = "HtmlPath";
     private const string ParameterSetPdfPath = "PdfPath";
+    private const string ParameterSetMarkdown = "Markdown";
+    private const string ParameterSetMarkdownPath = "MarkdownPath";
 
     /// <summary>Path to a .docx file to convert to RTF.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetWordPath)]
@@ -61,6 +70,14 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
     /// <summary>Path to a PDF file to convert to semantic RTF.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetPdfPath)]
     public string PdfPath { get; set; } = string.Empty;
+
+    /// <summary>Markdown text to convert to RTF.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetMarkdown)]
+    public string Markdown { get; set; } = string.Empty;
+
+    /// <summary>Path to a Markdown file to convert to RTF.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetMarkdownPath)]
+    public string MarkdownPath { get; set; } = string.Empty;
 
     /// <summary>Optional destination RTF path. When omitted, raw RTF text is returned.</summary>
     [Parameter]
@@ -87,6 +104,11 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetHtmlPath)]
     public string[]? StylesheetContent { get; set; }
 
+    /// <summary>Preserve raw HTML Markdown blocks as plain text in the RTF output.</summary>
+    [Parameter(ParameterSetName = ParameterSetMarkdown)]
+    [Parameter(ParameterSetName = ParameterSetMarkdownPath)]
+    public SwitchParameter PreserveRawHtmlAsText { get; set; }
+
     /// <summary>Emit a FileInfo when saving to disk.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -99,6 +121,12 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
             if (ParameterSetName == ParameterSetPdfPath)
             {
                 ConvertPdf();
+                return;
+            }
+
+            if (ParameterSetName == ParameterSetMarkdown || ParameterSetName == ParameterSetMarkdownPath)
+            {
+                ConvertMarkdown();
                 return;
             }
 
@@ -241,6 +269,45 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
         }
     }
 
+    private void ConvertMarkdown()
+    {
+        var markdown = Markdown;
+        if (ParameterSetName == ParameterSetMarkdownPath)
+        {
+            markdown = File.ReadAllText(PdfCommandUtilities.ResolvePath(this, MarkdownPath));
+        }
+
+        if (string.IsNullOrWhiteSpace(markdown))
+        {
+            throw new PSArgumentException("Markdown content cannot be empty.", nameof(Markdown));
+        }
+
+        var options = new MarkdownToRtfOptions
+        {
+            PreserveRawHtmlAsText = PreserveRawHtmlAsText.IsPresent
+        };
+
+        var rtf = markdown.ToRtfFromMarkdown(options);
+        if (string.IsNullOrWhiteSpace(OutputPath))
+        {
+            WriteObject(rtf);
+            return;
+        }
+
+        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write RTF converted from Markdown"))
+        {
+            return;
+        }
+
+        PdfCommandUtilities.EnsureDirectory(outputPath);
+        File.WriteAllText(outputPath, rtf, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        if (PassThru.IsPresent)
+        {
+            WriteObject(new FileInfo(outputPath));
+        }
+    }
+
     private object GetErrorTarget()
     {
         return ParameterSetName switch
@@ -250,6 +317,8 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
             ParameterSetHtml => Html,
             ParameterSetHtmlPath => HtmlPath,
             ParameterSetPdfPath => PdfPath,
+            ParameterSetMarkdown => Markdown,
+            ParameterSetMarkdownPath => MarkdownPath,
             _ => this
         };
     }

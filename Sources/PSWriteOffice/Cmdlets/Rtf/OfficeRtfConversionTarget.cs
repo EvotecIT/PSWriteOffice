@@ -10,5 +10,8 @@ public enum OfficeRtfConversionTarget
     Html,
 
     /// <summary>Convert RTF content to PDF through OfficeIMO.Rtf.Pdf.</summary>
-    Pdf
+    Pdf,
+
+    /// <summary>Convert RTF content to Markdown through OfficeIMO.Rtf.Markdown.</summary>
+    Markdown
 }

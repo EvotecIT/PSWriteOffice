@@ -4,9 +4,16 @@ description: "Curated PSWriteOffice examples for the Evotec project hub."
 layout: docs
 ---
 
-These PSWriteOffice examples focus on small document automation patterns rather than the full generated output set.
+These PSWriteOffice examples focus on small document automation patterns rather than the full generated output set. Each page uses normal installed-module loading with `Import-Module PSWriteOffice`.
 
 ## Examples
 
 - [Create a Word report](./create-word-report/)
 - [Create an Excel workbook](./create-excel-workbook/)
+- [Create a PowerPoint deck](./create-powerpoint-deck/)
+- [Review Office documents as HTML](./review-office-documents-as-html/)
+- [Compose a PDF report](./compose-pdf-report/)
+- [Read and convert documents](./read-and-convert-documents/)
+- [Create a Visio diagram](./create-visio-diagram/)
+
+The repository also includes runnable scripts under `Examples/` for Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Visio, and larger showcase scenarios.

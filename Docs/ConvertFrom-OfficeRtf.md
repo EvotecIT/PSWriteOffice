@@ -6,21 +6,21 @@ schema: 2.0.0
 ---
 # ConvertFrom-OfficeRtf
 ## SYNOPSIS
-Converts RTF input to Word, HTML, or PDF output.
+Converts RTF input to Word, HTML, PDF, or Markdown output.
 
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertFrom-OfficeRtf [-Path] <string> -As <OfficeRtfConversionTarget> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-IncludeHiddenText] [-ExcludeImages] [-ExcludeTables] [-ExcludeHeaderFooters] [-ExcludeNotes] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertFrom-OfficeRtf [-Path] <string> -As <OfficeRtfConversionTarget> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-IncludeHiddenText] [-ExcludeImages] [-ExcludeTables] [-ExcludeHeaderFooters] [-ExcludeNotes] [-NoUnsupportedHtmlComments] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Text
 ```powershell
-ConvertFrom-OfficeRtf -Text <string> -As <OfficeRtfConversionTarget> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-IncludeHiddenText] [-ExcludeImages] [-ExcludeTables] [-ExcludeHeaderFooters] [-ExcludeNotes] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertFrom-OfficeRtf -Text <string> -As <OfficeRtfConversionTarget> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-IncludeHiddenText] [-ExcludeImages] [-ExcludeTables] [-ExcludeHeaderFooters] [-ExcludeNotes] [-NoUnsupportedHtmlComments] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Converts RTF input to Word, HTML, or PDF output.
+Converts RTF input to Word, HTML, PDF, or Markdown output.
 
 ## EXAMPLES
 
@@ -46,6 +46,13 @@ PS> ConvertFrom-OfficeRtf -Path .\Report.rtf -As Pdf -OutputPath .\Report.pdf
 
 Uses OfficeIMO.Rtf.Pdf to save a PDF file.
 
+### EXAMPLE 4
+```powershell
+PS> ConvertFrom-OfficeRtf -Path .\Report.rtf -As Markdown -OutputPath .\Report.md -PassThru
+```
+
+Converts the RTF document to Markdown using OfficeIMO.Rtf.Markdown.
+
 ## PARAMETERS
 
 ### -As
@@ -55,7 +62,7 @@ Target document format.
 Type: OfficeRtfConversionTarget
 Parameter Sets: Path, Text
 Aliases: None
-Possible values: Word, Html, Pdf
+Possible values: Word, Html, Pdf, Markdown
 
 Required: True
 Position: named
@@ -177,7 +184,7 @@ Accept wildcard characters: True
 ```
 
 ### -IncludeHiddenText
-Include hidden RTF text when converting to PDF.
+Include hidden RTF text when converting to PDF or Markdown.
 
 ```yaml
 Type: SwitchParameter
@@ -226,6 +233,22 @@ Accept wildcard characters: True
 
 ### -IncludeRunClasses
 Emit run styles as CSS classes for RTF to HTML conversion.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoUnsupportedHtmlComments
+Do not emit HTML comments for unsupported RTF features when converting to Markdown.
 
 ```yaml
 Type: SwitchParameter

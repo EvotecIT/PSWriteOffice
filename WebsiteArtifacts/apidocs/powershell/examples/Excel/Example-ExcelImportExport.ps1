@@ -1,4 +1,4 @@
-Import-Module "$PSScriptRoot\..\..\PSWriteOffice.psd1" -Force
+Import-Module PSWriteOffice -ErrorAction Stop
 
 $outputDirectory = Join-Path $PSScriptRoot '..\Documents'
 if (-not (Test-Path -LiteralPath $outputDirectory)) {

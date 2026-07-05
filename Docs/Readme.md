@@ -449,7 +449,7 @@ Converts HTML content to Markdown.
 Converts HTML content to a PDF through the first-party OfficeIMO HTML/PDF adapter.
 
 ### [ConvertFrom-OfficeRtf](ConvertFrom-OfficeRtf.md)
-Converts RTF input to Word, HTML, or PDF output.
+Converts RTF input to Word, HTML, PDF, or Markdown output.
 
 ### [ConvertFrom-OfficeWordHtml](ConvertFrom-OfficeWordHtml.md)
 Creates a Word document from HTML.
@@ -459,6 +459,12 @@ Creates a Word document from Markdown.
 
 ### [ConvertTo-OfficeCsv](ConvertTo-OfficeCsv.md)
 Converts objects or a CSV document into CSV text.
+
+### [ConvertTo-OfficeExcelHtml](ConvertTo-OfficeExcelHtml.md)
+Converts an Excel workbook to an HTML review document.
+
+### [ConvertTo-OfficeExcelWorkbook](ConvertTo-OfficeExcelWorkbook.md)
+Converts Excel workbooks between supported .xls and .xlsx formats.
 
 ### [ConvertTo-OfficeMarkdown](ConvertTo-OfficeMarkdown.md)
 Converts objects into a Markdown table.
@@ -484,14 +490,20 @@ Applies lossless PDF optimization actions and writes a new PDF.
 ### [ConvertTo-OfficePdfRedacted](ConvertTo-OfficePdfRedacted.md)
 Applies rectangle-based PDF redactions and writes a new PDF.
 
+### [ConvertTo-OfficePowerPointHtml](ConvertTo-OfficePowerPointHtml.md)
+Converts a PowerPoint deck to an HTML review document.
+
 ### [ConvertTo-OfficeRtf](ConvertTo-OfficeRtf.md)
-Converts Word, HTML, or PDF input to RTF.
+Converts Word, HTML, PDF, or Markdown input to RTF.
 
 ### [ConvertTo-OfficeVisioPng](ConvertTo-OfficeVisioPng.md)
 Exports a Visio document page to native dependency-free PNG.
 
 ### [ConvertTo-OfficeVisioSvg](ConvertTo-OfficeVisioSvg.md)
 Exports a Visio document page to dependency-free SVG.
+
+### [ConvertTo-OfficeWordDocument](ConvertTo-OfficeWordDocument.md)
+Converts Word documents between supported .doc and .docx formats.
 
 ### [ConvertTo-OfficeWordHtml](ConvertTo-OfficeWordHtml.md)
 Converts a Word document to HTML.

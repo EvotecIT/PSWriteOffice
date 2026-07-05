@@ -1,14 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
-    $env:PSWRITEOFFICE_MODULE_MANIFEST
-} else {
-    Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1'
-}
-
-if (-not (Get-Module -Name PSWriteOffice)) {
-    Import-Module $modulePath -ErrorAction Stop
-}
+Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
 $splitDirectory = Join-Path $documents 'Example-PdfOperations-Split'

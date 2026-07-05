@@ -1,9 +1,4 @@
-$modulePath = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
-    $env:PSWRITEOFFICE_MODULE_MANIFEST
-} else {
-    (Join-Path $PSScriptRoot '..\..\PSWriteOffice.psd1')
-}
-if (-not (Get-Module -Name PSWriteOffice)) { Import-Module $modulePath -ErrorAction Stop }
+Import-Module PSWriteOffice -ErrorAction Stop
 $markdown = @(
     [PSCustomObject]@{ Name = 'Alpha'; Value = 1 }
     [PSCustomObject]@{ Name = 'Beta'; Value = 2 }

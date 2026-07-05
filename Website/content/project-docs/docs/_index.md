@@ -4,7 +4,7 @@ description: "Curated documentation workspace for PSWriteOffice."
 layout: docs
 ---
 
-PSWriteOffice provides PowerShell commands for creating and reading Word, Excel, PowerPoint, Markdown, and CSV files through OfficeIMO.
+PSWriteOffice provides PowerShell commands for creating, converting, and reading Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Reader, and Visio files through OfficeIMO.
 
 ## Start here
 

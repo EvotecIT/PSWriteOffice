@@ -1,3 +1,5 @@
+Import-Module PSWriteOffice -ErrorAction Stop
+
 $Path = Join-Path $PSScriptRoot 'Example-WordLinksAndProperties.docx'
 
 New-OfficeWord -Path $Path {
