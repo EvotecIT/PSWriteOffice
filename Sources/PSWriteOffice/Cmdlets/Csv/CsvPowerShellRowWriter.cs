@@ -36,12 +36,18 @@ internal sealed class CsvPowerShellRowWriter
             }
 
             var outputHeader = GetOutputHeader(header);
-            var valueCount = outputHeader.Length < row.FieldCount ? outputHeader.Length : row.FieldCount;
-            var psObj = PowerShellObjectFactory.Create(valueCount);
+            var headerCount = outputHeader.Length;
+            var valueCount = headerCount < row.FieldCount ? headerCount : row.FieldCount;
+            var psObj = PowerShellObjectFactory.Create(headerCount);
             var prevalidated = _prevalidatedOutputProperties;
             for (var i = 0; i < valueCount; i++)
             {
                 psObj.Properties.Add(new PSNoteProperty(outputHeader[i], row[i]), prevalidated);
+            }
+
+            if (valueCount < headerCount)
+            {
+                AddMissingNoteProperties(psObj, outputHeader, valueCount, headerCount, prevalidated);
             }
 
             cmdlet.WriteObject(psObj);
