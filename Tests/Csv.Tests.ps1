@@ -559,6 +559,20 @@ Describe 'CSV cmdlets' {
         $rows[1].Value | Should -Be '2'
     }
 
+    It 'keeps trailing missing header properties consistent across import modes' {
+        $path = Join-Path $TestDrive 'padded.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value,Other`nAlpha,1" -Encoding UTF8
+
+        $streamed = @(Import-OfficeCsv -Path $path)
+        $inMemory = @(Import-OfficeCsv -Path $path -Mode InMemory)
+        $fromDocument = @(Get-OfficeCsv -Path $path | Import-OfficeCsv)
+
+        foreach ($row in @($streamed[0], $inMemory[0], $fromDocument[0])) {
+            $row.PSObject.Properties.Name | Should -Contain 'Other'
+            $row.Other | Should -BeNullOrEmpty
+        }
+    }
+
     It 'can enforce strict row width validation' {
         $path = Join-Path $TestDrive 'strict-uneven.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha" -Encoding UTF8

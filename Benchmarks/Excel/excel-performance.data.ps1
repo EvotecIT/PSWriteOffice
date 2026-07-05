@@ -11,6 +11,15 @@ function Get-ExcelBenchmarkData {
         WideObjects {
             [pscustomobject]@{ Data = @(New-ExcelBenchmarkWideRows -Count $Count); ColumnCount = 40; WorksheetName = 'Data' }
         }
+        CsvQuotedObjects {
+            [pscustomobject]@{ Data = @(New-ExcelBenchmarkCsvQuotedRows -Count $Count); ColumnCount = 10; WorksheetName = 'Data' }
+        }
+        CsvMultilineObjects {
+            [pscustomobject]@{ Data = @(New-ExcelBenchmarkCsvMultilineRows -Count $Count); ColumnCount = 10; WorksheetName = 'Data' }
+        }
+        CsvWideObjects {
+            [pscustomobject]@{ Data = @(New-ExcelBenchmarkWideRows -Count $Count); ColumnCount = 40; WorksheetName = 'Data' }
+        }
         DataTable {
             [pscustomobject]@{ Data = New-ExcelBenchmarkDataTable -Count $Count; ColumnCount = 6; WorksheetName = 'Data' }
         }
@@ -72,6 +81,44 @@ function New-ExcelBenchmarkWideRows {
             $row["Metric$column"] = [math]::Round((($i + $column) * 1.017) % 10000, 4)
         }
         [pscustomobject]$row
+    }
+}
+
+function New-ExcelBenchmarkCsvQuotedRows {
+    param([int] $Count)
+
+    for ($i = 1; $i -le $Count; $i++) {
+        [pscustomobject]@{
+            Id = $i
+            Name = 'Server, "{0:000000}"' -f $i
+            Department = 'Department "{0}"' -f ($i % 25)
+            Region = @('NA, East', 'EU "West"', 'APAC', 'LATAM')[$i % 4]
+            IsEnabled = ($i % 3) -ne 0
+            Created = ([datetime]'2024-01-01').AddMinutes($i)
+            Score = [math]::Round(($i * 1.137) % 1000, 3)
+            Owner = 'owner{0}@example.test' -f ($i % 250)
+            TicketCount = $i % 17
+            Notes = 'Quoted, comma, and ""escape"" row {0}' -f $i
+        }
+    }
+}
+
+function New-ExcelBenchmarkCsvMultilineRows {
+    param([int] $Count)
+
+    for ($i = 1; $i -le $Count; $i++) {
+        [pscustomobject]@{
+            Id = $i
+            Name = 'Server-{0:000000}' -f $i
+            Department = 'Department-{0}' -f ($i % 25)
+            Region = @('NA', 'EU', 'APAC', 'LATAM')[$i % 4]
+            IsEnabled = ($i % 3) -ne 0
+            Created = ([datetime]'2024-01-01').AddMinutes($i)
+            Score = [math]::Round(($i * 1.137) % 1000, 3)
+            Owner = 'owner{0}@example.test' -f ($i % 250)
+            TicketCount = $i % 17
+            Notes = "Line 1 for row $i`r`nLine 2 with comma, quote "" and row $i"
+        }
     }
 }
 
@@ -138,6 +185,7 @@ function Get-ExcelBenchmarkColumnCount {
 
     switch ($Profile) {
         WideObjects { 40 }
+        CsvWideObjects { 40 }
         DataTable { 6 }
         DataSet { 6 }
         default { 10 }
@@ -176,10 +224,10 @@ function Initialize-ExcelBenchmarkInput {
 
     switch ([string]$Case.OperationKey) {
         ReadCsvSource {
-            $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8
+            $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
         }
         CsvToExcel {
-            $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8
+            $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
         }
         ReadFullSheet { New-ExcelBenchmarkDefaultWorkbook -Engine $Case.Engine -Run $Run }
         ReadRange { New-ExcelBenchmarkDefaultWorkbook -Engine $Case.Engine -Run $Run }

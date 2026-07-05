@@ -121,8 +121,15 @@ function Get-CsvBenchmarkCase {
 
     $csv = @('Smoke', 'Standard', 'Large', 'Full', 'SuperLarge')
     @(
-        New-ExcelBenchmarkCase -Name csv-write -Label 'Write CSV file' -Suites $csv -OperationKey WriteCsv -Profile MixedObjects -FileExtension '.csv' -ValidateWorkbook:$false
-        New-ExcelBenchmarkCase -Name csv-read-source -Label 'Read CSV file' -Suites $csv -OperationKey ReadCsvSource -Profile MixedObjects -FileExtension '.csv' -ValidateWorkbook:$false
+        foreach ($csvProfile in @(
+            [pscustomobject]@{ Profile = 'MixedObjects'; Label = 'mixed' }
+            [pscustomobject]@{ Profile = 'CsvQuotedObjects'; Label = 'quoted' }
+            [pscustomobject]@{ Profile = 'CsvMultilineObjects'; Label = 'multiline' }
+            [pscustomobject]@{ Profile = 'CsvWideObjects'; Label = 'wide' }
+        )) {
+            New-ExcelBenchmarkCase -Name ('csv-write-{0}' -f $csvProfile.Label) -Label ('Write CSV file ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey WriteCsv -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
+            New-ExcelBenchmarkCase -Name ('csv-read-source-{0}' -f $csvProfile.Label) -Label ('Read CSV file ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey ReadCsvSource -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
+        }
     ) | Where-Object { (($_.Suites -split ',') -contains $Suite) }
 }
 

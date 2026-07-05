@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using OfficeIMO.CSV;
 using PSWriteOffice.Services;
@@ -10,13 +11,25 @@ internal sealed class CsvPowerShellObjectProjector
 {
     private string[]? _columns;
     private object?[]? _values;
+    private string?[]? _textValues;
+    private PowerShellObjectNormalizerOptions _normalizerOptions = PowerShellObjectNormalizerOptions.Default;
     private bool _validateColumns;
 
     public void Reset()
     {
         _columns = null;
         _values = null;
+        _textValues = null;
         _validateColumns = false;
+    }
+
+    public void UseCsvCulture(CultureInfo culture)
+    {
+        _normalizerOptions = new PowerShellObjectNormalizerOptions
+        {
+            Culture = culture ?? CultureInfo.InvariantCulture,
+            FormatScalarValuesAsText = true
+        };
     }
 
     public void UseColumns(IReadOnlyList<string> columns, bool validateColumns)
@@ -28,6 +41,7 @@ internal sealed class CsvPowerShellObjectProjector
 
         _columns = columns.ToArray();
         _values = new object?[_columns.Length];
+        _textValues = new string?[_columns.Length];
         _validateColumns = validateColumns;
     }
 
@@ -56,24 +70,65 @@ internal sealed class CsvPowerShellObjectProjector
         if (_columns != null &&
             _values != null)
         {
+            if (_validateColumns)
+            {
+                ValidateFirstRowColumns(value, _columns);
+            }
+
+            if (_textValues != null &&
+                PowerShellObjectNormalizer.TryProjectPSObjectTextIntoKnownColumns(value, _columns, _textValues, _normalizerOptions))
+            {
+                WriteProjectedTextRow(writer, _columns, _textValues);
+                return;
+            }
+
+            if (PowerShellObjectNormalizer.TryProjectPSObjectIntoKnownColumns(value, _columns, _values, _normalizerOptions))
+            {
+                WriteProjectedRow(writer, _columns, _values);
+                return;
+            }
+
             if (!TryProjectIntoExistingColumns(value, _columns, _values))
             {
                 Array.Clear(_values, 0, _values.Length);
             }
 
-            writer.WriteRow(_columns, _values);
+            WriteProjectedRow(writer, _columns, _values);
             return;
         }
 
-        if (PowerShellObjectNormalizer.TryProjectItem(value, null, out var columns, out var values))
+        if (PowerShellObjectNormalizer.TryProjectItem(value, null, out var columns, out var values, _normalizerOptions))
         {
             _columns = columns;
             _values = new object?[columns.Length];
+            _textValues = new string?[columns.Length];
             writer.WriteRow(_columns, values);
             return;
         }
 
         writer.WriteObject(PowerShellObjectNormalizer.NormalizeItem(value));
+    }
+
+    private static void WriteProjectedTextRow(CsvObjectWriter writer, string[] columns, string?[] values)
+    {
+        if (writer.HasRows)
+        {
+            writer.WriteTrustedTextRow(values);
+            return;
+        }
+
+        writer.WriteRow(columns, values);
+    }
+
+    private static void WriteProjectedRow(CsvObjectWriter writer, string[] columns, object?[] values)
+    {
+        if (writer.HasRows)
+        {
+            writer.WriteTrustedRow(values);
+            return;
+        }
+
+        writer.WriteRow(columns, values);
     }
 
     private bool TryProjectIntoExistingColumns(object? value, string[] columns, object?[] values)
@@ -83,7 +138,7 @@ internal sealed class CsvPowerShellObjectProjector
             ValidateFirstRowColumns(value, columns);
         }
 
-        return PowerShellObjectNormalizer.TryProjectItemInto(value, columns, values);
+        return PowerShellObjectNormalizer.TryProjectItemInto(value, columns, values, _normalizerOptions);
     }
 
     private static void ValidateFirstRowColumns(object? value, IReadOnlyList<string> columns)
@@ -102,7 +157,7 @@ internal sealed class CsvPowerShellObjectProjector
     private static bool TryGetProjectableColumns(object? value, IReadOnlyList<string> columns, out string? missingColumn)
     {
         missingColumn = null;
-        if (!PowerShellObjectNormalizer.TryProjectItem(value, null, out var sourceColumns, out _))
+        if (!PowerShellObjectNormalizer.TryProjectItem(value, null, out var sourceColumns, out _, PowerShellObjectNormalizerOptions.Default))
         {
             return false;
         }
