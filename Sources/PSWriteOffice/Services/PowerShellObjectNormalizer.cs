@@ -304,6 +304,75 @@ internal static class PowerShellObjectNormalizer
         return true;
     }
 
+    public static bool TryPreparePSObjectTextProjection(object? item, out PSObject? ps)
+    {
+        ps = null;
+        if (item == null || item is IDictionary)
+        {
+            return false;
+        }
+
+        if (item is not PSObject && item.GetType().FullName != "System.Management.Automation.PSCustomObject")
+        {
+            return false;
+        }
+
+        ps = item as PSObject ?? PSObject.AsPSObject(item);
+        if (ps.BaseObject is IDictionary)
+        {
+            ps = null;
+            return false;
+        }
+
+        if (ps.BaseObject != null &&
+            IsScalarClrType(ps.BaseObject.GetType()) &&
+            !HasExportableExtendedProperties(ps))
+        {
+            ps = null;
+            return false;
+        }
+
+        return true;
+    }
+
+    public static string? ProjectPSObjectTextValue(PSObject ps, string column, PowerShellObjectNormalizerOptions options)
+    {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(ps);
+        ArgumentNullException.ThrowIfNull(column);
+#else
+        if (ps == null) throw new ArgumentNullException(nameof(ps));
+        if (column == null) throw new ArgumentNullException(nameof(column));
+#endif
+
+        var property = ps.Properties[column];
+        if (property == null || !ShouldExportProperty(property))
+        {
+            return null;
+        }
+
+        return ProjectPSObjectPropertyTextValue(property, options);
+    }
+
+    public static object? ProjectPSObjectValue(PSObject ps, string column, PowerShellObjectNormalizerOptions options)
+    {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(ps);
+        ArgumentNullException.ThrowIfNull(column);
+#else
+        if (ps == null) throw new ArgumentNullException(nameof(ps));
+        if (column == null) throw new ArgumentNullException(nameof(column));
+#endif
+
+        var property = ps.Properties[column];
+        if (property == null || !ShouldExportProperty(property))
+        {
+            return null;
+        }
+
+        return ProjectPSObjectPropertyValue(property, options);
+    }
+
     private static bool TryProjectAlignedPSObject(PSObject ps, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
     {
         var index = 0;
@@ -937,6 +1006,46 @@ internal static class PowerShellObjectNormalizer
         return value is IFormattable fallbackFormattable
             ? fallbackFormattable.ToString(null, options.Culture)
             : value.ToString();
+    }
+
+    private static string? ProjectPSObjectPropertyTextValue(PSPropertyInfo property, PowerShellObjectNormalizerOptions options)
+    {
+        try
+        {
+            return NormalizeCellValueToText(property.Value, options);
+        }
+        catch (Exception exception) when (exception is not PipelineStoppedException)
+        {
+            if (options.PropertyErrorAction == ActionPreference.Stop)
+            {
+                throw new InvalidOperationException($"Unable to read PowerShell property '{property.Name}'.", exception);
+            }
+
+            options.PropertyErrorCallback?.Invoke(property.Name, exception);
+            return options.IncludeUnexportableProperties
+                ? options.UnexportablePropertyValueFactory?.Invoke(property.Name, exception)?.ToString() ?? string.Empty
+                : null;
+        }
+    }
+
+    private static object? ProjectPSObjectPropertyValue(PSPropertyInfo property, PowerShellObjectNormalizerOptions options)
+    {
+        try
+        {
+            return NormalizeCellValue(property.Value, options);
+        }
+        catch (Exception exception) when (exception is not PipelineStoppedException)
+        {
+            if (options.PropertyErrorAction == ActionPreference.Stop)
+            {
+                throw new InvalidOperationException($"Unable to read PowerShell property '{property.Name}'.", exception);
+            }
+
+            options.PropertyErrorCallback?.Invoke(property.Name, exception);
+            return options.IncludeUnexportableProperties
+                ? options.UnexportablePropertyValueFactory?.Invoke(property.Name, exception) ?? string.Empty
+                : null;
+        }
     }
 
     private static bool TryGetFastCellValue(object? value, PowerShellObjectNormalizerOptions options, out object? normalized)
