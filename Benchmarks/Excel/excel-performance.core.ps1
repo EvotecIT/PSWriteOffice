@@ -174,6 +174,8 @@ function Test-CsvBenchmarkEngineSupport {
 
     switch ($Engine) {
         PSWriteOffice { return $true }
+        PSWriteOfficeHashtable { return [string]$Case.OperationKey -eq 'ReadCsvSource' }
+        PSWriteOfficeDataTable { return [string]$Case.OperationKey -eq 'ReadCsvSource' }
         NativeCsv { return [string]$Case.OperationKey -in @('WriteCsv', 'ReadCsvSource') }
         default { return $false }
     }

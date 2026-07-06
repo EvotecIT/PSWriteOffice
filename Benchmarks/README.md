@@ -113,6 +113,8 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
 PowerShell CSV import/export:
 
 - `PSWriteOffice`
+- `PSWriteOfficeHashtable` for `Import-OfficeCsv -AsHashtable` read lanes
+- `PSWriteOfficeDataTable` for `Import-OfficeCsv -AsDataTable` read lanes
 - `NativeCsv`
 
 ```powershell
@@ -128,19 +130,37 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
     -Suite Standard `
     -RowCount 1000,5000,10000 `
     -RepeatCount 3 `
-    -Engine PSWriteOffice,NativeCsv `
+    -Engine PSWriteOffice,PSWriteOfficeHashtable,PSWriteOfficeDataTable,NativeCsv `
     -UpdateReadme
 ```
 
 <!-- BENCHMARK:CsvComparison:START -->
-| Scenario | Rows | PSWriteOffice | NativeCsv | Result |
-| --- | ---: | ---: | ---: | --- |
-| csv-read-source | 1000 | 53.8 ms (1.00x) | 20.8 ms (2.58x faster) | NativeCsv fastest; PSWriteOffice 2.58x slower |
-| csv-read-source | 5000 | 61.8 ms (1.00x) | 16.7 ms (3.70x faster) | NativeCsv fastest; PSWriteOffice 3.70x slower |
-| csv-read-source | 10000 | 62.2 ms (1.00x) | 179.4 ms (2.89x slower) | PSWriteOffice fastest |
-| csv-write | 1000 | 60.0 ms (1.00x) | 51.1 ms (1.17x faster) | NativeCsv fastest; PSWriteOffice 1.17x slower |
-| csv-write | 5000 | 124.8 ms (1.00x) | 24.6 ms (5.08x faster) | NativeCsv fastest; PSWriteOffice 5.08x slower |
-| csv-write | 10000 | 238.6 ms (1.00x) | 77.3 ms (3.09x faster) | NativeCsv fastest; PSWriteOffice 3.09x slower |
+| Scenario | Rows | PSWriteOffice | NativeCsv | PSWriteOfficeDataTable | PSWriteOfficeHashtable | Result |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| csv-read-source-mixed | 1000 | 10.6 ms (1.00x) | 9.2 ms (1.15x faster) | 9.0 ms (1.18x faster) | 8.7 ms (1.23x faster) | PSWriteOfficeHashtable fastest; PSWriteOffice 1.23x slower |
+| csv-read-source-mixed | 5000 | 16.8 ms (1.00x) | 22.3 ms (1.33x slower) | 14.2 ms (1.18x faster) | 17.5 ms (1.04x slower) | PSWriteOfficeDataTable fastest; PSWriteOffice 1.18x slower |
+| csv-read-source-mixed | 10000 | 63.7 ms (1.00x) | 51.8 ms (1.23x faster) | 60.8 ms (1.05x faster) | 45.2 ms (1.41x faster) | PSWriteOfficeHashtable fastest; PSWriteOffice 1.41x slower |
+| csv-read-source-multiline | 1000 | 10.4 ms (1.00x) | 16.5 ms (1.59x slower) | 17.3 ms (1.66x slower) | 10.1 ms (1.02x faster) | PSWriteOfficeHashtable fastest; PSWriteOffice 1.02x slower |
+| csv-read-source-multiline | 5000 | 20.4 ms (1.00x) | 38.8 ms (1.90x slower) | 28.5 ms (1.40x slower) | 25.3 ms (1.24x slower) | PSWriteOffice fastest |
+| csv-read-source-multiline | 10000 | 109.6 ms (1.00x) | 40.3 ms (2.72x faster) | 34.0 ms (3.22x faster) | 42.4 ms (2.58x faster) | PSWriteOfficeDataTable fastest; PSWriteOffice 3.22x slower |
+| csv-read-source-quoted | 1000 | 8.4 ms (1.00x) | 10.8 ms (1.28x slower) | 8.5 ms (1.01x slower) | 9.2 ms (1.10x slower) | PSWriteOffice fastest |
+| csv-read-source-quoted | 5000 | 46.4 ms (1.00x) | 29.7 ms (1.57x faster) | 33.1 ms (1.40x faster) | 16.2 ms (2.87x faster) | PSWriteOfficeHashtable fastest; PSWriteOffice 2.87x slower |
+| csv-read-source-quoted | 10000 | 55.2 ms (1.00x) | 67.7 ms (1.23x slower) | 31.8 ms (1.74x faster) | 14.6 ms (3.79x faster) | PSWriteOfficeHashtable fastest; PSWriteOffice 3.79x slower |
+| csv-read-source-wide | 1000 | 15.2 ms (1.00x) | 13.7 ms (1.10x faster) | 10.5 ms (1.45x faster) | 34.4 ms (2.27x slower) | PSWriteOfficeDataTable fastest; PSWriteOffice 1.45x slower |
+| csv-read-source-wide | 5000 | 78.7 ms (1.00x) | 122.7 ms (1.56x slower) | 23.4 ms (3.37x faster) | 43.1 ms (1.83x faster) | PSWriteOfficeDataTable fastest; PSWriteOffice 3.37x slower |
+| csv-read-source-wide | 10000 | 142.4 ms (1.00x) | 232.7 ms (1.63x slower) | 54.1 ms (2.63x faster) | 49.2 ms (2.90x faster) | PSWriteOfficeHashtable fastest; PSWriteOffice 2.90x slower |
+| csv-write-mixed | 1000 | 11.2 ms (1.00x) | 13.6 ms (1.21x slower) | Skipped | Skipped | PSWriteOffice fastest |
+| csv-write-mixed | 5000 | 18.1 ms (1.00x) | 19.5 ms (1.08x slower) | Skipped | Skipped | PSWriteOffice fastest |
+| csv-write-mixed | 10000 | 27.8 ms (1.00x) | 43.6 ms (1.56x slower) | Skipped | Skipped | PSWriteOffice fastest |
+| csv-write-multiline | 1000 | 13.2 ms (1.00x) | 13.9 ms (1.05x slower) | Skipped | Skipped | PSWriteOffice fastest |
+| csv-write-multiline | 5000 | 14.9 ms (1.00x) | 23.8 ms (1.60x slower) | Skipped | Skipped | PSWriteOffice fastest |
+| csv-write-multiline | 10000 | 61.8 ms (1.00x) | 58.8 ms (1.05x faster) | Skipped | Skipped | NativeCsv fastest; PSWriteOffice 1.05x slower |
+| csv-write-quoted | 1000 | 14.1 ms (1.00x) | 11.3 ms (1.25x faster) | Skipped | Skipped | NativeCsv fastest; PSWriteOffice 1.25x slower |
+| csv-write-quoted | 5000 | 20.1 ms (1.00x) | 20.3 ms (1.01x slower) | Skipped | Skipped | PSWriteOffice fastest |
+| csv-write-quoted | 10000 | 64.1 ms (1.00x) | 55.7 ms (1.15x faster) | Skipped | Skipped | NativeCsv fastest; PSWriteOffice 1.15x slower |
+| csv-write-wide | 1000 | 17.3 ms (1.00x) | 20.3 ms (1.17x slower) | Skipped | Skipped | PSWriteOffice fastest |
+| csv-write-wide | 5000 | 70.1 ms (1.00x) | 67.2 ms (1.04x faster) | Skipped | Skipped | NativeCsv fastest; PSWriteOffice 1.04x slower |
+| csv-write-wide | 10000 | 79.0 ms (1.00x) | 107.0 ms (1.35x slower) | Skipped | Skipped | PSWriteOffice fastest |
 <!-- BENCHMARK:CsvComparison:END -->
 
 ## Options

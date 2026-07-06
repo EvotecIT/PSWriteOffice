@@ -46,6 +46,12 @@ function Invoke-ExcelBenchmarkReadCsv {
 
     $rows = switch ($Engine) {
         PSWriteOffice { @(Import-OfficeCsv -Path $Run.SourcePath) }
+        PSWriteOfficeHashtable { @(Import-OfficeCsv -Path $Run.SourcePath -AsHashtable) }
+        PSWriteOfficeDataTable {
+            $table = Import-OfficeCsv -Path $Run.SourcePath -AsDataTable
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+            return
+        }
         NativeCsv { @(Import-Csv -Path $Run.SourcePath) }
         default { throw "Engine '$Engine' does not support CSV read." }
     }

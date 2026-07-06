@@ -43,6 +43,20 @@ benchmark 'csv-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks\C
         }
     }
 
+    engine PSWriteOfficeHashtable {
+        operation Run {
+            param($case, $run)
+            Invoke-ExcelBenchmarkOperation -Engine PSWriteOfficeHashtable -Case $case -Run $run
+        }
+    }
+
+    engine PSWriteOfficeDataTable {
+        operation Run {
+            param($case, $run)
+            Invoke-ExcelBenchmarkOperation -Engine PSWriteOfficeDataTable -Case $case -Run $run
+        }
+    }
+
     engine NativeCsv {
         operation Run {
             param($case, $run)

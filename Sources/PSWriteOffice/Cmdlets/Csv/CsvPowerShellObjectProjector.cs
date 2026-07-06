@@ -102,6 +102,12 @@ internal sealed class CsvPowerShellObjectProjector
             _columns = columns;
             _values = new object?[columns.Length];
             _textValues = new string?[columns.Length];
+            if (TryCopyTextValues(values, _textValues))
+            {
+                writer.WriteTextRow(_columns, _textValues);
+                return;
+            }
+
             writer.WriteRow(_columns, values);
             return;
         }
@@ -118,6 +124,29 @@ internal sealed class CsvPowerShellObjectProjector
         }
 
         writer.WriteRow(columns, values);
+    }
+
+    private static bool TryCopyTextValues(object?[] values, string?[] textValues)
+    {
+        for (var i = 0; i < values.Length; i++)
+        {
+            if (values[i] is string text)
+            {
+                textValues[i] = text;
+                continue;
+            }
+
+            if (values[i] == null)
+            {
+                textValues[i] = null;
+                continue;
+            }
+
+            Array.Clear(textValues, 0, textValues.Length);
+            return false;
+        }
+
+        return true;
     }
 
     private static void WriteProjectedRow(CsvObjectWriter writer, string[] columns, object?[] values)

@@ -8,7 +8,7 @@ param(
 
     [string[]] $Scenario,
 
-    [string[]] $Engine = @('PSWriteOffice', 'NativeCsv'),
+    [string[]] $Engine = @('PSWriteOffice', 'PSWriteOfficeHashtable', 'PSWriteOfficeDataTable', 'NativeCsv'),
 
     [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\CsvPerformance'),
 
@@ -59,7 +59,7 @@ $Scenario = @(
     }
 ) | Select-Object -Unique
 
-$requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (@($Engine) -contains 'PSWriteOffice')
+$requiresPSWriteOffice = -not $ListScenarios.IsPresent -and [bool](@($Engine) | Where-Object { $_ -like 'PSWriteOffice*' } | Select-Object -First 1)
 if ($requiresPSWriteOffice) {
     if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
         $env:OfficeIMORoot = $OfficeIMORoot
