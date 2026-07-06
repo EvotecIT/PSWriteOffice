@@ -282,11 +282,12 @@ $data | Export-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data' -TableName 
 Import-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data'
 ```
 
-### Excel and database round trip
+### CSV, Excel, and database round trips
 
-PSWriteOffice owns the workbook side of the flow. Database access, provider-specific bulk writes, table creation, and verification belong to DbaClientX. The example below exports SQL Server rows to Excel, imports the workbook back as a `DataTable`, writes it to a destination table with DbaClientX, and verifies row counts.
+PSWriteOffice owns the file side of the flow. Database access, provider-specific bulk writes, table creation, and verification belong to DbaClientX. The examples below export SQL Server rows to CSV or Excel, import the file back as a `DataTable`, write it to a destination table with DbaClientX, and verify row counts.
 
 ```powershell
+.\Examples\Csv\Example-CsvDbaClientXRoundTrip.ps1 -Server localhost -Database tempdb -RowCount 100
 .\Examples\Excel\Example-ExcelDbaClientXRoundTrip.ps1 -Server localhost -Database tempdb -RowCount 100
 ```
 

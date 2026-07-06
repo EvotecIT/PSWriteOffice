@@ -24,6 +24,7 @@ Describe 'CSV cmdlets' {
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'AsDataTable'
 
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
@@ -57,6 +58,38 @@ Describe 'CSV cmdlets' {
         $data = Import-OfficeCsv -Path $path
         $data.Count | Should -Be 2
         $data[0].Region | Should -Be 'NA'
+    }
+
+    It 'imports CSV rows as a DataTable for database workflows' {
+        $path = Join-Path $TestDrive 'datatable.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBeta,2" -Encoding UTF8
+
+        $table = Import-OfficeCsv -Path $path -AsDataTable
+
+        $table.GetType() | Should -Be ([System.Data.DataTable])
+        $table.TableName | Should -Be 'datatable'
+        $table.Columns.Count | Should -Be 2
+        $table.Columns['Name'].DataType | Should -Be ([string])
+        $table.Rows.Count | Should -Be 2
+        $table.Rows[0]['Name'] | Should -Be 'Alpha'
+        $table.Rows[1]['Value'] | Should -Be '2'
+    }
+
+    It 'preserves normalized empty DataTable fields' {
+        $path = Join-Path $TestDrive 'datatable-missing.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBeta" -Encoding UTF8
+
+        $table = Import-OfficeCsv -Path $path -AsDataTable
+
+        $table.Rows[1]['Value'] | Should -Be ''
+    }
+
+    It 'rejects conflicting CSV table and hashtable output modes' {
+        $path = Join-Path $TestDrive 'datatable-conflict.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
+
+        { Import-OfficeCsv -Path $path -AsDataTable -AsHashtable -ErrorAction Stop } |
+            Should -Throw '*AsDataTable*AsHashtable*'
     }
 
     It 'writes to files using the Path alias' {
