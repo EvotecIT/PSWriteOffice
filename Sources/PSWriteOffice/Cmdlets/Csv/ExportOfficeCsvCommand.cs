@@ -152,6 +152,12 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (_streamingWriter != null && !IsCsvDocument(InputObject))
+        {
+            WriteStreamingInputObject(InputObject);
+            return;
+        }
+
         if (IsDocumentParameterSet())
         {
             ExportDocument(Document);
@@ -219,6 +225,12 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
         document = null!;
         return false;
+    }
+
+    private static bool IsCsvDocument(object? value)
+    {
+        return value is CsvDocument ||
+            value is PSObject { BaseObject: CsvDocument };
     }
 
     private void AppendDocument(CsvDocument document)
