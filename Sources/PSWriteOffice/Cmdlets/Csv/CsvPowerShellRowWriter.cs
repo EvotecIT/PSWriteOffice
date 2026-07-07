@@ -11,11 +11,25 @@ internal sealed class CsvPowerShellRowWriter
 {
     private bool _prevalidatedOutputProperties;
     private string[]? _outputHeader;
+#if NET8_0_OR_GREATER
+    private string[]? _spanHeader;
+    private PSObject? _spanObject;
+    private Dictionary<string, object?>? _spanHashtable;
+    private bool _spanAsHashtable;
+    private int _spanValueCount;
+#endif
 
     public void Reset()
     {
         _outputHeader = null;
         _prevalidatedOutputProperties = false;
+#if NET8_0_OR_GREATER
+        _spanHeader = null;
+        _spanObject = null;
+        _spanHashtable = null;
+        _spanAsHashtable = false;
+        _spanValueCount = 0;
+#endif
     }
 
     public void WriteDocumentRows(CsvDocument document, bool asHashtable, PSCmdlet cmdlet)
@@ -71,6 +85,87 @@ internal sealed class CsvPowerShellRowWriter
 
         WriteObjectRow(cmdlet, outputHeader, row, headerCount);
     }
+
+#if NET8_0_OR_GREATER
+    public void BeginSpanRow(IReadOnlyList<string> header, bool asHashtable)
+    {
+        var outputHeader = GetOutputHeader(header);
+        _spanHeader = outputHeader;
+        _spanAsHashtable = asHashtable;
+        _spanValueCount = 0;
+        if (asHashtable)
+        {
+            _spanHashtable = new Dictionary<string, object?>(outputHeader.Length, StringComparer.OrdinalIgnoreCase);
+            _spanObject = null;
+            return;
+        }
+
+        _spanObject = PowerShellObjectFactory.Create(outputHeader.Length);
+        _spanHashtable = null;
+    }
+
+    public void WriteSpanField(int fieldIndex, ReadOnlySpan<char> value)
+    {
+        WriteSpanFieldValue(fieldIndex, value.ToString());
+    }
+
+    public void WriteSpanFieldValue(int fieldIndex, string value)
+    {
+        var header = _spanHeader;
+        if (header is null || fieldIndex >= header.Length)
+        {
+            return;
+        }
+
+        if (fieldIndex + 1 > _spanValueCount)
+        {
+            _spanValueCount = fieldIndex + 1;
+        }
+
+        if (_spanAsHashtable)
+        {
+            _spanHashtable!.Add(header[fieldIndex], value ?? string.Empty);
+            return;
+        }
+
+        _spanObject!.Properties.Add(new PSNoteProperty(header[fieldIndex], value ?? string.Empty), _prevalidatedOutputProperties);
+    }
+
+    public void EndSpanRow(PSCmdlet cmdlet)
+    {
+        var header = _spanHeader;
+        if (header is null)
+        {
+            return;
+        }
+
+        if (_spanAsHashtable)
+        {
+            var rowValues = _spanHashtable!;
+            for (var i = _spanValueCount; i < header.Length; i++)
+            {
+                rowValues.Add(header[i], string.Empty);
+            }
+
+            cmdlet.WriteObject(rowValues);
+        }
+        else
+        {
+            var psObj = _spanObject!;
+            for (var i = _spanValueCount; i < header.Length; i++)
+            {
+                psObj.Properties.Add(new PSNoteProperty(header[i], string.Empty), _prevalidatedOutputProperties);
+            }
+
+            cmdlet.WriteObject(psObj);
+        }
+
+        _spanHeader = null;
+        _spanObject = null;
+        _spanHashtable = null;
+        _spanValueCount = 0;
+    }
+#endif
 
     private void WriteObjectRow(PSCmdlet cmdlet, string[] header, IReadOnlyList<string> row, int headerCount)
     {

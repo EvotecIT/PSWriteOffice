@@ -222,7 +222,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                 if (Mode == CsvLoadMode.Stream)
                 {
                     _rowWriter.Reset();
-                    CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
+                    ReadRows(resolved, options);
                     continue;
                 }
 
@@ -241,6 +241,16 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private void WriteDocumentRows(CsvDocument document)
     {
         _rowWriter.WriteDocumentRows(document, _asHashtable, this);
+    }
+
+    private void ReadRows(string path, CsvLoadOptions options)
+    {
+#if NET8_0_OR_GREATER
+        var visitor = new CsvPowerShellRowFieldSpanVisitor(_rowWriter, this, _asHashtable);
+        CsvDocument.ReadRowFieldSpans(path, ref visitor, options);
+#else
+        CsvDocument.ReadRowsReusable(path, WriteRow, options);
+#endif
     }
 
     private void ApplyCultureDelimiter()
