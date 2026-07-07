@@ -833,7 +833,7 @@ Gets the table of contents from a Word document.
 Gets text segments from Word paragraphs.
 
 ### [Import-OfficeCsv](Import-OfficeCsv.md)
-Imports CSV rows as PSCustomObjects or dictionaries.
+Imports CSV rows as PSCustomObjects, dictionaries, or a DataTable.
 
 ### [Import-OfficeExcel](Import-OfficeExcel.md)
 Imports rows from an Excel workbook as PowerShell objects.

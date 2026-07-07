@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
@@ -8,7 +9,7 @@ using OfficeIMO.CSV;
 
 namespace PSWriteOffice.Cmdlets.Csv;
 
-/// <summary>Imports CSV rows as PSCustomObjects or dictionaries.</summary>
+/// <summary>Imports CSV rows as PSCustomObjects, dictionaries, or a DataTable.</summary>
 /// <para>Uses the CSV header to map fields to property names.</para>
 /// <example>
 ///   <summary>Read rows as PSCustomObjects.</summary>
@@ -22,6 +23,12 @@ namespace PSWriteOffice.Cmdlets.Csv;
 ///   <code>Import-OfficeCsv -Path .\data.csv -AsHashtable | ForEach-Object { $_['Name'] }</code>
 ///   <para>Uses hashtables for dynamic schemas or key-based access.</para>
 /// </example>
+/// <example>
+///   <summary>Read rows as a DataTable.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Import-OfficeCsv -Path .\data.csv -AsDataTable</code>
+///   <para>Emits one DataTable per input file for database and table-oriented workflows.</para>
+/// </example>
 [Cmdlet(VerbsData.Import, "OfficeCsv", DefaultParameterSetName = ParameterSetPathDelimiter)]
 public sealed class ImportOfficeCsvCommand : PSCmdlet
 {
@@ -33,6 +40,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private const string ParameterSetLiteralPathDetect = "LiteralPathDetect";
     private const string ParameterSetDocument = "Document";
     private readonly CsvPowerShellRowWriter _rowWriter = new();
+    private bool _asDataTable;
     private bool _asHashtable;
 
     /// <summary>CSV document to read when already loaded.</summary>
@@ -195,10 +203,20 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public SwitchParameter AsHashtable { get; set; }
 
+    /// <summary>Emit one DataTable per input file instead of enumerating row objects.</summary>
+    [Parameter]
+    public SwitchParameter AsDataTable { get; set; }
+
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
         CsvCommandValidation.EnsureHeaderOptions(NoHeader, Header);
+        if (AsDataTable.IsPresent && AsHashtable.IsPresent)
+        {
+            throw new PSArgumentException("Specify either -AsDataTable or -AsHashtable, but not both.");
+        }
+
+        _asDataTable = AsDataTable.IsPresent;
         _asHashtable = AsHashtable.IsPresent;
     }
 
@@ -219,7 +237,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                     throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
                 }
 
-                if (Mode == CsvLoadMode.Stream)
+                if (Mode == CsvLoadMode.Stream && !_asDataTable)
                 {
                     _rowWriter.Reset();
                     CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
@@ -228,7 +246,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
                 document = CsvDocument.Load(resolved, options);
                 _rowWriter.Reset();
-                WriteDocumentRows(document);
+                WriteDocumentRows(document, System.IO.Path.GetFileNameWithoutExtension(resolved));
             }
 
             return;
@@ -238,9 +256,43 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
         WriteDocumentRows(document);
     }
 
-    private void WriteDocumentRows(CsvDocument document)
+    private void WriteDocumentRows(CsvDocument document, string? tableName = null)
     {
+        if (_asDataTable)
+        {
+            WriteDataTable(document, tableName);
+            return;
+        }
+
         _rowWriter.WriteDocumentRows(document, _asHashtable, this);
+    }
+
+    private void WriteDataTable(CsvDocument document, string? tableName)
+    {
+        var table = new DataTable(string.IsNullOrWhiteSpace(tableName) ? "CsvData" : tableName);
+        foreach (var header in document.Header)
+        {
+            table.Columns.Add(header, typeof(string));
+        }
+
+        foreach (var csvRow in document.AsEnumerable())
+        {
+            var values = new object?[table.Columns.Count];
+            var valueCount = csvRow.FieldCount < table.Columns.Count ? csvRow.FieldCount : table.Columns.Count;
+            for (var i = 0; i < valueCount; i++)
+            {
+                values[i] = csvRow[i] is null ? DBNull.Value : csvRow[i]!.ToString();
+            }
+
+            for (var i = valueCount; i < values.Length; i++)
+            {
+                values[i] = DBNull.Value;
+            }
+
+            table.Rows.Add(values);
+        }
+
+        WriteObject(PSObject.AsPSObject(table), enumerateCollection: false);
     }
 
     private void ApplyCultureDelimiter()
