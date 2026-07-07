@@ -253,7 +253,7 @@ internal sealed class CsvPowerShellObjectProjector
 
     private static bool ShouldUseTypedProjection(string[] columns)
     {
-        return columns.Length >= 20;
+        return columns.Length > 0;
     }
 
     private enum KnownColumnProjectionMode
