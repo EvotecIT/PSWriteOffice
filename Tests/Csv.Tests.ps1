@@ -71,19 +71,28 @@ Describe 'CSV cmdlets' {
     }
 
     It 'uses configured null tokens and date formats when converting and exporting rows' {
-        $row = [pscustomobject]@{
-            Name = 'Alpha'
-            Created = [datetime]::SpecifyKind([datetime]'2026-07-07T13:45:00', [System.DateTimeKind]::Utc)
-            Value = $null
-        }
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Alpha'
+                Created = [datetime]::SpecifyKind([datetime]'2026-07-07T13:45:00', [System.DateTimeKind]::Utc)
+                Value = $null
+            }
+            [pscustomobject]@{
+                Name = 'Beta'
+                Created = [datetime]::SpecifyKind([datetime]'2026-07-07T14:15:00', [System.DateTimeKind]::Utc)
+                Value = $null
+            }
+        )
 
-        $csvText = @($row | ConvertTo-OfficeCsv -NullValue '<null>' -DateTimeFormat 'yyyyMMdd-HHmm' -UseUtc)
+        $csvText = @($rows | ConvertTo-OfficeCsv -NullValue '<null>' -DateTimeFormat 'yyyyMMdd-HHmm' -UseUtc)
         $csvText[1] | Should -Be 'Alpha,20260707-1345,<null>'
+        $csvText[2] | Should -Be 'Beta,20260707-1415,<null>'
 
         $path = Join-Path $TestDrive 'formatted.csv'
-        $row | Export-OfficeCsv -Path $path -NullValue '<null>' -DateTimeFormat 'yyyyMMdd-HHmm' -UseUtc
+        $rows | Export-OfficeCsv -Path $path -NullValue '<null>' -DateTimeFormat 'yyyyMMdd-HHmm' -UseUtc
 
         (Get-Content -LiteralPath $path)[1] | Should -Be 'Alpha,20260707-1345,<null>'
+        (Get-Content -LiteralPath $path)[2] | Should -Be 'Beta,20260707-1415,<null>'
     }
 
     It 'imports duplicate headers, null tokens, static columns, and strict quote settings through OfficeIMO options' {
@@ -115,6 +124,25 @@ Describe 'CSV cmdlets' {
         $row = Import-OfficeCsv -Path $path -CompressionType GZip
         $row.Name | Should -Be 'Alpha'
         $row.Value | Should -Be '1'
+    }
+
+    It 'allows append to create a compressed CSV file when the target has no content' {
+        $path = Join-Path $TestDrive 'append-create.csv.gz'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType GZip -Append
+
+        $row = Import-OfficeCsv -Path $path -CompressionType GZip
+        $row.Name | Should -Be 'Alpha'
+        $row.Value | Should -Be '1'
+    }
+
+    It 'keeps load-time options on file import parameter sets' {
+        $parameterSets = (Get-Command Import-OfficeCsv).Parameters['NullValue'].ParameterSets.Keys
+
+        $parameterSets | Should -Contain 'PathDelimiter'
+        $parameterSets | Should -Contain 'LiteralPathDelimiter'
+        $parameterSets | Should -Not -Contain 'Document'
     }
 
     It 'imports CSV rows as a DataTable for database workflows' {

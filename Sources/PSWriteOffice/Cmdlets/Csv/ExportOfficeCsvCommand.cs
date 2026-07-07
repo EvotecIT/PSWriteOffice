@@ -346,7 +346,8 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
         var needsFileState = Append.IsPresent || NoClobber.IsPresent || Force.IsPresent;
         var fileExists = needsFileState && File.Exists(_resolvedPath);
-        if (Append.IsPresent && CsvFile.ResolveCompression(CompressionType, _resolvedPath) != CsvCompressionType.None)
+        var appendTargetHasBytes = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
+        if (appendTargetHasBytes && CsvFile.ResolveCompression(CompressionType, _resolvedPath) != CsvCompressionType.None)
         {
             WriteError(new ErrorRecord(
                 new NotSupportedException("Appending to compressed CSV files is not supported."),
@@ -383,7 +384,6 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             }
         }
 
-        var appendTargetHasBytes = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
         _appendEncoding = appendTargetHasBytes && Encoding == null
             ? TryDetectEncodingFromBom(_resolvedPath)
             : null;
@@ -474,7 +474,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     {
         var appendToContent = append && _appendToExistingFile;
         var compressionType = CsvFile.ResolveCompression(options.CompressionType, _resolvedPath!);
-        if (append && compressionType != CsvCompressionType.None)
+        if (appendToContent && compressionType != CsvCompressionType.None)
         {
             throw new NotSupportedException("Appending to compressed CSV files is not supported.");
         }

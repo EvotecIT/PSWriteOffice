@@ -16,7 +16,7 @@ Import-OfficeCsv [-Path] <string[]> [-NoHeader] [-Header <string[]>] [-SkipRows 
 
 ### Document
 ```powershell
-Import-OfficeCsv [-Document <CsvDocument>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeCsv [-Document <CsvDocument>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
 ```
 
 ### PathCulture
@@ -157,7 +157,7 @@ Compression used when reading files. Auto infers from the file extension.
 
 ```yaml
 Type: CsvCompressionType
-Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values: None, Auto, GZip, Deflate, Brotli, ZLib
 
@@ -189,7 +189,7 @@ Additional date/time formats used by typed conversions and validation.
 
 ```yaml
 Type: String[]
-Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values:
 
@@ -269,7 +269,7 @@ Controls how duplicate header names are handled.
 
 ```yaml
 Type: CsvDuplicateHeaderBehavior
-Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values: Preserve, Rename, Throw
 
@@ -333,7 +333,7 @@ Maximum decompressed bytes to read from compressed CSV files.
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values:
 
@@ -381,7 +381,7 @@ Token that is materialized as null when importing rows.
 
 ```yaml
 Type: String
-Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values:
 
@@ -413,7 +413,7 @@ Controls whether malformed quoted fields are parsed leniently or rejected.
 
 ```yaml
 Type: CsvQuoteParsingMode
-Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values: Lenient, Strict
 
@@ -493,7 +493,7 @@ Static columns appended to every imported row.
 
 ```yaml
 Type: IDictionary
-Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values:
 
