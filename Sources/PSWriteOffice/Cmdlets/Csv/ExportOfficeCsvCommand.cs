@@ -133,6 +133,18 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public string[]? QuoteFields { get; set; }
 
+    /// <summary>Token written for null values.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Date/time format used for DateTime and DateTimeOffset values.</summary>
+    [Parameter]
+    public string? DateTimeFormat { get; set; }
+
+    /// <summary>Convert date/time values to UTC before formatting.</summary>
+    [Parameter]
+    public SwitchParameter UseUtc { get; set; }
+
     /// <summary>Emit a <see cref="FileInfo"/> for the exported file.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -308,11 +320,11 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
-        _objectProjector.UseCsvCulture(options.Culture);
+        _objectProjector.UseCsvOptions(options);
         if (Append.IsPresent)
         {
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
-            _objectProjector.UseCsvCulture(options.Culture);
+            _objectProjector.UseCsvOptions(options);
             var appendHeader = GetEffectiveAppendHeader(firstValue);
             if (appendHeader is { Length: > 0 })
             {
@@ -358,6 +370,17 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
         var needsFileState = Append.IsPresent || NoClobber.IsPresent || Force.IsPresent;
         var fileExists = needsFileState && File.Exists(_resolvedPath);
+        if (Append.IsPresent && CsvFile.ResolveCompression(CompressionType, _resolvedPath) != CsvCompressionType.None)
+        {
+            WriteError(new ErrorRecord(
+                new NotSupportedException("Appending to compressed CSV files is not supported."),
+                "CsvCompressedAppendNotSupported",
+                ErrorCategory.NotImplemented,
+                _resolvedPath));
+            _skipOutput = true;
+            return false;
+        }
+
         if (fileExists && NoClobber.IsPresent && !Append.IsPresent)
         {
             WriteError(new ErrorRecord(
@@ -430,6 +453,14 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             QuoteFields = QuoteFields
         };
 
+        CsvPowerShellOptionBuilder.ApplySaveOptions(
+            options,
+            NullValue,
+            DateTimeFormat,
+            UseUtc.IsPresent,
+            CompressionType,
+            CompressionLevel);
+
         if (!string.IsNullOrEmpty(NewLine))
         {
             options.NewLine = NewLine!;
@@ -468,9 +499,15 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
     private TextWriter CreateTextWriter(bool append, CsvSaveOptions options)
     {
-        var encoding = ResolveOutputEncoding(append, options);
         var appendToContent = append && _appendToExistingFile;
-        var mode = appendToContent ? FileMode.Append : FileMode.Create;
+        var compressionType = CsvFile.ResolveCompression(options.CompressionType, _resolvedPath!);
+        if (append && compressionType != CsvCompressionType.None)
+        {
+            throw new NotSupportedException("Appending to compressed CSV files is not supported.");
+        }
+
+        var encoding = ResolveOutputEncoding(append, options);
+        options.Encoding = encoding;
         if (appendToContent)
         {
             EnsureAppendStartsOnNewRecord(_resolvedPath!, options);

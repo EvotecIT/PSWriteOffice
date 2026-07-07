@@ -92,6 +92,18 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter]
     public string[]? QuoteFields { get; set; }
 
+    /// <summary>Token written for null values.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Date/time format used for DateTime and DateTimeOffset values.</summary>
+    [Parameter]
+    public string? DateTimeFormat { get; set; }
+
+    /// <summary>Convert date/time values to UTC before formatting.</summary>
+    [Parameter]
+    public SwitchParameter UseUtc { get; set; }
+
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
@@ -213,7 +225,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
-        _objectProjector.UseCsvCulture(options.Culture);
+        _objectProjector.UseCsvOptions(options);
         _lineWriter = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
         _csvWriter = new CsvObjectWriter(_lineWriter, options);
         return _csvWriter;
@@ -239,6 +251,14 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             QuoteMode = UseQuotes,
             QuoteFields = QuoteFields
         };
+
+        CsvPowerShellOptionBuilder.ApplySaveOptions(
+            options,
+            NullValue,
+            DateTimeFormat,
+            UseUtc.IsPresent,
+            CsvCompressionType.None,
+            System.IO.Compression.CompressionLevel.Optimal);
 
         if (!string.IsNullOrEmpty(NewLine))
         {

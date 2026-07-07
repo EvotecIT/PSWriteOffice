@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using OfficeIMO.CSV;
 using PSWriteOffice.Services;
@@ -23,12 +22,17 @@ internal sealed class CsvPowerShellObjectProjector
         _validateColumns = false;
     }
 
-    public void UseCsvCulture(CultureInfo culture)
+    public void UseCsvOptions(CsvSaveOptions options)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         _normalizerOptions = new PowerShellObjectNormalizerOptions
         {
-            Culture = culture ?? CultureInfo.InvariantCulture,
-            FormatScalarValuesAsText = true
+            Culture = options.Culture,
+            FormatScalarValuesAsText = options.DateTimeFormat == null && !options.UseUtc
         };
     }
 

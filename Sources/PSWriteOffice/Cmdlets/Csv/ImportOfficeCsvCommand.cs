@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -180,6 +181,35 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public CsvColumnCountMismatchPolicy ColumnCountMismatchPolicy { get; set; } = CsvColumnCountMismatchPolicy.PadMissingFieldsAndIgnoreExtraFields;
 
+    /// <summary>Controls how duplicate header names are handled.</summary>
+    [Parameter]
+    public CsvDuplicateHeaderBehavior DuplicateHeaderBehavior { get; set; } = CsvDuplicateHeaderBehavior.Rename;
+
+    /// <summary>Token that is materialized as null when importing rows.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Additional date/time formats used by typed conversions and validation.</summary>
+    [Parameter]
+    public string[]? DateTimeFormats { get; set; }
+
+    /// <summary>Controls whether malformed quoted fields are parsed leniently or rejected.</summary>
+    [Parameter]
+    public CsvQuoteParsingMode QuoteParsingMode { get; set; } = CsvQuoteParsingMode.Lenient;
+
+    /// <summary>Static columns appended to every imported row.</summary>
+    [Parameter]
+    public IDictionary? StaticColumns { get; set; }
+
+    /// <summary>Compression used when reading files. Auto infers from the file extension.</summary>
+    [Parameter]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.Auto;
+
+    /// <summary>Maximum decompressed bytes to read from compressed CSV files.</summary>
+    [Parameter]
+    [ValidateRange(0, long.MaxValue)]
+    public long? MaxDecompressedBytes { get; set; }
+
     /// <summary>Load mode controlling materialization.</summary>
     [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetPathCulture)]
@@ -206,35 +236,6 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public Encoding? Encoding { get; set; }
-
-    /// <summary>Compression used when reading CSV files.</summary>
-    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetPathCulture)]
-    [Parameter(ParameterSetName = ParameterSetPathDetect)]
-    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
-    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
-    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
-    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.None;
-
-    /// <summary>Maximum decompressed bytes allowed when reading compressed CSV files.</summary>
-    [Parameter]
-    public long? MaxDecompressedBytes { get; set; }
-
-    /// <summary>How malformed quoted fields are handled.</summary>
-    [Parameter]
-    public CsvQuoteParsingMode QuoteParsingMode { get; set; } = CsvQuoteParsingMode.Lenient;
-
-    /// <summary>How duplicate header names are handled.</summary>
-    [Parameter]
-    public CsvDuplicateHeaderBehavior DuplicateHeaderBehavior { get; set; } = CsvDuplicateHeaderBehavior.Throw;
-
-    /// <summary>Token materialized as null when loading rows.</summary>
-    [Parameter]
-    public string? NullValue { get; set; }
-
-    /// <summary>Additional date/time formats used by typed conversions.</summary>
-    [Parameter]
-    public string[]? DateTimeFormats { get; set; }
 
     /// <summary>How parse errors are handled.</summary>
     [Parameter]
@@ -325,7 +326,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                     throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
                 }
 
-                if (Mode == CsvLoadMode.Stream)
+                if (Mode == CsvLoadMode.Stream && !RequiresMaterializedRows())
                 {
                     _rowWriter.Reset();
                     _parseErrors.Clear();
@@ -407,6 +408,11 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
         base.StopProcessing();
     }
 
+    private bool RequiresMaterializedRows() =>
+        _asDataTable ||
+        NullValue != null ||
+        StaticColumns is { Count: > 0 };
+
     private void ApplyCultureDelimiter()
     {
         if (!UseCulture.IsPresent)
@@ -473,17 +479,11 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             SkipCommentRows = SkipCommentRows.IsPresent,
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
-            DuplicateHeaderBehavior = DuplicateHeaderBehavior,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
             Mode = Mode,
-            CompressionType = CompressionType,
-            MaxDecompressedBytes = MaxDecompressedBytes,
             CancellationToken = _cancellation.Token,
             ProgressReportInterval = ProgressInterval ?? 0,
             ProgressCallback = ProgressInterval.HasValue ? WriteCsvProgress : null,
-            QuoteParsingMode = QuoteParsingMode,
-            NullValue = NullValue,
-            DateTimeFormats = DateTimeFormats,
             ParseErrorAction = ParseErrorAction,
             CollectParseErrors = CollectParseErrors.IsPresent,
             MaxParseErrors = MaxParseErrors,
@@ -493,6 +493,16 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             NormalizeQuotes = NormalizeQuotes.IsPresent,
             InternStrings = InternStrings.IsPresent
         };
+
+        CsvPowerShellOptionBuilder.ApplyLoadOptions(
+            options,
+            DuplicateHeaderBehavior,
+            NullValue,
+            DateTimeFormats,
+            QuoteParsingMode,
+            StaticColumns,
+            CompressionType,
+            MaxDecompressedBytes);
 
         if (Culture != null)
         {
