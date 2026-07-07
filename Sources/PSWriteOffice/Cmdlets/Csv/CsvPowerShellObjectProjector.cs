@@ -12,6 +12,7 @@ internal sealed class CsvPowerShellObjectProjector
     private object?[]? _values;
     private string?[]? _textValues;
     private PowerShellObjectNormalizerOptions _normalizerOptions = PowerShellObjectNormalizerOptions.Default;
+    private bool _allowTrustedTextRows = true;
     private bool _validateColumns;
 
     public void Reset()
@@ -20,6 +21,7 @@ internal sealed class CsvPowerShellObjectProjector
         _values = null;
         _textValues = null;
         _validateColumns = false;
+        _allowTrustedTextRows = true;
     }
 
     public void UseCsvOptions(CsvSaveOptions options)
@@ -29,10 +31,11 @@ internal sealed class CsvPowerShellObjectProjector
             throw new ArgumentNullException(nameof(options));
         }
 
+        _allowTrustedTextRows = options.DateTimeFormat == null && !options.UseUtc;
         _normalizerOptions = new PowerShellObjectNormalizerOptions
         {
             Culture = options.Culture,
-            FormatScalarValuesAsText = options.DateTimeFormat == null && !options.UseUtc
+            FormatScalarValuesAsText = _allowTrustedTextRows
         };
     }
 
@@ -79,7 +82,8 @@ internal sealed class CsvPowerShellObjectProjector
                 ValidateFirstRowColumns(value, _columns);
             }
 
-            if (_textValues != null &&
+            if (_allowTrustedTextRows &&
+                _textValues != null &&
                 PowerShellObjectNormalizer.TryProjectPSObjectTextIntoKnownColumns(value, _columns, _textValues, _normalizerOptions))
             {
                 WriteProjectedTextRow(writer, _columns, _textValues);
