@@ -144,6 +144,25 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public Encoding? Encoding { get; set; }
 
+    /// <summary>Compression used when reading CSV files. Auto infers compression from the file extension.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.Auto;
+
+    /// <summary>Optional limit for decompressed bytes read from compressed CSV files.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
+    [ValidateRange(0, long.MaxValue)]
+    public long? MaxDecompressedBytes { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -175,7 +194,9 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
-            Mode = Mode
+            Mode = Mode,
+            CompressionType = CompressionType,
+            MaxDecompressedBytes = MaxDecompressedBytes
         };
 
         if (Culture != null)

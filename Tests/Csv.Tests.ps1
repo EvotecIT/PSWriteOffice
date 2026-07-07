@@ -25,6 +25,11 @@ Describe 'CSV cmdlets' {
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'AsDataTable'
+        (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'MaxDecompressedBytes'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'MaxDecompressedBytes'
 
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
@@ -58,6 +63,34 @@ Describe 'CSV cmdlets' {
         $data = Import-OfficeCsv -Path $path
         $data.Count | Should -Be 2
         $data[0].Region | Should -Be 'NA'
+    }
+
+    It 'exports and imports gzip-compressed CSV by extension' {
+        $path = Join-Path $TestDrive 'data.csv.gz'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        Test-Path $path | Should -BeTrue
+
+        $document = Get-OfficeCsv -Path $path
+        $data = Import-OfficeCsv -Path $path
+        $table = Import-OfficeCsv -Path $path -AsDataTable
+
+        $document.Header | Should -Be @('Name', 'Value')
+        $data[0].Name | Should -Be 'Alpha'
+        $data[0].Value | Should -Be '1'
+        $table.Rows[0]['Name'] | Should -Be 'Alpha'
+    }
+
+    It 'rejects appending to compressed CSV files' {
+        $path = Join-Path $TestDrive 'append.csv.gz'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        {
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+                Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*compressed CSV*'
     }
 
     It 'imports CSV rows as a DataTable for database workflows' {

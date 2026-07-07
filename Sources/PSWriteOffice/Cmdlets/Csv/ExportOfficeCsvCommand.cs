@@ -105,6 +105,10 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public Encoding? Encoding { get; set; }
 
+    /// <summary>Compression used when writing the CSV file. Auto infers compression from the file extension.</summary>
+    [Parameter]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.Auto;
+
     /// <summary>Controls how formula-like values are written.</summary>
     [Parameter]
     public CsvFormulaInjectionPolicy FormulaInjectionPolicy { get; set; } = CsvFormulaInjectionPolicy.Preserve;
@@ -351,6 +355,18 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             }
         }
 
+        if (Append.IsPresent &&
+            CsvFile.ResolveCompression(CompressionType, _resolvedPath) != CsvCompressionType.None)
+        {
+            WriteError(new ErrorRecord(
+                new NotSupportedException("Appending to compressed CSV files is not supported."),
+                "CsvCompressedAppendNotSupported",
+                ErrorCategory.NotImplemented,
+                _resolvedPath));
+            _skipOutput = true;
+            return false;
+        }
+
         var appendTargetHasBytes = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
         _appendEncoding = appendTargetHasBytes && Encoding == null
             ? TryDetectEncodingFromBom(_resolvedPath)
@@ -389,6 +405,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             IncludeHeader = includeHeader ?? !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
+            CompressionType = CompressionType,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
             QuoteMode = UseQuotes,
             QuoteFields = QuoteFields
@@ -430,18 +447,17 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
     private string? GetTargetPathForErrors() => IsLiteralPathParameterSet() ? LiteralPath : Path;
 
-    private StreamWriter CreateTextWriter(bool append, CsvSaveOptions options)
+    private TextWriter CreateTextWriter(bool append, CsvSaveOptions options)
     {
         var encoding = ResolveOutputEncoding(append, options);
         var appendToContent = append && _appendToExistingFile;
-        var mode = appendToContent ? FileMode.Append : FileMode.Create;
         if (appendToContent)
         {
             EnsureAppendStartsOnNewRecord(_resolvedPath!, options);
         }
 
-        var stream = new FileStream(_resolvedPath!, mode, FileAccess.Write, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
-        return new StreamWriter(stream, encoding, bufferSize: StreamWriterBufferSize);
+        options.Encoding = encoding;
+        return CsvFile.CreateTextWriter(_resolvedPath!, options, append: appendToContent, bufferSize: StreamWriterBufferSize);
     }
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>
@@ -488,6 +504,7 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             Delimiter = Delimiter,
             Encoding = Encoding ?? _appendEncoding,
             Culture = Culture ?? CultureInfo.InvariantCulture,
+            CompressionType = CompressionType,
             Mode = CsvLoadMode.Stream
         };
 
