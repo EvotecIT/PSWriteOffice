@@ -117,7 +117,7 @@ internal sealed class CsvPowerShellObjectProjector
             return;
         }
 
-        writer.WriteRow(columns, values);
+        writer.WriteTextRow(columns, values);
     }
 
     private static void WriteProjectedRow(CsvObjectWriter writer, string[] columns, object?[] values)
