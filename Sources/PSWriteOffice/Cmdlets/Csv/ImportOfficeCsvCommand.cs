@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -172,6 +173,35 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public CsvColumnCountMismatchPolicy ColumnCountMismatchPolicy { get; set; } = CsvColumnCountMismatchPolicy.PadMissingFieldsAndIgnoreExtraFields;
 
+    /// <summary>Controls how duplicate header names are handled.</summary>
+    [Parameter]
+    public CsvDuplicateHeaderBehavior DuplicateHeaderBehavior { get; set; } = CsvDuplicateHeaderBehavior.Rename;
+
+    /// <summary>Token that is materialized as null when importing rows.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Additional date/time formats used by typed conversions and validation.</summary>
+    [Parameter]
+    public string[]? DateTimeFormats { get; set; }
+
+    /// <summary>Controls whether malformed quoted fields are parsed leniently or rejected.</summary>
+    [Parameter]
+    public CsvQuoteParsingMode QuoteParsingMode { get; set; } = CsvQuoteParsingMode.Lenient;
+
+    /// <summary>Static columns appended to every imported row.</summary>
+    [Parameter]
+    public IDictionary? StaticColumns { get; set; }
+
+    /// <summary>Compression used when reading files. Auto infers from the file extension.</summary>
+    [Parameter]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.Auto;
+
+    /// <summary>Maximum decompressed bytes to read from compressed CSV files.</summary>
+    [Parameter]
+    [ValidateRange(0, long.MaxValue)]
+    public long? MaxDecompressedBytes { get; set; }
+
     /// <summary>Load mode controlling materialization.</summary>
     [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetPathCulture)]
@@ -237,7 +267,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                     throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
                 }
 
-                if (Mode == CsvLoadMode.Stream && !_asDataTable)
+                if (Mode == CsvLoadMode.Stream && !RequiresMaterializedRows())
                 {
                     _rowWriter.Reset();
                     CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
@@ -294,6 +324,11 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
         WriteObject(PSObject.AsPSObject(table), enumerateCollection: false);
     }
+
+    private bool RequiresMaterializedRows() =>
+        _asDataTable ||
+        NullValue != null ||
+        StaticColumns is { Count: > 0 };
 
     private void ApplyCultureDelimiter()
     {
@@ -363,6 +398,16 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
             Mode = Mode
         };
+
+        CsvPowerShellOptionBuilder.ApplyLoadOptions(
+            options,
+            DuplicateHeaderBehavior,
+            NullValue,
+            DateTimeFormats,
+            QuoteParsingMode,
+            StaticColumns,
+            CompressionType,
+            MaxDecompressedBytes);
 
         if (Culture != null)
         {

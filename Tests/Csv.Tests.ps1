@@ -25,6 +25,16 @@ Describe 'CSV cmdlets' {
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'AsDataTable'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'DuplicateHeaderBehavior'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NullValue'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'DateTimeFormats'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'QuoteParsingMode'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'StaticColumns'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
+        (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'NullValue'
+        (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'DateTimeFormat'
+        (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'UseUtc'
+        (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
 
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
@@ -58,6 +68,53 @@ Describe 'CSV cmdlets' {
         $data = Import-OfficeCsv -Path $path
         $data.Count | Should -Be 2
         $data[0].Region | Should -Be 'NA'
+    }
+
+    It 'uses configured null tokens and date formats when converting and exporting rows' {
+        $row = [pscustomobject]@{
+            Name = 'Alpha'
+            Created = [datetime]::SpecifyKind([datetime]'2026-07-07T13:45:00', [System.DateTimeKind]::Utc)
+            Value = $null
+        }
+
+        $csvText = @($row | ConvertTo-OfficeCsv -NullValue '<null>' -DateTimeFormat 'yyyyMMdd-HHmm' -UseUtc)
+        $csvText[1] | Should -Be 'Alpha,20260707-1345,<null>'
+
+        $path = Join-Path $TestDrive 'formatted.csv'
+        $row | Export-OfficeCsv -Path $path -NullValue '<null>' -DateTimeFormat 'yyyyMMdd-HHmm' -UseUtc
+
+        (Get-Content -LiteralPath $path)[1] | Should -Be 'Alpha,20260707-1345,<null>'
+    }
+
+    It 'imports duplicate headers, null tokens, static columns, and strict quote settings through OfficeIMO options' {
+        $path = Join-Path $TestDrive 'parity.csv'
+        Set-Content -LiteralPath $path -Value "Name,Name,Value`nAlpha,Beta,<null>" -Encoding UTF8
+
+        $row = Import-OfficeCsv -Path $path -NullValue '<null>' -StaticColumns @{ SourceFile = 'parity.csv' }
+
+        $row.Name | Should -Be 'Alpha'
+        $row.Name_2 | Should -Be 'Beta'
+        $row.Value | Should -BeNullOrEmpty
+        $row.SourceFile | Should -Be 'parity.csv'
+
+        { Import-OfficeCsv -Path $path -DuplicateHeaderBehavior Throw -ErrorAction Stop } |
+            Should -Throw '*duplicate*'
+
+        { ConvertFrom-OfficeCsv -Text "Name,Value`nAlpha,`"one`"two" -QuoteParsingMode Strict -ErrorAction Stop } |
+            Should -Throw '*quoted*'
+    }
+
+    It 'round-trips compressed CSV files through PSWriteOffice cmdlets' {
+        $path = Join-Path $TestDrive 'compressed.csv.gz'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType GZip
+
+        Test-Path -LiteralPath $path | Should -BeTrue
+
+        $row = Import-OfficeCsv -Path $path -CompressionType GZip
+        $row.Name | Should -Be 'Alpha'
+        $row.Value | Should -Be '1'
     }
 
     It 'imports CSV rows as a DataTable for database workflows' {
@@ -536,18 +593,26 @@ Describe 'CSV cmdlets' {
         $data[1].Value | Should -Be '2'
     }
 
-    It 'rejects duplicate object headers before using the optimized output path' {
+    It 'renames duplicate object headers by default and can reject them in strict mode' {
         $path = Join-Path $TestDrive 'duplicate-header.csv'
         Set-Content -LiteralPath $path -Value "Name,Name`nAlpha,1" -Encoding UTF8
 
-        { Import-OfficeCsv -Path $path -ErrorAction Stop } | Should -Throw
+        $row = Import-OfficeCsv -Path $path
+
+        $row.Name | Should -Be 'Alpha'
+        $row.Name_2 | Should -Be '1'
+        { Import-OfficeCsv -Path $path -DuplicateHeaderBehavior Throw -ErrorAction Stop } | Should -Throw '*duplicate*'
     }
 
-    It 'rejects duplicate hashtable headers instead of overwriting values' {
+    It 'renames duplicate hashtable headers by default and can reject them in strict mode' {
         $path = Join-Path $TestDrive 'duplicate-hashtable-header.csv'
         Set-Content -LiteralPath $path -Value "Name,Name`nAlpha,1" -Encoding UTF8
 
-        { Import-OfficeCsv -Path $path -AsHashtable -ErrorAction Stop } | Should -Throw
+        $row = Import-OfficeCsv -Path $path -AsHashtable
+
+        $row['Name'] | Should -Be 'Alpha'
+        $row['Name_2'] | Should -Be '1'
+        { Import-OfficeCsv -Path $path -AsHashtable -DuplicateHeaderBehavior Throw -ErrorAction Stop } | Should -Throw '*duplicate*'
     }
 
     It 'supports NoHeader when reading CSV data and documents' {

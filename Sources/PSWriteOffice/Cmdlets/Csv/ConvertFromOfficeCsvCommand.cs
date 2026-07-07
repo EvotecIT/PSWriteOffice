@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -97,6 +98,26 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
     [Parameter]
     public CsvColumnCountMismatchPolicy ColumnCountMismatchPolicy { get; set; } = CsvColumnCountMismatchPolicy.PadMissingFieldsAndIgnoreExtraFields;
 
+    /// <summary>Controls how duplicate header names are handled.</summary>
+    [Parameter]
+    public CsvDuplicateHeaderBehavior DuplicateHeaderBehavior { get; set; } = CsvDuplicateHeaderBehavior.Rename;
+
+    /// <summary>Token that is materialized as null when converting rows.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Additional date/time formats used by typed conversions and validation.</summary>
+    [Parameter]
+    public string[]? DateTimeFormats { get; set; }
+
+    /// <summary>Controls whether malformed quoted fields are parsed leniently or rejected.</summary>
+    [Parameter]
+    public CsvQuoteParsingMode QuoteParsingMode { get; set; } = CsvQuoteParsingMode.Lenient;
+
+    /// <summary>Static columns appended to every converted row.</summary>
+    [Parameter]
+    public IDictionary? StaticColumns { get; set; }
+
     /// <summary>Load mode controlling materialization.</summary>
     [Parameter]
     public CsvLoadMode Mode { get; set; } = CsvLoadMode.Stream;
@@ -136,7 +157,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
         var csvText = _textInput.ToString();
 
         _rowWriter.Reset();
-        if (Mode == CsvLoadMode.Stream)
+        if (Mode == CsvLoadMode.Stream && !RequiresMaterializedRows())
         {
             using var reader = new StringReader(csvText);
             CsvDocument.ReadRowsReusable(reader, WriteRow, options);
@@ -182,6 +203,14 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
             Mode = Mode
         };
 
+        CsvPowerShellOptionBuilder.ApplyTextLoadOptions(
+            options,
+            DuplicateHeaderBehavior,
+            NullValue,
+            DateTimeFormats,
+            QuoteParsingMode,
+            StaticColumns);
+
         if (Culture != null)
         {
             options.Culture = Culture;
@@ -189,6 +218,10 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
 
         return options;
     }
+
+    private bool RequiresMaterializedRows() =>
+        NullValue != null ||
+        StaticColumns is { Count: > 0 };
 
     private void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row)
     {

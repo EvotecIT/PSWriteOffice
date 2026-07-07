@@ -11,22 +11,22 @@ Converts objects or a CSV document into CSV text.
 ## SYNTAX
 ### InputObjectDelimiter (Default)
 ```powershell
-ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [<CommonParameters>]
+ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
 ```
 
 ### DocumentDelimiter
 ```powershell
-ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [<CommonParameters>]
+ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
 ```
 
 ### DocumentCulture
 ```powershell
-ConvertTo-OfficeCsv -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [<CommonParameters>]
+ConvertTo-OfficeCsv -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
 ```
 
 ### InputObjectCulture
 ```powershell
-ConvertTo-OfficeCsv -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [<CommonParameters>]
+ConvertTo-OfficeCsv -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -66,6 +66,22 @@ Culture used for value formatting.
 
 ```yaml
 Type: CultureInfo
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DateTimeFormat
+Date/time format used for DateTime and DateTimeOffset values.
+
+```yaml
+Type: String
 Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values:
@@ -173,6 +189,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -NullValue
+Token written for null values.
+
+```yaml
+Type: String
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -QuoteFields
 Field names that should always be quoted when UseQuotes is AsNeeded.
 
@@ -213,6 +245,22 @@ Type: CsvQuoteMode
 Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
 Aliases: None
 Possible values: AsNeeded, Always, Never
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UseUtc
+Convert date/time values to UTC before formatting.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter, DocumentCulture, InputObjectCulture
+Aliases: None
+Possible values:
 
 Required: False
 Position: named

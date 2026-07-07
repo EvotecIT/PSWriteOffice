@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -127,6 +128,45 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [Parameter]
     public CsvColumnCountMismatchPolicy ColumnCountMismatchPolicy { get; set; } = CsvColumnCountMismatchPolicy.PadMissingFieldsAndIgnoreExtraFields;
 
+    /// <summary>Controls how duplicate header names are handled.</summary>
+    [Parameter]
+    public CsvDuplicateHeaderBehavior DuplicateHeaderBehavior { get; set; } = CsvDuplicateHeaderBehavior.Rename;
+
+    /// <summary>Token that is materialized as null when loading rows.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Additional date/time formats used by typed conversions and validation.</summary>
+    [Parameter]
+    public string[]? DateTimeFormats { get; set; }
+
+    /// <summary>Controls whether malformed quoted fields are parsed leniently or rejected.</summary>
+    [Parameter]
+    public CsvQuoteParsingMode QuoteParsingMode { get; set; } = CsvQuoteParsingMode.Lenient;
+
+    /// <summary>Static columns appended to every loaded row.</summary>
+    [Parameter]
+    public IDictionary? StaticColumns { get; set; }
+
+    /// <summary>Compression used when reading files. Auto infers from the file extension.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.Auto;
+
+    /// <summary>Maximum decompressed bytes to read from compressed CSV files.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
+    [ValidateRange(0, long.MaxValue)]
+    public long? MaxDecompressedBytes { get; set; }
+
     /// <summary>Load mode controlling materialization.</summary>
     [Parameter]
     public CsvLoadMode Mode { get; set; } = CsvLoadMode.InMemory;
@@ -178,6 +218,29 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             Mode = Mode
         };
 
+        if (IsTextParameterSet())
+        {
+            CsvPowerShellOptionBuilder.ApplyTextLoadOptions(
+                options,
+                DuplicateHeaderBehavior,
+                NullValue,
+                DateTimeFormats,
+                QuoteParsingMode,
+                StaticColumns);
+        }
+        else
+        {
+            CsvPowerShellOptionBuilder.ApplyLoadOptions(
+                options,
+                DuplicateHeaderBehavior,
+                NullValue,
+                DateTimeFormats,
+                QuoteParsingMode,
+                StaticColumns,
+                CompressionType,
+                MaxDecompressedBytes);
+        }
+
         if (Culture != null)
         {
             options.Culture = Culture;
@@ -227,6 +290,11 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
         string.Equals(ParameterSetName, ParameterSetLiteralPathDelimiter, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetLiteralPathCulture, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetLiteralPathDetect, StringComparison.OrdinalIgnoreCase);
+
+    private bool IsTextParameterSet() =>
+        string.Equals(ParameterSetName, ParameterSetTextDelimiter, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(ParameterSetName, ParameterSetTextCulture, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(ParameterSetName, ParameterSetTextDetect, StringComparison.OrdinalIgnoreCase);
 
     private IEnumerable<string> ResolveInputPaths()
     {
