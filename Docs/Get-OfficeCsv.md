@@ -280,7 +280,7 @@ Path to one or more CSV files. Wildcards are supported.
 ```yaml
 Type: String[]
 Parameter Sets: PathDelimiter, PathCulture, PathDetect
-Aliases: FilePath
+Aliases: FilePath, InputPath
 Possible values:
 
 Required: True

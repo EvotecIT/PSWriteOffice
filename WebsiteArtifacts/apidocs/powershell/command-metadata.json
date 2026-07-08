@@ -1,6 +1,6 @@
 {
   "moduleName": "PSWriteOffice",
-  "generatedAt": "2026-06-27T20:17:11.1150548+00:00",
+  "generatedAt": "2026-07-08T10:17:51.4660990Z",
   "commands": [
     {
       "name": "Add-OfficeExcelAutoFilter",
@@ -971,12 +971,12 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableConditionCommand.cs#L19"
     },
     {
-      "name": "Add-OfficeWordTableOfContent",
+      "name": "Add-OfficeWordTableOfContents",
       "kind": "Cmdlet",
       "aliases": [],
-      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentCommand.cs",
-      "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentCommand.cs#L25"
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentsCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentsCommand.cs#L22"
     },
     {
       "name": "Add-OfficeWordTableRow",
@@ -2168,12 +2168,12 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableCellCommand.cs#L21"
     },
     {
-      "name": "Get-OfficeWordTableOfContent",
+      "name": "Get-OfficeWordTableOfContents",
       "kind": "Cmdlet",
       "aliases": [],
-      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableOfContentCommand.cs",
-      "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableOfContentCommand.cs#L24"
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableOfContentsCommand.cs",
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/GetOfficeWordTableOfContentsCommand.cs#L21"
     },
     {
       "name": "Get-OfficeWordText",
@@ -2378,6 +2378,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfSignatureCommand.cs#L22"
     },
     {
+      "name": "New-OfficePdfTableCell",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellCommand.cs",
+      "sourceLine": 13,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellCommand.cs#L13"
+    },
+    {
       "name": "New-OfficePowerPoint",
       "kind": "Cmdlet",
       "aliases": [],
@@ -2426,6 +2434,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs",
       "sourceLine": 25,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs#L25"
+    },
+    {
+      "name": "New-OfficeWordTableCell",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordTableCellCommand.cs",
+      "sourceLine": 13,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordTableCellCommand.cs#L13"
     },
     {
       "name": "Protect-OfficeExcelSheet",
@@ -2492,12 +2508,12 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/RemoveOfficePowerPointSlideCommand.cs#L20"
     },
     {
-      "name": "Remove-OfficeWordTableOfContent",
+      "name": "Remove-OfficeWordTableOfContents",
       "kind": "Cmdlet",
       "aliases": [],
-      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/RemoveOfficeWordTableOfContentCommand.cs",
-      "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/RemoveOfficeWordTableOfContentCommand.cs#L18"
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/RemoveOfficeWordTableOfContentsCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/RemoveOfficeWordTableOfContentsCommand.cs#L17"
     },
     {
       "name": "Rename-OfficeExcelNamedRange",
@@ -3228,12 +3244,12 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableCellCommand.cs#L44"
     },
     {
-      "name": "Set-OfficeWordTableOfContent",
+      "name": "Set-OfficeWordTableOfContents",
       "kind": "Cmdlet",
       "aliases": [],
-      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableOfContentCommand.cs",
-      "sourceLine": 32,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableOfContentCommand.cs#L32"
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableOfContentsCommand.cs",
+      "sourceLine": 30,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/SetOfficeWordTableOfContentsCommand.cs#L30"
     },
     {
       "name": "Set-OfficeWordTextStyle",
@@ -3338,12 +3354,12 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordFieldsCommand.cs#L21"
     },
     {
-      "name": "Update-OfficeWordTableOfContent",
+      "name": "Update-OfficeWordTableOfContents",
       "kind": "Cmdlet",
       "aliases": [],
-      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTableOfContentCommand.cs",
-      "sourceLine": 30,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTableOfContentCommand.cs#L30"
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTableOfContentsCommand.cs",
+      "sourceLine": 28,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/UpdateOfficeWordTableOfContentsCommand.cs#L28"
     },
     {
       "name": "Update-OfficeWordText",

@@ -152,6 +152,127 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
+    It 'renders PDF table cell spans in PDF tables' {
+        (Get-Command New-OfficePdfTableCell).Parameters.Keys | Should -Contain 'ColumnSpan'
+        (Get-Command New-OfficePdfTableCell).Parameters.Keys | Should -Contain 'RowSpan'
+        Get-Command New-OfficeTableCell -ErrorAction SilentlyContinue | Should -BeNullOrEmpty
+
+        $path = Join-Path $TestDrive 'span-aware-table.pdf'
+
+        New-OfficePdf -Path $path {
+            PdfTable -HeaderRowCount 1 -InputObject @(
+                @('Service', 'Status', 'Owner'),
+                @(New-OfficePdfTableCell -Text 'Identity systems' -ColumnSpan 3),
+                @('Entra', 'Watch', 'IAM'),
+                @((New-OfficePdfTableCell -Text 'Shared owner' -RowSpan 2), 'Build', 'OfficeIMO'),
+                @('Release', 'PSWriteOffice')
+            )
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Identity systems'
+        $text | Should -Match 'Shared owner'
+        $text | Should -Match 'Release'
+    }
+
+    It 'keeps ordinary span-like property names on normal PDF tables' {
+        $path = Join-Path $TestDrive 'ordinary-span-named-table.pdf'
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Backlog'
+                Rows = 25
+                Columns = 3
+                Span = 2
+                ColumnSpan = 2
+                RowSpan = 3
+            }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Rows'
+        $text | Should -Match 'Columns'
+        $text | Should -Match 'Span'
+        $text | Should -Match 'ColumnSpa'
+        $text | Should -Match 'RowSpan'
+        $text | Should -Match '25'
+        $text | Should -Match '3'
+        $text | Should -Match '2'
+    }
+
+    It 'keeps ordinary text and span-key properties in mixed PDF tables' {
+        $path = Join-Path $TestDrive 'mixed-ordinary-span-key-table.pdf'
+        $rows = @(
+            [pscustomobject]@{
+                Text = 'Task'
+                ColumnSpan = 1
+                Status = 'Open'
+            }
+            , @(New-OfficePdfTableCell -Text 'Follow-up' -ColumnSpan 3)
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Text'
+        $text | Should -Match 'ColumnSpa'
+        $text | Should -Match 'Status'
+        $text | Should -Match 'Task'
+        $text | Should -Match 'Open'
+        $text | Should -Match 'Follow-up'
+    }
+
+    It 'keeps default headers on mixed object and span PDF tables' {
+        $path = Join-Path $TestDrive 'mixed-object-span-table.pdf'
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Directory'
+                Status = 'Healthy'
+            }
+            , @(New-OfficePdfTableCell -Text 'Follow-up' -ColumnSpan 2)
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Name'
+        $text | Should -Match 'Status'
+        $text | Should -Match 'Directory'
+        $text | Should -Match 'Healthy'
+        $text | Should -Match 'Follow-up'
+    }
+
+    It 'keeps generated mixed PDF headers out of leading row spans' {
+        $path = Join-Path $TestDrive 'mixed-leading-row-span-table.pdf'
+        $rows = @(
+            , @((New-OfficePdfTableCell -Text 'Group' -RowSpan 2), 'A')
+            [pscustomobject]@{
+                Name = 'B'
+                Value = 'C'
+            }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text.IndexOf('Name') | Should -BeLessThan $text.IndexOf('Group')
+        $text | Should -Match 'Value'
+        $text | Should -Match 'Group'
+        $text | Should -Match 'A'
+        $text | Should -Match 'B'
+        $text | Should -Match 'C'
+    }
+
     It 'supports transposed table views' {
         $path = Join-Path $TestDrive 'transposed-table.pdf'
         $rows = @(

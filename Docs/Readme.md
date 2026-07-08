@@ -382,7 +382,7 @@ Enters a specific table cell and executes nested DSL content inside it.
 ### [Add-OfficeWordTableCondition](Add-OfficeWordTableCondition.md)
 Attaches conditional formatting logic to the current table.
 
-### [Add-OfficeWordTableOfContent](Add-OfficeWordTableOfContent.md)
+### [Add-OfficeWordTableOfContents](Add-OfficeWordTableOfContents.md)
 Adds a table of contents to a Word document.
 
 ### [Add-OfficeWordTableRow](Add-OfficeWordTableRow.md)
@@ -826,7 +826,7 @@ Gets tables from a Word document or section.
 ### [Get-OfficeWordTableCell](Get-OfficeWordTableCell.md)
 Gets cells from an OfficeIMO Word table.
 
-### [Get-OfficeWordTableOfContent](Get-OfficeWordTableOfContent.md)
+### [Get-OfficeWordTableOfContents](Get-OfficeWordTableOfContents.md)
 Gets the table of contents from a Word document.
 
 ### [Get-OfficeWordText](Get-OfficeWordText.md)
@@ -901,6 +901,9 @@ Creates a PDF document using the OfficeIMO.Pdf composition engine.
 ### [New-OfficePdfSignature](New-OfficePdfSignature.md)
 Prepares an existing PDF for external digital signing by appending a signature field, /ByteRange, and reserved /Contents placeholder.
 
+### [New-OfficePdfTableCell](New-OfficePdfTableCell.md)
+Creates a reusable PDF table cell definition for explicit table rows.
+
 ### [New-OfficePowerPoint](New-OfficePowerPoint.md)
 Creates a PowerPoint presentation using the DSL.
 
@@ -918,6 +921,9 @@ Generates the OfficeIMO Visio reference gallery as editable .vsdx diagrams.
 
 ### [New-OfficeWord](New-OfficeWord.md)
 Creates a Word document using the DSL.
+
+### [New-OfficeWordTableCell](New-OfficeWordTableCell.md)
+Creates a reusable Word table cell definition for explicit table rows.
 
 ### [Protect-OfficeExcelSheet](Protect-OfficeExcelSheet.md)
 Protects the current worksheet.
@@ -943,7 +949,7 @@ Removes selected pages from a PDF and writes a new PDF.
 ### [Remove-OfficePowerPointSlide](Remove-OfficePowerPointSlide.md)
 Removes a slide by index.
 
-### [Remove-OfficeWordTableOfContent](Remove-OfficeWordTableOfContent.md)
+### [Remove-OfficeWordTableOfContents](Remove-OfficeWordTableOfContents.md)
 Removes the table of contents from a Word document.
 
 ### [Rename-OfficeExcelNamedRange](Rename-OfficeExcelNamedRange.md)
@@ -1219,7 +1225,7 @@ Updates OfficeIMO Word shape metadata, sizing, and colors.
 ### [Set-OfficeWordTableCell](Set-OfficeWordTableCell.md)
 Updates OfficeIMO Word table-cell content, layout, and merge settings.
 
-### [Set-OfficeWordTableOfContent](Set-OfficeWordTableOfContent.md)
+### [Set-OfficeWordTableOfContents](Set-OfficeWordTableOfContents.md)
 Sets properties on a table of contents in a Word document.
 
 ### [Set-OfficeWordTextStyle](Set-OfficeWordTextStyle.md)
@@ -1258,7 +1264,7 @@ Applies lossless text and metadata edits to an RTF document.
 ### [Update-OfficeWordFields](Update-OfficeWordFields.md)
 Updates fields in a Word document.
 
-### [Update-OfficeWordTableOfContent](Update-OfficeWordTableOfContent.md)
+### [Update-OfficeWordTableOfContents](Update-OfficeWordTableOfContents.md)
 Updates the table of contents in a Word document.
 
 ### [Update-OfficeWordText](Update-OfficeWordText.md)
