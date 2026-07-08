@@ -8,8 +8,17 @@ namespace PSWriteOffice.Services.PowerPoint;
 
 internal static class PowerPointTableCellSpecService
 {
+    internal static void Validate(OfficeTableCellSpec spec)
+    {
+        if (spec.HasRuns)
+        {
+            PowerPointTextRunService.ValidateRuns(OfficeTableCellTextRunStyle.Apply(spec.Runs!.ToArray(), spec.Style), allowHyperlinks: false);
+        }
+    }
+
     internal static void Apply(PowerPointTableCell cell, OfficeTableCellSpec spec)
     {
+        Validate(spec);
         if (spec.HasRuns)
         {
             PowerPointTextRunService.ApplyRuns(cell, OfficeTableCellTextRunStyle.Apply(spec.Runs!.ToArray(), spec.Style));

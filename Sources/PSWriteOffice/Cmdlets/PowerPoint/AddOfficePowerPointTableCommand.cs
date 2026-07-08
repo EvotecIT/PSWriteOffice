@@ -154,6 +154,11 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
 
     private PowerPointTable CreateStructuredTable(PowerPointSlide slide, OfficeTableSpec spec)
     {
+        foreach (var placement in spec.Placements)
+        {
+            PowerPointTableCellSpecService.Validate(placement.Cell);
+        }
+
         var table = slide.AddTablePoints(spec.RowCount, spec.ColumnCount, X, Y, Width, Height);
         foreach (var placement in spec.Placements)
         {

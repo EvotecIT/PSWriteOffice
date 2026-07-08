@@ -209,6 +209,7 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
             if (values[valueIndex] != null && OfficeTableSpecParser.TryCreateCell(values[valueIndex], out var spec))
             {
                 ValidateSpan(spec, column, columnCount);
+                PowerPointTableCellSpecService.Validate(spec);
                 for (var offset = 1; offset < spec.ColumnSpan && column + offset < occupiedColumns.Length; offset++)
                 {
                     occupiedColumns[column + offset] = true;

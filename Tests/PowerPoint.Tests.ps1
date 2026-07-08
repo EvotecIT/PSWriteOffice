@@ -386,6 +386,13 @@ Describe 'PowerPoint cmdlets' {
             } | Should -Throw '*RowSpan*'
             $threeColumnTable.Rows | Should -Be 2
 
+            {
+                $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
+                    @{ Run = @(PptTextRun 'site' -LinkUri 'https://example.org/table-cell') }
+                )
+            } | Should -Throw '*do not support hyperlinks yet*'
+            $threeColumnTable.Rows | Should -Be 2
+
             $cell = $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
                 PptTextRun 'Owner '
                 PptTextRun 'Ready' -Color Navy -Bold
@@ -442,15 +449,41 @@ Describe 'PowerPoint cmdlets' {
             $slide = PptSlide -Presentation $presentation -Layout 1
             $table = PptTable -Slide $slide -InputObject @(
                 [pscustomobject]@{
-                    Text  = 'Apple'
-                    Color = 'Red'
+                    Text     = 'Apple'
+                    Color    = 'Red'
+                    FontSize = 'Large'
                 }
             ) -X 80 -Y 150 -Width 300 -Height 100
 
             $table.GetCell(0, 0).Text | Should -Be 'Text'
             $table.GetCell(0, 1).Text | Should -Be 'Color'
+            $table.GetCell(0, 2).Text | Should -Be 'FontSize'
             $table.GetCell(1, 0).Text | Should -Be 'Apple'
             $table.GetCell(1, 1).Text | Should -Be 'Red'
+            $table.GetCell(1, 2).Text | Should -Be 'Large'
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
+    It 'validates structured PowerPoint table runs before creating the table' {
+        $path = Join-Path $TestDrive 'PowerPointStructuredTableRunValidation.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            @($slide.Tables).Count | Should -Be 0
+
+            {
+                PptTable -Slide $slide -InputObject @(
+                    , @(
+                        @{ Run = @(PptTextRun 'site' -LinkUri 'https://example.org/table-cell') }
+                    )
+                ) -X 80 -Y 150 -Width 300 -Height 100 -ErrorAction Stop
+            } | Should -Throw '*do not support hyperlinks yet*'
+
+            @($slide.Tables).Count | Should -Be 0
         } finally {
             if ($presentation) {
                 Close-OfficePowerPoint -Presentation $presentation
@@ -515,12 +548,13 @@ Describe 'PowerPoint cmdlets' {
             $slide = PptSlide -Presentation $presentation -Layout 1
             $table = PptTable -Slide $slide -InputObject @(
                 [pscustomobject]@{
-                    Run = 'Nightly'
+                    Run = @('Nightly', 'Daily')
                 }
             ) -X 80 -Y 150 -Width 300 -Height 100
 
             $table.GetCell(0, 0).Text | Should -Be 'Run'
-            $table.GetCell(1, 0).Text | Should -Be 'Nightly'
+            $table.GetCell(1, 0).Text | Should -Match 'Nightly'
+            $table.GetCell(1, 0).Text | Should -Match 'Daily'
         } finally {
             if ($presentation) {
                 Close-OfficePowerPoint -Presentation $presentation

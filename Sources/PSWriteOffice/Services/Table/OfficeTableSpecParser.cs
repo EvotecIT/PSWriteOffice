@@ -73,7 +73,7 @@ internal static class OfficeTableSpecParser
         string[]? columns = propertyNames;
         foreach (var row in rows)
         {
-            if (TryCreateCell(row, requireExplicitCellShape: true, allowStyleOnlyCell: false, out var singleCell))
+            if (TryCreateCell(row, requireExplicitCellShape: true, allowStyleOnlyCell: false, allowRunEnumerable: false, out var singleCell))
             {
                 tableRows.Add(new[] { singleCell });
                 continue;
@@ -111,14 +111,14 @@ internal static class OfficeTableSpecParser
     }
 
     internal static bool TryCreateCell(object? value, out OfficeTableCellSpec spec)
-        => TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, out spec);
+        => TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, allowRunEnumerable: true, out spec);
 
     private static OfficeTableCellSpec[] CreateExplicitRow(object row)
     {
         var cells = new List<OfficeTableCellSpec>();
         foreach (var value in Enumerate(row))
         {
-            cells.Add(TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, out var spec)
+            cells.Add(TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, allowRunEnumerable: true, out var spec)
                 ? spec
                 : ToCell(value));
         }
@@ -128,7 +128,7 @@ internal static class OfficeTableSpecParser
 
     private static bool ContainsStructuredCellMarker(object row)
     {
-        if (TryCreateCell(row, requireExplicitCellShape: true, allowStyleOnlyCell: false, out var cell) && cell.HasStructuredMarker)
+        if (TryCreateCell(row, requireExplicitCellShape: true, allowStyleOnlyCell: false, allowRunEnumerable: false, out var cell) && cell.HasStructuredMarker)
         {
             return true;
         }
@@ -140,7 +140,7 @@ internal static class OfficeTableSpecParser
 
         foreach (var value in Enumerate(row))
         {
-            if (TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, out cell) && cell.HasStructuredMarker)
+            if (TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, allowRunEnumerable: true, out cell) && cell.HasStructuredMarker)
             {
                 return true;
             }
@@ -152,7 +152,12 @@ internal static class OfficeTableSpecParser
     private static OfficeTableCellSpec ToCell(object? value)
         => new(Convert.ToString(UnwrapPSObject(value), CultureInfo.InvariantCulture));
 
-    private static bool TryCreateCell(object? value, bool requireExplicitCellShape, bool allowStyleOnlyCell, out OfficeTableCellSpec spec)
+    private static bool TryCreateCell(
+        object? value,
+        bool requireExplicitCellShape,
+        bool allowStyleOnlyCell,
+        bool allowRunEnumerable,
+        out OfficeTableCellSpec spec)
     {
         value = UnwrapPSObject(value);
         if (value is OfficeTableCellSpec typed)
@@ -165,9 +170,15 @@ internal static class OfficeTableSpecParser
         var hasRowSpan = TryGetValue(value, RowSpanKeys, out var rowSpanValue);
         var hasSpan = hasColumnSpan || hasRowSpan;
         var hasText = TryGetValue(value, TextKeys, out var textValue);
-        var hasRuns = TryGetValue(value, RunKeys, out var runValue) && IsRunValue(runValue, allowStringRun: !requireExplicitCellShape);
+        var hasRuns = TryGetValue(value, RunKeys, out var runValue) && IsRunValue(runValue, allowStringRun: !requireExplicitCellShape, allowEnumerableRun: allowRunEnumerable);
         var hasOnlyCellKeys = HasOnlyCellKeys(value);
         if (!hasOnlyCellKeys)
+        {
+            spec = null!;
+            return false;
+        }
+
+        if (!allowStyleOnlyCell && !hasSpan && !hasRuns)
         {
             spec = null!;
             return false;
@@ -271,7 +282,7 @@ internal static class OfficeTableSpecParser
         return properties.Length > 0 && properties.All(static property => IsCellKey(property.Name));
     }
 
-    private static bool IsRunValue(object? value, bool allowStringRun)
+    private static bool IsRunValue(object? value, bool allowStringRun, bool allowEnumerableRun)
     {
         value = UnwrapPSObject(value);
         if (value is null)
@@ -289,7 +300,9 @@ internal static class OfficeTableSpecParser
             return true;
         }
 
-        return value is IEnumerable enumerable && enumerable.Cast<object?>().Any(static item => item is not null);
+        return allowEnumerableRun &&
+               value is IEnumerable enumerable &&
+               enumerable.Cast<object?>().Any(static item => item is not null);
     }
 
     private static bool IsCellKey(string? key)
