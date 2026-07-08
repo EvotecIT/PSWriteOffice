@@ -35,7 +35,6 @@ internal static class PowerPointTableCellSpecService
                     Underline = spec.Style.Underline,
                     Strike = spec.Style.Strike,
                     Color = spec.Style.TextColor,
-                    BackgroundColor = spec.Style.FillColor,
                     FontSize = spec.Style.FontSize
                 }
             });

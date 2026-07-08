@@ -338,6 +338,7 @@ Describe 'PowerPoint cmdlets' {
                     }
                 )
                 , @('Owner', 'Platform')
+                , @(@{ Text = 'Filled'; FillColor = 'Yellow'; Bold = $true }, 'Styled')
                 , @(@{ Run = 'Queued' }, 'String run')
             ) -X 80 -Y 150 -Width 420 -Height 140
             $table.GetCell(0, 0).Text | Should -Be 'Build Ready'
@@ -347,7 +348,11 @@ Describe 'PowerPoint cmdlets' {
             $table.GetCell(0, 0).Runs[1].Bold | Should -BeTrue
             $table.GetCell(0, 0).Runs[1].Color | Should -Be '2E8B57'
             $table.GetCell(1, 0).Text | Should -Be 'Owner'
-            $table.GetCell(2, 0).Text | Should -Be 'Queued'
+            $table.GetCell(2, 0).Text | Should -Be 'Filled'
+            $table.GetCell(2, 0).Runs[0].Bold | Should -BeTrue
+            $table.GetCell(2, 0).Runs[0].HighlightColor | Should -BeNullOrEmpty
+            $table.GetCell(2, 0).FillColor | Should -Be 'FFFF00'
+            $table.GetCell(3, 0).Text | Should -Be 'Queued'
 
             $row = $table | Add-OfficePowerPointTableRow -Values @(
                 @{ Run = @(PptTextRun 'Latency '; PptTextRun 'Ready' -Color SeaGreen -Bold) },
