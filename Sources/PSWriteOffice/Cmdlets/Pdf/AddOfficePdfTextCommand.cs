@@ -49,17 +49,18 @@ public sealed class AddOfficePdfTextCommand : PSCmdlet
 
     /// <summary>Rich run specifications. Each run may define Text, Bold, Italic, Underline, Strike, Color, BackgroundColor, FontSize, Font, Baseline, LinkUri, LinkDestinationName, LinkContents, Type, or Kind.</summary>
     [Parameter]
+    [Alias("Runs")]
     public object[]? Run { get; set; }
 
     /// <summary>Paragraph alignment.</summary>
     [Parameter]
     public PdfAlign Align { get; set; } = PdfAlign.Left;
 
-    /// <summary>Default paragraph color in #RRGGBB format.</summary>
+    /// <summary>Default paragraph color. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
     public string? Color { get; set; }
 
-    /// <summary>Run background color for -Text input in #RRGGBB format.</summary>
+    /// <summary>Run background color for -Text input. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
     public string? BackgroundColor { get; set; }
 

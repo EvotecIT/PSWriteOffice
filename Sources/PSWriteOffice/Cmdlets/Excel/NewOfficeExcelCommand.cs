@@ -17,6 +17,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <para>Creates <c>report.xlsx</c> and writes “Region” into cell A1 on the Data worksheet.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeExcel", SupportsShouldProcess = true)]
+[Alias("ExcelNew")]
 public sealed class NewOfficeExcelCommand : PSCmdlet
 {
     /// <summary>Destination path for the workbook.</summary>

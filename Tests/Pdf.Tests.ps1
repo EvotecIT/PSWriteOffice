@@ -176,6 +176,156 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Release'
     }
 
+    It 'styles merged PDF table cells' {
+        $parameters = (Get-Command New-OfficePdfTableCell).Parameters.Keys
+        $parameters | Should -Contain 'TextColor'
+        $parameters | Should -Contain 'FillColor'
+        $parameters | Should -Contain 'FontSize'
+        $parameters | Should -Contain 'Bold'
+        $parameters | Should -Contain 'Italic'
+        $parameters | Should -Contain 'Align'
+        $parameters | Should -Contain 'VerticalAlign'
+
+        $path = Join-Path $TestDrive 'styled-span-aware-table.pdf'
+
+        New-OfficePdf -Path $path {
+            PdfTable -HeaderRowCount 1 -InputObject @(
+                @('Service', 'Status', 'Owner'),
+                @(New-OfficePdfTableCell -Text 'Identity systems' -ColumnSpan 3 -FillColor '#DBEAFE' -TextColor '#1E3A8A' -FontSize 17 -Bold -Italic -Align Center -VerticalAlign Middle),
+                @('Entra', 'Watch', 'IAM'),
+                @(@{ Text = 'Follow-up'; ColumnSpan = 3; FillColor = '#FEF3C7'; Color = '#92400E'; FontSize = 15; Bold = $true; Align = 'Center' }),
+                @('Release', 'Ready', 'PSWriteOffice')
+            )
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Identity systems'
+        $text | Should -Match 'Follow-up'
+
+        $blocks = @(Get-OfficePdfText -Path $path -AsTextBlock)
+        $identityBlock = $blocks | Where-Object { $_.Text -match 'Identity systems' } | Select-Object -First 1
+        $identityBlock | Should -Not -BeNullOrEmpty
+        $identityBlock.FontSize | Should -Be 17
+
+        $followUpBlock = $blocks | Where-Object { $_.Text -match 'Follow-up' } | Select-Object -First 1
+        $followUpBlock | Should -Not -BeNullOrEmpty
+        $followUpBlock.FontSize | Should -Be 15
+    }
+
+    It 'renders rich text runs and named colors in PDF text and table cells' {
+        foreach ($name in 'PdfNew', 'TextRun', 'PdfTextRun', 'PdfTableCell') {
+            Get-Command $name | Should -Not -BeNullOrEmpty
+        }
+
+        $path = Join-Path $TestDrive 'rich-run-table.pdf'
+
+        PdfNew -Path $path {
+            PdfText -Run @(
+                PdfTextRun 'Status: '
+                PdfTextRun 'Ready' -Color SeaGreen -Bold
+            )
+            PdfTable -InputObject @(
+                , @(
+                    PdfTableCell -Run @(
+                        PdfTextRun 'Build '
+                        PdfTextRun 'Ready' -Color SeaGreen -Bold
+                    ) -ColumnSpan 2 -FillColor AliceBlue
+                )
+                , @(
+                    PdfTableCell -Run @(
+                        PdfTextRun 'Styled'
+                    ) -Bold -TextColor Crimson -FontSize 19 -ColumnSpan 2
+                )
+                , @(
+                    @{ Run = 'Queued' },
+                    'String run'
+                )
+                , @('Owner', 'Platform')
+            )
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Status'
+        $text | Should -Match 'Ready'
+        $text | Should -Match 'Build'
+        $text | Should -Match 'Styled'
+        $text | Should -Match 'Queued'
+        $text | Should -Match 'Owner'
+
+        $blocks = @(Get-OfficePdfText -Path $path -AsTextBlock)
+        $styledBlock = $blocks | Where-Object { $_.Text -match 'Styled' } | Select-Object -First 1
+        $styledBlock | Should -Not -BeNullOrEmpty
+        $styledBlock.FontSize | Should -Be 19
+    }
+
+    It 'rejects PDF table cell rich text links until table annotations are supported' {
+        $path = Join-Path $TestDrive 'rich-run-table-link.pdf'
+
+        {
+            PdfNew -Path $path {
+                PdfTable -InputObject @(
+                    , @(
+                        PdfTableCell -Run @(
+                            PdfTextRun 'Docs' -LinkUri 'https://example.org/table'
+                        )
+                    )
+                )
+            }
+        } | Should -Throw '*PDF table cell text runs do not support links yet*'
+    }
+
+    It 'treats rich and styled PDF table cells as structured without spans' {
+        $path = Join-Path $TestDrive 'rich-run-mixed-object-table.pdf'
+
+        PdfNew -Path $path {
+            PdfTable -InputObject @(
+                [pscustomobject]@{
+                    Service = 'Entra'
+                    Status  = 'Ready'
+                }
+                , @(
+                    (PdfTableCell -Run @(
+                        PdfTextRun 'Build '
+                        PdfTextRun 'Watch' -Color DarkOrange -Bold
+                    ) -FillColor AliceBlue),
+                    'Platform'
+                )
+            )
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Service'
+        $text | Should -Match 'Entra'
+        $text | Should -Match 'Build'
+        $text | Should -Match 'Watch'
+        $text | Should -Match 'Platform'
+    }
+
+    It 'keeps ordinary style-named columns in PDF object tables' {
+        $path = Join-Path $TestDrive 'ordinary-style-named-table.pdf'
+
+        PdfNew -Path $path {
+            PdfTable -InputObject @(
+                [pscustomobject]@{
+                    Text     = 'Task'
+                    Color    = 'Red'
+                    FontSize = 'Large'
+                }
+            )
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Text'
+        $text | Should -Match 'Color'
+        $text | Should -Match 'FontSize'
+        $text | Should -Match 'Red'
+        $text | Should -Match 'Task'
+        $text | Should -Match 'Large'
+    }
+
     It 'keeps ordinary span-like property names on normal PDF tables' {
         $path = Join-Path $TestDrive 'ordinary-span-named-table.pdf'
         $rows = @(
@@ -204,11 +354,29 @@ Describe 'PDF cmdlets' {
         $text | Should -Match '2'
     }
 
+    It 'keeps ordinary Run property names on normal PDF tables' {
+        $path = Join-Path $TestDrive 'ordinary-run-named-table.pdf'
+        $rows = @(
+            [pscustomobject]@{
+                Run = 'Nightly'
+            }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Run'
+        $text | Should -Match 'Nightly'
+    }
+
     It 'keeps ordinary text and span-key properties in mixed PDF tables' {
         $path = Join-Path $TestDrive 'mixed-ordinary-span-key-table.pdf'
         $rows = @(
             [pscustomobject]@{
                 Text = 'Task'
+                FontSize = 'Large'
                 ColumnSpan = 1
                 Status = 'Open'
             }
@@ -221,9 +389,11 @@ Describe 'PDF cmdlets' {
 
         $text = Get-OfficePdfText -Path $path
         $text | Should -Match 'Text'
+        $text | Should -Match 'FontSize'
         $text | Should -Match 'ColumnSpa'
         $text | Should -Match 'Status'
         $text | Should -Match 'Task'
+        $text | Should -Match 'Large'
         $text | Should -Match 'Open'
         $text | Should -Match 'Follow-up'
     }
@@ -1184,6 +1354,20 @@ startxref
         $text | Should -Match 'bold'
         $text | Should -Match 'bookmark link'
         $text | Should -Match 'rich inline text'
+    }
+
+    It 'normalizes typed text run kinds before rendering adapters consume them' {
+        $assembly = [PSWriteOffice.Cmdlets.Text.NewOfficeTextRunCommand].Assembly
+        $parserType = $assembly.GetType('PSWriteOffice.Services.Text.OfficeTextRunParser', $true)
+        $specType = $assembly.GetType('PSWriteOffice.Services.Text.OfficeTextRunSpec', $true)
+        $parseMethod = $parserType.GetMethod('Parse', [Reflection.BindingFlags]'Static,NonPublic')
+        $spec = [Activator]::CreateInstance($specType)
+        $spec.Text = '2'
+        $spec.Kind = 'Superscript'
+
+        $parsed = $parseMethod.Invoke($null, @($spec))
+
+        $parsed.Baseline | Should -Be 'Superscript'
     }
 
     It 'applies PDF themes and decorative backgrounds' {

@@ -516,6 +516,138 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'creates Word paragraphs and table cells from rich text runs with named colors' {
+        foreach ($name in 'WordNew', 'WordTextRun', 'WordTableCellSpec') {
+            Get-Command $name | Should -Not -BeNullOrEmpty
+        }
+
+        $path = Join-Path $TestDrive 'DslRichTextRunsWord.docx'
+
+        WordNew -Path $path {
+            WordParagraph -Run @(
+                WordTextRun 'Status: '
+                WordTextRun 'Ready' -Color SeaGreen -Bold -UnderlineStyle Dotted
+            )
+            WordParagraph -Run @(
+                WordTextRun 'Highlight ' -BackgroundColor Yellow
+                WordTextRun 'Shaded' -BackgroundColor LightPink
+            )
+            WordParagraph -Run @(
+                WordTextRun 'x'
+                WordTextRun '2' -Kind Superscript
+                WordTextRun ' H'
+                WordTextRun '2' -Baseline Subscript
+                WordTextRun 'O'
+            )
+            WordParagraph -Run @(
+                WordTextRun 'Styled link' -LinkUri 'https://example.org/styled' -LinkContents 'Styled tooltip' -Bold -Color Crimson -BackgroundColor Yellow -FontSize 16 -FontName 'Arial'
+            )
+            WordTable -Style TableGrid -InputObject @(
+                , @(
+                    WordTableCellSpec -Run @(
+                        WordTextRun 'Build '
+                        WordTextRun 'Ready' -Color SeaGreen -Bold
+                    ) -ColumnSpan 2 -FillColor AliceBlue -Bold -TextColor Red -FontSize 14
+                )
+                , @('Owner', 'Platform')
+            ) {
+                WordTableCell -Row 1 -Column 0 -Run @(
+                    WordTextRun 'Owner: '
+                    WordTextRun 'Platform' -Color Navy -Bold
+                )
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[0].ColumnSpan | Should -Be 2
+        } finally {
+            $document.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+        $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
+        $text | Should -Match 'Status: Ready'
+        $text | Should -Match 'Highlight Shaded'
+        $text | Should -Match 'x2 H2O'
+        $text | Should -Match 'Styled link'
+        $text | Should -Match 'Build Ready'
+        $text | Should -Match 'Owner: Platform'
+        $documentXml.SelectSingleNode('//w:color[translate(@w:val, "abcdef", "ABCDEF")="2E8B57"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:b', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:color[translate(@w:val, "abcdef", "ABCDEF")="DC143C"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:highlight[@w:val="yellow"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:sz[@w:val="32"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:r[w:t="Build "]//w:b', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:r[w:t="Build "]//w:color[translate(@w:val, "abcdef", "ABCDEF")="FF0000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:r[w:t="Build "]//w:sz[@w:val="28"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:r[w:t="Ready"]//w:color[translate(@w:val, "abcdef", "ABCDEF")="2E8B57"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:vertAlign[@w:val="superscript"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:vertAlign[@w:val="subscript"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:highlight[@w:val="yellow"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:shd[translate(@w:fill, "abcdef", "ABCDEF")="FFB6C1"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:highlight[translate(@w:val, "abcdef", "ABCDEF")="F0F8FF"] | //w:shd[translate(@w:fill, "abcdef", "ABCDEF")="F0F8FF"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:u[@w:val="dotted"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
+
+    It 'treats rich and styled Word table cells as structured without spans' {
+        $path = Join-Path $TestDrive 'DslRichRunMixedObjectWordTable.docx'
+
+        WordNew -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                [pscustomobject]@{
+                    Service = 'Entra'
+                    Status  = 'Ready'
+                }
+                , @(
+                    (WordTableCellSpec -Run @(
+                        WordTextRun 'Build '
+                        WordTextRun 'Watch' -Color DarkOrange -Bold
+                    ) -FillColor AliceBlue),
+                    'Platform'
+                )
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Service'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Entra'
+            $table.Rows[2].Cells[1].Paragraphs[0].Text | Should -Be 'Platform'
+        } finally {
+            $document.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
+        $text | Should -Match 'Build Watch'
+    }
+
+    It 'keeps ordinary Run columns in normal Word tables' {
+        $path = Join-Path $TestDrive 'DslOrdinaryRunColumnWordTable.docx'
+
+        WordNew -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                [pscustomobject]@{
+                    Run = 'Nightly'
+                }
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Run'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Nightly'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'keeps ordinary span-like property names on normal Word tables' {
         $path = Join-Path $TestDrive 'DslOrdinarySpanNamedWordTable.docx'
         $rows = @(
@@ -558,6 +690,7 @@ Describe 'Word DSL surface' {
         $rows = @(
             [pscustomobject]@{
                 Text = 'Task'
+                FontSize = 'Large'
                 ColumnSpan = 1
                 Status = 'Open'
             }
@@ -573,11 +706,13 @@ Describe 'Word DSL surface' {
             $table = $document.Tables[0]
             $table.RowsCount | Should -Be 3
             $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Text'
-            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'ColumnSpan'
-            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Status'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'FontSize'
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'ColumnSpan'
+            $table.Rows[0].Cells[3].Paragraphs[0].Text | Should -Be 'Status'
             $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Task'
-            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be '1'
-            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be 'Open'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'Large'
+            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be '1'
+            $table.Rows[1].Cells[3].Paragraphs[0].Text | Should -Be 'Open'
             $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Follow-up'
             $table.Rows[2].Cells[0].ColumnSpan | Should -Be 3
         } finally {
@@ -1111,17 +1246,32 @@ Describe 'Word DSL surface' {
                 WordText 'Summary'
                 WordBookmark -Name 'Summary'
             }
+
+            WordParagraph -Run @(
+                WordTextRun 'Run link' -LinkUri 'https://example.org/run' -LinkContents 'Run tooltip'
+                WordTextRun ' and '
+                WordTextRun 'run anchor' -LinkDestinationName 'Summary'
+            )
         } | Out-Null
 
         $document = Get-OfficeWord -Path $path -ReadOnly
         try {
-            $document.HyperLinks.Count | Should -Be 2
+            $document.HyperLinks.Count | Should -Be 4
             $document.BuiltinDocumentProperties.Title | Should -Be 'DSL document'
             $document.BuiltinDocumentProperties.Creator | Should -Be 'PSWriteOffice'
             $document.CustomDocumentProperties['BuildNumber'].Value | Should -Be 21
         } finally {
             $document.Dispose()
         }
+
+        $links = @(Get-OfficeWordHyperlink -Path $path)
+        $relationshipXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/_rels/document.xml.rels'
+        $hyperlinkTargets = @($relationshipXml.Relationships.Relationship |
+                Where-Object Type -eq 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink' |
+                ForEach-Object Target)
+        $hyperlinkTargets | Should -Contain 'https://example.org/run'
+        ($links | Where-Object Text -eq 'Run link' | Select-Object -First 1).Tooltip | Should -Be 'Run tooltip'
+        ($links | Where-Object Text -eq 'run anchor' | Select-Object -First 1).Anchor | Should -Be 'Summary'
     }
 
     It 'supports background colors and mail merge in the DSL' {

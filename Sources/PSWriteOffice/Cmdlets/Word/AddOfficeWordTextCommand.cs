@@ -13,13 +13,21 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Important: ' -Bold }</code>
 ///   <para>Writes “Important:” with bold formatting.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeWordText")]
+[Cmdlet(VerbsCommon.Add, "OfficeWordText", DefaultParameterSetName = "Text")]
 [Alias("WordText", "WordBold", "WordItalic")]
 public sealed class AddOfficeWordTextCommand : PSCmdlet
 {
+    private const string ParameterSetText = "Text";
+    private const string ParameterSetRun = "Run";
+
     /// <summary>Text segments to append.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetText)]
     public string[] Text { get; set; } = Array.Empty<string>();
+
+    /// <summary>Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetRun)]
+    [Alias("Runs")]
+    public object[]? Run { get; set; }
 
     /// <summary>Apply bold formatting.</summary>
     [Parameter]
@@ -36,6 +44,19 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
     /// <summary>Run color (#RRGGBB).</summary>
     [Parameter]
     public string? Color { get; set; }
+
+    /// <summary>Render text with strikethrough.</summary>
+    [Parameter]
+    public SwitchParameter Strike { get; set; }
+
+    /// <summary>Font size in points.</summary>
+    [Parameter]
+    public int? FontSize { get; set; }
+
+    /// <summary>Font name or family.</summary>
+    [Parameter]
+    [Alias("Font", "FontFamily", "Typeface")]
+    public string? FontName { get; set; }
 
     /// <inheritdoc />
     protected override void BeginProcessing()
@@ -57,13 +78,24 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
         var context = WordDslContext.Require(this);
         var paragraph = context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
 
+        if (ParameterSetName == ParameterSetRun)
+        {
+            WordTextRunService.ApplyRuns(paragraph, Run!);
+            return;
+        }
+
         foreach (var entry in Text)
         {
-            var run = paragraph.AddFormattedText(entry, Bold.IsPresent, Italic.IsPresent, Underline);
-            if (!string.IsNullOrWhiteSpace(Color))
-            {
-                run.SetColorHex(Color!);
-            }
+            WordTextRunService.AddText(
+                paragraph,
+                entry,
+                Bold.IsPresent,
+                Italic.IsPresent,
+                Underline,
+                Strike.IsPresent,
+                Color,
+                FontSize,
+                FontName);
         }
     }
 }
