@@ -307,6 +307,21 @@ Describe 'PowerPoint cmdlets' {
                 PptTextRun 'Ready' -Color SeaGreen -Bold
             ) -X 80 -Y 80 -Width 300 -Height 50
             $textBox.Text | Should -Be 'Status: Ready'
+            $textBox = $textBox | Set-OfficePowerPointShapeText -Run @(
+                PptTextRun 'Linked' -Color Crimson -BackgroundColor Yellow -FontName 'Arial' -FontSize 18 -LinkUri 'https://example.org/ppt'
+            ) -PassThru
+            $textBox.Paragraphs[0].Runs[0].Color | Should -Be 'DC143C'
+            $textBox.Paragraphs[0].Runs[0].HighlightColor | Should -Be 'FFFF00'
+            $textBox.Paragraphs[0].Runs[0].Hyperlink.AbsoluteUri | Should -Be 'https://example.org/ppt'
+            $textBox = $textBox | Set-OfficePowerPointShapeText -Run @(
+                PptTextRun 'Plain'
+            ) -PassThru
+            $textBox.Text | Should -Be 'Plain'
+            $textBox.Paragraphs[0].Runs[0].Color | Should -BeNullOrEmpty
+            $textBox.Paragraphs[0].Runs[0].HighlightColor | Should -BeNullOrEmpty
+            $textBox.Paragraphs[0].Runs[0].FontName | Should -BeNullOrEmpty
+            $textBox.Paragraphs[0].Runs[0].FontSize | Should -BeNullOrEmpty
+            $textBox.Paragraphs[0].Runs[0].Hyperlink | Should -BeNullOrEmpty
 
             $table = PptTable -Slide $slide -InputObject @(
                 , @(
@@ -320,8 +335,11 @@ Describe 'PowerPoint cmdlets' {
                     }
                 )
                 , @('Owner', 'Platform')
+                , @(@{ Run = 'Queued' }, 'String run')
             ) -X 80 -Y 150 -Width 420 -Height 140
             $table.GetCell(0, 0).Text | Should -Be 'Build Ready'
+            $table.GetCell(1, 0).Text | Should -Be 'Owner'
+            $table.GetCell(2, 0).Text | Should -Be 'Queued'
 
             $row = $table | Add-OfficePowerPointTableRow -Values @(
                 @{ Run = @(PptTextRun 'Latency '; PptTextRun 'Ready' -Color SeaGreen -Bold) },
@@ -351,6 +369,11 @@ Describe 'PowerPoint cmdlets' {
                 PptTextRun 'Ready' -Color Navy -Bold
             ) -PassThru
             $cell.Text | Should -Be 'Owner Ready'
+            $cell = $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
+                PptTextRun 'Plain'
+            ) -PassThru
+            $cell.Text | Should -Be 'Plain'
+            $cell.Runs[0].Color | Should -BeNullOrEmpty
         } finally {
             if ($presentation) {
                 Close-OfficePowerPoint -Presentation $presentation

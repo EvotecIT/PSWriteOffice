@@ -100,17 +100,24 @@ internal static class PdfRichTextRunBuilder
     {
         var text = run.IsLineBreak ? Environment.NewLine : run.IsTab ? "\t" : run.Text;
         var baseline = GetEnum(run.Baseline, PdfTextBaseline.Normal);
+        if (!string.IsNullOrWhiteSpace(run.LinkUri) || !string.IsNullOrWhiteSpace(run.LinkDestinationName))
+        {
+            throw new PSArgumentException("PDF table cell text runs do not support links yet. Use PdfText outside the table or remove LinkUri/LinkDestinationName from the table cell run.");
+        }
+
         return new TextRun(
             text,
             bold: run.Bold,
             underline: run.Underline,
             color: PdfCommandUtilities.ParseColor(run.Color),
-            backgroundColor: PdfCommandUtilities.ParseColor(run.BackgroundColor),
             italic: run.Italic,
             strike: run.Strike,
             fontSize: run.FontSize,
             baseline: baseline,
-            font: GetNullableEnum<PdfStandardFont>(run.FontName));
+            font: GetNullableEnum<PdfStandardFont>(run.FontName),
+            tabLeader: GetEnum(run.TabLeader, PdfTabLeaderStyle.None),
+            tabAlignment: GetEnum(run.TabAlignment, PdfTabAlignment.Left),
+            backgroundColor: PdfCommandUtilities.ParseColor(run.BackgroundColor));
     }
 
     private static void AddText(PdfParagraphBuilder builder, string text, string? linkUri, string? linkDestinationName, string? linkContents, PdfColor? color, bool underline)

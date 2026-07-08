@@ -232,6 +232,15 @@ Describe 'PDF cmdlets' {
                         PdfTextRun 'Ready' -Color SeaGreen -Bold
                     ) -ColumnSpan 2 -FillColor AliceBlue
                 )
+                , @(
+                    PdfTableCell -Run @(
+                        PdfTextRun 'Styled'
+                    ) -Bold -TextColor Crimson -FontSize 19 -ColumnSpan 2
+                )
+                , @(
+                    @{ Run = 'Queued' },
+                    'String run'
+                )
                 , @('Owner', 'Platform')
             )
         } | Out-Null
@@ -241,7 +250,30 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Status'
         $text | Should -Match 'Ready'
         $text | Should -Match 'Build'
+        $text | Should -Match 'Styled'
+        $text | Should -Match 'Queued'
         $text | Should -Match 'Owner'
+
+        $blocks = @(Get-OfficePdfText -Path $path -AsTextBlock)
+        $styledBlock = $blocks | Where-Object { $_.Text -match 'Styled' } | Select-Object -First 1
+        $styledBlock | Should -Not -BeNullOrEmpty
+        $styledBlock.FontSize | Should -Be 19
+    }
+
+    It 'rejects PDF table cell rich text links until table annotations are supported' {
+        $path = Join-Path $TestDrive 'rich-run-table-link.pdf'
+
+        {
+            PdfNew -Path $path {
+                PdfTable -InputObject @(
+                    , @(
+                        PdfTableCell -Run @(
+                            PdfTextRun 'Docs' -LinkUri 'https://example.org/table'
+                        )
+                    )
+                )
+            }
+        } | Should -Throw '*PDF table cell text runs do not support links yet*'
     }
 
     It 'treats rich and styled PDF table cells as structured without spans' {

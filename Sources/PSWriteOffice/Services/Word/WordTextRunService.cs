@@ -1,5 +1,8 @@
 using System;
+using System.Globalization;
+using System.Linq;
 using System.Management.Automation;
+using System.Reflection;
 using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services;
@@ -45,13 +48,14 @@ internal static class WordTextRunService
         }
 
         var text = spec.IsTab ? "\t" : spec.Text;
+        var underline = ResolveUnderline(spec.Underline, spec.UnderlineStyle);
         if (!string.IsNullOrWhiteSpace(spec.LinkUri) || !string.IsNullOrWhiteSpace(spec.LinkDestinationName))
         {
             AddHyperlink(paragraph, text, spec);
+            ApplyHyperlinkStyle(paragraph.Hyperlink, spec, underline);
             return;
         }
 
-        var underline = ResolveUnderline(spec.Underline, spec.UnderlineStyle);
         var run = paragraph.AddFormattedText(text, spec.Bold, spec.Italic, underline);
         ApplyAdditionalStyle(
             run,
@@ -60,6 +64,7 @@ internal static class WordTextRunService
             spec.BackgroundColor,
             spec.FontSize.HasValue ? (int)Math.Round(spec.FontSize.Value) : null,
             spec.FontName);
+        ApplyBaseline(run, spec.Baseline);
     }
 
     private static void AddHyperlink(WordParagraph paragraph, string text, OfficeTextRunSpec spec)
@@ -81,6 +86,89 @@ internal static class WordTextRunService
         }
 
         paragraph.AddHyperLink(text, uri, true, spec.LinkContents ?? string.Empty, true);
+    }
+
+    private static void ApplyHyperlinkStyle(WordHyperLink? hyperlink, OfficeTextRunSpec spec, UnderlineValues? underline)
+    {
+        var run = GetHyperlinkRun(hyperlink);
+        if (run == null)
+        {
+            return;
+        }
+
+        var properties = EnsureRunProperties(run);
+        if (spec.Bold)
+        {
+            properties.Bold = new Bold();
+        }
+
+        if (spec.Italic)
+        {
+            properties.Italic = new Italic();
+        }
+
+        if (underline.HasValue)
+        {
+            properties.Underline = new Underline { Val = underline.Value };
+        }
+
+        if (spec.Strike)
+        {
+            properties.Strike = new Strike();
+        }
+
+        var rgb = OfficeColorUtilities.ToRgbHex(spec.Color);
+        if (!string.IsNullOrWhiteSpace(rgb))
+        {
+            properties.Color = new Color { Val = rgb! };
+        }
+
+        ApplyBackground(properties, spec.BackgroundColor);
+
+        if (spec.FontSize.HasValue)
+        {
+            var halfPoints = ((int)Math.Round(spec.FontSize.Value) * 2).ToString(CultureInfo.InvariantCulture);
+            properties.FontSize = new FontSize { Val = halfPoints };
+        }
+
+        if (!string.IsNullOrWhiteSpace(spec.FontName))
+        {
+            properties.RunFonts = new RunFonts
+            {
+                Ascii = spec.FontName,
+                HighAnsi = spec.FontName,
+                EastAsia = spec.FontName,
+                ComplexScript = spec.FontName
+            };
+        }
+
+        ApplyBaseline(properties, spec.Baseline);
+    }
+
+    private static Run? GetHyperlinkRun(WordHyperLink? hyperlink)
+    {
+        if (hyperlink == null)
+        {
+            return null;
+        }
+
+        // OfficeIMO exposes hyperlink metadata publicly, but not the formatted inner run.
+        var field = typeof(WordHyperLink).GetField("_hyperlink", BindingFlags.Instance | BindingFlags.NonPublic);
+        return field?.GetValue(hyperlink) is Hyperlink element
+            ? element.Elements<Run>().FirstOrDefault()
+            : null;
+    }
+
+    private static RunProperties EnsureRunProperties(Run run)
+    {
+        if (run.RunProperties != null)
+        {
+            return run.RunProperties;
+        }
+
+        var properties = new RunProperties();
+        run.PrependChild(properties);
+        return properties;
     }
 
     private static void ApplyAdditionalStyle(WordParagraph run, bool strike, string? color, string? backgroundColor, int? fontSize, string? fontName)
@@ -109,6 +197,59 @@ internal static class WordTextRunService
         }
     }
 
+    private static void ApplyBaseline(WordParagraph run, string? baseline)
+    {
+        var value = ResolveBaseline(baseline);
+        if (value == null)
+        {
+            return;
+        }
+
+        if (value == VerticalPositionValues.Superscript)
+        {
+            run.SetSuperScript();
+            return;
+        }
+
+        if (value == VerticalPositionValues.Subscript)
+        {
+            run.SetSubScript();
+        }
+    }
+
+    private static void ApplyBaseline(RunProperties properties, string? baseline)
+    {
+        var value = ResolveBaseline(baseline);
+        if (value.HasValue)
+        {
+            properties.VerticalTextAlignment = new VerticalTextAlignment { Val = value.Value };
+        }
+    }
+
+    private static VerticalPositionValues? ResolveBaseline(string? baseline)
+    {
+        if (string.IsNullOrWhiteSpace(baseline))
+        {
+            return null;
+        }
+
+        switch (OfficeTextRunParser.NormalizeKind(baseline))
+        {
+            case "normal":
+            case "baseline":
+                return null;
+            case "superscript":
+            case "super":
+            case "sup":
+                return VerticalPositionValues.Superscript;
+            case "subscript":
+            case "sub":
+                return VerticalPositionValues.Subscript;
+            default:
+                throw new PSArgumentException($"Unsupported Word baseline '{baseline}'.", nameof(baseline));
+        }
+    }
+
     private static void ApplyBackground(WordParagraph run, string? backgroundColor)
     {
         if (string.IsNullOrWhiteSpace(backgroundColor))
@@ -127,6 +268,26 @@ internal static class WordTextRunService
         {
             run.ShadingFillColorHex = rgb!;
             run.ShadingPattern = ShadingPatternValues.Clear;
+        }
+    }
+
+    private static void ApplyBackground(RunProperties properties, string? backgroundColor)
+    {
+        if (string.IsNullOrWhiteSpace(backgroundColor))
+        {
+            return;
+        }
+
+        if (OpenXmlValueParser.TryParse(backgroundColor, out HighlightColorValues highlight))
+        {
+            properties.Highlight = new Highlight { Val = highlight };
+            return;
+        }
+
+        var rgb = OfficeColorUtilities.ToRgbHex(backgroundColor);
+        if (!string.IsNullOrWhiteSpace(rgb))
+        {
+            properties.Shading = new Shading { Fill = rgb!, Val = ShadingPatternValues.Clear };
         }
     }
 

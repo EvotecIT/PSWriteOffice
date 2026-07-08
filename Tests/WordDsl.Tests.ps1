@@ -532,6 +532,16 @@ Describe 'Word DSL surface' {
                 WordTextRun 'Highlight ' -BackgroundColor Yellow
                 WordTextRun 'Shaded' -BackgroundColor LightPink
             )
+            WordParagraph -Run @(
+                WordTextRun 'x'
+                WordTextRun '2' -Kind Superscript
+                WordTextRun ' H'
+                WordTextRun '2' -Baseline Subscript
+                WordTextRun 'O'
+            )
+            WordParagraph -Run @(
+                WordTextRun 'Styled link' -LinkUri 'https://example.org/styled' -LinkContents 'Styled tooltip' -Bold -Color Crimson -BackgroundColor Yellow -FontSize 16 -FontName 'Arial'
+            )
             WordTable -Style TableGrid -InputObject @(
                 , @(
                     WordTableCellSpec -Run @(
@@ -562,9 +572,17 @@ Describe 'Word DSL surface' {
         $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
         $text | Should -Match 'Status: Ready'
         $text | Should -Match 'Highlight Shaded'
+        $text | Should -Match 'x2 H2O'
+        $text | Should -Match 'Styled link'
         $text | Should -Match 'Build Ready'
         $text | Should -Match 'Owner: Platform'
         $documentXml.SelectSingleNode('//w:color[translate(@w:val, "abcdef", "ABCDEF")="2E8B57"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:b', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:color[translate(@w:val, "abcdef", "ABCDEF")="DC143C"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:highlight[@w:val="yellow"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:sz[@w:val="32"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:vertAlign[@w:val="superscript"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:vertAlign[@w:val="subscript"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:highlight[@w:val="yellow"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:shd[translate(@w:fill, "abcdef", "ABCDEF")="FFB6C1"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:highlight[translate(@w:val, "abcdef", "ABCDEF")="F0F8FF"] | //w:shd[translate(@w:fill, "abcdef", "ABCDEF")="F0F8FF"]', $namespaceManager) | Should -Not -BeNullOrEmpty

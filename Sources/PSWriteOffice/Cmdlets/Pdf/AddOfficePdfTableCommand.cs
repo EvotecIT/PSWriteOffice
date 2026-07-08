@@ -6,6 +6,7 @@ using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.Table;
+using PSWriteOffice.Services.Text;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -262,7 +263,7 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     {
         if (cell.HasRuns)
         {
-            var runs = PdfRichTextRunBuilder.ToTextRuns(cell.Runs!.ToArray());
+            var runs = PdfRichTextRunBuilder.ToTextRuns(ApplyTextStyle(cell.Runs!.ToArray(), cell.Style));
             return PdfTableCell.Merge(runs, cell.ColumnSpan, cell.RowSpan);
         }
 
@@ -283,6 +284,35 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
         return cell.HasSpan
             ? PdfTableCell.Merge(cell.Text, cell.ColumnSpan, cell.RowSpan)
             : PdfTableCell.TextCell(cell.Text);
+    }
+
+    private static OfficeTextRunSpec[] ApplyTextStyle(OfficeTextRunSpec[] runs, OfficeTableCellStyle? style)
+    {
+        if (style?.HasTextStyle != true)
+        {
+            return runs;
+        }
+
+        return runs.Select(run => OfficeTextRunParser.NormalizeDerivedFields(new OfficeTextRunSpec
+        {
+            Text = run.Text,
+            Bold = run.Bold || style.Bold,
+            Italic = run.Italic || style.Italic,
+            Underline = run.Underline || style.Underline || !string.IsNullOrWhiteSpace(style.UnderlineStyle),
+            Strike = run.Strike || style.Strike,
+            Color = run.Color ?? style.TextColor,
+            BackgroundColor = run.BackgroundColor,
+            FontName = run.FontName,
+            FontSize = run.FontSize ?? style.FontSize,
+            Kind = run.Kind,
+            Baseline = run.Baseline,
+            LinkUri = run.LinkUri,
+            LinkDestinationName = run.LinkDestinationName,
+            LinkContents = run.LinkContents,
+            UnderlineStyle = run.UnderlineStyle ?? style.UnderlineStyle,
+            TabLeader = run.TabLeader,
+            TabAlignment = run.TabAlignment
+        })).ToArray();
     }
 
     private static PdfTableStyle? ApplyPdfCellStyles(

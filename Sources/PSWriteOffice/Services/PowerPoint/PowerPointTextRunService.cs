@@ -61,28 +61,15 @@ internal static class PowerPointTextRunService
         run.Italic = spec.Italic;
         run.Underline = spec.Underline;
         run.Strikethrough = spec.Strike;
-
-        if (spec.FontSize.HasValue)
-        {
-            run.FontSize = (int)Math.Round(spec.FontSize.Value);
-        }
-
-        if (!string.IsNullOrWhiteSpace(spec.FontName))
-        {
-            run.FontName = spec.FontName;
-        }
-
-        var color = OfficeColorUtilities.ToRgbHex(spec.Color);
-        if (!string.IsNullOrWhiteSpace(color))
-        {
-            run.Color = color;
-        }
-
-        var highlightColor = OfficeColorUtilities.ToRgbHex(spec.BackgroundColor);
-        if (!string.IsNullOrWhiteSpace(highlightColor))
-        {
-            run.HighlightColor = highlightColor;
-        }
+        run.FontSize = spec.FontSize.HasValue
+            ? (int)Math.Round(spec.FontSize.Value)
+            : null;
+        run.FontName = !string.IsNullOrWhiteSpace(spec.FontName)
+            ? spec.FontName
+            : null;
+        run.Color = OfficeColorUtilities.ToRgbHex(spec.Color);
+        run.HighlightColor = OfficeColorUtilities.ToRgbHex(spec.BackgroundColor);
+        run.ClearHyperlink();
 
         if (!string.IsNullOrWhiteSpace(spec.LinkDestinationName))
         {
