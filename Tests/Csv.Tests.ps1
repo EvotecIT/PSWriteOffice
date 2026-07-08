@@ -25,6 +25,7 @@ Describe 'CSV cmdlets' {
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'AsDataTable'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'AsDataReader'
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
@@ -223,6 +224,22 @@ Describe 'CSV cmdlets' {
         $table.Rows[1]['Value'] | Should -Be 2
     }
 
+    It 'imports CSV rows as a typed IDataReader for database workflows' {
+        $path = Join-Path $TestDrive 'reader-import.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBeta,2" -Encoding UTF8
+
+        $reader = Import-OfficeCsv -Path $path -AsDataReader -InferSchema -SchemaSampleSize 2
+        try {
+            $reader.GetType().Name | Should -Be 'CsvDataReader'
+            $reader.GetFieldType($reader.GetOrdinal('Value')) | Should -Be ([int])
+            $reader.Read() | Should -BeTrue
+            $reader.GetString($reader.GetOrdinal('Name')) | Should -Be 'Alpha'
+            $reader.GetInt32($reader.GetOrdinal('Value')) | Should -Be 1
+        } finally {
+            $reader.Dispose()
+        }
+    }
+
     It 'rejects appending to compressed CSV files' {
         $path = Join-Path $TestDrive 'compressed-append.csv.gz'
 
@@ -289,7 +306,10 @@ Describe 'CSV cmdlets' {
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
 
         { Import-OfficeCsv -Path $path -AsDataTable -AsHashtable -ErrorAction Stop } |
-            Should -Throw '*AsDataTable*AsHashtable*'
+            Should -Throw '*AsDataTable*AsDataReader*AsHashtable*'
+
+        { Import-OfficeCsv -Path $path -AsDataTable -AsDataReader -ErrorAction Stop } |
+            Should -Throw '*AsDataTable*AsDataReader*AsHashtable*'
     }
 
     It 'writes to files using the Path alias' {

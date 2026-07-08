@@ -42,6 +42,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private readonly CsvPowerShellRowWriter _rowWriter = new();
     private readonly List<CsvParseError> _parseErrors = new();
     private readonly CancellationTokenSource _cancellation = new();
+    private bool _asDataReader;
     private bool _asDataTable;
     private bool _asHashtable;
 
@@ -271,7 +272,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [ValidateRange(1, int.MaxValue)]
     public int? ProgressInterval { get; set; }
 
-    /// <summary>Infer DataTable column types when -AsDataTable is used.</summary>
+    /// <summary>Infer typed columns when -AsDataTable or -AsDataReader is used.</summary>
     [Parameter]
     public SwitchParameter InferSchema { get; set; }
 
@@ -284,6 +285,10 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public SwitchParameter AsHashtable { get; set; }
 
+    /// <summary>Emit a forward-only IDataReader for database bulk-copy workflows.</summary>
+    [Parameter]
+    public SwitchParameter AsDataReader { get; set; }
+
     /// <summary>Emit one DataTable per input file instead of enumerating row objects.</summary>
     [Parameter]
     public SwitchParameter AsDataTable { get; set; }
@@ -292,11 +297,13 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     protected override void BeginProcessing()
     {
         CsvCommandValidation.EnsureHeaderOptions(NoHeader, Header);
-        if (AsDataTable.IsPresent && AsHashtable.IsPresent)
+        var selectedOutputModes = (AsDataTable.IsPresent ? 1 : 0) + (AsDataReader.IsPresent ? 1 : 0) + (AsHashtable.IsPresent ? 1 : 0);
+        if (selectedOutputModes > 1)
         {
-            throw new PSArgumentException("Specify either -AsDataTable or -AsHashtable, but not both.");
+            throw new PSArgumentException("Specify only one of -AsDataTable, -AsDataReader, or -AsHashtable.");
         }
 
+        _asDataReader = AsDataReader.IsPresent;
         _asDataTable = AsDataTable.IsPresent;
         _asHashtable = AsHashtable.IsPresent;
     }
@@ -322,7 +329,11 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                 {
                     _rowWriter.Reset();
                     _parseErrors.Clear();
-                    if (_asDataTable)
+                    if (_asDataReader)
+                    {
+                        WriteDataReader(resolved, options);
+                    }
+                    else if (_asDataTable)
                     {
                         WriteDataTable(resolved, options, System.IO.Path.GetFileNameWithoutExtension(resolved));
                     }
@@ -352,6 +363,12 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteDocumentRows(CsvDocument document, string? tableName = null)
     {
+        if (_asDataReader)
+        {
+            WriteDataReader(document);
+            return;
+        }
+
         if (_asDataTable)
         {
             WriteDataTable(document, tableName);
@@ -370,6 +387,17 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     {
         var document = CsvDocument.Load(path, options);
         WriteObject(PSObject.AsPSObject(document.ToDataTable(CreateDataTableOptions(tableName))), enumerateCollection: false);
+    }
+
+    private void WriteDataReader(CsvDocument document)
+    {
+        WriteObject(PSObject.AsPSObject(document.CreateDataReader(CreateDataReaderOptions())), enumerateCollection: false);
+    }
+
+    private void WriteDataReader(string path, CsvLoadOptions options)
+    {
+        var document = CsvDocument.Load(path, options);
+        WriteDataReader(document);
     }
 
     /// <inheritdoc />
@@ -488,6 +516,13 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
         new()
         {
             TableName = tableName,
+            InferSchema = InferSchema.IsPresent,
+            SchemaSampleSize = SchemaSampleSize
+        };
+
+    private CsvDataReaderOptions CreateDataReaderOptions() =>
+        new()
+        {
             InferSchema = InferSchema.IsPresent,
             SchemaSampleSize = SchemaSampleSize
         };
