@@ -169,8 +169,20 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
     private void EmitDataTable(DataTable table)
     {
+        _objectProjector.UseColumns(GetDataTableColumnNames(table), validateColumns: false);
         using var reader = table.CreateDataReader();
         EnsureObjectWriter().WriteDataReader(reader);
+    }
+
+    private static string[] GetDataTableColumnNames(DataTable table)
+    {
+        var columns = new string[table.Columns.Count];
+        for (var i = 0; i < columns.Length; i++)
+        {
+            columns[i] = table.Columns[i].ColumnName;
+        }
+
+        return columns;
     }
 
     private static bool TryGetCsvDocument(object? value, out CsvDocument document)

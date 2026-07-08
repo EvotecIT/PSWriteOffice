@@ -345,6 +345,47 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         return _streamingWriter;
     }
 
+    private CsvObjectWriter? EnsureStreamingWriterForColumns(IReadOnlyList<string> sourceColumns, out IReadOnlyList<string> effectiveColumns)
+    {
+        if (sourceColumns == null)
+        {
+            throw new ArgumentNullException(nameof(sourceColumns));
+        }
+
+        if (_streamingWriter != null)
+        {
+            effectiveColumns = _objectProjector.CurrentColumns ?? sourceColumns;
+            return _streamingWriter;
+        }
+
+        if (!TryPrepareOutput("Write CSV"))
+        {
+            effectiveColumns = sourceColumns;
+            return null;
+        }
+
+        var options = CreateSaveOptions();
+        _objectProjector.UseCsvOptions(options);
+        effectiveColumns = sourceColumns;
+        var validateFollowingObjects = false;
+        if (Append.IsPresent)
+        {
+            options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
+            _objectProjector.UseCsvOptions(options);
+            if (_appendHeader is { Length: > 0 })
+            {
+                effectiveColumns = _appendHeader;
+                validateFollowingObjects = !Force.IsPresent;
+            }
+        }
+
+        _objectProjector.UseColumns(effectiveColumns, validateColumns: validateFollowingObjects);
+        var fileWriter = CreateTextWriter(Append.IsPresent, options);
+        _streamingWriter = new CsvObjectWriter(fileWriter, options);
+        _wroteOutput = true;
+        return _streamingWriter;
+    }
+
     private bool TryPrepareOutput(string action, bool allowAdditionalAppend = false)
     {
         if (_skipOutput)

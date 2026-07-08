@@ -538,6 +538,26 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'converts DataTable then object input using the table column order' {
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Alpha', 1)
+
+        $csvText = @(
+            & {
+                Write-Output -InputObject $table -NoEnumerate
+                Write-Output -InputObject ([pscustomobject]@{ Value = 2; Name = 'Beta' }) -NoEnumerate
+            } | ConvertTo-OfficeCsv
+        )
+
+        $csvText | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'appends DataTable rows using an existing CSV header order' {
         $path = Join-Path $TestDrive 'datatable-append.csv'
         Set-Content -LiteralPath $path -Value "Value,Name`n1,Alpha" -Encoding UTF8
@@ -566,6 +586,46 @@ Describe 'CSV cmdlets' {
         & {
             Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
             Write-Output -InputObject $table -NoEnumerate
+        } | Export-OfficeCsv -Path $path -Append
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Seed,0'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
+    It 'exports object then DataTable rows in one invocation without append' {
+        $path = Join-Path $TestDrive 'object-then-datatable-export.csv'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+
+        & {
+            Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+            Write-Output -InputObject $table -NoEnumerate
+        } | Export-OfficeCsv -Path $path
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
+    It 'appends DataTable then object rows in one invocation' {
+        $path = Join-Path $TestDrive 'datatable-then-object-append.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Alpha', 1)
+
+        & {
+            Write-Output -InputObject $table -NoEnumerate
+            Write-Output -InputObject ([pscustomobject]@{ Value = 2; Name = 'Beta' }) -NoEnumerate
         } | Export-OfficeCsv -Path $path -Append
 
         Get-Content -LiteralPath $path | Should -Be @(
@@ -634,6 +694,31 @@ Describe 'CSV cmdlets' {
             & {
                 Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
                 Write-Output -InputObject $reader -NoEnumerate
+            } | Export-OfficeCsv -Path $path -Append
+        } finally {
+            $reader.Dispose()
+        }
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Seed,0'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
+    It 'appends IDataReader then object rows in one invocation' {
+        $path = Join-Path $TestDrive 'reader-then-object-append.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Alpha', 1)
+        $reader = $table.CreateDataReader()
+        try {
+            & {
+                Write-Output -InputObject $reader -NoEnumerate
+                Write-Output -InputObject ([pscustomobject]@{ Value = 2; Name = 'Beta' }) -NoEnumerate
             } | Export-OfficeCsv -Path $path -Append
         } finally {
             $reader.Dispose()

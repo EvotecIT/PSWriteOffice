@@ -11,29 +11,43 @@ public sealed partial class ExportOfficeCsvCommand
 {
     private void ExportDataReader(IDataReader reader)
     {
-        if (Append.IsPresent && _streamingWriter != null)
-        {
-            DisposeStreamingWriter();
-        }
-
-        if (reader == null || !TryPrepareOutput("Write CSV", allowAdditionalAppend: Append.IsPresent))
+        if (reader == null)
         {
             return;
         }
 
-        if (Append.IsPresent)
+        var sourceColumns = GetDataReaderColumnNames(reader);
+        var hadActiveWriter = _streamingWriter != null;
+        var writer = EnsureStreamingWriterForColumns(sourceColumns, out var effectiveColumns);
+        if (writer == null)
         {
-            AppendDataReader(reader);
-        }
-        else
-        {
-            var options = CreateSaveOptions();
-            using var writer = CreateTextWriter(append: false, options);
-            WriteDataReader(writer, reader, options);
+            return;
         }
 
-        _wroteOutput = true;
-        WritePassThru();
+        try
+        {
+            if (!hadActiveWriter &&
+                Append.IsPresent &&
+                effectiveColumns.Count > 0 &&
+                !ColumnsMatch(sourceColumns, effectiveColumns))
+            {
+                ValidateDataReaderAppendHeader(reader, effectiveColumns);
+            }
+
+            if (!hadActiveWriter && ColumnsMatch(sourceColumns, effectiveColumns))
+            {
+                writer.WriteDataReader(reader);
+            }
+            else
+            {
+                WriteDataReaderRows(reader, writer, effectiveColumns);
+            }
+        }
+        catch
+        {
+            DisposeStreamingWriter();
+            throw;
+        }
     }
 
     private static bool TryGetDataReader(object? value, out IDataReader reader)
@@ -79,6 +93,17 @@ public sealed partial class ExportOfficeCsvCommand
     {
         using var csvWriter = new CsvObjectWriter(writer, options, leaveOpen: true);
         csvWriter.WriteDataReader(reader);
+    }
+
+    private static string[] GetDataReaderColumnNames(IDataReader reader)
+    {
+        var columns = new string[reader.FieldCount];
+        for (var i = 0; i < columns.Length; i++)
+        {
+            columns[i] = reader.GetName(i);
+        }
+
+        return columns;
     }
 
     private string[]? GetEffectiveAppendHeader(IDataReader reader)

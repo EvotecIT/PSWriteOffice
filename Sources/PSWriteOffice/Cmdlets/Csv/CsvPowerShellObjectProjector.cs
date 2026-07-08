@@ -52,6 +52,8 @@ internal sealed class CsvPowerShellObjectProjector
         _validateColumns = validateColumns;
     }
 
+    public IReadOnlyList<string>? CurrentColumns => _columns;
+
     public void ValidateObjectColumns(object? value, IReadOnlyList<string> columns)
     {
         if (columns == null)

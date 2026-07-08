@@ -11,29 +11,44 @@ public sealed partial class ExportOfficeCsvCommand
 {
     private void ExportDataTable(DataTable table)
     {
-        if (Append.IsPresent && _streamingWriter != null)
-        {
-            DisposeStreamingWriter();
-        }
-
-        if (table == null || !TryPrepareOutput("Write CSV", allowAdditionalAppend: Append.IsPresent))
+        if (table == null)
         {
             return;
         }
 
-        if (Append.IsPresent)
+        var sourceColumns = GetDataTableColumnNames(table);
+        var hadActiveWriter = _streamingWriter != null;
+        var writer = EnsureStreamingWriterForColumns(sourceColumns, out var effectiveColumns);
+        if (writer == null)
         {
-            AppendDataTable(table);
-        }
-        else
-        {
-            var options = CreateSaveOptions();
-            using var writer = CreateTextWriter(append: false, options);
-            WriteDataTable(writer, table, options);
+            return;
         }
 
-        _wroteOutput = true;
-        WritePassThru();
+        try
+        {
+            if (!hadActiveWriter &&
+                Append.IsPresent &&
+                effectiveColumns.Count > 0 &&
+                !ColumnsMatch(sourceColumns, effectiveColumns))
+            {
+                ValidateDataTableAppendHeader(table, effectiveColumns);
+            }
+
+            if (!hadActiveWriter && ColumnsMatch(sourceColumns, effectiveColumns))
+            {
+                using var reader = table.CreateDataReader();
+                writer.WriteDataReader(reader);
+            }
+            else
+            {
+                WriteDataTableRows(table, writer, effectiveColumns);
+            }
+        }
+        catch
+        {
+            DisposeStreamingWriter();
+            throw;
+        }
     }
 
     private static bool TryGetDataTable(object? value, out DataTable table)
@@ -100,6 +115,17 @@ public sealed partial class ExportOfficeCsvCommand
         csvWriter.WriteDataReader(reader);
     }
 
+    private static string[] GetDataTableColumnNames(DataTable table)
+    {
+        var columns = new string[table.Columns.Count];
+        for (var i = 0; i < columns.Length; i++)
+        {
+            columns[i] = table.Columns[i].ColumnName;
+        }
+
+        return columns;
+    }
+
     private string[]? GetEffectiveAppendHeader(DataTable table)
     {
         if (_appendHeader is not { Length: > 0 })
@@ -136,6 +162,24 @@ public sealed partial class ExportOfficeCsvCommand
                 (Row: row, Columns: columns),
                 static (state, index) => TryGetDataTableValue(state.Row, state.Columns[index]));
         }
+    }
+
+    private static bool ColumnsMatch(IReadOnlyList<string> left, IReadOnlyList<string> right)
+    {
+        if (left.Count != right.Count)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < left.Count; i++)
+        {
+            if (!string.Equals(left[i], right[i], StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static object? TryGetDataTableValue(DataRow row, string column)
