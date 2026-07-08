@@ -547,6 +547,72 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'keeps default headers on mixed object and span Word tables' {
+        $path = Join-Path $TestDrive 'DslMixedObjectSpanWordTable.docx'
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Directory'
+                Status = 'Healthy'
+            }
+            , @(New-OfficeWordTableCell -Text 'Follow-up' -ColumnSpan 2)
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'Status'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Directory'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'Healthy'
+            $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Follow-up'
+            $table.Rows[2].Cells[0].ColumnSpan | Should -Be 2
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'merges adjacent and occupied-range Word spans without stale indexes' {
+        $path = Join-Path $TestDrive 'DslComplexSpanWordTable.docx'
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                , @(
+                    (New-OfficeWordTableCell -Text 'Left block' -ColumnSpan 2),
+                    (New-OfficeWordTableCell -Text 'Right block' -ColumnSpan 2)
+                )
+                , @(
+                    'A',
+                    (New-OfficeWordTableCell -Text 'Pinned' -RowSpan 2),
+                    'C'
+                )
+                , @(
+                    (New-OfficeWordTableCell -Text 'Wide task' -ColumnSpan 2),
+                    'Tail'
+                )
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $texts = @($table.Rows | ForEach-Object {
+                $_.Cells | ForEach-Object { $_.Paragraphs[0].Text }
+            })
+            $texts | Should -Contain 'Left block'
+            $texts | Should -Contain 'Right block'
+            $texts | Should -Contain 'Pinned'
+            $texts | Should -Contain 'Wide task'
+            $texts | Should -Contain 'Tail'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'applies conditions to the correct explicit Word table rows' {
         $path = Join-Path $TestDrive 'DslExplicitRowConditionWordTable.docx'
 

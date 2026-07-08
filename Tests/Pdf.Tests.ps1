@@ -200,6 +200,28 @@ Describe 'PDF cmdlets' {
         $text | Should -Match '2'
     }
 
+    It 'keeps default headers on mixed object and span PDF tables' {
+        $path = Join-Path $TestDrive 'mixed-object-span-table.pdf'
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Directory'
+                Status = 'Healthy'
+            }
+            , @(New-OfficePdfTableCell -Text 'Follow-up' -ColumnSpan 2)
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Name'
+        $text | Should -Match 'Status'
+        $text | Should -Match 'Directory'
+        $text | Should -Match 'Healthy'
+        $text | Should -Match 'Follow-up'
+    }
+
     It 'supports transposed table views' {
         $path = Join-Path $TestDrive 'transposed-table.pdf'
         $rows = @(

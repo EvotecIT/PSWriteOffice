@@ -86,7 +86,11 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var tableRows = TableViewProjection.Project(rows, effectiveView);
         var legacyLayout = ResolveLegacyLayout(Layout);
         var conditionSkipsHeader = NoHeader.IsPresent;
-        var table = OfficeTableSpecParser.TryCreate(tableRows, propertyNames: null, header: null, out var tableSpec)
+        var table = OfficeTableSpecParser.TryCreate(
+                tableRows,
+                propertyNames: null,
+                header: NoHeader.IsPresent ? Array.Empty<string>() : null,
+                out var tableSpec)
             ? CreateTable(context, tableSpec, Style, legacyLayout)
             : CreateTable(
                 context,
@@ -94,7 +98,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
                 Style,
                 includeHeader: !NoHeader.IsPresent,
                 layout: legacyLayout);
-        conditionSkipsHeader = conditionSkipsHeader || tableSpec != null;
+        conditionSkipsHeader = conditionSkipsHeader || tableSpec is { HasHeader: false };
         ApplyLayout(table, Layout);
         context.RegisterTableSource(table, tableRows);
 
@@ -246,16 +250,16 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
             SetCellText(table, placement.RowIndex, placement.ColumnIndex, placement.Cell.Text);
         }
 
-        foreach (var placement in spec.Placements)
+        foreach (var placement in spec.Placements
+            .Where(static placement => placement.Cell.HasSpan)
+            .OrderByDescending(static placement => placement.RowIndex)
+            .ThenByDescending(static placement => placement.ColumnIndex))
         {
-            if (placement.Cell.HasSpan)
-            {
-                table.MergeCells(
-                    placement.RowIndex,
-                    placement.ColumnIndex,
-                    placement.Cell.RowSpan,
-                    placement.Cell.ColumnSpan);
-            }
+            table.MergeCells(
+                placement.RowIndex,
+                placement.ColumnIndex,
+                placement.Cell.RowSpan,
+                placement.Cell.ColumnSpan);
         }
 
         return table;

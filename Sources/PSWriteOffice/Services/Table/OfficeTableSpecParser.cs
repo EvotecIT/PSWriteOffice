@@ -35,9 +35,12 @@ internal static class OfficeTableSpecParser
         }
 
         var tableRows = new List<IReadOnlyList<OfficeTableCellSpec>>();
+        var hasHeader = false;
+        var allowDefaultHeader = header == null;
         if (header is { Length: > 0 })
         {
             tableRows.Add(header.Select(static value => new OfficeTableCellSpec(value)).ToArray());
+            hasHeader = true;
         }
 
         string[]? columns = propertyNames;
@@ -58,6 +61,12 @@ internal static class OfficeTableSpecParser
             if (PowerShellObjectNormalizer.TryProjectItem(row, columns, out var projectedColumns, out var values))
             {
                 columns ??= projectedColumns;
+                if (allowDefaultHeader && !hasHeader && columns.Length > 0)
+                {
+                    tableRows.Add(columns.Select(static value => new OfficeTableCellSpec(value)).ToArray());
+                    hasHeader = true;
+                }
+
                 tableRows.Add(values.Select(ToCell).ToArray());
                 continue;
             }
@@ -70,7 +79,7 @@ internal static class OfficeTableSpecParser
             return false;
         }
 
-        spec = new OfficeTableSpec(tableRows);
+        spec = new OfficeTableSpec(tableRows, hasHeader);
         return spec.RowCount > 0 && spec.ColumnCount > 0;
     }
 
@@ -153,12 +162,15 @@ internal static class OfficeTableSpecParser
     }
 
     private static bool IsExplicitRow(object row)
-        => row is IEnumerable and not string and not IDictionary and not DataTable and not DataView and not IDataReader and not DataSet &&
-           !IsGenericDictionary(row);
+    {
+        row = UnwrapPSObject(row)!;
+        return row is IEnumerable and not string and not IDictionary and not DataTable and not DataView and not IDataReader and not DataSet &&
+               !IsGenericDictionary(row);
+    }
 
     private static IEnumerable<object?> Enumerate(object row)
     {
-        foreach (var value in (IEnumerable)row)
+        foreach (var value in (IEnumerable)UnwrapPSObject(row)!)
         {
             yield return value;
         }

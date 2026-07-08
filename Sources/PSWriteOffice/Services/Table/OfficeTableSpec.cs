@@ -5,14 +5,17 @@ namespace PSWriteOffice.Services.Table;
 
 internal sealed class OfficeTableSpec
 {
-    public OfficeTableSpec(IReadOnlyList<IReadOnlyList<OfficeTableCellSpec>> rows)
+    public OfficeTableSpec(IReadOnlyList<IReadOnlyList<OfficeTableCellSpec>> rows, bool hasHeader)
     {
         Rows = rows ?? throw new ArgumentNullException(nameof(rows));
+        HasHeader = hasHeader;
         Placements = OfficeTableGridPlanner.Plan(rows, out var columnCount);
         ColumnCount = columnCount;
     }
 
     public IReadOnlyList<IReadOnlyList<OfficeTableCellSpec>> Rows { get; }
+
+    public bool HasHeader { get; }
 
     public IReadOnlyList<OfficeTableCellPlacement> Placements { get; }
 

@@ -26,7 +26,7 @@ internal static class OfficeTableGridPlanner
 
             foreach (var cell in rows[rowIndex])
             {
-                while (occupiedColumns.Contains(columnIndex))
+                while (IsRangeOccupied(occupiedColumns, columnIndex, cell.ColumnSpan))
                 {
                     columnIndex++;
                 }
@@ -71,5 +71,18 @@ internal static class OfficeTableGridPlanner
         }
 
         return placements;
+    }
+
+    private static bool IsRangeOccupied(HashSet<int> occupiedColumns, int columnIndex, int columnSpan)
+    {
+        for (var offset = 0; offset < columnSpan; offset++)
+        {
+            if (occupiedColumns.Contains(columnIndex + offset))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
