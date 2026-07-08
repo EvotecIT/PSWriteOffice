@@ -547,7 +547,7 @@ Describe 'Word DSL surface' {
                     WordTableCellSpec -Run @(
                         WordTextRun 'Build '
                         WordTextRun 'Ready' -Color SeaGreen -Bold
-                    ) -ColumnSpan 2 -FillColor AliceBlue
+                    ) -ColumnSpan 2 -FillColor AliceBlue -Bold -TextColor Red -FontSize 14
                 )
                 , @('Owner', 'Platform')
             ) {
@@ -581,6 +581,10 @@ Describe 'Word DSL surface' {
         $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:color[translate(@w:val, "abcdef", "ABCDEF")="DC143C"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:highlight[@w:val="yellow"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:hyperlink[.//w:t="Styled link"]//w:sz[@w:val="32"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:r[w:t="Build "]//w:b', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:r[w:t="Build "]//w:color[translate(@w:val, "abcdef", "ABCDEF")="FF0000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:r[w:t="Build "]//w:sz[@w:val="28"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:r[w:t="Ready"]//w:color[translate(@w:val, "abcdef", "ABCDEF")="2E8B57"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:vertAlign[@w:val="superscript"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:vertAlign[@w:val="subscript"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:highlight[@w:val="yellow"]', $namespaceManager) | Should -Not -BeNullOrEmpty

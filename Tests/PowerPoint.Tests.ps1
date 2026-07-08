@@ -328,16 +328,24 @@ Describe 'PowerPoint cmdlets' {
                     @{
                         Run = @(
                             PptTextRun 'Build '
-                            PptTextRun 'Ready' -Color SeaGreen -Bold
+                            PptTextRun 'Ready' -Color SeaGreen
                         )
                         ColumnSpan = 2
                         FillColor = 'AliceBlue'
+                        Bold = $true
+                        Color = 'Red'
+                        FontSize = 18
                     }
                 )
                 , @('Owner', 'Platform')
                 , @(@{ Run = 'Queued' }, 'String run')
             ) -X 80 -Y 150 -Width 420 -Height 140
             $table.GetCell(0, 0).Text | Should -Be 'Build Ready'
+            $table.GetCell(0, 0).Runs[0].Bold | Should -BeTrue
+            $table.GetCell(0, 0).Runs[0].Color | Should -Be 'FF0000'
+            $table.GetCell(0, 0).Runs[0].FontSize | Should -Be 18
+            $table.GetCell(0, 0).Runs[1].Bold | Should -BeTrue
+            $table.GetCell(0, 0).Runs[1].Color | Should -Be '2E8B57'
             $table.GetCell(1, 0).Text | Should -Be 'Owner'
             $table.GetCell(2, 0).Text | Should -Be 'Queued'
 
@@ -374,11 +382,43 @@ Describe 'PowerPoint cmdlets' {
             ) -PassThru
             $cell.Text | Should -Be 'Plain'
             $cell.Runs[0].Color | Should -BeNullOrEmpty
+
+            { $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
+                PptTextRun 'site' -LinkUri 'https://example.org/table-cell'
+            ) } | Should -Throw
+            $table.GetCell(1, 1).Text | Should -Be 'Plain'
+
+            $baselineTextBox = PptTextBox -Slide $slide -Run @(
+                PptTextRun 'x'
+                PptTextRun '2' -Kind Superscript
+            ) -X 360 -Y 80 -Width 120 -Height 50
+            $baselineTextBox.Text | Should -Be 'x2'
+
+            $baselineTable = PptTable -Slide $slide -InputObject @(
+                , @(
+                    @{
+                        Run = @(
+                            PptTextRun 'H'
+                            PptTextRun '2' -Baseline Subscript
+                            PptTextRun 'O'
+                        )
+                    }
+                )
+            ) -X 80 -Y 450 -Width 240 -Height 80
+            $baselineTable.GetCell(0, 0).Text | Should -Be 'H2O'
+
+            Save-OfficePowerPoint -Presentation $presentation
         } finally {
             if ($presentation) {
                 Close-OfficePowerPoint -Presentation $presentation
             }
         }
+
+        $slideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide1.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($slideXml.NameTable)
+        $namespaceManager.AddNamespace('a', 'http://schemas.openxmlformats.org/drawingml/2006/main')
+        $slideXml.SelectSingleNode('//a:r[a:t="2"]/a:rPr[@baseline="30000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $slideXml.SelectSingleNode('//a:r[a:t="2"]/a:rPr[@baseline="-25000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
     }
 
     It 'preserves explicit headers on structured PowerPoint tables' {

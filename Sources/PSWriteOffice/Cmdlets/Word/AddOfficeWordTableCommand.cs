@@ -424,7 +424,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
         if (spec.HasRuns)
         {
-            WordTextRunService.ApplyRuns(paragraph, spec.Runs!.ToArray());
+            WordTextRunService.ApplyRuns(paragraph, OfficeTableCellTextRunStyle.Apply(spec.Runs!.ToArray(), spec.Style));
         }
         else if (spec.Style?.HasTextStyle == true)
         {

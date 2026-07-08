@@ -12,7 +12,7 @@ internal static class PowerPointTableCellSpecService
     {
         if (spec.HasRuns)
         {
-            PowerPointTextRunService.ApplyRuns(cell, spec.Runs!.ToArray());
+            PowerPointTextRunService.ApplyRuns(cell, OfficeTableCellTextRunStyle.Apply(spec.Runs!.ToArray(), spec.Style));
         }
         else if (spec.Style?.HasTextStyle == true)
         {
