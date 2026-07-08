@@ -29,6 +29,7 @@ namespace PSWriteOffice.Cmdlets.Csv;
 public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 {
     private const int StreamWriterBufferSize = 64 * 1024;
+    private const int CompressionProbeBufferSize = 256;
     private const string ParameterSetInputObjectPathDelimiter = "InputObjectPathDelimiter";
     private const string ParameterSetInputObjectPathCulture = "InputObjectPathCulture";
     private const string ParameterSetInputObjectLiteralPathDelimiter = "InputObjectLiteralPathDelimiter";
@@ -522,7 +523,8 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     {
         return CsvFile.ResolveCompression(requestedCompressionType, path) != CsvCompressionType.None ||
             HasCompressedFileExtension(path) ||
-            HasGZipHeader(path);
+            HasGZipHeader(path) ||
+            HasDeflatePayload(path);
     }
 
     private static bool HasCompressedFileExtension(string path)
@@ -541,6 +543,53 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         var header = new byte[2];
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, StreamWriterBufferSize, FileOptions.SequentialScan);
         return stream.Read(header, 0, header.Length) == header.Length && header[0] == 0x1F && header[1] == 0x8B;
+    }
+
+    private static bool HasDeflatePayload(string path)
+    {
+        try
+        {
+            var buffer = new byte[CompressionProbeBufferSize];
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, StreamWriterBufferSize, FileOptions.SequentialScan);
+            if (stream.Length == 0)
+            {
+                return false;
+            }
+
+            using var deflateStream = new DeflateStream(stream, CompressionMode.Decompress, leaveOpen: false);
+            var bytesRead = deflateStream.Read(buffer, 0, buffer.Length);
+            return bytesRead > 0 && LooksLikeCsvText(buffer, bytesRead);
+        }
+        catch (InvalidDataException)
+        {
+            return false;
+        }
+    }
+
+    private static bool LooksLikeCsvText(byte[] buffer, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            var value = buffer[i];
+            if (value == 0)
+            {
+                return false;
+            }
+
+            if (value is (byte)'\t' or (byte)'\r' or (byte)'\n')
+            {
+                continue;
+            }
+
+            if (value >= 0x20 && value != 0x7F)
+            {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>

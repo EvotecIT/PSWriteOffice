@@ -418,6 +418,22 @@ Describe 'CSV cmdlets' {
         } | Should -Throw '*Appending*compressed*'
     }
 
+    It 'rejects appending to extensionless Deflate compressed CSV files when compression is omitted' {
+        $path = Join-Path $TestDrive 'compressed-append-deflate.csv'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType Deflate
+
+        {
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+                Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*Appending*compressed*'
+
+        $rows = @(Import-OfficeCsv -Path $path -CompressionType Deflate)
+        $rows.Count | Should -Be 1
+        $rows[0].Name | Should -Be 'Alpha'
+    }
+
     It 'converts DataTable input directly to CSV text' {
         $table = [System.Data.DataTable]::new('Rows')
         [void] $table.Columns.Add('Name', [string])
