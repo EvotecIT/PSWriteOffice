@@ -125,6 +125,27 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'exports IDataReader input directly as CSV rows' {
+        $path = Join-Path $TestDrive 'reader-export.csv'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Alpha', 1)
+        [void] $table.Rows.Add('Beta', 2)
+        $reader = $table.CreateDataReader()
+        try {
+            Export-OfficeCsv -InputObject $reader -Path $path
+        } finally {
+            $reader.Dispose()
+        }
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'exports and imports GZip compressed CSV files' {
         $path = Join-Path $TestDrive 'compressed.csv.gz'
         $rows = @(
@@ -234,6 +255,27 @@ Describe 'CSV cmdlets' {
         [void] $table.Rows.Add('Beta', 2)
 
         Export-OfficeCsv -InputObject $table -Path $path -Append
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Value,Name'
+            '1,Alpha'
+            '2,Beta'
+        )
+    }
+
+    It 'appends IDataReader rows using an existing CSV header order' {
+        $path = Join-Path $TestDrive 'reader-append.csv'
+        Set-Content -LiteralPath $path -Value "Value,Name`n1,Alpha" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+        $reader = $table.CreateDataReader()
+        try {
+            Export-OfficeCsv -InputObject $reader -Path $path -Append
+        } finally {
+            $reader.Dispose()
+        }
 
         Get-Content -LiteralPath $path | Should -Be @(
             'Value,Name'

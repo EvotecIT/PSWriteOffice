@@ -191,6 +191,12 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             return;
         }
 
+        if (TryGetDataReader(InputObject, out var dataReader))
+        {
+            ExportDataReader(dataReader);
+            return;
+        }
+
         WriteStreamingInputObject(InputObject);
     }
 
