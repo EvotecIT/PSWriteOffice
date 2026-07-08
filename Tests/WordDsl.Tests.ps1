@@ -564,6 +564,40 @@ Describe 'Word DSL surface' {
         $documentXml.SelectSingleNode('//w:u[@w:val="dotted"]', $namespaceManager) | Should -Not -BeNullOrEmpty
     }
 
+    It 'treats rich and styled Word table cells as structured without spans' {
+        $path = Join-Path $TestDrive 'DslRichRunMixedObjectWordTable.docx'
+
+        WordNew -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                [pscustomobject]@{
+                    Service = 'Entra'
+                    Status  = 'Ready'
+                }
+                , @(
+                    (WordTableCellSpec -Run @(
+                        WordTextRun 'Build '
+                        WordTextRun 'Watch' -Color DarkOrange -Bold
+                    ) -FillColor AliceBlue),
+                    'Platform'
+                )
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Service'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Entra'
+            $table.Rows[2].Cells[1].Paragraphs[0].Text | Should -Be 'Platform'
+        } finally {
+            $document.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
+        $text | Should -Match 'Build Watch'
+    }
+
     It 'keeps ordinary span-like property names on normal Word tables' {
         $path = Join-Path $TestDrive 'DslOrdinarySpanNamedWordTable.docx'
         $rows = @(
@@ -606,6 +640,7 @@ Describe 'Word DSL surface' {
         $rows = @(
             [pscustomobject]@{
                 Text = 'Task'
+                FontSize = 'Large'
                 ColumnSpan = 1
                 Status = 'Open'
             }
@@ -621,11 +656,13 @@ Describe 'Word DSL surface' {
             $table = $document.Tables[0]
             $table.RowsCount | Should -Be 3
             $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Text'
-            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'ColumnSpan'
-            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Status'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'FontSize'
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'ColumnSpan'
+            $table.Rows[0].Cells[3].Paragraphs[0].Text | Should -Be 'Status'
             $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Task'
-            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be '1'
-            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be 'Open'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'Large'
+            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be '1'
+            $table.Rows[1].Cells[3].Paragraphs[0].Text | Should -Be 'Open'
             $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Follow-up'
             $table.Rows[2].Cells[0].ColumnSpan | Should -Be 3
         } finally {

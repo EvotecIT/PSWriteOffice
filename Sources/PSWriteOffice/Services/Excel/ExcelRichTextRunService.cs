@@ -52,7 +52,7 @@ internal static class ExcelRichTextRunService
             Bold = run.Bold,
             Italic = run.Italic,
             Underline = run.Underline,
-            FontColor = OfficeColorUtilities.ToRgbHex(run.Color),
+            FontColor = OfficeColorUtilities.ToExcelColorHex(run.Color),
             FontName = run.FontName,
             FontSize = run.FontSize
         };

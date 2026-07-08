@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Drawing;
 using OfficeIMO.Pdf;
@@ -22,6 +23,22 @@ internal static class OfficeColorUtilities
         {
             throw new PSArgumentException(exception.Message, parameterName);
         }
+    }
+
+    internal static string? ToExcelColorHex(string? color, string parameterName = "Color")
+    {
+        if (string.IsNullOrWhiteSpace(color))
+        {
+            return null;
+        }
+
+        var normalized = color!.Trim().TrimStart('#');
+        if (normalized.Length == 8 && normalized.All(Uri.IsHexDigit))
+        {
+            return normalized.ToUpperInvariant();
+        }
+
+        return ToRgbHex(color, parameterName);
     }
 
     internal static PdfColor? ToPdfColor(string? color, string parameterName = "Color")

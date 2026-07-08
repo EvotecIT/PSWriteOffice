@@ -53,6 +53,8 @@ public sealed class OfficeTableCellSpec
     internal bool HasStyle => Style?.HasAnyValue == true;
 
     internal bool HasRuns => Runs is { Count: > 0 };
+
+    internal bool HasStructuredMarker => HasSpan || HasStyle || HasRuns;
 }
 
 /// <summary>Optional logical table cell style hints for renderers that support per-cell formatting.</summary>

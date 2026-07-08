@@ -127,7 +127,22 @@ internal static class OfficeTextRunParser
 
     internal static object? GetValue(object? source, params string[] names)
     {
-        source = UnwrapPSObject(source);
+        if (source is PSObject wrapped)
+        {
+            foreach (var name in names)
+            {
+                var wrappedProperty = wrapped.Properties
+                    .Cast<PSPropertyInfo>()
+                    .FirstOrDefault(candidate => candidate.IsGettable && string.Equals(candidate.Name, name, StringComparison.OrdinalIgnoreCase));
+                if (wrappedProperty != null)
+                {
+                    return wrappedProperty.Value;
+                }
+            }
+
+            source = wrapped.BaseObject;
+        }
+
         if (source is IDictionary dictionary)
         {
             foreach (DictionaryEntry entry in dictionary)

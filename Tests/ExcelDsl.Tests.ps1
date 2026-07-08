@@ -3097,6 +3097,17 @@ Describe 'Excel DSL surface' {
         $runs[2].Italic | Should -BeTrue
         $runs[2].Underline | Should -BeTrue
 
+        $roundTripPath = Join-Path $TestDrive 'DslExcelRichText.RoundTrip.xlsx'
+        ExcelNew -Path $roundTripPath {
+            ExcelSheet -Name 'Summary' -Content {
+                ExcelRichText -Address A1 -Run $runs
+            }
+        }
+
+        $roundTripXml = Read-XlsxEntryText -Path $roundTripPath -Entry 'xl/worksheets/sheet1.xml'
+        $roundTripXml | Should -Match 'rgb="FFFF0000"'
+        $roundTripXml | Should -Not -Match 'rgb="FFFFFF00"'
+
         $contextRuns = @()
         New-OfficeExcel -Path (Join-Path $TestDrive 'DslExcelRichText.Context.xlsx') {
             Add-OfficeExcelSheet -Name 'Summary' -Content {

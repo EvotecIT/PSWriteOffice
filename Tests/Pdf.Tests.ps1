@@ -244,6 +244,34 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Owner'
     }
 
+    It 'treats rich and styled PDF table cells as structured without spans' {
+        $path = Join-Path $TestDrive 'rich-run-mixed-object-table.pdf'
+
+        PdfNew -Path $path {
+            PdfTable -InputObject @(
+                [pscustomobject]@{
+                    Service = 'Entra'
+                    Status  = 'Ready'
+                }
+                , @(
+                    (PdfTableCell -Run @(
+                        PdfTextRun 'Build '
+                        PdfTextRun 'Watch' -Color DarkOrange -Bold
+                    ) -FillColor AliceBlue),
+                    'Platform'
+                )
+            )
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Service'
+        $text | Should -Match 'Entra'
+        $text | Should -Match 'Build'
+        $text | Should -Match 'Watch'
+        $text | Should -Match 'Platform'
+    }
+
     It 'keeps ordinary span-like property names on normal PDF tables' {
         $path = Join-Path $TestDrive 'ordinary-span-named-table.pdf'
         $rows = @(
@@ -277,6 +305,7 @@ Describe 'PDF cmdlets' {
         $rows = @(
             [pscustomobject]@{
                 Text = 'Task'
+                FontSize = 'Large'
                 ColumnSpan = 1
                 Status = 'Open'
             }
@@ -289,9 +318,11 @@ Describe 'PDF cmdlets' {
 
         $text = Get-OfficePdfText -Path $path
         $text | Should -Match 'Text'
+        $text | Should -Match 'FontSize'
         $text | Should -Match 'ColumnSpa'
         $text | Should -Match 'Status'
         $text | Should -Match 'Task'
+        $text | Should -Match 'Large'
         $text | Should -Match 'Open'
         $text | Should -Match 'Follow-up'
     }

@@ -341,6 +341,35 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'preserves explicit headers on structured PowerPoint tables' {
+        $path = Join-Path $TestDrive 'PowerPointStructuredHeaders.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            $table = PptTable -Slide $slide -Headers Qty, Item -InputObject @(
+                [pscustomobject]@{
+                    Item = 'Alpha'
+                    Qty  = 10
+                }
+                , @(
+                    @{ Run = @(PptTextRun 'Total' -Bold) },
+                    'Two'
+                )
+            ) -X 80 -Y 150 -Width 420 -Height 140
+
+            $table.GetCell(0, 0).Text | Should -Be 'Qty'
+            $table.GetCell(0, 1).Text | Should -Be 'Item'
+            $table.GetCell(1, 0).Text | Should -Be '10'
+            $table.GetCell(1, 1).Text | Should -Be 'Alpha'
+            $table.GetCell(2, 0).Runs[0].Text | Should -Be 'Total'
+            $table.GetCell(2, 1).Text | Should -Be 'Two'
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
     It 'finds existing PowerPoint shapes by metadata without a text term' {
         $path = Join-Path $TestDrive 'PowerPointMetadataShapeFind.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path

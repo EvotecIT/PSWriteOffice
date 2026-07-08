@@ -263,9 +263,7 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
         if (cell.HasRuns)
         {
             var runs = PdfRichTextRunBuilder.ToTextRuns(cell.Runs!.ToArray());
-            return cell.HasSpan
-                ? PdfTableCell.Merge(runs, cell.ColumnSpan, cell.RowSpan)
-                : PdfTableCell.RichTextCell(runs);
+            return PdfTableCell.Merge(runs, cell.ColumnSpan, cell.RowSpan);
         }
 
         if (cell.Style?.HasTextStyle == true)
@@ -279,9 +277,7 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
                 strike: cell.Style.Strike,
                 fontSize: cell.Style.FontSize);
 
-            return cell.HasSpan
-                ? PdfTableCell.Merge(new[] { run }, cell.ColumnSpan, cell.RowSpan)
-                : PdfTableCell.RichTextCell(new[] { run });
+            return PdfTableCell.Merge(new[] { run }, cell.ColumnSpan, cell.RowSpan);
         }
 
         return cell.HasSpan

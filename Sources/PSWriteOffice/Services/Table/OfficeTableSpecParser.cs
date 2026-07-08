@@ -128,7 +128,7 @@ internal static class OfficeTableSpecParser
 
     private static bool ContainsStructuredCellMarker(object row)
     {
-        if (TryCreateCell(row, requireExplicitCellShape: true, out var cell) && cell.HasSpan)
+        if (TryCreateCell(row, requireExplicitCellShape: true, out var cell) && cell.HasStructuredMarker)
         {
             return true;
         }
@@ -140,7 +140,7 @@ internal static class OfficeTableSpecParser
 
         foreach (var value in Enumerate(row))
         {
-            if (TryCreateCell(value, requireExplicitCellShape: false, out cell) && cell.HasSpan)
+            if (TryCreateCell(value, requireExplicitCellShape: false, out cell) && cell.HasStructuredMarker)
             {
                 return true;
             }
@@ -164,18 +164,24 @@ internal static class OfficeTableSpecParser
         var hasColumnSpan = TryGetValue(value, ColumnSpanKeys, out var columnSpanValue);
         var hasRowSpan = TryGetValue(value, RowSpanKeys, out var rowSpanValue);
         var hasSpan = hasColumnSpan || hasRowSpan;
-        var style = CreateStyle(value);
-        var hasStyle = style?.HasAnyValue == true;
         var hasText = TryGetValue(value, TextKeys, out var textValue);
         var hasRuns = TryGetValue(value, RunKeys, out var runValue);
         var hasOnlyCellKeys = HasOnlyCellKeys(value);
+        if (!hasOnlyCellKeys)
+        {
+            spec = null!;
+            return false;
+        }
+
+        var style = CreateStyle(value);
+        var hasStyle = style?.HasAnyValue == true;
         if (requireExplicitCellShape && !hasSpan && !hasStyle && !hasRuns)
         {
             spec = null!;
             return false;
         }
 
-        if (!hasOnlyCellKeys || (!hasSpan && !hasStyle && !hasText && !hasRuns))
+        if (!hasSpan && !hasStyle && !hasText && !hasRuns)
         {
             spec = null!;
             return false;
@@ -199,7 +205,7 @@ internal static class OfficeTableSpecParser
         var rowSpan = hasRowSpan
             ? ConvertToPositiveInt(rowSpanValue, "RowSpan")
             : 1;
-        if (requireExplicitCellShape && columnSpan == 1 && rowSpan == 1)
+        if (requireExplicitCellShape && columnSpan == 1 && rowSpan == 1 && !hasStyle && !hasRuns)
         {
             spec = null!;
             return false;
