@@ -145,6 +145,14 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
     -Engine PSWriteOffice,NativeCsv
 ```
 
+Focused local dbatools QuickTest-shaped run, `20260708-053630-00691048`, 100,000
+rows, 10 columns, three measured iterations:
+
+| Scenario | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | --- |
+| First column read | 341.3 ms, 294,869 rows/s | 347.3 ms, 285,460 rows/s | PSWriteOffice fastest |
+| All columns read | 1.08 s, 92,385 rows/s | 1.12 s, 89,942 rows/s | PSWriteOffice fastest |
+
 <!-- BENCHMARK:CsvComparison:START -->
 | Scenario | Rows | PSWriteOffice | NativeCsv | Result |
 | --- | ---: | ---: | ---: | --- |
