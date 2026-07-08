@@ -131,6 +131,7 @@ function Get-CsvBenchmarkCase {
             New-ExcelBenchmarkCase -Name ('csv-read-source-{0}' -f $csvProfile.Label) -Label ('Read CSV file ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey ReadCsvSource -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
             New-ExcelBenchmarkCase -Name ('csv-read-datatable-{0}' -f $csvProfile.Label) -Label ('Read CSV file as DataTable ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey ReadCsvDataTable -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
         }
+        New-ExcelBenchmarkCase -Name csv-write-datatable -Label 'Write DataTable as CSV file' -Suites $csv -OperationKey WriteCsvDataTable -Profile DataTable -FileExtension '.csv' -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name csv-dbatools-quick-single-column -Label 'dbatools QuickTest read first column' -Suites $csv -OperationKey ReadCsvQuickSingleColumn -Profile DbatoolsQuickCsv -FileExtension '.csv' -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name csv-dbatools-quick-all-columns -Label 'dbatools QuickTest read all columns' -Suites $csv -OperationKey ReadCsvQuickAllColumns -Profile DbatoolsQuickCsv -FileExtension '.csv' -ValidateWorkbook:$false
     ) | Where-Object { (($_.Suites -split ',') -contains $Suite) }
@@ -177,7 +178,7 @@ function Test-CsvBenchmarkEngineSupport {
 
     switch ($Engine) {
         PSWriteOffice { return $true }
-        NativeCsv { return [string]$Case.OperationKey -in @('WriteCsv', 'ReadCsvSource', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns') }
+        NativeCsv { return [string]$Case.OperationKey -in @('WriteCsv', 'WriteCsvDataTable', 'ReadCsvSource', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns') }
         default { return $false }
     }
 }

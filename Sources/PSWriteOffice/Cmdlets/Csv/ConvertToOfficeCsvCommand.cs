@@ -1,5 +1,7 @@
 using System;
+using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Management.Automation;
 using OfficeIMO.CSV;
 
@@ -110,6 +112,12 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             return;
         }
 
+        if (TryGetDataTable(InputObject, out var dataTable))
+        {
+            EmitDataTable(dataTable);
+            return;
+        }
+
         _objectProjector.WriteObject(InputObject, EnsureObjectWriter());
     }
 
@@ -142,6 +150,15 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         writer.Write(document.ToString(options));
     }
 
+    private void EmitDataTable(DataTable table)
+    {
+        var options = CreateSaveOptions();
+        using var textWriter = new StringWriter(CultureInfo.InvariantCulture);
+        CsvDocument.WriteDataTable(textWriter, table, options);
+        using var writer = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
+        writer.Write(textWriter.ToString());
+    }
+
     private static bool TryGetCsvDocument(object? value, out CsvDocument document)
     {
         if (value is CsvDocument csvDocument)
@@ -157,6 +174,24 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         }
 
         document = null!;
+        return false;
+    }
+
+    private static bool TryGetDataTable(object? value, out DataTable table)
+    {
+        if (value is DataTable dataTable)
+        {
+            table = dataTable;
+            return true;
+        }
+
+        if (value is PSObject { BaseObject: DataTable psObjectTable })
+        {
+            table = psObjectTable;
+            return true;
+        }
+
+        table = null!;
         return false;
     }
 

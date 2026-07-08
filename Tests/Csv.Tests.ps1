@@ -96,6 +96,54 @@ Describe 'CSV cmdlets' {
         $table.Rows.Count | Should -Be 0
     }
 
+    It 'exports DataTable input directly as CSV rows' {
+        $path = Join-Path $TestDrive 'datatable-export.csv'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Alpha', 1)
+        [void] $table.Rows.Add('Beta', 2)
+
+        Export-OfficeCsv -InputObject $table -Path $path
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
+    It 'converts DataTable input directly to CSV text' {
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Alpha', 1)
+
+        $csvText = @(ConvertTo-OfficeCsv -InputObject $table)
+
+        $csvText | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+        )
+    }
+
+    It 'appends DataTable rows using an existing CSV header order' {
+        $path = Join-Path $TestDrive 'datatable-append.csv'
+        Set-Content -LiteralPath $path -Value "Value,Name`n1,Alpha" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+
+        Export-OfficeCsv -InputObject $table -Path $path -Append
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Value,Name'
+            '1,Alpha'
+            '2,Beta'
+        )
+    }
+
     It 'rejects conflicting CSV table and hashtable output modes' {
         $path = Join-Path $TestDrive 'datatable-conflict.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8

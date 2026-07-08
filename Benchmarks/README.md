@@ -145,6 +145,14 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
     -Engine PSWriteOffice,NativeCsv
 ```
 
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 10000,100000 `
+    -Scenario csv-write-datatable `
+    -Engine PSWriteOffice,NativeCsv
+```
+
 Focused local dbatools QuickTest-shaped run, `20260708-053630-00691048`, 100,000
 rows, 10 columns, three measured iterations:
 
@@ -152,6 +160,14 @@ rows, 10 columns, three measured iterations:
 | --- | ---: | ---: | --- |
 | First column read | 341.3 ms, 294,869 rows/s | 347.3 ms, 285,460 rows/s | PSWriteOffice fastest |
 | All columns read | 1.08 s, 92,385 rows/s | 1.12 s, 89,942 rows/s | PSWriteOffice fastest |
+
+Focused local DataTable CSV write run, `20260708-060903-2e761e92`, five
+measured iterations:
+
+| Rows | PSWriteOffice median | NativeCsv median | Result |
+| ---: | ---: | ---: | --- |
+| 10,000 | 59.8 ms | 42.2 ms | NativeCsv fastest |
+| 100,000 | 43.9 ms | 301.5 ms | PSWriteOffice fastest |
 
 <!-- BENCHMARK:CsvComparison:START -->
 | Scenario | Rows | PSWriteOffice | NativeCsv | Result |

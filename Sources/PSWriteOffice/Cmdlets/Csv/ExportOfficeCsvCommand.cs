@@ -25,7 +25,7 @@ namespace PSWriteOffice.Cmdlets.Csv;
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficeCsv", DefaultParameterSetName = ParameterSetInputObjectPathDelimiter, SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
-public sealed class ExportOfficeCsvCommand : PSCmdlet
+public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 {
     private const int StreamWriterBufferSize = 64 * 1024;
     private const string ParameterSetInputObjectPathDelimiter = "InputObjectPathDelimiter";
@@ -161,6 +161,12 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         if (TryGetCsvDocument(InputObject, out var csvDocument))
         {
             ExportDocument(csvDocument);
+            return;
+        }
+
+        if (TryGetDataTable(InputObject, out var dataTable))
+        {
+            ExportDataTable(dataTable);
             return;
         }
 

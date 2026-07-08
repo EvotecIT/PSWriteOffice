@@ -7,6 +7,7 @@ function Invoke-ExcelBenchmarkOperation {
 
     switch ([string]$Case.OperationKey) {
         WriteCsv { Invoke-ExcelBenchmarkWriteCsv -Engine $Engine -Run $Run }
+        WriteCsvDataTable { Invoke-ExcelBenchmarkWriteCsvDataTable -Engine $Engine -Run $Run }
         ReadCsvSource { Invoke-ExcelBenchmarkReadCsv -Engine $Engine -Run $Run }
         ReadCsvDataTable { Invoke-ExcelBenchmarkReadCsvDataTable -Engine $Engine -Run $Run }
         ReadCsvQuickSingleColumn { Invoke-ExcelBenchmarkReadCsvQuickSingleColumn -Engine $Engine -Run $Run }
@@ -41,6 +42,16 @@ function Invoke-ExcelBenchmarkWriteCsv {
         PSWriteOffice { $Run.Payload | Export-OfficeCsv -Path $Run.Path }
         NativeCsv { $Run.Payload | Export-Csv -Path $Run.Path -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded }
         default { throw "Engine '$Engine' does not support CSV write." }
+    }
+}
+
+function Invoke-ExcelBenchmarkWriteCsvDataTable {
+    param([string] $Engine, [object] $Run)
+
+    switch ($Engine) {
+        PSWriteOffice { Export-OfficeCsv -InputObject $Run.Payload -Path $Run.Path }
+        NativeCsv { $Run.Payload | Export-Csv -Path $Run.Path -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded }
+        default { throw "Engine '$Engine' does not support DataTable CSV write." }
     }
 }
 
