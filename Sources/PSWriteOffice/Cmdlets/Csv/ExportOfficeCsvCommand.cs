@@ -524,7 +524,9 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         return CsvFile.ResolveCompression(requestedCompressionType, path) != CsvCompressionType.None ||
             HasCompressedFileExtension(path) ||
             HasGZipHeader(path) ||
-            HasDeflatePayload(path);
+            HasDeflatePayload(path) ||
+            HasBrotliPayload(path) ||
+            HasZLibPayload(path);
     }
 
     private static bool HasCompressedFileExtension(string path)
@@ -569,6 +571,70 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             return false;
         }
     }
+
+    private static bool HasBrotliPayload(string path)
+    {
+#if NET8_0_OR_GREATER
+        try
+        {
+            return CanReadCompressedPayload(path, static stream => new BrotliStream(stream, CompressionMode.Decompress, leaveOpen: false));
+        }
+        catch (InvalidDataException)
+        {
+            return false;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (InvalidOperationException)
+        {
+            return false;
+        }
+#else
+        return false;
+#endif
+    }
+
+    private static bool HasZLibPayload(string path)
+    {
+#if NET8_0_OR_GREATER
+        try
+        {
+            return CanReadCompressedPayload(path, static stream => new ZLibStream(stream, CompressionMode.Decompress, leaveOpen: false));
+        }
+        catch (InvalidDataException)
+        {
+            return false;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (InvalidOperationException)
+        {
+            return false;
+        }
+#else
+        return false;
+#endif
+    }
+
+#if NET8_0_OR_GREATER
+    private static bool CanReadCompressedPayload(string path, Func<Stream, Stream> streamFactory)
+    {
+        var buffer = new byte[CompressionProbeBufferSize];
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, StreamWriterBufferSize, FileOptions.SequentialScan);
+        if (stream.Length == 0)
+        {
+            return false;
+        }
+
+        using var compressedStream = streamFactory(stream);
+        var bytesRead = compressedStream.Read(buffer, 0, buffer.Length);
+        return bytesRead > 0;
+    }
+#endif
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>
         options.Encoding ?? (append ? _appendEncoding : null) ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);

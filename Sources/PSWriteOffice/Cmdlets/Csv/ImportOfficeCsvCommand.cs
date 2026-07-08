@@ -339,9 +339,9 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             throw new PSArgumentException("Specify only one of -AsDataTable, -AsDataReader, or -AsHashtable.");
         }
 
-        if (!AsDataTable.IsPresent && !AsDataReader.IsPresent && DuplicateHeaderBehavior == CsvDuplicateHeaderBehavior.Preserve)
+        if (!AsDataReader.IsPresent && DuplicateHeaderBehavior == CsvDuplicateHeaderBehavior.Preserve)
         {
-            throw new PSArgumentException("DuplicateHeaderBehavior Preserve cannot be used with row object or hashtable output. Use -AsDataTable or -AsDataReader, or choose Rename or Throw.");
+            throw new PSArgumentException("DuplicateHeaderBehavior Preserve cannot be used with row object, hashtable, or DataTable output. Use -AsDataReader, or choose Rename or Throw.");
         }
 
         _asDataReader = AsDataReader.IsPresent;

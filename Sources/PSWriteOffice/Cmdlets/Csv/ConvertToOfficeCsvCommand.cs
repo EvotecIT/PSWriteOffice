@@ -170,15 +170,10 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     private void EmitDataTable(DataTable table)
     {
         var options = CreateSaveOptions();
-        using var textWriter = new StringWriter(CultureInfo.InvariantCulture);
-        using (var csvWriter = new CsvObjectWriter(textWriter, options, leaveOpen: true))
-        using (var reader = table.CreateDataReader())
-        {
-            csvWriter.WriteDataReader(reader);
-        }
-
         using var writer = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
-        writer.Write(textWriter.ToString());
+        using var csvWriter = new CsvObjectWriter(writer, options, leaveOpen: true);
+        using var reader = table.CreateDataReader();
+        csvWriter.WriteDataReader(reader);
     }
 
     private static bool TryGetCsvDocument(object? value, out CsvDocument document)

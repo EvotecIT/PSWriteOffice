@@ -462,6 +462,48 @@ Describe 'CSV cmdlets' {
         $rows[0].Name | Should -Be 'Alpha'
     }
 
+    It 'rejects appending to extensionless Brotli compressed CSV files when compression is omitted' {
+        if (-not $IsCoreCLR) {
+            Set-ItResult -Skipped -Because 'Brotli CSV compression is available only on modern .NET runtimes.'
+            return
+        }
+
+        $path = Join-Path $TestDrive 'compressed-append-brotli.csv'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType Brotli
+
+        {
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+                Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*Appending*compressed*'
+
+        $rows = @(Import-OfficeCsv -Path $path -CompressionType Brotli)
+        $rows.Count | Should -Be 1
+        $rows[0].Name | Should -Be 'Alpha'
+    }
+
+    It 'rejects appending to extensionless ZLib compressed CSV files when compression is omitted' {
+        if (-not $IsCoreCLR) {
+            Set-ItResult -Skipped -Because 'ZLib CSV compression is available only on modern .NET runtimes.'
+            return
+        }
+
+        $path = Join-Path $TestDrive 'compressed-append-zlib.csv'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType ZLib
+
+        {
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+                Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*Appending*compressed*'
+
+        $rows = @(Import-OfficeCsv -Path $path -CompressionType ZLib)
+        $rows.Count | Should -Be 1
+        $rows[0].Name | Should -Be 'Alpha'
+    }
+
     It 'converts DataTable input directly to CSV text' {
         $table = [System.Data.DataTable]::new('Rows')
         [void] $table.Columns.Add('Name', [string])
@@ -490,6 +532,27 @@ Describe 'CSV cmdlets' {
             'Value,Name'
             '1,Alpha'
             '2,Beta'
+        )
+    }
+
+    It 'flushes object rows before appending DataTable rows in one invocation' {
+        $path = Join-Path $TestDrive 'object-then-datatable-append.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+
+        & {
+            Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+            Write-Output -InputObject $table -NoEnumerate
+        } | Export-OfficeCsv -Path $path -Append
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Seed,0'
+            'Alpha,1'
+            'Beta,2'
         )
     }
 
@@ -1004,6 +1067,7 @@ Describe 'CSV cmdlets' {
         $row.Name_2 | Should -Be '1'
         { Import-OfficeCsv -Path $path -DuplicateHeaderBehavior Throw -ErrorAction Stop } | Should -Throw '*duplicate*'
         { Import-OfficeCsv -Path $path -DuplicateHeaderBehavior Preserve -ErrorAction Stop } | Should -Throw '*Preserve*row*object*hashtable*'
+        { Import-OfficeCsv -Path $path -AsDataTable -DuplicateHeaderBehavior Preserve -ErrorAction Stop } | Should -Throw '*Preserve*DataTable*'
     }
 
     It 'renames duplicate hashtable headers by default and can reject them in strict mode' {
