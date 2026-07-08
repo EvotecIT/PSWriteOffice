@@ -51,8 +51,12 @@ public sealed class UpdateOfficeWordTableOfContentsCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = Document ?? WordDslContext.Require(this).Document;
         var toc = TableOfContents;
+        var document = Document;
+        if (toc == null && document == null)
+        {
+            document = WordDslContext.Require(this).Document;
+        }
 
         if (toc == null && document == null)
         {

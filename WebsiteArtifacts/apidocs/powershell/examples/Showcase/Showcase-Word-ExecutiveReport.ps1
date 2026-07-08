@@ -70,7 +70,7 @@ New-OfficeWord -Path $path {
             WordBookmark -Name 'ExecutiveSummary'
         }
 
-        WordTableOfContent -Style Template1
+        Add-OfficeWordTableOfContents -Style Template1
 
         WordParagraph -Text 'Executive Summary' -Style Heading1
         WordParagraph 'The portfolio is stable overall, but Remote Access and Endpoint Backup need targeted work before the next governance review.'

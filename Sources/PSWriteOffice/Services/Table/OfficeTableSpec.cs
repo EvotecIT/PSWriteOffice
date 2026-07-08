@@ -5,10 +5,10 @@ namespace PSWriteOffice.Services.Table;
 
 internal sealed class OfficeTableSpec
 {
-    public OfficeTableSpec(IReadOnlyList<IReadOnlyList<OfficeTableCellSpec>> rows, bool hasHeader)
+    public OfficeTableSpec(IReadOnlyList<IReadOnlyList<OfficeTableCellSpec>> rows, int? headerRowIndex)
     {
         Rows = rows ?? throw new ArgumentNullException(nameof(rows));
-        HasHeader = hasHeader;
+        HeaderRowIndex = headerRowIndex;
         Placements = OfficeTableGridPlanner.Plan(rows, out var columnCount);
         ColumnCount = columnCount;
         ValidateSpanBounds(Placements, RowCount);
@@ -16,7 +16,9 @@ internal sealed class OfficeTableSpec
 
     public IReadOnlyList<IReadOnlyList<OfficeTableCellSpec>> Rows { get; }
 
-    public bool HasHeader { get; }
+    public bool HasHeader => HeaderRowIndex.HasValue;
+
+    public int? HeaderRowIndex { get; }
 
     public IReadOnlyList<OfficeTableCellPlacement> Placements { get; }
 

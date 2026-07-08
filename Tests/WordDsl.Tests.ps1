@@ -553,6 +553,38 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'keeps ordinary text and span-key properties in mixed Word tables' {
+        $path = Join-Path $TestDrive 'DslMixedOrdinarySpanKeyWordTable.docx'
+        $rows = @(
+            [pscustomobject]@{
+                Text = 'Task'
+                ColumnSpan = 1
+                Status = 'Open'
+            }
+            , @(New-OfficeWordTableCell -Text 'Follow-up' -ColumnSpan 3)
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Text'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'ColumnSpan'
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Status'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Task'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be '1'
+            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be 'Open'
+            $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Follow-up'
+            $table.Rows[2].Cells[0].ColumnSpan | Should -Be 3
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'keeps default headers on mixed object and span Word tables' {
         $path = Join-Path $TestDrive 'DslMixedObjectSpanWordTable.docx'
         $rows = @(
@@ -577,6 +609,36 @@ Describe 'Word DSL surface' {
             $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'Healthy'
             $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Follow-up'
             $table.Rows[2].Cells[0].ColumnSpan | Should -Be 2
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'applies conditions to span rows before generated mixed Word headers' {
+        $path = Join-Path $TestDrive 'DslMixedLeadingSpanConditionWordTable.docx'
+        $rows = @(
+            , @(New-OfficeWordTableCell -Text 'Section' -ColumnSpan 2)
+            [pscustomobject]@{
+                Name = 'Directory'
+                Status = 'Healthy'
+            }
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows {
+                WordTableCondition -FilterScript { $_[0].Text -eq 'Section' } -BackgroundColor '#ffeeee'
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Section'
+            $table.Rows[0].Cells[0].ShadingFillColorHex | Should -Be 'ffeeee'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[1].Cells[0].ShadingFillColorHex | Should -Not -Be 'ffeeee'
+            $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Directory'
         } finally {
             $document.Dispose()
         }
@@ -951,6 +1013,23 @@ Describe 'Word DSL surface' {
             $document.ComboBoxes.Count | Should -BeGreaterThan 0
             $document.RepeatingSections.Count | Should -BeGreaterThan 0
             $document.TableOfContent | Should -Not -BeNullOrEmpty
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'updates piped Word table of contents outside the DSL' {
+        $path = Join-Path $TestDrive 'DslPipedTableOfContentsUpdate.docx'
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordTableOfContents
+            Add-OfficeWordParagraph -Text 'Scope' -Style Heading1
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path
+        try {
+            $toc = $document | Get-OfficeWordTableOfContents
+            $toc | Update-OfficeWordTableOfContents -PassThru | Should -Not -BeNullOrEmpty
         } finally {
             $document.Dispose()
         }

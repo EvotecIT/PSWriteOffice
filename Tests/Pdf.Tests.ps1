@@ -204,6 +204,30 @@ Describe 'PDF cmdlets' {
         $text | Should -Match '2'
     }
 
+    It 'keeps ordinary text and span-key properties in mixed PDF tables' {
+        $path = Join-Path $TestDrive 'mixed-ordinary-span-key-table.pdf'
+        $rows = @(
+            [pscustomobject]@{
+                Text = 'Task'
+                ColumnSpan = 1
+                Status = 'Open'
+            }
+            , @(New-OfficePdfTableCell -Text 'Follow-up' -ColumnSpan 3)
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Text'
+        $text | Should -Match 'ColumnSpa'
+        $text | Should -Match 'Status'
+        $text | Should -Match 'Task'
+        $text | Should -Match 'Open'
+        $text | Should -Match 'Follow-up'
+    }
+
     It 'keeps default headers on mixed object and span PDF tables' {
         $path = Join-Path $TestDrive 'mixed-object-span-table.pdf'
         $rows = @(

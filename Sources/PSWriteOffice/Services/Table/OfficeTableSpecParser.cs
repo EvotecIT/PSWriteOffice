@@ -14,6 +14,7 @@ internal static class OfficeTableSpecParser
     private static readonly string[] TextKeys = { "Text", "Value", "Content" };
     private static readonly string[] ColumnSpanKeys = { "ColumnSpan", "ColSpan" };
     private static readonly string[] RowSpanKeys = { "RowSpan" };
+    private static readonly string[] CellKeys = TextKeys.Concat(ColumnSpanKeys).Concat(RowSpanKeys).ToArray();
 
     public static bool TryCreate(
         IReadOnlyList<object> rows,
@@ -35,12 +36,12 @@ internal static class OfficeTableSpecParser
         }
 
         var tableRows = new List<IReadOnlyList<OfficeTableCellSpec>>();
-        var hasHeader = false;
+        int? headerRowIndex = null;
         var allowDefaultHeader = header == null;
         if (header is { Length: > 0 })
         {
             tableRows.Add(header.Select(static value => new OfficeTableCellSpec(value)).ToArray());
-            hasHeader = true;
+            headerRowIndex = 0;
         }
 
         string[]? columns = propertyNames;
@@ -61,10 +62,10 @@ internal static class OfficeTableSpecParser
             if (PowerShellObjectNormalizer.TryProjectItem(row, columns, out var projectedColumns, out var values))
             {
                 columns ??= projectedColumns;
-                if (allowDefaultHeader && !hasHeader && columns.Length > 0)
+                if (allowDefaultHeader && !headerRowIndex.HasValue && columns.Length > 0)
                 {
+                    headerRowIndex = tableRows.Count;
                     tableRows.Add(columns.Select(static value => new OfficeTableCellSpec(value)).ToArray());
-                    hasHeader = true;
                 }
 
                 tableRows.Add(values.Select(ToCell).ToArray());
@@ -79,7 +80,7 @@ internal static class OfficeTableSpecParser
             return false;
         }
 
-        spec = new OfficeTableSpec(tableRows, hasHeader);
+        spec = new OfficeTableSpec(tableRows, headerRowIndex);
         return spec.RowCount > 0 && spec.ColumnCount > 0;
     }
 
@@ -135,13 +136,14 @@ internal static class OfficeTableSpecParser
         var hasRowSpan = TryGetValue(value, RowSpanKeys, out var rowSpanValue);
         var hasSpan = hasColumnSpan || hasRowSpan;
         var hasText = TryGetValue(value, TextKeys, out var textValue);
+        var hasOnlyCellKeys = HasOnlyCellKeys(value);
         if (requireExplicitCellShape && !hasSpan)
         {
             spec = null!;
             return false;
         }
 
-        if (!hasSpan && !hasText)
+        if (!hasOnlyCellKeys || (!hasSpan && !hasText))
         {
             spec = null!;
             return false;
@@ -162,10 +164,50 @@ internal static class OfficeTableSpecParser
         var rowSpan = hasRowSpan
             ? ConvertToPositiveInt(rowSpanValue, "RowSpan")
             : 1;
+        if (requireExplicitCellShape && columnSpan == 1 && rowSpan == 1)
+        {
+            spec = null!;
+            return false;
+        }
 
         spec = new OfficeTableCellSpec(text, columnSpan, rowSpan);
         return true;
     }
+
+    private static bool HasOnlyCellKeys(object? source)
+    {
+        source = UnwrapPSObject(source);
+        if (source is IDictionary dictionary)
+        {
+            return dictionary.Count > 0 &&
+                   dictionary.Keys
+                       .Cast<object?>()
+                       .Select(static key => Convert.ToString(key, CultureInfo.InvariantCulture))
+                       .All(IsCellKey);
+        }
+
+        if (source is null)
+        {
+            return false;
+        }
+
+        var psObject = PSObject.AsPSObject(source);
+        if (psObject.BaseObject is IDictionary baseDictionary)
+        {
+            return HasOnlyCellKeys(baseDictionary);
+        }
+
+        var properties = psObject.Properties
+            .Where(static property =>
+                property.IsGettable &&
+                property.MemberType is PSMemberTypes.NoteProperty or PSMemberTypes.Property or PSMemberTypes.AliasProperty)
+            .ToArray();
+        return properties.Length > 0 && properties.All(static property => IsCellKey(property.Name));
+    }
+
+    private static bool IsCellKey(string? key)
+        => !string.IsNullOrWhiteSpace(key) &&
+           CellKeys.Any(cellKey => string.Equals(cellKey, key, StringComparison.OrdinalIgnoreCase));
 
     private static bool IsExplicitRow(object row)
     {

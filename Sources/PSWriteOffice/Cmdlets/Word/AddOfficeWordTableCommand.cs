@@ -85,20 +85,27 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
         var tableRows = TableViewProjection.Project(rows, effectiveView);
         var legacyLayout = ResolveLegacyLayout(Layout);
-        var conditionSkipsHeader = NoHeader.IsPresent;
-        var table = OfficeTableSpecParser.TryCreate(
+        int? conditionHeaderRowIndex = NoHeader.IsPresent ? null : 0;
+        WordTable table;
+        if (OfficeTableSpecParser.TryCreate(
                 tableRows,
                 propertyNames: null,
                 header: NoHeader.IsPresent ? Array.Empty<string>() : null,
-                out var tableSpec)
-            ? CreateTable(context, tableSpec, Style, legacyLayout)
-            : CreateTable(
+                out var tableSpec))
+        {
+            table = CreateTable(context, tableSpec, Style, legacyLayout);
+            conditionHeaderRowIndex = tableSpec.HeaderRowIndex;
+        }
+        else
+        {
+            table = CreateTable(
                 context,
                 PowerShellObjectNormalizer.NormalizeItems(tableRows),
                 Style,
                 includeHeader: !NoHeader.IsPresent,
                 layout: legacyLayout);
-        conditionSkipsHeader = conditionSkipsHeader || tableSpec is { HasHeader: false };
+        }
+
         ApplyLayout(table, Layout);
         context.RegisterTableSource(table, tableRows);
 
@@ -110,7 +117,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var conditions = context.ConsumeTableConditions(table);
         if (conditions.Count > 0)
         {
-            ApplyConditions(table, tableRows, conditions, conditionSkipsHeader);
+            ApplyConditions(table, tableRows, conditions, conditionHeaderRowIndex);
         }
 
         context.ClearTableSource(table);
@@ -121,13 +128,20 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
     }
 
-    private void ApplyConditions(WordTable table, IReadOnlyList<object> rows, IReadOnlyList<WordTableConditionModel> conditions, bool skipHeader)
+    private void ApplyConditions(WordTable table, IReadOnlyList<object> rows, IReadOnlyList<WordTableConditionModel> conditions, int? headerRowIndex)
     {
-        var dataRowOffset = skipHeader ? 0 : 1;
-        for (var index = 0; index < rows.Count && (index + dataRowOffset) < table.RowsCount; index++)
+        for (var index = 0; index < rows.Count; index++)
         {
+            var targetRowIndex = headerRowIndex.HasValue && index >= headerRowIndex.Value
+                ? index + 1
+                : index;
+            if (targetRowIndex >= table.RowsCount)
+            {
+                break;
+            }
+
             var rowObject = rows[index];
-            var wordRow = table.Rows[index + dataRowOffset];
+            var wordRow = table.Rows[targetRowIndex];
             foreach (var condition in conditions)
             {
                 if (!EvaluateCondition(condition.FilterScript, rowObject))
