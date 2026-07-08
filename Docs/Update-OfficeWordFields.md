@@ -23,7 +23,7 @@ Refreshes page number fields and queues table-of-contents updates.
 ```powershell
 PS> New-OfficeWord -Path .\Report.docx {
     Add-OfficeWordParagraph -Text 'Release report'
-    Add-OfficeWordTableOfContent
+    Add-OfficeWordTableOfContents
     Update-OfficeWordFields
 }
 ```

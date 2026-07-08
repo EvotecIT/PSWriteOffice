@@ -152,6 +152,30 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
+    It 'renders shared table cell spans in PDF tables' {
+        (Get-Command New-OfficeTableCell).Parameters.Keys | Should -Contain 'ColumnSpan'
+        (Get-Command New-OfficeTableCell).Parameters.Keys | Should -Contain 'RowSpan'
+        Get-Command OfficeTableCell | Should -Not -BeNullOrEmpty
+
+        $path = Join-Path $TestDrive 'span-aware-table.pdf'
+
+        New-OfficePdf -Path $path {
+            PdfTable -HeaderRowCount 1 -InputObject @(
+                @('Service', 'Status', 'Owner'),
+                @(New-OfficeTableCell -Text 'Identity systems' -ColumnSpan 3),
+                @('Entra', 'Watch', 'IAM'),
+                @((New-OfficeTableCell -Text 'Shared owner' -RowSpan 2), 'Build', 'OfficeIMO'),
+                @('Release', 'PSWriteOffice')
+            )
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Identity systems'
+        $text | Should -Match 'Shared owner'
+        $text | Should -Match 'Release'
+    }
+
     It 'supports transposed table views' {
         $path = Join-Path $TestDrive 'transposed-table.pdf'
         $rows = @(

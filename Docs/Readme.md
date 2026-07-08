@@ -382,7 +382,7 @@ Enters a specific table cell and executes nested DSL content inside it.
 ### [Add-OfficeWordTableCondition](Add-OfficeWordTableCondition.md)
 Attaches conditional formatting logic to the current table.
 
-### [Add-OfficeWordTableOfContent](Add-OfficeWordTableOfContent.md)
+### [Add-OfficeWordTableOfContents](Add-OfficeWordTableOfContents.md)
 Adds a table of contents to a Word document.
 
 ### [Add-OfficeWordTableRow](Add-OfficeWordTableRow.md)
@@ -826,7 +826,7 @@ Gets tables from a Word document or section.
 ### [Get-OfficeWordTableCell](Get-OfficeWordTableCell.md)
 Gets cells from an OfficeIMO Word table.
 
-### [Get-OfficeWordTableOfContent](Get-OfficeWordTableOfContent.md)
+### [Get-OfficeWordTableOfContents](Get-OfficeWordTableOfContents.md)
 Gets the table of contents from a Word document.
 
 ### [Get-OfficeWordText](Get-OfficeWordText.md)
@@ -910,6 +910,9 @@ Creates a semantic PowerPoint deck plan for designer rendering.
 ### [New-OfficeRtf](New-OfficeRtf.md)
 Creates an RTF document with plain paragraph content.
 
+### [New-OfficeTableCell](New-OfficeTableCell.md)
+Creates a reusable table cell definition for Word and PDF table cmdlets.
+
 ### [New-OfficeVisio](New-OfficeVisio.md)
 Creates a new OfficeIMO.Visio document with an initial page and optional DSL content.
 
@@ -943,7 +946,7 @@ Removes selected pages from a PDF and writes a new PDF.
 ### [Remove-OfficePowerPointSlide](Remove-OfficePowerPointSlide.md)
 Removes a slide by index.
 
-### [Remove-OfficeWordTableOfContent](Remove-OfficeWordTableOfContent.md)
+### [Remove-OfficeWordTableOfContents](Remove-OfficeWordTableOfContents.md)
 Removes the table of contents from a Word document.
 
 ### [Rename-OfficeExcelNamedRange](Rename-OfficeExcelNamedRange.md)
@@ -1219,7 +1222,7 @@ Updates OfficeIMO Word shape metadata, sizing, and colors.
 ### [Set-OfficeWordTableCell](Set-OfficeWordTableCell.md)
 Updates OfficeIMO Word table-cell content, layout, and merge settings.
 
-### [Set-OfficeWordTableOfContent](Set-OfficeWordTableOfContent.md)
+### [Set-OfficeWordTableOfContents](Set-OfficeWordTableOfContents.md)
 Sets properties on a table of contents in a Word document.
 
 ### [Set-OfficeWordTextStyle](Set-OfficeWordTextStyle.md)
@@ -1258,7 +1261,7 @@ Applies lossless text and metadata edits to an RTF document.
 ### [Update-OfficeWordFields](Update-OfficeWordFields.md)
 Updates fields in a Word document.
 
-### [Update-OfficeWordTableOfContent](Update-OfficeWordTableOfContent.md)
+### [Update-OfficeWordTableOfContents](Update-OfficeWordTableOfContents.md)
 Updates the table of contents in a Word document.
 
 ### [Update-OfficeWordText](Update-OfficeWordText.md)

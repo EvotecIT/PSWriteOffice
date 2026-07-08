@@ -484,6 +484,38 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'creates span-aware Word tables from the shared table cell DSL' {
+        (Get-Command New-OfficeTableCell).Parameters.Keys | Should -Contain 'ColumnSpan'
+        (Get-Command New-OfficeTableCell).Parameters.Keys | Should -Contain 'RowSpan'
+        Get-Command OfficeTableCell | Should -Not -BeNullOrEmpty
+
+        $path = Join-Path $TestDrive 'DslSpanAwareWordTable.docx'
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                @('Service', 'Status', 'Owner'),
+                @(OfficeTableCell -Text 'Identity systems' -ColumnSpan 3),
+                @('Entra', 'Watch', 'IAM'),
+                @((OfficeTableCell -Text 'Shared owner' -RowSpan 2), 'Build', 'OfficeIMO'),
+                @('Release', 'PSWriteOffice')
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].CellsCount | Should -Be 3
+            $table.Rows[1].CellsCount | Should -Be 1
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Identity systems'
+            $table.Rows[1].Cells[0].ColumnSpan | Should -Be 3
+            $table.Rows[3].Cells[0].Paragraphs[0].Text | Should -Be 'Shared owner'
+            $table.Rows[3].Cells[0].RowSpan | Should -Be 2
+            $table.Rows[4].Cells[1].Paragraphs[0].Text | Should -Be 'Release'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'adds Word pie charts inside the DSL' {
         $path = Join-Path $TestDrive 'DslWordPieChart.docx'
         $rows = @(
@@ -726,7 +758,7 @@ Describe 'Word DSL surface' {
             Add-OfficeWordParagraph { Add-OfficeWordDropDownList -Items 'Low','Medium','High' -Alias 'Priority' }
             Add-OfficeWordParagraph { Add-OfficeWordComboBox -Items 'Red','Blue' -DefaultValue 'Blue' -Alias 'Color' }
             Add-OfficeWordParagraph { Add-OfficeWordRepeatingSection -SectionTitle 'Items' -Alias 'LineItems' }
-            Add-OfficeWordTableOfContent -Style Template1
+            Add-OfficeWordTableOfContents -Style Template1
             Update-OfficeWordFields
         } | Out-Null
 

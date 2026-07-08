@@ -84,9 +84,15 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var context = WordDslContext.Require(this);
         var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
         var tableRows = TableViewProjection.Project(rows, effectiveView);
-        var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(tableRows);
         var legacyLayout = ResolveLegacyLayout(Layout);
-        var table = CreateTable(context, normalizedRows, Style, includeHeader: !NoHeader.IsPresent, layout: legacyLayout);
+        var table = OfficeTableSpecParser.TryCreate(tableRows, propertyNames: null, header: null, out var tableSpec)
+            ? CreateTable(context, tableSpec, Style, legacyLayout)
+            : CreateTable(
+                context,
+                PowerShellObjectNormalizer.NormalizeItems(tableRows),
+                Style,
+                includeHeader: !NoHeader.IsPresent,
+                layout: legacyLayout);
         ApplyLayout(table, Layout);
         context.RegisterTableSource(table, tableRows);
 
@@ -211,6 +217,46 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         return AddTableToCell(context.CurrentTableCell, normalizedRows, style, includeHeader, layout);
+    }
+
+    private static WordTable CreateTable(
+        WordDslContext context,
+        OfficeTableSpec spec,
+        WordTableStyle style,
+        TableLayoutValues? layout)
+    {
+        if (spec.RowCount == 0 || spec.ColumnCount == 0)
+        {
+            throw new ArgumentException("Provide at least one table row and one table column.", nameof(spec));
+        }
+
+        var table = context.CurrentTableCell == null
+            ? context.Document.AddTable(spec.RowCount, spec.ColumnCount, style)
+            : context.CurrentTableCell.AddTable(spec.RowCount, spec.ColumnCount, style);
+
+        if (layout.HasValue)
+        {
+            table.LayoutType = layout.Value;
+        }
+
+        foreach (var placement in spec.Placements)
+        {
+            SetCellText(table, placement.RowIndex, placement.ColumnIndex, placement.Cell.Text);
+        }
+
+        foreach (var placement in spec.Placements)
+        {
+            if (placement.Cell.HasSpan)
+            {
+                table.MergeCells(
+                    placement.RowIndex,
+                    placement.ColumnIndex,
+                    placement.Cell.RowSpan,
+                    placement.Cell.ColumnSpan);
+            }
+        }
+
+        return table;
     }
 
     private static WordTable AddTableToCell(
