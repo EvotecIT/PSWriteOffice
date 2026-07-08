@@ -250,6 +250,29 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Follow-up'
     }
 
+    It 'keeps generated mixed PDF headers out of leading row spans' {
+        $path = Join-Path $TestDrive 'mixed-leading-row-span-table.pdf'
+        $rows = @(
+            , @((New-OfficePdfTableCell -Text 'Group' -RowSpan 2), 'A')
+            [pscustomobject]@{
+                Name = 'B'
+                Value = 'C'
+            }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text.IndexOf('Name') | Should -BeLessThan $text.IndexOf('Group')
+        $text | Should -Match 'Value'
+        $text | Should -Match 'Group'
+        $text | Should -Match 'A'
+        $text | Should -Match 'B'
+        $text | Should -Match 'C'
+    }
+
     It 'supports transposed table views' {
         $path = Join-Path $TestDrive 'transposed-table.pdf'
         $rows = @(

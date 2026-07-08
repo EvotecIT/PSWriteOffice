@@ -614,7 +614,7 @@ Describe 'Word DSL surface' {
         }
     }
 
-    It 'applies conditions to span rows before generated mixed Word headers' {
+    It 'applies conditions to leading span rows after generated mixed Word headers' {
         $path = Join-Path $TestDrive 'DslMixedLeadingSpanConditionWordTable.docx'
         $rows = @(
             , @(New-OfficeWordTableCell -Text 'Section' -ColumnSpan 2)
@@ -634,11 +634,40 @@ Describe 'Word DSL surface' {
         try {
             $table = $document.Tables[0]
             $table.RowsCount | Should -Be 3
-            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Section'
-            $table.Rows[0].Cells[0].ShadingFillColorHex | Should -Be 'ffeeee'
-            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
-            $table.Rows[1].Cells[0].ShadingFillColorHex | Should -Not -Be 'ffeeee'
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[0].Cells[0].ShadingFillColorHex | Should -Not -Be 'ffeeee'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Section'
+            $table.Rows[1].Cells[0].ShadingFillColorHex | Should -Be 'ffeeee'
             $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Directory'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'keeps generated mixed Word headers out of leading row spans' {
+        $path = Join-Path $TestDrive 'DslMixedLeadingRowSpanWordTable.docx'
+        $rows = @(
+            , @((New-OfficeWordTableCell -Text 'Group' -RowSpan 2), 'A')
+            [pscustomobject]@{
+                Name = 'B'
+                Value = 'C'
+            }
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Group'
+            $table.Rows[1].Cells[0].RowSpan | Should -Be 2
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'A'
+            $table.Rows[2].Cells[1].Paragraphs[0].Text | Should -Be 'B'
+            $table.Rows[2].Cells[2].Paragraphs[0].Text | Should -Be 'C'
         } finally {
             $document.Dispose()
         }

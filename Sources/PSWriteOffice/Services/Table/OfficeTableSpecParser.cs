@@ -64,8 +64,8 @@ internal static class OfficeTableSpecParser
                 columns ??= projectedColumns;
                 if (allowDefaultHeader && !headerRowIndex.HasValue && columns.Length > 0)
                 {
-                    headerRowIndex = tableRows.Count;
-                    tableRows.Add(columns.Select(static value => new OfficeTableCellSpec(value)).ToArray());
+                    headerRowIndex = 0;
+                    tableRows.Insert(0, columns.Select(static value => new OfficeTableCellSpec(value)).ToArray());
                 }
 
                 tableRows.Add(values.Select(ToCell).ToArray());
