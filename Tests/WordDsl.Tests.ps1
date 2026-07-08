@@ -484,19 +484,19 @@ Describe 'Word DSL surface' {
         }
     }
 
-    It 'creates span-aware Word tables from the shared table cell DSL' {
-        (Get-Command New-OfficeTableCell).Parameters.Keys | Should -Contain 'ColumnSpan'
-        (Get-Command New-OfficeTableCell).Parameters.Keys | Should -Contain 'RowSpan'
-        Get-Command OfficeTableCell | Should -Not -BeNullOrEmpty
+    It 'creates span-aware Word tables from Word table cell specs' {
+        (Get-Command New-OfficeWordTableCell).Parameters.Keys | Should -Contain 'ColumnSpan'
+        (Get-Command New-OfficeWordTableCell).Parameters.Keys | Should -Contain 'RowSpan'
+        Get-Command New-OfficeTableCell -ErrorAction SilentlyContinue | Should -BeNullOrEmpty
 
         $path = Join-Path $TestDrive 'DslSpanAwareWordTable.docx'
 
         New-OfficeWord -Path $path {
             WordTable -Style TableGrid -InputObject @(
                 @('Service', 'Status', 'Owner'),
-                @(OfficeTableCell -Text 'Identity systems' -ColumnSpan 3),
+                @(New-OfficeWordTableCell -Text 'Identity systems' -ColumnSpan 3),
                 @('Entra', 'Watch', 'IAM'),
-                @((OfficeTableCell -Text 'Shared owner' -RowSpan 2), 'Build', 'OfficeIMO'),
+                @((New-OfficeWordTableCell -Text 'Shared owner' -RowSpan 2), 'Build', 'OfficeIMO'),
                 @('Release', 'PSWriteOffice')
             )
         } | Out-Null

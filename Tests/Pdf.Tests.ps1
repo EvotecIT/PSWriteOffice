@@ -152,19 +152,19 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Beta'
     }
 
-    It 'renders shared table cell spans in PDF tables' {
-        (Get-Command New-OfficeTableCell).Parameters.Keys | Should -Contain 'ColumnSpan'
-        (Get-Command New-OfficeTableCell).Parameters.Keys | Should -Contain 'RowSpan'
-        Get-Command OfficeTableCell | Should -Not -BeNullOrEmpty
+    It 'renders PDF table cell spans in PDF tables' {
+        (Get-Command New-OfficePdfTableCell).Parameters.Keys | Should -Contain 'ColumnSpan'
+        (Get-Command New-OfficePdfTableCell).Parameters.Keys | Should -Contain 'RowSpan'
+        Get-Command New-OfficeTableCell -ErrorAction SilentlyContinue | Should -BeNullOrEmpty
 
         $path = Join-Path $TestDrive 'span-aware-table.pdf'
 
         New-OfficePdf -Path $path {
             PdfTable -HeaderRowCount 1 -InputObject @(
                 @('Service', 'Status', 'Owner'),
-                @(New-OfficeTableCell -Text 'Identity systems' -ColumnSpan 3),
+                @(New-OfficePdfTableCell -Text 'Identity systems' -ColumnSpan 3),
                 @('Entra', 'Watch', 'IAM'),
-                @((New-OfficeTableCell -Text 'Shared owner' -RowSpan 2), 'Build', 'OfficeIMO'),
+                @((New-OfficePdfTableCell -Text 'Shared owner' -RowSpan 2), 'Build', 'OfficeIMO'),
                 @('Release', 'PSWriteOffice')
             )
         } | Out-Null

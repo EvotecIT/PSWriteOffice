@@ -898,6 +898,9 @@ Creates a Markdown document using a DSL scriptblock.
 ### [New-OfficePdf](New-OfficePdf.md)
 Creates a PDF document using the OfficeIMO.Pdf composition engine.
 
+### [New-OfficePdfTableCell](New-OfficePdfTableCell.md)
+Creates a reusable PDF table cell definition for explicit table rows.
+
 ### [New-OfficePdfSignature](New-OfficePdfSignature.md)
 Prepares an existing PDF for external digital signing by appending a signature field, /ByteRange, and reserved /Contents placeholder.
 
@@ -910,9 +913,6 @@ Creates a semantic PowerPoint deck plan for designer rendering.
 ### [New-OfficeRtf](New-OfficeRtf.md)
 Creates an RTF document with plain paragraph content.
 
-### [New-OfficeTableCell](New-OfficeTableCell.md)
-Creates a reusable table cell definition for Word and PDF table cmdlets.
-
 ### [New-OfficeVisio](New-OfficeVisio.md)
 Creates a new OfficeIMO.Visio document with an initial page and optional DSL content.
 
@@ -921,6 +921,9 @@ Generates the OfficeIMO Visio reference gallery as editable .vsdx diagrams.
 
 ### [New-OfficeWord](New-OfficeWord.md)
 Creates a Word document using the DSL.
+
+### [New-OfficeWordTableCell](New-OfficeWordTableCell.md)
+Creates a reusable Word table cell definition for explicit table rows.
 
 ### [Protect-OfficeExcelSheet](Protect-OfficeExcelSheet.md)
 Protects the current worksheet.
