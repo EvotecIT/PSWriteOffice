@@ -9,6 +9,8 @@ function Invoke-ExcelBenchmarkOperation {
         WriteCsv { Invoke-ExcelBenchmarkWriteCsv -Engine $Engine -Run $Run }
         ReadCsvSource { Invoke-ExcelBenchmarkReadCsv -Engine $Engine -Run $Run }
         ReadCsvDataTable { Invoke-ExcelBenchmarkReadCsvDataTable -Engine $Engine -Run $Run }
+        ReadCsvQuickSingleColumn { Invoke-ExcelBenchmarkReadCsvQuickSingleColumn -Engine $Engine -Run $Run }
+        ReadCsvQuickAllColumns { Invoke-ExcelBenchmarkReadCsvQuickAllColumns -Engine $Engine -Run $Run }
         CsvToExcel { Invoke-ExcelBenchmarkCsvToExcel -Engine $Engine -Run $Run }
         WriteWorkbook { Invoke-ExcelBenchmarkWriteWorkbook -Engine $Engine -Case $Case -Run $Run }
         ReadFullSheet { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode Full }
@@ -63,6 +65,69 @@ function Invoke-ExcelBenchmarkReadCsvDataTable {
         }
         default { throw "Engine '$Engine' does not support CSV DataTable read." }
     }
+}
+
+function Invoke-ExcelBenchmarkReadCsvQuickSingleColumn {
+    param([string] $Engine, [object] $Run)
+
+    $count = 0
+    $lastValue = $null
+    switch ($Engine) {
+        PSWriteOffice {
+            Import-OfficeCsv -Path $Run.SourcePath | ForEach-Object {
+                $lastValue = $_.Column0
+                $count++
+            }
+        }
+        NativeCsv {
+            Import-Csv -Path $Run.SourcePath | ForEach-Object {
+                $lastValue = $_.Column0
+                $count++
+            }
+        }
+        default { throw "Engine '$Engine' does not support CSV QuickTest single-column read." }
+    }
+
+    $Run.ActualRows = $count
+    $Run.AccessedFields = $count
+    $Run.LastValue = $lastValue
+}
+
+function Invoke-ExcelBenchmarkReadCsvQuickAllColumns {
+    param([string] $Engine, [object] $Run)
+
+    $count = 0
+    $accessedFields = 0
+    $lastValue = $null
+    $columns = for ($column = 0; $column -lt [int]$Run.ColumnCount; $column++) {
+        'Column{0}' -f $column
+    }
+
+    switch ($Engine) {
+        PSWriteOffice {
+            Import-OfficeCsv -Path $Run.SourcePath | ForEach-Object {
+                $count++
+                foreach ($column in $columns) {
+                    $lastValue = $_.$column
+                    $accessedFields++
+                }
+            }
+        }
+        NativeCsv {
+            Import-Csv -Path $Run.SourcePath | ForEach-Object {
+                $count++
+                foreach ($column in $columns) {
+                    $lastValue = $_.$column
+                    $accessedFields++
+                }
+            }
+        }
+        default { throw "Engine '$Engine' does not support CSV QuickTest all-columns read." }
+    }
+
+    $Run.ActualRows = $count
+    $Run.AccessedFields = $accessedFields
+    $Run.LastValue = $lastValue
 }
 
 function Invoke-ExcelBenchmarkCsvToExcel {

@@ -115,6 +115,11 @@ PowerShell CSV import/export:
 - `PSWriteOffice`
 - `NativeCsv`
 
+The CSV suite also includes dbatools `QuickTest`-shaped read scenarios over the
+same 10-column generated CSV shape: `csv-dbatools-quick-single-column` touches
+`Column0` for every row, and `csv-dbatools-quick-all-columns` touches every
+column for every row.
+
 ```powershell
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 -Suite Smoke
 ```
@@ -130,6 +135,14 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
     -RepeatCount 3 `
     -Engine PSWriteOffice,NativeCsv `
     -UpdateReadme
+```
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 100000 `
+    -Scenario csv-dbatools-quick-single-column,csv-dbatools-quick-all-columns `
+    -Engine PSWriteOffice,NativeCsv
 ```
 
 <!-- BENCHMARK:CsvComparison:START -->

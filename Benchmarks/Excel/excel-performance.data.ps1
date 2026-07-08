@@ -20,6 +20,9 @@ function Get-ExcelBenchmarkData {
         CsvWideObjects {
             [pscustomobject]@{ Data = @(New-ExcelBenchmarkWideRows -Count $Count); ColumnCount = 40; WorksheetName = 'Data' }
         }
+        DbatoolsQuickCsv {
+            [pscustomobject]@{ Data = $null; ColumnCount = 10; WorksheetName = 'Data' }
+        }
         DataTable {
             [pscustomobject]@{ Data = New-ExcelBenchmarkDataTable -Count $Count; ColumnCount = 6; WorksheetName = 'Data' }
         }
@@ -122,6 +125,61 @@ function New-ExcelBenchmarkCsvMultilineRows {
     }
 }
 
+function New-ExcelBenchmarkDbatoolsCsvSource {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Path,
+
+        [Parameter(Mandatory)]
+        [int] $Count,
+
+        [int] $ColumnCount = 10
+    )
+
+    $directory = [IO.Path]::GetDirectoryName($Path)
+    if (-not [string]::IsNullOrWhiteSpace($directory) -and -not [IO.Directory]::Exists($directory)) {
+        [IO.Directory]::CreateDirectory($directory) | Out-Null
+    }
+
+    $encoding = [Text.UTF8Encoding]::new($false)
+    $writer = [IO.StreamWriter]::new($Path, $false, $encoding)
+    try {
+        $headers = @(
+            for ($column = 0; $column -lt $ColumnCount; $column++) {
+                'Column{0}' -f $column
+            }
+        )
+        $writer.WriteLine(($headers -join ','))
+
+        $random = [Random]::new(42)
+        $builder = [Text.StringBuilder]::new()
+        for ($row = 0; $row -lt $Count; $row++) {
+            $null = $builder.Clear()
+            for ($column = 0; $column -lt $ColumnCount; $column++) {
+                if ($column -gt 0) {
+                    $null = $builder.Append(',')
+                }
+
+                $value = switch ($column) {
+                    0 { $row.ToString([Globalization.CultureInfo]::InvariantCulture); break }
+                    1 { 'Name{0}' -f $row; break }
+                    2 { $random.Next(1, 100).ToString([Globalization.CultureInfo]::InvariantCulture); break }
+                    3 { $random.NextDouble().ToString('F4', [Globalization.CultureInfo]::InvariantCulture); break }
+                    4 { [datetime]::Now.AddDays(-$random.Next(365)).ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture); break }
+                    5 { if ($random.Next(0, 2) -eq 0) { 'true' } else { 'false' }; break }
+                    default { 'Value{0}_{1}' -f $row, $column; break }
+                }
+
+                $null = $builder.Append($value)
+            }
+
+            $writer.WriteLine($builder.ToString())
+        }
+    } finally {
+        $writer.Dispose()
+    }
+}
+
 function New-ExcelBenchmarkDataTable {
     param([int] $Count)
 
@@ -186,6 +244,7 @@ function Get-ExcelBenchmarkColumnCount {
     switch ($Profile) {
         WideObjects { 40 }
         CsvWideObjects { 40 }
+        DbatoolsQuickCsv { 10 }
         DataTable { 6 }
         DataSet { 6 }
         default { 10 }
@@ -228,6 +287,12 @@ function Initialize-ExcelBenchmarkInput {
         }
         ReadCsvDataTable {
             $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        }
+        ReadCsvQuickSingleColumn {
+            New-ExcelBenchmarkDbatoolsCsvSource -Path $Run.SourcePath -Count ([int]$Case.RowCount) -ColumnCount $Run.ColumnCount
+        }
+        ReadCsvQuickAllColumns {
+            New-ExcelBenchmarkDbatoolsCsvSource -Path $Run.SourcePath -Count ([int]$Case.RowCount) -ColumnCount $Run.ColumnCount
         }
         CsvToExcel {
             $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
