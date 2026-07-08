@@ -124,6 +124,16 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         TableInputCollector.AddInput(items, InputObject);
         var inputRows = TableInputCollector.RequireRows(items, nameof(InputObject));
         var projectedRows = TableViewProjection.Project(inputRows, View);
+        var explicitHeaders = ResolveExplicitHeaders();
+        if (OfficeTableSpecParser.TryCreate(
+                projectedRows,
+                propertyNames: explicitHeaders,
+                header: NoHeader.IsPresent ? Array.Empty<string>() : explicitHeaders,
+                out var tableSpec))
+        {
+            return CreateStructuredTable(slide, tableSpec);
+        }
+
         var normalized = PowerShellObjectNormalizer.NormalizeItems(projectedRows);
         var rows = NormalizeRows(normalized);
         var headers = ResolveHeaders(rows);
@@ -140,6 +150,27 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
             .ToList();
 
         return slide.AddTablePoints(rows, columns, includeHeaders: !NoHeader.IsPresent, X, Y, Width, Height);
+    }
+
+    private PowerPointTable CreateStructuredTable(PowerPointSlide slide, OfficeTableSpec spec)
+    {
+        foreach (var placement in spec.Placements)
+        {
+            PowerPointTableCellSpecService.Validate(placement.Cell);
+        }
+
+        var table = slide.AddTablePoints(spec.RowCount, spec.ColumnCount, X, Y, Width, Height);
+        foreach (var placement in spec.Placements)
+        {
+            var cell = table.GetCell(placement.RowIndex, placement.ColumnIndex);
+            PowerPointTableCellSpecService.Apply(cell, placement.Cell);
+            if (placement.Cell.HasSpan)
+            {
+                cell.Merge = (placement.Cell.RowSpan, placement.Cell.ColumnSpan);
+            }
+        }
+
+        return table;
     }
 
     private void ValidateDimensions()
@@ -194,19 +225,10 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
 
     private List<string> ResolveHeaders(IReadOnlyList<Dictionary<string, object?>> rows)
     {
-        if (Header != null && Header.Length > 0)
+        var explicitHeaders = ResolveExplicitHeaders();
+        if (explicitHeaders != null)
         {
-            var explicitHeaders = Header
-                .Where(h => !string.IsNullOrWhiteSpace(h))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            if (explicitHeaders.Count == 0)
-            {
-                throw new PSArgumentException("Header cannot be empty.", nameof(Header));
-            }
-
-            return explicitHeaders;
+            return explicitHeaders.ToList();
         }
 
         var headers = new List<string>();
@@ -223,5 +245,25 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         }
 
         return headers;
+    }
+
+    private string[]? ResolveExplicitHeaders()
+    {
+        if (Header == null || Header.Length == 0)
+        {
+            return null;
+        }
+
+        var explicitHeaders = Header
+            .Where(h => !string.IsNullOrWhiteSpace(h))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (explicitHeaders.Length == 0)
+        {
+            throw new PSArgumentException("Header cannot be empty.", nameof(Header));
+        }
+
+        return explicitHeaders;
     }
 }

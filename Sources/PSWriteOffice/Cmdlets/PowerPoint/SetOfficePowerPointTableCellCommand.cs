@@ -26,10 +26,13 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Text 'Mitigating'</code>
 ///   <para>Uses the table found by text content and updates the second row, second column.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Set, "OfficePowerPointTableCell")]
+[Cmdlet(VerbsCommon.Set, "OfficePowerPointTableCell", DefaultParameterSetName = "Text")]
 [OutputType(typeof(PowerPointTableCell))]
 public sealed class SetOfficePowerPointTableCellCommand : PSCmdlet
 {
+    private const string ParameterSetText = "Text";
+    private const string ParameterSetRun = "Run";
+
     /// <summary>PowerPoint table or table shape info returned by <c>Find-OfficePowerPointShape</c> or <c>Get-OfficePowerPointShape</c>.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public object InputObject { get; set; } = null!;
@@ -45,9 +48,14 @@ public sealed class SetOfficePowerPointTableCellCommand : PSCmdlet
     public int Column { get; set; }
 
     /// <summary>Replacement cell text. A null value clears the cell.</summary>
-    [Parameter(Mandatory = true)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
     [AllowNull]
     public string? Text { get; set; }
+
+    /// <summary>Replacement rich text runs. Each run can be created with TextRun/PowerPointTextRun or provided as a hashtable/object.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetRun)]
+    [Alias("Runs")]
+    public object[]? Run { get; set; }
 
     /// <summary>Emit the updated table cell for additional OfficeIMO-level edits.</summary>
     [Parameter]
@@ -68,7 +76,14 @@ public sealed class SetOfficePowerPointTableCellCommand : PSCmdlet
         }
 
         var cell = table.GetCell(Row, Column);
-        cell.Text = Text ?? string.Empty;
+        if (ParameterSetName == ParameterSetRun)
+        {
+            PowerPointTextRunService.ApplyRuns(cell, Run!);
+        }
+        else
+        {
+            cell.Text = Text ?? string.Empty;
+        }
 
         if (PassThru.IsPresent)
         {

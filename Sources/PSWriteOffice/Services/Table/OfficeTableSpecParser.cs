@@ -6,15 +6,41 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 using PSWriteOffice.Services;
+using PSWriteOffice.Services.Text;
 
 namespace PSWriteOffice.Services.Table;
 
 internal static class OfficeTableSpecParser
 {
     private static readonly string[] TextKeys = { "Text", "Value", "Content" };
+    private static readonly string[] RunKeys = { "Run", "Runs" };
     private static readonly string[] ColumnSpanKeys = { "ColumnSpan", "ColSpan" };
     private static readonly string[] RowSpanKeys = { "RowSpan" };
-    private static readonly string[] CellKeys = TextKeys.Concat(ColumnSpanKeys).Concat(RowSpanKeys).ToArray();
+    private static readonly string[] TextColorKeys = { "TextColor", "Color", "FontColor" };
+    private static readonly string[] FillColorKeys = { "FillColor", "BackgroundColor", "CellFill" };
+    private static readonly string[] FontSizeKeys = { "FontSize" };
+    private static readonly string[] BoldKeys = { "Bold" };
+    private static readonly string[] ItalicKeys = { "Italic" };
+    private static readonly string[] UnderlineKeys = { "Underline", "Underlined" };
+    private static readonly string[] UnderlineStyleKeys = { "UnderlineStyle", "UnderlineKind" };
+    private static readonly string[] StrikeKeys = { "Strike", "Strikethrough" };
+    private static readonly string[] AlignKeys = { "Align", "Alignment", "HorizontalAlign" };
+    private static readonly string[] VerticalAlignKeys = { "VerticalAlign", "VerticalAlignment" };
+    private static readonly string[] CellKeys = TextKeys
+        .Concat(RunKeys)
+        .Concat(ColumnSpanKeys)
+        .Concat(RowSpanKeys)
+        .Concat(TextColorKeys)
+        .Concat(FillColorKeys)
+        .Concat(FontSizeKeys)
+        .Concat(BoldKeys)
+        .Concat(ItalicKeys)
+        .Concat(UnderlineKeys)
+        .Concat(UnderlineStyleKeys)
+        .Concat(StrikeKeys)
+        .Concat(AlignKeys)
+        .Concat(VerticalAlignKeys)
+        .ToArray();
 
     public static bool TryCreate(
         IReadOnlyList<object> rows,
@@ -47,7 +73,7 @@ internal static class OfficeTableSpecParser
         string[]? columns = propertyNames;
         foreach (var row in rows)
         {
-            if (TryCreateCell(row, requireExplicitCellShape: true, out var singleCell))
+            if (TryCreateCell(row, requireExplicitCellShape: true, allowStyleOnlyCell: false, allowRunEnumerable: false, out var singleCell))
             {
                 tableRows.Add(new[] { singleCell });
                 continue;
@@ -84,12 +110,15 @@ internal static class OfficeTableSpecParser
         return spec.RowCount > 0 && spec.ColumnCount > 0;
     }
 
+    internal static bool TryCreateCell(object? value, out OfficeTableCellSpec spec)
+        => TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, allowRunEnumerable: true, out spec);
+
     private static OfficeTableCellSpec[] CreateExplicitRow(object row)
     {
         var cells = new List<OfficeTableCellSpec>();
         foreach (var value in Enumerate(row))
         {
-            cells.Add(TryCreateCell(value, requireExplicitCellShape: false, out var spec)
+            cells.Add(TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, allowRunEnumerable: true, out var spec)
                 ? spec
                 : ToCell(value));
         }
@@ -99,7 +128,7 @@ internal static class OfficeTableSpecParser
 
     private static bool ContainsStructuredCellMarker(object row)
     {
-        if (TryCreateCell(row, requireExplicitCellShape: true, out var cell) && cell.HasSpan)
+        if (TryCreateCell(row, requireExplicitCellShape: true, allowStyleOnlyCell: false, allowRunEnumerable: false, out var cell) && cell.HasStructuredMarker)
         {
             return true;
         }
@@ -111,7 +140,7 @@ internal static class OfficeTableSpecParser
 
         foreach (var value in Enumerate(row))
         {
-            if (TryCreateCell(value, requireExplicitCellShape: false, out cell) && cell.HasSpan)
+            if (TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, allowRunEnumerable: true, out cell) && cell.HasStructuredMarker)
             {
                 return true;
             }
@@ -123,7 +152,12 @@ internal static class OfficeTableSpecParser
     private static OfficeTableCellSpec ToCell(object? value)
         => new(Convert.ToString(UnwrapPSObject(value), CultureInfo.InvariantCulture));
 
-    private static bool TryCreateCell(object? value, bool requireExplicitCellShape, out OfficeTableCellSpec spec)
+    private static bool TryCreateCell(
+        object? value,
+        bool requireExplicitCellShape,
+        bool allowStyleOnlyCell,
+        bool allowRunEnumerable,
+        out OfficeTableCellSpec spec)
     {
         value = UnwrapPSObject(value);
         if (value is OfficeTableCellSpec typed)
@@ -136,27 +170,51 @@ internal static class OfficeTableSpecParser
         var hasRowSpan = TryGetValue(value, RowSpanKeys, out var rowSpanValue);
         var hasSpan = hasColumnSpan || hasRowSpan;
         var hasText = TryGetValue(value, TextKeys, out var textValue);
+        var hasRuns = TryGetValue(value, RunKeys, out var runValue) && IsRunValue(runValue, allowStringRun: !requireExplicitCellShape, allowEnumerableRun: allowRunEnumerable);
         var hasOnlyCellKeys = HasOnlyCellKeys(value);
-        if (requireExplicitCellShape && !hasSpan)
+        if (!hasOnlyCellKeys)
         {
             spec = null!;
             return false;
         }
 
-        if (!hasOnlyCellKeys || (!hasSpan && !hasText))
+        if (!allowStyleOnlyCell && !hasSpan && !hasRuns)
         {
             spec = null!;
             return false;
         }
 
-        if (hasSpan && !hasText)
+        var style = CreateStyle(value);
+        var hasStyle = style?.HasAnyValue == true;
+        if (!allowStyleOnlyCell && !hasSpan && hasStyle && !hasRuns)
         {
             spec = null!;
             return false;
         }
 
+        if (requireExplicitCellShape && !hasSpan && !hasStyle && !hasRuns)
+        {
+            spec = null!;
+            return false;
+        }
+
+        if (!hasSpan && !hasStyle && !hasText && !hasRuns)
+        {
+            spec = null!;
+            return false;
+        }
+
+        if ((hasSpan || hasStyle) && !hasText && !hasRuns)
+        {
+            spec = null!;
+            return false;
+        }
+
+        var runs = hasRuns ? OfficeTextRunParser.ParseMany(runValue) : null;
         var text = hasText
             ? Convert.ToString(UnwrapPSObject(textValue), CultureInfo.InvariantCulture)
+            : runs != null
+                ? OfficeTextRunParser.GetPlainText(runs)
             : string.Empty;
         var columnSpan = hasColumnSpan
             ? ConvertToPositiveInt(columnSpanValue, "ColumnSpan")
@@ -164,14 +222,33 @@ internal static class OfficeTableSpecParser
         var rowSpan = hasRowSpan
             ? ConvertToPositiveInt(rowSpanValue, "RowSpan")
             : 1;
-        if (requireExplicitCellShape && columnSpan == 1 && rowSpan == 1)
+        if (requireExplicitCellShape && columnSpan == 1 && rowSpan == 1 && !hasStyle && !hasRuns)
         {
             spec = null!;
             return false;
         }
 
-        spec = new OfficeTableCellSpec(text, columnSpan, rowSpan);
+        spec = new OfficeTableCellSpec(text, columnSpan, rowSpan, style, runs);
         return true;
+    }
+
+    private static OfficeTableCellStyle? CreateStyle(object? value)
+    {
+        var style = new OfficeTableCellStyle
+        {
+            TextColor = GetString(value, TextColorKeys),
+            FillColor = GetString(value, FillColorKeys),
+            FontSize = GetDouble(value, FontSizeKeys),
+            Bold = GetBool(value, BoldKeys),
+            Italic = GetBool(value, ItalicKeys),
+            Underline = GetBool(value, UnderlineKeys) || GetString(value, UnderlineStyleKeys) != null,
+            UnderlineStyle = GetString(value, UnderlineStyleKeys),
+            Strike = GetBool(value, StrikeKeys),
+            Align = GetString(value, AlignKeys),
+            VerticalAlign = GetString(value, VerticalAlignKeys)
+        };
+
+        return style.HasAnyValue ? style : null;
     }
 
     private static bool HasOnlyCellKeys(object? source)
@@ -203,6 +280,29 @@ internal static class OfficeTableSpecParser
                 property.MemberType is PSMemberTypes.NoteProperty or PSMemberTypes.Property or PSMemberTypes.AliasProperty)
             .ToArray();
         return properties.Length > 0 && properties.All(static property => IsCellKey(property.Name));
+    }
+
+    private static bool IsRunValue(object? value, bool allowStringRun, bool allowEnumerableRun)
+    {
+        value = UnwrapPSObject(value);
+        if (value is null)
+        {
+            return false;
+        }
+
+        if (value is string)
+        {
+            return allowStringRun;
+        }
+
+        if (value is OfficeTextRunSpec or IDictionary)
+        {
+            return true;
+        }
+
+        return allowEnumerableRun &&
+               value is IEnumerable enumerable &&
+               enumerable.Cast<object?>().Any(static item => item is not null);
     }
 
     private static bool IsCellKey(string? key)
@@ -302,6 +402,20 @@ internal static class OfficeTableSpecParser
 
         return result;
     }
+
+    private static string? GetString(object? source, IEnumerable<string> keys)
+        => TryGetValue(source, keys, out var value)
+            ? Convert.ToString(UnwrapPSObject(value), CultureInfo.InvariantCulture)
+            : null;
+
+    private static double? GetDouble(object? source, IEnumerable<string> keys)
+        => TryGetValue(source, keys, out var value)
+            ? Convert.ToDouble(UnwrapPSObject(value), CultureInfo.InvariantCulture)
+            : null;
+
+    private static bool GetBool(object? source, IEnumerable<string> keys)
+        => TryGetValue(source, keys, out var value) &&
+           Convert.ToBoolean(UnwrapPSObject(value), CultureInfo.InvariantCulture);
 
     private static object? UnwrapPSObject(object? value)
         => value is PSObject psObject ? psObject.BaseObject : value;

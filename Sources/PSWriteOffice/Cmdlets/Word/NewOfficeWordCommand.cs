@@ -22,6 +22,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <para>Copies the template to the output path, runs the DSL against the copied document, and saves it.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeWord", SupportsShouldProcess = true)]
+[Alias("WordNew")]
 public sealed class NewOfficeWordCommand : PSCmdlet
 {
     /// <summary>Destination path for the document.</summary>

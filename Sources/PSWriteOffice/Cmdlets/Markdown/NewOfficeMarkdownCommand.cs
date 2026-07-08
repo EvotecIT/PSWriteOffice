@@ -29,6 +29,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   <para>Creates a report with two tables separated by headings.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeMarkdown", SupportsShouldProcess = true)]
+[Alias("MarkdownNew")]
 [OutputType(typeof(FileInfo), typeof(MarkdownDoc))]
 public sealed class NewOfficeMarkdownCommand : PSCmdlet
     , IMarkdownWriteOptionSource

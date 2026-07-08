@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services.PowerPoint;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -62,6 +63,12 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var table = ResolveTable(InputObject);
+        var values = ExpandValues(Value);
+        if (table.Rows > 0)
+        {
+            ValidateValues(values, table.Columns);
+        }
+
         PowerPointTableRow row;
         if (table.Rows == 0)
         {
@@ -74,12 +81,28 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
             row = table.AddRowFromTemplate(templateRowIndex, Index, clearText: true);
         }
 
-        var values = ExpandValues(Value);
+        var occupiedColumns = new bool[row.Cells.Count];
+        var valueIndex = 0;
         for (var column = 0; column < row.Cells.Count; column++)
         {
-            row.GetCell(column).Text = column < values.Count
-                ? ConvertValue(values[column])
-                : string.Empty;
+            if (occupiedColumns[column])
+            {
+                continue;
+            }
+
+            var cell = row.GetCell(column);
+            if (valueIndex < values.Count)
+            {
+                var columnSpan = ApplyValue(cell, values[valueIndex++], column, row.Cells.Count);
+                for (var offset = 1; offset < columnSpan && column + offset < occupiedColumns.Length; offset++)
+                {
+                    occupiedColumns[column + offset] = true;
+                }
+            }
+            else
+            {
+                cell.Text = string.Empty;
+            }
         }
 
         if (PassThru.IsPresent)
@@ -170,5 +193,61 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
     private static string ConvertValue(object? value)
     {
         return value == null ? string.Empty : LanguagePrimitives.ConvertTo<string>(value) ?? string.Empty;
+    }
+
+    private static void ValidateValues(IReadOnlyList<object?> values, int columnCount)
+    {
+        var occupiedColumns = new bool[columnCount];
+        var valueIndex = 0;
+        for (var column = 0; column < columnCount && valueIndex < values.Count; column++)
+        {
+            if (occupiedColumns[column])
+            {
+                continue;
+            }
+
+            if (values[valueIndex] != null && OfficeTableSpecParser.TryCreateCell(values[valueIndex], out var spec))
+            {
+                ValidateSpan(spec, column, columnCount);
+                PowerPointTableCellSpecService.Validate(spec);
+                for (var offset = 1; offset < spec.ColumnSpan && column + offset < occupiedColumns.Length; offset++)
+                {
+                    occupiedColumns[column + offset] = true;
+                }
+            }
+
+            valueIndex++;
+        }
+    }
+
+    private static int ApplyValue(PowerPointTableCell cell, object? value, int column, int columnCount)
+    {
+        if (value != null && OfficeTableSpecParser.TryCreateCell(value, out var spec))
+        {
+            ValidateSpan(spec, column, columnCount);
+            PowerPointTableCellSpecService.Apply(cell, spec);
+            if (spec.HasSpan)
+            {
+                cell.Merge = (spec.RowSpan, spec.ColumnSpan);
+            }
+
+            return spec.ColumnSpan;
+        }
+
+        cell.Text = ConvertValue(value);
+        return 1;
+    }
+
+    private static void ValidateSpan(OfficeTableCellSpec spec, int column, int columnCount)
+    {
+        if (spec.RowSpan > 1)
+        {
+            throw new PSArgumentException("Add-OfficePowerPointTableRow cannot apply RowSpan values because it creates one physical row.", nameof(Value));
+        }
+
+        if (column + spec.ColumnSpan > columnCount)
+        {
+            throw new PSArgumentException($"ColumnSpan {spec.ColumnSpan} at column {column} exceeds the table width of {columnCount}.", nameof(Value));
+        }
     }
 }

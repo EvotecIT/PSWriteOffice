@@ -293,6 +293,280 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'creates and updates PowerPoint text and table cells from rich text runs' {
+        foreach ($name in 'PptNew', 'PowerPointTextRun', 'PptTextRun') {
+            Get-Command $name | Should -Not -BeNullOrEmpty
+        }
+
+        $path = Join-Path $TestDrive 'PowerPointRichTextRuns.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            $textBox = PptTextBox -Slide $slide -Run @(
+                PptTextRun 'Status: '
+                PptTextRun 'Ready' -Color SeaGreen -Bold
+            ) -X 80 -Y 80 -Width 300 -Height 50
+            $textBox.Text | Should -Be 'Status: Ready'
+            $textBox = $textBox | Set-OfficePowerPointShapeText -Run @(
+                PptTextRun 'Linked' -Color Crimson -BackgroundColor Yellow -FontName 'Arial' -FontSize 18 -LinkUri 'https://example.org/ppt'
+            ) -PassThru
+            $textBox.Paragraphs[0].Runs[0].Color | Should -Be 'DC143C'
+            $textBox.Paragraphs[0].Runs[0].HighlightColor | Should -Be 'FFFF00'
+            $textBox.Paragraphs[0].Runs[0].Hyperlink.AbsoluteUri | Should -Be 'https://example.org/ppt'
+            $textBox = $textBox | Set-OfficePowerPointShapeText -Run @(
+                PptTextRun 'Plain'
+            ) -PassThru
+            $textBox.Text | Should -Be 'Plain'
+            $textBox.Paragraphs[0].Runs[0].Color | Should -BeNullOrEmpty
+            $textBox.Paragraphs[0].Runs[0].HighlightColor | Should -BeNullOrEmpty
+            $textBox.Paragraphs[0].Runs[0].FontName | Should -BeNullOrEmpty
+            $textBox.Paragraphs[0].Runs[0].FontSize | Should -BeNullOrEmpty
+            $textBox.Paragraphs[0].Runs[0].Hyperlink | Should -BeNullOrEmpty
+
+            $table = PptTable -Slide $slide -InputObject @(
+                , @(
+                    @{
+                        Run = @(
+                            PptTextRun 'Build '
+                            PptTextRun 'Ready' -Color SeaGreen
+                        )
+                        ColumnSpan = 2
+                        FillColor = 'AliceBlue'
+                        Bold = $true
+                        Color = 'Red'
+                        FontSize = 18
+                    }
+                )
+                , @('Owner', 'Platform')
+                , @(@{ Text = 'Filled'; FillColor = 'Yellow'; Bold = $true }, 'Styled')
+                , @(@{ Run = 'Queued' }, 'String run')
+            ) -X 80 -Y 150 -Width 420 -Height 140
+            $table.GetCell(0, 0).Text | Should -Be 'Build Ready'
+            $table.GetCell(0, 0).Runs[0].Bold | Should -BeTrue
+            $table.GetCell(0, 0).Runs[0].Color | Should -Be 'FF0000'
+            $table.GetCell(0, 0).Runs[0].FontSize | Should -Be 18
+            $table.GetCell(0, 0).Runs[1].Bold | Should -BeTrue
+            $table.GetCell(0, 0).Runs[1].Color | Should -Be '2E8B57'
+            $table.GetCell(1, 0).Text | Should -Be 'Owner'
+            $table.GetCell(2, 0).Text | Should -Be 'Filled'
+            $table.GetCell(2, 0).Runs[0].Bold | Should -BeTrue
+            $table.GetCell(2, 0).Runs[0].HighlightColor | Should -BeNullOrEmpty
+            $table.GetCell(2, 0).FillColor | Should -Be 'FFFF00'
+            $table.GetCell(3, 0).Text | Should -Be 'Queued'
+
+            $row = $table | Add-OfficePowerPointTableRow -Values @(
+                @{ Run = @(PptTextRun 'Latency '; PptTextRun 'Ready' -Color SeaGreen -Bold) },
+                'SRE'
+            ) -PassThru
+            $row.GetCell(0).Text | Should -Be 'Latency Ready'
+
+            $spannedRow = $table | Add-OfficePowerPointTableRow -Values @(
+                @{ Text = 'Total'; ColumnSpan = 2; FillColor = 'AliceBlue' }
+            ) -PassThru
+            $spannedRow.GetCell(0).Text | Should -Be 'Total'
+            $spannedRow.GetCell(0).Merge.Item1 | Should -Be 1
+            $spannedRow.GetCell(0).Merge.Item2 | Should -Be 2
+
+            $threeColumnTable = PptTable -Slide $slide -InputObject @(
+                , @('Metric', 'Scope', 'Value')
+            ) -X 80 -Y 320 -Width 420 -Height 120
+            $valueAfterSpan = $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
+                @{ Text = 'Total'; ColumnSpan = 2; FillColor = 'AliceBlue' },
+                '42'
+            ) -PassThru
+            $valueAfterSpan.GetCell(0).Merge.Item2 | Should -Be 2
+            $valueAfterSpan.GetCell(2).Text | Should -Be '42'
+
+            {
+                $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
+                    @{ Text = 'Too wide'; ColumnSpan = 4 }
+                )
+            } | Should -Throw '*ColumnSpan 4*'
+            $threeColumnTable.Rows | Should -Be 2
+
+            {
+                $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
+                    @{ Text = 'Too tall'; RowSpan = 2 }
+                )
+            } | Should -Throw '*RowSpan*'
+            $threeColumnTable.Rows | Should -Be 2
+
+            {
+                $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
+                    @{ Run = @(PptTextRun 'site' -LinkUri 'https://example.org/table-cell') }
+                )
+            } | Should -Throw '*do not support hyperlinks yet*'
+            $threeColumnTable.Rows | Should -Be 2
+
+            $cell = $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
+                PptTextRun 'Owner '
+                PptTextRun 'Ready' -Color Navy -Bold
+            ) -PassThru
+            $cell.Text | Should -Be 'Owner Ready'
+            $cell = $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
+                PptTextRun 'Plain'
+            ) -PassThru
+            $cell.Text | Should -Be 'Plain'
+            $cell.Runs[0].Color | Should -BeNullOrEmpty
+
+            { $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
+                PptTextRun 'site' -LinkUri 'https://example.org/table-cell'
+            ) } | Should -Throw
+            $table.GetCell(1, 1).Text | Should -Be 'Plain'
+
+            $baselineTextBox = PptTextBox -Slide $slide -Run @(
+                PptTextRun 'x'
+                PptTextRun '2' -Kind Superscript
+            ) -X 360 -Y 80 -Width 120 -Height 50
+            $baselineTextBox.Text | Should -Be 'x2'
+
+            $baselineTable = PptTable -Slide $slide -InputObject @(
+                , @(
+                    @{
+                        Run = @(
+                            PptTextRun 'H'
+                            PptTextRun '2' -Baseline Subscript
+                            PptTextRun 'O'
+                        )
+                    }
+                )
+            ) -X 80 -Y 450 -Width 240 -Height 80
+            $baselineTable.GetCell(0, 0).Text | Should -Be 'H2O'
+
+            Save-OfficePowerPoint -Presentation $presentation
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+
+        $slideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide1.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($slideXml.NameTable)
+        $namespaceManager.AddNamespace('a', 'http://schemas.openxmlformats.org/drawingml/2006/main')
+        $slideXml.SelectSingleNode('//a:r[a:t="2"]/a:rPr[@baseline="30000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $slideXml.SelectSingleNode('//a:r[a:t="2"]/a:rPr[@baseline="-25000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
+
+    It 'keeps ordinary style-named columns in PowerPoint object tables' {
+        $path = Join-Path $TestDrive 'PowerPointOrdinaryStyleColumns.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            $table = PptTable -Slide $slide -InputObject @(
+                [pscustomobject]@{
+                    Text     = 'Apple'
+                    Color    = 'Red'
+                    FontSize = 'Large'
+                }
+            ) -X 80 -Y 150 -Width 300 -Height 100
+
+            $table.GetCell(0, 0).Text | Should -Be 'Text'
+            $table.GetCell(0, 1).Text | Should -Be 'Color'
+            $table.GetCell(0, 2).Text | Should -Be 'FontSize'
+            $table.GetCell(1, 0).Text | Should -Be 'Apple'
+            $table.GetCell(1, 1).Text | Should -Be 'Red'
+            $table.GetCell(1, 2).Text | Should -Be 'Large'
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
+    It 'validates structured PowerPoint table runs before creating the table' {
+        $path = Join-Path $TestDrive 'PowerPointStructuredTableRunValidation.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            @($slide.Tables).Count | Should -Be 0
+
+            {
+                PptTable -Slide $slide -InputObject @(
+                    , @(
+                        @{ Run = @(PptTextRun 'site' -LinkUri 'https://example.org/table-cell') }
+                    )
+                ) -X 80 -Y 150 -Width 300 -Height 100 -ErrorAction Stop
+            } | Should -Throw '*do not support hyperlinks yet*'
+
+            @($slide.Tables).Count | Should -Be 0
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
+    It 'validates PowerPoint text box runs before creating the shape' {
+        $path = Join-Path $TestDrive 'PowerPointTextBoxRunValidation.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            @($slide.TextBoxes).Count | Should -Be 0
+
+            {
+                PptTextBox -Slide $slide -Run @(
+                    PptTextRun 'jump' -LinkDestinationName Summary
+                ) -ErrorAction Stop
+            } | Should -Throw '*named PDF/Word destinations*'
+
+            @($slide.TextBoxes).Count | Should -Be 0
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
+    It 'preserves explicit headers on structured PowerPoint tables' {
+        $path = Join-Path $TestDrive 'PowerPointStructuredHeaders.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            $table = PptTable -Slide $slide -Headers Qty, Item -InputObject @(
+                [pscustomobject]@{
+                    Item = 'Alpha'
+                    Qty  = 10
+                }
+                , @(
+                    @{ Run = @(PptTextRun 'Total' -Bold) },
+                    'Two'
+                )
+            ) -X 80 -Y 150 -Width 420 -Height 140
+
+            $table.GetCell(0, 0).Text | Should -Be 'Qty'
+            $table.GetCell(0, 1).Text | Should -Be 'Item'
+            $table.GetCell(1, 0).Text | Should -Be '10'
+            $table.GetCell(1, 1).Text | Should -Be 'Alpha'
+            $table.GetCell(2, 0).Runs[0].Text | Should -Be 'Total'
+            $table.GetCell(2, 1).Text | Should -Be 'Two'
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
+    It 'keeps ordinary Run columns in PowerPoint object tables' {
+        $path = Join-Path $TestDrive 'PowerPointOrdinaryRunColumn.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            $table = PptTable -Slide $slide -InputObject @(
+                [pscustomobject]@{
+                    Run = @('Nightly', 'Daily')
+                }
+            ) -X 80 -Y 150 -Width 300 -Height 100
+
+            $table.GetCell(0, 0).Text | Should -Be 'Run'
+            $table.GetCell(1, 0).Text | Should -Match 'Nightly'
+            $table.GetCell(1, 0).Text | Should -Match 'Daily'
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
     It 'finds existing PowerPoint shapes by metadata without a text term' {
         $path = Join-Path $TestDrive 'PowerPointMetadataShapeFind.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path

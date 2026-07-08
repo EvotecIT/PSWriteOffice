@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Text;
 
 namespace PSWriteOffice.Services.Pdf;
 
@@ -143,28 +144,7 @@ internal static class PdfCommandUtilities
     }
 
     internal static PdfColor? ParseColor(string? color)
-    {
-        if (string.IsNullOrWhiteSpace(color))
-        {
-            return null;
-        }
-
-        var value = color!.Trim();
-        if (value.StartsWith("#", StringComparison.Ordinal))
-        {
-            value = value.Substring(1);
-        }
-
-        if (value.Length != 6)
-        {
-            throw new PSArgumentException("Color must use #RRGGBB format.", nameof(color));
-        }
-
-        return PdfColor.FromRgb(
-            byte.Parse(value.Substring(0, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture),
-            byte.Parse(value.Substring(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture),
-            byte.Parse(value.Substring(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture));
-    }
+        => OfficeColorUtilities.ToPdfColor(color);
 
     internal static PageSize ResolvePageSize(string? pageSize, double? width, double? height, bool landscape)
     {

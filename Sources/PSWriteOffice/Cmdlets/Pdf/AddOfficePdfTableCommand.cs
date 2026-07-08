@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +6,7 @@ using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.Table;
+using PSWriteOffice.Services.Text;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -233,7 +235,8 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
         var projectedRows = TableViewProjection.Project(inputRows, View);
         if (OfficeTableSpecParser.TryCreate(projectedRows, Property, Header, out var tableSpec))
         {
-            document.Table(ToPdfRows(tableSpec), Align, CreateStyle());
+            var style = ApplyPdfCellStyles(CreateStyle(), tableSpec.Placements);
+            document.Table(ToPdfRows(tableSpec), Align, style);
             return;
         }
 
@@ -251,11 +254,84 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     {
         return table.Rows
             .Select(row => row
-                .Select(cell => cell.HasSpan
-                    ? PdfTableCell.Merge(cell.Text, cell.ColumnSpan, cell.RowSpan)
-                    : PdfTableCell.TextCell(cell.Text))
+                .Select(ToPdfCell)
                 .ToArray())
             .ToArray();
+    }
+
+    private static PdfTableCell ToPdfCell(OfficeTableCellSpec cell)
+    {
+        if (cell.HasRuns)
+        {
+            var runs = PdfRichTextRunBuilder.ToTextRuns(OfficeTableCellTextRunStyle.Apply(cell.Runs!.ToArray(), cell.Style));
+            return PdfTableCell.Merge(runs, cell.ColumnSpan, cell.RowSpan);
+        }
+
+        if (cell.Style?.HasTextStyle == true)
+        {
+            var run = new TextRun(
+                cell.Text,
+                bold: cell.Style.Bold,
+                underline: cell.Style.Underline,
+                color: PdfCommandUtilities.ParseColor(cell.Style.TextColor),
+                italic: cell.Style.Italic,
+                strike: cell.Style.Strike,
+                fontSize: cell.Style.FontSize);
+
+            return PdfTableCell.Merge(new[] { run }, cell.ColumnSpan, cell.RowSpan);
+        }
+
+        return cell.HasSpan
+            ? PdfTableCell.Merge(cell.Text, cell.ColumnSpan, cell.RowSpan)
+            : PdfTableCell.TextCell(cell.Text);
+    }
+
+    private static PdfTableStyle? ApplyPdfCellStyles(
+        PdfTableStyle? style,
+        IReadOnlyList<OfficeTableCellPlacement> placements)
+    {
+        var styledPlacements = placements
+            .Where(static placement => placement.Cell.Style?.HasTableStyle == true)
+            .ToArray();
+        if (styledPlacements.Length == 0)
+        {
+            return style;
+        }
+
+        style ??= new PdfTableStyle();
+        foreach (var placement in styledPlacements)
+        {
+            var cellStyle = placement.Cell.Style!;
+            var key = (placement.RowIndex, placement.ColumnIndex);
+
+            if (!string.IsNullOrWhiteSpace(cellStyle.FillColor))
+            {
+                style.CellFills ??= new Dictionary<(int Row, int Column), PdfColor>();
+                style.CellFills[key] = PdfCommandUtilities.ParseColor(cellStyle.FillColor)!.Value;
+            }
+
+            if (!string.IsNullOrWhiteSpace(cellStyle.Align))
+            {
+                style.CellAlignments ??= new Dictionary<(int Row, int Column), PdfColumnAlign>();
+                style.CellAlignments[key] = ParseCellEnum<PdfColumnAlign>(cellStyle.Align!, nameof(cellStyle.Align));
+            }
+
+            if (!string.IsNullOrWhiteSpace(cellStyle.VerticalAlign))
+            {
+                style.CellVerticalAlignments ??= new Dictionary<(int Row, int Column), PdfCellVerticalAlign>();
+                style.CellVerticalAlignments[key] = ParseCellEnum<PdfCellVerticalAlign>(cellStyle.VerticalAlign!, nameof(cellStyle.VerticalAlign));
+            }
+        }
+
+        return style;
+    }
+
+    private static TEnum ParseCellEnum<TEnum>(string value, string parameterName)
+        where TEnum : struct
+    {
+        return Enum.TryParse<TEnum>(value, ignoreCase: true, out var parsed)
+            ? parsed
+            : throw new PSArgumentException($"Unsupported table cell {parameterName} value '{value}'.", parameterName);
     }
 
     private PdfTableStyle? CreateStyle()

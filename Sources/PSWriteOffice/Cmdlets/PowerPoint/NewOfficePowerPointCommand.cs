@@ -23,6 +23,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <para>Creates, saves, and opens a deck with one titled slide.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficePowerPoint", SupportsShouldProcess = true)]
+[Alias("PowerPointNew", "PptNew")]
 public class NewOfficePowerPointCommand : PSCmdlet
 {
     /// <summary>Destination path for the new .pptx.</summary>
