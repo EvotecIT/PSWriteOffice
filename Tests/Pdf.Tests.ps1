@@ -1285,6 +1285,20 @@ startxref
         $text | Should -Match 'rich inline text'
     }
 
+    It 'normalizes typed text run kinds before rendering adapters consume them' {
+        $assembly = [PSWriteOffice.Cmdlets.Text.NewOfficeTextRunCommand].Assembly
+        $parserType = $assembly.GetType('PSWriteOffice.Services.Text.OfficeTextRunParser', $true)
+        $specType = $assembly.GetType('PSWriteOffice.Services.Text.OfficeTextRunSpec', $true)
+        $parseMethod = $parserType.GetMethod('Parse', [Reflection.BindingFlags]'Static,NonPublic')
+        $spec = [Activator]::CreateInstance($specType)
+        $spec.Text = '2'
+        $spec.Kind = 'Superscript'
+
+        $parsed = $parseMethod.Invoke($null, @($spec))
+
+        $parsed.Baseline | Should -Be 'Superscript'
+    }
+
     It 'applies PDF themes and decorative backgrounds' {
         $path = Join-Path $TestDrive 'styled-backgrounds.pdf'
         $imagePath = Join-Path (Join-Path $PSScriptRoot 'Assets') 'CellImage.png'

@@ -329,6 +329,13 @@ Describe 'PowerPoint cmdlets' {
             ) -PassThru
             $row.GetCell(0).Text | Should -Be 'Latency Ready'
 
+            $spannedRow = $table | Add-OfficePowerPointTableRow -Values @(
+                @{ Text = 'Total'; ColumnSpan = 2; FillColor = 'AliceBlue' }
+            ) -PassThru
+            $spannedRow.GetCell(0).Text | Should -Be 'Total'
+            $spannedRow.GetCell(0).Merge.Item1 | Should -Be 1
+            $spannedRow.GetCell(0).Merge.Item2 | Should -Be 2
+
             $cell = $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
                 PptTextRun 'Owner '
                 PptTextRun 'Ready' -Color Navy -Bold

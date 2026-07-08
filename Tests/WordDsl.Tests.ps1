@@ -1196,17 +1196,32 @@ Describe 'Word DSL surface' {
                 WordText 'Summary'
                 WordBookmark -Name 'Summary'
             }
+
+            WordParagraph -Run @(
+                WordTextRun 'Run link' -LinkUri 'https://example.org/run' -LinkContents 'Run tooltip'
+                WordTextRun ' and '
+                WordTextRun 'run anchor' -LinkDestinationName 'Summary'
+            )
         } | Out-Null
 
         $document = Get-OfficeWord -Path $path -ReadOnly
         try {
-            $document.HyperLinks.Count | Should -Be 2
+            $document.HyperLinks.Count | Should -Be 4
             $document.BuiltinDocumentProperties.Title | Should -Be 'DSL document'
             $document.BuiltinDocumentProperties.Creator | Should -Be 'PSWriteOffice'
             $document.CustomDocumentProperties['BuildNumber'].Value | Should -Be 21
         } finally {
             $document.Dispose()
         }
+
+        $links = @(Get-OfficeWordHyperlink -Path $path)
+        $relationshipXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/_rels/document.xml.rels'
+        $hyperlinkTargets = @($relationshipXml.Relationships.Relationship |
+                Where-Object Type -eq 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink' |
+                ForEach-Object Target)
+        $hyperlinkTargets | Should -Contain 'https://example.org/run'
+        ($links | Where-Object Text -eq 'Run link' | Select-Object -First 1).Tooltip | Should -Be 'Run tooltip'
+        ($links | Where-Object Text -eq 'run anchor' | Select-Object -First 1).Anchor | Should -Be 'Summary'
     }
 
     It 'supports background colors and mail merge in the DSL' {

@@ -184,6 +184,11 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
         if (value != null && OfficeTableSpecParser.TryCreateCell(value, out var spec))
         {
             PowerPointTableCellSpecService.Apply(cell, spec);
+            if (spec.HasSpan)
+            {
+                cell.Merge = (spec.RowSpan, spec.ColumnSpan);
+            }
+
             return;
         }
 

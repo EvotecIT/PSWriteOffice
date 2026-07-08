@@ -45,6 +45,12 @@ internal static class WordTextRunService
         }
 
         var text = spec.IsTab ? "\t" : spec.Text;
+        if (!string.IsNullOrWhiteSpace(spec.LinkUri) || !string.IsNullOrWhiteSpace(spec.LinkDestinationName))
+        {
+            AddHyperlink(paragraph, text, spec);
+            return;
+        }
+
         var underline = ResolveUnderline(spec.Underline, spec.UnderlineStyle);
         var run = paragraph.AddFormattedText(text, spec.Bold, spec.Italic, underline);
         ApplyAdditionalStyle(
@@ -53,6 +59,27 @@ internal static class WordTextRunService
             spec.Color,
             spec.FontSize.HasValue ? (int)Math.Round(spec.FontSize.Value) : null,
             spec.FontName);
+    }
+
+    private static void AddHyperlink(WordParagraph paragraph, string text, OfficeTextRunSpec spec)
+    {
+        if (!string.IsNullOrWhiteSpace(spec.LinkUri) && !string.IsNullOrWhiteSpace(spec.LinkDestinationName))
+        {
+            throw new PSArgumentException("A Word text run can target either LinkUri or LinkDestinationName, not both.", nameof(spec.LinkUri));
+        }
+
+        if (!string.IsNullOrWhiteSpace(spec.LinkDestinationName))
+        {
+            paragraph.AddHyperLink(text, spec.LinkDestinationName!, true, spec.LinkContents ?? string.Empty, true);
+            return;
+        }
+
+        if (!Uri.TryCreate(spec.LinkUri, UriKind.Absolute, out var uri))
+        {
+            throw new PSArgumentException("Provide an absolute URL such as https://example.org or mailto:user@example.org.", nameof(spec.LinkUri));
+        }
+
+        paragraph.AddHyperLink(text, uri, true, spec.LinkContents ?? string.Empty, true);
     }
 
     private static void ApplyAdditionalStyle(WordParagraph run, bool strike, string? color, int? fontSize, string? fontName)

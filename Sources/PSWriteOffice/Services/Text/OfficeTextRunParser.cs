@@ -56,7 +56,7 @@ internal static class OfficeTextRunParser
     {
         if (value is OfficeTextRunSpec spec)
         {
-            return spec;
+            return NormalizeDerivedFields(spec);
         }
 
         if (value is string text)
@@ -79,7 +79,7 @@ internal static class OfficeTextRunParser
             baseline = "Subscript";
         }
 
-        return new OfficeTextRunSpec
+        return NormalizeDerivedFields(new OfficeTextRunSpec
         {
             Text = GetString(value, "Text", "Value", "Content") ?? string.Empty,
             Kind = kind,
@@ -98,7 +98,7 @@ internal static class OfficeTextRunParser
             LinkContents = GetString(value, "LinkContents", "Contents", "Tooltip"),
             TabLeader = GetString(value, "Leader", "TabLeader"),
             TabAlignment = GetString(value, "Alignment", "TabAlignment")
-        };
+        });
     }
 
     internal static string GetPlainText(OfficeTextRunSpec[] runs)
@@ -106,6 +106,41 @@ internal static class OfficeTextRunParser
 
     internal static string NormalizeKind(string? value)
         => (value ?? string.Empty).Replace("-", string.Empty).Replace("_", string.Empty).Replace(" ", string.Empty).ToLowerInvariant();
+
+    internal static OfficeTextRunSpec NormalizeDerivedFields(OfficeTextRunSpec spec)
+    {
+        var normalizedKind = NormalizeKind(spec.Kind);
+        var baseline = spec.Baseline;
+        if (normalizedKind == "superscript")
+        {
+            baseline = "Superscript";
+        }
+        else if (normalizedKind == "subscript")
+        {
+            baseline = "Subscript";
+        }
+
+        return new OfficeTextRunSpec
+        {
+            Text = spec.Text,
+            Kind = spec.Kind,
+            Bold = spec.Bold || normalizedKind == "bold",
+            Italic = spec.Italic || normalizedKind == "italic",
+            Underline = spec.Underline || normalizedKind is "underline" or "underlined" or "link" or "bookmarklink",
+            UnderlineStyle = spec.UnderlineStyle,
+            Strike = spec.Strike || normalizedKind is "strike" or "strikethrough",
+            Color = spec.Color,
+            BackgroundColor = spec.BackgroundColor,
+            FontSize = spec.FontSize,
+            FontName = spec.FontName,
+            Baseline = baseline,
+            LinkUri = spec.LinkUri,
+            LinkDestinationName = spec.LinkDestinationName,
+            LinkContents = spec.LinkContents,
+            TabLeader = spec.TabLeader,
+            TabAlignment = spec.TabAlignment
+        };
+    }
 
     internal static string? GetString(object source, params string[] names)
     {
