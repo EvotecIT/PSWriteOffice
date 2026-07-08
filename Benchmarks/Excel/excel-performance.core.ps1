@@ -182,7 +182,7 @@ function Test-CsvBenchmarkEngineSupport {
 
     switch ($Engine) {
         PSWriteOffice { return $true }
-        NativeCsv { return [string]$Case.OperationKey -in @('WriteCsv', 'WriteCsvDataTable', 'ReadCsvSource', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns') }
+        NativeCsv { return [string]$Case.OperationKey -in @('WriteCsv', 'WriteCsvDataTable', 'ReadCsvSource', 'ReadCsvDataTable', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns') }
         default { return $false }
     }
 }

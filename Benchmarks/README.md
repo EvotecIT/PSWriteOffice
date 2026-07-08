@@ -122,6 +122,11 @@ upstream `QuickTest` pattern and the small/medium/large reader shape by changing
 `-RowCount`. The explicit `csv-dbatools-wide-*` and `csv-dbatools-quoted-*`
 lanes cover the upstream wide 50-column and quote-all files.
 
+The `csv-read-datatable-*` lanes compare `Import-OfficeCsv -AsDataTable` with a
+native PowerShell baseline that reads via `Import-Csv` and fills a `DataTable`.
+That keeps the database/table workflow visible instead of comparing only
+PowerShell object materialization.
+
 ```powershell
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 -Suite Smoke
 ```
@@ -160,6 +165,14 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
     -Suite Smoke `
     -RowCount 10000,100000 `
     -Scenario csv-write-datatable `
+    -Engine PSWriteOffice,NativeCsv
+```
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 10000,100000 `
+    -Scenario csv-read-datatable-mixed,csv-read-datatable-wide `
     -Engine PSWriteOffice,NativeCsv
 ```
 

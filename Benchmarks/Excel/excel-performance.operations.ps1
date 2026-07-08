@@ -74,8 +74,43 @@ function Invoke-ExcelBenchmarkReadCsvDataTable {
             $table = Import-OfficeCsv -Path $Run.SourcePath -AsDataTable
             $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
         }
+        NativeCsv {
+            $table = ConvertFrom-NativeCsvToDataTable -Path $Run.SourcePath
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        }
         default { throw "Engine '$Engine' does not support CSV DataTable read." }
     }
+}
+
+function ConvertFrom-NativeCsvToDataTable {
+    param([Parameter(Mandatory)][string] $Path)
+
+    $table = [Data.DataTable]::new('CsvData')
+    $columnNames = $null
+
+    $table.BeginLoadData()
+    try {
+        foreach ($row in Import-Csv -Path $Path) {
+            if ($null -eq $columnNames) {
+                $columnNames = @($row.PSObject.Properties.Name)
+                foreach ($columnName in $columnNames) {
+                    $null = $table.Columns.Add([string]$columnName, [string])
+                }
+            }
+
+            $dataRow = $table.NewRow()
+            foreach ($columnName in $columnNames) {
+                $value = $row.$columnName
+                $dataRow[$columnName] = if ($null -eq $value) { [DBNull]::Value } else { $value }
+            }
+
+            $table.Rows.Add($dataRow)
+        }
+    } finally {
+        $table.EndLoadData()
+    }
+
+    , $table
 }
 
 function Invoke-ExcelBenchmarkReadCsvQuickSingleColumn {
