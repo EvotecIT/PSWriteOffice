@@ -445,6 +445,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private bool RequiresMaterializedRows() =>
         _asDataTable ||
+        (_asDataReader && CollectParseErrors.IsPresent) ||
         NullValue != null ||
         StaticColumns is { Count: > 0 };
 
@@ -547,6 +548,11 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
         if (Encoding != null)
         {
             options.Encoding = Encoding;
+        }
+
+        if (_asDataReader && CollectParseErrors.IsPresent && options.Mode == CsvLoadMode.Stream)
+        {
+            options.Mode = CsvLoadMode.InMemory;
         }
 
         return options;

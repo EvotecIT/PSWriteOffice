@@ -297,6 +297,38 @@ Describe 'CSV cmdlets' {
         $data.Name | Should -Be @('Alpha', 'Beta')
     }
 
+    It 'reports collected parse errors before returning streamed data readers' {
+        $path = Join-Path $TestDrive 'malformed-reader.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBroken,`"one`"two`nBeta,2" -Encoding UTF8
+
+        $parseErrors = $null
+        $reader = Import-OfficeCsv -Path $path -AsDataReader -Mode Stream -QuoteParsingMode Strict -ParseErrorAction SkipRow -CollectParseErrors -ErrorAction SilentlyContinue -ErrorVariable parseErrors
+        try {
+            $reader.GetType().Name | Should -Be 'CsvDataReader'
+            $rows = 0
+            while ($reader.Read()) {
+                $rows++
+            }
+
+            $rows | Should -Be 2
+        } finally {
+            $reader.Dispose()
+        }
+
+        $parseErrors.Count | Should -BeGreaterThan 0
+    }
+
+    It 'reports collected parse errors before returning streamed CSV documents' {
+        $path = Join-Path $TestDrive 'malformed-document.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBroken,`"one`"two`nBeta,2" -Encoding UTF8
+
+        $parseErrors = $null
+        $document = Get-OfficeCsv -Path $path -Mode Stream -QuoteParsingMode Strict -ParseErrorAction SkipRow -CollectParseErrors -ErrorAction SilentlyContinue -ErrorVariable parseErrors
+
+        @($document.AsEnumerable()).Count | Should -Be 2
+        $parseErrors.Count | Should -BeGreaterThan 0
+    }
+
     It 'infers DataTable schema when requested' {
         $path = Join-Path $TestDrive 'datatable-infer.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBeta,2" -Encoding UTF8
