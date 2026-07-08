@@ -872,6 +872,46 @@ Describe 'CSV cmdlets' {
         $roundTrip[1].Value | Should -Be '2'
     }
 
+    It 'imports and gets CSV with a multi-character delimiter' {
+        $path = Join-Path $TestDrive 'multi-delimiter.csv'
+        Set-Content -LiteralPath $path -Value "Name||Value`nAlpha||`"one||two`"" -Encoding UTF8
+
+        $document = Get-OfficeCsv -Path $path -DelimiterText '||'
+        $data = @(Import-OfficeCsv -Path $path -DelimiterText '||')
+
+        $document.Header | Should -Be @('Name', 'Value')
+        $data.Count | Should -Be 1
+        $data[0].Name | Should -Be 'Alpha'
+        $data[0].Value | Should -Be 'one||two'
+    }
+
+    It 'converts from and to CSV with a multi-character delimiter' {
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 'one||two' }
+            [pscustomobject]@{ Name = 'Beta'; Value = 'plain' }
+        )
+
+        $csvLines = @($rows | ConvertTo-OfficeCsv -DelimiterText '||')
+        $roundTrip = @($csvLines | ConvertFrom-OfficeCsv -DelimiterText '||')
+
+        $csvLines | Should -Be @('Name||Value', 'Alpha||"one||two"', 'Beta||plain')
+        $roundTrip.Count | Should -Be 2
+        $roundTrip[0].Value | Should -Be 'one||two'
+        $roundTrip[1].Name | Should -Be 'Beta'
+    }
+
+    It 'exports CSV with a multi-character delimiter and can append using the same delimiter' {
+        $path = Join-Path $TestDrive 'export-multi-delimiter.csv'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 'one||two' } |
+            Export-OfficeCsv -Path $path -DelimiterText '||'
+        [pscustomobject]@{ Name = 'Beta'; Value = 'plain' } |
+            Export-OfficeCsv -Path $path -DelimiterText '||' -Append
+
+        Get-Content -LiteralPath $path | Should -Be @('Name||Value', 'Alpha||"one||two"', 'Beta||plain')
+        @((Import-OfficeCsv -Path $path -DelimiterText '||'))[1].Name | Should -Be 'Beta'
+    }
+
     It 'keeps quoted embedded newlines inside one ConvertTo-OfficeCsv record object' {
         $csvLines = @([pscustomobject]@{ Name = 'Alpha'; Note = "one`ntwo" } | ConvertTo-OfficeCsv)
 

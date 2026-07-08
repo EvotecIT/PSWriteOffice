@@ -57,6 +57,10 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetTextDelimiter)]
     public char Delimiter { get; set; } = ',';
 
+    /// <summary>Field delimiter text for multi-character delimiters such as || or ::.</summary>
+    [Parameter(ParameterSetName = ParameterSetTextDelimiter)]
+    public string? DelimiterText { get; set; }
+
     /// <summary>Detect the delimiter from the first meaningful records.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetTextDetect)]
     public SwitchParameter DetectDelimiter { get; set; }
@@ -170,6 +174,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
             Header = Header,
             SkipInitialRecords = SkipRows,
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             DetectDelimiter = DetectDelimiter.IsPresent,
             DelimiterCandidates = DelimiterCandidates,
             TrimWhitespace = TrimWhitespace,

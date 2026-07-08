@@ -210,6 +210,8 @@ New-OfficeMarkdown -Path .\README.md {
 }
 
 $data | ConvertTo-OfficeCsv -OutputPath .\export.csv
+$rows | Export-OfficeCsv -Path .\pipes.csv -DelimiterText '||'
+Import-OfficeCsv -Path .\pipes.csv -DelimiterText '||'
 ```
 
 ### Reader and Visio

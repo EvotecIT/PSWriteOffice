@@ -9,18 +9,24 @@ namespace PSWriteOffice.Cmdlets.Csv;
 internal sealed class CsvPowerShellLineWriter : TextWriter
 {
     private readonly PSCmdlet _cmdlet;
-    private readonly char _delimiter;
+    private readonly string _delimiterText;
     private readonly bool _parseQuotedRecords;
     private readonly StringBuilder _line = new();
     private bool _pendingCarriageReturn;
     private bool _inQuotes;
     private bool _pendingQuoteInQuotedField;
     private bool _atFieldStart = true;
+    private int _delimiterMatchIndex;
 
     public CsvPowerShellLineWriter(PSCmdlet cmdlet, char delimiter, CsvQuoteMode quoteMode)
+        : this(cmdlet, delimiter.ToString(), quoteMode)
+    {
+    }
+
+    public CsvPowerShellLineWriter(PSCmdlet cmdlet, string delimiterText, CsvQuoteMode quoteMode)
     {
         _cmdlet = cmdlet ?? throw new ArgumentNullException(nameof(cmdlet));
-        _delimiter = delimiter;
+        _delimiterText = string.IsNullOrEmpty(delimiterText) ? "," : delimiterText;
         _parseQuotedRecords = quoteMode != CsvQuoteMode.Never;
     }
 
@@ -103,7 +109,7 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
         }
 
         _line.Append(value);
-        _atFieldStart = value == _delimiter && !_inQuotes;
+        UpdateFieldStartState(value);
     }
 
     public override void Write(string? value)
@@ -186,7 +192,36 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
         }
 
         _inQuotes = false;
-        _atFieldStart = value == _delimiter;
+        _atFieldStart = false;
         return false;
+    }
+
+    private void UpdateFieldStartState(char value)
+    {
+        if (_inQuotes)
+        {
+            _atFieldStart = false;
+            _delimiterMatchIndex = 0;
+            return;
+        }
+
+        if (value == _delimiterText[_delimiterMatchIndex])
+        {
+            _delimiterMatchIndex++;
+            if (_delimiterMatchIndex == _delimiterText.Length)
+            {
+                _atFieldStart = true;
+                _delimiterMatchIndex = 0;
+            }
+            else
+            {
+                _atFieldStart = false;
+            }
+
+            return;
+        }
+
+        _delimiterMatchIndex = value == _delimiterText[0] ? 1 : 0;
+        _atFieldStart = false;
     }
 }

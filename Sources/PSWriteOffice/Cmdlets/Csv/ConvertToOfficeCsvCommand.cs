@@ -58,6 +58,11 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetDocumentDelimiter)]
     public char Delimiter { get; set; } = ',';
 
+    /// <summary>Field delimiter text for multi-character delimiters such as || or ::.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObjectDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetDocumentDelimiter)]
+    public string? DelimiterText { get; set; }
+
     /// <summary>Use the list separator from the selected or current culture as the delimiter.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectCulture)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentCulture)]
@@ -146,7 +151,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     private void EmitCsv(CsvDocument document)
     {
         var options = CreateSaveOptions();
-        using var writer = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
+        using var writer = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
         writer.Write(document.ToString(options));
     }
 
@@ -160,7 +165,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
             csvWriter.WriteDataReader(reader);
         }
 
-        using var writer = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
+        using var writer = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
         writer.Write(textWriter.ToString());
     }
 
@@ -209,7 +214,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
         var options = CreateSaveOptions();
         _objectProjector.UseCsvCulture(options.Culture);
-        _lineWriter = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
+        _lineWriter = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
         _csvWriter = new CsvObjectWriter(_lineWriter, options);
         return _csvWriter;
     }
@@ -227,6 +232,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         var options = new CsvSaveOptions
         {
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             IncludeHeader = !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
@@ -241,6 +247,9 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
         return options;
     }
+
+    private static string GetDelimiterText(CsvSaveOptions options) =>
+        string.IsNullOrEmpty(options.DelimiterText) ? options.Delimiter.ToString() : options.DelimiterText!;
 
     private bool IsDocumentParameterSet() =>
         string.Equals(ParameterSetName, ParameterSetDocumentDelimiter, StringComparison.OrdinalIgnoreCase) ||

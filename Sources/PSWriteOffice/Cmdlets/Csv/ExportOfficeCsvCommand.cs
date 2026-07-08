@@ -83,6 +83,13 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetDocumentLiteralPathDelimiter)]
     public char Delimiter { get; set; } = ',';
 
+    /// <summary>Field delimiter text for multi-character delimiters such as || or ::.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObjectPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetDocumentPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetDocumentLiteralPathDelimiter)]
+    public string? DelimiterText { get; set; }
+
     /// <summary>Use the list separator from the selected or current culture as the delimiter.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectPathCulture)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectLiteralPathCulture)]
@@ -406,6 +413,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         var options = new CsvSaveOptions
         {
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             IncludeHeader = includeHeader ?? !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
@@ -508,6 +516,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         var options = new CsvLoadOptions
         {
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             Encoding = Encoding ?? _appendEncoding,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Mode = CsvLoadMode.Stream

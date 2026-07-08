@@ -96,6 +96,11 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
     public char Delimiter { get; set; } = ',';
 
+    /// <summary>Field delimiter text for multi-character delimiters such as || or ::.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    public string? DelimiterText { get; set; }
+
     /// <summary>Detect the delimiter from the first meaningful records.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetPathDetect)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetLiteralPathDetect)]
@@ -431,6 +436,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             Header = Header,
             SkipInitialRecords = SkipRows,
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             DetectDelimiter = DetectDelimiter.IsPresent,
             DelimiterCandidates = DelimiterCandidates,
             TrimWhitespace = TrimWhitespace,
