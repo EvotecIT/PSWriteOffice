@@ -76,12 +76,23 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
         }
 
         var values = ExpandValues(Value);
+        var occupiedColumns = new bool[row.Cells.Count];
+        var valueIndex = 0;
         for (var column = 0; column < row.Cells.Count; column++)
         {
-            var cell = row.GetCell(column);
-            if (column < values.Count)
+            if (occupiedColumns[column])
             {
-                ApplyValue(cell, values[column]);
+                continue;
+            }
+
+            var cell = row.GetCell(column);
+            if (valueIndex < values.Count)
+            {
+                var columnSpan = ApplyValue(cell, values[valueIndex++]);
+                for (var offset = 1; offset < columnSpan && column + offset < occupiedColumns.Length; offset++)
+                {
+                    occupiedColumns[column + offset] = true;
+                }
             }
             else
             {
@@ -179,7 +190,7 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
         return value == null ? string.Empty : LanguagePrimitives.ConvertTo<string>(value) ?? string.Empty;
     }
 
-    private static void ApplyValue(PowerPointTableCell cell, object? value)
+    private static int ApplyValue(PowerPointTableCell cell, object? value)
     {
         if (value != null && OfficeTableSpecParser.TryCreateCell(value, out var spec))
         {
@@ -189,9 +200,10 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
                 cell.Merge = (spec.RowSpan, spec.ColumnSpan);
             }
 
-            return;
+            return spec.ColumnSpan;
         }
 
         cell.Text = ConvertValue(value);
+        return 1;
     }
 }

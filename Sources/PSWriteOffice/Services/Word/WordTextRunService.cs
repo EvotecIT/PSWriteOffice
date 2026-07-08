@@ -32,7 +32,7 @@ internal static class WordTextRunService
         string? fontName)
     {
         var run = paragraph.AddFormattedText(text, bold, italic, underline);
-        ApplyAdditionalStyle(run, strike, color, fontSize, fontName);
+        ApplyAdditionalStyle(run, strike, color, null, fontSize, fontName);
         return run;
     }
 
@@ -57,6 +57,7 @@ internal static class WordTextRunService
             run,
             spec.Strike,
             spec.Color,
+            spec.BackgroundColor,
             spec.FontSize.HasValue ? (int)Math.Round(spec.FontSize.Value) : null,
             spec.FontName);
     }
@@ -82,7 +83,7 @@ internal static class WordTextRunService
         paragraph.AddHyperLink(text, uri, true, spec.LinkContents ?? string.Empty, true);
     }
 
-    private static void ApplyAdditionalStyle(WordParagraph run, bool strike, string? color, int? fontSize, string? fontName)
+    private static void ApplyAdditionalStyle(WordParagraph run, bool strike, string? color, string? backgroundColor, int? fontSize, string? fontName)
     {
         if (strike)
         {
@@ -95,6 +96,8 @@ internal static class WordTextRunService
             run.SetColorHex(rgb!);
         }
 
+        ApplyBackground(run, backgroundColor);
+
         if (fontSize.HasValue)
         {
             run.SetFontSize(fontSize.Value);
@@ -103,6 +106,27 @@ internal static class WordTextRunService
         if (!string.IsNullOrWhiteSpace(fontName))
         {
             run.SetFontFamily(fontName!);
+        }
+    }
+
+    private static void ApplyBackground(WordParagraph run, string? backgroundColor)
+    {
+        if (string.IsNullOrWhiteSpace(backgroundColor))
+        {
+            return;
+        }
+
+        if (OpenXmlValueParser.TryParse(backgroundColor, out HighlightColorValues highlight))
+        {
+            run.Highlight = highlight;
+            return;
+        }
+
+        var rgb = OfficeColorUtilities.ToRgbHex(backgroundColor);
+        if (!string.IsNullOrWhiteSpace(rgb))
+        {
+            run.ShadingFillColorHex = rgb!;
+            run.ShadingPattern = ShadingPatternValues.Clear;
         }
     }
 

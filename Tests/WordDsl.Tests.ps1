@@ -528,6 +528,10 @@ Describe 'Word DSL surface' {
                 WordTextRun 'Status: '
                 WordTextRun 'Ready' -Color SeaGreen -Bold -UnderlineStyle Dotted
             )
+            WordParagraph -Run @(
+                WordTextRun 'Highlight ' -BackgroundColor Yellow
+                WordTextRun 'Shaded' -BackgroundColor LightPink
+            )
             WordTable -Style TableGrid -InputObject @(
                 , @(
                     WordTableCellSpec -Run @(
@@ -557,9 +561,12 @@ Describe 'Word DSL surface' {
         $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
         $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
         $text | Should -Match 'Status: Ready'
+        $text | Should -Match 'Highlight Shaded'
         $text | Should -Match 'Build Ready'
         $text | Should -Match 'Owner: Platform'
         $documentXml.SelectSingleNode('//w:color[translate(@w:val, "abcdef", "ABCDEF")="2E8B57"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:highlight[@w:val="yellow"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:shd[translate(@w:fill, "abcdef", "ABCDEF")="FFB6C1"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:highlight[translate(@w:val, "abcdef", "ABCDEF")="F0F8FF"] | //w:shd[translate(@w:fill, "abcdef", "ABCDEF")="F0F8FF"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:u[@w:val="dotted"]', $namespaceManager) | Should -Not -BeNullOrEmpty
     }
@@ -596,6 +603,27 @@ Describe 'Word DSL surface' {
         $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
         $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
         $text | Should -Match 'Build Watch'
+    }
+
+    It 'keeps ordinary Run columns in normal Word tables' {
+        $path = Join-Path $TestDrive 'DslOrdinaryRunColumnWordTable.docx'
+
+        WordNew -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                [pscustomobject]@{
+                    Run = 'Nightly'
+                }
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Run'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Nightly'
+        } finally {
+            $document.Dispose()
+        }
     }
 
     It 'keeps ordinary span-like property names on normal Word tables' {

@@ -300,6 +300,23 @@ Describe 'PDF cmdlets' {
         $text | Should -Match '2'
     }
 
+    It 'keeps ordinary Run property names on normal PDF tables' {
+        $path = Join-Path $TestDrive 'ordinary-run-named-table.pdf'
+        $rows = @(
+            [pscustomobject]@{
+                Run = 'Nightly'
+            }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Run'
+        $text | Should -Match 'Nightly'
+    }
+
     It 'keeps ordinary text and span-key properties in mixed PDF tables' {
         $path = Join-Path $TestDrive 'mixed-ordinary-span-key-table.pdf'
         $rows = @(

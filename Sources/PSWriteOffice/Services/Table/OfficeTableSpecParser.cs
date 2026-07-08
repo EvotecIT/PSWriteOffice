@@ -165,7 +165,7 @@ internal static class OfficeTableSpecParser
         var hasRowSpan = TryGetValue(value, RowSpanKeys, out var rowSpanValue);
         var hasSpan = hasColumnSpan || hasRowSpan;
         var hasText = TryGetValue(value, TextKeys, out var textValue);
-        var hasRuns = TryGetValue(value, RunKeys, out var runValue);
+        var hasRuns = TryGetValue(value, RunKeys, out var runValue) && IsRunValue(runValue);
         var hasOnlyCellKeys = HasOnlyCellKeys(value);
         if (!hasOnlyCellKeys)
         {
@@ -263,6 +263,22 @@ internal static class OfficeTableSpecParser
                 property.MemberType is PSMemberTypes.NoteProperty or PSMemberTypes.Property or PSMemberTypes.AliasProperty)
             .ToArray();
         return properties.Length > 0 && properties.All(static property => IsCellKey(property.Name));
+    }
+
+    private static bool IsRunValue(object? value)
+    {
+        value = UnwrapPSObject(value);
+        if (value is null or string)
+        {
+            return false;
+        }
+
+        if (value is OfficeTextRunSpec or IDictionary)
+        {
+            return true;
+        }
+
+        return value is IEnumerable enumerable && enumerable.Cast<object?>().Any(static item => item is not null);
     }
 
     private static bool IsCellKey(string? key)

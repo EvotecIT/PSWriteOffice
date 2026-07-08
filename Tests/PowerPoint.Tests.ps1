@@ -336,6 +336,16 @@ Describe 'PowerPoint cmdlets' {
             $spannedRow.GetCell(0).Merge.Item1 | Should -Be 1
             $spannedRow.GetCell(0).Merge.Item2 | Should -Be 2
 
+            $threeColumnTable = PptTable -Slide $slide -InputObject @(
+                , @('Metric', 'Scope', 'Value')
+            ) -X 80 -Y 320 -Width 420 -Height 120
+            $valueAfterSpan = $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
+                @{ Text = 'Total'; ColumnSpan = 2; FillColor = 'AliceBlue' },
+                '42'
+            ) -PassThru
+            $valueAfterSpan.GetCell(0).Merge.Item2 | Should -Be 2
+            $valueAfterSpan.GetCell(2).Text | Should -Be '42'
+
             $cell = $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
                 PptTextRun 'Owner '
                 PptTextRun 'Ready' -Color Navy -Bold
@@ -370,6 +380,26 @@ Describe 'PowerPoint cmdlets' {
             $table.GetCell(1, 1).Text | Should -Be 'Alpha'
             $table.GetCell(2, 0).Runs[0].Text | Should -Be 'Total'
             $table.GetCell(2, 1).Text | Should -Be 'Two'
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
+    It 'keeps ordinary Run columns in PowerPoint object tables' {
+        $path = Join-Path $TestDrive 'PowerPointOrdinaryRunColumn.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            $table = PptTable -Slide $slide -InputObject @(
+                [pscustomobject]@{
+                    Run = 'Nightly'
+                }
+            ) -X 80 -Y 150 -Width 300 -Height 100
+
+            $table.GetCell(0, 0).Text | Should -Be 'Run'
+            $table.GetCell(1, 0).Text | Should -Be 'Nightly'
         } finally {
             if ($presentation) {
                 Close-OfficePowerPoint -Presentation $presentation
