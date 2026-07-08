@@ -335,6 +335,18 @@ Describe 'CSV cmdlets' {
         } | Should -Throw '*Appending*compressed*'
     }
 
+    It 'rejects appending to compressed CSV files when compression is inferred from the existing target' {
+        $path = Join-Path $TestDrive 'compressed-append-inferred.csv.gz'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType GZip
+
+        {
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+                Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*Appending*compressed*'
+    }
+
     It 'converts DataTable input directly to CSV text' {
         $table = [System.Data.DataTable]::new('Rows')
         [void] $table.Columns.Add('Name', [string])

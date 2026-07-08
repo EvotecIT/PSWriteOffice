@@ -366,7 +366,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         var needsFileState = Append.IsPresent || NoClobber.IsPresent || Force.IsPresent;
         var fileExists = needsFileState && File.Exists(_resolvedPath);
         var appendTargetHasBytes = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
-        if (appendTargetHasBytes && CsvFile.ResolveCompression(CompressionType, _resolvedPath) != CsvCompressionType.None)
+        if (appendTargetHasBytes && IsCompressedAppendTarget(CompressionType, _resolvedPath))
         {
             WriteError(new ErrorRecord(
                 new NotSupportedException("Appending to compressed CSV files is not supported."),
@@ -510,6 +510,31 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
         options.Encoding = encoding;
         return CsvFile.CreateTextWriter(_resolvedPath!, options, append: appendToContent, bufferSize: StreamWriterBufferSize);
+    }
+
+    private static bool IsCompressedAppendTarget(CsvCompressionType requestedCompressionType, string path)
+    {
+        return CsvFile.ResolveCompression(requestedCompressionType, path) != CsvCompressionType.None ||
+            HasCompressedFileExtension(path) ||
+            HasGZipHeader(path);
+    }
+
+    private static bool HasCompressedFileExtension(string path)
+    {
+        var extension = System.IO.Path.GetExtension(path);
+        return string.Equals(extension, ".gz", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".gzip", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".deflate", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".br", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".brotli", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".zlib", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasGZipHeader(string path)
+    {
+        var header = new byte[2];
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, StreamWriterBufferSize, FileOptions.SequentialScan);
+        return stream.Read(header, 0, header.Length) == header.Length && header[0] == 0x1F && header[1] == 0x8B;
     }
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>
