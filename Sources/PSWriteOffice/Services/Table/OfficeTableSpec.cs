@@ -11,6 +11,7 @@ internal sealed class OfficeTableSpec
         HasHeader = hasHeader;
         Placements = OfficeTableGridPlanner.Plan(rows, out var columnCount);
         ColumnCount = columnCount;
+        ValidateSpanBounds(Placements, RowCount);
     }
 
     public IReadOnlyList<IReadOnlyList<OfficeTableCellSpec>> Rows { get; }
@@ -22,6 +23,19 @@ internal sealed class OfficeTableSpec
     public int RowCount => Rows.Count;
 
     public int ColumnCount { get; }
+
+    private static void ValidateSpanBounds(IReadOnlyList<OfficeTableCellPlacement> placements, int rowCount)
+    {
+        foreach (var placement in placements)
+        {
+            if (placement.RowIndex + placement.Cell.RowSpan > rowCount)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(placement.Cell.RowSpan),
+                    "Row span cannot extend past the last table row.");
+            }
+        }
+    }
 }
 
 internal sealed class OfficeTableCellPlacement

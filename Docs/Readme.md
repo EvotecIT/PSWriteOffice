@@ -898,11 +898,11 @@ Creates a Markdown document using a DSL scriptblock.
 ### [New-OfficePdf](New-OfficePdf.md)
 Creates a PDF document using the OfficeIMO.Pdf composition engine.
 
-### [New-OfficePdfTableCell](New-OfficePdfTableCell.md)
-Creates a reusable PDF table cell definition for explicit table rows.
-
 ### [New-OfficePdfSignature](New-OfficePdfSignature.md)
 Prepares an existing PDF for external digital signing by appending a signature field, /ByteRange, and reserved /Contents placeholder.
+
+### [New-OfficePdfTableCell](New-OfficePdfTableCell.md)
+Creates a reusable PDF table cell definition for explicit table rows.
 
 ### [New-OfficePowerPoint](New-OfficePowerPoint.md)
 Creates a PowerPoint presentation using the DSL.

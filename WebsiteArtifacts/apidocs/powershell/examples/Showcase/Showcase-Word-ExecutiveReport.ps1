@@ -118,7 +118,7 @@ New-OfficeWord -Path $path {
 
         WordWatermark -Text 'SHOWCASE'
         Update-OfficeWordFields
-        Update-OfficeWordTableOfContent
+        Update-OfficeWordTableOfContents
     }
 } | Out-Null
 

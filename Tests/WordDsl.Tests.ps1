@@ -613,6 +613,18 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'rejects Word row spans past the table bottom' {
+        $path = Join-Path $TestDrive 'DslInvalidRowSpanWordTable.docx'
+
+        {
+            New-OfficeWord -Path $path {
+                WordTable -Style TableGrid -InputObject @(
+                    , @((New-OfficeWordTableCell -Text 'Too tall' -RowSpan 2), 'Tail')
+                )
+            } | Out-Null
+        } | Should -Throw -ExpectedMessage '*Row span cannot extend past the last table row*'
+    }
+
     It 'applies conditions to the correct explicit Word table rows' {
         $path = Join-Path $TestDrive 'DslExplicitRowConditionWordTable.docx'
 

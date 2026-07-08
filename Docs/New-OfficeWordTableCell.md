@@ -85,7 +85,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.Table.OfficeTableCellSpec` — Describes a logical table cell that can be rendered by table surfaces.
+- `PSWriteOffice.Services.Table.OfficeTableCellSpec` — Describes a logical table cell that can be rendered by multiple Office table surfaces.
 
 ## RELATED LINKS
 
