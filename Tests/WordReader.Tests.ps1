@@ -50,9 +50,9 @@ Describe 'Word reader helpers' {
             Add-OfficeWordParagraph { Add-OfficeWordComboBox -Items 'Red', 'Green' -Alias 'Color' -Tag 'ColorTag' }
             Add-OfficeWordParagraph { Add-OfficeWordPictureControl -Path $imagePath -Alias 'Logo' -Tag 'LogoTag' }
             Add-OfficeWordParagraph { Add-OfficeWordRepeatingSection -SectionTitle 'Items' -Alias 'LineItems' -Tag 'LineItemsTag' }
-            $toc = Add-OfficeWordTableOfContent -PassThru
-            Set-OfficeWordTableOfContent -TableOfContent $toc -Text 'Contents' -TextNoContent 'No entries'
-            Update-OfficeWordTableOfContent -TableOfContent $toc
+            $toc = Add-OfficeWordTableOfContents -PassThru
+            Set-OfficeWordTableOfContents -TableOfContents $toc -Text 'Contents' -TextNoContent 'No entries'
+            Update-OfficeWordTableOfContents -TableOfContents $toc
         }
 
         $controls = Get-OfficeWordContentControl -Path $path -Alias 'Client*'
@@ -83,7 +83,7 @@ Describe 'Word reader helpers' {
         $repeating = Get-OfficeWordRepeatingSection -Path $path -Alias 'LineItems'
         $repeating.Count | Should -Be 1
 
-        $toc = Get-OfficeWordTableOfContent -Path $path
+        $toc = Get-OfficeWordTableOfContents -Path $path
         $toc | Should -Not -BeNullOrEmpty
         $toc.Text | Should -Be 'Contents'
         $toc.TextNoContent | Should -Be 'No entries'

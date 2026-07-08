@@ -484,6 +484,307 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'creates span-aware Word tables from Word table cell specs' {
+        (Get-Command New-OfficeWordTableCell).Parameters.Keys | Should -Contain 'ColumnSpan'
+        (Get-Command New-OfficeWordTableCell).Parameters.Keys | Should -Contain 'RowSpan'
+        Get-Command New-OfficeTableCell -ErrorAction SilentlyContinue | Should -BeNullOrEmpty
+
+        $path = Join-Path $TestDrive 'DslSpanAwareWordTable.docx'
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                @('Service', 'Status', 'Owner'),
+                @(New-OfficeWordTableCell -Text 'Identity systems' -ColumnSpan 3),
+                @('Entra', 'Watch', 'IAM'),
+                @((New-OfficeWordTableCell -Text 'Shared owner' -RowSpan 2), 'Build', 'OfficeIMO'),
+                @('Release', 'PSWriteOffice')
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].CellsCount | Should -Be 3
+            $table.Rows[1].CellsCount | Should -Be 1
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Identity systems'
+            $table.Rows[1].Cells[0].ColumnSpan | Should -Be 3
+            $table.Rows[3].Cells[0].Paragraphs[0].Text | Should -Be 'Shared owner'
+            $table.Rows[3].Cells[0].RowSpan | Should -Be 2
+            $table.Rows[4].Cells[1].Paragraphs[0].Text | Should -Be 'Release'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'keeps ordinary span-like property names on normal Word tables' {
+        $path = Join-Path $TestDrive 'DslOrdinarySpanNamedWordTable.docx'
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Backlog'
+                Rows = 25
+                Columns = 3
+                Span = 2
+                ColumnSpan = 2
+                RowSpan = 3
+            }
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 2
+            $table.Rows[0].CellsCount | Should -Be 6
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'Rows'
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Columns'
+            $table.Rows[0].Cells[3].Paragraphs[0].Text | Should -Be 'Span'
+            $table.Rows[0].Cells[4].Paragraphs[0].Text | Should -Be 'ColumnSpan'
+            $table.Rows[0].Cells[5].Paragraphs[0].Text | Should -Be 'RowSpan'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be '25'
+            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be '3'
+            $table.Rows[1].Cells[3].Paragraphs[0].Text | Should -Be '2'
+            $table.Rows[1].Cells[4].Paragraphs[0].Text | Should -Be '2'
+            $table.Rows[1].Cells[5].Paragraphs[0].Text | Should -Be '3'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'keeps ordinary text and span-key properties in mixed Word tables' {
+        $path = Join-Path $TestDrive 'DslMixedOrdinarySpanKeyWordTable.docx'
+        $rows = @(
+            [pscustomobject]@{
+                Text = 'Task'
+                ColumnSpan = 1
+                Status = 'Open'
+            }
+            , @(New-OfficeWordTableCell -Text 'Follow-up' -ColumnSpan 3)
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Text'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'ColumnSpan'
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Status'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Task'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be '1'
+            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be 'Open'
+            $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Follow-up'
+            $table.Rows[2].Cells[0].ColumnSpan | Should -Be 3
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'keeps default headers on mixed object and span Word tables' {
+        $path = Join-Path $TestDrive 'DslMixedObjectSpanWordTable.docx'
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Directory'
+                Status = 'Healthy'
+            }
+            , @(New-OfficeWordTableCell -Text 'Follow-up' -ColumnSpan 2)
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'Status'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Directory'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'Healthy'
+            $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Follow-up'
+            $table.Rows[2].Cells[0].ColumnSpan | Should -Be 2
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'applies conditions to leading span rows after generated mixed Word headers' {
+        $path = Join-Path $TestDrive 'DslMixedLeadingSpanConditionWordTable.docx'
+        $rows = @(
+            , @(New-OfficeWordTableCell -Text 'Section' -ColumnSpan 2)
+            [pscustomobject]@{
+                Name = 'Directory'
+                Status = 'Healthy'
+            }
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows {
+                WordTableCondition -FilterScript { $_[0].Text -eq 'Section' } -BackgroundColor '#ffeeee'
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[0].Cells[0].ShadingFillColorHex | Should -Not -Be 'ffeeee'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Section'
+            $table.Rows[1].Cells[0].ShadingFillColorHex | Should -Be 'ffeeee'
+            $table.Rows[2].Cells[0].Paragraphs[0].Text | Should -Be 'Directory'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'keeps generated mixed Word headers out of leading row spans' {
+        $path = Join-Path $TestDrive 'DslMixedLeadingRowSpanWordTable.docx'
+        $rows = @(
+            , @((New-OfficeWordTableCell -Text 'Group' -RowSpan 2), 'A')
+            [pscustomobject]@{
+                Name = 'B'
+                Value = 'C'
+            }
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 3
+            $table.Rows[0].Cells[0].Paragraphs[0].Text | Should -Be 'Name'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Group'
+            $table.Rows[1].Cells[0].RowSpan | Should -Be 2
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be 'A'
+            $table.Rows[2].Cells[1].Paragraphs[0].Text | Should -Be 'B'
+            $table.Rows[2].Cells[2].Paragraphs[0].Text | Should -Be 'C'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'merges adjacent and occupied-range Word spans without stale indexes' {
+        $path = Join-Path $TestDrive 'DslComplexSpanWordTable.docx'
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                , @(
+                    (New-OfficeWordTableCell -Text 'Left block' -ColumnSpan 2),
+                    (New-OfficeWordTableCell -Text 'Right block' -ColumnSpan 2)
+                )
+                , @(
+                    'A',
+                    (New-OfficeWordTableCell -Text 'Pinned' -RowSpan 2),
+                    'C'
+                )
+                , @(
+                    (New-OfficeWordTableCell -Text 'Wide task' -ColumnSpan 2),
+                    'Tail'
+                )
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $texts = @($table.Rows | ForEach-Object {
+                $_.Cells | ForEach-Object { $_.Paragraphs[0].Text }
+            })
+            $texts | Should -Contain 'Left block'
+            $texts | Should -Contain 'Right block'
+            $texts | Should -Contain 'Pinned'
+            $texts | Should -Contain 'Wide task'
+            $texts | Should -Contain 'Tail'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'merges upper row spans before lower horizontal Word spans' {
+        $path = Join-Path $TestDrive 'DslUpperRowSpanBeforeLowerHorizontalWordTable.docx'
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                , @(
+                    'Lead',
+                    'Middle',
+                    (New-OfficeWordTableCell -Text 'Pinned' -RowSpan 2)
+                )
+                , @(
+                    (New-OfficeWordTableCell -Text 'Wide task' -ColumnSpan 2),
+                    'Tail'
+                )
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Pinned'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Wide task'
+            $table.Rows[1].Cells[0].ColumnSpan | Should -Be 2
+
+            $texts = @($table.Rows | ForEach-Object {
+                $_.Cells | ForEach-Object { $_.Paragraphs[0].Text }
+            })
+            $texts | Should -Contain 'Tail'
+        } finally {
+            $document.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+
+        $documentXml.SelectSingleNode('(//w:tbl)[1]/w:tr[1]/w:tc[3]/w:tcPr/w:vMerge[@w:val="restart"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('(//w:tbl)[1]/w:tr[2]/w:tc[1]/w:tcPr/w:vMerge', $namespaceManager) | Should -BeNullOrEmpty
+        $documentXml.SelectSingleNode('(//w:tbl)[1]/w:tr[2]/w:tc[2]/w:tcPr/w:vMerge[@w:val="continue"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
+
+    It 'rejects Word row spans past the table bottom' {
+        $path = Join-Path $TestDrive 'DslInvalidRowSpanWordTable.docx'
+
+        {
+            New-OfficeWord -Path $path {
+                WordTable -Style TableGrid -InputObject @(
+                    , @((New-OfficeWordTableCell -Text 'Too tall' -RowSpan 2), 'Tail')
+                )
+            } | Out-Null
+        } | Should -Throw -ExpectedMessage '*Row span cannot extend past the last table row*'
+    }
+
+    It 'applies conditions to the correct explicit Word table rows' {
+        $path = Join-Path $TestDrive 'DslExplicitRowConditionWordTable.docx'
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                , @((New-OfficeWordTableCell -Text 'Open'), 'Identity')
+                , @((New-OfficeWordTableCell -Text 'Closed'), 'Archive')
+            ) {
+                WordTableCondition -FilterScript { $_[0].Text -eq 'Open' } -BackgroundColor '#ffeeee'
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[0].ShadingFillColorHex | Should -Be 'ffeeee'
+            $table.Rows[1].Cells[0].ShadingFillColorHex | Should -Not -Be 'ffeeee'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'adds Word pie charts inside the DSL' {
         $path = Join-Path $TestDrive 'DslWordPieChart.docx'
         $rows = @(
@@ -726,7 +1027,7 @@ Describe 'Word DSL surface' {
             Add-OfficeWordParagraph { Add-OfficeWordDropDownList -Items 'Low','Medium','High' -Alias 'Priority' }
             Add-OfficeWordParagraph { Add-OfficeWordComboBox -Items 'Red','Blue' -DefaultValue 'Blue' -Alias 'Color' }
             Add-OfficeWordParagraph { Add-OfficeWordRepeatingSection -SectionTitle 'Items' -Alias 'LineItems' }
-            Add-OfficeWordTableOfContent -Style Template1
+            Add-OfficeWordTableOfContents -Style Template1
             Update-OfficeWordFields
         } | Out-Null
 
@@ -741,6 +1042,23 @@ Describe 'Word DSL surface' {
             $document.ComboBoxes.Count | Should -BeGreaterThan 0
             $document.RepeatingSections.Count | Should -BeGreaterThan 0
             $document.TableOfContent | Should -Not -BeNullOrEmpty
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'updates piped Word table of contents outside the DSL' {
+        $path = Join-Path $TestDrive 'DslPipedTableOfContentsUpdate.docx'
+
+        New-OfficeWord -Path $path {
+            Add-OfficeWordTableOfContents
+            Add-OfficeWordParagraph -Text 'Scope' -Style Heading1
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path
+        try {
+            $toc = $document | Get-OfficeWordTableOfContents
+            $toc | Update-OfficeWordTableOfContents -PassThru | Should -Not -BeNullOrEmpty
         } finally {
             $document.Dispose()
         }

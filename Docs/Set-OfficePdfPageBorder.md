@@ -75,7 +75,7 @@ Border dash style.
 Type: OfficeStrokeDashStyle
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: Solid, Dash, Dot, DashDot
+Possible values: Solid, Dash, Dot, DashDot, DashDotDot
 
 Required: False
 Position: named

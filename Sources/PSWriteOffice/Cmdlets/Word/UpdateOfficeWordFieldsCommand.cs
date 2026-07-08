@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficeWord -Path .\Report.docx {
 ///     Add-OfficeWordParagraph -Text 'Release report'
-///     Add-OfficeWordTableOfContent
+///     Add-OfficeWordTableOfContents
 ///     Update-OfficeWordFields
 /// }</code>
 ///   <para>Updates PAGE and NUMPAGES fields and marks TOC fields as dirty before saving.</para>

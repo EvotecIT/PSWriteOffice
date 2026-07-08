@@ -231,6 +231,12 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     private void RenderTable(PdfDocument document, object[] inputRows)
     {
         var projectedRows = TableViewProjection.Project(inputRows, View);
+        if (OfficeTableSpecParser.TryCreate(projectedRows, Property, Header, out var tableSpec))
+        {
+            document.Table(ToPdfRows(tableSpec), Align, CreateStyle());
+            return;
+        }
+
         var rowArrayInput = projectedRows.All(item => item is IEnumerable && item is not string && item is not IDictionary);
         string[][] rows = rowArrayInput
             ? PdfCommandUtilities.ConvertDataRows(projectedRows, Header)
@@ -239,6 +245,17 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
             : PdfCommandUtilities.ConvertToTableRows(projectedRows, Property, Header);
 
         document.Table(rows, Align, CreateStyle());
+    }
+
+    private static PdfTableCell[][] ToPdfRows(OfficeTableSpec table)
+    {
+        return table.Rows
+            .Select(row => row
+                .Select(cell => cell.HasSpan
+                    ? PdfTableCell.Merge(cell.Text, cell.ColumnSpan, cell.RowSpan)
+                    : PdfTableCell.TextCell(cell.Text))
+                .ToArray())
+            .ToArray();
     }
 
     private PdfTableStyle? CreateStyle()

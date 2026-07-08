@@ -84,9 +84,28 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var context = WordDslContext.Require(this);
         var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
         var tableRows = TableViewProjection.Project(rows, effectiveView);
-        var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(tableRows);
         var legacyLayout = ResolveLegacyLayout(Layout);
-        var table = CreateTable(context, normalizedRows, Style, includeHeader: !NoHeader.IsPresent, layout: legacyLayout);
+        int? conditionHeaderRowIndex = NoHeader.IsPresent ? null : 0;
+        WordTable table;
+        if (OfficeTableSpecParser.TryCreate(
+                tableRows,
+                propertyNames: null,
+                header: NoHeader.IsPresent ? Array.Empty<string>() : null,
+                out var tableSpec))
+        {
+            table = CreateTable(context, tableSpec, Style, legacyLayout);
+            conditionHeaderRowIndex = tableSpec.HeaderRowIndex;
+        }
+        else
+        {
+            table = CreateTable(
+                context,
+                PowerShellObjectNormalizer.NormalizeItems(tableRows),
+                Style,
+                includeHeader: !NoHeader.IsPresent,
+                layout: legacyLayout);
+        }
+
         ApplyLayout(table, Layout);
         context.RegisterTableSource(table, tableRows);
 
@@ -98,7 +117,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var conditions = context.ConsumeTableConditions(table);
         if (conditions.Count > 0)
         {
-            ApplyConditions(table, tableRows, conditions, NoHeader.IsPresent);
+            ApplyConditions(table, tableRows, conditions, conditionHeaderRowIndex);
         }
 
         context.ClearTableSource(table);
@@ -109,13 +128,20 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
     }
 
-    private void ApplyConditions(WordTable table, IReadOnlyList<object> rows, IReadOnlyList<WordTableConditionModel> conditions, bool skipHeader)
+    private void ApplyConditions(WordTable table, IReadOnlyList<object> rows, IReadOnlyList<WordTableConditionModel> conditions, int? headerRowIndex)
     {
-        var dataRowOffset = skipHeader ? 0 : 1;
-        for (var index = 0; index < rows.Count && (index + dataRowOffset) < table.RowsCount; index++)
+        for (var index = 0; index < rows.Count; index++)
         {
+            var targetRowIndex = headerRowIndex.HasValue && index >= headerRowIndex.Value
+                ? index + 1
+                : index;
+            if (targetRowIndex >= table.RowsCount)
+            {
+                break;
+            }
+
             var rowObject = rows[index];
-            var wordRow = table.Rows[index + dataRowOffset];
+            var wordRow = table.Rows[targetRowIndex];
             foreach (var condition in conditions)
             {
                 if (!EvaluateCondition(condition.FilterScript, rowObject))
@@ -211,6 +237,76 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         return AddTableToCell(context.CurrentTableCell, normalizedRows, style, includeHeader, layout);
+    }
+
+    private static WordTable CreateTable(
+        WordDslContext context,
+        OfficeTableSpec spec,
+        WordTableStyle style,
+        TableLayoutValues? layout)
+    {
+        if (spec.RowCount == 0 || spec.ColumnCount == 0)
+        {
+            throw new ArgumentException("Provide at least one table row and one table column.", nameof(spec));
+        }
+
+        var table = context.CurrentTableCell == null
+            ? context.Document.AddTable(spec.RowCount, spec.ColumnCount, style)
+            : context.CurrentTableCell.AddTable(spec.RowCount, spec.ColumnCount, style);
+
+        if (layout.HasValue)
+        {
+            table.LayoutType = layout.Value;
+        }
+
+        foreach (var placement in spec.Placements)
+        {
+            SetCellText(table, placement.RowIndex, placement.ColumnIndex, placement.Cell.Text);
+        }
+
+        ApplyCellSpans(table, spec.Placements);
+
+        return table;
+    }
+
+    private static void ApplyCellSpans(WordTable table, IReadOnlyList<OfficeTableCellPlacement> placements)
+    {
+        var spanPlacements = placements
+            .Where(static placement => placement.Cell.HasSpan)
+            .ToList();
+
+        foreach (var placement in spanPlacements
+            .Where(static placement => placement.Cell.RowSpan > 1)
+            .OrderBy(static placement => placement.RowIndex)
+            .ThenByDescending(static placement => placement.ColumnIndex))
+        {
+            for (var offset = placement.Cell.ColumnSpan - 1; offset >= 0; offset--)
+            {
+                table.Rows[placement.RowIndex]
+                    .Cells[placement.ColumnIndex + offset]
+                    .MergeVertically(placement.Cell.RowSpan - 1);
+            }
+        }
+
+        var horizontalSpans = spanPlacements
+            .Where(static placement => placement.Cell.ColumnSpan > 1)
+            .SelectMany(static placement => Enumerable
+                .Range(placement.RowIndex, placement.Cell.RowSpan)
+                .Select(rowIndex => new
+                {
+                    RowIndex = rowIndex,
+                    placement.ColumnIndex,
+                    placement.Cell.ColumnSpan
+                }))
+            .OrderByDescending(static span => span.RowIndex)
+            .ThenByDescending(static span => span.ColumnIndex);
+
+        foreach (var span in horizontalSpans)
+        {
+            table.Rows[span.RowIndex]
+                .Cells[span.ColumnIndex]
+                .MergeHorizontally(span.ColumnSpan - 1);
+        }
     }
 
     private static WordTable AddTableToCell(
