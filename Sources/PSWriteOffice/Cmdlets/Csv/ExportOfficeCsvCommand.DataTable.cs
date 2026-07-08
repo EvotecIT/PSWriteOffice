@@ -26,8 +26,7 @@ public sealed partial class ExportOfficeCsvCommand
 
         try
         {
-            if (!hadActiveWriter &&
-                Append.IsPresent &&
+            if (Append.IsPresent &&
                 effectiveColumns.Count > 0 &&
                 !ColumnsMatch(sourceColumns, effectiveColumns))
             {

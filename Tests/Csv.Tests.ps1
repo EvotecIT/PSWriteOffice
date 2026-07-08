@@ -538,6 +538,26 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'converts object then reordered DataTable input using the active column order' {
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Rows.Add(2, 'Beta')
+
+        $csvText = @(
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $table -NoEnumerate
+            } | ConvertTo-OfficeCsv
+        )
+
+        $csvText | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'converts DataTable then object input using the table column order' {
         $table = [System.Data.DataTable]::new('Rows')
         [void] $table.Columns.Add('Name', [string])
@@ -636,6 +656,27 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'rejects object then DataTable append when the table is missing active columns' {
+        $path = Join-Path $TestDrive 'object-then-datatable-missing-append.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Rows.Add('Beta')
+
+        {
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $table -NoEnumerate
+            } | Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*missing*Value*'
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Seed,0'
+            'Alpha,1'
+        )
+    }
+
     It 'validates DataTable append headers when headers are not written' {
         $path = Join-Path $TestDrive 'datatable-append-no-header-validation.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
@@ -729,6 +770,31 @@ Describe 'CSV cmdlets' {
             'Seed,0'
             'Alpha,1'
             'Beta,2'
+        )
+    }
+
+    It 'rejects object then IDataReader append when the reader is missing active columns' {
+        $path = Join-Path $TestDrive 'object-then-reader-missing-append.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Rows.Add('Beta')
+        $reader = $table.CreateDataReader()
+        try {
+            {
+                & {
+                    Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                    Write-Output -InputObject $reader -NoEnumerate
+                } | Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+            } | Should -Throw '*missing*Value*'
+        } finally {
+            $reader.Dispose()
+        }
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Seed,0'
+            'Alpha,1'
         )
     }
 

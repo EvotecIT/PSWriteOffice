@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -169,7 +170,15 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
     private void EmitDataTable(DataTable table)
     {
-        _objectProjector.UseColumns(GetDataTableColumnNames(table), validateColumns: false);
+        if (_csvWriter != null)
+        {
+            var activeColumns = _objectProjector.CurrentColumns ?? GetDataTableColumnNames(table);
+            WriteDataTableRows(table, _csvWriter, activeColumns);
+            return;
+        }
+
+        var tableColumns = GetDataTableColumnNames(table);
+        _objectProjector.UseColumns(tableColumns, validateColumns: false);
         using var reader = table.CreateDataReader();
         EnsureObjectWriter().WriteDataReader(reader);
     }
@@ -183,6 +192,50 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         }
 
         return columns;
+    }
+
+    private static void WriteDataTableRows(DataTable table, CsvObjectWriter writer, IReadOnlyList<string> columns)
+    {
+        foreach (DataRow row in table.Rows)
+        {
+            writer.WriteRow(
+                columns,
+                columns.Count,
+                (Row: row, Columns: columns),
+                static (state, index) => TryGetDataTableValue(state.Row, state.Columns[index]));
+        }
+    }
+
+    private static object? TryGetDataTableValue(DataRow row, string column)
+    {
+        if (!TryGetDataColumn(row.Table, column, out var dataColumn))
+        {
+            return null;
+        }
+
+        var value = row[dataColumn];
+        return value == DBNull.Value ? null : value;
+    }
+
+    private static bool TryGetDataColumn(DataTable table, string column, out DataColumn dataColumn)
+    {
+        if (table.Columns.Contains(column))
+        {
+            dataColumn = table.Columns[column]!;
+            return true;
+        }
+
+        foreach (DataColumn candidate in table.Columns)
+        {
+            if (string.Equals(candidate.ColumnName, column, StringComparison.OrdinalIgnoreCase))
+            {
+                dataColumn = candidate;
+                return true;
+            }
+        }
+
+        dataColumn = null!;
+        return false;
     }
 
     private static bool TryGetCsvDocument(object? value, out CsvDocument document)
