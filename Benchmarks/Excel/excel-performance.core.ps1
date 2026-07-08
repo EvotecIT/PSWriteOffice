@@ -134,6 +134,10 @@ function Get-CsvBenchmarkCase {
         New-ExcelBenchmarkCase -Name csv-write-datatable -Label 'Write DataTable as CSV file' -Suites $csv -OperationKey WriteCsvDataTable -Profile DataTable -FileExtension '.csv' -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name csv-dbatools-quick-single-column -Label 'dbatools QuickTest read first column' -Suites $csv -OperationKey ReadCsvQuickSingleColumn -Profile DbatoolsQuickCsv -FileExtension '.csv' -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name csv-dbatools-quick-all-columns -Label 'dbatools QuickTest read all columns' -Suites $csv -OperationKey ReadCsvQuickAllColumns -Profile DbatoolsQuickCsv -FileExtension '.csv' -ValidateWorkbook:$false
+        New-ExcelBenchmarkCase -Name csv-dbatools-wide-single-column -Label 'dbatools wide read first column' -Suites $csv -OperationKey ReadCsvQuickSingleColumn -Profile DbatoolsWideCsv -FileExtension '.csv' -ValidateWorkbook:$false
+        New-ExcelBenchmarkCase -Name csv-dbatools-wide-all-columns -Label 'dbatools wide read all columns' -Suites $csv -OperationKey ReadCsvQuickAllColumns -Profile DbatoolsWideCsv -FileExtension '.csv' -ValidateWorkbook:$false
+        New-ExcelBenchmarkCase -Name csv-dbatools-quoted-single-column -Label 'dbatools quoted read first column' -Suites $csv -OperationKey ReadCsvQuickSingleColumn -Profile DbatoolsQuotedCsv -FileExtension '.csv' -ValidateWorkbook:$false
+        New-ExcelBenchmarkCase -Name csv-dbatools-quoted-all-columns -Label 'dbatools quoted read all columns' -Suites $csv -OperationKey ReadCsvQuickAllColumns -Profile DbatoolsQuotedCsv -FileExtension '.csv' -ValidateWorkbook:$false
     ) | Where-Object { (($_.Suites -split ',') -contains $Suite) }
 }
 

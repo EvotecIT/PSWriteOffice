@@ -115,10 +115,12 @@ PowerShell CSV import/export:
 - `PSWriteOffice`
 - `NativeCsv`
 
-The CSV suite also includes dbatools `QuickTest`-shaped read scenarios over the
-same 10-column generated CSV shape: `csv-dbatools-quick-single-column` touches
-`Column0` for every row, and `csv-dbatools-quick-all-columns` touches every
-column for every row.
+The CSV suite also includes dbatools-shaped read scenarios over the same
+generated CSV shape used by `dataplat/dbatools.library/benchmarks/CsvBenchmarks`.
+`csv-dbatools-quick-single-column` and `csv-dbatools-quick-all-columns` cover the
+upstream `QuickTest` pattern and the small/medium/large reader shape by changing
+`-RowCount`. The explicit `csv-dbatools-wide-*` and `csv-dbatools-quoted-*`
+lanes cover the upstream wide 50-column and quote-all files.
 
 ```powershell
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 -Suite Smoke
@@ -142,6 +144,14 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
     -Suite Smoke `
     -RowCount 100000 `
     -Scenario csv-dbatools-quick-single-column,csv-dbatools-quick-all-columns `
+    -Engine PSWriteOffice,NativeCsv
+```
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 100000 `
+    -Scenario csv-dbatools-wide-single-column,csv-dbatools-wide-all-columns,csv-dbatools-quoted-single-column,csv-dbatools-quoted-all-columns `
     -Engine PSWriteOffice,NativeCsv
 ```
 

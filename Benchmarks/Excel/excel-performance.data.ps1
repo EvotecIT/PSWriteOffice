@@ -23,6 +23,12 @@ function Get-ExcelBenchmarkData {
         DbatoolsQuickCsv {
             [pscustomobject]@{ Data = $null; ColumnCount = 10; WorksheetName = 'Data' }
         }
+        DbatoolsQuotedCsv {
+            [pscustomobject]@{ Data = $null; ColumnCount = 10; WorksheetName = 'Data' }
+        }
+        DbatoolsWideCsv {
+            [pscustomobject]@{ Data = $null; ColumnCount = 50; WorksheetName = 'Data' }
+        }
         DataTable {
             [pscustomobject]@{ Data = New-ExcelBenchmarkDataTable -Count $Count; ColumnCount = 6; WorksheetName = 'Data' }
         }
@@ -133,7 +139,9 @@ function New-ExcelBenchmarkDbatoolsCsvSource {
         [Parameter(Mandatory)]
         [int] $Count,
 
-        [int] $ColumnCount = 10
+        [int] $ColumnCount = 10,
+
+        [switch] $QuoteAll
     )
 
     $directory = [IO.Path]::GetDirectoryName($Path)
@@ -170,7 +178,13 @@ function New-ExcelBenchmarkDbatoolsCsvSource {
                     default { 'Value{0}_{1}' -f $row, $column; break }
                 }
 
-                $null = $builder.Append($value)
+                if ($QuoteAll.IsPresent) {
+                    $null = $builder.Append('"')
+                    $null = $builder.Append($value)
+                    $null = $builder.Append('"')
+                } else {
+                    $null = $builder.Append($value)
+                }
             }
 
             $writer.WriteLine($builder.ToString())
@@ -245,6 +259,8 @@ function Get-ExcelBenchmarkColumnCount {
         WideObjects { 40 }
         CsvWideObjects { 40 }
         DbatoolsQuickCsv { 10 }
+        DbatoolsQuotedCsv { 10 }
+        DbatoolsWideCsv { 50 }
         DataTable { 6 }
         DataSet { 6 }
         default { 10 }
@@ -289,10 +305,10 @@ function Initialize-ExcelBenchmarkInput {
             $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
         }
         ReadCsvQuickSingleColumn {
-            New-ExcelBenchmarkDbatoolsCsvSource -Path $Run.SourcePath -Count ([int]$Case.RowCount) -ColumnCount $Run.ColumnCount
+            New-ExcelBenchmarkDbatoolsCsvSource -Path $Run.SourcePath -Count ([int]$Case.RowCount) -ColumnCount $Run.ColumnCount -QuoteAll:([string]$Case.DataProfile -eq 'DbatoolsQuotedCsv')
         }
         ReadCsvQuickAllColumns {
-            New-ExcelBenchmarkDbatoolsCsvSource -Path $Run.SourcePath -Count ([int]$Case.RowCount) -ColumnCount $Run.ColumnCount
+            New-ExcelBenchmarkDbatoolsCsvSource -Path $Run.SourcePath -Count ([int]$Case.RowCount) -ColumnCount $Run.ColumnCount -QuoteAll:([string]$Case.DataProfile -eq 'DbatoolsQuotedCsv')
         }
         CsvToExcel {
             $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
