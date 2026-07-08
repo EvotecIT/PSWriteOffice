@@ -1123,15 +1123,15 @@ Describe 'CSV cmdlets' {
     It 'resets multi-character delimiter matching between ConvertTo-OfficeCsv records' {
         $rows = @(
             [pscustomobject]@{ Name = 'Alpha'; Value = 'ends|' }
-            [pscustomobject]@{ Name = ''; Value = "one`ntwo" }
+            [pscustomobject]@{ Name = ''; Value = 'one||two' }
         )
 
         $csvLines = @($rows | ConvertTo-OfficeCsv -DelimiterText '||')
 
         $csvLines.Count | Should -Be 3
         $csvLines[1] | Should -Be 'Alpha||ends|'
-        $csvLines[2] | Should -Be "||`"one`ntwo`""
-        @($csvLines | ConvertFrom-OfficeCsv -DelimiterText '||')[1].Value | Should -Be "one`ntwo"
+        $csvLines[2] | Should -Be '||"one||two"'
+        @($csvLines | ConvertFrom-OfficeCsv -DelimiterText '||')[1].Value | Should -Be 'one||two'
     }
 
     It 'exports CSV with a multi-character delimiter and can append using the same delimiter' {
