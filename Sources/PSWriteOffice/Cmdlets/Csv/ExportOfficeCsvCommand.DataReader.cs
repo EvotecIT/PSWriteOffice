@@ -83,12 +83,7 @@ public sealed partial class ExportOfficeCsvCommand
             return null;
         }
 
-        if (!NoHeader.IsPresent || Force.IsPresent || DataReaderContainsColumns(reader, _appendHeader))
-        {
-            return _appendHeader;
-        }
-
-        return null;
+        return _appendHeader;
     }
 
     private void ValidateDataReaderAppendHeader(IDataReader reader, IReadOnlyList<string> appendHeader)
@@ -129,19 +124,6 @@ public sealed partial class ExportOfficeCsvCommand
 
         var value = reader.GetValue(ordinal);
         return value == DBNull.Value ? null : value;
-    }
-
-    private static bool DataReaderContainsColumns(IDataReader reader, IEnumerable<string> columns)
-    {
-        foreach (var column in columns)
-        {
-            if (!ContainsDataReaderColumn(reader, column))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private static bool ContainsDataReaderColumn(IDataReader reader, string column)

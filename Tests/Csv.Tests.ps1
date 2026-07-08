@@ -449,6 +449,31 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'validates DataTable append headers when headers are not written' {
+        $path = Join-Path $TestDrive 'datatable-append-no-header-validation.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Rows.Add('Beta')
+
+        {
+            Export-OfficeCsv -InputObject $table -Path $path -Append -NoHeader -ErrorAction Stop
+        } | Should -Throw '*missing*Value*'
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+        )
+
+        Export-OfficeCsv -InputObject $table -Path $path -Append -NoHeader -Force
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,'
+        )
+    }
+
     It 'appends IDataReader rows using an existing CSV header order' {
         $path = Join-Path $TestDrive 'reader-append.csv'
         Set-Content -LiteralPath $path -Value "Value,Name`n1,Alpha" -Encoding UTF8

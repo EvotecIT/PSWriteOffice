@@ -102,12 +102,7 @@ public sealed partial class ExportOfficeCsvCommand
             return null;
         }
 
-        if (!NoHeader.IsPresent || Force.IsPresent || DataTableContainsColumns(table, _appendHeader))
-        {
-            return _appendHeader;
-        }
-
-        return null;
+        return _appendHeader;
     }
 
     private void ValidateDataTableAppendHeader(DataTable table, IReadOnlyList<string> appendHeader)
@@ -148,19 +143,6 @@ public sealed partial class ExportOfficeCsvCommand
 
         var value = row[dataColumn];
         return value == DBNull.Value ? null : value;
-    }
-
-    private static bool DataTableContainsColumns(DataTable table, IEnumerable<string> columns)
-    {
-        foreach (var column in columns)
-        {
-            if (!ContainsDataColumn(table, column))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private static bool ContainsDataColumn(DataTable table, string column) => GetDataColumn(table, column) != null;
