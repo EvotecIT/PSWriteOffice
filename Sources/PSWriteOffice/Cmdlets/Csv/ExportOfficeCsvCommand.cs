@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
@@ -105,6 +106,14 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public Encoding? Encoding { get; set; }
 
+    /// <summary>Compression used when writing the CSV file.</summary>
+    [Parameter]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.None;
+
+    /// <summary>Compression level used when <see cref="CompressionType"/> is enabled.</summary>
+    [Parameter]
+    public CompressionLevel CompressionLevel { get; set; } = CompressionLevel.Optimal;
+
     /// <summary>Controls how formula-like values are written.</summary>
     [Parameter]
     public CsvFormulaInjectionPolicy FormulaInjectionPolicy { get; set; } = CsvFormulaInjectionPolicy.Preserve;
@@ -137,6 +146,11 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
+        if (Append.IsPresent && CompressionType != CsvCompressionType.None)
+        {
+            throw new PSArgumentException("Appending to compressed CSV files is not supported. Write a new compressed file or append to an uncompressed CSV file.");
+        }
+
         if (UseCulture.IsPresent)
         {
             var separator = (Culture ?? CultureInfo.CurrentCulture).TextInfo.ListSeparator;
@@ -395,6 +409,8 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             IncludeHeader = includeHeader ?? !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
+            CompressionType = CompressionType,
+            CompressionLevel = CompressionLevel,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
             QuoteMode = UseQuotes,
             QuoteFields = QuoteFields
@@ -436,7 +452,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
     private string? GetTargetPathForErrors() => IsLiteralPathParameterSet() ? LiteralPath : Path;
 
-    private StreamWriter CreateTextWriter(bool append, CsvSaveOptions options)
+    private TextWriter CreateTextWriter(bool append, CsvSaveOptions options)
     {
         var encoding = ResolveOutputEncoding(append, options);
         var appendToContent = append && _appendToExistingFile;
@@ -447,7 +463,14 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         }
 
         var stream = new FileStream(_resolvedPath!, mode, FileAccess.Write, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
-        return new StreamWriter(stream, encoding, bufferSize: StreamWriterBufferSize);
+        Stream writerStream = options.CompressionType switch
+        {
+            CsvCompressionType.None => stream,
+            CsvCompressionType.GZip => new GZipStream(stream, options.CompressionLevel),
+            _ => throw new PSArgumentException($"Compression type '{options.CompressionType}' is not supported.")
+        };
+
+        return new StreamWriter(writerStream, encoding, bufferSize: StreamWriterBufferSize);
     }
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>

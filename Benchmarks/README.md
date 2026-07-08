@@ -179,6 +179,29 @@ measured iterations:
 | 10,000 | 59.8 ms | 42.2 ms | NativeCsv fastest |
 | 100,000 | 43.9 ms | 301.5 ms | PSWriteOffice fastest |
 
+Focused local dbatools wide/quoted run, `20260708-072202-eb2e9470`, 10,000
+rows, three measured iterations:
+
+| Scenario | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | --- |
+| Quoted all columns | 119.8 ms, 81,573 rows/s | 127.0 ms, 76,753 rows/s | PSWriteOffice fastest |
+| Quoted first column | 44.8 ms, 222,418 rows/s | 48.7 ms, 205,266 rows/s | PSWriteOffice fastest |
+| Wide all columns | 643.9 ms, 15,344 rows/s | 651.9 ms, 15,291 rows/s | PSWriteOffice fastest |
+| Wide first column | 99.6 ms, 98,934 rows/s | 124.5 ms, 80,758 rows/s | PSWriteOffice fastest |
+
+Focused local wide DataTable read run, `20260708-072349-8d0090a6`, 100,000
+rows, three measured iterations:
+
+| Scenario | PSWriteOffice median | Result |
+| --- | ---: | --- |
+| Wide CSV to DataTable | 1.71 s, 61,539 rows/s | PSWriteOffice table path |
+
+The 100,000-row repeated wide/quoted object-output run was stopped after more
+than nine minutes without a completed artifact. Treat that as a signal that the
+large all-column PowerShell-object path is dominated by `PSCustomObject` /
+`PSNoteProperty` materialization. Use `Import-OfficeCsv -AsDataTable` for
+table/database workflows until a lower-level streaming reader lane is added.
+
 <!-- BENCHMARK:CsvComparison:START -->
 | Scenario | Rows | PSWriteOffice | NativeCsv | Result |
 | --- | ---: | ---: | ---: | --- |

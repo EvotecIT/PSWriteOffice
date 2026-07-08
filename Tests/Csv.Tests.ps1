@@ -25,8 +25,13 @@ Describe 'CSV cmdlets' {
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'AsDataTable'
+        (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
 
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
+        (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'CompressionType'
+        (Get-Command ConvertFrom-OfficeCsv).Parameters.Keys | Should -Not -Contain 'CompressionType'
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Not -Contain 'HasHeaderRow'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Not -Contain 'HasHeaderRow'
@@ -111,6 +116,53 @@ Describe 'CSV cmdlets' {
             'Alpha,1'
             'Beta,2'
         )
+    }
+
+    It 'exports and imports GZip compressed CSV files' {
+        $path = Join-Path $TestDrive 'compressed.csv.gz'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 }
+        )
+
+        $rows | Export-OfficeCsv -Path $path -CompressionType GZip -CompressionLevel Fastest
+
+        $bytes = [System.IO.File]::ReadAllBytes($path)
+        $bytes[0] | Should -Be 0x1F
+        $bytes[1] | Should -Be 0x8B
+
+        $imported = @(Import-OfficeCsv -Path $path -CompressionType GZip)
+        $document = Get-OfficeCsv -Path $path -CompressionType GZip
+        $table = Import-OfficeCsv -Path $path -CompressionType GZip -AsDataTable
+
+        $imported.Count | Should -Be 2
+        $imported[1].Name | Should -Be 'Beta'
+        $document.Header | Should -Be @('Name', 'Value')
+        $table.Rows.Count | Should -Be 2
+        $table.Rows[0]['Value'] | Should -Be '1'
+    }
+
+    It 'exports DataTable input as GZip compressed CSV files' {
+        $path = Join-Path $TestDrive 'datatable-compressed.csv.gz'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Alpha', 1)
+
+        Export-OfficeCsv -InputObject $table -Path $path -CompressionType GZip
+
+        $imported = @(Import-OfficeCsv -Path $path -CompressionType GZip)
+        $imported.Count | Should -Be 1
+        $imported[0].Name | Should -Be 'Alpha'
+    }
+
+    It 'rejects appending to compressed CSV files' {
+        $path = Join-Path $TestDrive 'compressed-append.csv.gz'
+
+        {
+            [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+                Export-OfficeCsv -Path $path -CompressionType GZip -Append -ErrorAction Stop
+        } | Should -Throw '*Appending*compressed*'
     }
 
     It 'converts DataTable input directly to CSV text' {
@@ -753,6 +805,7 @@ Describe 'CSV cmdlets' {
 
         foreach ($set in $textSets) {
             $set.Parameters.Name | Should -Not -Contain 'Encoding'
+            $set.Parameters.Name | Should -Not -Contain 'CompressionType'
         }
 
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'Encoding'

@@ -198,6 +198,15 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public Encoding? Encoding { get; set; }
 
+    /// <summary>Compression used when reading CSV files.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.None;
+
     /// <summary>Emit dictionaries instead of PSCustomObjects.</summary>
     [Parameter]
     public SwitchParameter AsHashtable { get; set; }
@@ -276,12 +285,13 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteDataTable(CsvDocument document, string? tableName)
     {
-        WriteObject(PSObject.AsPSObject(document.ToDataTable(tableName)), enumerateCollection: false);
+        WriteObject(PSObject.AsPSObject(document.ToDataTable(new CsvDataTableOptions { TableName = tableName })), enumerateCollection: false);
     }
 
     private void WriteDataTable(string path, CsvLoadOptions options, string? tableName)
     {
-        WriteObject(PSObject.AsPSObject(CsvDocument.LoadDataTable(path, options, tableName)), enumerateCollection: false);
+        var document = CsvDocument.Load(path, options);
+        WriteObject(PSObject.AsPSObject(document.ToDataTable(new CsvDataTableOptions { TableName = tableName })), enumerateCollection: false);
     }
 
     private void ApplyCultureDelimiter()
@@ -349,8 +359,10 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             SkipCommentRows = SkipCommentRows.IsPresent,
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
+            DuplicateHeaderBehavior = CsvDuplicateHeaderBehavior.Throw,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
-            Mode = Mode
+            Mode = Mode,
+            CompressionType = CompressionType
         };
 
         if (Culture != null)

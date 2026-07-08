@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Management.Automation;
 using OfficeIMO.CSV;
 
@@ -23,7 +24,7 @@ public sealed partial class ExportOfficeCsvCommand
         {
             var options = CreateSaveOptions();
             using var writer = CreateTextWriter(append: false, options);
-            CsvDocument.WriteDataTable(writer, table, options);
+            WriteDataTable(writer, table, options);
         }
 
         _wroteOutput = true;
@@ -66,7 +67,14 @@ public sealed partial class ExportOfficeCsvCommand
             return;
         }
 
-        CsvDocument.WriteDataTable(writer, table, options);
+        WriteDataTable(writer, table, options);
+    }
+
+    private static void WriteDataTable(TextWriter writer, DataTable table, CsvSaveOptions options)
+    {
+        using var csvWriter = new CsvObjectWriter(writer, options, leaveOpen: true);
+        using var reader = table.CreateDataReader();
+        csvWriter.WriteDataReader(reader);
     }
 
     private string[]? GetEffectiveAppendHeader(DataTable table)

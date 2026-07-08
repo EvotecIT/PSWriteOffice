@@ -154,7 +154,12 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     {
         var options = CreateSaveOptions();
         using var textWriter = new StringWriter(CultureInfo.InvariantCulture);
-        CsvDocument.WriteDataTable(textWriter, table, options);
+        using (var csvWriter = new CsvObjectWriter(textWriter, options, leaveOpen: true))
+        using (var reader = table.CreateDataReader())
+        {
+            csvWriter.WriteDataReader(reader);
+        }
+
         using var writer = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
         writer.Write(textWriter.ToString());
     }

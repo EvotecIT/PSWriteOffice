@@ -178,6 +178,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
             SkipCommentRows = SkipCommentRows.IsPresent,
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
+            DuplicateHeaderBehavior = CsvDuplicateHeaderBehavior.Throw,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
             Mode = Mode
         };
