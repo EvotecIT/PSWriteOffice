@@ -138,6 +138,11 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
     protected override void BeginProcessing()
     {
         CsvCommandValidation.EnsureHeaderOptions(NoHeader, Header);
+        if (DuplicateHeaderBehavior == CsvDuplicateHeaderBehavior.Preserve)
+        {
+            throw new PSArgumentException("DuplicateHeaderBehavior Preserve cannot be used with row object or hashtable output. Use Rename or Throw.");
+        }
+
         _asHashtable = AsHashtable.IsPresent;
     }
 

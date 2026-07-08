@@ -116,7 +116,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
     /// <summary>Compression used when writing the CSV file.</summary>
     [Parameter]
-    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.None;
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.Auto;
 
     /// <summary>Compression level used when <see cref="CompressionType"/> is enabled.</summary>
     [Parameter]

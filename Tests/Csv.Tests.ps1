@@ -273,6 +273,18 @@ Describe 'CSV cmdlets' {
         $table.Rows[0]['Value'] | Should -Be '1'
     }
 
+    It 'infers GZip compression from export paths by default' {
+        $path = Join-Path $TestDrive 'compressed-inferred.csv.gz'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path
+
+        $imported = @(Import-OfficeCsv -Path $path)
+
+        $imported.Count | Should -Be 1
+        $imported[0].Name | Should -Be 'Alpha'
+    }
+
     It 'exports DataTable input as GZip compressed CSV files' {
         $path = Join-Path $TestDrive 'datatable-compressed.csv.gz'
         $table = [System.Data.DataTable]::new('Rows')
@@ -1004,6 +1016,16 @@ Describe 'CSV cmdlets' {
         $row['Name_2'] | Should -Be '1'
         { Import-OfficeCsv -Path $path -AsHashtable -DuplicateHeaderBehavior Throw -ErrorAction Stop } | Should -Throw '*duplicate*'
         { Import-OfficeCsv -Path $path -AsHashtable -DuplicateHeaderBehavior Preserve -ErrorAction Stop } | Should -Throw '*Preserve*row*object*hashtable*'
+    }
+
+    It 'rejects duplicate-header preservation for ConvertFrom row outputs' {
+        $text = "Name,Name`nAlpha,1"
+
+        { ConvertFrom-OfficeCsv -Text $text -DuplicateHeaderBehavior Preserve -ErrorAction Stop } |
+            Should -Throw '*Preserve*row*object*hashtable*'
+
+        { ConvertFrom-OfficeCsv -Text $text -AsHashtable -DuplicateHeaderBehavior Preserve -ErrorAction Stop } |
+            Should -Throw '*Preserve*row*object*hashtable*'
     }
 
     It 'supports NoHeader when reading CSV data and documents' {
