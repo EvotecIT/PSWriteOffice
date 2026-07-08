@@ -206,6 +206,12 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
             return;
         }
 
+        if (_atFieldStart && _delimiterText.Length > 1 && value == _delimiterText[0])
+        {
+            _delimiterMatchIndex = 1;
+            return;
+        }
+
         if (value == _delimiterText[_delimiterMatchIndex])
         {
             _delimiterMatchIndex++;

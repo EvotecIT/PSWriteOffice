@@ -49,6 +49,24 @@ public sealed partial class ExportOfficeCsvCommand
         return false;
     }
 
+    private static bool TryGetDataView(object? value, out DataView view)
+    {
+        if (value is DataView dataView)
+        {
+            view = dataView;
+            return true;
+        }
+
+        if (value is PSObject { BaseObject: DataView psObjectView })
+        {
+            view = psObjectView;
+            return true;
+        }
+
+        view = null!;
+        return false;
+    }
+
     private void AppendDataTable(DataTable table)
     {
         var options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);

@@ -198,6 +198,12 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             return;
         }
 
+        if (TryGetDataView(InputObject, out var dataView))
+        {
+            ExportDataTable(dataView.ToTable());
+            return;
+        }
+
         if (TryGetDataReader(InputObject, out var dataReader))
         {
             ExportDataReader(dataReader);

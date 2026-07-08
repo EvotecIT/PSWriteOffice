@@ -209,6 +209,25 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'exports DataView input directly as CSV rows' {
+        $path = Join-Path $TestDrive 'dataview-export.csv'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+        [void] $table.Rows.Add('Alpha', 1)
+        $view = [System.Data.DataView]::new($table)
+        $view.Sort = 'Name ASC'
+
+        Export-OfficeCsv -InputObject $view -Path $path
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'exports IDataReader input directly as CSV rows' {
         $path = Join-Path $TestDrive 'reader-export.csv'
         $table = [System.Data.DataTable]::new('Rows')
@@ -1123,15 +1142,15 @@ Describe 'CSV cmdlets' {
     It 'resets multi-character delimiter matching between ConvertTo-OfficeCsv records' {
         $rows = @(
             [pscustomobject]@{ Name = 'Alpha'; Value = 'ends|' }
-            [pscustomobject]@{ Name = ''; Value = 'one||two' }
+            [pscustomobject]@{ Name = ''; Value = "one`ntwo" }
         )
 
         $csvLines = @($rows | ConvertTo-OfficeCsv -DelimiterText '||')
 
         $csvLines.Count | Should -Be 3
         $csvLines[1] | Should -Be 'Alpha||ends|'
-        $csvLines[2] | Should -Be '||"one||two"'
-        @($csvLines | ConvertFrom-OfficeCsv -DelimiterText '||')[1].Value | Should -Be 'one||two'
+        $csvLines[2] | Should -Match '^\|\|"one\r?\ntwo"$'
+        (@($csvLines | ConvertFrom-OfficeCsv -DelimiterText '||')[1].Value -replace "`r`n", "`n") | Should -Be "one`ntwo"
     }
 
     It 'exports CSV with a multi-character delimiter and can append using the same delimiter' {
