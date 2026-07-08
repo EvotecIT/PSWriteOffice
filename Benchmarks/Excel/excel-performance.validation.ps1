@@ -111,6 +111,7 @@ function Test-CsvBenchmarkOutput {
     $expectedRows = [int]$Run.ExpectedRows
     if ($Case.OperationKey -in @('ReadCsvSource', 'ReadCsvDataTable')) {
         assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+        $Run.RowsProcessed = [int]$Run.ActualRows
         return
     }
 
@@ -118,6 +119,7 @@ function Test-CsvBenchmarkOutput {
     assertPath $path
     $actualRows = @(Import-Csv -Path $path).Count
     assertValue $actualRows $expectedRows -Message "Expected $expectedRows rows in '$path'."
+    $Run.RowsProcessed = [int]$actualRows
 }
 
 function Test-ExcelBenchmarkOpenXml {

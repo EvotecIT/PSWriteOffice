@@ -56,6 +56,22 @@ benchmark 'csv-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks\C
         Test-CsvBenchmarkOutput -Case $case -Run $run
     }
 
+    metric RowsProcessed {
+        param($case, $run)
+
+        $run.RowsProcessed
+    }
+
+    metric RowsPerSecond {
+        param($case, $run)
+
+        if ($run.DurationMs -le 0) {
+            return 0
+        }
+
+        [double] $case.RowCount / ($run.DurationMs / 1000)
+    }
+
     comparison Engine -Baseline PSWriteOffice -Metric MedianMs
     artifacts Json, Csv, Markdown
 }
