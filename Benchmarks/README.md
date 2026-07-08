@@ -207,10 +207,12 @@ rows, three measured iterations. The native baseline reads with `Import-Csv`
 and fills a `DataTable`, so this compares the table/database workflow rather
 than only PowerShell object output:
 
-| Scenario | PSWriteOffice median | NativeCsv + DataTable median | Result |
-| --- | ---: | ---: | --- |
-| Mixed CSV to DataTable | 255.5 ms, 395,307 rows/s | 2.58 s, 40,285 rows/s | PSWriteOffice 10.11x faster |
-| Wide CSV to DataTable | 1.63 s, 61,838 rows/s | 11.60 s, 8,697 rows/s | PSWriteOffice 7.10x faster |
+<!-- BENCHMARK:CsvDataTableComparison:START -->
+| Scenario | Rows | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | ---: | --- |
+| csv-read-datatable-mixed | 100000 | 219.6 ms (1.00x) | 2.57 s (11.72x slower) | PSWriteOffice fastest |
+| csv-read-datatable-wide | 100000 | 1.60 s (1.00x) | 10.85 s (6.78x slower) | PSWriteOffice fastest |
+<!-- BENCHMARK:CsvDataTableComparison:END -->
 
 The 100,000-row repeated wide/quoted object-output run was stopped after more
 than nine minutes without a completed artifact. Treat that as a signal that the

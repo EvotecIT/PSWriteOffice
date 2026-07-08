@@ -23,7 +23,9 @@ param(
 
     [switch] $SkipPSWriteOfficeBuild,
 
-    [switch] $UpdateReadme
+    [switch] $UpdateReadme,
+
+    [string] $ReadmeBlockId = 'CsvComparison'
 )
 
 Set-StrictMode -Version Latest
@@ -121,6 +123,6 @@ if ($summaryPath -and $UpdateReadme.IsPresent) {
     & (Join-Path $PSScriptRoot 'Update-PerformanceBenchmarkReadme.ps1') `
         -SummaryPath $summaryPath `
         -ReadmePath (Join-Path $PSScriptRoot 'README.md') `
-        -BlockId CsvComparison
+        -BlockId $ReadmeBlockId
 }
 $result
