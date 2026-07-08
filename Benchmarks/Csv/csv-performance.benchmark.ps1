@@ -15,8 +15,9 @@ benchmark 'csv-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks\C
 
         $run.RepositoryRoot = $repositoryRoot
         $run.WorksheetName = 'Data'
-        $run.Path = $run.OutputPath + '.csv'
-        $run.SourcePath = $run.OutputPath + '.source.csv'
+        $extension = Get-ExcelBenchmarkExtension -Case $case
+        $run.Path = $run.OutputPath + $extension
+        $run.SourcePath = $run.OutputPath + '.source' + $extension
         Initialize-ExcelBenchmarkEngine -Engine $case.Engine -Run $run
     }
 

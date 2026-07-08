@@ -304,6 +304,9 @@ function Initialize-ExcelBenchmarkInput {
         ReadCsvDataTable {
             $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
         }
+        ReadCsvGZipDataTable {
+            Write-NativeGZipCsv -InputObject $Run.Payload -Path $Run.SourcePath
+        }
         ReadCsvQuickSingleColumn {
             New-ExcelBenchmarkDbatoolsCsvSource -Path $Run.SourcePath -Count ([int]$Case.RowCount) -ColumnCount $Run.ColumnCount -QuoteAll:([string]$Case.DataProfile -eq 'DbatoolsQuotedCsv')
         }

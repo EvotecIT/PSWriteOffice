@@ -128,8 +128,10 @@ function Get-CsvBenchmarkCase {
             [pscustomobject]@{ Profile = 'CsvWideObjects'; Label = 'wide' }
         )) {
             New-ExcelBenchmarkCase -Name ('csv-write-{0}' -f $csvProfile.Label) -Label ('Write CSV file ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey WriteCsv -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
+            New-ExcelBenchmarkCase -Name ('csv-write-gzip-{0}' -f $csvProfile.Label) -Label ('Write GZip CSV file ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey WriteCsvGZip -Profile $csvProfile.Profile -FileExtension '.csv.gz' -ValidateWorkbook:$false
             New-ExcelBenchmarkCase -Name ('csv-read-source-{0}' -f $csvProfile.Label) -Label ('Read CSV file ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey ReadCsvSource -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
             New-ExcelBenchmarkCase -Name ('csv-read-datatable-{0}' -f $csvProfile.Label) -Label ('Read CSV file as DataTable ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey ReadCsvDataTable -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
+            New-ExcelBenchmarkCase -Name ('csv-read-gzip-datatable-{0}' -f $csvProfile.Label) -Label ('Read GZip CSV file as DataTable ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey ReadCsvGZipDataTable -Profile $csvProfile.Profile -FileExtension '.csv.gz' -ValidateWorkbook:$false
         }
         New-ExcelBenchmarkCase -Name csv-write-datatable -Label 'Write DataTable as CSV file' -Suites $csv -OperationKey WriteCsvDataTable -Profile DataTable -FileExtension '.csv' -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name csv-dbatools-quick-single-column -Label 'dbatools QuickTest read first column' -Suites $csv -OperationKey ReadCsvQuickSingleColumn -Profile DbatoolsQuickCsv -FileExtension '.csv' -ValidateWorkbook:$false
@@ -182,7 +184,7 @@ function Test-CsvBenchmarkEngineSupport {
 
     switch ($Engine) {
         PSWriteOffice { return $true }
-        NativeCsv { return [string]$Case.OperationKey -in @('WriteCsv', 'WriteCsvDataTable', 'ReadCsvSource', 'ReadCsvDataTable', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns') }
+        NativeCsv { return [string]$Case.OperationKey -in @('WriteCsv', 'WriteCsvGZip', 'WriteCsvDataTable', 'ReadCsvSource', 'ReadCsvDataTable', 'ReadCsvGZipDataTable', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns') }
         default { return $false }
     }
 }

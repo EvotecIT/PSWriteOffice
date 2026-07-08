@@ -7,9 +7,11 @@ function Invoke-ExcelBenchmarkOperation {
 
     switch ([string]$Case.OperationKey) {
         WriteCsv { Invoke-ExcelBenchmarkWriteCsv -Engine $Engine -Run $Run }
+        WriteCsvGZip { Invoke-ExcelBenchmarkWriteCsvGZip -Engine $Engine -Run $Run }
         WriteCsvDataTable { Invoke-ExcelBenchmarkWriteCsvDataTable -Engine $Engine -Run $Run }
         ReadCsvSource { Invoke-ExcelBenchmarkReadCsv -Engine $Engine -Run $Run }
         ReadCsvDataTable { Invoke-ExcelBenchmarkReadCsvDataTable -Engine $Engine -Run $Run }
+        ReadCsvGZipDataTable { Invoke-ExcelBenchmarkReadCsvGZipDataTable -Engine $Engine -Run $Run }
         ReadCsvQuickSingleColumn { Invoke-ExcelBenchmarkReadCsvQuickSingleColumn -Engine $Engine -Run $Run }
         ReadCsvQuickAllColumns { Invoke-ExcelBenchmarkReadCsvQuickAllColumns -Engine $Engine -Run $Run }
         CsvToExcel { Invoke-ExcelBenchmarkCsvToExcel -Engine $Engine -Run $Run }
@@ -42,6 +44,16 @@ function Invoke-ExcelBenchmarkWriteCsv {
         PSWriteOffice { $Run.Payload | Export-OfficeCsv -Path $Run.Path }
         NativeCsv { $Run.Payload | Export-Csv -Path $Run.Path -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded }
         default { throw "Engine '$Engine' does not support CSV write." }
+    }
+}
+
+function Invoke-ExcelBenchmarkWriteCsvGZip {
+    param([string] $Engine, [object] $Run)
+
+    switch ($Engine) {
+        PSWriteOffice { $Run.Payload | Export-OfficeCsv -Path $Run.Path -CompressionType GZip }
+        NativeCsv { Write-NativeGZipCsv -InputObject $Run.Payload -Path $Run.Path }
+        default { throw "Engine '$Engine' does not support GZip CSV write." }
     }
 }
 
@@ -82,15 +94,60 @@ function Invoke-ExcelBenchmarkReadCsvDataTable {
     }
 }
 
+function Invoke-ExcelBenchmarkReadCsvGZipDataTable {
+    param([string] $Engine, [object] $Run)
+
+    switch ($Engine) {
+        PSWriteOffice {
+            $table = Import-OfficeCsv -Path $Run.SourcePath -CompressionType GZip -AsDataTable
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        }
+        NativeCsv {
+            $table = ConvertFrom-NativeGZipCsvToDataTable -Path $Run.SourcePath
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        }
+        default { throw "Engine '$Engine' does not support GZip CSV DataTable read." }
+    }
+}
+
 function ConvertFrom-NativeCsvToDataTable {
     param([Parameter(Mandatory)][string] $Path)
+
+    ConvertFrom-NativeCsvRowsToDataTable -Rows (Import-Csv -Path $Path)
+}
+
+function ConvertFrom-NativeGZipCsvToDataTable {
+    param([Parameter(Mandatory)][string] $Path)
+
+    $stream = [IO.File]::OpenRead($Path)
+    try {
+        $gzip = [IO.Compression.GZipStream]::new($stream, [IO.Compression.CompressionMode]::Decompress, $false)
+        try {
+            $reader = [IO.StreamReader]::new($gzip, [Text.UTF8Encoding]::new($false))
+            try {
+                $csvText = $reader.ReadToEnd()
+            } finally {
+                $reader.Dispose()
+            }
+        } finally {
+            $gzip.Dispose()
+        }
+    } finally {
+        $stream.Dispose()
+    }
+
+    ConvertFrom-NativeCsvRowsToDataTable -Rows ($csvText | ConvertFrom-Csv)
+}
+
+function ConvertFrom-NativeCsvRowsToDataTable {
+    param([Parameter(Mandatory)][object[]] $Rows)
 
     $table = [Data.DataTable]::new('CsvData')
     $columnNames = $null
 
     $table.BeginLoadData()
     try {
-        foreach ($row in Import-Csv -Path $Path) {
+        foreach ($row in $Rows) {
             if ($null -eq $columnNames) {
                 $columnNames = @($row.PSObject.Properties.Name)
                 foreach ($columnName in $columnNames) {
@@ -111,6 +168,40 @@ function ConvertFrom-NativeCsvToDataTable {
     }
 
     , $table
+}
+
+function Write-NativeGZipCsv {
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [object[]] $InputObject,
+
+        [Parameter(Mandatory)]
+        [string] $Path
+    )
+
+    $directory = [IO.Path]::GetDirectoryName($Path)
+    if (-not [string]::IsNullOrWhiteSpace($directory) -and -not [IO.Directory]::Exists($directory)) {
+        [IO.Directory]::CreateDirectory($directory) | Out-Null
+    }
+
+    $stream = [IO.File]::Create($Path)
+    try {
+        $gzip = [IO.Compression.GZipStream]::new($stream, [IO.Compression.CompressionLevel]::Optimal, $false)
+        try {
+            $writer = [IO.StreamWriter]::new($gzip, [Text.UTF8Encoding]::new($false))
+            try {
+                foreach ($line in ($InputObject | ConvertTo-Csv -NoTypeInformation -UseQuotes AsNeeded)) {
+                    $writer.WriteLine($line)
+                }
+            } finally {
+                $writer.Dispose()
+            }
+        } finally {
+            $gzip.Dispose()
+        }
+    } finally {
+        $stream.Dispose()
+    }
 }
 
 function Invoke-ExcelBenchmarkReadCsvQuickSingleColumn {

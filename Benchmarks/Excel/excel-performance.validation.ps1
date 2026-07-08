@@ -62,7 +62,7 @@ function Get-ExcelBenchmarkWorkbookMergeInput {
 function Test-ExcelBenchmarkOutput {
     param([object] $Case, [object] $Run)
 
-    if ($Case.OperationKey -in @('WriteCsv', 'CsvToExcel', 'WriteWorkbook')) {
+    if ($Case.OperationKey -in @('WriteCsv', 'WriteCsvGZip', 'CsvToExcel', 'WriteWorkbook')) {
         assertPath $Run.Path
     }
 
@@ -109,7 +109,7 @@ function Test-CsvBenchmarkOutput {
     param([object] $Case, [object] $Run)
 
     $expectedRows = [int]$Run.ExpectedRows
-    if ($Case.OperationKey -in @('ReadCsvSource', 'ReadCsvDataTable', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns')) {
+    if ($Case.OperationKey -in @('ReadCsvSource', 'ReadCsvDataTable', 'ReadCsvGZipDataTable', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns')) {
         assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
         if ($Case.OperationKey -eq 'ReadCsvQuickSingleColumn') {
             assertValue ([int]$Run.AccessedFields) $expectedRows -Message "Expected $expectedRows first-column values accessed by '$($Case.OperationKey)'."
@@ -126,7 +126,12 @@ function Test-CsvBenchmarkOutput {
 
     $path = $Run.Path
     assertPath $path
-    $actualRows = @(Import-Csv -Path $path).Count
+    $actualRows = if ($Case.OperationKey -eq 'WriteCsvGZip') {
+        $table = ConvertFrom-NativeGZipCsvToDataTable -Path $path
+        if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+    } else {
+        @(Import-Csv -Path $path).Count
+    }
     assertValue $actualRows $expectedRows -Message "Expected $expectedRows rows in '$path'."
     $Run.RowsProcessed = [int]$actualRows
 }
