@@ -73,7 +73,7 @@ internal static class OfficeTableSpecParser
         string[]? columns = propertyNames;
         foreach (var row in rows)
         {
-            if (TryCreateCell(row, requireExplicitCellShape: true, out var singleCell))
+            if (TryCreateCell(row, requireExplicitCellShape: true, allowStyleOnlyCell: false, out var singleCell))
             {
                 tableRows.Add(new[] { singleCell });
                 continue;
@@ -111,14 +111,14 @@ internal static class OfficeTableSpecParser
     }
 
     internal static bool TryCreateCell(object? value, out OfficeTableCellSpec spec)
-        => TryCreateCell(value, requireExplicitCellShape: false, out spec);
+        => TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, out spec);
 
     private static OfficeTableCellSpec[] CreateExplicitRow(object row)
     {
         var cells = new List<OfficeTableCellSpec>();
         foreach (var value in Enumerate(row))
         {
-            cells.Add(TryCreateCell(value, requireExplicitCellShape: false, out var spec)
+            cells.Add(TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, out var spec)
                 ? spec
                 : ToCell(value));
         }
@@ -128,7 +128,7 @@ internal static class OfficeTableSpecParser
 
     private static bool ContainsStructuredCellMarker(object row)
     {
-        if (TryCreateCell(row, requireExplicitCellShape: true, out var cell) && cell.HasStructuredMarker)
+        if (TryCreateCell(row, requireExplicitCellShape: true, allowStyleOnlyCell: false, out var cell) && cell.HasStructuredMarker)
         {
             return true;
         }
@@ -140,7 +140,7 @@ internal static class OfficeTableSpecParser
 
         foreach (var value in Enumerate(row))
         {
-            if (TryCreateCell(value, requireExplicitCellShape: false, out cell) && cell.HasStructuredMarker)
+            if (TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, out cell) && cell.HasStructuredMarker)
             {
                 return true;
             }
@@ -152,7 +152,7 @@ internal static class OfficeTableSpecParser
     private static OfficeTableCellSpec ToCell(object? value)
         => new(Convert.ToString(UnwrapPSObject(value), CultureInfo.InvariantCulture));
 
-    private static bool TryCreateCell(object? value, bool requireExplicitCellShape, out OfficeTableCellSpec spec)
+    private static bool TryCreateCell(object? value, bool requireExplicitCellShape, bool allowStyleOnlyCell, out OfficeTableCellSpec spec)
     {
         value = UnwrapPSObject(value);
         if (value is OfficeTableCellSpec typed)
@@ -175,6 +175,12 @@ internal static class OfficeTableSpecParser
 
         var style = CreateStyle(value);
         var hasStyle = style?.HasAnyValue == true;
+        if (!allowStyleOnlyCell && !hasSpan && hasStyle && !hasRuns)
+        {
+            spec = null!;
+            return false;
+        }
+
         if (requireExplicitCellShape && !hasSpan && !hasStyle && !hasRuns)
         {
             spec = null!;

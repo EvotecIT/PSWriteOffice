@@ -59,6 +59,11 @@ public class AddOfficePowerPointTextBoxCommand : PSCmdlet
         try
         {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
+            if (ParameterSetName == ParameterSetRun)
+            {
+                PowerPointTextRunService.ValidateRuns(Run!, allowHyperlinks: true);
+            }
+
             var textBox = slide.AddTextBoxPoints(Text ?? string.Empty, X, Y, Width, Height);
             if (ParameterSetName == ParameterSetRun)
             {

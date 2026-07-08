@@ -372,6 +372,20 @@ Describe 'PowerPoint cmdlets' {
             $valueAfterSpan.GetCell(0).Merge.Item2 | Should -Be 2
             $valueAfterSpan.GetCell(2).Text | Should -Be '42'
 
+            {
+                $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
+                    @{ Text = 'Too wide'; ColumnSpan = 4 }
+                )
+            } | Should -Throw '*ColumnSpan 4*'
+            $threeColumnTable.Rows | Should -Be 2
+
+            {
+                $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
+                    @{ Text = 'Too tall'; RowSpan = 2 }
+                )
+            } | Should -Throw '*RowSpan*'
+            $threeColumnTable.Rows | Should -Be 2
+
             $cell = $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
                 PptTextRun 'Owner '
                 PptTextRun 'Ready' -Color Navy -Bold
@@ -419,6 +433,50 @@ Describe 'PowerPoint cmdlets' {
         $namespaceManager.AddNamespace('a', 'http://schemas.openxmlformats.org/drawingml/2006/main')
         $slideXml.SelectSingleNode('//a:r[a:t="2"]/a:rPr[@baseline="30000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $slideXml.SelectSingleNode('//a:r[a:t="2"]/a:rPr[@baseline="-25000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
+
+    It 'keeps ordinary style-named columns in PowerPoint object tables' {
+        $path = Join-Path $TestDrive 'PowerPointOrdinaryStyleColumns.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            $table = PptTable -Slide $slide -InputObject @(
+                [pscustomobject]@{
+                    Text  = 'Apple'
+                    Color = 'Red'
+                }
+            ) -X 80 -Y 150 -Width 300 -Height 100
+
+            $table.GetCell(0, 0).Text | Should -Be 'Text'
+            $table.GetCell(0, 1).Text | Should -Be 'Color'
+            $table.GetCell(1, 0).Text | Should -Be 'Apple'
+            $table.GetCell(1, 1).Text | Should -Be 'Red'
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
+    It 'validates PowerPoint text box runs before creating the shape' {
+        $path = Join-Path $TestDrive 'PowerPointTextBoxRunValidation.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            @($slide.TextBoxes).Count | Should -Be 0
+
+            {
+                PptTextBox -Slide $slide -Run @(
+                    PptTextRun 'jump' -LinkDestinationName Summary
+                ) -ErrorAction Stop
+            } | Should -Throw '*named PDF/Word destinations*'
+
+            @($slide.TextBoxes).Count | Should -Be 0
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
     }
 
     It 'preserves explicit headers on structured PowerPoint tables' {

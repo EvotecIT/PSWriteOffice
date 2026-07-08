@@ -298,7 +298,7 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
             return style;
         }
 
-        style ??= TableStyles.Light();
+        style ??= new PdfTableStyle();
         foreach (var placement in styledPlacements)
         {
             var cellStyle = placement.Cell.Style!;

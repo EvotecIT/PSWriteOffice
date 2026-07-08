@@ -13,6 +13,9 @@ internal static class PowerPointTextRunService
         "Run",
         BindingFlags.Instance | BindingFlags.NonPublic);
 
+    internal static void ValidateRuns(object[] runs, bool allowHyperlinks)
+        => ValidateRuns(OfficeTextRunParser.ParseMany(runs), allowHyperlinks);
+
     internal static void ApplyRuns(PowerPointTextBox textBox, object[] runs)
     {
         var parsedRuns = OfficeTextRunParser.ParseMany(runs);

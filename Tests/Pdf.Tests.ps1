@@ -304,6 +304,25 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Platform'
     }
 
+    It 'keeps ordinary style-named columns in PDF object tables' {
+        $path = Join-Path $TestDrive 'ordinary-style-named-table.pdf'
+
+        PdfNew -Path $path {
+            PdfTable -InputObject @(
+                [pscustomobject]@{
+                    Text  = 'Apple'
+                    Color = 'Red'
+                }
+            )
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Text'
+        $text | Should -Match 'Color'
+        $text | Should -Match 'Apple'
+        $text | Should -Match 'Red'
+    }
+
     It 'keeps ordinary span-like property names on normal PDF tables' {
         $path = Join-Path $TestDrive 'ordinary-span-named-table.pdf'
         $rows = @(
