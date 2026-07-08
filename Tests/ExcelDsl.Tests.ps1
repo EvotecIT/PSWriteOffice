@@ -3071,14 +3071,17 @@ Describe 'Excel DSL surface' {
     }
 
     It 'sets and reads mixed rich text runs in Excel cells' {
+        Get-Command ExcelNew | Should -Not -BeNullOrEmpty
+        Get-Command ExcelTextRun | Should -Not -BeNullOrEmpty
+
         $path = Join-Path $TestDrive 'DslExcelRichText.xlsx'
 
-        New-OfficeExcel -Path $path {
-            Add-OfficeExcelSheet -Name 'Summary' -Content {
-                Set-OfficeExcelRichText -Address A1 -Run @(
-                    'Status: '
-                    @{ Text = 'Blocked'; Bold = $true; Color = '#C00000'; FontName = 'Arial'; FontSize = 14 }
-                    @{ Text = ' pending owner'; Italic = $true; Underline = $true }
+        ExcelNew -Path $path {
+            ExcelSheet -Name 'Summary' -Content {
+                ExcelRichText -Address A1 -Run @(
+                    ExcelTextRun 'Status: '
+                    ExcelTextRun 'Blocked' -Bold -Color Red -FontName 'Arial' -FontSize 14
+                    ExcelTextRun ' pending owner' -Italic -Underline
                 )
             }
         }
@@ -3088,7 +3091,7 @@ Describe 'Excel DSL surface' {
         $runs[0].Text | Should -Be 'Status: '
         $runs[1].Text | Should -Be 'Blocked'
         $runs[1].Bold | Should -BeTrue
-        $runs[1].FontColor | Should -Match 'C00000'
+        $runs[1].FontColor | Should -Match 'FF0000'
         $runs[1].FontName | Should -Be 'Arial'
         $runs[1].FontSize | Should -Be 14
         $runs[2].Italic | Should -BeTrue
@@ -3114,7 +3117,7 @@ Describe 'Excel DSL surface' {
         $worksheetXml | Should -Match '<(?:\w+:)?b\s*/?>'
         $worksheetXml | Should -Match '<(?:\w+:)?i\s*/?>'
         $worksheetXml | Should -Match '<(?:\w+:)?u\s*/?>'
-        $worksheetXml | Should -Match 'rgb="FFC00000"'
+        $worksheetXml | Should -Match 'rgb="FFFF0000"'
     }
 
     It 'protects and unprotects workbook structure through thin workbook commands' {

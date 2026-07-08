@@ -176,6 +176,74 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Release'
     }
 
+    It 'styles merged PDF table cells' {
+        $parameters = (Get-Command New-OfficePdfTableCell).Parameters.Keys
+        $parameters | Should -Contain 'TextColor'
+        $parameters | Should -Contain 'FillColor'
+        $parameters | Should -Contain 'FontSize'
+        $parameters | Should -Contain 'Bold'
+        $parameters | Should -Contain 'Italic'
+        $parameters | Should -Contain 'Align'
+        $parameters | Should -Contain 'VerticalAlign'
+
+        $path = Join-Path $TestDrive 'styled-span-aware-table.pdf'
+
+        New-OfficePdf -Path $path {
+            PdfTable -HeaderRowCount 1 -InputObject @(
+                @('Service', 'Status', 'Owner'),
+                @(New-OfficePdfTableCell -Text 'Identity systems' -ColumnSpan 3 -FillColor '#DBEAFE' -TextColor '#1E3A8A' -FontSize 17 -Bold -Italic -Align Center -VerticalAlign Middle),
+                @('Entra', 'Watch', 'IAM'),
+                @(@{ Text = 'Follow-up'; ColumnSpan = 3; FillColor = '#FEF3C7'; Color = '#92400E'; FontSize = 15; Bold = $true; Align = 'Center' }),
+                @('Release', 'Ready', 'PSWriteOffice')
+            )
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Identity systems'
+        $text | Should -Match 'Follow-up'
+
+        $blocks = @(Get-OfficePdfText -Path $path -AsTextBlock)
+        $identityBlock = $blocks | Where-Object { $_.Text -match 'Identity systems' } | Select-Object -First 1
+        $identityBlock | Should -Not -BeNullOrEmpty
+        $identityBlock.FontSize | Should -Be 17
+
+        $followUpBlock = $blocks | Where-Object { $_.Text -match 'Follow-up' } | Select-Object -First 1
+        $followUpBlock | Should -Not -BeNullOrEmpty
+        $followUpBlock.FontSize | Should -Be 15
+    }
+
+    It 'renders rich text runs and named colors in PDF text and table cells' {
+        foreach ($name in 'PdfNew', 'TextRun', 'PdfTextRun', 'PdfTableCell') {
+            Get-Command $name | Should -Not -BeNullOrEmpty
+        }
+
+        $path = Join-Path $TestDrive 'rich-run-table.pdf'
+
+        PdfNew -Path $path {
+            PdfText -Run @(
+                PdfTextRun 'Status: '
+                PdfTextRun 'Ready' -Color SeaGreen -Bold
+            )
+            PdfTable -InputObject @(
+                , @(
+                    PdfTableCell -Run @(
+                        PdfTextRun 'Build '
+                        PdfTextRun 'Ready' -Color SeaGreen -Bold
+                    ) -ColumnSpan 2 -FillColor AliceBlue
+                )
+                , @('Owner', 'Platform')
+            )
+        } | Out-Null
+
+        (Get-OfficePdfPreflight -Path $path).CanRead | Should -BeTrue
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Status'
+        $text | Should -Match 'Ready'
+        $text | Should -Match 'Build'
+        $text | Should -Match 'Owner'
+    }
+
     It 'keeps ordinary span-like property names on normal PDF tables' {
         $path = Join-Path $TestDrive 'ordinary-span-named-table.pdf'
         $rows = @(

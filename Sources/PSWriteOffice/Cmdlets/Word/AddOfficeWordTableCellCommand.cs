@@ -39,6 +39,16 @@ public sealed class AddOfficeWordTableCellCommand : PSCmdlet
     [Parameter(Position = 0)]
     public ScriptBlock? Content { get; set; }
 
+    /// <summary>Text to append to the selected cell before nested content runs.</summary>
+    [Parameter]
+    [AllowNull]
+    public string? Text { get; set; }
+
+    /// <summary>Rich text runs to append to the selected cell before nested content runs.</summary>
+    [Parameter]
+    [Alias("Runs")]
+    public object[]? Run { get; set; }
+
     /// <summary>Emit the selected <see cref="WordTableCell"/>.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -46,6 +56,11 @@ public sealed class AddOfficeWordTableCellCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(Text)) && Run != null)
+        {
+            throw new PSArgumentException("Use either -Text or -Run for WordTableCell, not both.", nameof(Run));
+        }
+
         var context = WordDslContext.Require(this);
         var table = Table ?? context.ResolveCurrentTable();
         if (table == null)
@@ -67,6 +82,16 @@ public sealed class AddOfficeWordTableCellCommand : PSCmdlet
         var cell = row.Cells[Column];
         using (context.Push(cell))
         {
+            if (Run != null)
+            {
+                var paragraph = cell.AddParagraph(string.Empty);
+                WordTextRunService.ApplyRuns(paragraph, Run);
+            }
+            else if (MyInvocation.BoundParameters.ContainsKey(nameof(Text)))
+            {
+                cell.AddParagraph(Text ?? string.Empty);
+            }
+
             Content?.InvokeReturnAsIs();
         }
 

@@ -516,6 +516,54 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'creates Word paragraphs and table cells from rich text runs with named colors' {
+        foreach ($name in 'WordNew', 'WordTextRun', 'WordTableCellSpec') {
+            Get-Command $name | Should -Not -BeNullOrEmpty
+        }
+
+        $path = Join-Path $TestDrive 'DslRichTextRunsWord.docx'
+
+        WordNew -Path $path {
+            WordParagraph -Run @(
+                WordTextRun 'Status: '
+                WordTextRun 'Ready' -Color SeaGreen -Bold -UnderlineStyle Dotted
+            )
+            WordTable -Style TableGrid -InputObject @(
+                , @(
+                    WordTableCellSpec -Run @(
+                        WordTextRun 'Build '
+                        WordTextRun 'Ready' -Color SeaGreen -Bold
+                    ) -ColumnSpan 2 -FillColor AliceBlue
+                )
+                , @('Owner', 'Platform')
+            ) {
+                WordTableCell -Row 1 -Column 0 -Run @(
+                    WordTextRun 'Owner: '
+                    WordTextRun 'Platform' -Color Navy -Bold
+                )
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[0].ColumnSpan | Should -Be 2
+        } finally {
+            $document.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+        $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
+        $text | Should -Match 'Status: Ready'
+        $text | Should -Match 'Build Ready'
+        $text | Should -Match 'Owner: Platform'
+        $documentXml.SelectSingleNode('//w:color[translate(@w:val, "abcdef", "ABCDEF")="2E8B57"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:highlight[translate(@w:val, "abcdef", "ABCDEF")="F0F8FF"] | //w:shd[translate(@w:fill, "abcdef", "ABCDEF")="F0F8FF"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('//w:u[@w:val="dotted"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
+
     It 'keeps ordinary span-like property names on normal Word tables' {
         $path = Join-Path $TestDrive 'DslOrdinarySpanNamedWordTable.docx'
         $rows = @(

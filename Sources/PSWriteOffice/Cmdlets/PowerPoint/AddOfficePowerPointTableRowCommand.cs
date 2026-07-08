@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services.PowerPoint;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -77,9 +78,15 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
         var values = ExpandValues(Value);
         for (var column = 0; column < row.Cells.Count; column++)
         {
-            row.GetCell(column).Text = column < values.Count
-                ? ConvertValue(values[column])
-                : string.Empty;
+            var cell = row.GetCell(column);
+            if (column < values.Count)
+            {
+                ApplyValue(cell, values[column]);
+            }
+            else
+            {
+                cell.Text = string.Empty;
+            }
         }
 
         if (PassThru.IsPresent)
@@ -170,5 +177,16 @@ public sealed class AddOfficePowerPointTableRowCommand : PSCmdlet
     private static string ConvertValue(object? value)
     {
         return value == null ? string.Empty : LanguagePrimitives.ConvertTo<string>(value) ?? string.Empty;
+    }
+
+    private static void ApplyValue(PowerPointTableCell cell, object? value)
+    {
+        if (value != null && OfficeTableSpecParser.TryCreateCell(value, out var spec))
+        {
+            PowerPointTableCellSpecService.Apply(cell, spec);
+            return;
+        }
+
+        cell.Text = ConvertValue(value);
     }
 }

@@ -124,6 +124,15 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         TableInputCollector.AddInput(items, InputObject);
         var inputRows = TableInputCollector.RequireRows(items, nameof(InputObject));
         var projectedRows = TableViewProjection.Project(inputRows, View);
+        if (OfficeTableSpecParser.TryCreate(
+                projectedRows,
+                propertyNames: null,
+                header: NoHeader.IsPresent ? Array.Empty<string>() : null,
+                out var tableSpec))
+        {
+            return CreateStructuredTable(slide, tableSpec);
+        }
+
         var normalized = PowerShellObjectNormalizer.NormalizeItems(projectedRows);
         var rows = NormalizeRows(normalized);
         var headers = ResolveHeaders(rows);
@@ -140,6 +149,22 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
             .ToList();
 
         return slide.AddTablePoints(rows, columns, includeHeaders: !NoHeader.IsPresent, X, Y, Width, Height);
+    }
+
+    private PowerPointTable CreateStructuredTable(PowerPointSlide slide, OfficeTableSpec spec)
+    {
+        var table = slide.AddTablePoints(spec.RowCount, spec.ColumnCount, X, Y, Width, Height);
+        foreach (var placement in spec.Placements)
+        {
+            var cell = table.GetCell(placement.RowIndex, placement.ColumnIndex);
+            PowerPointTableCellSpecService.Apply(cell, placement.Cell);
+            if (placement.Cell.HasSpan)
+            {
+                cell.Merge = (placement.Cell.RowSpan, placement.Cell.ColumnSpan);
+            }
+        }
+
+        return table;
     }
 
     private void ValidateDimensions()

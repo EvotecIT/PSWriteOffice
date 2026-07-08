@@ -8,6 +8,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Table;
+using PSWriteOffice.Services.Text;
 using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
@@ -261,7 +262,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
         foreach (var placement in spec.Placements)
         {
-            SetCellText(table, placement.RowIndex, placement.ColumnIndex, placement.Cell.Text);
+            SetCell(table, placement.RowIndex, placement.ColumnIndex, placement.Cell);
         }
 
         ApplyCellSpans(table, spec.Placements);
@@ -413,5 +414,66 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var cell = table.Rows[rowIndex].Cells[columnIndex];
         var paragraph = cell.Paragraphs.Count > 0 ? cell.Paragraphs[0] : cell.AddParagraph();
         paragraph.Text = value;
+    }
+
+    private static void SetCell(WordTable table, int rowIndex, int columnIndex, OfficeTableCellSpec spec)
+    {
+        var cell = table.Rows[rowIndex].Cells[columnIndex];
+        var paragraph = cell.Paragraphs.Count > 0 ? cell.Paragraphs[0] : cell.AddParagraph();
+        paragraph.Text = string.Empty;
+
+        if (spec.HasRuns)
+        {
+            WordTextRunService.ApplyRuns(paragraph, spec.Runs!.ToArray());
+        }
+        else if (spec.Style?.HasTextStyle == true)
+        {
+            WordTextRunService.ApplyRuns(paragraph, new[]
+            {
+                new OfficeTextRunSpec
+                {
+                    Text = spec.Text,
+                    Bold = spec.Style.Bold,
+                    Italic = spec.Style.Italic,
+                    Underline = spec.Style.Underline,
+                    UnderlineStyle = spec.Style.UnderlineStyle,
+                    Strike = spec.Style.Strike,
+                    Color = spec.Style.TextColor,
+                    FontSize = spec.Style.FontSize
+                }
+            });
+        }
+        else
+        {
+            paragraph.Text = spec.Text;
+        }
+
+        ApplyCellStyle(cell, paragraph, spec.Style);
+    }
+
+    private static void ApplyCellStyle(WordTableCell cell, WordParagraph paragraph, OfficeTableCellStyle? style)
+    {
+        if (style == null)
+        {
+            return;
+        }
+
+        var fill = OfficeColorUtilities.ToRgbHex(style.FillColor);
+        if (!string.IsNullOrWhiteSpace(fill))
+        {
+            cell.ShadingFillColorHex = fill!;
+        }
+
+        if (!string.IsNullOrWhiteSpace(style.Align) &&
+            OpenXmlValueParser.TryParse<JustificationValues>(style.Align, out var alignment))
+        {
+            paragraph.ParagraphAlignment = alignment;
+        }
+
+        if (!string.IsNullOrWhiteSpace(style.VerticalAlign) &&
+            OpenXmlValueParser.TryParse<TableVerticalAlignmentValues>(style.VerticalAlign, out var verticalAlignment))
+        {
+            cell.VerticalAlignment = verticalAlignment;
+        }
     }
 }

@@ -293,6 +293,54 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'creates and updates PowerPoint text and table cells from rich text runs' {
+        foreach ($name in 'PptNew', 'PowerPointTextRun', 'PptTextRun') {
+            Get-Command $name | Should -Not -BeNullOrEmpty
+        }
+
+        $path = Join-Path $TestDrive 'PowerPointRichTextRuns.pptx'
+        $presentation = PptNew -FilePath $path
+        try {
+            $slide = PptSlide -Presentation $presentation -Layout 1
+            $textBox = PptTextBox -Slide $slide -Run @(
+                PptTextRun 'Status: '
+                PptTextRun 'Ready' -Color SeaGreen -Bold
+            ) -X 80 -Y 80 -Width 300 -Height 50
+            $textBox.Text | Should -Be 'Status: Ready'
+
+            $table = PptTable -Slide $slide -InputObject @(
+                , @(
+                    @{
+                        Run = @(
+                            PptTextRun 'Build '
+                            PptTextRun 'Ready' -Color SeaGreen -Bold
+                        )
+                        ColumnSpan = 2
+                        FillColor = 'AliceBlue'
+                    }
+                )
+                , @('Owner', 'Platform')
+            ) -X 80 -Y 150 -Width 420 -Height 140
+            $table.GetCell(0, 0).Text | Should -Be 'Build Ready'
+
+            $row = $table | Add-OfficePowerPointTableRow -Values @(
+                @{ Run = @(PptTextRun 'Latency '; PptTextRun 'Ready' -Color SeaGreen -Bold) },
+                'SRE'
+            ) -PassThru
+            $row.GetCell(0).Text | Should -Be 'Latency Ready'
+
+            $cell = $table | Set-OfficePowerPointTableCell -Row 1 -Column 1 -Run @(
+                PptTextRun 'Owner '
+                PptTextRun 'Ready' -Color Navy -Bold
+            ) -PassThru
+            $cell.Text | Should -Be 'Owner Ready'
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation
+            }
+        }
+    }
+
     It 'finds existing PowerPoint shapes by metadata without a text term' {
         $path = Join-Path $TestDrive 'PowerPointMetadataShapeFind.pptx'
         $presentation = New-OfficePowerPoint -FilePath $path

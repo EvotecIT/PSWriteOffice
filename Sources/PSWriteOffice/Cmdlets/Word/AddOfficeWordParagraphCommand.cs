@@ -31,6 +31,11 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetContent)]
     public string? Text { get; set; }
 
+    /// <summary>Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.</summary>
+    [Parameter(ParameterSetName = ParameterSetText)]
+    [Alias("Runs")]
+    public object[]? Run { get; set; }
+
     /// <summary>Nested DSL content (runs, lists, images).</summary>
     [Parameter(Position = 0, ParameterSetName = ParameterSetContent)]
     public ScriptBlock? Content { get; set; }
@@ -56,7 +61,12 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
     {
         var context = WordDslContext.Require(this);
         var host = context.RequireParagraphHost();
-        var paragraph = host.AddParagraph(Text);
+        if (!string.IsNullOrEmpty(Text) && Run is { Length: > 0 })
+        {
+            throw new PSArgumentException("Use either -Text or -Run, not both.");
+        }
+
+        var paragraph = host.AddParagraph(Run is { Length: > 0 } ? null : Text);
 
         if (Alignment.HasValue)
         {
@@ -75,6 +85,11 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
 
         using (context.Push(paragraph))
         {
+            if (Run is { Length: > 0 })
+            {
+                WordTextRunService.ApplyRuns(paragraph, Run);
+            }
+
             Content?.InvokeReturnAsIs();
         }
 

@@ -17,17 +17,25 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// }</code>
 ///   <para>Places two text boxes on a generated slide.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficePowerPointTextBox")]
+[Cmdlet(VerbsCommon.Add, "OfficePowerPointTextBox", DefaultParameterSetName = "Text")]
 [Alias("PptTextBox")]
 public class AddOfficePowerPointTextBoxCommand : PSCmdlet
 {
+    private const string ParameterSetText = "Text";
+    private const string ParameterSetRun = "Run";
+
     /// <summary>Target slide that will receive the text box (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointSlide? Slide { get; set; }
 
     /// <summary>Text to render inside the box.</summary>
-    [Parameter(Mandatory = true)]
-    public string Text { get; set; } = null!;
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
+    public string? Text { get; set; }
+
+    /// <summary>Rich text runs. Each run can be created with TextRun/PowerPointTextRun or provided as a hashtable/object.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetRun)]
+    [Alias("Runs")]
+    public object[]? Run { get; set; }
 
     /// <summary>Left offset (in points) from the slide origin.</summary>
     [Parameter]
@@ -51,7 +59,12 @@ public class AddOfficePowerPointTextBoxCommand : PSCmdlet
         try
         {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
-            var textBox = slide.AddTextBoxPoints(Text, X, Y, Width, Height);
+            var textBox = slide.AddTextBoxPoints(Text ?? string.Empty, X, Y, Width, Height);
+            if (ParameterSetName == ParameterSetRun)
+            {
+                PowerPointTextRunService.ApplyRuns(textBox, Run!);
+            }
+
             WriteObject(textBox);
         }
         catch (Exception ex)
