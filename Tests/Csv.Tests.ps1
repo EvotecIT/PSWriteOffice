@@ -602,6 +602,31 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'flushes object rows before appending IDataReader rows in one invocation' {
+        $path = Join-Path $TestDrive 'object-then-reader-append.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+        $reader = $table.CreateDataReader()
+        try {
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $reader -NoEnumerate
+            } | Export-OfficeCsv -Path $path -Append
+        } finally {
+            $reader.Dispose()
+        }
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Seed,0'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'rejects conflicting CSV table and hashtable output modes' {
         $path = Join-Path $TestDrive 'datatable-conflict.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8

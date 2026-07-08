@@ -11,6 +11,11 @@ public sealed partial class ExportOfficeCsvCommand
 {
     private void ExportDataReader(IDataReader reader)
     {
+        if (Append.IsPresent && _streamingWriter != null)
+        {
+            DisposeStreamingWriter();
+        }
+
         if (reader == null || !TryPrepareOutput("Write CSV", allowAdditionalAppend: Append.IsPresent))
         {
             return;
