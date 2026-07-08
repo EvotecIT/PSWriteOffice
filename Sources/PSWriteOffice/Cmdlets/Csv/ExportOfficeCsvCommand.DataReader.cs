@@ -18,7 +18,10 @@ public sealed partial class ExportOfficeCsvCommand
 
         var sourceColumns = GetDataReaderColumnNames(reader);
         var hadActiveWriter = _streamingWriter != null;
-        var writer = EnsureStreamingWriterForColumns(sourceColumns, out var effectiveColumns);
+        var writer = EnsureStreamingWriterForColumns(
+            sourceColumns,
+            out var effectiveColumns,
+            columns => ValidateDataReaderAppendColumns(reader, sourceColumns, columns));
         if (writer == null)
         {
             return;
@@ -26,11 +29,9 @@ public sealed partial class ExportOfficeCsvCommand
 
         try
         {
-            if (Append.IsPresent &&
-                effectiveColumns.Count > 0 &&
-                !ColumnsMatch(sourceColumns, effectiveColumns))
+            if (hadActiveWriter)
             {
-                ValidateDataReaderAppendHeader(reader, effectiveColumns);
+                ValidateDataReaderAppendColumns(reader, sourceColumns, effectiveColumns);
             }
 
             if (!hadActiveWriter && ColumnsMatch(sourceColumns, effectiveColumns))
@@ -128,6 +129,16 @@ public sealed partial class ExportOfficeCsvCommand
             {
                 throw new CsvException($"Cannot append CSV because the data reader is missing the existing column '{column}'. Use -Force to append with blank values for missing columns.");
             }
+        }
+    }
+
+    private void ValidateDataReaderAppendColumns(IDataReader reader, IReadOnlyList<string> sourceColumns, IReadOnlyList<string> effectiveColumns)
+    {
+        if (Append.IsPresent &&
+            effectiveColumns.Count > 0 &&
+            !ColumnsMatch(sourceColumns, effectiveColumns))
+        {
+            ValidateDataReaderAppendHeader(reader, effectiveColumns);
         }
     }
 

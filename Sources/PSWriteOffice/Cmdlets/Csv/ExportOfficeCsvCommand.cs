@@ -345,7 +345,10 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         return _streamingWriter;
     }
 
-    private CsvObjectWriter? EnsureStreamingWriterForColumns(IReadOnlyList<string> sourceColumns, out IReadOnlyList<string> effectiveColumns)
+    private CsvObjectWriter? EnsureStreamingWriterForColumns(
+        IReadOnlyList<string> sourceColumns,
+        out IReadOnlyList<string> effectiveColumns,
+        Action<IReadOnlyList<string>>? validateBeforeOpen = null)
     {
         if (sourceColumns == null)
         {
@@ -372,13 +375,15 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         {
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
             _objectProjector.UseCsvOptions(options);
-            if (_appendHeader is { Length: > 0 })
+            var appendHeader = GetEffectiveAppendHeader(sourceColumns);
+            if (appendHeader is { Length: > 0 })
             {
-                effectiveColumns = _appendHeader;
+                effectiveColumns = appendHeader;
                 validateFollowingObjects = !Force.IsPresent;
             }
         }
 
+        validateBeforeOpen?.Invoke(effectiveColumns);
         _objectProjector.UseColumns(effectiveColumns, validateColumns: validateFollowingObjects);
         var fileWriter = CreateTextWriter(Append.IsPresent, options);
         _streamingWriter = new CsvObjectWriter(fileWriter, options);
@@ -562,6 +567,14 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
     private static bool IsCompressedAppendTarget(CsvCompressionType requestedCompressionType, string path)
     {
+        if (requestedCompressionType == CsvCompressionType.None)
+        {
+            return HasGZipHeader(path) ||
+                HasDeflatePayload(path) ||
+                HasBrotliPayload(path) ||
+                HasZLibPayload(path);
+        }
+
         return CsvFile.ResolveCompression(requestedCompressionType, path) != CsvCompressionType.None ||
             HasCompressedFileExtension(path) ||
             HasGZipHeader(path) ||
@@ -722,6 +735,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             DelimiterText = DelimiterText,
             Encoding = Encoding ?? _appendEncoding,
             Culture = Culture ?? CultureInfo.InvariantCulture,
+            CompressionType = CompressionType,
             Mode = CsvLoadMode.Stream
         };
 
@@ -836,6 +850,24 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         return null;
     }
 
+    private string[]? GetEffectiveAppendHeader(IReadOnlyList<string> sourceColumns)
+    {
+        if (_appendHeader is not { Length: > 0 })
+        {
+            return null;
+        }
+
+        if (!NoHeader.IsPresent ||
+            Force.IsPresent ||
+            ContainsColumns(sourceColumns, _appendHeader) ||
+            SharesAnyColumn(sourceColumns, _appendHeader))
+        {
+            return _appendHeader;
+        }
+
+        return null;
+    }
+
     private string[]? GetEffectiveAppendHeader(CsvDocument document)
     {
         if (_appendHeader is not { Length: > 0 })
@@ -850,6 +882,18 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
         var documentHeader = new HashSet<string>(document.Header, StringComparer.OrdinalIgnoreCase);
         return _appendHeader.All(documentHeader.Contains) ? _appendHeader : null;
+    }
+
+    private static bool ContainsColumns(IReadOnlyList<string> sourceColumns, IReadOnlyList<string> requiredColumns)
+    {
+        var columns = new HashSet<string>(sourceColumns, StringComparer.OrdinalIgnoreCase);
+        return requiredColumns.All(columns.Contains);
+    }
+
+    private static bool SharesAnyColumn(IReadOnlyList<string> sourceColumns, IReadOnlyList<string> requiredColumns)
+    {
+        var columns = new HashSet<string>(sourceColumns, StringComparer.OrdinalIgnoreCase);
+        return requiredColumns.Any(columns.Contains);
     }
 
     private static void WriteDocumentRows(CsvDocument document, CsvObjectWriter writer, IReadOnlyList<string> columns, bool projectByName)

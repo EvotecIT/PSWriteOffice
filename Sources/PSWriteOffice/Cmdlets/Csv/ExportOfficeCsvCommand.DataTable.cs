@@ -18,7 +18,10 @@ public sealed partial class ExportOfficeCsvCommand
 
         var sourceColumns = GetDataTableColumnNames(table);
         var hadActiveWriter = _streamingWriter != null;
-        var writer = EnsureStreamingWriterForColumns(sourceColumns, out var effectiveColumns);
+        var writer = EnsureStreamingWriterForColumns(
+            sourceColumns,
+            out var effectiveColumns,
+            columns => ValidateDataTableAppendColumns(table, sourceColumns, columns));
         if (writer == null)
         {
             return;
@@ -26,11 +29,9 @@ public sealed partial class ExportOfficeCsvCommand
 
         try
         {
-            if (Append.IsPresent &&
-                effectiveColumns.Count > 0 &&
-                !ColumnsMatch(sourceColumns, effectiveColumns))
+            if (hadActiveWriter)
             {
-                ValidateDataTableAppendHeader(table, effectiveColumns);
+                ValidateDataTableAppendColumns(table, sourceColumns, effectiveColumns);
             }
 
             if (!hadActiveWriter && ColumnsMatch(sourceColumns, effectiveColumns))
@@ -148,6 +149,16 @@ public sealed partial class ExportOfficeCsvCommand
             {
                 throw new CsvException($"Cannot append CSV because the DataTable is missing the existing column '{column}'. Use -Force to append with blank values for missing columns.");
             }
+        }
+    }
+
+    private void ValidateDataTableAppendColumns(DataTable table, IReadOnlyList<string> sourceColumns, IReadOnlyList<string> effectiveColumns)
+    {
+        if (Append.IsPresent &&
+            effectiveColumns.Count > 0 &&
+            !ColumnsMatch(sourceColumns, effectiveColumns))
+        {
+            ValidateDataTableAppendHeader(table, effectiveColumns);
         }
     }
 

@@ -430,6 +430,22 @@ Describe 'CSV cmdlets' {
         } | Should -Throw '*Appending*compressed*'
     }
 
+    It 'honors explicit uncompressed appends for extension-based compression names' {
+        $path = Join-Path $TestDrive 'plain-extension.csv.gz'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType None
+
+        [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+            Export-OfficeCsv -Path $path -CompressionType None -Append
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'rejects appending to extensionless Deflate compressed CSV files when compression is omitted' {
         $path = Join-Path $TestDrive 'compressed-append-deflate.csv'
 
@@ -595,6 +611,22 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'appends DataTable rows to headerless CSV files without inferring the first data row as a header' {
+        $path = Join-Path $TestDrive 'datatable-headerless-append.csv'
+        [System.IO.File]::WriteAllText($path, 'Alpha,1')
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+
+        Export-OfficeCsv -InputObject $table -Path $path -Append -NoHeader
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'flushes object rows before appending DataTable rows in one invocation' {
         $path = Join-Path $TestDrive 'object-then-datatable-append.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8
@@ -675,6 +707,21 @@ Describe 'CSV cmdlets' {
             'Seed,0'
             'Alpha,1'
         )
+    }
+
+    It 'does not touch an append target when initial DataTable validation fails' {
+        $path = Join-Path $TestDrive 'datatable-append-validation-preserve.csv'
+        $original = "Name,Value`nAlpha,1"
+        [System.IO.File]::WriteAllText($path, $original)
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Rows.Add('Beta')
+
+        {
+            Export-OfficeCsv -InputObject $table -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*missing*Value*'
+
+        [System.IO.File]::ReadAllText($path) | Should -Be $original
     }
 
     It 'validates DataTable append headers when headers are not written' {
@@ -796,6 +843,25 @@ Describe 'CSV cmdlets' {
             'Seed,0'
             'Alpha,1'
         )
+    }
+
+    It 'does not touch an append target when initial IDataReader validation fails' {
+        $path = Join-Path $TestDrive 'reader-append-validation-preserve.csv'
+        $original = "Name,Value`nAlpha,1"
+        [System.IO.File]::WriteAllText($path, $original)
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Rows.Add('Beta')
+        $reader = $table.CreateDataReader()
+        try {
+            {
+                Export-OfficeCsv -InputObject $reader -Path $path -Append -ErrorAction Stop
+            } | Should -Throw '*missing*Value*'
+        } finally {
+            $reader.Dispose()
+        }
+
+        [System.IO.File]::ReadAllText($path) | Should -Be $original
     }
 
     It 'rejects conflicting CSV table and hashtable output modes' {
