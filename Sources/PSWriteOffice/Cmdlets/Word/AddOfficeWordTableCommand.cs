@@ -250,19 +250,49 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
             SetCellText(table, placement.RowIndex, placement.ColumnIndex, placement.Cell.Text);
         }
 
-        foreach (var placement in spec.Placements
-            .Where(static placement => placement.Cell.HasSpan)
-            .OrderByDescending(static placement => placement.RowIndex)
-            .ThenByDescending(static placement => placement.ColumnIndex))
-        {
-            table.MergeCells(
-                placement.RowIndex,
-                placement.ColumnIndex,
-                placement.Cell.RowSpan,
-                placement.Cell.ColumnSpan);
-        }
+        ApplyCellSpans(table, spec.Placements);
 
         return table;
+    }
+
+    private static void ApplyCellSpans(WordTable table, IReadOnlyList<OfficeTableCellPlacement> placements)
+    {
+        var spanPlacements = placements
+            .Where(static placement => placement.Cell.HasSpan)
+            .ToList();
+
+        foreach (var placement in spanPlacements
+            .Where(static placement => placement.Cell.RowSpan > 1)
+            .OrderBy(static placement => placement.RowIndex)
+            .ThenByDescending(static placement => placement.ColumnIndex))
+        {
+            for (var offset = placement.Cell.ColumnSpan - 1; offset >= 0; offset--)
+            {
+                table.Rows[placement.RowIndex]
+                    .Cells[placement.ColumnIndex + offset]
+                    .MergeVertically(placement.Cell.RowSpan - 1);
+            }
+        }
+
+        var horizontalSpans = spanPlacements
+            .Where(static placement => placement.Cell.ColumnSpan > 1)
+            .SelectMany(static placement => Enumerable
+                .Range(placement.RowIndex, placement.Cell.RowSpan)
+                .Select(rowIndex => new
+                {
+                    RowIndex = rowIndex,
+                    placement.ColumnIndex,
+                    placement.Cell.ColumnSpan
+                }))
+            .OrderByDescending(static span => span.RowIndex)
+            .ThenByDescending(static span => span.ColumnIndex);
+
+        foreach (var span in horizontalSpans)
+        {
+            table.Rows[span.RowIndex]
+                .Cells[span.ColumnIndex]
+                .MergeHorizontally(span.ColumnSpan - 1);
+        }
     }
 
     private static WordTable AddTableToCell(

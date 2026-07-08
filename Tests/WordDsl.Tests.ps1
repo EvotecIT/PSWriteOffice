@@ -613,6 +613,47 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'merges upper row spans before lower horizontal Word spans' {
+        $path = Join-Path $TestDrive 'DslUpperRowSpanBeforeLowerHorizontalWordTable.docx'
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                , @(
+                    'Lead',
+                    'Middle',
+                    (New-OfficeWordTableCell -Text 'Pinned' -RowSpan 2)
+                )
+                , @(
+                    (New-OfficeWordTableCell -Text 'Wide task' -ColumnSpan 2),
+                    'Tail'
+                )
+            )
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Pinned'
+            $table.Rows[1].Cells[0].Paragraphs[0].Text | Should -Be 'Wide task'
+            $table.Rows[1].Cells[0].ColumnSpan | Should -Be 2
+
+            $texts = @($table.Rows | ForEach-Object {
+                $_.Cells | ForEach-Object { $_.Paragraphs[0].Text }
+            })
+            $texts | Should -Contain 'Tail'
+        } finally {
+            $document.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+
+        $documentXml.SelectSingleNode('(//w:tbl)[1]/w:tr[1]/w:tc[3]/w:tcPr/w:vMerge[@w:val="restart"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+        $documentXml.SelectSingleNode('(//w:tbl)[1]/w:tr[2]/w:tc[1]/w:tcPr/w:vMerge', $namespaceManager) | Should -BeNullOrEmpty
+        $documentXml.SelectSingleNode('(//w:tbl)[1]/w:tr[2]/w:tc[2]/w:tcPr/w:vMerge[@w:val="continue"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
+
     It 'rejects Word row spans past the table bottom' {
         $path = Join-Path $TestDrive 'DslInvalidRowSpanWordTable.docx'
 
