@@ -147,6 +147,12 @@ internal static class OfficeTableSpecParser
             return false;
         }
 
+        if (hasSpan && !hasText)
+        {
+            spec = null!;
+            return false;
+        }
+
         var text = hasText
             ? Convert.ToString(UnwrapPSObject(textValue), CultureInfo.InvariantCulture)
             : string.Empty;

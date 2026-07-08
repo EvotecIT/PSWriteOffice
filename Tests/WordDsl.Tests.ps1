@@ -524,6 +524,8 @@ Describe 'Word DSL surface' {
                 Rows = 25
                 Columns = 3
                 Span = 2
+                ColumnSpan = 2
+                RowSpan = 3
             }
         )
 
@@ -535,13 +537,17 @@ Describe 'Word DSL surface' {
         try {
             $table = $document.Tables[0]
             $table.RowsCount | Should -Be 2
-            $table.Rows[0].CellsCount | Should -Be 4
+            $table.Rows[0].CellsCount | Should -Be 6
             $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'Rows'
             $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Columns'
             $table.Rows[0].Cells[3].Paragraphs[0].Text | Should -Be 'Span'
+            $table.Rows[0].Cells[4].Paragraphs[0].Text | Should -Be 'ColumnSpan'
+            $table.Rows[0].Cells[5].Paragraphs[0].Text | Should -Be 'RowSpan'
             $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be '25'
             $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be '3'
             $table.Rows[1].Cells[3].Paragraphs[0].Text | Should -Be '2'
+            $table.Rows[1].Cells[4].Paragraphs[0].Text | Should -Be '2'
+            $table.Rows[1].Cells[5].Paragraphs[0].Text | Should -Be '3'
         } finally {
             $document.Dispose()
         }

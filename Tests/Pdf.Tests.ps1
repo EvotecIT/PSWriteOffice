@@ -184,6 +184,8 @@ Describe 'PDF cmdlets' {
                 Rows = 25
                 Columns = 3
                 Span = 2
+                ColumnSpan = 2
+                RowSpan = 3
             }
         )
 
@@ -195,6 +197,8 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Rows'
         $text | Should -Match 'Columns'
         $text | Should -Match 'Span'
+        $text | Should -Match 'ColumnSpa'
+        $text | Should -Match 'RowSpan'
         $text | Should -Match '25'
         $text | Should -Match '3'
         $text | Should -Match '2'
