@@ -17,7 +17,7 @@ New-OfficeWord -Path $path {
         WordParagraph -Text 'Executive Summary' -Style Heading1
         WordParagraph -Text 'This report was generated automatically.'
 
-        WordTableOfContents -Style Template1
+        Add-OfficeWordTableOfContents -Style Template1
 
         WordParagraph -Text 'Status Overview' -Style Heading2
         WordList -Style Bulleted {
