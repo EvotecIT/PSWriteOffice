@@ -176,6 +176,30 @@ Describe 'PDF cmdlets' {
         $text | Should -Match 'Release'
     }
 
+    It 'keeps ordinary span-like property names on normal PDF tables' {
+        $path = Join-Path $TestDrive 'ordinary-span-named-table.pdf'
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Backlog'
+                Rows = 25
+                Columns = 3
+                Span = 2
+            }
+        )
+
+        New-OfficePdf -Path $path {
+            PdfTable -InputObject $rows
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Rows'
+        $text | Should -Match 'Columns'
+        $text | Should -Match 'Span'
+        $text | Should -Match '25'
+        $text | Should -Match '3'
+        $text | Should -Match '2'
+    }
+
     It 'supports transposed table views' {
         $path = Join-Path $TestDrive 'transposed-table.pdf'
         $rows = @(

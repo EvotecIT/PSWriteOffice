@@ -516,6 +516,59 @@ Describe 'Word DSL surface' {
         }
     }
 
+    It 'keeps ordinary span-like property names on normal Word tables' {
+        $path = Join-Path $TestDrive 'DslOrdinarySpanNamedWordTable.docx'
+        $rows = @(
+            [pscustomobject]@{
+                Name = 'Backlog'
+                Rows = 25
+                Columns = 3
+                Span = 2
+            }
+        )
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject $rows
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.RowsCount | Should -Be 2
+            $table.Rows[0].CellsCount | Should -Be 4
+            $table.Rows[0].Cells[1].Paragraphs[0].Text | Should -Be 'Rows'
+            $table.Rows[0].Cells[2].Paragraphs[0].Text | Should -Be 'Columns'
+            $table.Rows[0].Cells[3].Paragraphs[0].Text | Should -Be 'Span'
+            $table.Rows[1].Cells[1].Paragraphs[0].Text | Should -Be '25'
+            $table.Rows[1].Cells[2].Paragraphs[0].Text | Should -Be '3'
+            $table.Rows[1].Cells[3].Paragraphs[0].Text | Should -Be '2'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
+    It 'applies conditions to the correct explicit Word table rows' {
+        $path = Join-Path $TestDrive 'DslExplicitRowConditionWordTable.docx'
+
+        New-OfficeWord -Path $path {
+            WordTable -Style TableGrid -InputObject @(
+                , @((New-OfficeWordTableCell -Text 'Open'), 'Identity')
+                , @((New-OfficeWordTableCell -Text 'Closed'), 'Archive')
+            ) {
+                WordTableCondition -FilterScript { $_[0].Text -eq 'Open' } -BackgroundColor '#ffeeee'
+            }
+        } | Out-Null
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $table = $document.Tables[0]
+            $table.Rows[0].Cells[0].ShadingFillColorHex | Should -Be 'ffeeee'
+            $table.Rows[1].Cells[0].ShadingFillColorHex | Should -Not -Be 'ffeeee'
+        } finally {
+            $document.Dispose()
+        }
+    }
+
     It 'adds Word pie charts inside the DSL' {
         $path = Join-Path $TestDrive 'DslWordPieChart.docx'
         $rows = @(

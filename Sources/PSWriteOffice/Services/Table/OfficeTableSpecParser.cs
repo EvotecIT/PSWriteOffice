@@ -12,8 +12,8 @@ namespace PSWriteOffice.Services.Table;
 internal static class OfficeTableSpecParser
 {
     private static readonly string[] TextKeys = { "Text", "Value", "Content" };
-    private static readonly string[] ColumnSpanKeys = { "ColumnSpan", "ColSpan", "Columns", "Span" };
-    private static readonly string[] RowSpanKeys = { "RowSpan", "Rows" };
+    private static readonly string[] ColumnSpanKeys = { "ColumnSpan", "ColSpan" };
+    private static readonly string[] RowSpanKeys = { "RowSpan" };
 
     public static bool TryCreate(
         IReadOnlyList<object> rows,
@@ -122,15 +122,10 @@ internal static class OfficeTableSpecParser
             return true;
         }
 
-        if (!TryGetPropertyBag(value, out var properties))
-        {
-            spec = null!;
-            return false;
-        }
-
-        var hasSpan = TryGetValue(properties, ColumnSpanKeys, out _) ||
-            TryGetValue(properties, RowSpanKeys, out _);
-        var hasText = TryGetValue(properties, TextKeys, out _);
+        var hasColumnSpan = TryGetValue(value, ColumnSpanKeys, out var columnSpanValue);
+        var hasRowSpan = TryGetValue(value, RowSpanKeys, out var rowSpanValue);
+        var hasSpan = hasColumnSpan || hasRowSpan;
+        var hasText = TryGetValue(value, TextKeys, out var textValue);
         if (requireExplicitCellShape && !hasSpan)
         {
             spec = null!;
@@ -143,13 +138,13 @@ internal static class OfficeTableSpecParser
             return false;
         }
 
-        var text = TryGetValue(properties, TextKeys, out var textValue)
+        var text = hasText
             ? Convert.ToString(UnwrapPSObject(textValue), CultureInfo.InvariantCulture)
             : string.Empty;
-        var columnSpan = TryGetValue(properties, ColumnSpanKeys, out var columnSpanValue)
+        var columnSpan = hasColumnSpan
             ? ConvertToPositiveInt(columnSpanValue, "ColumnSpan")
             : 1;
-        var rowSpan = TryGetValue(properties, RowSpanKeys, out var rowSpanValue)
+        var rowSpan = hasRowSpan
             ? ConvertToPositiveInt(rowSpanValue, "RowSpan")
             : 1;
 
@@ -169,61 +164,66 @@ internal static class OfficeTableSpecParser
         }
     }
 
-    private static bool TryGetPropertyBag(object? value, out Dictionary<string, object?> properties)
+    private static bool TryGetValue(
+        object? source,
+        IEnumerable<string> keys,
+        out object? value)
     {
-        properties = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-        if (value is IDictionary dictionary)
+        if (source is IDictionary dictionary)
         {
-            foreach (DictionaryEntry entry in dictionary)
+            foreach (var key in keys)
             {
-                var key = Convert.ToString(entry.Key, CultureInfo.InvariantCulture);
-                if (!string.IsNullOrWhiteSpace(key))
+                if (dictionary.Contains(key))
                 {
-                    properties[key!] = entry.Value;
+                    value = dictionary[key];
+                    return true;
+                }
+
+                foreach (DictionaryEntry entry in dictionary)
+                {
+                    if (string.Equals(Convert.ToString(entry.Key, CultureInfo.InvariantCulture), key, StringComparison.OrdinalIgnoreCase))
+                    {
+                        value = entry.Value;
+                        return true;
+                    }
                 }
             }
 
-            return properties.Count > 0;
-        }
-
-        if (value is null)
-        {
+            value = null;
             return false;
         }
 
-        var psObject = PSObject.AsPSObject(value);
-        if (psObject.BaseObject is IDictionary baseDictionary)
+        if (source is null)
         {
-            return TryGetPropertyBag(baseDictionary, out properties);
+            value = null;
+            return false;
         }
 
-        foreach (var property in psObject.Properties)
+        var psObject = PSObject.AsPSObject(source);
+        if (psObject.BaseObject is IDictionary baseDictionary)
         {
-            if (!property.IsGettable ||
+            return TryGetValue(baseDictionary, keys, out value);
+        }
+
+        foreach (var key in keys)
+        {
+            var property = psObject.Properties[key];
+            if (property == null ||
+                !property.IsGettable ||
                 property.MemberType is not (PSMemberTypes.NoteProperty or PSMemberTypes.Property or PSMemberTypes.AliasProperty))
             {
                 continue;
             }
 
-            if (!string.IsNullOrWhiteSpace(property.Name))
+            try
             {
-                properties[property.Name] = property.Value;
-            }
-        }
-
-        return properties.Count > 0;
-    }
-
-    private static bool TryGetValue(
-        IReadOnlyDictionary<string, object?> properties,
-        IEnumerable<string> keys,
-        out object? value)
-    {
-        foreach (var key in keys)
-        {
-            if (properties.TryGetValue(key, out value))
-            {
+                value = property.Value;
                 return true;
+            }
+            catch (Exception exception) when (exception is not PipelineStoppedException)
+            {
+                value = null;
+                return false;
             }
         }
 

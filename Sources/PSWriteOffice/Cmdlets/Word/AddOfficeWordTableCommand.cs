@@ -85,6 +85,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
         var tableRows = TableViewProjection.Project(rows, effectiveView);
         var legacyLayout = ResolveLegacyLayout(Layout);
+        var conditionSkipsHeader = NoHeader.IsPresent;
         var table = OfficeTableSpecParser.TryCreate(tableRows, propertyNames: null, header: null, out var tableSpec)
             ? CreateTable(context, tableSpec, Style, legacyLayout)
             : CreateTable(
@@ -93,6 +94,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
                 Style,
                 includeHeader: !NoHeader.IsPresent,
                 layout: legacyLayout);
+        conditionSkipsHeader = conditionSkipsHeader || tableSpec != null;
         ApplyLayout(table, Layout);
         context.RegisterTableSource(table, tableRows);
 
@@ -104,7 +106,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var conditions = context.ConsumeTableConditions(table);
         if (conditions.Count > 0)
         {
-            ApplyConditions(table, tableRows, conditions, NoHeader.IsPresent);
+            ApplyConditions(table, tableRows, conditions, conditionSkipsHeader);
         }
 
         context.ClearTableSource(table);
