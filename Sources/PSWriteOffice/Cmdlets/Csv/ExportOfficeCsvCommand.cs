@@ -462,15 +462,8 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             EnsureAppendStartsOnNewRecord(_resolvedPath!, options);
         }
 
-        var stream = new FileStream(_resolvedPath!, mode, FileAccess.Write, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
-        Stream writerStream = options.CompressionType switch
-        {
-            CsvCompressionType.None => stream,
-            CsvCompressionType.GZip => new GZipStream(stream, options.CompressionLevel),
-            _ => throw new PSArgumentException($"Compression type '{options.CompressionType}' is not supported.")
-        };
-
-        return new StreamWriter(writerStream, encoding, bufferSize: StreamWriterBufferSize);
+        options.Encoding = encoding;
+        return CsvFile.CreateTextWriter(_resolvedPath!, options, append: appendToContent, bufferSize: StreamWriterBufferSize);
     }
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using System.Threading;
 using OfficeIMO.CSV;
 
 namespace PSWriteOffice.Cmdlets.Csv;
@@ -39,6 +40,8 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private const string ParameterSetLiteralPathDetect = "LiteralPathDetect";
     private const string ParameterSetDocument = "Document";
     private readonly CsvPowerShellRowWriter _rowWriter = new();
+    private readonly List<CsvParseError> _parseErrors = new();
+    private readonly CancellationTokenSource _cancellation = new();
     private bool _asDataTable;
     private bool _asHashtable;
 
@@ -207,6 +210,71 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.None;
 
+    /// <summary>Maximum decompressed bytes allowed when reading compressed CSV files.</summary>
+    [Parameter]
+    public long? MaxDecompressedBytes { get; set; }
+
+    /// <summary>How malformed quoted fields are handled.</summary>
+    [Parameter]
+    public CsvQuoteParsingMode QuoteParsingMode { get; set; } = CsvQuoteParsingMode.Lenient;
+
+    /// <summary>How duplicate header names are handled.</summary>
+    [Parameter]
+    public CsvDuplicateHeaderBehavior DuplicateHeaderBehavior { get; set; } = CsvDuplicateHeaderBehavior.Throw;
+
+    /// <summary>Token materialized as null when loading rows.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Additional date/time formats used by typed conversions.</summary>
+    [Parameter]
+    public string[]? DateTimeFormats { get; set; }
+
+    /// <summary>How parse errors are handled.</summary>
+    [Parameter]
+    public CsvParseErrorAction ParseErrorAction { get; set; } = CsvParseErrorAction.Throw;
+
+    /// <summary>Collect parse errors and write them as non-terminating errors after each file.</summary>
+    [Parameter]
+    public SwitchParameter CollectParseErrors { get; set; }
+
+    /// <summary>Maximum number of collected parse errors before parsing fails.</summary>
+    [Parameter]
+    [ValidateRange(0, int.MaxValue)]
+    public int MaxParseErrors { get; set; } = 100;
+
+    /// <summary>Maximum length allowed for any parsed field.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? MaxFieldLength { get; set; }
+
+    /// <summary>Maximum length allowed for fields parsed from quoted records.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? MaxQuotedFieldLength { get; set; }
+
+    /// <summary>Normalize curly quote characters to straight quotes.</summary>
+    [Parameter]
+    public SwitchParameter NormalizeQuotes { get; set; }
+
+    /// <summary>Reuse repeated string values through a per-read cache.</summary>
+    [Parameter]
+    public SwitchParameter InternStrings { get; set; }
+
+    /// <summary>Report progress every N parsed records.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? ProgressInterval { get; set; }
+
+    /// <summary>Infer DataTable column types when -AsDataTable is used.</summary>
+    [Parameter]
+    public SwitchParameter InferSchema { get; set; }
+
+    /// <summary>Maximum row count inspected when schema inference is enabled.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int SchemaSampleSize { get; set; } = 1000;
+
     /// <summary>Emit dictionaries instead of PSCustomObjects.</summary>
     [Parameter]
     public SwitchParameter AsHashtable { get; set; }
@@ -248,6 +316,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                 if (Mode == CsvLoadMode.Stream)
                 {
                     _rowWriter.Reset();
+                    _parseErrors.Clear();
                     if (_asDataTable)
                     {
                         WriteDataTable(resolved, options, System.IO.Path.GetFileNameWithoutExtension(resolved));
@@ -257,12 +326,16 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                         CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
                     }
 
+                    WriteCollectedParseErrors(resolved);
+
                     continue;
                 }
 
+                _parseErrors.Clear();
                 document = CsvDocument.Load(resolved, options);
                 _rowWriter.Reset();
                 WriteDocumentRows(document, System.IO.Path.GetFileNameWithoutExtension(resolved));
+                WriteCollectedParseErrors(resolved);
             }
 
             return;
@@ -285,13 +358,20 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteDataTable(CsvDocument document, string? tableName)
     {
-        WriteObject(PSObject.AsPSObject(document.ToDataTable(new CsvDataTableOptions { TableName = tableName })), enumerateCollection: false);
+        WriteObject(PSObject.AsPSObject(document.ToDataTable(CreateDataTableOptions(tableName))), enumerateCollection: false);
     }
 
     private void WriteDataTable(string path, CsvLoadOptions options, string? tableName)
     {
         var document = CsvDocument.Load(path, options);
-        WriteObject(PSObject.AsPSObject(document.ToDataTable(new CsvDataTableOptions { TableName = tableName })), enumerateCollection: false);
+        WriteObject(PSObject.AsPSObject(document.ToDataTable(CreateDataTableOptions(tableName))), enumerateCollection: false);
+    }
+
+    /// <inheritdoc />
+    protected override void StopProcessing()
+    {
+        _cancellation.Cancel();
+        base.StopProcessing();
     }
 
     private void ApplyCultureDelimiter()
@@ -359,10 +439,25 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             SkipCommentRows = SkipCommentRows.IsPresent,
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
-            DuplicateHeaderBehavior = CsvDuplicateHeaderBehavior.Throw,
+            DuplicateHeaderBehavior = DuplicateHeaderBehavior,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
             Mode = Mode,
-            CompressionType = CompressionType
+            CompressionType = CompressionType,
+            MaxDecompressedBytes = MaxDecompressedBytes,
+            CancellationToken = _cancellation.Token,
+            ProgressReportInterval = ProgressInterval ?? 0,
+            ProgressCallback = ProgressInterval.HasValue ? WriteCsvProgress : null,
+            QuoteParsingMode = QuoteParsingMode,
+            NullValue = NullValue,
+            DateTimeFormats = DateTimeFormats,
+            ParseErrorAction = ParseErrorAction,
+            CollectParseErrors = CollectParseErrors.IsPresent,
+            MaxParseErrors = MaxParseErrors,
+            ParseErrors = _parseErrors,
+            MaxFieldLength = MaxFieldLength,
+            MaxQuotedFieldLength = MaxQuotedFieldLength,
+            NormalizeQuotes = NormalizeQuotes.IsPresent,
+            InternStrings = InternStrings.IsPresent
         };
 
         if (Culture != null)
@@ -381,5 +476,36 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row)
     {
         _rowWriter.WriteRow(header, row, _asHashtable, this);
+    }
+
+    private CsvDataTableOptions CreateDataTableOptions(string? tableName) =>
+        new()
+        {
+            TableName = tableName,
+            InferSchema = InferSchema.IsPresent,
+            SchemaSampleSize = SchemaSampleSize
+        };
+
+    private void WriteCsvProgress(CsvProgress progress)
+    {
+        WriteProgress(new ProgressRecord(
+            activityId: 1,
+            activity: "Importing CSV",
+            statusDescription: $"{progress.RecordsRead:N0} records parsed"));
+    }
+
+    private void WriteCollectedParseErrors(string path)
+    {
+        foreach (var error in _parseErrors)
+        {
+            WriteError(new ErrorRecord(
+                error.Exception,
+                "CsvParseError",
+                ErrorCategory.ParserError,
+                path)
+            {
+                ErrorDetails = new ErrorDetails(error.Message)
+            });
+        }
     }
 }

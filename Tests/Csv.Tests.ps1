@@ -28,6 +28,13 @@ Describe 'CSV cmdlets' {
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'MaxDecompressedBytes'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'MaxDecompressedBytes'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'ParseErrorAction'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'ParseErrorAction'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'ProgressInterval'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'ProgressInterval'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'InferSchema'
 
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'IncludeHeader'
         (Get-Command ConvertTo-OfficeCsv).Parameters.Keys | Should -Not -Contain 'CompressionType'
@@ -154,6 +161,45 @@ Describe 'CSV cmdlets' {
         $imported = @(Import-OfficeCsv -Path $path -CompressionType GZip)
         $imported.Count | Should -Be 1
         $imported[0].Name | Should -Be 'Alpha'
+    }
+
+    It 'exports and imports Deflate compressed CSV files' {
+        $path = Join-Path $TestDrive 'compressed.csv.deflate'
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType Deflate
+
+        $imported = @(Import-OfficeCsv -Path $path -CompressionType Deflate)
+
+        $imported.Count | Should -Be 1
+        $imported[0].Name | Should -Be 'Alpha'
+    }
+
+    It 'passes parser safety and normalization options through import surfaces' {
+        $path = Join-Path $TestDrive 'smart-quotes.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,$([char]0x201C)Hello$([char]0x201D)" -Encoding UTF8
+
+        $data = @(Import-OfficeCsv -Path $path -NormalizeQuotes -MaxFieldLength 16 -InternStrings)
+
+        $data[0].Value | Should -Be '"Hello"'
+    }
+
+    It 'can collect and skip malformed CSV rows' {
+        $path = Join-Path $TestDrive 'malformed.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBroken,`"one`"two`nBeta,2" -Encoding UTF8
+
+        $data = @(Import-OfficeCsv -Path $path -QuoteParsingMode Strict -ParseErrorAction SkipRow -CollectParseErrors -ErrorAction SilentlyContinue)
+
+        $data.Name | Should -Be @('Alpha', 'Beta')
+    }
+
+    It 'infers DataTable schema when requested' {
+        $path = Join-Path $TestDrive 'datatable-infer.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBeta,2" -Encoding UTF8
+
+        $table = Import-OfficeCsv -Path $path -AsDataTable -InferSchema
+
+        $table.Columns['Value'].DataType | Should -Be ([int])
+        $table.Rows[1]['Value'] | Should -Be 2
     }
 
     It 'rejects appending to compressed CSV files' {
