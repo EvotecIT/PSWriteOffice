@@ -129,6 +129,7 @@ function Get-CsvBenchmarkCase {
         )) {
             New-ExcelBenchmarkCase -Name ('csv-write-{0}' -f $csvProfile.Label) -Label ('Write CSV file ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey WriteCsv -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
             New-ExcelBenchmarkCase -Name ('csv-read-source-{0}' -f $csvProfile.Label) -Label ('Read CSV file ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey ReadCsvSource -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
+            New-ExcelBenchmarkCase -Name ('csv-read-datatable-{0}' -f $csvProfile.Label) -Label ('Read CSV file as DataTable ({0})' -f $csvProfile.Label) -Suites $csv -OperationKey ReadCsvDataTable -Profile $csvProfile.Profile -FileExtension '.csv' -ValidateWorkbook:$false
         }
     ) | Where-Object { (($_.Suites -split ',') -contains $Suite) }
 }

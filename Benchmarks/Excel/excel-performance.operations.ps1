@@ -8,6 +8,7 @@ function Invoke-ExcelBenchmarkOperation {
     switch ([string]$Case.OperationKey) {
         WriteCsv { Invoke-ExcelBenchmarkWriteCsv -Engine $Engine -Run $Run }
         ReadCsvSource { Invoke-ExcelBenchmarkReadCsv -Engine $Engine -Run $Run }
+        ReadCsvDataTable { Invoke-ExcelBenchmarkReadCsvDataTable -Engine $Engine -Run $Run }
         CsvToExcel { Invoke-ExcelBenchmarkCsvToExcel -Engine $Engine -Run $Run }
         WriteWorkbook { Invoke-ExcelBenchmarkWriteWorkbook -Engine $Engine -Case $Case -Run $Run }
         ReadFullSheet { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode Full }
@@ -50,6 +51,18 @@ function Invoke-ExcelBenchmarkReadCsv {
         default { throw "Engine '$Engine' does not support CSV read." }
     }
     $Run.ActualRows = @($rows).Count
+}
+
+function Invoke-ExcelBenchmarkReadCsvDataTable {
+    param([string] $Engine, [object] $Run)
+
+    switch ($Engine) {
+        PSWriteOffice {
+            $table = Import-OfficeCsv -Path $Run.SourcePath -AsDataTable
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        }
+        default { throw "Engine '$Engine' does not support CSV DataTable read." }
+    }
 }
 
 function Invoke-ExcelBenchmarkCsvToExcel {

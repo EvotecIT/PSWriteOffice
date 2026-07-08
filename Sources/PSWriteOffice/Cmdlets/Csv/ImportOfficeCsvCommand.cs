@@ -237,10 +237,18 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                     throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
                 }
 
-                if (Mode == CsvLoadMode.Stream && !_asDataTable)
+                if (Mode == CsvLoadMode.Stream)
                 {
                     _rowWriter.Reset();
-                    CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
+                    if (_asDataTable)
+                    {
+                        WriteDataTable(resolved, options, System.IO.Path.GetFileNameWithoutExtension(resolved));
+                    }
+                    else
+                    {
+                        CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
+                    }
+
                     continue;
                 }
 
@@ -269,30 +277,78 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteDataTable(CsvDocument document, string? tableName)
     {
-        var table = new DataTable(string.IsNullOrWhiteSpace(tableName) ? "CsvData" : tableName);
-        foreach (var header in document.Header)
-        {
-            table.Columns.Add(header, typeof(string));
-        }
+        var table = CreateDataTable(tableName, document.Header);
 
         foreach (var csvRow in document.AsEnumerable())
         {
-            var values = new object?[table.Columns.Count];
-            var valueCount = csvRow.FieldCount < table.Columns.Count ? csvRow.FieldCount : table.Columns.Count;
-            for (var i = 0; i < valueCount; i++)
-            {
-                values[i] = csvRow[i] is null ? DBNull.Value : csvRow[i]!.ToString();
-            }
-
-            for (var i = valueCount; i < values.Length; i++)
-            {
-                values[i] = DBNull.Value;
-            }
-
-            table.Rows.Add(values);
+            AddDataTableRow(table, csvRow);
         }
 
         WriteObject(PSObject.AsPSObject(table), enumerateCollection: false);
+    }
+
+    private void WriteDataTable(string path, CsvLoadOptions options, string? tableName)
+    {
+        DataTable? table = null;
+
+        CsvDocument.ReadRowsReusable(path, (header, row) =>
+        {
+            table ??= CreateDataTable(tableName, header);
+            AddDataTableRow(table, row);
+        }, options);
+
+        if (table is null)
+        {
+            WriteDataTable(CsvDocument.Load(path, options), tableName);
+            return;
+        }
+
+        WriteObject(PSObject.AsPSObject(table), enumerateCollection: false);
+    }
+
+    private static DataTable CreateDataTable(string? tableName, IReadOnlyList<string> header)
+    {
+        var table = new DataTable(string.IsNullOrWhiteSpace(tableName) ? "CsvData" : tableName);
+        foreach (var columnName in header)
+        {
+            table.Columns.Add(columnName, typeof(string));
+        }
+
+        return table;
+    }
+
+    private static void AddDataTableRow(DataTable table, IReadOnlyList<string> row)
+    {
+        var values = new object?[table.Columns.Count];
+        var valueCount = row.Count < table.Columns.Count ? row.Count : table.Columns.Count;
+        for (var i = 0; i < valueCount; i++)
+        {
+            values[i] = row[i] is null ? DBNull.Value : row[i];
+        }
+
+        for (var i = valueCount; i < values.Length; i++)
+        {
+            values[i] = DBNull.Value;
+        }
+
+        table.Rows.Add(values);
+    }
+
+    private static void AddDataTableRow(DataTable table, CsvRow row)
+    {
+        var values = new object?[table.Columns.Count];
+        var valueCount = row.FieldCount < table.Columns.Count ? row.FieldCount : table.Columns.Count;
+        for (var i = 0; i < valueCount; i++)
+        {
+            values[i] = row[i] is null ? DBNull.Value : row[i]!.ToString();
+        }
+
+        for (var i = valueCount; i < values.Length; i++)
+        {
+            values[i] = DBNull.Value;
+        }
+
+        table.Rows.Add(values);
     }
 
     private void ApplyCultureDelimiter()

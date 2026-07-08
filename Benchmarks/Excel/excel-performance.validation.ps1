@@ -109,7 +109,7 @@ function Test-CsvBenchmarkOutput {
     param([object] $Case, [object] $Run)
 
     $expectedRows = [int]$Run.ExpectedRows
-    if ($Case.OperationKey -eq 'ReadCsvSource') {
+    if ($Case.OperationKey -in @('ReadCsvSource', 'ReadCsvDataTable')) {
         assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
         return
     }

@@ -84,6 +84,18 @@ Describe 'CSV cmdlets' {
         $table.Rows[1]['Value'] | Should -Be ''
     }
 
+    It 'imports header-only CSV files as empty DataTables' {
+        $path = Join-Path $TestDrive 'datatable-header-only.csv'
+        Set-Content -LiteralPath $path -Value 'Name,Value' -Encoding UTF8
+
+        $table = Import-OfficeCsv -Path $path -AsDataTable
+
+        $table.GetType() | Should -Be ([System.Data.DataTable])
+        $table.Columns.Count | Should -Be 2
+        $table.Columns['Name'].DataType | Should -Be ([string])
+        $table.Rows.Count | Should -Be 0
+    }
+
     It 'rejects conflicting CSV table and hashtable output modes' {
         $path = Join-Path $TestDrive 'datatable-conflict.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8

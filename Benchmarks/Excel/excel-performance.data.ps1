@@ -226,6 +226,9 @@ function Initialize-ExcelBenchmarkInput {
         ReadCsvSource {
             $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
         }
+        ReadCsvDataTable {
+            $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
+        }
         CsvToExcel {
             $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
         }
