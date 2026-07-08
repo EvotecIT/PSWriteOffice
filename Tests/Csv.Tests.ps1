@@ -518,6 +518,26 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'converts mixed object and DataTable input without duplicate headers' {
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+
+        $csvText = @(
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $table -NoEnumerate
+            } | ConvertTo-OfficeCsv
+        )
+
+        $csvText | Should -Be @(
+            'Name,Value'
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'appends DataTable rows using an existing CSV header order' {
         $path = Join-Path $TestDrive 'datatable-append.csv'
         Set-Content -LiteralPath $path -Value "Value,Name`n1,Alpha" -Encoding UTF8

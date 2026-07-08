@@ -169,11 +169,8 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
     private void EmitDataTable(DataTable table)
     {
-        var options = CreateSaveOptions();
-        using var writer = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
-        using var csvWriter = new CsvObjectWriter(writer, options, leaveOpen: true);
         using var reader = table.CreateDataReader();
-        csvWriter.WriteDataReader(reader);
+        EnsureObjectWriter().WriteDataReader(reader);
     }
 
     private static bool TryGetCsvDocument(object? value, out CsvDocument document)
