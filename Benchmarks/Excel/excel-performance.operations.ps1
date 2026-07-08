@@ -62,7 +62,7 @@ function Invoke-ExcelBenchmarkWriteCsvDataTable {
 
     switch ($Engine) {
         PSWriteOffice { Export-OfficeCsv -InputObject $Run.Payload -Path $Run.Path }
-        NativeCsv { $Run.Payload | Export-Csv -Path $Run.Path -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded }
+        NativeCsv { $Run.Payload.Rows | Export-Csv -Path $Run.Path -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded }
         default { throw "Engine '$Engine' does not support DataTable CSV write." }
     }
 }

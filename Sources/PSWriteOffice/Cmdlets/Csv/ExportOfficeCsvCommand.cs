@@ -558,38 +558,16 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
             using var deflateStream = new DeflateStream(stream, CompressionMode.Decompress, leaveOpen: false);
             var bytesRead = deflateStream.Read(buffer, 0, buffer.Length);
-            return bytesRead > 0 && LooksLikeCsvText(buffer, bytesRead);
+            return bytesRead > 0;
         }
         catch (InvalidDataException)
         {
             return false;
         }
-    }
-
-    private static bool LooksLikeCsvText(byte[] buffer, int count)
-    {
-        for (var i = 0; i < count; i++)
+        catch (IOException)
         {
-            var value = buffer[i];
-            if (value == 0)
-            {
-                return false;
-            }
-
-            if (value is (byte)'\t' or (byte)'\r' or (byte)'\n')
-            {
-                continue;
-            }
-
-            if (value >= 0x20 && value != 0x7F)
-            {
-                continue;
-            }
-
             return false;
         }
-
-        return true;
     }
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>

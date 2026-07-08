@@ -434,6 +434,22 @@ Describe 'CSV cmdlets' {
         $rows[0].Name | Should -Be 'Alpha'
     }
 
+    It 'rejects appending to extensionless Unicode Deflate compressed CSV files when compression is omitted' {
+        $path = Join-Path $TestDrive 'compressed-append-deflate-unicode.csv'
+
+        [pscustomobject]@{ Name = 'Alpha'; Value = 1 } |
+            Export-OfficeCsv -Path $path -CompressionType Deflate -Encoding ([System.Text.Encoding]::Unicode)
+
+        {
+            [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+                Export-OfficeCsv -Path $path -Append -ErrorAction Stop
+        } | Should -Throw '*Appending*compressed*'
+
+        $rows = @(Import-OfficeCsv -Path $path -CompressionType Deflate -Encoding ([System.Text.Encoding]::Unicode))
+        $rows.Count | Should -Be 1
+        $rows[0].Name | Should -Be 'Alpha'
+    }
+
     It 'converts DataTable input directly to CSV text' {
         $table = [System.Data.DataTable]::new('Rows')
         [void] $table.Columns.Add('Name', [string])
@@ -975,6 +991,7 @@ Describe 'CSV cmdlets' {
         $row.Name | Should -Be 'Alpha'
         $row.Name_2 | Should -Be '1'
         { Import-OfficeCsv -Path $path -DuplicateHeaderBehavior Throw -ErrorAction Stop } | Should -Throw '*duplicate*'
+        { Import-OfficeCsv -Path $path -DuplicateHeaderBehavior Preserve -ErrorAction Stop } | Should -Throw '*Preserve*row*object*hashtable*'
     }
 
     It 'renames duplicate hashtable headers by default and can reject them in strict mode' {
@@ -986,6 +1003,7 @@ Describe 'CSV cmdlets' {
         $row['Name'] | Should -Be 'Alpha'
         $row['Name_2'] | Should -Be '1'
         { Import-OfficeCsv -Path $path -AsHashtable -DuplicateHeaderBehavior Throw -ErrorAction Stop } | Should -Throw '*duplicate*'
+        { Import-OfficeCsv -Path $path -AsHashtable -DuplicateHeaderBehavior Preserve -ErrorAction Stop } | Should -Throw '*Preserve*row*object*hashtable*'
     }
 
     It 'supports NoHeader when reading CSV data and documents' {
