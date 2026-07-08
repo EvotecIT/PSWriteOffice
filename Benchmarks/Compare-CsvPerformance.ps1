@@ -1,3 +1,4 @@
+[CmdletBinding()]
 param(
     [ValidateSet('Smoke', 'Standard', 'Large', 'Full', 'SuperLarge')]
     [string] $Suite = 'Standard',
@@ -12,6 +13,7 @@ param(
 
     [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\Ignore\Benchmarks\CsvPerformance'),
 
+    [Alias('Plan')]
     [switch] $ListScenarios,
 
     [string] $OfficeIMORoot,
