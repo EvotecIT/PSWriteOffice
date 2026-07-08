@@ -314,7 +314,7 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             options.Encoding = Encoding;
         }
 
-        if (CollectParseErrors.IsPresent && options.Mode == CsvLoadMode.Stream)
+        if ((CollectParseErrors.IsPresent || ProgressInterval.HasValue) && options.Mode == CsvLoadMode.Stream)
         {
             options.Mode = CsvLoadMode.InMemory;
         }

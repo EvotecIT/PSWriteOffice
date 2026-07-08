@@ -355,6 +355,26 @@ Describe 'CSV cmdlets' {
         }
     }
 
+    It 'keeps progress-enabled CSV readers and documents safe to consume after cmdlet return' {
+        $path = Join-Path $TestDrive 'progress-stream.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBeta,2" -Encoding UTF8
+
+        $reader = Import-OfficeCsv -Path $path -AsDataReader -Mode Stream -ProgressInterval 1
+        try {
+            $rows = 0
+            while ($reader.Read()) {
+                $rows++
+            }
+
+            $rows | Should -Be 2
+        } finally {
+            $reader.Dispose()
+        }
+
+        $document = Get-OfficeCsv -Path $path -Mode Stream -ProgressInterval 1
+        @($document.AsEnumerable()).Count | Should -Be 2
+    }
+
     It 'rejects appending to compressed CSV files' {
         $path = Join-Path $TestDrive 'compressed-append.csv.gz'
 
@@ -1098,6 +1118,20 @@ Describe 'CSV cmdlets' {
         $roundTrip.Count | Should -Be 2
         $roundTrip[0].Value | Should -Be 'one||two'
         $roundTrip[1].Name | Should -Be 'Beta'
+    }
+
+    It 'resets multi-character delimiter matching between ConvertTo-OfficeCsv records' {
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha'; Value = 'ends|' }
+            [pscustomobject]@{ Name = ''; Value = "one`ntwo" }
+        )
+
+        $csvLines = @($rows | ConvertTo-OfficeCsv -DelimiterText '||')
+
+        $csvLines.Count | Should -Be 3
+        $csvLines[1] | Should -Be 'Alpha||ends|'
+        $csvLines[2] | Should -Be "||`"one`ntwo`""
+        @($csvLines | ConvertFrom-OfficeCsv -DelimiterText '||')[1].Value | Should -Be "one`ntwo"
     }
 
     It 'exports CSV with a multi-character delimiter and can append using the same delimiter' {

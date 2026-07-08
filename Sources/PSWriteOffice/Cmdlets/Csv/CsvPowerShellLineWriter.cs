@@ -174,6 +174,7 @@ internal sealed class CsvPowerShellLineWriter : TextWriter
         _inQuotes = false;
         _pendingQuoteInQuotedField = false;
         _atFieldStart = true;
+        _delimiterMatchIndex = 0;
     }
 
     private bool ResolvePendingQuote(char value)
