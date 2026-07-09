@@ -18,7 +18,7 @@ public sealed partial class ExportOfficeCsvCommand
 
         var allowAdditionalAppend = false;
         IReadOnlyList<string>? activeAppendColumns = null;
-        if (Append.IsPresent && _streamingWriter != null)
+        if (Append.IsPresent && _streamingWriter != null && !IsCompressedAppendTarget(CompressionType, _resolvedPath!))
         {
             activeAppendColumns = NoHeader.IsPresent ? _objectProjector.CurrentColumns : null;
             DisposeStreamingWriter();
