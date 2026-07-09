@@ -803,6 +803,101 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'preserves headerless append when flushing object rows before IDataReader rows' {
+        $path = Join-Path $TestDrive 'object-then-reader-no-header-append.csv'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+        $reader = $table.CreateDataReader()
+        try {
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $reader -NoEnumerate
+            } | Export-OfficeCsv -Path $path -Append -NoHeader
+        } finally {
+            $reader.Dispose()
+        }
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
+    It 'preserves forced headerless append columns when flushing object rows before IDataReader rows' {
+        $path = Join-Path $TestDrive 'object-then-reader-no-header-force-append.csv'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+        $reader = $table.CreateDataReader()
+        try {
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $reader -NoEnumerate
+            } | Export-OfficeCsv -Path $path -Append -NoHeader -Force
+        } finally {
+            $reader.Dispose()
+        }
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
+    It 'keeps compressed append streams open when object rows precede IDataReader rows' {
+        $path = Join-Path $TestDrive 'object-then-reader-append.csv.gz'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+        $reader = $table.CreateDataReader()
+        try {
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $reader -NoEnumerate
+            } | Export-OfficeCsv -Path $path -Append -CompressionType GZip
+        } finally {
+            $reader.Dispose()
+        }
+
+        $rows = @(Import-OfficeCsv -Path $path -CompressionType GZip)
+        $rows.Count | Should -Be 2
+        $rows[0].Name | Should -Be 'Alpha'
+        $rows[0].Value | Should -Be '1'
+        $rows[1].Name | Should -Be 'Beta'
+        $rows[1].Value | Should -Be '2'
+    }
+
+    It 'continues appending object rows after IDataReader rows in one invocation' {
+        $path = Join-Path $TestDrive 'object-reader-object-append.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+        $reader = $table.CreateDataReader()
+        try {
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $reader -NoEnumerate
+                Write-Output -InputObject ([pscustomobject]@{ Value = 3; Name = 'Gamma' }) -NoEnumerate
+            } | Export-OfficeCsv -Path $path -Append
+        } finally {
+            $reader.Dispose()
+        }
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Name,Value'
+            'Seed,0'
+            'Alpha,1'
+            'Beta,2'
+            'Gamma,3'
+        )
+    }
+
     It 'appends IDataReader then object rows in one invocation' {
         $path = Join-Path $TestDrive 'reader-then-object-append.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8

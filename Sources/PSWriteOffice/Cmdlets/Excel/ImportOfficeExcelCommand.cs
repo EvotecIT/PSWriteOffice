@@ -117,9 +117,23 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter AsDataTable { get; set; }
 
+    /// <summary>Emit a forward-only IDataReader for database bulk-copy workflows.</summary>
+    [Parameter]
+    public SwitchParameter AsDataReader { get; set; }
+
     /// <summary>Emit one object per column with ColumnName, ColumnIndex, and Values instead of row objects.</summary>
     [Parameter]
     public SwitchParameter ByColumn { get; set; }
+
+    /// <summary>Maximum row count inspected when -AsDataReader infers the reader schema.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int SchemaSampleSize { get; set; } = 1024;
+
+    /// <summary>Worksheet row count requested from each streaming chunk when -AsDataReader is used.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int ChunkRows { get; set; } = 1024;
 
     /// <inheritdoc />
     protected override void ProcessRecord()
@@ -129,10 +143,27 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("Specify either -Range or coordinate bounds, but not both.");
         }
 
+        if (AsDataReader.IsPresent && (AsDataTable.IsPresent || AsHashtable.IsPresent || ByColumn.IsPresent))
+        {
+            throw new PSArgumentException("Specify only one of -AsDataTable, -AsDataReader, -AsHashtable, or -ByColumn.");
+        }
+
+        if (AsDataReader.IsPresent && AllSheets.IsPresent)
+        {
+            throw new PSArgumentException("-AsDataReader reads one worksheet range at a time. Specify a single worksheet instead of -AllSheets.");
+        }
+
         var options = ExcelReadOutputService.CreateOptions(
             NumericAsDecimal.IsPresent,
             useCachedFormulaResult: !string.Equals(FormulaMode, "FormulaText", StringComparison.OrdinalIgnoreCase),
             culture: ResolveCulture());
+
+        if (AsDataReader.IsPresent)
+        {
+            WriteDataReader(options);
+            return;
+        }
+
         using var reader = CreateReader(options);
         if (AllSheets.IsPresent)
         {
@@ -163,6 +194,27 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
         var table = sheet.ReadRangeAsDataTable(range, headersInFirstRow: !NoHeader.IsPresent);
 
         ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent, ByColumn.IsPresent, null);
+    }
+
+    private void WriteDataReader(ExcelReadOptions options)
+    {
+        var reader = CreateReader(options);
+        try
+        {
+            var sheet = ExcelReadOutputService.ResolveSheetReader(reader, WorksheetName, SheetIndex);
+            var range = ResolveRange(sheet);
+            var dataReader = sheet.ReadRangeAsDataReader(
+                range,
+                headersInFirstRow: !NoHeader.IsPresent,
+                chunkRows: ChunkRows,
+                schemaSampleRows: SchemaSampleSize);
+            WriteObject(PSObject.AsPSObject(new OwnedDataReader(dataReader, reader)), enumerateCollection: false);
+        }
+        catch
+        {
+            reader.Dispose();
+            throw;
+        }
     }
 
     private ExcelDocumentReader CreateReader(ExcelReadOptions options)

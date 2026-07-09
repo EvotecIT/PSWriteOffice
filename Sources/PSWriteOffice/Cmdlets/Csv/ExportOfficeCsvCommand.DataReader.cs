@@ -16,12 +16,23 @@ public sealed partial class ExportOfficeCsvCommand
             return;
         }
 
+        var allowAdditionalAppend = false;
+        IReadOnlyList<string>? activeAppendColumns = null;
+        if (Append.IsPresent && _streamingWriter != null && !IsCompressedAppendTarget(CompressionType, _resolvedPath!))
+        {
+            activeAppendColumns = NoHeader.IsPresent ? _objectProjector.CurrentColumns : null;
+            DisposeStreamingWriter();
+            allowAdditionalAppend = true;
+        }
+
         var sourceColumns = GetDataReaderColumnNames(reader);
         var hadActiveWriter = _streamingWriter != null;
         var writer = EnsureStreamingWriterForColumns(
             sourceColumns,
             out var effectiveColumns,
-            columns => ValidateDataReaderAppendColumns(reader, sourceColumns, columns));
+            columns => ValidateDataReaderAppendColumns(reader, sourceColumns, columns),
+            allowAdditionalAppend,
+            activeAppendColumns);
         if (writer == null)
         {
             return;
