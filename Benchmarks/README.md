@@ -13,6 +13,10 @@ cmdlets against PowerShell-facing Excel alternatives:
 - `ImportExcel`
 - `ExcelFast` for the workbook lanes it supports
 
+Every read comparison uses the same PSWriteOffice-produced workbook shape for
+the selected row count. The competing readers do not benchmark files created by
+their own writers.
+
 ```powershell
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Smoke
 ```

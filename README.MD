@@ -293,26 +293,16 @@ The examples below export SQL Server rows to CSV or Excel, import the file back 
 
 ### CSV and Excel benchmark snapshot
 
-The benchmark numbers are local timing snapshots, not promises for every
-machine or data shape. These docs assume matching OfficeIMO, PSWriteOffice, and
-DbaClientX releases are installed, so the examples show the normal public
-commands directly.
+| Workflow | Rows | PSWriteOffice | Comparison | Result |
+| --- | ---: | ---: | ---: | --- |
+| Excel object table export | 10,000 | 301.2 ms | ImportExcel 2.03 s | 6.73x faster |
+| Excel full-sheet import | 10,000 | 286.4 ms | ExcelFast 391.2 ms / ImportExcel 453.8 ms | Fastest |
+| CSV to DataTable, mixed | 100,000 | 219.6 ms | NativeCsv 2.57 s | 11.72x faster |
+| GZip CSV to DataTable, mixed | 10,000 | 77.5 ms | NativeCsv 205.2 ms | 2.65x faster |
+| CSV object export, mixed | 100,000 | 203.6 ms | NativeCsv 217.9 ms | 1.07x faster |
+| CSV object import, mixed | 100,000 | 824.8 ms | NativeCsv 704.0 ms | 1.17x slower |
 
-| Area | Current timing signal | Remaining target |
-| --- | --- | --- |
-| Excel workbook export/import | PSWriteOffice is fastest across the checked-in Excel matrix in `Benchmarks\README.md`, including object export, DataTable export, workbook reads, append/update, chart, pivot, and report workbook lanes against `ImportExcel` and supported `ExcelFast` lanes. | Keep widening C# and PowerShell read/write coverage so OfficeIMO.Excel stays ahead of specialized readers on real workbook workflows, not only simple cells. |
-| CSV table/database flow | `Import-OfficeCsv -AsDataTable` is 6.78x to 11.72x faster than the native PowerShell DataTable baseline in the 100k-row local snapshot. Through DbaClientX, the 100k-row SQL round-trip snapshot is about 4x faster than dbatools for default CSV and compressed CSV, faster for typed CSV, and effectively tied for compressed typed CSV. | Push the compressed typed CSV lane from tie to clear win, then keep widening the SQL round-trip matrix. |
-| CSV object flow | PSWriteOffice wins small mixed reads and most mixed writes, while the current 10k/100k mixed object read snapshot is still about 1.17x to 1.19x slower than native `Import-Csv`. | Fix the raw/object reader path in OfficeIMO.CSV rather than adding PSWriteOffice-side shortcuts. |
-
-To compare on your machine:
-
-```powershell
-pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard
-pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 -Suite Standard
-```
-
-The full tables, commands, artifact layout, validation checks, and notes about
-optional comparison tools live in `Benchmarks\README.md`.
+The complete timing tables and commands are in [Benchmarks/README.md](Benchmarks/README.md).
 
 ### Excel readers
 
