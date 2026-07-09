@@ -299,8 +299,8 @@ The examples below export SQL Server rows to CSV or Excel, import the file back 
 | Excel full-sheet import | 10,000 | 286.4 ms | ExcelFast 391.2 ms / ImportExcel 453.8 ms | Fastest |
 | CSV to DataTable, mixed | 100,000 | 219.6 ms | NativeCsv 2.57 s | 11.72x faster |
 | GZip CSV to DataTable, mixed | 10,000 | 77.5 ms | NativeCsv 205.2 ms | 2.65x faster |
-| CSV object export, mixed | 100,000 | 203.6 ms | NativeCsv 217.9 ms | 1.07x faster |
-| CSV object import, mixed | 100,000 | 824.8 ms | NativeCsv 704.0 ms | 1.17x slower |
+| CSV object export, mixed | 100,000 | 206.0 ms | NativeCsv 207.8 ms | Within 1% |
+| CSV object import, mixed | 100,000 | 605.6 ms | NativeCsv 566.0 ms | Within 7% |
 
 The complete timing tables and commands are in [Benchmarks/README.md](Benchmarks/README.md).
 

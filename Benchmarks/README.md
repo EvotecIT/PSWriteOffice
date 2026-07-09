@@ -274,14 +274,14 @@ PowerShell objects.
 <!-- BENCHMARK:CsvComparison:START -->
 | Scenario | Rows | PSWriteOffice | NativeCsv | Result |
 | --- | ---: | ---: | ---: | --- |
-| csv-read-source-mixed | 1000 | 10.3 ms (1.00x) | 12.7 ms (1.23x slower) | PSWriteOffice fastest |
-| csv-read-source-mixed | 5000 | 19.2 ms (1.00x) | 25.2 ms (1.32x slower) | PSWriteOffice fastest |
-| csv-read-source-mixed | 10000 | 71.6 ms (1.00x) | 60.1 ms (1.19x faster) | NativeCsv fastest; PSWriteOffice 1.19x slower |
-| csv-read-source-mixed | 100000 | 824.8 ms (1.00x) | 704.0 ms (1.17x faster) | NativeCsv fastest; PSWriteOffice 1.17x slower |
-| csv-write-mixed | 1000 | 13.7 ms (1.00x) | 14.3 ms (1.05x slower) | PSWriteOffice fastest |
-| csv-write-mixed | 5000 | 21.9 ms (1.00x) | 22.3 ms (1.02x slower) | PSWriteOffice fastest |
-| csv-write-mixed | 10000 | 30.2 ms (1.00x) | 29.4 ms (1.03x faster) | NativeCsv fastest; PSWriteOffice 1.03x slower |
-| csv-write-mixed | 100000 | 203.6 ms (1.00x) | 217.9 ms (1.07x slower) | PSWriteOffice fastest |
+| csv-read-source-mixed | 1000 | 52.6 ms (1.00x) | 10.0 ms (5.27x faster) | NativeCsv fastest; PSWriteOffice 5.27x slower |
+| csv-read-source-mixed | 5000 | 33.0 ms (1.00x) | 19.6 ms (1.69x faster) | NativeCsv fastest; PSWriteOffice 1.69x slower |
+| csv-read-source-mixed | 10000 | 45.7 ms (1.00x) | 49.7 ms (1.09x slower) | PSWriteOffice fastest |
+| csv-read-source-mixed | 100000 | 605.6 ms (1.00x) | 566.0 ms (1.07x faster) | NativeCsv fastest; PSWriteOffice 1.07x slower |
+| csv-write-mixed | 1000 | 10.7 ms (1.00x) | 14.6 ms (1.36x slower) | PSWriteOffice fastest |
+| csv-write-mixed | 5000 | 18.2 ms (1.00x) | 19.9 ms (1.09x slower) | PSWriteOffice fastest |
+| csv-write-mixed | 10000 | 32.4 ms (1.00x) | 32.0 ms (1.01x faster) | PSWriteOffice and NativeCsv within 5% |
+| csv-write-mixed | 100000 | 206.0 ms (1.00x) | 207.8 ms (1.01x slower) | PSWriteOffice and NativeCsv within 5% |
 <!-- BENCHMARK:CsvComparison:END -->
 
 ## Options
