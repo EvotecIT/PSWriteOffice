@@ -21,7 +21,7 @@ internal sealed class OwnedDataReader : IDataReader
 
     public int Depth => _reader.Depth;
 
-    public bool IsClosed => _reader.IsClosed;
+    public bool IsClosed => _disposed || _reader.IsClosed;
 
     public int RecordsAffected => _reader.RecordsAffected;
 
@@ -45,7 +45,21 @@ internal sealed class OwnedDataReader : IDataReader
 
     public bool NextResult() => _reader.NextResult();
 
-    public bool Read() => _reader.Read();
+    public bool Read()
+    {
+        if (_disposed)
+        {
+            return false;
+        }
+
+        if (_reader.Read())
+        {
+            return true;
+        }
+
+        Dispose();
+        return false;
+    }
 
     public bool GetBoolean(int i) => _reader.GetBoolean(i);
 

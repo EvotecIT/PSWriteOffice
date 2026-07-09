@@ -64,6 +64,24 @@ Describe 'Excel IDataReader import' {
         }
     }
 
+    It 'closes the owned workbook when the IDataReader reaches EOF' {
+        $xlsx = Join-Path $TestDrive 'excel-reader-eof-close.xlsx'
+
+        [pscustomobject]@{ Id = 1; Name = 'Alpha' } |
+            Export-OfficeExcel -Path $xlsx -WorksheetName Data -TableName Data
+
+        $reader = Import-OfficeExcel -Path $xlsx -WorksheetName Data -AsDataReader
+
+        $rowCount = 0
+        while ($reader.Read()) {
+            $rowCount++
+        }
+
+        $rowCount | Should -BeGreaterOrEqual 1
+        $reader.IsClosed | Should -BeTrue
+        { Remove-Item -LiteralPath $xlsx -Force -ErrorAction Stop } | Should -Not -Throw
+    }
+
     It 'rejects mutually exclusive output modes' {
         $xlsx = Join-Path $TestDrive 'excel-reader-conflict.xlsx'
 
