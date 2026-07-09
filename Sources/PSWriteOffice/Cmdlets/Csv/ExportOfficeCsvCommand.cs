@@ -348,7 +348,8 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     private CsvObjectWriter? EnsureStreamingWriterForColumns(
         IReadOnlyList<string> sourceColumns,
         out IReadOnlyList<string> effectiveColumns,
-        Action<IReadOnlyList<string>>? validateBeforeOpen = null)
+        Action<IReadOnlyList<string>>? validateBeforeOpen = null,
+        bool allowAdditionalAppend = false)
     {
         if (sourceColumns == null)
         {
@@ -361,7 +362,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             return _streamingWriter;
         }
 
-        if (!TryPrepareOutput("Write CSV"))
+        if (!TryPrepareOutput("Write CSV", allowAdditionalAppend))
         {
             effectiveColumns = sourceColumns;
             return null;
