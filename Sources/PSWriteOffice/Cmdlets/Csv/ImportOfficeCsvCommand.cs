@@ -651,7 +651,8 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             throw new PSArgumentException($"ColumnType value for '{columnName}' cannot be empty.");
         }
 
-        return typeName.Trim().ToLowerInvariant() switch
+        var trimmedTypeName = typeName.Trim();
+        return trimmedTypeName.ToLowerInvariant() switch
         {
             "bool" or "boolean" => typeof(bool),
             "byte" => typeof(byte),
@@ -664,7 +665,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             "datetime" => typeof(DateTime),
             "guid" => typeof(Guid),
             "string" => typeof(string),
-            _ => Type.GetType(typeName, throwOnError: false) ??
+            _ => Type.GetType(trimmedTypeName, throwOnError: false) ??
                 throw new PSArgumentException($"ColumnType value '{typeName}' for '{columnName}' is not a supported type name.")
         };
     }

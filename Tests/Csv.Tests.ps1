@@ -408,6 +408,25 @@ Describe 'CSV cmdlets' {
         }
     }
 
+    It 'preserves CLR type name casing in explicit column types' {
+        $path = Join-Path $TestDrive 'reader-column-type-name.csv'
+        Set-Content -LiteralPath $path -Value "Value,Created`n1,2026-07-07" -Encoding UTF8
+
+        $reader = Import-OfficeCsv -Path $path -AsDataReader -ColumnType @{
+            Value = 'System.Int32'
+            Created = [datetime].AssemblyQualifiedName
+        }
+        try {
+            $reader.GetFieldType($reader.GetOrdinal('Value')) | Should -Be ([int])
+            $reader.GetFieldType($reader.GetOrdinal('Created')) | Should -Be ([datetime])
+            $reader.Read() | Should -BeTrue
+            $reader.GetInt32($reader.GetOrdinal('Value')) | Should -Be 1
+            $reader.GetDateTime($reader.GetOrdinal('Created')) | Should -Be ([datetime]'2026-07-07')
+        } finally {
+            $reader.Dispose()
+        }
+    }
+
     It 'rejects combining explicit column types with schema inference' {
         $path = Join-Path $TestDrive 'reader-column-type-infer.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
