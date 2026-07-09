@@ -825,6 +825,28 @@ Describe 'CSV cmdlets' {
         )
     }
 
+    It 'preserves forced headerless append columns when flushing object rows before IDataReader rows' {
+        $path = Join-Path $TestDrive 'object-then-reader-no-header-force-append.csv'
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+        $reader = $table.CreateDataReader()
+        try {
+            & {
+                Write-Output -InputObject ([pscustomobject]@{ Name = 'Alpha'; Value = 1 }) -NoEnumerate
+                Write-Output -InputObject $reader -NoEnumerate
+            } | Export-OfficeCsv -Path $path -Append -NoHeader -Force
+        } finally {
+            $reader.Dispose()
+        }
+
+        Get-Content -LiteralPath $path | Should -Be @(
+            'Alpha,1'
+            'Beta,2'
+        )
+    }
+
     It 'continues appending object rows after IDataReader rows in one invocation' {
         $path = Join-Path $TestDrive 'object-reader-object-append.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nSeed,0" -Encoding UTF8

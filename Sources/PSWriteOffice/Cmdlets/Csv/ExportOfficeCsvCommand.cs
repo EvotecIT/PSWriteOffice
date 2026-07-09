@@ -349,7 +349,8 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         IReadOnlyList<string> sourceColumns,
         out IReadOnlyList<string> effectiveColumns,
         Action<IReadOnlyList<string>>? validateBeforeOpen = null,
-        bool allowAdditionalAppend = false)
+        bool allowAdditionalAppend = false,
+        IReadOnlyList<string>? activeAppendColumns = null)
     {
         if (sourceColumns == null)
         {
@@ -376,8 +377,10 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         {
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
             _objectProjector.UseCsvOptions(options);
-            var appendHeader = GetEffectiveAppendHeader(sourceColumns);
-            if (appendHeader is { Length: > 0 })
+            var appendHeader = activeAppendColumns is { Count: > 0 }
+                ? activeAppendColumns
+                : GetEffectiveAppendHeader(sourceColumns);
+            if (appendHeader is { Count: > 0 })
             {
                 effectiveColumns = appendHeader;
                 validateFollowingObjects = !Force.IsPresent;

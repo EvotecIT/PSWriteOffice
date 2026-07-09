@@ -17,8 +17,10 @@ public sealed partial class ExportOfficeCsvCommand
         }
 
         var allowAdditionalAppend = false;
+        IReadOnlyList<string>? activeAppendColumns = null;
         if (Append.IsPresent && _streamingWriter != null)
         {
+            activeAppendColumns = NoHeader.IsPresent ? _objectProjector.CurrentColumns : null;
             DisposeStreamingWriter();
             allowAdditionalAppend = true;
         }
@@ -29,7 +31,8 @@ public sealed partial class ExportOfficeCsvCommand
             sourceColumns,
             out var effectiveColumns,
             columns => ValidateDataReaderAppendColumns(reader, sourceColumns, columns),
-            allowAdditionalAppend);
+            allowAdditionalAppend,
+            activeAppendColumns);
         if (writer == null)
         {
             return;
