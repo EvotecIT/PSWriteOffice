@@ -15,8 +15,9 @@ benchmark 'csv-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks\C
 
         $run.RepositoryRoot = $repositoryRoot
         $run.WorksheetName = 'Data'
-        $run.Path = $run.OutputPath + '.csv'
-        $run.SourcePath = $run.OutputPath + '.source.csv'
+        $extension = Get-ExcelBenchmarkExtension -Case $case
+        $run.Path = $run.OutputPath + $extension
+        $run.SourcePath = $run.OutputPath + '.source' + $extension
         Initialize-ExcelBenchmarkEngine -Engine $case.Engine -Run $run
     }
 
@@ -54,6 +55,22 @@ benchmark 'csv-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks\C
         param($case, $run)
 
         Test-CsvBenchmarkOutput -Case $case -Run $run
+    }
+
+    metric RowsProcessed {
+        param($case, $run)
+
+        $run.RowsProcessed
+    }
+
+    metric RowsPerSecond {
+        param($case, $run)
+
+        if ($run.DurationMs -le 0) {
+            return 0
+        }
+
+        [double] $case.RowCount / ($run.DurationMs / 1000)
     }
 
     comparison Engine -Baseline PSWriteOffice -Metric MedianMs

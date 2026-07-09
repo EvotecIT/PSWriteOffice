@@ -1,0 +1,196 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Management.Automation;
+using OfficeIMO.CSV;
+
+namespace PSWriteOffice.Cmdlets.Csv;
+
+public sealed partial class ExportOfficeCsvCommand
+{
+    private void ExportDataReader(IDataReader reader)
+    {
+        if (reader == null)
+        {
+            return;
+        }
+
+        var sourceColumns = GetDataReaderColumnNames(reader);
+        var hadActiveWriter = _streamingWriter != null;
+        var writer = EnsureStreamingWriterForColumns(
+            sourceColumns,
+            out var effectiveColumns,
+            columns => ValidateDataReaderAppendColumns(reader, sourceColumns, columns));
+        if (writer == null)
+        {
+            return;
+        }
+
+        try
+        {
+            if (hadActiveWriter)
+            {
+                ValidateDataReaderAppendColumns(reader, sourceColumns, effectiveColumns);
+            }
+
+            if (!hadActiveWriter && ColumnsMatch(sourceColumns, effectiveColumns))
+            {
+                writer.WriteDataReader(reader);
+            }
+            else
+            {
+                WriteDataReaderRows(reader, writer, effectiveColumns);
+            }
+        }
+        catch
+        {
+            DisposeStreamingWriter();
+            throw;
+        }
+    }
+
+    private static bool TryGetDataReader(object? value, out IDataReader reader)
+    {
+        if (value is IDataReader dataReader)
+        {
+            reader = dataReader;
+            return true;
+        }
+
+        if (value is PSObject { BaseObject: IDataReader psObjectReader })
+        {
+            reader = psObjectReader;
+            return true;
+        }
+
+        reader = null!;
+        return false;
+    }
+
+    private void AppendDataReader(IDataReader reader)
+    {
+        var options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
+        var appendHeader = GetEffectiveAppendHeader(reader);
+
+        if (appendHeader is { Length: > 0 })
+        {
+            ValidateDataReaderAppendHeader(reader, appendHeader);
+        }
+
+        using var writer = CreateTextWriter(append: true, options);
+        if (appendHeader is { Length: > 0 })
+        {
+            using var csvWriter = new CsvObjectWriter(writer, options);
+            WriteDataReaderRows(reader, csvWriter, appendHeader);
+            return;
+        }
+
+        WriteDataReader(writer, reader, options);
+    }
+
+    private static void WriteDataReader(TextWriter writer, IDataReader reader, CsvSaveOptions options)
+    {
+        using var csvWriter = new CsvObjectWriter(writer, options, leaveOpen: true);
+        csvWriter.WriteDataReader(reader);
+    }
+
+    private static string[] GetDataReaderColumnNames(IDataReader reader)
+    {
+        var columns = new string[reader.FieldCount];
+        for (var i = 0; i < columns.Length; i++)
+        {
+            columns[i] = reader.GetName(i);
+        }
+
+        return columns;
+    }
+
+    private string[]? GetEffectiveAppendHeader(IDataReader reader)
+    {
+        if (_appendHeader is not { Length: > 0 })
+        {
+            return null;
+        }
+
+        return _appendHeader;
+    }
+
+    private void ValidateDataReaderAppendHeader(IDataReader reader, IReadOnlyList<string> appendHeader)
+    {
+        if (Force.IsPresent)
+        {
+            return;
+        }
+
+        foreach (var column in appendHeader)
+        {
+            if (!ContainsDataReaderColumn(reader, column))
+            {
+                throw new CsvException($"Cannot append CSV because the data reader is missing the existing column '{column}'. Use -Force to append with blank values for missing columns.");
+            }
+        }
+    }
+
+    private void ValidateDataReaderAppendColumns(IDataReader reader, IReadOnlyList<string> sourceColumns, IReadOnlyList<string> effectiveColumns)
+    {
+        if (Append.IsPresent &&
+            effectiveColumns.Count > 0 &&
+            !ColumnsMatch(sourceColumns, effectiveColumns))
+        {
+            ValidateDataReaderAppendHeader(reader, effectiveColumns);
+        }
+    }
+
+    private static void WriteDataReaderRows(IDataReader reader, CsvObjectWriter writer, IReadOnlyList<string> columns)
+    {
+        var columnOrdinals = GetDataReaderColumnOrdinals(reader);
+        while (reader.Read())
+        {
+            writer.WriteRow(
+                columns,
+                columns.Count,
+                (Reader: reader, Columns: columns, Ordinals: columnOrdinals),
+                static (state, index) => TryGetDataReaderValue(state.Reader, state.Columns[index], state.Ordinals));
+        }
+    }
+
+    private static object? TryGetDataReaderValue(IDataRecord reader, string column, IReadOnlyDictionary<string, int> ordinals)
+    {
+        if (!ordinals.TryGetValue(column, out var ordinal))
+        {
+            return null;
+        }
+
+        var value = reader.GetValue(ordinal);
+        return value == DBNull.Value ? null : value;
+    }
+
+    private static bool ContainsDataReaderColumn(IDataReader reader, string column)
+    {
+        for (var i = 0; i < reader.FieldCount; i++)
+        {
+            if (string.Equals(reader.GetName(i), column, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static Dictionary<string, int> GetDataReaderColumnOrdinals(IDataReader reader)
+    {
+        var ordinals = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        for (var i = 0; i < reader.FieldCount; i++)
+        {
+            var name = reader.GetName(i);
+            if (!ordinals.ContainsKey(name))
+            {
+                ordinals.Add(name, i);
+            }
+        }
+
+        return ordinals;
+    }
+}

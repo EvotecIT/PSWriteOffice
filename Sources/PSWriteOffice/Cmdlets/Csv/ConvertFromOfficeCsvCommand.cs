@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -57,6 +58,10 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetTextDelimiter)]
     public char Delimiter { get; set; } = ',';
 
+    /// <summary>Field delimiter text for multi-character delimiters such as || or ::.</summary>
+    [Parameter(ParameterSetName = ParameterSetTextDelimiter)]
+    public string? DelimiterText { get; set; }
+
     /// <summary>Detect the delimiter from the first meaningful records.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetTextDetect)]
     public SwitchParameter DetectDelimiter { get; set; }
@@ -97,6 +102,26 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
     [Parameter]
     public CsvColumnCountMismatchPolicy ColumnCountMismatchPolicy { get; set; } = CsvColumnCountMismatchPolicy.PadMissingFieldsAndIgnoreExtraFields;
 
+    /// <summary>Controls how duplicate header names are handled.</summary>
+    [Parameter]
+    public CsvDuplicateHeaderBehavior DuplicateHeaderBehavior { get; set; } = CsvDuplicateHeaderBehavior.Rename;
+
+    /// <summary>Token that is materialized as null when converting rows.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Additional date/time formats used by typed conversions and validation.</summary>
+    [Parameter]
+    public string[]? DateTimeFormats { get; set; }
+
+    /// <summary>Controls whether malformed quoted fields are parsed leniently or rejected.</summary>
+    [Parameter]
+    public CsvQuoteParsingMode QuoteParsingMode { get; set; } = CsvQuoteParsingMode.Lenient;
+
+    /// <summary>Static columns appended to every converted row.</summary>
+    [Parameter]
+    public IDictionary? StaticColumns { get; set; }
+
     /// <summary>Load mode controlling materialization.</summary>
     [Parameter]
     public CsvLoadMode Mode { get; set; } = CsvLoadMode.Stream;
@@ -113,6 +138,11 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
     protected override void BeginProcessing()
     {
         CsvCommandValidation.EnsureHeaderOptions(NoHeader, Header);
+        if (DuplicateHeaderBehavior == CsvDuplicateHeaderBehavior.Preserve)
+        {
+            throw new PSArgumentException("DuplicateHeaderBehavior Preserve cannot be used with row object or hashtable output. Use Rename or Throw.");
+        }
+
         _asHashtable = AsHashtable.IsPresent;
     }
 
@@ -136,7 +166,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
         var csvText = _textInput.ToString();
 
         _rowWriter.Reset();
-        if (Mode == CsvLoadMode.Stream)
+        if (Mode == CsvLoadMode.Stream && !RequiresMaterializedRows())
         {
             using var reader = new StringReader(csvText);
             CsvDocument.ReadRowsReusable(reader, WriteRow, options);
@@ -170,6 +200,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
             Header = Header,
             SkipInitialRecords = SkipRows,
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             DetectDelimiter = DetectDelimiter.IsPresent,
             DelimiterCandidates = DelimiterCandidates,
             TrimWhitespace = TrimWhitespace,
@@ -178,9 +209,18 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
             SkipCommentRows = SkipCommentRows.IsPresent,
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
+            DuplicateHeaderBehavior = CsvDuplicateHeaderBehavior.Throw,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
             Mode = Mode
         };
+
+        CsvPowerShellOptionBuilder.ApplyTextLoadOptions(
+            options,
+            DuplicateHeaderBehavior,
+            NullValue,
+            DateTimeFormats,
+            QuoteParsingMode,
+            StaticColumns);
 
         if (Culture != null)
         {
@@ -189,6 +229,10 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
 
         return options;
     }
+
+    private bool RequiresMaterializedRows() =>
+        NullValue != null ||
+        StaticColumns is { Count: > 0 };
 
     private void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row)
     {

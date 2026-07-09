@@ -62,7 +62,7 @@ function Get-ExcelBenchmarkWorkbookMergeInput {
 function Test-ExcelBenchmarkOutput {
     param([object] $Case, [object] $Run)
 
-    if ($Case.OperationKey -in @('WriteCsv', 'CsvToExcel', 'WriteWorkbook')) {
+    if ($Case.OperationKey -in @('WriteCsv', 'WriteCsvGZip', 'CsvToExcel', 'WriteWorkbook')) {
         assertPath $Run.Path
     }
 
@@ -109,15 +109,31 @@ function Test-CsvBenchmarkOutput {
     param([object] $Case, [object] $Run)
 
     $expectedRows = [int]$Run.ExpectedRows
-    if ($Case.OperationKey -eq 'ReadCsvSource') {
+    if ($Case.OperationKey -in @('ReadCsvSource', 'ReadCsvDataTable', 'ReadCsvGZipDataTable', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns')) {
         assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+        if ($Case.OperationKey -eq 'ReadCsvQuickSingleColumn') {
+            assertValue ([int]$Run.AccessedFields) $expectedRows -Message "Expected $expectedRows first-column values accessed by '$($Case.OperationKey)'."
+            assertValue ([string]$Run.LastValue) ([string]($expectedRows - 1)) -Message "Expected '$($Case.OperationKey)' to access the last Column0 value."
+        }
+        if ($Case.OperationKey -eq 'ReadCsvQuickAllColumns') {
+            $expectedFields = $expectedRows * [int]$Run.ColumnCount
+            assertValue ([int]$Run.AccessedFields) $expectedFields -Message "Expected $expectedFields values accessed by '$($Case.OperationKey)'."
+            assertValue ([string]$Run.LastValue) ('Value{0}_{1}' -f ($expectedRows - 1), ([int]$Run.ColumnCount - 1)) -Message "Expected '$($Case.OperationKey)' to access the last field value."
+        }
+        $Run.RowsProcessed = [int]$Run.ActualRows
         return
     }
 
     $path = $Run.Path
     assertPath $path
-    $actualRows = @(Import-Csv -Path $path).Count
+    $actualRows = if ($Case.OperationKey -eq 'WriteCsvGZip') {
+        $table = ConvertFrom-NativeGZipCsvToDataTable -Path $path
+        if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+    } else {
+        @(Import-Csv -Path $path).Count
+    }
     assertValue $actualRows $expectedRows -Message "Expected $expectedRows rows in '$path'."
+    $Run.RowsProcessed = [int]$actualRows
 }
 
 function Test-ExcelBenchmarkOpenXml {

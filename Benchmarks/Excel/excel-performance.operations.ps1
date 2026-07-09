@@ -7,7 +7,13 @@ function Invoke-ExcelBenchmarkOperation {
 
     switch ([string]$Case.OperationKey) {
         WriteCsv { Invoke-ExcelBenchmarkWriteCsv -Engine $Engine -Run $Run }
+        WriteCsvGZip { Invoke-ExcelBenchmarkWriteCsvGZip -Engine $Engine -Run $Run }
+        WriteCsvDataTable { Invoke-ExcelBenchmarkWriteCsvDataTable -Engine $Engine -Run $Run }
         ReadCsvSource { Invoke-ExcelBenchmarkReadCsv -Engine $Engine -Run $Run }
+        ReadCsvDataTable { Invoke-ExcelBenchmarkReadCsvDataTable -Engine $Engine -Run $Run }
+        ReadCsvGZipDataTable { Invoke-ExcelBenchmarkReadCsvGZipDataTable -Engine $Engine -Run $Run }
+        ReadCsvQuickSingleColumn { Invoke-ExcelBenchmarkReadCsvQuickSingleColumn -Engine $Engine -Run $Run }
+        ReadCsvQuickAllColumns { Invoke-ExcelBenchmarkReadCsvQuickAllColumns -Engine $Engine -Run $Run }
         CsvToExcel { Invoke-ExcelBenchmarkCsvToExcel -Engine $Engine -Run $Run }
         WriteWorkbook { Invoke-ExcelBenchmarkWriteWorkbook -Engine $Engine -Case $Case -Run $Run }
         ReadFullSheet { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode Full }
@@ -41,6 +47,26 @@ function Invoke-ExcelBenchmarkWriteCsv {
     }
 }
 
+function Invoke-ExcelBenchmarkWriteCsvGZip {
+    param([string] $Engine, [object] $Run)
+
+    switch ($Engine) {
+        PSWriteOffice { $Run.Payload | Export-OfficeCsv -Path $Run.Path -CompressionType GZip }
+        NativeCsv { Write-NativeGZipCsv -InputObject $Run.Payload -Path $Run.Path }
+        default { throw "Engine '$Engine' does not support GZip CSV write." }
+    }
+}
+
+function Invoke-ExcelBenchmarkWriteCsvDataTable {
+    param([string] $Engine, [object] $Run)
+
+    switch ($Engine) {
+        PSWriteOffice { Export-OfficeCsv -InputObject $Run.Payload -Path $Run.Path }
+        NativeCsv { $Run.Payload.Rows | Export-Csv -Path $Run.Path -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded }
+        default { throw "Engine '$Engine' does not support DataTable CSV write." }
+    }
+}
+
 function Invoke-ExcelBenchmarkReadCsv {
     param([string] $Engine, [object] $Run)
 
@@ -50,6 +76,195 @@ function Invoke-ExcelBenchmarkReadCsv {
         default { throw "Engine '$Engine' does not support CSV read." }
     }
     $Run.ActualRows = @($rows).Count
+}
+
+function Invoke-ExcelBenchmarkReadCsvDataTable {
+    param([string] $Engine, [object] $Run)
+
+    switch ($Engine) {
+        PSWriteOffice {
+            $table = Import-OfficeCsv -Path $Run.SourcePath -AsDataTable
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        }
+        NativeCsv {
+            $table = ConvertFrom-NativeCsvToDataTable -Path $Run.SourcePath
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        }
+        default { throw "Engine '$Engine' does not support CSV DataTable read." }
+    }
+}
+
+function Invoke-ExcelBenchmarkReadCsvGZipDataTable {
+    param([string] $Engine, [object] $Run)
+
+    switch ($Engine) {
+        PSWriteOffice {
+            $table = Import-OfficeCsv -Path $Run.SourcePath -CompressionType GZip -AsDataTable
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        }
+        NativeCsv {
+            $table = ConvertFrom-NativeGZipCsvToDataTable -Path $Run.SourcePath
+            $Run.ActualRows = if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        }
+        default { throw "Engine '$Engine' does not support GZip CSV DataTable read." }
+    }
+}
+
+function ConvertFrom-NativeCsvToDataTable {
+    param([Parameter(Mandatory)][string] $Path)
+
+    ConvertFrom-NativeCsvRowsToDataTable -Rows (Import-Csv -Path $Path)
+}
+
+function ConvertFrom-NativeGZipCsvToDataTable {
+    param([Parameter(Mandatory)][string] $Path)
+
+    $stream = [IO.File]::OpenRead($Path)
+    try {
+        $gzip = [IO.Compression.GZipStream]::new($stream, [IO.Compression.CompressionMode]::Decompress, $false)
+        try {
+            $reader = [IO.StreamReader]::new($gzip, [Text.UTF8Encoding]::new($false))
+            try {
+                $csvText = $reader.ReadToEnd()
+            } finally {
+                $reader.Dispose()
+            }
+        } finally {
+            $gzip.Dispose()
+        }
+    } finally {
+        $stream.Dispose()
+    }
+
+    ConvertFrom-NativeCsvRowsToDataTable -Rows ($csvText | ConvertFrom-Csv)
+}
+
+function ConvertFrom-NativeCsvRowsToDataTable {
+    param([Parameter(Mandatory)][object[]] $Rows)
+
+    $table = [Data.DataTable]::new('CsvData')
+    $columnNames = $null
+
+    $table.BeginLoadData()
+    try {
+        foreach ($row in $Rows) {
+            if ($null -eq $columnNames) {
+                $columnNames = @($row.PSObject.Properties.Name)
+                foreach ($columnName in $columnNames) {
+                    $null = $table.Columns.Add([string]$columnName, [string])
+                }
+            }
+
+            $dataRow = $table.NewRow()
+            foreach ($columnName in $columnNames) {
+                $value = $row.$columnName
+                $dataRow[$columnName] = if ($null -eq $value) { [DBNull]::Value } else { $value }
+            }
+
+            $table.Rows.Add($dataRow)
+        }
+    } finally {
+        $table.EndLoadData()
+    }
+
+    , $table
+}
+
+function Write-NativeGZipCsv {
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [object[]] $InputObject,
+
+        [Parameter(Mandatory)]
+        [string] $Path
+    )
+
+    $directory = [IO.Path]::GetDirectoryName($Path)
+    if (-not [string]::IsNullOrWhiteSpace($directory) -and -not [IO.Directory]::Exists($directory)) {
+        [IO.Directory]::CreateDirectory($directory) | Out-Null
+    }
+
+    $stream = [IO.File]::Create($Path)
+    try {
+        $gzip = [IO.Compression.GZipStream]::new($stream, [IO.Compression.CompressionLevel]::Optimal, $false)
+        try {
+            $writer = [IO.StreamWriter]::new($gzip, [Text.UTF8Encoding]::new($false))
+            try {
+                foreach ($line in ($InputObject | ConvertTo-Csv -NoTypeInformation -UseQuotes AsNeeded)) {
+                    $writer.WriteLine($line)
+                }
+            } finally {
+                $writer.Dispose()
+            }
+        } finally {
+            $gzip.Dispose()
+        }
+    } finally {
+        $stream.Dispose()
+    }
+}
+
+function Invoke-ExcelBenchmarkReadCsvQuickSingleColumn {
+    param([string] $Engine, [object] $Run)
+
+    $count = 0
+    $lastValue = $null
+    switch ($Engine) {
+        PSWriteOffice {
+            Import-OfficeCsv -Path $Run.SourcePath | ForEach-Object {
+                $lastValue = $_.Column0
+                $count++
+            }
+        }
+        NativeCsv {
+            Import-Csv -Path $Run.SourcePath | ForEach-Object {
+                $lastValue = $_.Column0
+                $count++
+            }
+        }
+        default { throw "Engine '$Engine' does not support CSV QuickTest single-column read." }
+    }
+
+    $Run.ActualRows = $count
+    $Run.AccessedFields = $count
+    $Run.LastValue = $lastValue
+}
+
+function Invoke-ExcelBenchmarkReadCsvQuickAllColumns {
+    param([string] $Engine, [object] $Run)
+
+    $count = 0
+    $accessedFields = 0
+    $lastValue = $null
+    $columns = for ($column = 0; $column -lt [int]$Run.ColumnCount; $column++) {
+        'Column{0}' -f $column
+    }
+
+    switch ($Engine) {
+        PSWriteOffice {
+            Import-OfficeCsv -Path $Run.SourcePath | ForEach-Object {
+                $count++
+                foreach ($column in $columns) {
+                    $lastValue = $_.$column
+                    $accessedFields++
+                }
+            }
+        }
+        NativeCsv {
+            Import-Csv -Path $Run.SourcePath | ForEach-Object {
+                $count++
+                foreach ($column in $columns) {
+                    $lastValue = $_.$column
+                    $accessedFields++
+                }
+            }
+        }
+        default { throw "Engine '$Engine' does not support CSV QuickTest all-columns read." }
+    }
+
+    $Run.ActualRows = $count
+    $Run.AccessedFields = $accessedFields
+    $Run.LastValue = $lastValue
 }
 
 function Invoke-ExcelBenchmarkCsvToExcel {

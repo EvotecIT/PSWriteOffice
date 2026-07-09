@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Management.Automation;
 using OfficeIMO.CSV;
 
@@ -56,6 +59,11 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetDocumentDelimiter)]
     public char Delimiter { get; set; } = ',';
 
+    /// <summary>Field delimiter text for multi-character delimiters such as || or ::.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObjectDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetDocumentDelimiter)]
+    public string? DelimiterText { get; set; }
+
     /// <summary>Use the list separator from the selected or current culture as the delimiter.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectCulture)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocumentCulture)]
@@ -85,6 +93,18 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter]
     public string[]? QuoteFields { get; set; }
 
+    /// <summary>Token written for null values.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Date/time format used for DateTime and DateTimeOffset values.</summary>
+    [Parameter]
+    public string? DateTimeFormat { get; set; }
+
+    /// <summary>Convert date/time values to UTC before formatting.</summary>
+    [Parameter]
+    public SwitchParameter UseUtc { get; set; }
+
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
@@ -107,6 +127,12 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         if (TryGetCsvDocument(InputObject, out var csvDocument))
         {
             EmitCsv(csvDocument);
+            return;
+        }
+
+        if (TryGetDataTable(InputObject, out var dataTable))
+        {
+            EmitDataTable(dataTable);
             return;
         }
 
@@ -138,8 +164,78 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     private void EmitCsv(CsvDocument document)
     {
         var options = CreateSaveOptions();
-        using var writer = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
+        using var writer = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
         writer.Write(document.ToString(options));
+    }
+
+    private void EmitDataTable(DataTable table)
+    {
+        if (_csvWriter != null)
+        {
+            var activeColumns = _objectProjector.CurrentColumns ?? GetDataTableColumnNames(table);
+            WriteDataTableRows(table, _csvWriter, activeColumns);
+            return;
+        }
+
+        var tableColumns = GetDataTableColumnNames(table);
+        _objectProjector.UseColumns(tableColumns, validateColumns: false);
+        using var reader = table.CreateDataReader();
+        EnsureObjectWriter().WriteDataReader(reader);
+    }
+
+    private static string[] GetDataTableColumnNames(DataTable table)
+    {
+        var columns = new string[table.Columns.Count];
+        for (var i = 0; i < columns.Length; i++)
+        {
+            columns[i] = table.Columns[i].ColumnName;
+        }
+
+        return columns;
+    }
+
+    private static void WriteDataTableRows(DataTable table, CsvObjectWriter writer, IReadOnlyList<string> columns)
+    {
+        foreach (DataRow row in table.Rows)
+        {
+            writer.WriteRow(
+                columns,
+                columns.Count,
+                (Row: row, Columns: columns),
+                static (state, index) => TryGetDataTableValue(state.Row, state.Columns[index]));
+        }
+    }
+
+    private static object? TryGetDataTableValue(DataRow row, string column)
+    {
+        if (!TryGetDataColumn(row.Table, column, out var dataColumn))
+        {
+            return null;
+        }
+
+        var value = row[dataColumn];
+        return value == DBNull.Value ? null : value;
+    }
+
+    private static bool TryGetDataColumn(DataTable table, string column, out DataColumn dataColumn)
+    {
+        if (table.Columns.Contains(column))
+        {
+            dataColumn = table.Columns[column]!;
+            return true;
+        }
+
+        foreach (DataColumn candidate in table.Columns)
+        {
+            if (string.Equals(candidate.ColumnName, column, StringComparison.OrdinalIgnoreCase))
+            {
+                dataColumn = candidate;
+                return true;
+            }
+        }
+
+        dataColumn = null!;
+        return false;
     }
 
     private static bool TryGetCsvDocument(object? value, out CsvDocument document)
@@ -160,6 +256,24 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         return false;
     }
 
+    private static bool TryGetDataTable(object? value, out DataTable table)
+    {
+        if (value is DataTable dataTable)
+        {
+            table = dataTable;
+            return true;
+        }
+
+        if (value is PSObject { BaseObject: DataTable psObjectTable })
+        {
+            table = psObjectTable;
+            return true;
+        }
+
+        table = null!;
+        return false;
+    }
+
     private CsvObjectWriter EnsureObjectWriter()
     {
         if (_csvWriter != null)
@@ -168,8 +282,8 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
-        _objectProjector.UseCsvCulture(options.Culture);
-        _lineWriter = new CsvPowerShellLineWriter(this, options.Delimiter, options.QuoteMode);
+        _objectProjector.UseCsvOptions(options);
+        _lineWriter = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
         _csvWriter = new CsvObjectWriter(_lineWriter, options);
         return _csvWriter;
     }
@@ -187,12 +301,21 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         var options = new CsvSaveOptions
         {
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             IncludeHeader = !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
             QuoteMode = UseQuotes,
             QuoteFields = QuoteFields
         };
+
+        CsvPowerShellOptionBuilder.ApplySaveOptions(
+            options,
+            NullValue,
+            DateTimeFormat,
+            UseUtc.IsPresent,
+            CsvCompressionType.None,
+            System.IO.Compression.CompressionLevel.Optimal);
 
         if (!string.IsNullOrEmpty(NewLine))
         {
@@ -201,6 +324,9 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
 
         return options;
     }
+
+    private static string GetDelimiterText(CsvSaveOptions options) =>
+        string.IsNullOrEmpty(options.DelimiterText) ? options.Delimiter.ToString() : options.DelimiterText!;
 
     private bool IsDocumentParameterSet() =>
         string.Equals(ParameterSetName, ParameterSetDocumentDelimiter, StringComparison.OrdinalIgnoreCase) ||

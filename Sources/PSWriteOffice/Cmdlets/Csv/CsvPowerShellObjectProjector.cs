@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using OfficeIMO.CSV;
 using PSWriteOffice.Services;
@@ -13,6 +12,7 @@ internal sealed class CsvPowerShellObjectProjector
     private object?[]? _values;
     private string?[]? _textValues;
     private PowerShellObjectNormalizerOptions _normalizerOptions = PowerShellObjectNormalizerOptions.Default;
+    private bool _allowTrustedTextRows = true;
     private bool _validateColumns;
 
     public void Reset()
@@ -21,14 +21,21 @@ internal sealed class CsvPowerShellObjectProjector
         _values = null;
         _textValues = null;
         _validateColumns = false;
+        _allowTrustedTextRows = true;
     }
 
-    public void UseCsvCulture(CultureInfo culture)
+    public void UseCsvOptions(CsvSaveOptions options)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
+        _allowTrustedTextRows = options.DateTimeFormat == null && !options.UseUtc;
         _normalizerOptions = new PowerShellObjectNormalizerOptions
         {
-            Culture = culture ?? CultureInfo.InvariantCulture,
-            FormatScalarValuesAsText = true
+            Culture = options.Culture,
+            FormatScalarValuesAsText = _allowTrustedTextRows
         };
     }
 
@@ -44,6 +51,8 @@ internal sealed class CsvPowerShellObjectProjector
         _textValues = new string?[_columns.Length];
         _validateColumns = validateColumns;
     }
+
+    public IReadOnlyList<string>? CurrentColumns => _columns;
 
     public void ValidateObjectColumns(object? value, IReadOnlyList<string> columns)
     {
@@ -75,7 +84,8 @@ internal sealed class CsvPowerShellObjectProjector
                 ValidateFirstRowColumns(value, _columns);
             }
 
-            if (_textValues != null &&
+            if (_allowTrustedTextRows &&
+                _textValues != null &&
                 PowerShellObjectNormalizer.TryProjectPSObjectTextIntoKnownColumns(value, _columns, _textValues, _normalizerOptions))
             {
                 WriteProjectedTextRow(writer, _columns, _textValues);

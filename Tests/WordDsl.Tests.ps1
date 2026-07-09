@@ -1383,10 +1383,11 @@ Describe 'Word DSL surface' {
         }
 
         $replacements = Update-OfficeWordText -Path $path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkUri
-        $replacements | Should -Be 1
+        $replacements | Should -Be 2
 
         $document = Get-OfficeWord -Path $path -ReadOnly
         try {
+            $document.HyperLinks[0].Text | Should -Be 'Relative FY25'
             $document.HyperLinks[0].Uri.OriginalString | Should -Be '../reports/FY25.docx'
         } finally {
             $document.Dispose()

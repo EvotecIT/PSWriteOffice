@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
@@ -25,9 +26,10 @@ namespace PSWriteOffice.Cmdlets.Csv;
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficeCsv", DefaultParameterSetName = ParameterSetInputObjectPathDelimiter, SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
-public sealed class ExportOfficeCsvCommand : PSCmdlet
+public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 {
     private const int StreamWriterBufferSize = 64 * 1024;
+    private const int CompressionProbeBufferSize = 256;
     private const string ParameterSetInputObjectPathDelimiter = "InputObjectPathDelimiter";
     private const string ParameterSetInputObjectPathCulture = "InputObjectPathCulture";
     private const string ParameterSetInputObjectLiteralPathDelimiter = "InputObjectLiteralPathDelimiter";
@@ -82,6 +84,13 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetDocumentLiteralPathDelimiter)]
     public char Delimiter { get; set; } = ',';
 
+    /// <summary>Field delimiter text for multi-character delimiters such as || or ::.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObjectPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetDocumentPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetDocumentLiteralPathDelimiter)]
+    public string? DelimiterText { get; set; }
+
     /// <summary>Use the list separator from the selected or current culture as the delimiter.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectPathCulture)]
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetInputObjectLiteralPathCulture)]
@@ -105,6 +114,14 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public Encoding? Encoding { get; set; }
 
+    /// <summary>Compression used when writing the CSV file.</summary>
+    [Parameter]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.Auto;
+
+    /// <summary>Compression level used when <see cref="CompressionType"/> is enabled.</summary>
+    [Parameter]
+    public CompressionLevel CompressionLevel { get; set; } = CompressionLevel.Optimal;
+
     /// <summary>Controls how formula-like values are written.</summary>
     [Parameter]
     public CsvFormulaInjectionPolicy FormulaInjectionPolicy { get; set; } = CsvFormulaInjectionPolicy.Preserve;
@@ -116,6 +133,18 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
     /// <summary>Field names that should always be quoted when <see cref="UseQuotes"/> is AsNeeded.</summary>
     [Parameter]
     public string[]? QuoteFields { get; set; }
+
+    /// <summary>Token written for null values.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Date/time format used for DateTime and DateTimeOffset values.</summary>
+    [Parameter]
+    public string? DateTimeFormat { get; set; }
+
+    /// <summary>Convert date/time values to UTC before formatting.</summary>
+    [Parameter]
+    public SwitchParameter UseUtc { get; set; }
 
     /// <summary>Emit a <see cref="FileInfo"/> for the exported file.</summary>
     [Parameter]
@@ -161,6 +190,24 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         if (TryGetCsvDocument(InputObject, out var csvDocument))
         {
             ExportDocument(csvDocument);
+            return;
+        }
+
+        if (TryGetDataTable(InputObject, out var dataTable))
+        {
+            ExportDataTable(dataTable);
+            return;
+        }
+
+        if (TryGetDataView(InputObject, out var dataView))
+        {
+            ExportDataTable(dataView.ToTable());
+            return;
+        }
+
+        if (TryGetDataReader(InputObject, out var dataReader))
+        {
+            ExportDataReader(dataReader);
             return;
         }
 
@@ -275,11 +322,11 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
-        _objectProjector.UseCsvCulture(options.Culture);
+        _objectProjector.UseCsvOptions(options);
         if (Append.IsPresent)
         {
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
-            _objectProjector.UseCsvCulture(options.Culture);
+            _objectProjector.UseCsvOptions(options);
             var appendHeader = GetEffectiveAppendHeader(firstValue);
             if (appendHeader is { Length: > 0 })
             {
@@ -292,6 +339,52 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             }
         }
 
+        var fileWriter = CreateTextWriter(Append.IsPresent, options);
+        _streamingWriter = new CsvObjectWriter(fileWriter, options);
+        _wroteOutput = true;
+        return _streamingWriter;
+    }
+
+    private CsvObjectWriter? EnsureStreamingWriterForColumns(
+        IReadOnlyList<string> sourceColumns,
+        out IReadOnlyList<string> effectiveColumns,
+        Action<IReadOnlyList<string>>? validateBeforeOpen = null)
+    {
+        if (sourceColumns == null)
+        {
+            throw new ArgumentNullException(nameof(sourceColumns));
+        }
+
+        if (_streamingWriter != null)
+        {
+            effectiveColumns = _objectProjector.CurrentColumns ?? sourceColumns;
+            return _streamingWriter;
+        }
+
+        if (!TryPrepareOutput("Write CSV"))
+        {
+            effectiveColumns = sourceColumns;
+            return null;
+        }
+
+        var options = CreateSaveOptions();
+        _objectProjector.UseCsvOptions(options);
+        effectiveColumns = sourceColumns;
+        var validateFollowingObjects = false;
+        if (Append.IsPresent)
+        {
+            options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
+            _objectProjector.UseCsvOptions(options);
+            var appendHeader = GetEffectiveAppendHeader(sourceColumns);
+            if (appendHeader is { Length: > 0 })
+            {
+                effectiveColumns = appendHeader;
+                validateFollowingObjects = !Force.IsPresent;
+            }
+        }
+
+        validateBeforeOpen?.Invoke(effectiveColumns);
+        _objectProjector.UseColumns(effectiveColumns, validateColumns: validateFollowingObjects);
         var fileWriter = CreateTextWriter(Append.IsPresent, options);
         _streamingWriter = new CsvObjectWriter(fileWriter, options);
         _wroteOutput = true;
@@ -325,6 +418,18 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
         var needsFileState = Append.IsPresent || NoClobber.IsPresent || Force.IsPresent;
         var fileExists = needsFileState && File.Exists(_resolvedPath);
+        var appendTargetHasBytes = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
+        if (appendTargetHasBytes && IsCompressedAppendTarget(CompressionType, _resolvedPath))
+        {
+            WriteError(new ErrorRecord(
+                new NotSupportedException("Appending to compressed CSV files is not supported."),
+                "CsvCompressedAppendNotSupported",
+                ErrorCategory.NotImplemented,
+                _resolvedPath));
+            _skipOutput = true;
+            return false;
+        }
+
         if (fileExists && NoClobber.IsPresent && !Append.IsPresent)
         {
             WriteError(new ErrorRecord(
@@ -351,7 +456,6 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
             }
         }
 
-        var appendTargetHasBytes = Append.IsPresent && fileExists && new FileInfo(_resolvedPath).Length > 0;
         _appendEncoding = appendTargetHasBytes && Encoding == null
             ? TryDetectEncodingFromBom(_resolvedPath)
             : null;
@@ -386,13 +490,24 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         var options = new CsvSaveOptions
         {
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             IncludeHeader = includeHeader ?? !NoHeader.IsPresent,
             Culture = Culture ?? CultureInfo.InvariantCulture,
             Encoding = Encoding,
+            CompressionType = CompressionType,
+            CompressionLevel = CompressionLevel,
             FormulaInjectionPolicy = FormulaInjectionPolicy,
             QuoteMode = UseQuotes,
             QuoteFields = QuoteFields
         };
+
+        CsvPowerShellOptionBuilder.ApplySaveOptions(
+            options,
+            NullValue,
+            DateTimeFormat,
+            UseUtc.IsPresent,
+            CompressionType,
+            CompressionLevel);
 
         if (!string.IsNullOrEmpty(NewLine))
         {
@@ -430,19 +545,150 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
     private string? GetTargetPathForErrors() => IsLiteralPathParameterSet() ? LiteralPath : Path;
 
-    private StreamWriter CreateTextWriter(bool append, CsvSaveOptions options)
+    private TextWriter CreateTextWriter(bool append, CsvSaveOptions options)
     {
-        var encoding = ResolveOutputEncoding(append, options);
         var appendToContent = append && _appendToExistingFile;
-        var mode = appendToContent ? FileMode.Append : FileMode.Create;
+        var compressionType = CsvFile.ResolveCompression(options.CompressionType, _resolvedPath!);
+        if (appendToContent && compressionType != CsvCompressionType.None)
+        {
+            throw new NotSupportedException("Appending to compressed CSV files is not supported.");
+        }
+
+        var encoding = ResolveOutputEncoding(append, options);
+        options.Encoding = encoding;
         if (appendToContent)
         {
             EnsureAppendStartsOnNewRecord(_resolvedPath!, options);
         }
 
-        var stream = new FileStream(_resolvedPath!, mode, FileAccess.Write, FileShare.Read, StreamWriterBufferSize, FileOptions.SequentialScan);
-        return new StreamWriter(stream, encoding, bufferSize: StreamWriterBufferSize);
+        options.Encoding = encoding;
+        return CsvFile.CreateTextWriter(_resolvedPath!, options, append: appendToContent, bufferSize: StreamWriterBufferSize);
     }
+
+    private static bool IsCompressedAppendTarget(CsvCompressionType requestedCompressionType, string path)
+    {
+        if (requestedCompressionType == CsvCompressionType.None)
+        {
+            return HasGZipHeader(path) ||
+                HasDeflatePayload(path) ||
+                HasBrotliPayload(path) ||
+                HasZLibPayload(path);
+        }
+
+        return CsvFile.ResolveCompression(requestedCompressionType, path) != CsvCompressionType.None ||
+            HasCompressedFileExtension(path) ||
+            HasGZipHeader(path) ||
+            HasDeflatePayload(path) ||
+            HasBrotliPayload(path) ||
+            HasZLibPayload(path);
+    }
+
+    private static bool HasCompressedFileExtension(string path)
+    {
+        var extension = System.IO.Path.GetExtension(path);
+        return string.Equals(extension, ".gz", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".gzip", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".deflate", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".br", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".brotli", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".zlib", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasGZipHeader(string path)
+    {
+        var header = new byte[2];
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, StreamWriterBufferSize, FileOptions.SequentialScan);
+        return stream.Read(header, 0, header.Length) == header.Length && header[0] == 0x1F && header[1] == 0x8B;
+    }
+
+    private static bool HasDeflatePayload(string path)
+    {
+        try
+        {
+            var buffer = new byte[CompressionProbeBufferSize];
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, StreamWriterBufferSize, FileOptions.SequentialScan);
+            if (stream.Length == 0)
+            {
+                return false;
+            }
+
+            using var deflateStream = new DeflateStream(stream, CompressionMode.Decompress, leaveOpen: false);
+            var bytesRead = deflateStream.Read(buffer, 0, buffer.Length);
+            return bytesRead > 0;
+        }
+        catch (InvalidDataException)
+        {
+            return false;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+    }
+
+    private static bool HasBrotliPayload(string path)
+    {
+#if NET8_0_OR_GREATER
+        try
+        {
+            return CanReadCompressedPayload(path, static stream => new BrotliStream(stream, CompressionMode.Decompress, leaveOpen: false));
+        }
+        catch (InvalidDataException)
+        {
+            return false;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (InvalidOperationException)
+        {
+            return false;
+        }
+#else
+        return false;
+#endif
+    }
+
+    private static bool HasZLibPayload(string path)
+    {
+#if NET8_0_OR_GREATER
+        try
+        {
+            return CanReadCompressedPayload(path, static stream => new ZLibStream(stream, CompressionMode.Decompress, leaveOpen: false));
+        }
+        catch (InvalidDataException)
+        {
+            return false;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (InvalidOperationException)
+        {
+            return false;
+        }
+#else
+        return false;
+#endif
+    }
+
+#if NET8_0_OR_GREATER
+    private static bool CanReadCompressedPayload(string path, Func<Stream, Stream> streamFactory)
+    {
+        var buffer = new byte[CompressionProbeBufferSize];
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, StreamWriterBufferSize, FileOptions.SequentialScan);
+        if (stream.Length == 0)
+        {
+            return false;
+        }
+
+        using var compressedStream = streamFactory(stream);
+        var bytesRead = compressedStream.Read(buffer, 0, buffer.Length);
+        return bytesRead > 0;
+    }
+#endif
 
     private Encoding ResolveOutputEncoding(bool append, CsvSaveOptions options) =>
         options.Encoding ?? (append ? _appendEncoding : null) ?? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
@@ -486,8 +732,10 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         var options = new CsvLoadOptions
         {
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             Encoding = Encoding ?? _appendEncoding,
             Culture = Culture ?? CultureInfo.InvariantCulture,
+            CompressionType = CompressionType,
             Mode = CsvLoadMode.Stream
         };
 
@@ -602,6 +850,23 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
         return null;
     }
 
+    private string[]? GetEffectiveAppendHeader(IReadOnlyList<string> sourceColumns)
+    {
+        if (_appendHeader is not { Length: > 0 })
+        {
+            return null;
+        }
+
+        if (!NoHeader.IsPresent ||
+            Force.IsPresent ||
+            ContainsColumns(sourceColumns, _appendHeader))
+        {
+            return _appendHeader;
+        }
+
+        return null;
+    }
+
     private string[]? GetEffectiveAppendHeader(CsvDocument document)
     {
         if (_appendHeader is not { Length: > 0 })
@@ -616,6 +881,12 @@ public sealed class ExportOfficeCsvCommand : PSCmdlet
 
         var documentHeader = new HashSet<string>(document.Header, StringComparer.OrdinalIgnoreCase);
         return _appendHeader.All(documentHeader.Contains) ? _appendHeader : null;
+    }
+
+    private static bool ContainsColumns(IReadOnlyList<string> sourceColumns, IReadOnlyList<string> requiredColumns)
+    {
+        var columns = new HashSet<string>(sourceColumns, StringComparer.OrdinalIgnoreCase);
+        return requiredColumns.All(columns.Contains);
     }
 
     private static void WriteDocumentRows(CsvDocument document, CsvObjectWriter writer, IReadOnlyList<string> columns, bool projectByName)

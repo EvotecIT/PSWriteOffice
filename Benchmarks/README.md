@@ -18,7 +18,7 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
 ```
 
 ```powershell
-pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -ListScenarios
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard -Plan
 ```
 
 ```powershell
@@ -115,12 +115,48 @@ PowerShell CSV import/export:
 - `PSWriteOffice`
 - `NativeCsv`
 
+The CSV suite also includes dbatools-shaped read scenarios over the same
+generated CSV shape used by `dataplat/dbatools.library/benchmarks/CsvBenchmarks`.
+`csv-dbatools-quick-single-column` and `csv-dbatools-quick-all-columns` cover the
+upstream `QuickTest` pattern and the small/medium/large reader shape by changing
+`-RowCount`. The explicit `csv-dbatools-wide-*` and `csv-dbatools-quoted-*`
+lanes cover the upstream wide 50-column and quote-all files.
+
+The `csv-read-datatable-*` lanes compare `Import-OfficeCsv -AsDataTable` with a
+native PowerShell baseline that reads via `Import-Csv` and fills a `DataTable`.
+That keeps the database/table workflow visible instead of comparing only
+PowerShell object materialization.
+
+The `csv-write-gzip-*` and `csv-read-gzip-datatable-*` lanes keep compressed
+CSV in the same benchmark matrix. The native baseline uses `GZipStream` with
+`ConvertTo-Csv` / `ConvertFrom-Csv`, while PSWriteOffice uses
+`Export-OfficeCsv -CompressionType GZip` and
+`Import-OfficeCsv -CompressionType GZip`.
+
+### CSV Capability Coverage
+
+The CSV benchmarks sit next to feature coverage on purpose: the target is fast
+and correct, not a narrow parser trick. OfficeIMO.CSV owns the reusable CSV
+engine; PSWriteOffice exposes the PowerShell surface over it.
+
+| Capability | Current PSWriteOffice / OfficeIMO.CSV support | Benchmark visibility |
+| --- | --- | --- |
+| Streaming reads | `Import-OfficeCsv` streams rows by default; `-AsDataTable` materializes one table when the next hop is tabular | Object read lanes and DataTable read lanes |
+| Streaming writes | `Export-OfficeCsv` accepts objects, `DataTable`, `DataView`, and `IDataReader` input | Object/DataTable write lanes; DbaClientX export benchmark covers direct `IDataReader` SQL export |
+| Compression | `Export-OfficeCsv` / `Import-OfficeCsv` expose `-CompressionType`; OfficeIMO.CSV supports none, auto, GZip, Deflate, and runtime-supported Brotli/ZLib | GZip write/read DataTable lanes |
+| Cancellation | OfficeIMO.CSV accepts a cancellation token; PSWriteOffice cancels it from `StopProcessing`, so Ctrl+C can stop long reads | Contract coverage, not timed by default |
+| Progress | OfficeIMO.CSV exposes progress callbacks; PSWriteOffice exposes `-ProgressInterval` and writes PowerShell progress records | Contract coverage, not timed by default |
+| Schema and typed tables | OfficeIMO.CSV supports explicit/inferred schema, `DataTable`, and `IDataReader` schema tables; PSWriteOffice exposes `Import-OfficeCsv -AsDataTable -InferSchema` | DataTable read lanes; DbaClientX round-trip uses table handoff |
+| CSV dialects | Culture/list separator, delimiter detection, multi-character delimiters, no-header/custom headers, comments, W3C headers, null values, date formats, quote modes, and selected quote fields | Default benchmark dialect plus focused command tests |
+| Robust parsing | Duplicate-header policy, row-length mismatch policy, strict/lenient quotes, parse-error collection/skip-row, max field length, decompression limits, smart-quote normalization, and string interning | Command/core tests; timed lanes stay on clean generated files |
+| Platform shape | PSWriteOffice targets Windows PowerShell/.NET Framework and PowerShell 7/.NET; Brotli/ZLib depend on runtime support, and comparison tools such as `bcp`/FastBCP/dbatools must be installed locally | Benchmarks skip unavailable optional engines |
+
 ```powershell
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 -Suite Smoke
 ```
 
 ```powershell
-pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 -Suite Standard -ListScenarios
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 -Suite Standard -Plan
 ```
 
 ```powershell
@@ -132,15 +168,115 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
     -UpdateReadme
 ```
 
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 100000 `
+    -Scenario csv-dbatools-quick-single-column,csv-dbatools-quick-all-columns `
+    -Engine PSWriteOffice,NativeCsv
+```
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 100000 `
+    -Scenario csv-dbatools-wide-single-column,csv-dbatools-wide-all-columns,csv-dbatools-quoted-single-column,csv-dbatools-quoted-all-columns `
+    -Engine PSWriteOffice,NativeCsv
+```
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 10000,100000 `
+    -Scenario csv-write-datatable `
+    -Engine PSWriteOffice,NativeCsv
+```
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 10000,100000 `
+    -Scenario csv-read-datatable-mixed,csv-read-datatable-wide `
+    -Engine PSWriteOffice,NativeCsv
+```
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
+    -Suite Smoke `
+    -RowCount 10000,100000 `
+    -Scenario csv-write-gzip-mixed,csv-read-gzip-datatable-mixed,csv-write-gzip-wide,csv-read-gzip-datatable-wide `
+    -Engine PSWriteOffice,NativeCsv
+```
+
+Focused local dbatools QuickTest-shaped run, `20260708-053630-00691048`, 100,000
+rows, 10 columns, three measured iterations:
+
+| Scenario | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | --- |
+| First column read | 341.3 ms, 294,869 rows/s | 347.3 ms, 285,460 rows/s | PSWriteOffice fastest |
+| All columns read | 1.08 s, 92,385 rows/s | 1.12 s, 89,942 rows/s | PSWriteOffice fastest |
+
+Focused local DataTable CSV write run, `20260708-060903-2e761e92`, five
+measured iterations:
+
+| Rows | PSWriteOffice median | NativeCsv median | Result |
+| ---: | ---: | ---: | --- |
+| 10,000 | 59.8 ms | 42.2 ms | NativeCsv fastest |
+| 100,000 | 43.9 ms | 301.5 ms | PSWriteOffice fastest |
+
+Focused local dbatools wide/quoted run, `20260708-072202-eb2e9470`, 10,000
+rows, three measured iterations:
+
+| Scenario | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | --- |
+| Quoted all columns | 119.8 ms, 81,573 rows/s | 127.0 ms, 76,753 rows/s | PSWriteOffice fastest |
+| Quoted first column | 44.8 ms, 222,418 rows/s | 48.7 ms, 205,266 rows/s | PSWriteOffice fastest |
+| Wide all columns | 643.9 ms, 15,344 rows/s | 651.9 ms, 15,291 rows/s | PSWriteOffice fastest |
+| Wide first column | 99.6 ms, 98,934 rows/s | 124.5 ms, 80,758 rows/s | PSWriteOffice fastest |
+
+Focused local DataTable CSV read run, `20260708-100615-e9dbaa80`, 100,000
+rows, three measured iterations. The native baseline reads with `Import-Csv`
+and fills a `DataTable`, so this compares the table/database workflow rather
+than only PowerShell object output:
+
+<!-- BENCHMARK:CsvDataTableComparison:START -->
+| Scenario | Rows | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | ---: | --- |
+| csv-read-datatable-mixed | 100000 | 219.6 ms (1.00x) | 2.57 s (11.72x slower) | PSWriteOffice fastest |
+| csv-read-datatable-wide | 100000 | 1.60 s (1.00x) | 10.85 s (6.78x slower) | PSWriteOffice fastest |
+<!-- BENCHMARK:CsvDataTableComparison:END -->
+
+Focused local GZip CSV run, generated by the benchmark updater. The write lanes
+validate by decompressing and counting rows; the read lanes validate the returned
+DataTable row count.
+
+<!-- BENCHMARK:CsvGZipComparison:START -->
+| Scenario | Rows | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | ---: | --- |
+| csv-read-gzip-datatable-mixed | 10000 | 77.5 ms (1.00x) | 205.2 ms (2.65x slower) | PSWriteOffice fastest |
+| csv-read-gzip-datatable-wide | 10000 | 45.2 ms (1.00x) | 706.0 ms (15.63x slower) | PSWriteOffice fastest |
+| csv-write-gzip-mixed | 10000 | 86.7 ms (1.00x) | 192.1 ms (2.22x slower) | PSWriteOffice fastest |
+| csv-write-gzip-wide | 10000 | 118.8 ms (1.00x) | 397.7 ms (3.35x slower) | PSWriteOffice fastest |
+<!-- BENCHMARK:CsvGZipComparison:END -->
+
+The 100,000-row repeated wide/quoted object-output run was stopped after more
+than nine minutes without a completed artifact. Treat that as a signal that the
+large all-column PowerShell-object path is dominated by `PSCustomObject` /
+`PSNoteProperty` materialization. Use `Import-OfficeCsv -AsDataTable` for
+table/database workflows; use object output when the next step really needs
+PowerShell objects.
+
 <!-- BENCHMARK:CsvComparison:START -->
 | Scenario | Rows | PSWriteOffice | NativeCsv | Result |
 | --- | ---: | ---: | ---: | --- |
-| csv-read-source | 1000 | 53.8 ms (1.00x) | 20.8 ms (2.58x faster) | NativeCsv fastest; PSWriteOffice 2.58x slower |
-| csv-read-source | 5000 | 61.8 ms (1.00x) | 16.7 ms (3.70x faster) | NativeCsv fastest; PSWriteOffice 3.70x slower |
-| csv-read-source | 10000 | 62.2 ms (1.00x) | 179.4 ms (2.89x slower) | PSWriteOffice fastest |
-| csv-write | 1000 | 60.0 ms (1.00x) | 51.1 ms (1.17x faster) | NativeCsv fastest; PSWriteOffice 1.17x slower |
-| csv-write | 5000 | 124.8 ms (1.00x) | 24.6 ms (5.08x faster) | NativeCsv fastest; PSWriteOffice 5.08x slower |
-| csv-write | 10000 | 238.6 ms (1.00x) | 77.3 ms (3.09x faster) | NativeCsv fastest; PSWriteOffice 3.09x slower |
+| csv-read-source-mixed | 1000 | 10.3 ms (1.00x) | 12.7 ms (1.23x slower) | PSWriteOffice fastest |
+| csv-read-source-mixed | 5000 | 19.2 ms (1.00x) | 25.2 ms (1.32x slower) | PSWriteOffice fastest |
+| csv-read-source-mixed | 10000 | 71.6 ms (1.00x) | 60.1 ms (1.19x faster) | NativeCsv fastest; PSWriteOffice 1.19x slower |
+| csv-read-source-mixed | 100000 | 824.8 ms (1.00x) | 704.0 ms (1.17x faster) | NativeCsv fastest; PSWriteOffice 1.17x slower |
+| csv-write-mixed | 1000 | 13.7 ms (1.00x) | 14.3 ms (1.05x slower) | PSWriteOffice fastest |
+| csv-write-mixed | 5000 | 21.9 ms (1.00x) | 22.3 ms (1.02x slower) | PSWriteOffice fastest |
+| csv-write-mixed | 10000 | 30.2 ms (1.00x) | 29.4 ms (1.03x faster) | NativeCsv fastest; PSWriteOffice 1.03x slower |
+| csv-write-mixed | 100000 | 203.6 ms (1.00x) | 217.9 ms (1.07x slower) | PSWriteOffice fastest |
 <!-- BENCHMARK:CsvComparison:END -->
 
 ## Options

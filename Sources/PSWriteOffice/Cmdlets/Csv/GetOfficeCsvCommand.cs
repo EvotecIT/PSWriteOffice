@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using System.Threading;
 using OfficeIMO.CSV;
 
 namespace PSWriteOffice.Cmdlets.Csv;
@@ -41,6 +43,8 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     private const string ParameterSetTextDelimiter = "TextDelimiter";
     private const string ParameterSetTextCulture = "TextCulture";
     private const string ParameterSetTextDetect = "TextDetect";
+    private readonly List<CsvParseError> _parseErrors = new();
+    private readonly CancellationTokenSource _cancellation = new();
 
     /// <summary>Path to one or more CSV files. Wildcards are supported.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSetPathDelimiter)]
@@ -80,6 +84,12 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetTextDelimiter)]
     public char Delimiter { get; set; } = ',';
+
+    /// <summary>Field delimiter text for multi-character delimiters such as || or ::.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetTextDelimiter)]
+    public string? DelimiterText { get; set; }
 
     /// <summary>Detect the delimiter from the first meaningful records.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetPathDetect)]
@@ -127,6 +137,45 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [Parameter]
     public CsvColumnCountMismatchPolicy ColumnCountMismatchPolicy { get; set; } = CsvColumnCountMismatchPolicy.PadMissingFieldsAndIgnoreExtraFields;
 
+    /// <summary>Controls how duplicate header names are handled.</summary>
+    [Parameter]
+    public CsvDuplicateHeaderBehavior DuplicateHeaderBehavior { get; set; } = CsvDuplicateHeaderBehavior.Rename;
+
+    /// <summary>Token that is materialized as null when loading rows.</summary>
+    [Parameter]
+    public string? NullValue { get; set; }
+
+    /// <summary>Additional date/time formats used by typed conversions and validation.</summary>
+    [Parameter]
+    public string[]? DateTimeFormats { get; set; }
+
+    /// <summary>Controls whether malformed quoted fields are parsed leniently or rejected.</summary>
+    [Parameter]
+    public CsvQuoteParsingMode QuoteParsingMode { get; set; } = CsvQuoteParsingMode.Lenient;
+
+    /// <summary>Static columns appended to every loaded row.</summary>
+    [Parameter]
+    public IDictionary? StaticColumns { get; set; }
+
+    /// <summary>Compression used when reading files. Auto infers from the file extension.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
+    public CsvCompressionType CompressionType { get; set; } = CsvCompressionType.Auto;
+
+    /// <summary>Maximum decompressed bytes to read from compressed CSV files.</summary>
+    [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetPathDetect)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
+    [ValidateRange(0, long.MaxValue)]
+    public long? MaxDecompressedBytes { get; set; }
+
     /// <summary>Load mode controlling materialization.</summary>
     [Parameter]
     public CsvLoadMode Mode { get; set; } = CsvLoadMode.InMemory;
@@ -143,6 +192,42 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
     public Encoding? Encoding { get; set; }
+
+    /// <summary>How parse errors are handled.</summary>
+    [Parameter]
+    public CsvParseErrorAction ParseErrorAction { get; set; } = CsvParseErrorAction.Throw;
+
+    /// <summary>Collect parse errors and write them as non-terminating errors after each input.</summary>
+    [Parameter]
+    public SwitchParameter CollectParseErrors { get; set; }
+
+    /// <summary>Maximum number of collected parse errors before parsing fails.</summary>
+    [Parameter]
+    [ValidateRange(0, int.MaxValue)]
+    public int MaxParseErrors { get; set; } = 100;
+
+    /// <summary>Maximum length allowed for any parsed field.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? MaxFieldLength { get; set; }
+
+    /// <summary>Maximum length allowed for fields parsed from quoted records.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? MaxQuotedFieldLength { get; set; }
+
+    /// <summary>Normalize curly quote characters to straight quotes.</summary>
+    [Parameter]
+    public SwitchParameter NormalizeQuotes { get; set; }
+
+    /// <summary>Reuse repeated string values through a per-read cache.</summary>
+    [Parameter]
+    public SwitchParameter InternStrings { get; set; }
+
+    /// <summary>Report progress every N parsed records.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? ProgressInterval { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
@@ -166,6 +251,7 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             Header = Header,
             SkipInitialRecords = SkipRows,
             Delimiter = Delimiter,
+            DelimiterText = DelimiterText,
             DetectDelimiter = DetectDelimiter.IsPresent,
             DelimiterCandidates = DelimiterCandidates,
             TrimWhitespace = TrimWhitespace,
@@ -174,9 +260,49 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             SkipCommentRows = SkipCommentRows.IsPresent,
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
+            DuplicateHeaderBehavior = DuplicateHeaderBehavior,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
-            Mode = Mode
+            Mode = Mode,
+            CompressionType = CompressionType,
+            MaxDecompressedBytes = MaxDecompressedBytes,
+            CancellationToken = _cancellation.Token,
+            ProgressReportInterval = ProgressInterval ?? 0,
+            ProgressCallback = ProgressInterval.HasValue ? WriteCsvProgress : null,
+            QuoteParsingMode = QuoteParsingMode,
+            NullValue = NullValue,
+            DateTimeFormats = DateTimeFormats,
+            ParseErrorAction = ParseErrorAction,
+            CollectParseErrors = CollectParseErrors.IsPresent,
+            MaxParseErrors = MaxParseErrors,
+            ParseErrors = _parseErrors,
+            MaxFieldLength = MaxFieldLength,
+            MaxQuotedFieldLength = MaxQuotedFieldLength,
+            NormalizeQuotes = NormalizeQuotes.IsPresent,
+            InternStrings = InternStrings.IsPresent
         };
+
+        if (IsTextParameterSet())
+        {
+            CsvPowerShellOptionBuilder.ApplyTextLoadOptions(
+                options,
+                DuplicateHeaderBehavior,
+                NullValue,
+                DateTimeFormats,
+                QuoteParsingMode,
+                StaticColumns);
+        }
+        else
+        {
+            CsvPowerShellOptionBuilder.ApplyLoadOptions(
+                options,
+                DuplicateHeaderBehavior,
+                NullValue,
+                DateTimeFormats,
+                QuoteParsingMode,
+                StaticColumns,
+                CompressionType,
+                MaxDecompressedBytes);
+        }
 
         if (Culture != null)
         {
@@ -188,6 +314,11 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             options.Encoding = Encoding;
         }
 
+        if ((CollectParseErrors.IsPresent || ProgressInterval.HasValue) && options.Mode == CsvLoadMode.Stream)
+        {
+            options.Mode = CsvLoadMode.InMemory;
+        }
+
         if (IsPathParameterSet())
         {
             foreach (var resolvedPath in ResolveInputPaths())
@@ -197,7 +328,9 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
                     throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
                 }
 
+                _parseErrors.Clear();
                 WriteObject(CsvDocument.Load(resolvedPath, options));
+                WriteCollectedParseErrors(resolvedPath);
             }
         }
         else if (IsLiteralPathParameterSet())
@@ -209,13 +342,24 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
                     throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
                 }
 
+                _parseErrors.Clear();
                 WriteObject(CsvDocument.Load(resolvedPath, options));
+                WriteCollectedParseErrors(resolvedPath);
             }
         }
         else
         {
+            _parseErrors.Clear();
             WriteObject(CsvDocument.Parse(Text ?? string.Empty, options));
+            WriteCollectedParseErrors("Text");
         }
+    }
+
+    /// <inheritdoc />
+    protected override void StopProcessing()
+    {
+        _cancellation.Cancel();
+        base.StopProcessing();
     }
 
     private bool IsPathParameterSet() =>
@@ -227,6 +371,11 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
         string.Equals(ParameterSetName, ParameterSetLiteralPathDelimiter, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetLiteralPathCulture, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(ParameterSetName, ParameterSetLiteralPathDetect, StringComparison.OrdinalIgnoreCase);
+
+    private bool IsTextParameterSet() =>
+        string.Equals(ParameterSetName, ParameterSetTextDelimiter, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(ParameterSetName, ParameterSetTextCulture, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(ParameterSetName, ParameterSetTextDetect, StringComparison.OrdinalIgnoreCase);
 
     private IEnumerable<string> ResolveInputPaths()
     {
@@ -253,6 +402,29 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             {
                 yield return resolvedPath;
             }
+        }
+    }
+
+    private void WriteCsvProgress(CsvProgress progress)
+    {
+        WriteProgress(new ProgressRecord(
+            activityId: 1,
+            activity: "Loading CSV",
+            statusDescription: $"{progress.RecordsRead:N0} records parsed"));
+    }
+
+    private void WriteCollectedParseErrors(string target)
+    {
+        foreach (var error in _parseErrors)
+        {
+            WriteError(new ErrorRecord(
+                error.Exception,
+                "CsvParseError",
+                ErrorCategory.ParserError,
+                target)
+            {
+                ErrorDetails = new ErrorDetails(error.Message)
+            });
         }
     }
 }
