@@ -136,8 +136,9 @@ CSV in the same benchmark matrix. The native baseline uses `GZipStream` with
 ### CSV Capability Coverage
 
 The CSV benchmarks sit next to feature coverage on purpose: the target is fast
-and correct, not a narrow parser trick. OfficeIMO.CSV owns the reusable CSV
-engine; PSWriteOffice exposes the PowerShell surface over it.
+and correct, not a narrow parser trick. They measure the CSV reader and writer
+paths used by PSWriteOffice, including streaming, compression, typed values, and
+round-trip validation.
 
 | Capability | Current PSWriteOffice / OfficeIMO.CSV support | Benchmark visibility |
 | --- | --- | --- |
@@ -146,7 +147,7 @@ engine; PSWriteOffice exposes the PowerShell surface over it.
 | Compression | `Export-OfficeCsv` / `Import-OfficeCsv` expose `-CompressionType`; OfficeIMO.CSV supports none, auto, GZip, Deflate, and runtime-supported Brotli/ZLib | GZip write/read DataTable lanes |
 | Cancellation | OfficeIMO.CSV accepts a cancellation token; PSWriteOffice cancels it from `StopProcessing`, so Ctrl+C can stop long reads | Contract coverage, not timed by default |
 | Progress | OfficeIMO.CSV exposes progress callbacks; PSWriteOffice exposes `-ProgressInterval` and writes PowerShell progress records | Contract coverage, not timed by default |
-| Schema and typed tables | OfficeIMO.CSV supports explicit/inferred schema, `DataTable`, and `IDataReader` schema tables; PSWriteOffice exposes `Import-OfficeCsv -AsDataTable -InferSchema` | DataTable read lanes; DbaClientX round-trip uses table handoff |
+| Schema and typed tables | OfficeIMO.CSV supports explicit/inferred schema, `DataTable`, and `IDataReader` schema tables; PSWriteOffice exposes `Import-OfficeCsv -AsDataTable -InferSchema` and `Import-OfficeCsv -AsDataReader -ColumnType` | DataTable read lanes; DbaClientX round-trip uses schema-aware reader handoff |
 | CSV dialects | Culture/list separator, delimiter detection, multi-character delimiters, no-header/custom headers, comments, W3C headers, null values, date formats, quote modes, and selected quote fields | Default benchmark dialect plus focused command tests |
 | Robust parsing | Duplicate-header policy, row-length mismatch policy, strict/lenient quotes, parse-error collection/skip-row, max field length, decompression limits, smart-quote normalization, and string interning | Command/core tests; timed lanes stay on clean generated files |
 | Platform shape | PSWriteOffice targets Windows PowerShell/.NET Framework and PowerShell 7/.NET; Brotli/ZLib depend on runtime support, and comparison tools such as `bcp`/FastBCP/dbatools must be installed locally | Benchmarks skip unavailable optional engines |
@@ -284,12 +285,12 @@ PowerShell objects.
 The wrappers build PSWriteOffice in `Release` mode by default and import local
 development binaries when a selected run includes `PSWriteOffice`. Use
 `-PSWriteOfficeConfiguration Debug` for diagnostics or `-SkipPSWriteOfficeBuild`
-when intentionally reusing a previous build. Quick and focused runs leave this
+when reusing an existing local build. Quick and focused runs leave this
 README unchanged unless `-UpdateReadme` is specified.
 
-The scripts use published OfficeIMO packages by default by setting
-`OfficeIMORoot` to `.missing-officeimo`. Use `-OfficeIMORoot` when validating
-unreleased OfficeIMO source changes:
+By default the scripts use the OfficeIMO assemblies packaged with
+PSWriteOffice. Pass `-OfficeIMORoot` only when validating unreleased OfficeIMO
+source changes:
 
 ```powershell
 $evotecRoot = if ($env:EVOTEC_GITHUB_ROOT) { $env:EVOTEC_GITHUB_ROOT } else { 'C:\Support\GitHub' }

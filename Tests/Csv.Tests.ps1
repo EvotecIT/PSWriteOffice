@@ -36,6 +36,7 @@ Describe 'CSV cmdlets' {
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'ProgressInterval'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'ProgressInterval'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'InferSchema'
+        (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'ColumnType'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'DuplicateHeaderBehavior'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NullValue'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'DateTimeFormats'
@@ -384,6 +385,35 @@ Describe 'CSV cmdlets' {
         } finally {
             $reader.Dispose()
         }
+    }
+
+    It 'imports CSV rows as a typed IDataReader from explicit column types' {
+        $path = Join-Path $TestDrive 'reader-column-type.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value,Created`nAlpha,1,2026-07-07`nBeta,2,2026-07-08" -Encoding UTF8
+
+        $reader = Import-OfficeCsv -Path $path -AsDataReader -ColumnType @{
+            Value = [int]
+            Created = [datetime]
+        }
+        try {
+            $reader.GetFieldType($reader.GetOrdinal('Name')) | Should -Be ([string])
+            $reader.GetFieldType($reader.GetOrdinal('Value')) | Should -Be ([int])
+            $reader.GetFieldType($reader.GetOrdinal('Created')) | Should -Be ([datetime])
+            $reader.Read() | Should -BeTrue
+            $reader.GetString($reader.GetOrdinal('Name')) | Should -Be 'Alpha'
+            $reader.GetInt32($reader.GetOrdinal('Value')) | Should -Be 1
+            $reader.GetDateTime($reader.GetOrdinal('Created')) | Should -Be ([datetime]'2026-07-07')
+        } finally {
+            $reader.Dispose()
+        }
+    }
+
+    It 'rejects combining explicit column types with schema inference' {
+        $path = Join-Path $TestDrive 'reader-column-type-infer.csv'
+        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
+
+        { Import-OfficeCsv -Path $path -AsDataReader -ColumnType @{ Value = [int] } -InferSchema -ErrorAction Stop } |
+            Should -Throw '*ColumnType*InferSchema*'
     }
 
     It 'keeps progress-enabled CSV readers and documents safe to consume after cmdlet return' {

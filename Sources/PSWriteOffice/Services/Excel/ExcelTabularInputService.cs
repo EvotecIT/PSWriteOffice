@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using OfficeIMO.Data;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services;
 
@@ -20,149 +21,21 @@ internal static class ExcelTabularInputService
             throw new ArgumentNullException(nameof(input));
         }
 
-        var items = new List<object?>();
-        foreach (var item in input)
+        var table = TabularDataTableBuilder.FromItems(input, new TabularDataOptions
         {
-            if (item == null)
-            {
-                continue;
-            }
+            TableName = tableName,
+            CopyExistingDataTable = copyExistingTables,
+            ColumnDiscoveryMode = TabularColumnDiscoveryMode.FirstRow,
+            UnwrapValue = Unwrap,
+            ProjectObject = item => ProjectPowerShellObject(item, normalizerOptions)
+        });
 
-            items.Add(item);
-        }
-
-        if (items.Count == 0)
+        if (table.Columns.Count == 0 && table.Rows.Count == 0)
         {
             throw new ArgumentException("Provide at least one data row.", nameof(input));
         }
 
-        if (items.Count == 1)
-        {
-            var single = Unwrap(items[0]);
-            if (single is DataTable dataTable)
-            {
-                return copyExistingTables ? dataTable.Copy() : dataTable;
-            }
-
-            if (single is DataView dataView)
-            {
-                return dataView.ToTable();
-            }
-
-            if (single is IDataReader reader)
-            {
-                var dataTableFromReader = string.IsNullOrWhiteSpace(tableName)
-                    ? new DataTable()
-                    : new DataTable(tableName);
-                dataTableFromReader.Load(reader);
-                return dataTableFromReader;
-            }
-        }
-
-        var first = Unwrap(items[0]);
-        if (first is DataRow firstRow)
-        {
-            var rows = new List<DataRow>(items.Count) { firstRow };
-            for (var i = 1; i < items.Count; i++)
-            {
-                if (Unwrap(items[i]) is not DataRow row)
-                {
-                    rows.Clear();
-                    break;
-                }
-
-                rows.Add(row);
-            }
-
-            if (rows.Count > 0)
-            {
-                return FromDataRows(rows);
-            }
-        }
-
-        if (first is DataRowView firstRowView)
-        {
-            var rows = new List<DataRow>(items.Count) { firstRowView.Row };
-            for (var i = 1; i < items.Count; i++)
-            {
-                if (Unwrap(items[i]) is not DataRowView rowView)
-                {
-                    rows.Clear();
-                    break;
-                }
-
-                rows.Add(rowView.Row);
-            }
-
-            if (rows.Count > 0)
-            {
-                return FromDataRows(rows);
-            }
-        }
-
-        if (TryProjectToDataTable(items, tableName, normalizerOptions, out var projectedTable))
-        {
-            return projectedTable;
-        }
-
-        var normalized = PowerShellObjectNormalizer.NormalizeItems(items, normalizerOptions);
-        return ObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
-    }
-
-    private static bool TryProjectToDataTable(
-        IReadOnlyList<object?> items,
-        string? tableName,
-        PowerShellObjectNormalizerOptions? normalizerOptions,
-        out DataTable table)
-    {
-        table = string.IsNullOrWhiteSpace(tableName)
-            ? new DataTable()
-            : new DataTable(tableName);
-
-        string[]? columns = null;
-        table.MinimumCapacity = Math.Max(table.MinimumCapacity, items.Count);
-        table.BeginLoadData();
-        try
-        {
-            foreach (var item in items)
-            {
-                if (!PowerShellObjectNormalizer.TryProjectItem(item, columns, out var projectedColumns, out var values, normalizerOptions))
-                {
-                    table.EndLoadData();
-                    table = null!;
-                    return false;
-                }
-
-                if (columns == null)
-                {
-                    columns = projectedColumns;
-                    if (columns.Length == 0)
-                    {
-                        table.EndLoadData();
-                        table = null!;
-                        return false;
-                    }
-
-                    foreach (var column in columns)
-                    {
-                        table.Columns.Add(column, typeof(object));
-                    }
-                }
-
-                for (var i = 0; i < values.Length; i++)
-                {
-                    values[i] ??= DBNull.Value;
-                }
-
-                table.Rows.Add(values);
-            }
-        }
-        finally
-        {
-            table?.EndLoadData();
-        }
-
-        return columns != null;
+        return table;
     }
 
     public static DataSet? TryGetSingleDataSet(IEnumerable<object?> input)
@@ -172,25 +45,7 @@ internal static class ExcelTabularInputService
             throw new ArgumentNullException(nameof(input));
         }
 
-        DataSet? dataSet = null;
-        var count = 0;
-        foreach (var item in input)
-        {
-            if (item == null)
-            {
-                continue;
-            }
-
-            count++;
-            if (count > 1)
-            {
-                return null;
-            }
-
-            dataSet = Unwrap(item) as DataSet;
-        }
-
-        return count == 1 ? dataSet : null;
+        return TabularDataTableBuilder.TryGetSingleDataSet(input, Unwrap);
     }
 
     public static IDataReader? TryGetSingleDataReader(IEnumerable<object?> input)
@@ -200,47 +55,7 @@ internal static class ExcelTabularInputService
             throw new ArgumentNullException(nameof(input));
         }
 
-        IDataReader? reader = null;
-        var count = 0;
-        foreach (var item in input)
-        {
-            if (item == null)
-            {
-                continue;
-            }
-
-            count++;
-            if (count > 1)
-            {
-                return null;
-            }
-
-            reader = Unwrap(item) as IDataReader;
-        }
-
-        return count == 1 ? reader : null;
-    }
-
-    private static DataTable FromDataRows(IReadOnlyList<DataRow> rows)
-    {
-        if (rows.Count == 0)
-        {
-            throw new ArgumentException("Provide at least one data row.", nameof(rows));
-        }
-
-        var source = rows[0].Table;
-        var result = source.Clone();
-        foreach (var row in rows)
-        {
-            if (!ReferenceEquals(row.Table, source))
-            {
-                throw new InvalidOperationException("DataRow inputs must come from the same DataTable.");
-            }
-
-            result.ImportRow(row);
-        }
-
-        return result;
+        return TabularDataTableBuilder.TryGetSingleDataReader(input, Unwrap);
     }
 
     private static object? Unwrap(object? item)
@@ -251,5 +66,22 @@ internal static class ExcelTabularInputService
         }
 
         return item;
+    }
+
+    private static IReadOnlyDictionary<string, object?>? ProjectPowerShellObject(object? item, PowerShellObjectNormalizerOptions? normalizerOptions)
+    {
+        if (!PowerShellObjectNormalizer.TryProjectItem(item, null, out var columns, out var values, normalizerOptions) ||
+            columns.Length == 0)
+        {
+            return null;
+        }
+
+        var row = new Dictionary<string, object?>(columns.Length, StringComparer.OrdinalIgnoreCase);
+        for (var i = 0; i < columns.Length; i++)
+        {
+            row[columns[i]] = values[i];
+        }
+
+        return row;
     }
 }

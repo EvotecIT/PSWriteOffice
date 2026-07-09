@@ -16,11 +16,9 @@ PowerShell-first document automation for Word, Excel, PowerPoint, PDF, RTF, Mark
 
 ## Why PSWriteOffice ✨
 
-`PSWriteOffice` is the PowerShell layer for `OfficeIMO.*`.
+`PSWriteOffice` brings `OfficeIMO.*` document automation to PowerShell through cmdlets, DSL aliases, examples, and scripting-friendly defaults.
 
-- `OfficeIMO` owns the document engine and low-level file-format behavior.
-- `PSWriteOffice` owns the PowerShell cmdlets, DSL aliases, packaging, examples, and scripting ergonomics.
-- The goal is simple: make Office document automation feel native in PowerShell without requiring Microsoft Office on the machine.
+The goal is simple: make Office document automation feel native in PowerShell without requiring Microsoft Office on the machine.
 
 Start here when you want to create polished documents from PowerShell: workbooks with tables, charts, links, images, pivots, and navigation; Word reports with sections, headers, footers, tables, charts, and conversions; PowerPoint decks with reusable slides, notes, sections, themes, and transitions; PDFs with composition, extraction, forms, stamps, and metadata; RTF documents and bridges; Markdown and CSV workflows; Visio diagrams; and unified readback for existing files.
 
@@ -286,62 +284,35 @@ Import-OfficeExcel -Path .\Report.xlsx -WorksheetName 'Data'
 
 ### CSV, Excel, and database round trips
 
-PSWriteOffice owns the file side of the flow. Database access, provider-specific bulk writes, table creation, and verification belong to DbaClientX. The examples below export SQL Server rows to CSV or Excel, import the file back as a `DataTable`, write it to a destination table with DbaClientX, and verify row counts.
+The examples below export SQL Server rows to CSV or Excel, import the file back as a `DataTable`, write it to a destination table with DbaClientX, and verify row counts.
 
 ```powershell
 .\Examples\Csv\Example-CsvDbaClientXRoundTrip.ps1 -Server localhost -Database tempdb -RowCount 100
 .\Examples\Excel\Example-ExcelDbaClientXRoundTrip.ps1 -Server localhost -Database tempdb -RowCount 100
 ```
 
-### Excel benchmark snapshot
+### CSV and Excel benchmark snapshot
 
-The benchmark harness in `Benchmarks\Compare-ExcelPerformance.ps1` compares
-`Export-OfficeExcel` / `Import-OfficeExcel` with `ImportExcel` and `ExcelFast`
-on repeatable local workloads. The table below is a local snapshot, not a
-universal performance promise: hardware, PowerShell version, data shape,
-formatting, and workbook features all matter.
+The benchmark numbers are local timing snapshots, not promises for every
+machine or data shape. These docs assume matching OfficeIMO, PSWriteOffice, and
+DbaClientX releases are installed, so the examples show the normal public
+commands directly.
 
-Run context: PowerShell 7.5.5, AMD Ryzen 9 9950X3D2 16-Core Processor
-(16 cores / 32 logical processors), 64 GB RAM, Standard suite, median of three
-runs, measured on 2026-06-22.
+| Area | Current timing signal | Remaining target |
+| --- | --- | --- |
+| Excel workbook export/import | PSWriteOffice is fastest across the checked-in Excel matrix in `Benchmarks\README.md`, including object export, DataTable export, workbook reads, append/update, chart, pivot, and report workbook lanes against `ImportExcel` and supported `ExcelFast` lanes. | Keep widening C# and PowerShell read/write coverage so OfficeIMO.Excel stays ahead of specialized readers on real workbook workflows, not only simple cells. |
+| CSV table/database flow | `Import-OfficeCsv -AsDataTable` is 6.78x to 11.72x faster than the native PowerShell DataTable baseline in the 100k-row local snapshot. Through DbaClientX, the 100k-row SQL round-trip snapshot is about 4x faster than dbatools for default CSV and compressed CSV, faster for typed CSV, and effectively tied for compressed typed CSV. | Push the compressed typed CSV lane from tie to clear win, then keep widening the SQL round-trip matrix. |
+| CSV object flow | PSWriteOffice wins small mixed reads and most mixed writes, while the current 10k/100k mixed object read snapshot is still about 1.17x to 1.19x slower than native `Import-Csv`. | Fix the raw/object reader path in OfficeIMO.CSV rather than adding PSWriteOffice-side shortcuts. |
 
-| Scenario | Rows | Winner | PSWriteOffice 1.0.3 / OfficeIMO.Excel 0.6.47 | ImportExcel 7.8.10 | ExcelFast 0.0.1-alpha16 | Relative time (winner = 1x) |
-| --- | ---: | --- | ---: | ---: | ---: | --- |
-| Export objects default | 1k | PSWriteOffice | 16 ms | 183 ms | 126 ms | PSWriteOffice 1x; ImportExcel 11.44x; ExcelFast 7.88x |
-| Export objects default | 10k | PSWriteOffice | 84 ms | 1,287 ms | 153 ms | PSWriteOffice 1x; ImportExcel 15.32x; ExcelFast 1.82x |
-| Export objects default | 25k | PSWriteOffice | 199 ms | 3,827 ms | 233 ms | PSWriteOffice 1x; ImportExcel 19.23x; ExcelFast 1.17x |
-| Export wide objects default | 1k | PSWriteOffice | 26 ms | 166 ms | 127 ms | PSWriteOffice 1x; ImportExcel 6.38x; ExcelFast 4.88x |
-| Export wide objects default | 10k | PSWriteOffice | 256 ms | 1,231 ms | 296 ms | PSWriteOffice 1x; ImportExcel 4.81x; ExcelFast 1.16x |
-| Export wide objects default | 25k | PSWriteOffice | 679 ms | 3,832 ms | 1,134 ms | PSWriteOffice 1x; ImportExcel 5.64x; ExcelFast 1.67x |
-| Import mixed objects full sheet | 1k | PSWriteOffice | 9 ms | 52 ms | 32 ms | PSWriteOffice 1x; ImportExcel 5.78x; ExcelFast 3.56x |
-| Import mixed objects full sheet | 10k | PSWriteOffice | 98 ms | 383 ms | 311 ms | PSWriteOffice 1x; ImportExcel 3.91x; ExcelFast 3.17x |
-| Import mixed objects full sheet | 25k | PSWriteOffice | 333 ms | 3,083 ms | 881 ms | PSWriteOffice 1x; ImportExcel 9.26x; ExcelFast 2.65x |
-| Report workbook with table, chart, pivot, formatting | 1k | PSWriteOffice | 98 ms | 214 ms | n/a | PSWriteOffice 1x; ImportExcel 2.18x; ExcelFast n/a |
-| Report workbook with table, chart, pivot, formatting | 10k | PSWriteOffice | 1,134 ms | 1,560 ms | n/a | PSWriteOffice 1x; ImportExcel 1.38x; ExcelFast n/a |
-| Report workbook with table, chart, pivot, formatting | 25k | PSWriteOffice | 3,677 ms | 3,929 ms | n/a | PSWriteOffice 1x; ImportExcel 1.07x; ExcelFast n/a |
-| Export regional workbook, one table per sheet | 1k | PSWriteOffice | 105 ms | 248 ms | n/a | PSWriteOffice 1x; ImportExcel 2.36x; ExcelFast n/a |
-| Export regional workbook, one table per sheet | 10k | PSWriteOffice | 735 ms | 1,509 ms | n/a | PSWriteOffice 1x; ImportExcel 2.05x; ExcelFast n/a |
-| Export regional workbook, one table per sheet | 25k | PSWriteOffice | 2,003 ms | 3,611 ms | n/a | PSWriteOffice 1x; ImportExcel 1.8x; ExcelFast n/a |
-| Export title, offset header, frozen top row | 1k | ImportExcel | 251 ms | 222 ms | n/a | PSWriteOffice 1.13x; ImportExcel 1x; ExcelFast n/a |
-| Export title, offset header, frozen top row | 10k | PSWriteOffice | 735 ms | 1,370 ms | n/a | PSWriteOffice 1x; ImportExcel 1.86x; ExcelFast n/a |
-| Export title, offset header, frozen top row | 25k | PSWriteOffice | 1,828 ms | 3,290 ms | n/a | PSWriteOffice 1x; ImportExcel 1.8x; ExcelFast n/a |
-| Export data workbook with summary formulas | 1k | PSWriteOffice | 53 ms | 192 ms | n/a | PSWriteOffice 1x; ImportExcel 3.62x; ExcelFast n/a |
-| Export data workbook with summary formulas | 10k | PSWriteOffice | 507 ms | 1,449 ms | n/a | PSWriteOffice 1x; ImportExcel 2.86x; ExcelFast n/a |
-| Export data workbook with summary formulas | 25k | PSWriteOffice | 1,531 ms | 3,254 ms | n/a | PSWriteOffice 1x; ImportExcel 2.13x; ExcelFast n/a |
-
-To compare on your machine, run:
+To compare on your machine:
 
 ```powershell
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Standard
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 -Suite Standard
 ```
 
-The benchmark output also records exact module prerelease versions, machine and
-runtime metadata, per-engine support status, file sizes, and memory deltas in
-the generated CSV/JSON files. Export scenarios are also opened after generation
-and checked with Open XML validation when the validator is available. The full
-scenario list includes append, existing-workbook update, many-sheet, named
-range, chart-only, pivot-only, and read-focused workloads. See
-`Benchmarks\README.md` for the artifact schema and scenario list.
+The full tables, commands, artifact layout, validation checks, and notes about
+optional comparison tools live in `Benchmarks\README.md`.
 
 ### Excel readers
 
