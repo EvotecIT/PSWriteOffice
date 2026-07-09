@@ -859,8 +859,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
         if (!NoHeader.IsPresent ||
             Force.IsPresent ||
-            ContainsColumns(sourceColumns, _appendHeader) ||
-            SharesAnyColumn(sourceColumns, _appendHeader))
+            ContainsColumns(sourceColumns, _appendHeader))
         {
             return _appendHeader;
         }
@@ -888,12 +887,6 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     {
         var columns = new HashSet<string>(sourceColumns, StringComparer.OrdinalIgnoreCase);
         return requiredColumns.All(columns.Contains);
-    }
-
-    private static bool SharesAnyColumn(IReadOnlyList<string> sourceColumns, IReadOnlyList<string> requiredColumns)
-    {
-        var columns = new HashSet<string>(sourceColumns, StringComparer.OrdinalIgnoreCase);
-        return requiredColumns.Any(columns.Contains);
     }
 
     private static void WriteDocumentRows(CsvDocument document, CsvObjectWriter writer, IReadOnlyList<string> columns, bool projectByName)

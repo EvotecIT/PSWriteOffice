@@ -724,28 +724,36 @@ Describe 'CSV cmdlets' {
         [System.IO.File]::ReadAllText($path) | Should -Be $original
     }
 
-    It 'validates DataTable append headers when headers are not written' {
-        $path = Join-Path $TestDrive 'datatable-append-no-header-validation.csv'
-        Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
+    It 'uses full matching append headers when DataTable headers are not written' {
+        $path = Join-Path $TestDrive 'datatable-append-no-header-full-match.csv'
+        Set-Content -LiteralPath $path -Value "Value,Name`n1,Alpha" -Encoding UTF8
         $table = [System.Data.DataTable]::new('Rows')
         [void] $table.Columns.Add('Name', [string])
-        [void] $table.Rows.Add('Beta')
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
 
-        {
-            Export-OfficeCsv -InputObject $table -Path $path -Append -NoHeader -ErrorAction Stop
-        } | Should -Throw '*missing*Value*'
+        Export-OfficeCsv -InputObject $table -Path $path -Append -NoHeader
 
         Get-Content -LiteralPath $path | Should -Be @(
-            'Name,Value'
-            'Alpha,1'
+            'Value,Name'
+            '1,Alpha'
+            '2,Beta'
         )
+    }
 
-        Export-OfficeCsv -InputObject $table -Path $path -Append -NoHeader -Force
+    It 'does not infer partial matching headerless DataTable append rows as headers' {
+        $path = Join-Path $TestDrive 'datatable-append-no-header-partial-match.csv'
+        [System.IO.File]::WriteAllText($path, 'Name,1')
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Beta', 2)
+
+        Export-OfficeCsv -InputObject $table -Path $path -Append -NoHeader
 
         Get-Content -LiteralPath $path | Should -Be @(
-            'Name,Value'
-            'Alpha,1'
-            'Beta,'
+            'Name,1'
+            'Beta,2'
         )
     }
 
