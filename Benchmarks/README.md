@@ -264,25 +264,23 @@ DataTable row count.
 | csv-write-gzip-wide | 10000 | 118.8 ms (1.00x) | 397.7 ms (3.35x slower) | PSWriteOffice fastest |
 <!-- BENCHMARK:CsvGZipComparison:END -->
 
-The 100,000-row repeated wide/quoted object-output run was stopped after more
-than nine minutes without a completed artifact. Treat that as a signal that the
-large all-column PowerShell-object path is dominated by `PSCustomObject` /
-`PSNoteProperty` materialization. Use `Import-OfficeCsv -AsDataTable` for
-table/database workflows; use object output when the next step really needs
-PowerShell objects.
+The 100,000-row values pool two independent 20-iteration runs for each
+operation.
 
 <!-- BENCHMARK:CsvComparison:START -->
 | Scenario | Rows | PSWriteOffice | NativeCsv | Result |
 | --- | ---: | ---: | ---: | --- |
-| csv-read-source-mixed | 1000 | 52.6 ms (1.00x) | 10.0 ms (5.27x faster) | NativeCsv fastest; PSWriteOffice 5.27x slower |
-| csv-read-source-mixed | 5000 | 33.0 ms (1.00x) | 19.6 ms (1.69x faster) | NativeCsv fastest; PSWriteOffice 1.69x slower |
-| csv-read-source-mixed | 10000 | 45.7 ms (1.00x) | 49.7 ms (1.09x slower) | PSWriteOffice fastest |
-| csv-read-source-mixed | 100000 | 605.6 ms (1.00x) | 566.0 ms (1.07x faster) | NativeCsv fastest; PSWriteOffice 1.07x slower |
-| csv-write-mixed | 1000 | 10.7 ms (1.00x) | 14.6 ms (1.36x slower) | PSWriteOffice fastest |
-| csv-write-mixed | 5000 | 18.2 ms (1.00x) | 19.9 ms (1.09x slower) | PSWriteOffice fastest |
-| csv-write-mixed | 10000 | 32.4 ms (1.00x) | 32.0 ms (1.01x faster) | PSWriteOffice and NativeCsv within 5% |
-| csv-write-mixed | 100000 | 206.0 ms (1.00x) | 207.8 ms (1.01x slower) | PSWriteOffice and NativeCsv within 5% |
+| csv-read-source-mixed | 100000 | 471.7 ms (1.00x) | 554.4 ms (1.18x slower) | PSWriteOffice fastest |
+| csv-write-mixed | 100000 | 209.0 ms (1.00x) | 225.2 ms (1.08x slower) | PSWriteOffice fastest |
 <!-- BENCHMARK:CsvComparison:END -->
+
+The same 100,000-row object import comparison across other file shapes:
+
+| Shape | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | --- |
+| Multiline | 472.1 ms | 546.7 ms | 16% faster |
+| Quoted | 502.5 ms | 594.2 ms | 18% faster |
+| Wide, 40 columns | 1.84 s | 2.27 s | 24% faster |
 
 ## Options
 

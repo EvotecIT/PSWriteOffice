@@ -395,6 +395,13 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                     {
                         WriteDataTable(resolved, options, System.IO.Path.GetFileNameWithoutExtension(resolved));
                     }
+#if NET8_0_OR_GREATER
+                    else if (!_asHashtable && !NormalizeQuotes.IsPresent && !InternStrings.IsPresent)
+                    {
+                        var visitor = new CsvPowerShellRowSpanVisitor(_rowWriter, this);
+                        CsvDocument.ReadRowFieldSpans(resolved, ref visitor, options);
+                    }
+#endif
                     else
                     {
                         CsvDocument.ReadRowsReusable(resolved, WriteRow, options);

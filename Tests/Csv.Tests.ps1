@@ -82,6 +82,21 @@ Describe 'CSV cmdlets' {
         $data[0].Region | Should -Be 'NA'
     }
 
+    It 'imports quoted multiline and padded fields as row objects' {
+        $path = Join-Path $TestDrive 'multiline-padded.csv'
+        [System.IO.File]::WriteAllText(
+            $path,
+            "Name,Note,Value`nAlpha,`"one`ntwo`",1`nBeta,plain")
+
+        $rows = @(Import-OfficeCsv -Path $path)
+
+        $rows.Count | Should -Be 2
+        $rows[0].Name | Should -Be 'Alpha'
+        $rows[0].Note | Should -Be "one`ntwo"
+        $rows[1].Name | Should -Be 'Beta'
+        $rows[1].Value | Should -Be ''
+    }
+
     It 'uses configured null tokens and date formats when converting and exporting rows' {
         $rows = @(
             [pscustomobject]@{
