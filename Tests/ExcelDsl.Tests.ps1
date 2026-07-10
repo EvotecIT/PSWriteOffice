@@ -3947,6 +3947,22 @@ namespace PSWriteOffice.Tests {
         $clrPlaceholder[0].Broken | Should -BeLike 'Property export failed:*boom*'
     }
 
+    It 'uses first-row columns without evaluating later-only properties' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelFirstRowProjection.xlsx'
+        $first = [PSCustomObject]@{ Name = 'Alpha' }
+        $second = [PSCustomObject]@{ Name = 'Beta' }
+        $second | Add-Member -MemberType ScriptProperty -Name Broken -Value { throw 'later-only property was evaluated' }
+
+        { @($first, $second) | Export-OfficeExcel -Path $path -WorksheetName 'Data' -PropertyConversionErrorAction Stop -ErrorAction Stop } |
+            Should -Not -Throw
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $imported.Count | Should -Be 2
+        $imported[0].PSObject.Properties.Name | Should -Contain 'Name'
+        $imported[0].PSObject.Properties.Name | Should -Not -Contain 'Broken'
+        $imported[1].Name | Should -Be 'Beta'
+    }
+
     It 'sets category date-axis scale values through the chart axis cmdlet' {
         $path = Join-Path $TestDrive 'DslExcelCategoryAxisScale.xlsx'
         $rows = @(

@@ -143,7 +143,7 @@ function Get-CsvBenchmarkCase {
     ) | Where-Object { (($_.Suites -split ',') -contains $Suite) }
 }
 
-function Test-ExcelBenchmarkEngineSupport {
+function Test-ExcelBenchmarkEngineCaseSupport {
     param(
         [Parameter(Mandatory)]
         [string] $Engine,
@@ -153,7 +153,11 @@ function Test-ExcelBenchmarkEngineSupport {
     )
 
     $operation = [string]$Case.OperationKey
-    $name = [string]$Case.Scenario
+    $name = if ($Case.PSObject.Properties['Scenario']) {
+        [string]$Case.Scenario
+    } else {
+        ''
+    }
     if ($name.Length -eq 0 -and $Case.PSObject.Properties['Name']) {
         $name = [string]$Case.Name
     }
@@ -165,12 +169,28 @@ function Test-ExcelBenchmarkEngineSupport {
                 $name -ne 'dataset-worksheets'
         }
         ExcelFast {
-            return $name -in @('objects-default', 'wide-objects-default', 'import-default-full', 'import-default-range', 'read-no-header-range') -and
-                [bool](Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1)
+            return $name -in @('objects-default', 'wide-objects-default', 'import-default-full', 'import-default-range', 'read-no-header-range')
         }
         NativeCsv { return $false }
         default { return $false }
     }
+}
+
+function Test-ExcelBenchmarkEngineSupport {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Engine,
+
+        [Parameter(Mandatory)]
+        [object] $Case
+    )
+
+    if (-not (Test-ExcelBenchmarkEngineCaseSupport -Engine $Engine -Case $Case)) {
+        return $false
+    }
+
+    return $Engine -ne 'ExcelFast' -or
+        [bool](Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1)
 }
 
 function Test-CsvBenchmarkEngineSupport {

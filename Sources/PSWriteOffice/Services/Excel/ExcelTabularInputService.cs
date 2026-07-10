@@ -27,7 +27,7 @@ internal static class ExcelTabularInputService
             CopyExistingDataTable = copyExistingTables,
             ColumnDiscoveryMode = TabularColumnDiscoveryMode.FirstRow,
             UnwrapValue = Unwrap,
-            ProjectObject = item => ProjectPowerShellObject(item, normalizerOptions)
+            ProjectObject = (item, columns) => ProjectPowerShellObject(item, columns, normalizerOptions)
         });
 
         if (table.Columns.Count == 0 && table.Rows.Count == 0)
@@ -68,18 +68,22 @@ internal static class ExcelTabularInputService
         return item;
     }
 
-    private static IReadOnlyDictionary<string, object?>? ProjectPowerShellObject(object? item, PowerShellObjectNormalizerOptions? normalizerOptions)
+    private static IReadOnlyDictionary<string, object?>? ProjectPowerShellObject(
+        object? item,
+        IReadOnlyList<string>? columns,
+        PowerShellObjectNormalizerOptions? normalizerOptions)
     {
-        if (!PowerShellObjectNormalizer.TryProjectItem(item, null, out var columns, out var values, normalizerOptions) ||
-            columns.Length == 0)
+        var knownColumns = columns as string[] ?? columns?.ToArray();
+        if (!PowerShellObjectNormalizer.TryProjectItem(item, knownColumns, out var projectedColumns, out var values, normalizerOptions) ||
+            projectedColumns.Length == 0)
         {
             return null;
         }
 
-        var row = new Dictionary<string, object?>(columns.Length, StringComparer.OrdinalIgnoreCase);
-        for (var i = 0; i < columns.Length; i++)
+        var row = new Dictionary<string, object?>(projectedColumns.Length, StringComparer.OrdinalIgnoreCase);
+        for (var i = 0; i < projectedColumns.Length; i++)
         {
-            row[columns[i]] = values[i];
+            row[projectedColumns[i]] = values[i];
         }
 
         return row;
