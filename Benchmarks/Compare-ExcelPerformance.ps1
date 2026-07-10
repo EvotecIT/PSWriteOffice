@@ -93,13 +93,22 @@ if ($requiresExcelFast) {
         $env:PSModulePath = $excelFastModuleRoot + [IO.Path]::PathSeparator + $env:PSModulePath
     }
 
-    if (-not (Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1)) {
-        if ([bool]$SkipExcelFastInstall) {
-            throw 'ExcelFast is not installed and -SkipExcelFastInstall was specified.'
+    try {
+        if (-not (Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1)) {
+            if ([bool]$SkipExcelFastInstall) {
+                throw 'ExcelFast is not installed and -SkipExcelFastInstall was specified.'
+            }
+            Save-Module -Name ExcelFast -Path $excelFastModuleRoot -Repository PSGallery -AllowPrerelease -Force -ErrorAction Stop
         }
-        Save-Module -Name ExcelFast -Path $excelFastModuleRoot -Repository PSGallery -AllowPrerelease -Force -ErrorAction Stop
+        Import-Module ExcelFast -Force -ErrorAction Stop
+    } catch {
+        Write-Warning "Skipping ExcelFast benchmark lanes because ExcelFast could not be prepared. $($_.Exception.Message)"
+        $Engine = @($Engine | Where-Object { $_ -ne 'ExcelFast' })
+        $selectedRuns = @($selectedRuns | Where-Object Engine -NE 'ExcelFast')
+        if ($Engine.Count -eq 0) {
+            throw 'No benchmark engines remain after ExcelFast availability checks.'
+        }
     }
-    Import-Module ExcelFast -Force -ErrorAction Stop
 }
 
 $psWriteOfficeFixtureOperations = @(
