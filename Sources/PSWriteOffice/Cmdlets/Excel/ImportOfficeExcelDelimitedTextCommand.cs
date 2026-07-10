@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
+using OfficeIMO.Reader.Csv;
 using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
@@ -97,11 +98,11 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
         if (PassThru.IsPresent)
         {
             var output = new PSObject();
-            output.Properties.Add(new PSNoteProperty("SheetName", result.ImportResult.SheetName));
-            output.Properties.Add(new PSNoteProperty("TableName", result.ImportResult.TableName));
-            output.Properties.Add(new PSNoteProperty("Range", result.ImportResult.Range));
-            output.Properties.Add(new PSNoteProperty("RowCount", result.ImportResult.RowCount));
-            output.Properties.Add(new PSNoteProperty("ColumnCount", result.ImportResult.ColumnCount));
+            output.Properties.Add(new PSNoteProperty("SheetName", result.SheetName));
+            output.Properties.Add(new PSNoteProperty("TableName", result.TableName));
+            output.Properties.Add(new PSNoteProperty("Range", result.Range));
+            output.Properties.Add(new PSNoteProperty("RowCount", result.RowCount));
+            output.Properties.Add(new PSNoteProperty("ColumnCount", result.ColumnCount));
             output.Properties.Add(new PSNoteProperty("Delimiter", result.Delimiter.ToString()));
             output.Properties.Add(new PSNoteProperty("Warnings", result.Warnings));
             WriteObject(output);

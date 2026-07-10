@@ -4488,7 +4488,7 @@ namespace PSWriteOffice.Tests {
         }
     }
 
-    It 'imports normalized delimited text through the OfficeIMO core' {
+    It 'imports normalized delimited text into Excel' {
         $path = Join-Path $TestDrive 'DslExcelDelimitedImport.xlsx'
         $csv = Join-Path $TestDrive 'DelimitedImport.csv'
 
