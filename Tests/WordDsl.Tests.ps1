@@ -140,6 +140,7 @@ Describe 'Word DSL surface' {
         } finally {
             $document.Dispose()
         }
+
     }
 
     It 'preserves authored paragraph and table order inside a single Word section' {
@@ -262,6 +263,24 @@ Describe 'Word DSL surface' {
         } finally {
             $document.Dispose()
         }
+
+        $document = Get-OfficeWord -Path $path -Password 'secret'
+        try {
+            $document.AddParagraph('Updated encrypted Word value') | Out-Null
+            $document | Save-OfficeWord -Password 'secret'
+        } finally {
+            $document | Close-OfficeWord
+        }
+
+        $document = Get-OfficeWord -Path $path -Password 'secret' -ReadOnly
+        try {
+            $document.Paragraphs.Text | Should -Contain 'Updated encrypted Word value'
+        } finally {
+            $document | Close-OfficeWord
+        }
+
+        { Get-OfficeWord -Path $path -Password 'secret' -AutoSave -ErrorAction Stop } |
+            Should -Throw '*require explicit Save-OfficeWord*'
     }
 
     It 'runs the Word DSL against a cloned template document' {

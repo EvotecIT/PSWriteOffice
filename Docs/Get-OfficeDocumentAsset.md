@@ -11,7 +11,7 @@ Reads or materializes embedded assets discovered by OfficeIMO.Reader from a supp
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentAsset [-Path] <string> [-OutputDirectory <string>] [-Kind <string[]>] [-MediaType <string[]>] [-Extension <string[]>] [-NoOverwrite] [-ValidatePayloadHash] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [<CommonParameters>]
+Get-OfficeDocumentAsset [-Path] <string> [-OutputDirectory <string>] [-Kind <string[]>] [-MediaType <string[]>] [-Extension <string[]>] [-NoOverwrite] [-ValidatePayloadHash] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -321,6 +321,22 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Reader
+{{ Fill Reader Description }}
+
+```yaml
+Type: OfficeDocumentReader
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

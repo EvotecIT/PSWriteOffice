@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -16,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelHeaderFooter", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelHeaderFooter")]
-public sealed class SetOfficeExcelHeaderFooterCommand : PSCmdlet
+public sealed class SetOfficeExcelHeaderFooterCommand : AsyncPSCmdlet
 {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
@@ -110,7 +111,7 @@ public sealed class SetOfficeExcelHeaderFooterCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
+    protected override async Task ProcessRecordAsync()
     {
         var sheet = ResolveSheet();
 
@@ -134,7 +135,8 @@ public sealed class SetOfficeExcelHeaderFooterCommand : PSCmdlet
         }
         else if (!string.IsNullOrWhiteSpace(HeaderImageUrl))
         {
-            sheet.SetHeaderImageUrl(HeaderImagePosition, HeaderImageUrl!, ImageWidthPoints, ImageHeightPoints);
+            await sheet.SetHeaderImageFromUrlAsync(HeaderImagePosition, HeaderImageUrl!, ImageWidthPoints, ImageHeightPoints, CancelToken)
+                .ConfigureAwait(false);
         }
 
         if (!string.IsNullOrWhiteSpace(FooterImagePath))
@@ -145,7 +147,8 @@ public sealed class SetOfficeExcelHeaderFooterCommand : PSCmdlet
         }
         else if (!string.IsNullOrWhiteSpace(FooterImageUrl))
         {
-            sheet.SetFooterImageUrl(FooterImagePosition, FooterImageUrl!, ImageWidthPoints, ImageHeightPoints);
+            await sheet.SetFooterImageFromUrlAsync(FooterImagePosition, FooterImageUrl!, ImageWidthPoints, ImageHeightPoints, CancelToken)
+                .ConfigureAwait(false);
         }
 
         if (PassThru.IsPresent)

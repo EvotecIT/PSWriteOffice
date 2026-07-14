@@ -11,7 +11,7 @@ Reads visual payloads discovered by OfficeIMO.Reader from a supported document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentVisual [-Path] <string> [-AsExport] [-OutputDirectory <string>] [-NoOverwrite] [-Indented] [-NoPayload] [-NoJson] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [<CommonParameters>]
+Get-OfficeDocumentVisual [-Path] <string> [-AsExport] [-OutputDirectory <string>] [-NoOverwrite] [-Indented] [-NoPayload] [-NoJson] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -330,6 +330,22 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Reader
+{{ Fill Reader Description }}
+
+```yaml
+Type: OfficeDocumentReader
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

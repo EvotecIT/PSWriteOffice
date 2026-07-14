@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using OfficeIMO.Drawing;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services;
 
@@ -7,6 +11,8 @@ namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelDocumentService
 {
+    private static readonly ConcurrentDictionary<ExcelDocument, string> EncryptedSourcePaths = new();
+
     public static ExcelDocument CreateDocument(string filePath, bool autoSave)
     {
         if (string.IsNullOrWhiteSpace(filePath))
@@ -14,12 +20,12 @@ internal static class ExcelDocumentService
             throw new ArgumentException("File path cannot be empty.", nameof(filePath));
         }
 
-        return ExcelDocument.Create(Path.GetFullPath(filePath), autoSave);
+        return ExcelDocument.Create(Path.GetFullPath(filePath), CreateOptions(autoSave));
     }
 
     public static ExcelDocument CreateInMemoryDocument()
     {
-        return ExcelDocument.Create(new MemoryStream(), autoSave: false);
+        return ExcelDocument.Create();
     }
 
     public static ExcelDocument CreateDocumentFromTemplate(string templatePath, string filePath, bool autoSave)
@@ -37,8 +43,11 @@ internal static class ExcelDocumentService
         return ExcelDocument.CreateFromTemplate(
             Path.GetFullPath(templatePath),
             Path.GetFullPath(filePath),
-            overwrite: true,
-            autoSave: autoSave);
+            new ExcelTemplateCreateOptions
+            {
+                Overwrite = true,
+                PersistenceMode = autoSave ? DocumentPersistenceMode.SaveOnDispose : DocumentPersistenceMode.Explicit
+            });
     }
 
     public static void CopyWorkbookPackage(string sourcePath, string destinationPath, bool overwrite)
@@ -69,27 +78,38 @@ internal static class ExcelDocumentService
 
         if (!string.IsNullOrEmpty(password))
         {
-            return OfficeEncryptedPackageService.LoadExcel(resolvedPath, password!, readOnly, autoSave);
+            var document = OfficeEncryptedPackageService.LoadExcel(resolvedPath, password!, readOnly, autoSave);
+            EncryptedSourcePaths[document] = resolvedPath;
+            return document;
         }
 
-        return ExcelDocument.Load(resolvedPath, readOnly, autoSave);
+        return ExcelDocument.Load(resolvedPath, CreateLoadOptions(readOnly, autoSave));
     }
 
-    public static ExcelDocument LoadDocument(Uri uri, bool readOnly, bool allowHttp, string? password = null)
+    public static Task<ExcelDocument> LoadDocumentAsync(
+        Uri uri,
+        bool readOnly,
+        bool allowHttp,
+        string? password = null,
+        CancellationToken cancellationToken = default)
     {
         if (!string.IsNullOrEmpty(password))
         {
             throw new NotSupportedException("Encrypted remote workbook loads are not supported.");
         }
 
-        return ExcelDocument.Load(uri, ExcelHttpLoadService.CreateOptions(allowHttp), readOnly);
+        return ExcelDocument.LoadAsync(
+            uri,
+            ExcelHttpLoadService.CreateOptions(allowHttp),
+            CreateLoadOptions(readOnly, autoSave: false),
+            cancellationToken);
     }
 
     public static void SaveDocument(ExcelDocument document, bool show, string? filePath, string? password = null, ExcelSaveOptions? saveOptions = null)
     {
         if (document == null) throw new ArgumentNullException(nameof(document));
 
-        var currentPath = document.FilePath ?? string.Empty;
+        var currentPath = GetAssociatedPath(document) ?? string.Empty;
         if (!string.IsNullOrEmpty(filePath))
         {
             var target = filePath!;
@@ -98,6 +118,7 @@ internal static class ExcelDocumentService
                 SaveDocumentToPath(document, Path.GetFullPath(target), false, password, saveOptions);
                 var savedAsPath = document.FilePath ?? target;
                 document.Dispose();
+                EncryptedSourcePaths.TryRemove(document, out _);
                 if (show)
                 {
                     FileOpenService.Open(savedAsPath);
@@ -108,24 +129,24 @@ internal static class ExcelDocumentService
 
         if (!string.IsNullOrEmpty(password))
         {
-            if (string.IsNullOrWhiteSpace(document.FilePath))
+            var targetPath = GetAssociatedPath(document);
+            if (string.IsNullOrWhiteSpace(targetPath))
             {
                 throw new InvalidOperationException("No file path provided for encrypted save.");
             }
 
-            var targetPath = document.FilePath!;
-            OfficeEncryptedPackageService.SaveExcel(document, targetPath, password!, false, saveOptions);
+            OfficeEncryptedPackageService.SaveExcel(document, targetPath!, password!, false, saveOptions);
         }
         else
         {
             if (saveOptions == null)
             {
-                document.Save(false);
+                document.Save();
             }
             else if (!string.IsNullOrWhiteSpace(document.FilePath))
             {
                 var targetPath = document.FilePath!;
-                document.Save(targetPath, false, saveOptions);
+                document.Save(targetPath, saveOptions);
             }
             else
             {
@@ -135,6 +156,7 @@ internal static class ExcelDocumentService
 
         var savedPath = document.FilePath ?? filePath ?? throw new InvalidOperationException("No saved file path was available.");
         document.Dispose();
+        EncryptedSourcePaths.TryRemove(document, out _);
         if (show)
         {
             FileOpenService.Open(savedPath);
@@ -184,11 +206,46 @@ internal static class ExcelDocumentService
             return;
         }
 
-        document.Save(path, openExcel, saveOptions);
+        document.Save(path, saveOptions);
     }
+
+    private static ExcelCreateOptions CreateOptions(bool autoSave) => new()
+    {
+        PersistenceMode = autoSave ? DocumentPersistenceMode.SaveOnDispose : DocumentPersistenceMode.Explicit
+    };
+
+    private static ExcelLoadOptions CreateLoadOptions(bool readOnly, bool autoSave) => new()
+    {
+        AccessMode = readOnly ? DocumentAccessMode.ReadOnly : DocumentAccessMode.ReadWrite,
+        PersistenceMode = autoSave ? DocumentPersistenceMode.SaveOnDispose : DocumentPersistenceMode.Explicit
+    };
 
     public static void CloseDocument(ExcelDocument document)
     {
-        document?.Dispose();
+        if (document == null)
+        {
+            return;
+        }
+
+        try
+        {
+            document.Dispose();
+        }
+        finally
+        {
+            EncryptedSourcePaths.TryRemove(document, out _);
+        }
     }
+
+    internal static string? GetAssociatedPath(ExcelDocument document)
+    {
+        if (!string.IsNullOrWhiteSpace(document.FilePath))
+        {
+            return document.FilePath;
+        }
+
+        return EncryptedSourcePaths.TryGetValue(document, out var path) ? path : null;
+    }
+
+    internal static bool IsEncryptedSource(ExcelDocument document) => EncryptedSourcePaths.ContainsKey(document);
 }

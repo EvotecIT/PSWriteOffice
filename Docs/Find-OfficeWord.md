@@ -30,7 +30,7 @@ Find-OfficeWord [-Pattern] <string> -Document <WordDocument> [-CaseSensitive] [-
 ```
 
 ## DESCRIPTION
-Returns matching paragraphs or a WordFind result when using regex with -AsResult.
+Returns matching paragraphs or a WordSearchResult when using regex with -AsResult.
 
 ## EXAMPLES
 
@@ -56,7 +56,7 @@ Returns the full regex result so paragraphs, table matches, headers, and footers
 ## PARAMETERS
 
 ### -AsResult
-Emit the full WordFind result for regex searches.
+Emit the full WordSearchResult result for regex searches.
 
 ```yaml
 Type: SwitchParameter
@@ -161,7 +161,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 - `OfficeIMO.Word.WordParagraph
-OfficeIMO.Word.WordFind`
+OfficeIMO.Word.WordSearchResult`
 
 ## RELATED LINKS
 

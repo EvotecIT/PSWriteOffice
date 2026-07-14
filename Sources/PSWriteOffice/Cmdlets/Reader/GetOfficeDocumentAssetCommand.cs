@@ -23,7 +23,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentAsset")]
 [Alias("Read-OfficeDocumentAsset", "Export-OfficeDocumentAsset")]
 [OutputType(typeof(OfficeDocumentAsset), typeof(OfficeDocumentMaterializedAsset))]
-public sealed class GetOfficeDocumentAssetCommand : PSCmdlet
+public sealed class GetOfficeDocumentAssetCommand : OfficeDocumentReaderCommandBase
 {
     /// <summary>File path to read.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
@@ -103,12 +103,6 @@ public sealed class GetOfficeDocumentAssetCommand : PSCmdlet
     public SwitchParameter NoHashes { get; set; }
 
     /// <inheritdoc />
-    protected override void BeginProcessing()
-    {
-        ReaderCommandUtilities.RegisterReaderAdapters();
-    }
-
-    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
@@ -118,7 +112,7 @@ public sealed class GetOfficeDocumentAssetCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = ReaderCommandUtilities.ResolvePath(this, OutputDirectory!);
-            var result = DocumentReader.ReadDocument(path, options);
+            var result = EffectiveReader.ReadDocument(path, options);
             var materialized = result.WriteAssetsToDirectory(outputDirectory, new OfficeDocumentAssetMaterializationOptions
             {
                 Overwrite = !NoOverwrite.IsPresent,
@@ -129,7 +123,7 @@ public sealed class GetOfficeDocumentAssetCommand : PSCmdlet
             return;
         }
 
-        var assets = DocumentReader.ReadAssets(path, options);
+        var assets = EffectiveReader.ReadAssets(path, options);
         WriteObject(predicate == null ? assets : assets.Where(predicate).ToArray(), enumerateCollection: true);
     }
 

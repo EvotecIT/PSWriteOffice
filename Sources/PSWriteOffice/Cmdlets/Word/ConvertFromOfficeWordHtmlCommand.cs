@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
+using OfficeIMO.Html;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Html;
 using PSWriteOffice.Services;
@@ -171,7 +172,7 @@ public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
                 options.SectionTagHandling = SectionTagHandling.Value;
             }
 
-            var document = html.LoadFromHtml(options);
+            var document = HtmlConversionDocument.Parse(html).ToWordDocument(options);
 
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
@@ -190,7 +191,7 @@ public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
 
                 try
                 {
-                    document.Save(resolvedOutput, false);
+                    document.Save(resolvedOutput);
                 }
                 finally
                 {

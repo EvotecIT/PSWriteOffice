@@ -11,7 +11,7 @@ Lists OfficeIMO.Reader capabilities registered in the current PSWriteOffice proc
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentCapability [-Manifest] [-ExcludeBuiltIn] [-ExcludeCustom] [<CommonParameters>]
+Get-OfficeDocumentCapability [-Manifest] [-ExcludeBuiltIn] [-ExcludeCustom] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -66,6 +66,22 @@ Return the capability manifest envelope instead of individual handlers.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Reader
+{{ Fill Reader Description }}
+
+```yaml
+Type: OfficeDocumentReader
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

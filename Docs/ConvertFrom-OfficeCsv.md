@@ -11,7 +11,7 @@ Converts CSV text to PSCustomObjects or dictionaries.
 ## SYNTAX
 ### TextDelimiter (Default)
 ```powershell
-ConvertFrom-OfficeCsv [-Text] <string> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-AsHashtable] [<CommonParameters>]
+ConvertFrom-OfficeCsv [-Text] <string> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-DelimiterText <string>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-AsHashtable] [<CommonParameters>]
 ```
 
 ### TextCulture
@@ -163,6 +163,22 @@ Delimiter candidates to consider when detecting the delimiter.
 ```yaml
 Type: Char[]
 Parameter Sets: TextDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DelimiterText
+Field delimiter text for multi-character delimiters such as || or ::.
+
+```yaml
+Type: String
+Parameter Sets: TextDelimiter
 Aliases: None
 Possible values:
 

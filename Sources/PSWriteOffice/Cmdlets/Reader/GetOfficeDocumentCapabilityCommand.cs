@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Reader;
 using PSWriteOffice.Services.Reader;
@@ -15,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentCapability")]
 [Alias("Get-OfficeReaderCapability")]
 [OutputType(typeof(ReaderHandlerCapability), typeof(ReaderCapabilityManifest))]
-public sealed class GetOfficeDocumentCapabilityCommand : PSCmdlet
+public sealed class GetOfficeDocumentCapabilityCommand : OfficeDocumentReaderCommandBase
 {
     /// <summary>Return the capability manifest envelope instead of individual handlers.</summary>
     [Parameter]
@@ -30,23 +31,22 @@ public sealed class GetOfficeDocumentCapabilityCommand : PSCmdlet
     public SwitchParameter ExcludeCustom { get; set; }
 
     /// <inheritdoc />
-    protected override void BeginProcessing()
-    {
-        ReaderCommandUtilities.RegisterReaderAdapters();
-    }
-
-    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var includeBuiltIn = !ExcludeBuiltIn.IsPresent;
         var includeCustom = !ExcludeCustom.IsPresent;
+        var capabilities = EffectiveReader.GetCapabilities()
+            .Where(capability => capability.IsBuiltIn ? includeBuiltIn : includeCustom)
+            .ToArray();
 
         if (Manifest.IsPresent)
         {
-            WriteObject(DocumentReader.GetCapabilityManifest(includeBuiltIn, includeCustom));
+            var manifest = EffectiveReader.GetCapabilityManifest();
+            manifest.Handlers = capabilities;
+            WriteObject(manifest);
             return;
         }
 
-        WriteObject(DocumentReader.GetCapabilities(includeBuiltIn, includeCustom), enumerateCollection: true);
+        WriteObject(capabilities, enumerateCollection: true);
     }
 }

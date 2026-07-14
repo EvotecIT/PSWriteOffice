@@ -185,7 +185,12 @@ BeforeAll {
         )
 
         if (-not ('DocumentFormat.OpenXml.Packaging.SpreadsheetDocument' -as [type])) {
-            Add-Type -Path (Join-Path $PSScriptRoot '..\Sources\PSWriteOffice\bin\Debug\net8.0\DocumentFormat.OpenXml.dll')
+            $configuration = if ($env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION -in @('Debug', 'Release')) {
+                $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION
+            } else {
+                'Release'
+            }
+            Add-Type -Path (Join-Path $PSScriptRoot "..\Sources\PSWriteOffice\bin\$configuration\net8.0\DocumentFormat.OpenXml.dll")
         }
 
         $spreadsheet = [DocumentFormat.OpenXml.Packaging.SpreadsheetDocument]::Open($Path, $true)
@@ -238,6 +243,7 @@ Describe 'Excel DSL surface' {
         } finally {
             Close-OfficeExcel -Document $doc
         }
+
     }
 
     It 'creates 1904 date-system workbooks from the thin DSL surface' {
@@ -768,6 +774,26 @@ Describe 'Excel DSL surface' {
         } finally {
             Close-OfficeExcel -Document $doc
         }
+
+        $doc = Get-OfficeExcel -Path $path -Password 'secret'
+        try {
+            $doc.Sheets[0].Cell(1, 1, 'Updated encrypted value', $null, $null)
+            $doc | Save-OfficeExcel -Password 'secret'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $doc = Get-OfficeExcel -Path $path -Password 'secret' -ReadOnly
+        try {
+            $value = $null
+            $doc.Sheets[0].TryGetCellText(1, 1, [ref] $value) | Should -BeTrue
+            $value | Should -Be 'Updated encrypted value'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        { Get-OfficeExcel -Path $path -Password 'secret' -AutoSave -ErrorAction Stop } |
+            Should -Throw '*require explicit Save-OfficeExcel*'
     }
 
     It 'configures Excel execution policy from PowerShell' {

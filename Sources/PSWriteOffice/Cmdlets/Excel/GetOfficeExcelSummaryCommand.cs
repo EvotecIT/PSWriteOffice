@@ -53,11 +53,13 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         ExcelDocument? loadedDocument = null;
+        SpreadsheetDocument? spreadsheet = null;
+        MemoryStream? packageStream = null;
         var dispose = false;
 
         try
         {
-            SpreadsheetDocument spreadsheet;
+            ExcelDocument currentDocument;
             string? path;
 
             if (ParameterSetName == ParameterSetPath)
@@ -69,7 +71,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
                 }
 
                 loadedDocument = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
-                spreadsheet = loadedDocument._spreadSheetDocument;
+                currentDocument = loadedDocument;
+                spreadsheet = SpreadsheetDocument.Open(resolvedPath, false);
                 path = resolvedPath;
                 dispose = true;
             }
@@ -80,14 +83,30 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
                     throw new InvalidOperationException("Excel workbook was not provided.");
                 }
 
-                spreadsheet = Document._spreadSheetDocument;
+                currentDocument = Document;
                 path = Document.FilePath;
+                if (Document.AccessMode == OfficeIMO.Drawing.DocumentAccessMode.ReadOnly)
+                {
+                    if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+                    {
+                        throw new InvalidOperationException("A read-only in-memory workbook has no package path available for structural summary inspection.");
+                    }
+
+                    spreadsheet = SpreadsheetDocument.Open(path!, false);
+                }
+                else
+                {
+                    packageStream = Document.ToStream();
+                    spreadsheet = SpreadsheetDocument.Open(packageStream, false);
+                }
             }
 
-            WriteObject(CreateSummary(spreadsheet, path, IncludeSheets.IsPresent, IncludeSchema.IsPresent, loadedDocument ?? Document));
+            WriteObject(CreateSummary(spreadsheet, path, IncludeSheets.IsPresent, IncludeSchema.IsPresent, currentDocument));
         }
         finally
         {
+            spreadsheet?.Dispose();
+            packageStream?.Dispose();
             if (dispose)
             {
                 loadedDocument?.Dispose();

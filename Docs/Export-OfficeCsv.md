@@ -11,42 +11,42 @@ Exports objects or a CSV document to a CSV file.
 ## SYNTAX
 ### InputObjectPathDelimiter (Default)
 ```powershell
-Export-OfficeCsv [-Path] <string> [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputObjectPathCulture
 ```powershell
-Export-OfficeCsv [-Path] <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputObjectLiteralPathDelimiter
 ```powershell
-Export-OfficeCsv -LiteralPath <string> [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv -LiteralPath <string> [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputObjectLiteralPathCulture
 ```powershell
-Export-OfficeCsv -LiteralPath <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv -LiteralPath <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DocumentPathDelimiter
 ```powershell
-Export-OfficeCsv [-Path] <string> -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> -Document <CsvDocument> [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DocumentPathCulture
 ```powershell
-Export-OfficeCsv [-Path] <string> -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DocumentLiteralPathDelimiter
 ```powershell
-Export-OfficeCsv -Document <CsvDocument> -LiteralPath <string> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv -Document <CsvDocument> -LiteralPath <string> [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DocumentLiteralPathCulture
 ```powershell
-Export-OfficeCsv -Document <CsvDocument> -LiteralPath <string> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv -Document <CsvDocument> -LiteralPath <string> -UseCulture [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -87,7 +87,7 @@ Accept wildcard characters: True
 ```
 
 ### -CompressionLevel
-Compression level used when writing compressed CSV files.
+Compression level used when CompressionType is enabled.
 
 ```yaml
 Type: CompressionLevel
@@ -103,7 +103,7 @@ Accept wildcard characters: True
 ```
 
 ### -CompressionType
-Compression used when writing files. Auto infers from the file extension.
+Compression used when writing the CSV file.
 
 ```yaml
 Type: CsvCompressionType
@@ -155,6 +155,22 @@ Field delimiter character.
 
 ```yaml
 Type: Char
+Parameter Sets: InputObjectPathDelimiter, InputObjectLiteralPathDelimiter, DocumentPathDelimiter, DocumentLiteralPathDelimiter
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DelimiterText
+Field delimiter text for multi-character delimiters such as || or ::.
+
+```yaml
+Type: String
 Parameter Sets: InputObjectPathDelimiter, InputObjectLiteralPathDelimiter, DocumentPathDelimiter, DocumentLiteralPathDelimiter
 Aliases: None
 Possible values:

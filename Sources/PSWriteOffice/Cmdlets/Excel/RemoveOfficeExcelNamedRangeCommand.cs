@@ -71,7 +71,11 @@ public sealed class RemoveOfficeExcelNamedRangeCommand : PSCmdlet
 
         if (ShouldProcess(Name, "Remove Excel named range"))
         {
-            var removed = document.RemoveNamedRange(Name, scope, save: Save.IsPresent);
+            var removed = document.RemoveNamedRange(Name, scope, save: false);
+            if (removed && Save.IsPresent)
+            {
+                document.Save();
+            }
             if (PassThru.IsPresent)
             {
                 WriteObject(removed);

@@ -1,5 +1,6 @@
 using System;
 using DocumentFormat.OpenXml.Packaging;
+using OfficeIMO.Html;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Html;
 
@@ -17,6 +18,6 @@ public static partial class WordDocumentService
             return;
         }
 
-        document.AddHtmlToBody(html);
+        document.AddHtmlToBody(HtmlConversionDocument.Parse(html));
     }
 }

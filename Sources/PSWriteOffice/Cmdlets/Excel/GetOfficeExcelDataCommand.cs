@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
+using OfficeIMO.Drawing;
 using OfficeIMO.Excel;
 using OfficeIMO.Excel.Fluent;
 using PSWriteOffice.Services.Excel;
@@ -61,7 +62,11 @@ public sealed class GetOfficeExcelDataCommand : PSCmdlet
                 throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
             }
 
-            document = ExcelDocument.Load(resolved, readOnly: true);
+            document = ExcelDocument.Load(resolved, new ExcelLoadOptions
+            {
+                AccessMode = DocumentAccessMode.ReadOnly,
+                PersistenceMode = DocumentPersistenceMode.Explicit
+            });
             ownsDocument = true;
         }
 

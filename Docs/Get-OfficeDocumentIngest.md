@@ -11,7 +11,7 @@ Reads a folder into an OfficeIMO.Reader ingestion summary.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentIngest [-FolderPath] <string> [-NoRecurse] [-MaxFiles <int>] [-MaxTotalBytes <long>] [-Extension <string[]>] [-NoChunks] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [<CommonParameters>]
+Get-OfficeDocumentIngest [-FolderPath] <string> [-NoRecurse] [-MaxFiles <int>] [-MaxTotalBytes <long>] [-Extension <string[]>] [-NoChunks] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -306,6 +306,22 @@ OpenXML maximum characters per part.
 
 ```yaml
 Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Reader
+{{ Fill Reader Description }}
+
+```yaml
+Type: OfficeDocumentReader
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

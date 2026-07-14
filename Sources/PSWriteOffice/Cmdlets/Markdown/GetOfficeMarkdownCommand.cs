@@ -97,7 +97,7 @@ public sealed class GetOfficeMarkdownCommand : PSCmdlet
                 throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
-            document = MarkdownReader.ParseFile(resolvedPath, options);
+            document = MarkdownDoc.Load(resolvedPath, options);
         }
         else
         {

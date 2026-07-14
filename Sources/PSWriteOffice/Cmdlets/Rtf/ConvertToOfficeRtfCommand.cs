@@ -2,6 +2,10 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using OfficeIMO.Html;
+using OfficeIMO.Markdown;
+using OfficeIMO.Pdf;
+using OfficeIMO.Rtf;
 using OfficeIMO.Rtf.Markdown;
 using OfficeIMO.Rtf.Pdf;
 using OfficeIMO.Word;
@@ -179,7 +183,7 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
             throw new PSArgumentException("HTML content cannot be empty.", nameof(Html));
         }
 
-        return html.LoadFromHtml(CreateHtmlToWordOptions(htmlDirectory));
+        return HtmlConversionDocument.Parse(html).ToWordDocument(CreateHtmlToWordOptions(htmlDirectory));
     }
 
     private HtmlToWordOptions CreateHtmlToWordOptions(string? htmlDirectory)
@@ -249,9 +253,10 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
     private void ConvertPdf()
     {
         var sourcePath = PdfCommandUtilities.ResolvePath(this, PdfPath);
+        var document = PdfLogicalDocument.Load(sourcePath).ToRtfDocument();
         if (string.IsNullOrWhiteSpace(OutputPath))
         {
-            WriteObject(sourcePath.ToRtfFromPdfFile());
+            WriteObject(document.ToRtf());
             return;
         }
 
@@ -262,7 +267,7 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        RtfPdfConverterExtensions.SavePdfFileAsRtf(sourcePath, outputPath);
+        document.Save(outputPath, encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         if (PassThru.IsPresent)
         {
             WriteObject(new FileInfo(outputPath));
@@ -287,7 +292,7 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
             PreserveRawHtmlAsText = PreserveRawHtmlAsText.IsPresent
         };
 
-        var rtf = markdown.ToRtfFromMarkdown(options);
+        var rtf = MarkdownReader.Parse(markdown, options.ReaderOptions).ToRtfDocument(options).ToRtf();
         if (string.IsNullOrWhiteSpace(OutputPath))
         {
             WriteObject(rtf);

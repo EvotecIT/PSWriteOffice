@@ -65,6 +65,25 @@ Describe 'Word Markdown conversions' {
         }
     }
 
+    It 'downloads explicitly allowed remote Markdown images' {
+        $imagePath = New-TestOfficeImageFile -Directory $TestDrive -Name 'RemoteMarkdown.bmp'
+        $docPath = Join-Path $TestDrive 'RemoteMarkdown.docx'
+        $server = Start-TestHttpFileServer -FilePath $imagePath -ContentType 'image/bmp'
+
+        try {
+            ConvertFrom-OfficeWordMarkdown -Markdown "![Remote image]($($server.Url))" -AllowRemoteImages -OutputPath $docPath | Out-Null
+
+            $document = Get-OfficeWord -Path $docPath -ReadOnly
+            try {
+                $document.Images.Count | Should -Be 1
+            } finally {
+                $document | Close-OfficeWord
+            }
+        } finally {
+            Stop-TestHttpFileServer -Server $server
+        }
+    }
+
     It 'inserts Markdown into a Word template bookmark' {
         $templatePath = Join-Path $TestDrive 'Template.docx'
         $docPath = Join-Path $TestDrive 'TemplateOutput.docx'

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using OfficeIMO.Drawing;
 using OfficeIMO.Html;
 using OfficeIMO.PowerPoint;
 using OfficeIMO.PowerPoint.Html;
@@ -55,7 +56,7 @@ public sealed class ConvertToOfficePowerPointHtmlCommand : PSCmdlet
 
     /// <summary>Built-in HTML document theme.</summary>
     [Parameter]
-    public OfficeHtmlDocumentThemeKind Theme { get; set; } = OfficeHtmlDocumentThemeKind.WordLike;
+    public OfficeVisualThemeKind Theme { get; set; } = OfficeVisualThemeKind.WordLike;
 
     /// <summary>Optional HTML document title.</summary>
     [Parameter]

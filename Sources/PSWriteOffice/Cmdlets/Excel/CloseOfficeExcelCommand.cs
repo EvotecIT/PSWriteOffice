@@ -92,7 +92,7 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet
             ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
             var resolvedPath = !string.IsNullOrWhiteSpace(Path)
                 ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
-                : Document.FilePath;
+                : ExcelDocumentService.GetAssociatedPath(Document);
             var saveOptions = ExcelDocumentService.CreateSaveOptions(
                 SafePreflight.IsPresent,
                 SafeRepairDefinedNames.IsPresent,

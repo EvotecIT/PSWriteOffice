@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -18,7 +19,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelTable", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelTableCommand : PSCmdlet
+public sealed class GetOfficeExcelTableCommand : AsyncPSCmdlet
 {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetUri = "Uri";
@@ -55,7 +56,7 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
     public int? SheetIndex { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
+    protected override async Task ProcessRecordAsync()
     {
         ExcelDocument? document = null;
         var dispose = false;
@@ -79,7 +80,11 @@ public sealed class GetOfficeExcelTableCommand : PSCmdlet
                     throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
                 }
 
-                document = ExcelDocumentService.LoadDocument(Uri, readOnly: true, allowHttp: AllowHttp.IsPresent);
+                document = await ExcelDocumentService.LoadDocumentAsync(
+                    Uri,
+                    readOnly: true,
+                    allowHttp: AllowHttp.IsPresent,
+                    cancellationToken: CancelToken).ConfigureAwait(false);
                 dispose = true;
             }
             else

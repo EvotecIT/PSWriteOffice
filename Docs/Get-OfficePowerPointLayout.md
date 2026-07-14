@@ -28,7 +28,7 @@ Returns layout metadata including name, type, and index.
 
 ### EXAMPLE 2
 ```powershell
-PS> New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointLayout | Select-Object -First 3 }
+PS> New-OfficePowerPoint -Path .\deck.pptx { $layout = @(Get-OfficePowerPointLayout)[0] }
 ```
 
 Uses the current DSL presentation context.

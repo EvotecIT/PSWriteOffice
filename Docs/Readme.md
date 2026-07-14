@@ -913,6 +913,9 @@ Creates a semantic PowerPoint deck plan for designer rendering.
 ### [New-OfficeRtf](New-OfficeRtf.md)
 Creates an RTF document with plain paragraph content.
 
+### [New-OfficeTextRun](New-OfficeTextRun.md)
+Creates a reusable rich text run specification for Word, Excel, PowerPoint, and PDF commands.
+
 ### [New-OfficeVisio](New-OfficeVisio.md)
 Creates a new OfficeIMO.Visio document with an initial page and optional DSL content.
 

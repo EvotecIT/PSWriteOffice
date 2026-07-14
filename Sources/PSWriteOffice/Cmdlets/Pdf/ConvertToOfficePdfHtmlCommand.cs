@@ -90,7 +90,7 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
         {
             string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
             PdfHtmlSaveOptions options = BuildOptions();
-            string html = PdfHtmlConverter.ToHtml(inputPath, options);
+            string html = LoadLogicalDocument(inputPath).ToHtml(options);
 
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
@@ -144,11 +144,13 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
             options.PageRanges = PdfPageSelection.Parse(PageRange!).Ranges;
         }
 
-        if (!string.IsNullOrEmpty(Password))
-        {
-            options.ReadOptions = PdfCommandUtilities.CreateReadOptions(Password);
-        }
-
         return options;
+    }
+
+    private PdfLogicalDocument LoadLogicalDocument(string path)
+    {
+        return string.IsNullOrEmpty(Password)
+            ? PdfLogicalDocument.Load(path)
+            : PdfLogicalDocument.From(PdfReadDocument.Load(path, PdfCommandUtilities.CreateReadOptions(Password)));
     }
 }

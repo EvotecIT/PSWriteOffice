@@ -146,6 +146,26 @@ function Get-ZipEntriesLocal {
     }
 }
 
+function Get-TestPowerPointSlideEntry {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Path,
+
+        [Parameter(Mandatory)]
+        [int] $Index
+    )
+
+    $entries = @(Get-ZipEntriesLocal -Path $Path |
+        Where-Object { $_ -match '^ppt/slides/slide(\d+)\.xml$' } |
+        Sort-Object { [int] ([regex]::Match($_, 'slide(\d+)\.xml$').Groups[1].Value) })
+
+    if ($Index -lt 0 -or $Index -ge $entries.Count) {
+        throw "PowerPoint slide index $Index was not found in '$Path'."
+    }
+
+    $entries[$Index]
+}
+
 function Start-TestHttpFileServer {
     param(
         [Parameter(Mandatory)]

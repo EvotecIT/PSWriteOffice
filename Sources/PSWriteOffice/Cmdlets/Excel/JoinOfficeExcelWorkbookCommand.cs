@@ -143,7 +143,10 @@ public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
 
         var document = File.Exists(resolvedTargetPath)
             ? ExcelDocumentService.LoadDocument(resolvedTargetPath, readOnly: false, autoSave: false)
-            : ExcelDocument.Create(resolvedTargetPath, autoSave: false);
+            : ExcelDocument.Create(resolvedTargetPath, new ExcelCreateOptions
+            {
+                PersistenceMode = OfficeIMO.Drawing.DocumentPersistenceMode.Explicit
+            });
 
         return new ExcelWorkbookCommandScope(document, ownsDocument: true);
     }

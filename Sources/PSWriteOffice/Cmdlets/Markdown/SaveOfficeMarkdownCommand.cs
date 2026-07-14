@@ -1,6 +1,7 @@
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using OfficeIMO.Drawing;
 using OfficeIMO.Markdown;
 using OfficeIMO.Markdown.Pdf;
 using PSWriteOffice.Services.Markdown;
@@ -64,7 +65,7 @@ public sealed class SaveOfficeMarkdownCommand : PSCmdlet
 
     /// <summary>Built-in Markdown PDF visual theme.</summary>
     [Parameter]
-    public MarkdownPdfThemeKind? PdfTheme { get; set; }
+    public OfficeVisualThemeKind? PdfTheme { get; set; }
 
     /// <summary>Default font family used by Markdown PDF export.</summary>
     [Parameter]
@@ -182,8 +183,8 @@ public sealed class SaveOfficeMarkdownCommand : PSCmdlet
 
             PdfCommandUtilities.EnsureDirectory(pdfPath);
             var options = MarkdownOptionUtilities.BuildPdfOptions(this, this, ResolvePdfBaseDirectory(savedFile));
-            Document.SaveAsPdf(pdfPath, options);
-            MarkdownOptionUtilities.SetPdfResultVariables(this, this, options);
+            var result = Document.SaveAsPdf(pdfPath, options);
+            MarkdownOptionUtilities.SetPdfResultVariables(this, this, result);
         }
 
         WriteObject(PassThru.IsPresent ? Document : savedFile ?? (object)Document);

@@ -18,6 +18,10 @@ namespace PSWriteOffice.Services.Reader;
 
 internal static class ReaderCommandUtilities
 {
+    private static readonly Lazy<OfficeDocumentReader> SharedReader = new(CreateReader);
+
+    internal static OfficeDocumentReader Reader => SharedReader.Value;
+
     internal static string ResolvePath(PSCmdlet cmdlet, string path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -31,75 +35,20 @@ internal static class ReaderCommandUtilities
             : Path.Combine(cmdlet.SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 
-    internal static void RegisterPdfReader()
+    private static OfficeDocumentReader CreateReader()
     {
-        if (HasCustomHandlerForExtension(".pdf"))
-        {
-            return;
-        }
-
-        DocumentReaderPdfRegistrationExtensions.RegisterPdfHandler(replaceExisting: true);
-    }
-
-    internal static void RegisterReaderAdapters()
-    {
-        RegisterPdfReader();
-
-        RegisterAdapter(
-            DocumentReaderHtmlRegistrationExtensions.HandlerId,
-            static () => DocumentReaderHtmlRegistrationExtensions.RegisterHtmlHandler(null, replaceExisting: false, preserveExistingCustomExtensions: true));
-        RegisterAdapter(
-            DocumentReaderCsvRegistrationExtensions.HandlerId,
-            static () => DocumentReaderCsvRegistrationExtensions.RegisterCsvHandler(null, replaceExisting: true, preserveExistingCustomExtensions: true));
-        RegisterAdapter(
-            DocumentReaderJsonRegistrationExtensions.HandlerId,
-            static () => DocumentReaderJsonRegistrationExtensions.RegisterJsonHandler(null, replaceExisting: true, preserveExistingCustomExtensions: true));
-        RegisterAdapter(
-            DocumentReaderXmlRegistrationExtensions.HandlerId,
-            static () => DocumentReaderXmlRegistrationExtensions.RegisterXmlHandler(null, replaceExisting: true, preserveExistingCustomExtensions: true));
-        RegisterAdapter(
-            DocumentReaderYamlRegistrationExtensions.HandlerId,
-            static () => DocumentReaderYamlRegistrationExtensions.RegisterYamlHandler(null, replaceExisting: true, preserveExistingCustomExtensions: true));
-        RegisterAdapter(
-            DocumentReaderZipRegistrationExtensions.HandlerId,
-            static () => DocumentReaderZipRegistrationExtensions.RegisterZipHandler(null, null, replaceExisting: false, preserveExistingCustomExtensions: true));
-        RegisterAdapter(
-            DocumentReaderEpubRegistrationExtensions.HandlerId,
-            static () => DocumentReaderEpubRegistrationExtensions.RegisterEpubHandler(null, replaceExisting: false, preserveExistingCustomExtensions: true));
-        RegisterAdapter(
-            DocumentReaderVisioRegistrationExtensions.HandlerId,
-            static () => DocumentReaderVisioRegistrationExtensions.RegisterVisioHandler(null, replaceExisting: false, preserveExistingCustomExtensions: true));
-        RegisterRtfReader();
-    }
-
-    internal static void RegisterRtfReader()
-    {
-        if (HasCustomHandlerForExtension(".rtf"))
-        {
-            return;
-        }
-
-        RegisterAdapter(
-            DocumentReaderRtfRegistrationExtensions.HandlerId,
-            static () => DocumentReaderRtfRegistrationExtensions.RegisterRtfHandler(null, replaceExisting: true));
-    }
-
-    private static void RegisterAdapter(string handlerId, Action register)
-    {
-        var customCapabilities = DocumentReader.GetCapabilities(includeBuiltIn: false, includeCustom: true);
-        if (customCapabilities.Any(capability => string.Equals(capability.Id, handlerId, StringComparison.OrdinalIgnoreCase)))
-        {
-            return;
-        }
-
-        register();
-    }
-
-    private static bool HasCustomHandlerForExtension(string extension)
-    {
-        return DocumentReader.GetCapabilities(includeBuiltIn: false, includeCustom: true)
-            .Any(capability => capability.Extensions.Any(candidate =>
-                string.Equals(candidate, extension, StringComparison.OrdinalIgnoreCase)));
+        return new OfficeDocumentReaderBuilder()
+            .AddPdfHandler()
+            .AddHtmlHandler()
+            .AddCsvHandler()
+            .AddJsonHandler()
+            .AddXmlHandler()
+            .AddYamlHandler()
+            .AddZipHandler()
+            .AddEpubHandler()
+            .AddVisioHandler()
+            .AddRtfHandler()
+            .Build();
     }
 
     internal static ReaderOptions BuildReaderOptions(

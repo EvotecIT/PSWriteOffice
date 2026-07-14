@@ -11,7 +11,7 @@ Creates a reusable Word table cell definition for explicit table rows.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeWordTableCell [[-Text] <string>] [-ColumnSpan <int>] [-RowSpan <int>] [<CommonParameters>]
+New-OfficeWordTableCell [[-Text] <string>] [-Run <Object[]>] [-ColumnSpan <int>] [-RowSpan <int>] [-TextColor <string>] [-FillColor <string>] [-FontSize <double>] [-Bold] [-Italic] [-Underline] [-UnderlineStyle <UnderlineValues>] [-Strike] [-Align <JustificationValues>] [-VerticalAlign <TableVerticalAlignmentValues>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,11 +28,91 @@ The returned cell can be passed to WordTable inside explicit row arrays.
 
 ## PARAMETERS
 
+### -Align
+Horizontal cell alignment.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Bold
+Render the cell text in bold.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -ColumnSpan
 Number of logical columns covered by the cell.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FillColor
+Cell fill color. Named colors and hexadecimal colors are accepted.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: BackgroundColor, CellFill
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FontSize
+Cell font size in points.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Italic
+Render the cell text in italics.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -60,6 +140,38 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -Run
+Rich text runs for the cell. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.
+
+```yaml
+Type: Object[]
+Parameter Sets: __AllParameterSets
+Aliases: Runs
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Strike
+Render the cell text with strikethrough.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Text
 Cell text.
 
@@ -71,6 +183,70 @@ Possible values:
 
 Required: False
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -TextColor
+Cell text color. Named colors and hexadecimal colors are accepted.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: Color, FontColor
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Underline
+Render the cell text with underline.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UnderlineStyle
+Optional Word underline style.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -VerticalAlign
+Vertical cell alignment.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

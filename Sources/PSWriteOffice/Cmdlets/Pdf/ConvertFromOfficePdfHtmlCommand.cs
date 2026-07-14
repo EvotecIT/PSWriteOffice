@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using OfficeIMO.Html;
 using OfficeIMO.Html.Pdf;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
@@ -40,11 +41,11 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
     [Alias("OutPath")]
     public string? OutputPath { get; set; }
 
-    /// <summary>HTML to PDF profile to use when <see cref="Options"/> is not supplied.</summary>
+    /// <summary>HTML conversion profile applied before PDF rendering.</summary>
     [Parameter]
-    public HtmlPdfProfile Profile { get; set; } = HtmlPdfProfile.Semantic;
+    public HtmlConversionProfile Profile { get; set; } = HtmlConversionProfile.Semantic;
 
-    /// <summary>Use the trusted document profile, allowing document stylesheet links through OfficeIMO's policy controls.</summary>
+    /// <summary>Mark the HTML input as trusted for OfficeIMO conversion policy.</summary>
     [Parameter]
     public SwitchParameter TrustedDocumentProfile { get; set; }
 
@@ -134,7 +135,14 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
             return;
         }
 
+        string preparedHtml = ApplyStylesheets(html);
         HtmlPdfSaveOptions options = BuildOptions(htmlFileDirectory);
+        HtmlConversionDocument document = HtmlConversionDocument.Parse(preparedHtml, new HtmlConversionDocumentOptions
+        {
+            Profile = Profile,
+            Trust = TrustedDocumentProfile.IsPresent ? HtmlInputTrust.Trusted : HtmlInputTrust.Untrusted,
+            BaseUri = options.BaseUri
+        });
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
             string outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
@@ -144,7 +152,7 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            html.SaveAsPdf(outputPath, options);
+            document.SaveAsPdf(outputPath, options);
             if (Open.IsPresent)
             {
                 FileOpenService.Open(outputPath);
@@ -158,22 +166,12 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
             return;
         }
 
-        WriteObject(html.SaveAsPdf(options), enumerateCollection: false);
+        WriteObject(document.ToPdf(options), enumerateCollection: false);
     }
 
     private HtmlPdfSaveOptions BuildOptions(string? htmlFileDirectory)
     {
-        if (Options != null)
-        {
-            ApplyResourceOptions(Options, htmlFileDirectory);
-            return Options;
-        }
-
-        HtmlPdfSaveOptions options = TrustedDocumentProfile.IsPresent
-            ? HtmlPdfSaveOptions.CreateTrustedDocumentProfile()
-            : Profile == HtmlPdfProfile.Document
-                ? HtmlPdfSaveOptions.CreateDocumentProfile()
-                : HtmlPdfSaveOptions.CreateSemanticProfile();
+        HtmlPdfSaveOptions options = Options?.ClonePdf() ?? new HtmlPdfSaveOptions();
 
         ApplyResourceOptions(options, htmlFileDirectory);
         return options;
@@ -193,47 +191,44 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(resolvedBasePath))
         {
-            if (options.WordHtmlOptions != null && string.IsNullOrWhiteSpace(options.WordHtmlOptions.BasePath))
-            {
-                options.WordHtmlOptions.BasePath = resolvedBasePath;
-            }
-
-            if (options.MarkdownHtmlOptions != null && options.MarkdownHtmlOptions.BaseUri == null)
-            {
-                options.MarkdownHtmlOptions.BaseUri = new Uri(Path.GetFullPath(resolvedBasePath!) + Path.DirectorySeparatorChar);
-            }
+            options.BaseUri = new Uri(Path.GetFullPath(resolvedBasePath!) + Path.DirectorySeparatorChar);
         }
+    }
+
+    private string ApplyStylesheets(string html)
+    {
+        var styles = new StringBuilder();
 
         if (StylesheetPath != null)
         {
-            if (options.WordHtmlOptions == null)
-            {
-                options.WordHtmlOptions = OfficeIMO.Word.Html.HtmlToWordOptions.CreateOfficeIMOProfile();
-            }
-
             foreach (string path in StylesheetPath)
             {
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    options.WordHtmlOptions.StylesheetPaths.Add(PdfCommandUtilities.ResolvePath(this, path));
+                    string resolvedPath = PdfCommandUtilities.ResolvePath(this, path);
+                    if (!File.Exists(resolvedPath))
+                    {
+                        throw new FileNotFoundException($"Stylesheet file '{resolvedPath}' was not found.", resolvedPath);
+                    }
+
+                    styles.AppendLine(File.ReadAllText(resolvedPath));
                 }
             }
         }
 
         if (StylesheetContent != null)
         {
-            if (options.WordHtmlOptions == null)
-            {
-                options.WordHtmlOptions = OfficeIMO.Word.Html.HtmlToWordOptions.CreateOfficeIMOProfile();
-            }
-
             foreach (string content in StylesheetContent)
             {
                 if (!string.IsNullOrWhiteSpace(content))
                 {
-                    options.WordHtmlOptions.StylesheetContents.Add(content);
+                    styles.AppendLine(content);
                 }
             }
         }
+
+        return styles.Length == 0
+            ? html
+            : "<style>" + Environment.NewLine + styles + "</style>" + Environment.NewLine + html;
     }
 }

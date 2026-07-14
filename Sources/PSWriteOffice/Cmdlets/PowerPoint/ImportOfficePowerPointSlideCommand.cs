@@ -65,7 +65,7 @@ public sealed class ImportOfficePowerPointSlideCommand : PSCmdlet
                 throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
-            using var sourcePresentation = PowerPointPresentation.Open(resolvedPath);
+            using var sourcePresentation = PowerPointPresentation.Load(resolvedPath);
             WriteObject(targetPresentation.ImportSlide(sourcePresentation, SourceIndex, InsertAt));
         }
         catch (Exception ex)

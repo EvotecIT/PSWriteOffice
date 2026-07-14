@@ -78,8 +78,12 @@ public sealed class ConvertToOfficeExcelWorkbookCommand : PSCmdlet
             PdfCommandUtilities.EnsureDirectory(outputPath);
             ExcelDocument.Convert(sourcePath, outputPath, new ExcelDocumentConversionOptions
             {
-                Overwrite = Force.IsPresent,
-                AllowLossyLegacyConversion = AllowLossyLegacyConversion.IsPresent
+                FileConflictPolicy = Force.IsPresent
+                    ? ExcelConversionFileConflictPolicy.Replace
+                    : ExcelConversionFileConflictPolicy.FailIfExists,
+                LossPolicy = AllowLossyLegacyConversion.IsPresent
+                    ? ExcelConversionLossPolicy.Allow
+                    : ExcelConversionLossPolicy.Block
             });
 
             if (Open.IsPresent)

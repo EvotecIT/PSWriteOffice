@@ -101,7 +101,7 @@ public sealed class JoinOfficeExcelSheetCommand : PSCmdlet
         using var sourceWorkbook = ExcelWorkbookCommandService.ResolveSourceWorkbook(this, targetDocument, SourceDocument, SourcePath, readOnly: true);
         var sourceSheet = sourceWorkbook.Document[SourceSheet];
 
-        var result = targetDocument.JoinWorksheets(targetSheet, sourceSheet, BuildOptions());
+        var result = targetDocument.MergeWorksheets(targetSheet, sourceSheet, BuildOptions());
         targetWorkbook.SaveIfOwned();
         WriteObject(result);
     }

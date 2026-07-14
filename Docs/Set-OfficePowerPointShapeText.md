@@ -9,9 +9,14 @@ schema: 2.0.0
 Sets text on an existing PowerPoint text box.
 
 ## SYNTAX
-### __AllParameterSets
+### Text (Default)
 ```powershell
 Set-OfficePowerPointShapeText [-InputObject] <Object> [-Text] <string> [-PassThru] [<CommonParameters>]
+```
+
+### Run
+```powershell
+Set-OfficePowerPointShapeText [-InputObject] <Object> -Run <Object[]> [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -47,7 +52,7 @@ PowerPoint text box or shape-info record for a text box to update.
 
 ```yaml
 Type: Object
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -63,11 +68,27 @@ Emit the updated text box so additional OfficeIMO operations can continue.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Run
+Replacement rich text runs. Each run can be created with TextRun/PowerPointTextRun or provided as a hashtable/object.
+
+```yaml
+Type: Object[]
+Parameter Sets: Run
+Aliases: Runs
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -79,7 +100,7 @@ Replacement text. A null value clears the text box.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text
 Aliases: None
 Possible values:
 

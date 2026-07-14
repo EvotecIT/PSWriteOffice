@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using OfficeIMO.Drawing;
 using OfficeIMO.Word;
 
 namespace PSWriteOffice.Services.Word;
@@ -13,6 +15,7 @@ public static partial class WordDocumentService
 {
     private static readonly FieldInfo? DisposedField = typeof(WordDocument).GetField("_disposed", BindingFlags.Instance | BindingFlags.NonPublic);
     private static readonly AsyncLocal<WordDocument[]?> TrackedDocuments = new();
+    private static readonly ConcurrentDictionary<WordDocument, string> EncryptedSourcePaths = new();
 
     /// <summary>Loads an existing Word document.</summary>
     public static WordDocument LoadDocument(string filePath, bool readOnly, bool autoSave, string? password = null)
@@ -25,16 +28,21 @@ public static partial class WordDocumentService
 
         if (!string.IsNullOrEmpty(password))
         {
-            return RegisterDocument(OfficeEncryptedPackageService.LoadWord(resolvedPath, password!, readOnly, autoSave));
+            var document = RegisterDocument(OfficeEncryptedPackageService.LoadWord(resolvedPath, password!, readOnly, autoSave));
+            EncryptedSourcePaths[document] = resolvedPath;
+            return document;
         }
 
-        return RegisterDocument(WordDocument.Load(resolvedPath, readOnly, autoSave));
+        return RegisterDocument(WordDocument.Load(resolvedPath, CreateLoadOptions(readOnly, autoSave)));
     }
 
     /// <summary>Creates a new Word document at the specified path.</summary>
     public static WordDocument CreateDocument(string filePath, bool autoSave)
     {
-        return RegisterDocument(WordDocument.Create(Path.GetFullPath(filePath), autoSave));
+        return RegisterDocument(WordDocument.Create(Path.GetFullPath(filePath), new WordCreateOptions
+        {
+            PersistenceMode = autoSave ? DocumentPersistenceMode.SaveOnDispose : DocumentPersistenceMode.Explicit
+        }));
     }
 
     /// <summary>Creates a new in-memory Word document without creating a package on disk.</summary>
@@ -64,6 +72,7 @@ public static partial class WordDocumentService
         }
         finally
         {
+            EncryptedSourcePaths.TryRemove(document, out _);
             UnregisterDocument(document);
         }
     }
@@ -71,7 +80,8 @@ public static partial class WordDocumentService
     /// <summary>Saves the document, optionally to a new path, and closes it.</summary>
     public static void SaveDocument(WordDocument document, bool show, string? filePath, string? password = null)
     {
-        if (string.IsNullOrWhiteSpace(document.FilePath) && string.IsNullOrWhiteSpace(filePath))
+        var associatedPath = GetAssociatedPath(document);
+        if (string.IsNullOrWhiteSpace(associatedPath) && string.IsNullOrWhiteSpace(filePath))
         {
             throw new InvalidOperationException("No file path provided.");
         }
@@ -82,15 +92,20 @@ public static partial class WordDocumentService
         }
         else if (!string.IsNullOrEmpty(password))
         {
-            var targetPath = document.FilePath!;
+            var targetPath = associatedPath!;
             OfficeEncryptedPackageService.SaveWord(document, targetPath, password!, false);
         }
         else
         {
-            document.Save(false);
+            if (EncryptedSourcePaths.ContainsKey(document))
+            {
+                throw new InvalidOperationException("Provide -Password when saving a document loaded from an encrypted package.");
+            }
+
+            document.Save();
         }
 
-        var savedPath = document.FilePath ?? filePath ?? throw new InvalidOperationException("No saved file path was available.");
+        var savedPath = document.FilePath ?? filePath ?? associatedPath ?? throw new InvalidOperationException("No saved file path was available.");
         CloseDocument(document);
 
         if (show)
@@ -107,8 +122,14 @@ public static partial class WordDocumentService
             return;
         }
 
-        document.Save(path, openWord);
+        document.Save(path);
     }
+
+    private static WordLoadOptions CreateLoadOptions(bool readOnly, bool autoSave) => new()
+    {
+        AccessMode = readOnly ? DocumentAccessMode.ReadOnly : DocumentAccessMode.ReadWrite,
+        PersistenceMode = autoSave ? DocumentPersistenceMode.SaveOnDispose : DocumentPersistenceMode.Explicit
+    };
 
     /// <summary>Returns the most recently tracked Word document for the current runspace.</summary>
     public static WordDocument? GetCurrentTrackedDocument()
@@ -176,4 +197,16 @@ public static partial class WordDocumentService
             return false;
         }
     }
+
+    internal static string? GetAssociatedPath(WordDocument document)
+    {
+        if (!string.IsNullOrWhiteSpace(document.FilePath))
+        {
+            return document.FilePath;
+        }
+
+        return EncryptedSourcePaths.TryGetValue(document, out var path) ? path : null;
+    }
+
+    internal static bool IsEncryptedSource(WordDocument document) => EncryptedSourcePaths.ContainsKey(document);
 }

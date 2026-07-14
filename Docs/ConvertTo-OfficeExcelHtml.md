@@ -11,12 +11,12 @@ Converts an Excel workbook to an HTML review document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeExcelHtml [-Path] <string> [-Password <string>] [-OutputPath <string>] [-Profile <OfficeExcelHtmlProfile>] [-Theme <OfficeHtmlDocumentThemeKind>] [-Title <string>] [-MaxRowsPerSheet <int>] [-EmptyCellText <string>] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeExcelHtml [-Path] <string> [-Password <string>] [-OutputPath <string>] [-Profile <OfficeExcelHtmlProfile>] [-Theme <OfficeVisualThemeKind>] [-Title <string>] [-MaxRowsPerSheet <int>] [-EmptyCellText <string>] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Workbook
 ```powershell
-ConvertTo-OfficeExcelHtml -Workbook <ExcelDocument> [-OutputPath <string>] [-Profile <OfficeExcelHtmlProfile>] [-Theme <OfficeHtmlDocumentThemeKind>] [-Title <string>] [-MaxRowsPerSheet <int>] [-EmptyCellText <string>] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeExcelHtml -Workbook <ExcelDocument> [-OutputPath <string>] [-Profile <OfficeExcelHtmlProfile>] [-Theme <OfficeVisualThemeKind>] [-Title <string>] [-MaxRowsPerSheet <int>] [-EmptyCellText <string>] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -172,10 +172,10 @@ Accept wildcard characters: True
 Built-in HTML document theme.
 
 ```yaml
-Type: OfficeHtmlDocumentThemeKind
+Type: OfficeVisualThemeKind
 Parameter Sets: Path, Workbook
 Aliases: None
-Possible values: WordLike, Compact, Report, Technical
+Possible values: Plain, WordLike, TechnicalDocument, GitHubLike, Compact, Report
 
 Required: False
 Position: named

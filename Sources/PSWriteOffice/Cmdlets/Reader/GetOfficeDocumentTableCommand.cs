@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentTable")]
 [Alias("Read-OfficeDocumentTable")]
 [OutputType(typeof(ReaderTable), typeof(ReaderTableExportBundle), typeof(ReaderTableMaterializedExport))]
-public sealed class GetOfficeDocumentTableCommand : PSCmdlet
+public sealed class GetOfficeDocumentTableCommand : OfficeDocumentReaderCommandBase
 {
     /// <summary>File path to read.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
@@ -100,12 +100,6 @@ public sealed class GetOfficeDocumentTableCommand : PSCmdlet
     public SwitchParameter NoHashes { get; set; }
 
     /// <inheritdoc />
-    protected override void BeginProcessing()
-    {
-        ReaderCommandUtilities.RegisterReaderAdapters();
-    }
-
-    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
@@ -114,7 +108,7 @@ public sealed class GetOfficeDocumentTableCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = ReaderCommandUtilities.ResolvePath(this, OutputDirectory!);
-            var exports = DocumentReader.ReadTableExports(path, options, Indented.IsPresent);
+            var exports = EffectiveReader.ReadTableExports(path, options, Indented.IsPresent);
             var materialized = exports.WriteTableExportsToDirectory(outputDirectory, new ReaderTableExportMaterializationOptions
             {
                 Overwrite = !NoOverwrite.IsPresent,
@@ -128,11 +122,11 @@ public sealed class GetOfficeDocumentTableCommand : PSCmdlet
 
         if (AsExport.IsPresent)
         {
-            WriteObject(DocumentReader.ReadTableExports(path, options, Indented.IsPresent), enumerateCollection: true);
+            WriteObject(EffectiveReader.ReadTableExports(path, options, Indented.IsPresent), enumerateCollection: true);
             return;
         }
 
-        WriteObject(DocumentReader.ReadTables(path, options), enumerateCollection: true);
+        WriteObject(EffectiveReader.ReadTables(path, options), enumerateCollection: true);
     }
 
     private ReaderOptions BuildOptions()

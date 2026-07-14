@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 [Cmdlet(VerbsCommon.Get, "OfficeDocument")]
 [Alias("Read-OfficeDocument")]
 [OutputType(typeof(OfficeDocumentReadResult), typeof(string))]
-public sealed class GetOfficeDocumentCommand : PSCmdlet
+public sealed class GetOfficeDocumentCommand : OfficeDocumentReaderCommandBase
 {
     /// <summary>File path to read.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
@@ -82,12 +82,6 @@ public sealed class GetOfficeDocumentCommand : PSCmdlet
     public SwitchParameter NoHashes { get; set; }
 
     /// <inheritdoc />
-    protected override void BeginProcessing()
-    {
-        ReaderCommandUtilities.RegisterReaderAdapters();
-    }
-
-    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
@@ -106,7 +100,7 @@ public sealed class GetOfficeDocumentCommand : PSCmdlet
             !NoHashes.IsPresent);
 
         WriteObject(AsJson.IsPresent
-            ? DocumentReader.ReadDocumentJson(path, options, Indented.IsPresent)
-            : DocumentReader.ReadDocument(path, options));
+            ? EffectiveReader.ReadDocumentJson(path, options, Indented.IsPresent)
+            : EffectiveReader.ReadDocument(path, options));
     }
 }

@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentIngest")]
 [OutputType(typeof(ReaderIngestResult))]
-public sealed class GetOfficeDocumentIngestCommand : PSCmdlet
+public sealed class GetOfficeDocumentIngestCommand : OfficeDocumentReaderCommandBase
 {
     /// <summary>Folder path to ingest.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
@@ -90,12 +90,6 @@ public sealed class GetOfficeDocumentIngestCommand : PSCmdlet
     public SwitchParameter NoHashes { get; set; }
 
     /// <inheritdoc />
-    protected override void BeginProcessing()
-    {
-        ReaderCommandUtilities.RegisterReaderAdapters();
-    }
-
-    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var folderPath = ReaderCommandUtilities.ResolvePath(this, FolderPath);
@@ -114,6 +108,6 @@ public sealed class GetOfficeDocumentIngestCommand : PSCmdlet
             !NoMarkdownHeadingChunks.IsPresent,
             !NoHashes.IsPresent);
 
-        WriteObject(DocumentReader.ReadFolderDetailed(folderPath, folderOptions, options, includeChunks: !NoChunks.IsPresent));
+        WriteObject(EffectiveReader.ReadFolderDetailed(folderPath, folderOptions, options, includeChunks: !NoChunks.IsPresent));
     }
 }

@@ -11,12 +11,12 @@ Converts a PowerPoint deck to an HTML review document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficePowerPointHtml [-Path] <string> [-Password <string>] [-OutputPath <string>] [-Profile <OfficePowerPointHtmlProfile>] [-Theme <OfficeHtmlDocumentThemeKind>] [-Title <string>] [-IncludeHiddenSlides] [-NoNotes] [-NoTables] [-IncludeHiddenShapes] [-NoExtractionProof] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePowerPointHtml [-Path] <string> [-Password <string>] [-OutputPath <string>] [-Profile <OfficePowerPointHtmlProfile>] [-Theme <OfficeVisualThemeKind>] [-Title <string>] [-IncludeHiddenSlides] [-NoNotes] [-NoTables] [-IncludeHiddenShapes] [-NoExtractionProof] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Presentation
 ```powershell
-ConvertTo-OfficePowerPointHtml -Presentation <PowerPointPresentation> [-OutputPath <string>] [-Profile <OfficePowerPointHtmlProfile>] [-Theme <OfficeHtmlDocumentThemeKind>] [-Title <string>] [-IncludeHiddenSlides] [-NoNotes] [-NoTables] [-IncludeHiddenShapes] [-NoExtractionProof] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePowerPointHtml -Presentation <PowerPointPresentation> [-OutputPath <string>] [-Profile <OfficePowerPointHtmlProfile>] [-Theme <OfficeVisualThemeKind>] [-Title <string>] [-IncludeHiddenSlides] [-NoNotes] [-NoTables] [-IncludeHiddenShapes] [-NoExtractionProof] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -236,10 +236,10 @@ Accept wildcard characters: True
 Built-in HTML document theme.
 
 ```yaml
-Type: OfficeHtmlDocumentThemeKind
+Type: OfficeVisualThemeKind
 Parameter Sets: Path, Presentation
 Aliases: None
-Possible values: WordLike, Compact, Report, Technical
+Possible values: Plain, WordLike, TechnicalDocument, GitHubLike, Compact, Report
 
 Required: False
 Position: named

@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -35,7 +36,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsData.Import, "OfficeExcel", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelImport")]
-public sealed class ImportOfficeExcelCommand : PSCmdlet
+public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
 {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetUri = "Uri";
@@ -136,7 +137,7 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
     public int ChunkRows { get; set; } = 1024;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
+    protected override async Task ProcessRecordAsync()
     {
         if (!string.IsNullOrWhiteSpace(Range) && HasCoordinateRange())
         {
@@ -160,11 +161,11 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
 
         if (AsDataReader.IsPresent)
         {
-            WriteDataReader(options);
+            await WriteDataReaderAsync(options).ConfigureAwait(false);
             return;
         }
 
-        using var reader = CreateReader(options);
+        using var reader = await CreateReaderAsync(options).ConfigureAwait(false);
         if (AllSheets.IsPresent)
         {
             if (!string.IsNullOrWhiteSpace(WorksheetName) || SheetIndex.HasValue)
@@ -196,9 +197,9 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
         ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent, ByColumn.IsPresent, null);
     }
 
-    private void WriteDataReader(ExcelReadOptions options)
+    private async Task WriteDataReaderAsync(ExcelReadOptions options)
     {
-        var reader = CreateReader(options);
+        var reader = await CreateReaderAsync(options).ConfigureAwait(false);
         try
         {
             var sheet = ExcelReadOutputService.ResolveSheetReader(reader, WorksheetName, SheetIndex);
@@ -217,7 +218,7 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
         }
     }
 
-    private ExcelDocumentReader CreateReader(ExcelReadOptions options)
+    private async Task<ExcelDocumentReader> CreateReaderAsync(ExcelReadOptions options)
     {
         if (ParameterSetName == ParameterSetDocument)
         {
@@ -226,7 +227,7 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
                 throw new PSArgumentException("Excel document was not provided.", nameof(Document));
             }
 
-            return ExcelDocumentReader.Wrap(Document._spreadSheetDocument, options);
+            return Document.CreateReader(options);
         }
 
         if (ParameterSetName == ParameterSetUri)
@@ -236,7 +237,8 @@ public sealed class ImportOfficeExcelCommand : PSCmdlet
                 throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
             }
 
-            return ExcelDocumentReader.Open(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp));
+            return await ExcelDocumentReader.OpenAsync(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp), CancelToken)
+                .ConfigureAwait(false);
         }
 
         if (string.IsNullOrWhiteSpace(Path))

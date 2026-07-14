@@ -93,7 +93,7 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
             return;
         }
 
-        var document = PdfDocument.Open(inputPath);
+        var document = PdfDocument.Load(inputPath);
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
         PdfDocument result;
         if (Field == null || Field.Count == 0)

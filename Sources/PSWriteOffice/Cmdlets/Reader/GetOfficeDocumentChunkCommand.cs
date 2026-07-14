@@ -6,7 +6,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 
 /// <summary>Reads supported Office, PDF, Markdown, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPUB, Visio, and text files into normalized OfficeIMO.Reader chunks.</summary>
 /// <remarks>
-/// This is a thin adapter over <see cref="DocumentReader"/>. The OfficeIMO.Reader engine owns detection,
+/// This is a thin adapter over <see cref="OfficeDocumentReader"/>. The OfficeIMO.Reader engine owns detection,
 /// extraction, hashing, and chunk shaping.
 /// </remarks>
 /// <example>
@@ -19,7 +19,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentChunk", DefaultParameterSetName = FileParameterSet)]
 [Alias("Read-OfficeDocumentChunk")]
 [OutputType(typeof(ReaderChunk))]
-public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
+public sealed class GetOfficeDocumentChunkCommand : OfficeDocumentReaderCommandBase
 {
     private const string FileParameterSet = "File";
     private const string FolderParameterSet = "Folder";
@@ -99,12 +99,6 @@ public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
     public SwitchParameter NoHashes { get; set; }
 
     /// <inheritdoc />
-    protected override void BeginProcessing()
-    {
-        ReaderCommandUtilities.RegisterReaderAdapters();
-    }
-
-    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var options = BuildOptions();
@@ -113,7 +107,7 @@ public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
         {
             var folderPath = ReaderCommandUtilities.ResolvePath(this, FolderPath);
             var folderOptions = ReaderCommandUtilities.BuildFolderOptions(!NoRecurse.IsPresent, MaxFiles, MaxTotalBytes, Extension);
-            foreach (var chunk in DocumentReader.ReadFolder(folderPath, folderOptions, options))
+            foreach (var chunk in EffectiveReader.ReadFolder(folderPath, folderOptions, options))
             {
                 WriteObject(chunk);
             }
@@ -122,7 +116,7 @@ public sealed class GetOfficeDocumentChunkCommand : PSCmdlet
         }
 
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        foreach (var chunk in DocumentReader.Read(path, options))
+        foreach (var chunk in EffectiveReader.Read(path, options))
         {
             WriteObject(chunk);
         }

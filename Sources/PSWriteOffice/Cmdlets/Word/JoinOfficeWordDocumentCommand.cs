@@ -113,17 +113,17 @@ public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
                 savedPath = saveTarget;
-                document.Save(savedPath!, false);
+                document.Save(savedPath!);
             }
             else if (ParameterSetName == ParameterSetPath)
             {
-                document.Save(false);
+                document.Save();
                 savedPath = saveTarget;
             }
             else if (Show.IsPresent)
             {
                 savedPath = saveTarget;
-                document.Save(false);
+                document.Save();
             }
 
             if (Show.IsPresent)

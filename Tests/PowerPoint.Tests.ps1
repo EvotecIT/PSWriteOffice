@@ -440,7 +440,7 @@ Describe 'PowerPoint cmdlets' {
             }
         }
 
-        $slideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide1.xml'
+        $slideXml = Get-ZipXmlDocumentLocal -Path $path -Entry (Get-TestPowerPointSlideEntry -Path $path -Index 0)
         $namespaceManager = New-Object System.Xml.XmlNamespaceManager($slideXml.NameTable)
         $namespaceManager.AddNamespace('a', 'http://schemas.openxmlformats.org/drawingml/2006/main')
         $slideXml.SelectSingleNode('//a:r[a:t="2"]/a:rPr[@baseline="30000"]', $namespaceManager) | Should -Not -BeNullOrEmpty
@@ -826,7 +826,7 @@ Describe 'PowerPoint cmdlets' {
         Save-OfficePowerPoint -Presentation $presentation
         $presentation.Dispose()
 
-        $slideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide1.xml'
+        $slideXml = Get-ZipXmlDocumentLocal -Path $path -Entry (Get-TestPowerPointSlideEntry -Path $path -Index 0)
         $transitionNode = $slideXml.SelectSingleNode("/*[local-name()='sld']/*[local-name()='transition']")
         $transitionNode | Should -Not -BeNullOrEmpty
         $transitionNode.SelectSingleNode("*[local-name()='fade']") | Should -Not -BeNullOrEmpty
@@ -874,7 +874,7 @@ Describe 'PowerPoint cmdlets' {
         $path = Join-Path $TestDrive 'PowerPointDsl.pptx'
 
         New-OfficePowerPoint -Path $path {
-            $layout = Get-OfficePowerPointLayout | Select-Object -First 1
+            $layout = @(Get-OfficePowerPointLayout)[0]
             if ($layout) {
                 Set-OfficePowerPointLayoutPlaceholderBounds -Master $layout.MasterIndex -Layout $layout.LayoutIndex -PlaceholderType Title `
                     -Left 60 -Top 40 -Width 600 -Height 120 -CreateIfMissing
@@ -1111,10 +1111,10 @@ Describe 'PowerPoint cmdlets' {
             }
         }
 
-        $colorSlideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide1.xml'
+        $colorSlideXml = Get-ZipXmlDocumentLocal -Path $path -Entry (Get-TestPowerPointSlideEntry -Path $path -Index 0)
         $colorSlideXml.OuterXml | Should -Match 'rgbClr val="f4f7fb"'
 
-        $imageSlideXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'ppt/slides/slide2.xml'
+        $imageSlideXml = Get-ZipXmlDocumentLocal -Path $path -Entry (Get-TestPowerPointSlideEntry -Path $path -Index 1)
         $imageSlideXml.OuterXml | Should -Match '<a:blip '
         $imageSlideXml.OuterXml | Should -Match 'r:embed='
 

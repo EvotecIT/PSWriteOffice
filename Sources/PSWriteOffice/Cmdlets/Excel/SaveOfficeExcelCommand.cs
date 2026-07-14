@@ -87,7 +87,8 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(Document.FilePath))
+        var associatedPath = ExcelDocumentService.GetAssociatedPath(Document);
+        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(associatedPath))
         {
             throw new PSInvalidOperationException("No file path provided. Use -Path or open the workbook from disk.");
         }
@@ -117,7 +118,7 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             }
             else
             {
-                Document.Save(resolvedPath, false, saveOptions);
+                Document.Save(resolvedPath, saveOptions);
             }
 
             if (Show.IsPresent)
@@ -127,7 +128,7 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
         }
         else
         {
-            if (!PdfCommandUtilities.ShouldWrite(this, Document.FilePath!, "Save Excel workbook"))
+            if (!PdfCommandUtilities.ShouldWrite(this, associatedPath!, "Save Excel workbook"))
             {
                 return;
             }
@@ -135,23 +136,28 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
             if (!string.IsNullOrEmpty(Password))
             {
-                OfficeEncryptedPackageService.SaveExcel(Document, Document.FilePath!, Password!, false, saveOptions);
+                OfficeEncryptedPackageService.SaveExcel(Document, associatedPath!, Password!, false, saveOptions);
             }
             else
             {
+                if (ExcelDocumentService.IsEncryptedSource(Document))
+                {
+                    throw new PSInvalidOperationException("Provide -Password when saving a workbook loaded from an encrypted package.");
+                }
+
                 if (saveOptions == null)
                 {
-                    Document.Save(false);
+                    Document.Save();
                 }
                 else
                 {
-                    Document.Save(Document.FilePath!, false, saveOptions);
+                    Document.Save(associatedPath!, saveOptions);
                 }
             }
 
             if (Show.IsPresent)
             {
-                FileOpenService.Open(Document.FilePath);
+                FileOpenService.Open(associatedPath!);
             }
         }
 

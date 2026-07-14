@@ -4,6 +4,7 @@ using OfficeIMO.Word;
 using OfficeIMO.Word.Pdf;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
+using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
@@ -61,7 +62,8 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(Document.FilePath))
+        var associatedPath = WordDocumentService.GetAssociatedPath(Document);
+        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(associatedPath))
         {
             throw new PSInvalidOperationException("No file path provided. Use -Path or open the document from disk.");
         }
@@ -80,7 +82,7 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
             }
             else
             {
-                Document.Save(resolvedPath, false);
+                Document.Save(resolvedPath);
             }
 
             if (Show.IsPresent)
@@ -90,23 +92,28 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
         }
         else
         {
-            if (!PdfCommandUtilities.ShouldWrite(this, Document.FilePath!, "Save Word document"))
+            if (!PdfCommandUtilities.ShouldWrite(this, associatedPath!, "Save Word document"))
             {
                 return;
             }
 
             if (!string.IsNullOrEmpty(Password))
             {
-                OfficeEncryptedPackageService.SaveWord(Document, Document.FilePath!, Password!, false);
+                OfficeEncryptedPackageService.SaveWord(Document, associatedPath!, Password!, false);
             }
             else
             {
-                Document.Save(false);
+                if (WordDocumentService.IsEncryptedSource(Document))
+                {
+                    throw new PSInvalidOperationException("Provide -Password when saving a document loaded from an encrypted package.");
+                }
+
+                Document.Save();
             }
 
             if (Show.IsPresent)
             {
-                FileOpenService.Open(Document.FilePath);
+                FileOpenService.Open(associatedPath!);
             }
         }
 

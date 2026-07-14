@@ -68,7 +68,7 @@ Accept wildcard characters: True
 ```
 
 ### -BackgroundColor
-Run background color for -Text input in #RRGGBB format.
+Run background color for -Text input. Named colors and hexadecimal colors are accepted.
 
 ```yaml
 Type: String
@@ -116,7 +116,7 @@ Accept wildcard characters: True
 ```
 
 ### -Color
-Default paragraph color in #RRGGBB format.
+Default paragraph color. Named colors and hexadecimal colors are accepted.
 
 ```yaml
 Type: String
@@ -265,7 +265,7 @@ Rich run specifications. Each run may define Text, Bold, Italic, Underline, Stri
 ```yaml
 Type: Object[]
 Parameter Sets: Context, Document
-Aliases: None
+Aliases: Runs
 Possible values:
 
 Required: False

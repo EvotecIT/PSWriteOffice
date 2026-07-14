@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using System.Text;
+using OfficeIMO.Html;
 using OfficeIMO.Markdown;
 using OfficeIMO.Markdown.Html;
 using PSWriteOffice.Services.Markdown;
@@ -170,7 +171,7 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
 
             if (AsDocument.IsPresent)
             {
-                WriteObject(html.LoadFromHtml(options));
+                WriteObject(HtmlConversionDocument.Parse(html).ToMarkdownDocument(options));
                 return;
             }
 
@@ -182,7 +183,7 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
                     return;
                 }
 
-                var markdown = html.ToMarkdown(options);
+                var markdown = HtmlConversionDocument.Parse(html).ToMarkdown(options);
                 var directory = Path.GetDirectoryName(resolvedOutput);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
@@ -197,7 +198,7 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
             }
             else
             {
-                var markdown = html.ToMarkdown(options);
+                var markdown = HtmlConversionDocument.Parse(html).ToMarkdown(options);
                 WriteObject(markdown);
             }
         }

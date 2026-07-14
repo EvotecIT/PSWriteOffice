@@ -55,7 +55,7 @@ internal static class ExcelReadOutputService
     }
 
     public static void WriteOutput(
-        PSCmdlet cmdlet,
+        IAsyncCmdletPipeline cmdlet,
         DataTable table,
         bool asDataTable,
         bool asHashtable,
@@ -186,7 +186,7 @@ internal static class ExcelReadOutputService
         return candidate;
     }
 
-    private static void WriteColumnOutput(PSCmdlet cmdlet, DataTable table, string[] columnNames, bool asHashtable, string? worksheetName)
+    private static void WriteColumnOutput(IAsyncCmdletPipeline cmdlet, DataTable table, string[] columnNames, bool asHashtable, string? worksheetName)
     {
         for (var columnIndex = 0; columnIndex < columnNames.Length; columnIndex++)
         {

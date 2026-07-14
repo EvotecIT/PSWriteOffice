@@ -36,7 +36,7 @@ public static class PowerPointDocumentService
 
         var presentation = !string.IsNullOrEmpty(password)
             ? OfficeEncryptedPackageService.OpenPowerPoint(resolvedPath, password!)
-            : PowerPointPresentation.Open(resolvedPath);
+            : PowerPointPresentation.Load(resolvedPath);
         Presentations[presentation] = resolvedPath;
         return presentation;
     }

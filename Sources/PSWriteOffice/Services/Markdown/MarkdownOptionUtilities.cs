@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
+using OfficeIMO.Drawing;
 using OfficeIMO.Markdown;
 using OfficeIMO.Markdown.Pdf;
 using PSWriteOffice.Services.Pdf;
@@ -35,7 +36,7 @@ internal interface IMarkdownPdfOptionSource
 {
     MarkdownPdfSaveOptions? MarkdownPdfOptions { get; }
     OfficeIMO.Pdf.PdfOptions? PdfOptions { get; }
-    MarkdownPdfThemeKind? PdfTheme { get; }
+    OfficeVisualThemeKind? PdfTheme { get; }
     string? PdfFontFamily { get; }
     string? PdfTitle { get; }
     string? PdfAuthor { get; }
@@ -165,13 +166,13 @@ internal static class MarkdownOptionUtilities
         var options = source.MarkdownPdfOptions ?? new MarkdownPdfSaveOptions();
 
         if (source.PdfOptions != null) options.PdfOptions = source.PdfOptions;
-        if (source.PdfTheme.HasValue) options.VisualTheme = MarkdownPdfVisualTheme.Create(source.PdfTheme.Value);
+        if (source.PdfTheme.HasValue) options.Theme = MarkdownVisualTheme.Create(source.PdfTheme.Value);
         if (!string.IsNullOrWhiteSpace(source.PdfFontFamily)) options.FontFamily = source.PdfFontFamily;
         if (!string.IsNullOrWhiteSpace(source.PdfTitle)) options.Title = source.PdfTitle;
         if (!string.IsNullOrWhiteSpace(source.PdfAuthor)) options.Author = source.PdfAuthor;
         if (!string.IsNullOrWhiteSpace(source.PdfSubject)) options.Subject = source.PdfSubject;
         if (!string.IsNullOrWhiteSpace(source.PdfKeywords)) options.Keywords = source.PdfKeywords;
-        if (source.PdfApplyWordLikeTheme.HasValue) options.ApplyWordLikeTheme = source.PdfApplyWordLikeTheme.Value;
+        if (source.PdfApplyWordLikeTheme.HasValue) options.ApplyDefaultTheme = source.PdfApplyWordLikeTheme.Value;
 
         if (!string.IsNullOrWhiteSpace(source.PdfBaseDirectory))
         {
@@ -189,7 +190,7 @@ internal static class MarkdownOptionUtilities
         if (source.PdfDefaultImageWidth.HasValue) options.DefaultImageWidth = source.PdfDefaultImageWidth.Value;
         if (source.PdfDefaultImageHeight.HasValue) options.DefaultImageHeight = source.PdfDefaultImageHeight.Value;
         if (source.PdfFrontMatterRenderMode.HasValue) options.FrontMatterRenderMode = source.PdfFrontMatterRenderMode.Value;
-        if (source.PdfUseFrontMatterVisualTheme.HasValue) options.UseFrontMatterVisualTheme = source.PdfUseFrontMatterVisualTheme.Value;
+        if (source.PdfUseFrontMatterVisualTheme.HasValue) options.UseFrontMatterTheme = source.PdfUseFrontMatterVisualTheme.Value;
         if (source.PdfUseFrontMatterMetadata.HasValue) options.UseFrontMatterMetadata = source.PdfUseFrontMatterMetadata.Value;
         if (source.PdfUseFirstHeadingAsTitle.HasValue) options.UseFirstHeadingAsTitle = source.PdfUseFirstHeadingAsTitle.Value;
         if (source.PdfCreateOutlineFromHeadings.HasValue) options.CreateOutlineFromHeadings = source.PdfCreateOutlineFromHeadings.Value;
@@ -197,13 +198,13 @@ internal static class MarkdownOptionUtilities
         return options;
     }
 
-    internal static void SetPdfResultVariables(IMarkdownPdfOptionSource source, PSCmdlet command, MarkdownPdfSaveOptions options)
+    internal static void SetPdfResultVariables(IMarkdownPdfOptionSource source, PSCmdlet command, OfficeIMO.Pdf.PdfDocumentConversionResult result)
     {
-        SetVariable(command, source.PdfWarningVariable, options.Warnings);
-        SetVariable(command, source.PdfConversionReportVariable, options.ConversionReport);
+        SetVariable(command, source.PdfWarningVariable, result.Warnings);
+        SetVariable(command, source.PdfConversionReportVariable, result.Report);
     }
 
-    internal static MarkdownVisualTheme CreateTheme(MarkdownVisualThemeKind kind) => MarkdownVisualTheme.Create(kind);
+    internal static MarkdownVisualTheme CreateTheme(OfficeVisualThemeKind kind) => MarkdownVisualTheme.Create(kind);
 
     private static MarkdownWriteOptions CreateWriteProfile(OfficeMarkdownWriteProfile? profile)
     {

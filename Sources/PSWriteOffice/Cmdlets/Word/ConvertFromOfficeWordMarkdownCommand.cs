@@ -3,10 +3,13 @@ using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 using System.Reflection;
+using System.Threading.Tasks;
+using OfficeIMO.Drawing;
 using OfficeIMO.Markdown;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Markdown;
 using PSWriteOffice.Services;
+using PSWriteOffice.Services.Markdown;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
@@ -33,7 +36,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsData.ConvertFrom, "OfficeWordMarkdown", DefaultParameterSetName = ParameterSetMarkdown, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-WordMarkdown")]
 [OutputType(typeof(WordDocument), typeof(FileInfo))]
-public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
+public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
 {
     private const string ParameterSetMarkdown = "Markdown";
     private const string ParameterSetPath = "Path";
@@ -117,7 +120,7 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
 
     /// <summary>Shared Markdown visual theme for generated Word output.</summary>
     [Parameter]
-    public MarkdownVisualThemeKind? Theme { get; set; }
+    public OfficeVisualThemeKind? Theme { get; set; }
 
     /// <summary>Allow data URI Markdown images to be embedded in Word output.</summary>
     [Parameter]
@@ -160,7 +163,7 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
+    protected override async Task ProcessRecordAsync()
     {
         WordDocument? document = null;
 
@@ -189,19 +192,11 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
                         options.BaseUri = BuildDirectoryUri(Path.GetDirectoryName(resolvedPath) ?? Directory.GetCurrentDirectory());
                     }
 
-                    if (options is MarkdownToWordTemplateOptions templateOptions)
-                    {
-                        var markdown = File.ReadAllText(resolvedPath);
-                        document = markdown.LoadFromMarkdownTemplate(ResolveTemplatePath(), templateOptions);
-                    }
-                    else
-                    {
-                        document = WordMarkdownConverterExtensions.LoadFromMarkdown(resolvedPath, options);
-                    }
+                    document = await ConvertMarkdownTextAsync(File.ReadAllText(resolvedPath), options).ConfigureAwait(false);
                     break;
                 }
                 case ParameterSetDocument:
-                    document = ConvertMarkdownText(Document.ToMarkdown(), options);
+                    document = await ConvertMarkdownDocumentAsync(Document, options).ConfigureAwait(false);
                     break;
                 default:
                     if (string.IsNullOrWhiteSpace(Markdown))
@@ -209,7 +204,7 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
                         throw new ArgumentException("Markdown content cannot be empty.", nameof(Markdown));
                     }
 
-                    document = ConvertMarkdownText(Markdown, options);
+                    document = await ConvertMarkdownTextAsync(Markdown, options).ConfigureAwait(false);
                     break;
             }
 
@@ -235,7 +230,7 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
 
                 try
                 {
-                    document.Save(resolvedOutput, false);
+                    document.Save(resolvedOutput);
                 }
                 finally
                 {
@@ -278,7 +273,7 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
 
         var options = CreateOptions();
         options.AllowLocalImages = AllowLocalImages.IsPresent;
-        options.AllowRemoteImages = AllowRemoteImages.IsPresent;
+        options.OnWarning = WriteWarning;
 
         if (RenderFrontMatter.IsPresent)
         {
@@ -366,11 +361,30 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : PSCmdlet
             : new MarkdownToWordTemplateOptions();
     }
 
-    private WordDocument ConvertMarkdownText(string markdown, MarkdownToWordOptions options)
+    private Task<WordDocument> ConvertMarkdownTextAsync(string markdown, MarkdownToWordOptions options)
     {
-        return options is MarkdownToWordTemplateOptions templateOptions
-            ? markdown.LoadFromMarkdownTemplate(ResolveTemplatePath(), templateOptions)
-            : markdown.LoadFromMarkdown(options);
+        var markdownDocument = MarkdownReader.Parse(markdown, options.CreateReaderOptions());
+        return ConvertMarkdownDocumentAsync(markdownDocument, options);
+    }
+
+    private async Task<WordDocument> ConvertMarkdownDocumentAsync(MarkdownDoc markdownDocument, MarkdownToWordOptions options)
+    {
+        if (AllowRemoteImages.IsPresent)
+        {
+            await MarkdownRemoteImageService.ConfigureResolverAsync(markdownDocument, options, CancelToken).ConfigureAwait(false);
+        }
+
+        if (options is not MarkdownToWordTemplateOptions templateOptions)
+        {
+            return markdownDocument.ToWordDocument(options);
+        }
+
+        var templateDocument = WordDocument.Load(ResolveTemplatePath(), new WordLoadOptions
+        {
+            AccessMode = DocumentAccessMode.ReadWrite,
+            PersistenceMode = DocumentPersistenceMode.Explicit
+        });
+        return markdownDocument.ToWordDocument(templateDocument, templateOptions);
     }
 
     private void ValidateTemplateParameters()

@@ -21,7 +21,7 @@ internal sealed class ExcelWorkbookCommandScope : IDisposable
     {
         if (OwnsDocument)
         {
-            Document.Save(false);
+            Document.Save();
         }
     }
 

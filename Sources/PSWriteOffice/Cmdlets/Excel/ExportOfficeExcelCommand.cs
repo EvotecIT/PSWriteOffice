@@ -721,7 +721,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             var sheetExists = SheetExists(document, sheetName);
             if (ClearSheet.IsPresent && sheetExists)
             {
-                document.RemoveWorkSheet(sheetName);
+                document.RemoveWorksheet(sheetName);
                 sheetExists = false;
             }
 
@@ -832,7 +832,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     {
         if (ClearSheet.IsPresent && SheetExists(document, WorksheetName))
         {
-            document.RemoveWorkSheet(WorksheetName);
+            document.RemoveWorksheet(WorksheetName);
         }
 
         return document.GetOrCreateSheet(WorksheetName, SheetNameValidationMode.Sanitize);
@@ -1258,7 +1258,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     {
         var sheet = document.Sheets.FirstOrDefault(existing =>
             string.Equals(existing.Name, sheetName, StringComparison.OrdinalIgnoreCase));
-        return sheet ?? document.AddWorkSheet(sheetName, SheetNameValidationMode.None);
+        return sheet ?? document.AddWorksheet(sheetName, SheetNameValidationMode.None);
     }
 
     private static bool IsInvalidWorksheetNameCharacter(char ch)

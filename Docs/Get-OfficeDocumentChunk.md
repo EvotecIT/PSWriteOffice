@@ -11,16 +11,16 @@ Reads supported Office, PDF, Markdown, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPU
 ## SYNTAX
 ### File (Default)
 ```powershell
-Get-OfficeDocumentChunk [-Path] <string> [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [<CommonParameters>]
+Get-OfficeDocumentChunk [-Path] <string> [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ### Folder
 ```powershell
-Get-OfficeDocumentChunk -FolderPath <string> [-NoRecurse] [-MaxFiles <int>] [-MaxTotalBytes <long>] [-Extension <string[]>] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [<CommonParameters>]
+Get-OfficeDocumentChunk -FolderPath <string> [-NoRecurse] [-MaxFiles <int>] [-MaxTotalBytes <long>] [-Extension <string[]>] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This is a thin adapter over DocumentReader. The OfficeIMO.Reader engine owns detection,
+This is a thin adapter over OfficeDocumentReader. The OfficeIMO.Reader engine owns detection,
 extraction, hashing, and chunk shaping.
 
 ## EXAMPLES
@@ -320,6 +320,22 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Reader
+{{ Fill Reader Description }}
+
+```yaml
+Type: OfficeDocumentReader
+Parameter Sets: File, Folder
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

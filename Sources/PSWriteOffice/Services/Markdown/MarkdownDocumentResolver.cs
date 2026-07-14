@@ -31,7 +31,7 @@ internal static class MarkdownDocumentResolver
                 throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
-            return MarkdownReader.ParseFile(resolvedPath, effectiveOptions);
+            return MarkdownDoc.Load(resolvedPath, effectiveOptions);
         }
 
         return MarkdownReader.Parse(text ?? string.Empty, effectiveOptions);
@@ -69,7 +69,7 @@ internal static class MarkdownDocumentResolver
                 throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
-            return MarkdownReader.ParseFile(resolvedPath, effectiveOptions);
+            return MarkdownDoc.Load(resolvedPath, effectiveOptions);
         }
 
         return MarkdownReader.Parse(text ?? string.Empty, effectiveOptions);

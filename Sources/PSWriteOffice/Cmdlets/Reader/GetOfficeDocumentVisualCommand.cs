@@ -15,7 +15,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentVisual")]
 [Alias("Read-OfficeDocumentVisual")]
 [OutputType(typeof(ReaderVisual), typeof(ReaderVisualExportBundle), typeof(ReaderVisualMaterializedExport))]
-public sealed class GetOfficeDocumentVisualCommand : PSCmdlet
+public sealed class GetOfficeDocumentVisualCommand : OfficeDocumentReaderCommandBase
 {
     /// <summary>File path to read.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
@@ -95,12 +95,6 @@ public sealed class GetOfficeDocumentVisualCommand : PSCmdlet
     public SwitchParameter NoHashes { get; set; }
 
     /// <inheritdoc />
-    protected override void BeginProcessing()
-    {
-        ReaderCommandUtilities.RegisterReaderAdapters();
-    }
-
-    /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
@@ -109,7 +103,7 @@ public sealed class GetOfficeDocumentVisualCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = ReaderCommandUtilities.ResolvePath(this, OutputDirectory!);
-            var exports = DocumentReader.ReadVisualExports(path, options, Indented.IsPresent);
+            var exports = EffectiveReader.ReadVisualExports(path, options, Indented.IsPresent);
             var materialized = exports.WriteVisualExportsToDirectory(outputDirectory, new ReaderVisualExportMaterializationOptions
             {
                 Overwrite = !NoOverwrite.IsPresent,
@@ -122,11 +116,11 @@ public sealed class GetOfficeDocumentVisualCommand : PSCmdlet
 
         if (AsExport.IsPresent)
         {
-            WriteObject(DocumentReader.ReadVisualExports(path, options, Indented.IsPresent), enumerateCollection: true);
+            WriteObject(EffectiveReader.ReadVisualExports(path, options, Indented.IsPresent), enumerateCollection: true);
             return;
         }
 
-        WriteObject(DocumentReader.ReadVisuals(path, options), enumerateCollection: true);
+        WriteObject(EffectiveReader.ReadVisuals(path, options), enumerateCollection: true);
     }
 
     private ReaderOptions BuildOptions()
