@@ -138,6 +138,13 @@ Describe 'Expanded OfficeIMO support' {
         { ConvertTo-OfficeOpenDocument -Path $excelPath -OutputPath $wrongOutput -ErrorAction Stop } |
             Should -Throw '*must use the .ods extension*'
         Test-Path -LiteralPath $wrongOutput | Should -BeFalse
+
+        $textPath = Join-Path $TestDrive 'reverse-source.odt'
+        $wrongOfficeOutput = Join-Path $TestDrive 'text.xlsx'
+        New-OfficeOpenDocument -Kind Text -Path $textPath | Out-Null
+        { ConvertFrom-OfficeOpenDocument -Path $textPath -OutputPath $wrongOfficeOutput -ErrorAction Stop } |
+            Should -Throw '*must use the .docx extension*'
+        Test-Path -LiteralPath $wrongOfficeOutput | Should -BeFalse
     }
 
     It 'round-trips EML, MSG, TNEF, and mbox artifacts' {
@@ -194,6 +201,26 @@ Describe 'Expanded OfficeIMO support' {
             $result.GetType().FullName | Should -Be 'OfficeIMO.Drawing.OfficeImageExportResult'
             $result.Bytes.Length | Should -BeGreaterThan 0
         }
+
+        $htmlLines = @('<html><body>', '<h1>Pipeline heading</h1><p>Pipeline body</p>', '</body></html>')
+        $pipelineHtmlPath = Join-Path $TestDrive 'pipeline-html.svg'
+        $pipelineHtml = @($htmlLines | Export-OfficeHtmlImage -OutputPath $pipelineHtmlPath -Format Svg)
+        $pipelineHtml | Should -HaveCount 1
+        $pipelineHtml[0].GetType().FullName | Should -Be 'OfficeIMO.Drawing.OfficeImageExportResult'
+        Test-Path -LiteralPath $pipelineHtmlPath | Should -BeTrue
+    }
+
+    It 'releases path-loaded PowerPoint presentations after image export' {
+        $powerPointPath = Join-Path $TestDrive 'transient.pptx'
+        New-OfficePowerPoint -Path $powerPointPath { PptSlide { PptTitle -Title 'Transient' } } | Out-Null
+        $serviceType = Get-TestPSWriteOfficeType -AssemblyName 'PSWriteOffice' -TypeName 'PSWriteOffice.Services.PowerPoint.PowerPointDocumentService' -CommandName 'Export-OfficePowerPointImage'
+        $presentationsField = $serviceType.GetField('Presentations', [System.Reflection.BindingFlags]'NonPublic, Static')
+        $presentations = $presentationsField.GetValue($null)
+        $before = $presentations.Count
+
+        Export-OfficePowerPointImage -Path $powerPointPath -OutputPath (Join-Path $TestDrive 'transient-images') -Format Svg | Out-Null
+
+        $presentations.Count | Should -Be $before
     }
 
     It 'returns Word review/comparison and PowerPoint inspection reports' {

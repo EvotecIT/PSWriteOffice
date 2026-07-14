@@ -1,5 +1,6 @@
 using System.IO;
 using System.Management.Automation;
+using System.Text;
 using OfficeIMO.Drawing;
 using OfficeIMO.Html;
 
@@ -16,6 +17,9 @@ namespace PSWriteOffice.Cmdlets.Html;
 [OutputType(typeof(OfficeImageExportResult))]
 public sealed class ExportOfficeHtmlImageCommand : PSCmdlet
 {
+    private readonly StringBuilder _pipelineHtml = new();
+    private bool _hasPipelineHtml;
+
     /// <summary>Path to an HTML file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Path")]
     public string Path { get; set; } = string.Empty;
@@ -52,15 +56,34 @@ public sealed class ExportOfficeHtmlImageCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (ParameterSetName == "Html")
+        {
+            if (_hasPipelineHtml) _pipelineHtml.Append('\n');
+            _pipelineHtml.Append(Html ?? string.Empty);
+            _hasPipelineHtml = true;
+            return;
+        }
+
+        var document = ParameterSetName == "Path"
+            ? HtmlConversionDocument.Load(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), DocumentOptions)
+            : Document;
+        Export(document);
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        if (ParameterSetName == "Html")
+        {
+            Export(HtmlConversionDocument.Parse(_pipelineHtml.ToString(), DocumentOptions));
+        }
+    }
+
+    private void Export(HtmlConversionDocument document)
+    {
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         if (!ShouldProcess(output, $"Export HTML page as {Format}")) return;
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
-        var document = ParameterSetName switch
-        {
-            "Path" => HtmlConversionDocument.Load(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), DocumentOptions),
-            "Html" => HtmlConversionDocument.Parse(Html, DocumentOptions),
-            _ => Document
-        };
         WriteObject(Format == OfficeImageExportFormat.Svg
             ? document.SaveAsSvg(output, RenderOptions, PageIndex)
             : document.SaveAsPng(output, RenderOptions, PageIndex));
