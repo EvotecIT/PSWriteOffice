@@ -13,6 +13,10 @@ cmdlets against PowerShell-facing Excel alternatives:
 - `ImportExcel`
 - `ExcelFast` for the workbook lanes it supports
 
+Every read comparison uses the same PSWriteOffice-produced workbook shape for
+the selected row count. The competing readers do not benchmark files created by
+their own writers.
+
 ```powershell
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 -Suite Smoke
 ```
@@ -136,8 +140,9 @@ CSV in the same benchmark matrix. The native baseline uses `GZipStream` with
 ### CSV Capability Coverage
 
 The CSV benchmarks sit next to feature coverage on purpose: the target is fast
-and correct, not a narrow parser trick. OfficeIMO.CSV owns the reusable CSV
-engine; PSWriteOffice exposes the PowerShell surface over it.
+and correct, not a narrow parser trick. They measure the CSV reader and writer
+paths used by PSWriteOffice, including streaming, compression, typed values, and
+round-trip validation.
 
 | Capability | Current PSWriteOffice / OfficeIMO.CSV support | Benchmark visibility |
 | --- | --- | --- |
@@ -146,7 +151,7 @@ engine; PSWriteOffice exposes the PowerShell surface over it.
 | Compression | `Export-OfficeCsv` / `Import-OfficeCsv` expose `-CompressionType`; OfficeIMO.CSV supports none, auto, GZip, Deflate, and runtime-supported Brotli/ZLib | GZip write/read DataTable lanes |
 | Cancellation | OfficeIMO.CSV accepts a cancellation token; PSWriteOffice cancels it from `StopProcessing`, so Ctrl+C can stop long reads | Contract coverage, not timed by default |
 | Progress | OfficeIMO.CSV exposes progress callbacks; PSWriteOffice exposes `-ProgressInterval` and writes PowerShell progress records | Contract coverage, not timed by default |
-| Schema and typed tables | OfficeIMO.CSV supports explicit/inferred schema, `DataTable`, and `IDataReader` schema tables; PSWriteOffice exposes `Import-OfficeCsv -AsDataTable -InferSchema` | DataTable read lanes; DbaClientX round-trip uses table handoff |
+| Schema and typed tables | OfficeIMO.CSV supports explicit/inferred schema, `DataTable`, and `IDataReader` schema tables; PSWriteOffice exposes `Import-OfficeCsv -AsDataTable -InferSchema` and `Import-OfficeCsv -AsDataReader -ColumnType` | DataTable read lanes; DbaClientX round-trip uses schema-aware reader handoff |
 | CSV dialects | Culture/list separator, delimiter detection, multi-character delimiters, no-header/custom headers, comments, W3C headers, null values, date formats, quote modes, and selected quote fields | Default benchmark dialect plus focused command tests |
 | Robust parsing | Duplicate-header policy, row-length mismatch policy, strict/lenient quotes, parse-error collection/skip-row, max field length, decompression limits, smart-quote normalization, and string interning | Command/core tests; timed lanes stay on clean generated files |
 | Platform shape | PSWriteOffice targets Windows PowerShell/.NET Framework and PowerShell 7/.NET; Brotli/ZLib depend on runtime support, and comparison tools such as `bcp`/FastBCP/dbatools must be installed locally | Benchmarks skip unavailable optional engines |
@@ -259,37 +264,35 @@ DataTable row count.
 | csv-write-gzip-wide | 10000 | 118.8 ms (1.00x) | 397.7 ms (3.35x slower) | PSWriteOffice fastest |
 <!-- BENCHMARK:CsvGZipComparison:END -->
 
-The 100,000-row repeated wide/quoted object-output run was stopped after more
-than nine minutes without a completed artifact. Treat that as a signal that the
-large all-column PowerShell-object path is dominated by `PSCustomObject` /
-`PSNoteProperty` materialization. Use `Import-OfficeCsv -AsDataTable` for
-table/database workflows; use object output when the next step really needs
-PowerShell objects.
+The 100,000-row values pool two independent 20-iteration runs for each
+operation.
 
 <!-- BENCHMARK:CsvComparison:START -->
 | Scenario | Rows | PSWriteOffice | NativeCsv | Result |
 | --- | ---: | ---: | ---: | --- |
-| csv-read-source-mixed | 1000 | 10.3 ms (1.00x) | 12.7 ms (1.23x slower) | PSWriteOffice fastest |
-| csv-read-source-mixed | 5000 | 19.2 ms (1.00x) | 25.2 ms (1.32x slower) | PSWriteOffice fastest |
-| csv-read-source-mixed | 10000 | 71.6 ms (1.00x) | 60.1 ms (1.19x faster) | NativeCsv fastest; PSWriteOffice 1.19x slower |
-| csv-read-source-mixed | 100000 | 824.8 ms (1.00x) | 704.0 ms (1.17x faster) | NativeCsv fastest; PSWriteOffice 1.17x slower |
-| csv-write-mixed | 1000 | 13.7 ms (1.00x) | 14.3 ms (1.05x slower) | PSWriteOffice fastest |
-| csv-write-mixed | 5000 | 21.9 ms (1.00x) | 22.3 ms (1.02x slower) | PSWriteOffice fastest |
-| csv-write-mixed | 10000 | 30.2 ms (1.00x) | 29.4 ms (1.03x faster) | NativeCsv fastest; PSWriteOffice 1.03x slower |
-| csv-write-mixed | 100000 | 203.6 ms (1.00x) | 217.9 ms (1.07x slower) | PSWriteOffice fastest |
+| csv-read-source-mixed | 100000 | 471.7 ms (1.00x) | 554.4 ms (1.18x slower) | PSWriteOffice fastest |
+| csv-write-mixed | 100000 | 209.0 ms (1.00x) | 225.2 ms (1.08x slower) | PSWriteOffice fastest |
 <!-- BENCHMARK:CsvComparison:END -->
+
+The same 100,000-row object import comparison across other file shapes:
+
+| Shape | PSWriteOffice | NativeCsv | Result |
+| --- | ---: | ---: | --- |
+| Multiline | 472.1 ms | 546.7 ms | 16% faster |
+| Quoted | 502.5 ms | 594.2 ms | 18% faster |
+| Wide, 40 columns | 1.84 s | 2.27 s | 24% faster |
 
 ## Options
 
 The wrappers build PSWriteOffice in `Release` mode by default and import local
 development binaries when a selected run includes `PSWriteOffice`. Use
 `-PSWriteOfficeConfiguration Debug` for diagnostics or `-SkipPSWriteOfficeBuild`
-when intentionally reusing a previous build. Quick and focused runs leave this
+when reusing an existing local build. Quick and focused runs leave this
 README unchanged unless `-UpdateReadme` is specified.
 
-The scripts use published OfficeIMO packages by default by setting
-`OfficeIMORoot` to `.missing-officeimo`. Use `-OfficeIMORoot` when validating
-unreleased OfficeIMO source changes:
+By default the scripts use the OfficeIMO assemblies packaged with
+PSWriteOffice. Pass `-OfficeIMORoot` only when validating unreleased OfficeIMO
+source changes:
 
 ```powershell
 $evotecRoot = if ($env:EVOTEC_GITHUB_ROOT) { $env:EVOTEC_GITHUB_ROOT } else { 'C:\Support\GitHub' }

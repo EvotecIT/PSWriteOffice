@@ -11,7 +11,7 @@ Adds a paragraph to the current section/header/footer context.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficeWordParagraph [[-Text] <string>] [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordParagraph [[-Text] <string>] [-Run <Object[]>] [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Content
@@ -79,6 +79,22 @@ Emit the WordParagraph for further use.
 Type: SwitchParameter
 Parameter Sets: Text, Content
 Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Run
+Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.
+
+```yaml
+Type: Object[]
+Parameter Sets: Text
+Aliases: Runs
 Possible values:
 
 Required: False

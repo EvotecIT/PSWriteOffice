@@ -53,11 +53,12 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         ExcelDocument? loadedDocument = null;
+        SpreadsheetDocument? spreadsheet = null;
         var dispose = false;
 
         try
         {
-            SpreadsheetDocument spreadsheet;
+            ExcelDocument currentDocument;
             string? path;
 
             if (ParameterSetName == ParameterSetPath)
@@ -69,7 +70,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
                 }
 
                 loadedDocument = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
-                spreadsheet = loadedDocument._spreadSheetDocument;
+                currentDocument = loadedDocument;
+                spreadsheet = currentDocument.OpenXmlDocument;
                 path = resolvedPath;
                 dispose = true;
             }
@@ -80,11 +82,12 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
                     throw new InvalidOperationException("Excel workbook was not provided.");
                 }
 
-                spreadsheet = Document._spreadSheetDocument;
-                path = Document.FilePath;
+                currentDocument = Document;
+                path = ExcelDocumentService.GetAssociatedPath(Document);
+                spreadsheet = Document.OpenXmlDocument;
             }
 
-            WriteObject(CreateSummary(spreadsheet, path, IncludeSheets.IsPresent, IncludeSchema.IsPresent, loadedDocument ?? Document));
+            WriteObject(CreateSummary(spreadsheet, path, IncludeSheets.IsPresent, IncludeSchema.IsPresent, currentDocument));
         }
         finally
         {

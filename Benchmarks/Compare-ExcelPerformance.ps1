@@ -39,6 +39,7 @@ $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $specPath = Join-Path $PSScriptRoot 'Excel\excel-performance.benchmark.ps1'
 $projectPath = Join-Path $repoRoot 'Sources\PSWriteOffice\PSWriteOffice.csproj'
 $moduleManifest = Join-Path $repoRoot 'PSWriteOffice.psd1'
+$benchmarkHelperPath = Join-Path $PSScriptRoot 'Excel\excel-performance.helpers.ps1'
 
 Import-Module PSPublishModule -Force -ErrorAction Stop
 if (-not (Get-Command Invoke-BenchmarkSuite -ErrorAction SilentlyContinue)) {
@@ -67,7 +68,25 @@ $Scenario = @(
     }
 ) | Select-Object -Unique
 
-if (-not $ListScenarios.IsPresent -and (@($Engine) -contains 'ExcelFast')) {
+. $benchmarkHelperPath
+$selectedCases = @(
+    Get-ExcelBenchmarkCase -Suite $Suite | Where-Object {
+        -not $Scenario -or $Scenario.Count -eq 0 -or @($Scenario) -contains [string]$_.Name
+    }
+)
+$selectedRuns = @(
+    foreach ($engineName in @($Engine)) {
+        foreach ($case in $selectedCases) {
+            if (Test-ExcelBenchmarkEngineCaseSupport -Engine $engineName -Case $case) {
+                [pscustomobject]@{ Engine = $engineName; Case = $case }
+            }
+        }
+    }
+)
+
+$requiresExcelFast = -not $ListScenarios.IsPresent -and
+    [bool]($selectedRuns | Where-Object Engine -EQ 'ExcelFast' | Select-Object -First 1)
+if ($requiresExcelFast) {
     $excelFastModuleRoot = Join-Path $OutputDirectory 'Modules'
     New-Item -ItemType Directory -Force -Path $excelFastModuleRoot | Out-Null
     if (-not (($env:PSModulePath -split [IO.Path]::PathSeparator) -contains $excelFastModuleRoot)) {
@@ -85,15 +104,27 @@ if (-not $ListScenarios.IsPresent -and (@($Engine) -contains 'ExcelFast')) {
     } catch {
         Write-Warning "Skipping ExcelFast benchmark lanes because ExcelFast could not be prepared. $($_.Exception.Message)"
         $Engine = @($Engine | Where-Object { $_ -ne 'ExcelFast' })
+        $selectedRuns = @($selectedRuns | Where-Object Engine -NE 'ExcelFast')
         if ($Engine.Count -eq 0) {
             throw 'No benchmark engines remain after ExcelFast availability checks.'
         }
     }
 }
 
-$requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (
-    (@($Engine) -contains 'PSWriteOffice') -or
-    -not $SkipWorkbookValidation.IsPresent
+$psWriteOfficeFixtureOperations = @(
+    'ReadFullSheet',
+    'ReadRange',
+    'ReadNoHeaderRange',
+    'ReadUsedRangeDataTable',
+    'ReadTableMetadata',
+    'ReadNamedRangeMetadata'
+)
+$requiresPSWriteOffice = -not $ListScenarios.IsPresent -and [bool](
+    $selectedRuns | Where-Object {
+        $_.Engine -eq 'PSWriteOffice' -or
+        (-not $SkipWorkbookValidation.IsPresent -and [bool]$_.Case.ValidateWorkbook) -or
+        [string]$_.Case.OperationKey -in $psWriteOfficeFixtureOperations
+    } | Select-Object -First 1
 )
 if ($requiresPSWriteOffice) {
     if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {

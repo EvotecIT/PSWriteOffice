@@ -76,11 +76,22 @@ public sealed class ConvertToOfficeWordDocumentCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            WordDocument.Convert(sourcePath, outputPath, new WordDocumentConversionOptions
+            if (string.Equals(System.IO.Path.GetExtension(sourcePath), System.IO.Path.GetExtension(outputPath), StringComparison.OrdinalIgnoreCase))
             {
-                Overwrite = Force.IsPresent,
-                AllowLossyLegacyConversion = AllowLossyLegacyConversion.IsPresent
-            });
+                File.Copy(sourcePath, outputPath, overwrite: Force.IsPresent);
+            }
+            else
+            {
+                WordDocument.Convert(sourcePath, outputPath, new WordDocumentConversionOptions
+                {
+                    FileConflictPolicy = Force.IsPresent
+                        ? WordConversionFileConflictPolicy.Replace
+                        : WordConversionFileConflictPolicy.FailIfExists,
+                    LossPolicy = AllowLossyLegacyConversion.IsPresent
+                        ? WordConversionLossPolicy.Allow
+                        : WordConversionLossPolicy.Block
+                });
+            }
 
             if (Open.IsPresent)
             {

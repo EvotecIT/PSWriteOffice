@@ -92,7 +92,7 @@ public sealed class AddOfficePdfStampCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var document = PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path));
         PdfDocument result = ParameterSetName == ParameterSetImage
             ? StampImage(document)
             : StampText(document);

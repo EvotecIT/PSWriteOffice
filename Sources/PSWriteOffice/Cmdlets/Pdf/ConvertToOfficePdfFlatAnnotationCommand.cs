@@ -28,7 +28,7 @@ public sealed class ConvertToOfficePdfFlatAnnotationCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var result = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).FlattenVisualAnnotations();
+        var result = PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path)).FlattenVisualAnnotations();
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write flattened annotation PDF"))
         {

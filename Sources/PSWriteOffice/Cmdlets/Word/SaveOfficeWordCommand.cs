@@ -1,9 +1,11 @@
+using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Pdf;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
+using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
@@ -61,11 +63,13 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(Document.FilePath))
+        var associatedPath = WordDocumentService.GetAssociatedPath(Document);
+        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(associatedPath))
         {
             throw new PSInvalidOperationException("No file path provided. Use -Path or open the document from disk.");
         }
 
+        string savedPath;
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
@@ -74,40 +78,50 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
                 return;
             }
 
+            if (string.IsNullOrEmpty(Password) &&
+                WordDocumentService.IsEncryptedSource(Document) &&
+                string.Equals(System.IO.Path.GetFullPath(resolvedPath), System.IO.Path.GetFullPath(associatedPath!), StringComparison.OrdinalIgnoreCase))
+            {
+                throw new PSInvalidOperationException("Provide -Password when saving a document loaded from an encrypted package.");
+            }
+
             if (!string.IsNullOrEmpty(Password))
             {
                 OfficeEncryptedPackageService.SaveWord(Document, resolvedPath, Password!, false);
             }
             else
             {
-                Document.Save(resolvedPath, false);
+                Document.Save(resolvedPath);
             }
-
-            if (Show.IsPresent)
-            {
-                FileOpenService.Open(resolvedPath);
-            }
+            savedPath = resolvedPath;
         }
         else
         {
-            if (!PdfCommandUtilities.ShouldWrite(this, Document.FilePath!, "Save Word document"))
+            if (!PdfCommandUtilities.ShouldWrite(this, associatedPath!, "Save Word document"))
             {
                 return;
             }
 
             if (!string.IsNullOrEmpty(Password))
             {
-                OfficeEncryptedPackageService.SaveWord(Document, Document.FilePath!, Password!, false);
+                OfficeEncryptedPackageService.SaveWord(Document, associatedPath!, Password!, false);
             }
             else
             {
-                Document.Save(false);
-            }
+                if (WordDocumentService.IsEncryptedSource(Document))
+                {
+                    throw new PSInvalidOperationException("Provide -Password when saving a document loaded from an encrypted package.");
+                }
 
-            if (Show.IsPresent)
-            {
-                FileOpenService.Open(Document.FilePath);
+                Document.Save(associatedPath!);
             }
+            savedPath = associatedPath!;
+        }
+
+        WordDocumentService.UpdateSaveAssociation(Document, savedPath, !string.IsNullOrEmpty(Password));
+        if (Show.IsPresent)
+        {
+            FileOpenService.Open(savedPath);
         }
 
         SavePdfIfRequested();

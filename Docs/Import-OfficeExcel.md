@@ -11,17 +11,17 @@ Imports rows from an Excel workbook as PowerShell objects.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Import-OfficeExcel [-Path] <string> [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-ByColumn] [<CommonParameters>]
+Import-OfficeExcel [-Path] <string> [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
 ```
 
 ### Uri
 ```powershell
-Import-OfficeExcel [-Uri] <uri> [-AllowHttp] [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-ByColumn] [<CommonParameters>]
+Import-OfficeExcel [-Uri] <uri> [-AllowHttp] [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Import-OfficeExcel -Document <ExcelDocument> [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-ByColumn] [<CommonParameters>]
+Import-OfficeExcel -Document <ExcelDocument> [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -90,6 +90,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -AsDataReader
+Emit a forward-only IDataReader for database bulk-copy workflows.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -AsDataTable
 Emit a DataTable instead of enumerating row objects.
 
@@ -127,6 +143,22 @@ Emit one object per column with ColumnName, ColumnIndex, and Values instead of r
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ChunkRows
+Worksheet row count requested from each streaming chunk when -AsDataReader is used.
+
+```yaml
+Type: Int32
 Parameter Sets: Path, Uri, Document
 Aliases: None
 Possible values:
@@ -279,6 +311,22 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: True
+```
+
+### -SchemaSampleSize
+Maximum row count inspected when -AsDataReader infers the reader schema.
+
+```yaml
+Type: Int32
+Parameter Sets: Path, Uri, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

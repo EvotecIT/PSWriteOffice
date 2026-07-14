@@ -13,9 +13,9 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <para>Returns layout metadata including name, type, and index.</para>
 /// </example>
 /// <example>
-///   <summary>List layouts inside the DSL.</summary>
+///   <summary>Get the first layout inside the DSL.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficePowerPoint -Path .\deck.pptx { Get-OfficePowerPointLayout | Select-Object -First 3 }</code>
+///   <code>New-OfficePowerPoint -Path .\deck.pptx { $layout = @(Get-OfficePowerPointLayout)[0] }</code>
 ///   <para>Uses the current DSL presentation context.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePowerPointLayout")]
@@ -47,7 +47,7 @@ public sealed class GetOfficePowerPointLayoutCommand : PSCmdlet
                 WriteObject(layout);
             }
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex.GetType().Name != "StopUpstreamCommandsException")
         {
             WriteError(new ErrorRecord(ex, "PowerPointGetLayoutFailed", ErrorCategory.InvalidOperation, Presentation));
         }

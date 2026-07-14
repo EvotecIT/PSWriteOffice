@@ -149,7 +149,18 @@ function Test-ExcelBenchmarkOpenXml {
     try {
         $validator = [Activator]::CreateInstance($validatorType)
         $errors = @($validator.Validate($document))
-        assertValue $errors.Count 0 -Message "Expected '$Path' to pass OpenXML validation."
+        if ($errors.Count -gt 0) {
+            $details = @(
+                $errors |
+                    Select-Object -First 5 |
+                    ForEach-Object {
+                        $part = if ($_.Part -and $_.Part.Uri) { [string]$_.Part.Uri } else { 'unknown part' }
+                        '{0}: {1}' -f $part, $_.Description
+                    }
+            ) -join '; '
+
+            throw "Expected '$Path' to pass OpenXML validation. First errors: $details"
+        }
     } finally {
         if ($document) {
             $document.Dispose()

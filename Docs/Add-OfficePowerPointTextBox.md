@@ -9,9 +9,14 @@ schema: 2.0.0
 Adds a text box to a slide.
 
 ## SYNTAX
-### __AllParameterSets
+### Text (Default)
 ```powershell
 Add-OfficePowerPointTextBox -Text <string> [-Slide <PowerPointSlide>] [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [<CommonParameters>]
+```
+
+### Run
+```powershell
+Add-OfficePowerPointTextBox -Run <Object[]> [-Slide <PowerPointSlide>] [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,11 +42,27 @@ Box height in points.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Run
+Rich text runs. Each run can be created with TextRun/PowerPointTextRun or provided as a hashtable/object.
+
+```yaml
+Type: Object[]
+Parameter Sets: Run
+Aliases: Runs
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
@@ -53,7 +74,7 @@ Target slide that will receive the text box (optional inside DSL).
 
 ```yaml
 Type: PowerPointSlide
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -69,7 +90,7 @@ Text to render inside the box.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text
 Aliases: None
 Possible values:
 
@@ -85,7 +106,7 @@ Box width in points.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -101,7 +122,7 @@ Left offset (in points) from the slide origin.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -117,7 +138,7 @@ Top offset (in points) from the slide origin.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 

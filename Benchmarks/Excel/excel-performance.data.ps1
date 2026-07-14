@@ -316,9 +316,9 @@ function Initialize-ExcelBenchmarkInput {
         CsvToExcel {
             $Run.Payload | Export-Csv -Path $Run.SourcePath -NoTypeInformation -Encoding utf8 -UseQuotes AsNeeded
         }
-        ReadFullSheet { New-ExcelBenchmarkDefaultWorkbook -Engine $Case.Engine -Run $Run }
-        ReadRange { New-ExcelBenchmarkDefaultWorkbook -Engine $Case.Engine -Run $Run }
-        ReadNoHeaderRange { New-ExcelBenchmarkDefaultWorkbook -Engine $Case.Engine -Run $Run }
+        ReadFullSheet { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
+        ReadRange { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
+        ReadNoHeaderRange { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
         ReadUsedRangeDataTable { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
         ReadTableMetadata { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run -TableName Data }
         ReadNamedRangeMetadata { New-ExcelBenchmarkNamedRangeWorkbook -Engine PSWriteOffice -Run $Run }

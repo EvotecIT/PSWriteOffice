@@ -142,7 +142,7 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
     private static string GetDocumentTarget(WordDocument document)
     {
         return !string.IsNullOrWhiteSpace(document.FilePath)
-            ? document.FilePath
+            ? document.FilePath!
             : "Word document";
     }
 

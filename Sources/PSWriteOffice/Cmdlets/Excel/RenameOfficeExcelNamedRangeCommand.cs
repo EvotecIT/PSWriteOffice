@@ -78,7 +78,11 @@ public sealed class RenameOfficeExcelNamedRangeCommand : PSCmdlet
 
         if (ShouldProcess(Name, "Rename Excel named range"))
         {
-            var renamed = document.RenameNamedRange(Name, NewName, scope, ValidationMode, save: Save.IsPresent);
+            var renamed = document.RenameNamedRange(Name, NewName, scope, ValidationMode, save: false);
+            if (renamed && Save.IsPresent)
+            {
+                document.Save();
+            }
             if (PassThru.IsPresent)
             {
                 WriteObject(renamed);

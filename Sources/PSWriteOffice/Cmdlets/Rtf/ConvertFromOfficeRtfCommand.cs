@@ -170,7 +170,7 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
         PdfCommandUtilities.EnsureDirectory(outputPath);
         try
         {
-            document.Save(outputPath, false);
+            document.Save(outputPath);
         }
         finally
         {
@@ -227,14 +227,7 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            if (ParameterSetName == ParameterSetPath)
-            {
-                RtfPdfConverterExtensions.SaveRtfFileAsPdf(PdfCommandUtilities.ResolvePath(this, Path), outputPath, options: options);
-            }
-            else
-            {
-                RtfDocument.Read(Text).Document.ToPdfDocument(options).Save(outputPath);
-            }
+            LoadRtfDocument().SaveAsPdf(outputPath, options);
 
             if (PassThru.IsPresent)
             {
@@ -244,9 +237,7 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
             return;
         }
 
-        var document = ParameterSetName == ParameterSetPath
-            ? PdfCommandUtilities.ResolvePath(this, Path).ToPdfDocumentFromRtfFile(options: options)
-            : RtfDocument.Read(Text).Document.ToPdfDocument(options);
+        var document = LoadRtfDocument().ToPdfDocument(options);
         WriteObject(document);
     }
 
@@ -288,17 +279,7 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
 
     private WordDocument LoadWordDocument()
     {
-        if (ParameterSetName == ParameterSetPath)
-        {
-            return WordRtfConverterExtensions.LoadFromRtfFile(PdfCommandUtilities.ResolvePath(this, Path), encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-        }
-
-        if (string.IsNullOrWhiteSpace(Text))
-        {
-            throw new PSArgumentException("RTF content cannot be empty.", nameof(Text));
-        }
-
-        return Text.LoadFromRtf();
+        return LoadRtfDocument().ToWordDocument();
     }
 
     private WordToHtmlOptions CreateWordToHtmlOptions()

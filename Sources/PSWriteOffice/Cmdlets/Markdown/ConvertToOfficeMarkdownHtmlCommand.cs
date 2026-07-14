@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
+using OfficeIMO.Drawing;
 using OfficeIMO.Markdown;
 using PSWriteOffice.Services.Markdown;
 
@@ -114,7 +115,7 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
 
     /// <summary>Shared Markdown visual theme for HTML output.</summary>
     [Parameter]
-    public MarkdownVisualThemeKind? Theme { get; set; }
+    public OfficeVisualThemeKind? Theme { get; set; }
 
     /// <summary>Controls how raw HTML blocks are emitted.</summary>
     [Parameter]
@@ -197,7 +198,7 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
             {
                 throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
             }
-            document = MarkdownReader.ParseFile(resolved, readerOptions);
+            document = MarkdownDoc.Load(resolved, readerOptions);
         }
         else
         {
@@ -233,7 +234,7 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
                 Directory.CreateDirectory(directory);
             }
 
-            document.SaveHtml(resolvedOutput, options);
+            document.SaveAsHtml(resolvedOutput, options);
             if (PassThru.IsPresent)
             {
                 WriteObject(new FileInfo(resolvedOutput));
@@ -251,7 +252,7 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
     {
         if (Theme.HasValue)
         {
-            options.VisualTheme = MarkdownOptionUtilities.CreateTheme(Theme.Value);
+            options.Theme = MarkdownOptionUtilities.CreateTheme(Theme.Value);
         }
 
         if (RawHtmlHandling.HasValue)

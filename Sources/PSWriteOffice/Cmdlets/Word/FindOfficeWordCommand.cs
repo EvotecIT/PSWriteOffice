@@ -9,7 +9,7 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Finds text matches inside a Word document.</summary>
-/// <para>Returns matching paragraphs or a WordFind result when using regex with <c>-AsResult</c>.</para>
+/// <para>Returns matching paragraphs or a WordSearchResult when using regex with <c>-AsResult</c>.</para>
 /// <example>
 ///   <summary>Find matching paragraphs and export a review list.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -20,7 +20,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <para>Finds paragraphs containing the search text and writes a lightweight review CSV.</para>
 /// </example>
 /// <example>
-///   <summary>Use regex and keep the grouped WordFind result.</summary>
+///   <summary>Use regex and keep the grouped WordSearchResult.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$result = Find-OfficeWord -Path .\Report.docx -Pattern 'FY\d{4}' -AsResult
 /// $result.Paragraphs |
@@ -28,7 +28,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <para>Returns the full regex result so paragraphs, table matches, headers, and footers can be inspected separately.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Find, "OfficeWord", DefaultParameterSetName = ParameterSetPathText)]
-[OutputType(typeof(WordParagraph), typeof(WordFind))]
+[OutputType(typeof(WordParagraph), typeof(WordSearchResult))]
 public sealed class FindOfficeWordCommand : PSCmdlet
 {
     private const string ParameterSetPathText = "PathText";
@@ -61,7 +61,7 @@ public sealed class FindOfficeWordCommand : PSCmdlet
     [Parameter]
     public SwitchParameter CaseSensitive { get; set; }
 
-    /// <summary>Emit the full <see cref="WordFind"/> result for regex searches.</summary>
+    /// <summary>Emit the full <see cref="WordSearchResult"/> result for regex searches.</summary>
     [Parameter(ParameterSetName = ParameterSetPathRegex)]
     [Parameter(ParameterSetName = ParameterSetDocumentRegex)]
     public SwitchParameter AsResult { get; set; }
@@ -119,15 +119,15 @@ public sealed class FindOfficeWordCommand : PSCmdlet
         }
     }
 
-    private static IEnumerable<WordParagraph> Flatten(WordFind result)
+    private static IEnumerable<WordParagraph> Flatten(WordSearchResult result)
     {
-        foreach (var paragraph in result.Paragraphs) yield return paragraph;
-        foreach (var paragraph in result.Tables) yield return paragraph;
-        foreach (var paragraph in result.HeaderDefault) yield return paragraph;
-        foreach (var paragraph in result.HeaderEven) yield return paragraph;
-        foreach (var paragraph in result.HeaderFirst) yield return paragraph;
-        foreach (var paragraph in result.FooterDefault) yield return paragraph;
-        foreach (var paragraph in result.FooterEven) yield return paragraph;
-        foreach (var paragraph in result.FooterFirst) yield return paragraph;
+        foreach (var paragraph in result.BodyParagraphs) yield return paragraph;
+        foreach (var paragraph in result.TableParagraphs) yield return paragraph;
+        foreach (var paragraph in result.DefaultHeaderParagraphs) yield return paragraph;
+        foreach (var paragraph in result.EvenPageHeaderParagraphs) yield return paragraph;
+        foreach (var paragraph in result.FirstPageHeaderParagraphs) yield return paragraph;
+        foreach (var paragraph in result.DefaultFooterParagraphs) yield return paragraph;
+        foreach (var paragraph in result.EvenPageFooterParagraphs) yield return paragraph;
+        foreach (var paragraph in result.FirstPageFooterParagraphs) yield return paragraph;
     }
 }

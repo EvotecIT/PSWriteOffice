@@ -11,12 +11,12 @@ Converts objects or a CSV document into CSV text.
 ## SYNTAX
 ### InputObjectDelimiter (Default)
 ```powershell
-ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
+ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
 ```
 
 ### DocumentDelimiter
 ```powershell
-ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
+ConvertTo-OfficeCsv -Document <CsvDocument> [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
 ```
 
 ### DocumentCulture
@@ -98,6 +98,22 @@ Field delimiter character.
 
 ```yaml
 Type: Char
+Parameter Sets: InputObjectDelimiter, DocumentDelimiter
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -DelimiterText
+Field delimiter text for multi-character delimiters such as || or ::.
+
+```yaml
+Type: String
 Parameter Sets: InputObjectDelimiter, DocumentDelimiter
 Aliases: None
 Possible values:

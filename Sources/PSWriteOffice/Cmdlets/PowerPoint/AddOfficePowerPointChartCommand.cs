@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
+using OfficeIMO.Drawing;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services.PowerPoint;
 
@@ -149,14 +150,16 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
 
     private PowerPointChart AddDefaultChart(PowerPointSlide slide)
     {
-        return Type switch
-        {
-            PowerPointChartType.Line => slide.AddLineChartPoints(X, Y, Width, Height),
-            PowerPointChartType.Pie => slide.AddPieChartPoints(X, Y, Width, Height),
-            PowerPointChartType.Doughnut => slide.AddDoughnutChartPoints(X, Y, Width, Height),
-            PowerPointChartType.Scatter => slide.AddScatterChartPoints(X, Y, Width, Height),
-            _ => slide.AddChartPoints(X, Y, Width, Height)
-        };
+        OfficeChartKind kind = GetOfficeChartKind(Type);
+        OfficeChartData data = kind == OfficeChartKind.Scatter
+            ? new OfficeChartData(
+                new[] { "1", "2", "3" },
+                new[] { new OfficeChartSeries("Series 1", new[] { 12d, 18d, 14d }, new[] { 1d, 2d, 3d }) })
+            : new OfficeChartData(
+                new[] { "Q1", "Q2", "Q3" },
+                new[] { new OfficeChartSeries("Series 1", new[] { 12d, 18d, 14d }) });
+
+        return slide.AddChartPoints(kind, data, X, Y, Width, Height);
     }
 
     private PowerPointChart AddCategoricalChart(PowerPointSlide slide)
@@ -176,14 +179,7 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
             throw new PSArgumentException("Pie and Doughnut charts support only one series property.", nameof(SeriesProperty));
         }
 
-        var data = BuildChartData();
-        return Type switch
-        {
-            PowerPointChartType.Line => slide.AddLineChartPoints(data, X, Y, Width, Height),
-            PowerPointChartType.Pie => slide.AddPieChartPoints(data, X, Y, Width, Height),
-            PowerPointChartType.Doughnut => slide.AddDoughnutChartPoints(data, X, Y, Width, Height),
-            _ => slide.AddChartPoints(data, X, Y, Width, Height)
-        };
+        return slide.AddChartPoints(GetOfficeChartKind(Type), BuildChartData(), X, Y, Width, Height);
     }
 
     private PowerPointChart AddScatterChart(PowerPointSlide slide)
@@ -198,34 +194,44 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
             throw new PSArgumentException("Provide at least one -YProperty.", nameof(YProperty));
         }
 
-        var data = BuildScatterChartData();
-        return slide.AddScatterChartPoints(data, X, Y, Width, Height);
+        return slide.AddChartPoints(OfficeChartKind.Scatter, BuildScatterChartData(), X, Y, Width, Height);
     }
 
-    private PowerPointChartData BuildChartData()
+    private OfficeChartData BuildChartData()
     {
         var items = EnsureData();
         var categories = items.Select(item => ConvertToString(GetPropertyValue(item, CategoryProperty), CategoryProperty)).ToArray();
         var series = SeriesProperty.Select(property =>
-            new PowerPointChartSeries(property, items.Select(item => ConvertToDouble(GetPropertyValue(item, property), property)).ToArray()))
+            new OfficeChartSeries(property, items.Select(item => ConvertToDouble(GetPropertyValue(item, property), property)).ToArray()))
             .ToArray();
 
-        return new PowerPointChartData(categories, series);
+        return new OfficeChartData(categories, series);
     }
 
-    private PowerPointScatterChartData BuildScatterChartData()
+    private OfficeChartData BuildScatterChartData()
     {
         var items = EnsureData();
         var xValues = items.Select(item => ConvertToDouble(GetPropertyValue(item, XProperty), XProperty)).ToArray();
         var series = YProperty.Select(property =>
-            new PowerPointScatterChartSeries(
+            new OfficeChartSeries(
                 property,
-                xValues,
-                items.Select(item => ConvertToDouble(GetPropertyValue(item, property), property)).ToArray()))
+                items.Select(item => ConvertToDouble(GetPropertyValue(item, property), property)).ToArray(),
+                xValues))
             .ToArray();
 
-        return new PowerPointScatterChartData(series);
+        return new OfficeChartData(
+            xValues.Select(value => value.ToString(CultureInfo.InvariantCulture)),
+            series);
     }
+
+    private static OfficeChartKind GetOfficeChartKind(PowerPointChartType type) => type switch
+    {
+        PowerPointChartType.Line => OfficeChartKind.Line,
+        PowerPointChartType.Pie => OfficeChartKind.Pie,
+        PowerPointChartType.Doughnut => OfficeChartKind.Doughnut,
+        PowerPointChartType.Scatter => OfficeChartKind.Scatter,
+        _ => OfficeChartKind.ColumnClustered
+    };
 
     private object[] EnsureData()
     {

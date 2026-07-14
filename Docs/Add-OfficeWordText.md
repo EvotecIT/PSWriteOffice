@@ -9,9 +9,14 @@ schema: 2.0.0
 Adds inline text to the current paragraph.
 
 ## SYNTAX
-### __AllParameterSets
+### Text (Default)
 ```powershell
-Add-OfficeWordText [-Text] <string[]> [-Bold] [-Italic] [-Underline <UnderlineValues>] [-Color <string>] [<CommonParameters>]
+Add-OfficeWordText [-Text] <string[]> [-Bold] [-Italic] [-Underline <UnderlineValues>] [-Color <string>] [-Strike] [-FontSize <int>] [-FontName <string>] [<CommonParameters>]
+```
+
+### Run
+```powershell
+Add-OfficeWordText -Run <Object[]> [-Bold] [-Italic] [-Underline <UnderlineValues>] [-Color <string>] [-Strike] [-FontSize <int>] [-FontName <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -33,7 +38,7 @@ Apply bold formatting.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -49,7 +54,39 @@ Run color (#RRGGBB).
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FontName
+Font name or family.
+
+```yaml
+Type: String
+Parameter Sets: Text, Run
+Aliases: Font, FontFamily, Typeface
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FontSize
+Font size in points.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -65,7 +102,39 @@ Apply italic formatting.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Run
+Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.
+
+```yaml
+Type: Object[]
+Parameter Sets: Run
+Aliases: Runs
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Strike
+Render text with strikethrough.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -81,7 +150,7 @@ Text segments to append.
 
 ```yaml
 Type: String[]
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text
 Aliases: None
 Possible values:
 
@@ -97,7 +166,7 @@ Optional underline style.
 
 ```yaml
 Type: Nullable`1
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 

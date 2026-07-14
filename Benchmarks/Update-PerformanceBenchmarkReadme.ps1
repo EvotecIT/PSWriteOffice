@@ -49,6 +49,13 @@ function Format-BenchmarkResult {
     }
 
     $winner = $successful[0]
+    if ($successful.Count -gt 1) {
+        $runnerUp = $successful[1]
+        if (([double]$runnerUp.MedianMs / [double]$winner.MedianMs) -le 1.05) {
+            return "$($winner.Engine) and $($runnerUp.Engine) within 5%"
+        }
+    }
+
     if ($winner.Engine -eq $Baseline) {
         return "$Baseline fastest"
     }

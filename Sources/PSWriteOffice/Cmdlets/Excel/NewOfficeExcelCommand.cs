@@ -138,6 +138,11 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (!NoSave.IsPresent && AutoSave.IsPresent && !string.IsNullOrEmpty(Password))
+        {
+            throw new PSArgumentException("Encrypted Excel workbooks require explicit Save-OfficeExcel -Password or Close-OfficeExcel -Save -Password. -AutoSave cannot be used with -Password.");
+        }
+
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
         var action = NoSave.IsPresent
             ? string.IsNullOrWhiteSpace(TemplatePath)
@@ -191,7 +196,7 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
             {
                 if (document.Sheets.Count == 0)
                 {
-                    document.AddWorkSheet(string.Empty, SheetNameValidationMode.Sanitize);
+                    document.AddWorksheet(string.Empty, SheetNameValidationMode.Sanitize);
                 }
                 var saveOptions = ExcelDocumentService.CreateSaveOptions(
                     SafePreflight.IsPresent,

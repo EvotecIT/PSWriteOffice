@@ -131,18 +131,16 @@ public sealed class AddOfficePowerPointDesignerDeckCommand : PSCmdlet
         }
 
         var presentation = Presentation ?? PowerPointDslContext.Require(this).Presentation;
-        var composer = presentation.UseDesigner(
-            brief,
-            Plan,
-            AlternativeCount,
-            applyTheme: !NoApplyTheme.IsPresent);
-
-        var summary = composer.DescribeSlides(Plan);
-        var slides = composer.AddSlides(Plan);
+        var slideIndexOffset = presentation.Slides.Count;
+        var options = PowerPointCompositionOptions.FromBrief(brief);
+        options.AlternativeCount = AlternativeCount;
+        options.ApplyTheme = !NoApplyTheme.IsPresent;
+        var result = presentation.Compose(Plan, options);
+        var summary = result.Plan.DescribeSlides(result.Design, slideIndexOffset);
 
         if (PassThru.IsPresent)
         {
-            WriteObject(slides, enumerateCollection: true);
+            WriteObject(result.Slides, enumerateCollection: true);
         }
         else
         {

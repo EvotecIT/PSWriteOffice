@@ -9,9 +9,14 @@ schema: 2.0.0
 Sets text in an existing PowerPoint table cell.
 
 ## SYNTAX
-### __AllParameterSets
+### Text (Default)
 ```powershell
 Set-OfficePowerPointTableCell [-InputObject] <Object> -Row <int> -Column <int> -Text <string> [-PassThru] [<CommonParameters>]
+```
+
+### Run
+```powershell
+Set-OfficePowerPointTableCell [-InputObject] <Object> -Row <int> -Column <int> -Run <Object[]> [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,7 +50,7 @@ Zero-based column index.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -61,7 +66,7 @@ PowerPoint table or table shape info returned by Find-OfficePowerPointShape or G
 
 ```yaml
 Type: Object
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -77,7 +82,7 @@ Emit the updated table cell for additional OfficeIMO-level edits.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
 Possible values:
 
@@ -93,8 +98,24 @@ Zero-based row index.
 
 ```yaml
 Type: Int32
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text, Run
 Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Run
+Replacement rich text runs. Each run can be created with TextRun/PowerPointTextRun or provided as a hashtable/object.
+
+```yaml
+Type: Object[]
+Parameter Sets: Run
+Aliases: Runs
 Possible values:
 
 Required: True
@@ -109,7 +130,7 @@ Replacement cell text. A null value clears the cell.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Text
 Aliases: None
 Possible values:
 

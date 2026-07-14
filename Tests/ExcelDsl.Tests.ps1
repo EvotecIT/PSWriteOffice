@@ -185,7 +185,16 @@ BeforeAll {
         )
 
         if (-not ('DocumentFormat.OpenXml.Packaging.SpreadsheetDocument' -as [type])) {
-            Add-Type -Path (Join-Path $PSScriptRoot '..\Sources\PSWriteOffice\bin\Debug\net8.0\DocumentFormat.OpenXml.dll')
+            $configuration = if ($env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION -in @('Debug', 'Release')) {
+                $env:PSWRITEOFFICE_DEVELOPMENT_CONFIGURATION
+            } elseif ($env:BUILD_CONFIGURATION -in @('Debug', 'Release')) {
+                $env:BUILD_CONFIGURATION
+            } elseif (Test-Path (Join-Path $PSScriptRoot '..\Sources\PSWriteOffice\bin\Release')) {
+                'Release'
+            } else {
+                'Debug'
+            }
+            Add-Type -Path (Join-Path $PSScriptRoot "..\Sources\PSWriteOffice\bin\$configuration\net8.0\DocumentFormat.OpenXml.dll")
         }
 
         $spreadsheet = [DocumentFormat.OpenXml.Packaging.SpreadsheetDocument]::Open($Path, $true)
@@ -238,6 +247,7 @@ Describe 'Excel DSL surface' {
         } finally {
             Close-OfficeExcel -Document $doc
         }
+
     }
 
     It 'creates 1904 date-system workbooks from the thin DSL surface' {
@@ -758,6 +768,9 @@ Describe 'Excel DSL surface' {
         }
 
         { Get-ZipEntriesLocal -Path $path } | Should -Throw
+        $autoSavePath = Join-Path $TestDrive 'EncryptedExcelAutoSave.xlsx'
+        { New-OfficeExcel -Path $autoSavePath -Password 'secret' -AutoSave -ErrorAction Stop } |
+            Should -Throw '*require explicit Save-OfficeExcel*'
 
         $doc = Get-OfficeExcel -Path $path -Password 'secret' -ReadOnly
         try {
@@ -765,9 +778,84 @@ Describe 'Excel DSL surface' {
             $value = $null
             $doc.Sheets[0].TryGetCellText(1, 1, [ref] $value) | Should -BeTrue
             $value | Should -Be 'Encrypted value'
+            $summary = Get-OfficeExcelSummary -Document $doc -IncludeSheets -IncludeSchema
+            $summary.SheetCount | Should -Be 1
+            $summary.Sheets[0].Name | Should -Be 'Secure'
+            $summary.Schema.Worksheets[0].Name | Should -Be 'Secure'
         } finally {
             Close-OfficeExcel -Document $doc
         }
+
+        $doc = Get-OfficeExcel -Path $path -Password 'secret'
+        try {
+            { $doc | Save-OfficeExcel -Path $path -ErrorAction Stop } |
+                Should -Throw '*Provide -Password*'
+            $doc.Sheets[0].Cell(1, 1, 'Must not be saved without a password', $null, $null)
+            { $doc | Close-OfficeExcel -Save -ErrorAction Stop } |
+                Should -Throw '*Provide -Password*'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $plainCopyPath = Join-Path $TestDrive 'EncryptedExcelPlainCopy.xlsx'
+        $doc = Get-OfficeExcel -Path $path -Password 'secret'
+        try {
+            $doc | Save-OfficeExcel -Path $plainCopyPath
+            $doc.Sheets[0].Cell(1, 1, 'Updated plain copy', $null, $null)
+            $doc | Save-OfficeExcel
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        { Get-ZipEntriesLocal -Path $plainCopyPath } | Should -Not -Throw
+        $plainCopy = Get-OfficeExcel -Path $plainCopyPath -ReadOnly
+        try {
+            $plainValue = $null
+            $plainCopy.Sheets[0].TryGetCellText(1, 1, [ref] $plainValue) | Should -BeTrue
+            $plainValue | Should -Be 'Updated plain copy'
+        } finally {
+            Close-OfficeExcel -Document $plainCopy
+        }
+
+        $encryptedCopyPath = Join-Path $TestDrive 'EncryptedExcelCopy.xlsx'
+        $doc = Get-OfficeExcel -Path $path -Password 'secret'
+        try {
+            $doc | Save-OfficeExcel -Path $encryptedCopyPath -Password 'copy-secret'
+            $doc.Sheets[0].Cell(1, 1, 'Updated encrypted copy', $null, $null)
+            { $doc | Save-OfficeExcel -ErrorAction Stop } | Should -Throw '*Provide -Password*'
+            $doc | Save-OfficeExcel -Password 'copy-secret'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $encryptedCopy = Get-OfficeExcel -Path $encryptedCopyPath -Password 'copy-secret' -ReadOnly
+        try {
+            $copyValue = $null
+            $encryptedCopy.Sheets[0].TryGetCellText(1, 1, [ref] $copyValue) | Should -BeTrue
+            $copyValue | Should -Be 'Updated encrypted copy'
+        } finally {
+            Close-OfficeExcel -Document $encryptedCopy
+        }
+
+        $doc = Get-OfficeExcel -Path $path -Password 'secret'
+        try {
+            $doc.Sheets[0].Cell(1, 1, 'Updated encrypted value', $null, $null)
+            $doc | Save-OfficeExcel -Password 'secret'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $doc = Get-OfficeExcel -Path $path -Password 'secret' -ReadOnly
+        try {
+            $value = $null
+            $doc.Sheets[0].TryGetCellText(1, 1, [ref] $value) | Should -BeTrue
+            $value | Should -Be 'Updated encrypted value'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        { Get-OfficeExcel -Path $path -Password 'secret' -AutoSave -ErrorAction Stop } |
+            Should -Throw '*require explicit Save-OfficeExcel*'
     }
 
     It 'configures Excel execution policy from PowerShell' {
@@ -1862,6 +1950,10 @@ Describe 'Excel DSL surface' {
             try {
                 $remoteDocRows = @($remoteDoc | Import-OfficeExcel -Sheet 'Data' -Range 'A1:B3')
                 $remoteDocRows.Count | Should -Be 2
+                $remoteSummary = Get-OfficeExcelSummary -Document $remoteDoc -IncludeSheets -IncludeSchema
+                $remoteSummary.SheetCount | Should -Be 1
+                $remoteSummary.Sheets[0].Name | Should -Be 'Data'
+                $remoteSummary.Schema.Worksheets[0].Name | Should -Be 'Data'
             } finally {
                 Close-OfficeExcel -Document $remoteDoc
             }
@@ -3947,6 +4039,22 @@ namespace PSWriteOffice.Tests {
         $clrPlaceholder[0].Broken | Should -BeLike 'Property export failed:*boom*'
     }
 
+    It 'uses first-row columns without evaluating later-only properties' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelFirstRowProjection.xlsx'
+        $first = [PSCustomObject]@{ Name = 'Alpha' }
+        $second = [PSCustomObject]@{ Name = 'Beta' }
+        $second | Add-Member -MemberType ScriptProperty -Name Broken -Value { throw 'later-only property was evaluated' }
+
+        { @($first, $second) | Export-OfficeExcel -Path $path -WorksheetName 'Data' -PropertyConversionErrorAction Stop -ErrorAction Stop } |
+            Should -Not -Throw
+
+        $imported = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $imported.Count | Should -Be 2
+        $imported[0].PSObject.Properties.Name | Should -Contain 'Name'
+        $imported[0].PSObject.Properties.Name | Should -Not -Contain 'Broken'
+        $imported[1].Name | Should -Be 'Beta'
+    }
+
     It 'sets category date-axis scale values through the chart axis cmdlet' {
         $path = Join-Path $TestDrive 'DslExcelCategoryAxisScale.xlsx'
         $rows = @(
@@ -4472,7 +4580,7 @@ namespace PSWriteOffice.Tests {
         }
     }
 
-    It 'imports normalized delimited text through the OfficeIMO core' {
+    It 'imports normalized delimited text into Excel' {
         $path = Join-Path $TestDrive 'DslExcelDelimitedImport.xlsx'
         $csv = Join-Path $TestDrive 'DelimitedImport.csv'
 

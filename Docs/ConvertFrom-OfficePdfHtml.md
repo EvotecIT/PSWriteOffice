@@ -11,12 +11,12 @@ Converts HTML content to a PDF through the first-party OfficeIMO HTML/PDF adapte
 ## SYNTAX
 ### Html (Default)
 ```powershell
-ConvertFrom-OfficePdfHtml [-Html] <string> [-OutputPath <string>] [-Profile <HtmlPdfProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertFrom-OfficePdfHtml [-Html] <string> [-OutputPath <string>] [-Profile <HtmlConversionProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-ConvertFrom-OfficePdfHtml -InputPath <string> [-OutputPath <string>] [-Profile <HtmlPdfProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertFrom-OfficePdfHtml -InputPath <string> [-OutputPath <string>] [-Profile <HtmlConversionProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -147,13 +147,13 @@ Accept wildcard characters: True
 ```
 
 ### -Profile
-HTML to PDF profile to use when Options is not supplied.
+HTML conversion profile applied before PDF rendering.
 
 ```yaml
-Type: HtmlPdfProfile
+Type: HtmlConversionProfile
 Parameter Sets: Html, Path
 Aliases: None
-Possible values: Semantic, Document
+Possible values: Semantic, Document, HighFidelityPrint, PositionedReview
 
 Required: False
 Position: named
@@ -195,7 +195,7 @@ Accept wildcard characters: True
 ```
 
 ### -TrustedDocumentProfile
-Use the trusted document profile, allowing document stylesheet links through OfficeIMO's policy controls.
+Mark the HTML input as trusted for OfficeIMO conversion policy.
 
 ```yaml
 Type: SwitchParameter

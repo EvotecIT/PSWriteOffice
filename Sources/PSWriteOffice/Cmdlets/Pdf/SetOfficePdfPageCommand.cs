@@ -142,7 +142,7 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
             throw new PSArgumentException("Provide -Rotation, -BoxName with coordinates, or page resize options.");
         }
 
-        var document = PdfDocument.Open(inputPath);
+        var document = PdfDocument.Load(inputPath);
         var result = string.IsNullOrWhiteSpace(PageRange)
             ? document.Pages.Rotate(Rotation)
             : document.Pages.Rotate(Rotation, PageRange!);

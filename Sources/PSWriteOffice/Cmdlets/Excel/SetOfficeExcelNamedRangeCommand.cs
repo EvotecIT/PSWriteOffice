@@ -93,7 +93,11 @@ public sealed class SetOfficeExcelNamedRangeCommand : PSCmdlet
             }
         }
 
-        document.SetNamedRange(Name, Range, scope, save: Save.IsPresent, hidden: Hidden.IsPresent, validationMode: ValidationMode);
+        document.SetNamedRange(Name, Range, scope, save: false, hidden: Hidden.IsPresent, validationMode: ValidationMode);
+        if (Save.IsPresent)
+        {
+            document.Save();
+        }
 
         if (PassThru.IsPresent)
         {

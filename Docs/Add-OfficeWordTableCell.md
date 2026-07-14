@@ -11,12 +11,12 @@ Enters a specific table cell and executes nested DSL content inside it.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeWordTableCell [[-Content] <scriptblock>] -Row <int> -Column <int> [-PassThru] [<CommonParameters>]
+Add-OfficeWordTableCell [[-Content] <scriptblock>] -Row <int> -Column <int> [-Text <string>] [-Run <Object[]>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Table
 ```powershell
-Add-OfficeWordTableCell [[-Content] <scriptblock>] -Table <WordTable> -Row <int> -Column <int> [-PassThru] [<CommonParameters>]
+Add-OfficeWordTableCell [[-Content] <scriptblock>] -Table <WordTable> -Row <int> -Column <int> [-Text <string>] [-Run <Object[]>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -97,6 +97,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -Run
+Rich text runs to append to the selected cell before nested content runs.
+
+```yaml
+Type: Object[]
+Parameter Sets: Context, Table
+Aliases: Runs
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Table
 Optional table to target outside the active DSL table scope.
 
@@ -110,6 +126,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: True
+```
+
+### -Text
+Text to append to the selected cell before nested content runs.
+
+```yaml
+Type: String
+Parameter Sets: Context, Table
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 

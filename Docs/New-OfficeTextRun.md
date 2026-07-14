@@ -4,38 +4,36 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Get-OfficeDocumentTable
+# New-OfficeTextRun
 ## SYNOPSIS
-Reads structured tables discovered by OfficeIMO.Reader from a supported document.
+Creates a reusable rich text run specification for Word, Excel, PowerPoint, and PDF commands.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentTable [-Path] <string> [-AsExport] [-OutputDirectory <string>] [-NoOverwrite] [-Indented] [-NoCsv] [-NoMarkdown] [-NoJson] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
+New-OfficeTextRun [[-Text] <string>] [-Kind <string>] [-Bold] [-Italic] [-Underline] [-UnderlineStyle <string>] [-Strike] [-Color <string>] [-BackgroundColor <string>] [-FontSize <double>] [-FontName <string>] [-Baseline <string>] [-LinkUri <string>] [-LinkDestinationName <string>] [-LinkContents <string>] [-TabLeader <string>] [-TabAlignment <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Reads structured tables discovered by OfficeIMO.Reader from a supported document.
+Creates a reusable rich text run specification for Word, Excel, PowerPoint, and PDF commands.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> $tables = Get-OfficeDocumentTable -Path .\Workbook.xlsx -AsExport -OutputDirectory .\reader-tables -Indented
-$tables | Select-Object Id, CsvPath, JsonPath
+New-OfficeTextRun -BackgroundColor 'Value'
 ```
 
-Reads tables from a supported document and writes deterministic CSV, Markdown, and JSON sidecars.
 
 ## PARAMETERS
 
-### -AsExport
-Return deterministic CSV, Markdown, and JSON export bundles instead of table models.
+### -BackgroundColor
+Run background or highlight color. Named colors and hexadecimal colors are accepted.
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: HighlightColor, FillColor
 Possible values:
 
 Required: False
@@ -45,8 +43,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -ExcelA1Range
-Optional Excel A1 range to read.
+### -Baseline
+Target-specific baseline name, such as Superscript or Subscript.
 
 ```yaml
 Type: String
@@ -61,8 +59,56 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -ExcelChunkRows
-Excel rows per emitted worksheet chunk.
+### -Bold
+Render the run in bold.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Color
+Text color. Named colors and hexadecimal colors are accepted.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: TextColor, FontColor
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FontName
+Font name, family, or target-specific font identifier.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: Font, Typeface, FontFamily
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -FontSize
+Font size in points.
 
 ```yaml
 Type: Nullable`1
@@ -77,8 +123,24 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -ExcelSheetName
-Optional Excel sheet name to read.
+### -Italic
+Render the run in italics.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Kind
+Run kind such as Text, LineBreak, Tab, Superscript, or Subscript.
 
 ```yaml
 Type: String
@@ -93,8 +155,56 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -ExcludePowerPointNotes
-Exclude PowerPoint speaker notes.
+### -LinkContents
+Optional link tooltip or annotation contents.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: Contents, Tooltip
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -LinkDestinationName
+Named destination or bookmark target when supported by the target format.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: DestinationName, Bookmark, BookmarkName
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -LinkUri
+URI link target when supported by the target format.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: Uri, Url, Href
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Strike
+Render the run with strikethrough.
 
 ```yaml
 Type: SwitchParameter
@@ -109,13 +219,13 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -ExcludeWordFootnotes
-Exclude Word footnotes.
+### -TabAlignment
+Tab alignment name.
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Alignment
 Possible values:
 
 Required: False
@@ -125,13 +235,13 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Indented
-Indent JSON payloads in export bundles and sidecars.
+### -TabLeader
+PDF tab leader style name.
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Leader
 Possible values:
 
 Required: False
@@ -141,184 +251,8 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -MaxChars
-Maximum emitted chunk characters.
-
-```yaml
-Type: Nullable`1
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -MaxInputBytes
-Maximum input size in bytes.
-
-```yaml
-Type: Nullable`1
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -MaxTableRows
-Maximum table rows per emitted table.
-
-```yaml
-Type: Nullable`1
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NoCsv
-Do not write CSV sidecars when -OutputDirectory is used.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NoExcelHeaders
-Treat the first Excel row as data instead of headers.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NoHashes
-Disable source and chunk hash computation.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NoJson
-Do not write JSON sidecars when -OutputDirectory is used.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NoMarkdown
-Do not write Markdown sidecars when -OutputDirectory is used.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NoMarkdownHeadingChunks
-Do not split Markdown by headings.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -NoOverwrite
-Do not overwrite existing sidecar files.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -OpenXmlMaxCharactersInPart
-OpenXML maximum characters per part.
-
-```yaml
-Type: Nullable`1
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -OutputDirectory
-Optional directory where table sidecars should be written.
+### -Text
+Run text.
 
 ```yaml
 Type: String
@@ -327,33 +261,33 @@ Aliases: None
 Possible values:
 
 Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Path
-File path to read.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: FilePath
-Possible values:
-
-Required: True
 Position: 0
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -Reader
-{{ Fill Reader Description }}
+### -Underline
+Render the run with underline.
 
 ```yaml
-Type: OfficeDocumentReader
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -UnderlineStyle
+Optional underline style name when the target format supports it.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -370,13 +304,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `System.String`
+- `None`
 
 ## OUTPUTS
 
-- `OfficeIMO.Reader.ReaderTable
-OfficeIMO.Reader.ReaderTableExportBundle
-OfficeIMO.Reader.ReaderTableMaterializedExport`
+- `PSWriteOffice.Services.Text.OfficeTextRunSpec` — PowerShell-friendly rich text run specification used by document adapters.
 
 ## RELATED LINKS
 

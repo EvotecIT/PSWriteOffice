@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -20,7 +21,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelUsedRange", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject), typeof(System.Collections.Hashtable), typeof(DataTable))]
-public sealed class GetOfficeExcelUsedRangeCommand : PSCmdlet
+public sealed class GetOfficeExcelUsedRangeCommand : AsyncPSCmdlet
 {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetUri = "Uri";
@@ -69,10 +70,10 @@ public sealed class GetOfficeExcelUsedRangeCommand : PSCmdlet
     public SwitchParameter AsDataTable { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
+    protected override async Task ProcessRecordAsync()
     {
         var options = ExcelReadOutputService.CreateOptions(NumericAsDecimal.IsPresent);
-        using var reader = CreateReader(options);
+        using var reader = await CreateReaderAsync(options).ConfigureAwait(false);
         var sheetReader = ExcelReadOutputService.ResolveSheetReader(reader, Sheet, SheetIndex);
         var usedRange = sheetReader.GetUsedRangeA1();
         var table = sheetReader.ReadRangeAsDataTable(usedRange, HeadersInFirstRow);
@@ -80,11 +81,11 @@ public sealed class GetOfficeExcelUsedRangeCommand : PSCmdlet
         ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent);
     }
 
-    private ExcelDocumentReader CreateReader(ExcelReadOptions options)
+    private async Task<ExcelDocumentReader> CreateReaderAsync(ExcelReadOptions options)
     {
         if (ParameterSetName == ParameterSetDocument)
         {
-            return ExcelDocumentReader.Wrap(Document._spreadSheetDocument, options);
+            return Document.CreateReader(options);
         }
 
         if (ParameterSetName == ParameterSetUri)
@@ -94,7 +95,8 @@ public sealed class GetOfficeExcelUsedRangeCommand : PSCmdlet
                 throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
             }
 
-            return ExcelDocumentReader.Open(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp));
+            return await ExcelDocumentReader.OpenAsync(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp), CancelToken)
+                .ConfigureAwait(false);
         }
 
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);

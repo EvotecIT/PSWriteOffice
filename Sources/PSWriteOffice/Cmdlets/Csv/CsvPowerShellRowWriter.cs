@@ -157,7 +157,7 @@ internal sealed class CsvPowerShellRowWriter
         }
     }
 
-    private static void AddMissingNoteProperties(PSObject psObj, string[] header, int startIndex, int headerCount, bool prevalidated)
+    internal static void AddMissingNoteProperties(PSObject psObj, string[] header, int startIndex, int headerCount, bool prevalidated)
     {
         for (var i = startIndex; i < headerCount; i++)
         {
@@ -165,7 +165,9 @@ internal sealed class CsvPowerShellRowWriter
         }
     }
 
-    private string[] GetOutputHeader(IReadOnlyList<string> header)
+    internal bool PrevalidatedOutputProperties => _prevalidatedOutputProperties;
+
+    internal string[] GetOutputHeader(IReadOnlyList<string> header)
     {
         if (_outputHeader is not null)
         {
@@ -197,7 +199,7 @@ internal sealed class CsvPowerShellRowWriter
         return outputHeader;
     }
 
-    private static class PowerShellObjectFactory
+    internal static class PowerShellObjectFactory
     {
         // PowerShell 7+ exposes PSObject(int) for initial member capacity, but PowerShellStandard also exposes
         // PSObject(object). Use reflection so older runtimes fall back without wrapping the integer as BaseObject.

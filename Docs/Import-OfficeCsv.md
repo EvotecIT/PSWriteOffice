@@ -11,37 +11,37 @@ Imports CSV rows as PSCustomObjects, dictionaries, or a DataTable.
 ## SYNTAX
 ### PathDelimiter (Default)
 ```powershell
-Import-OfficeCsv [-Path] <string[]> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeCsv [-Path] <string[]> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-DelimiterText <string>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-ParseErrorAction <CsvParseErrorAction>] [-CollectParseErrors] [-MaxParseErrors <int>] [-MaxFieldLength <int>] [-MaxQuotedFieldLength <int>] [-NormalizeQuotes] [-InternStrings] [-ProgressInterval <int>] [-InferSchema] [-SchemaSampleSize <int>] [-ColumnType <IDictionary>] [-AsHashtable] [-AsDataReader] [-AsDataTable] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Import-OfficeCsv [-Document <CsvDocument>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeCsv [-Document <CsvDocument>] [-ParseErrorAction <CsvParseErrorAction>] [-CollectParseErrors] [-MaxParseErrors <int>] [-MaxFieldLength <int>] [-MaxQuotedFieldLength <int>] [-NormalizeQuotes] [-InternStrings] [-ProgressInterval <int>] [-InferSchema] [-SchemaSampleSize <int>] [-ColumnType <IDictionary>] [-AsHashtable] [-AsDataReader] [-AsDataTable] [<CommonParameters>]
 ```
 
 ### PathCulture
 ```powershell
-Import-OfficeCsv [-Path] <string[]> -UseCulture [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeCsv [-Path] <string[]> -UseCulture [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-ParseErrorAction <CsvParseErrorAction>] [-CollectParseErrors] [-MaxParseErrors <int>] [-MaxFieldLength <int>] [-MaxQuotedFieldLength <int>] [-NormalizeQuotes] [-InternStrings] [-ProgressInterval <int>] [-InferSchema] [-SchemaSampleSize <int>] [-ColumnType <IDictionary>] [-AsHashtable] [-AsDataReader] [-AsDataTable] [<CommonParameters>]
 ```
 
 ### PathDetect
 ```powershell
-Import-OfficeCsv [-Path] <string[]> -DetectDelimiter [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-DelimiterCandidates <char[]>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeCsv [-Path] <string[]> -DetectDelimiter [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-DelimiterCandidates <char[]>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-ParseErrorAction <CsvParseErrorAction>] [-CollectParseErrors] [-MaxParseErrors <int>] [-MaxFieldLength <int>] [-MaxQuotedFieldLength <int>] [-NormalizeQuotes] [-InternStrings] [-ProgressInterval <int>] [-InferSchema] [-SchemaSampleSize <int>] [-ColumnType <IDictionary>] [-AsHashtable] [-AsDataReader] [-AsDataTable] [<CommonParameters>]
 ```
 
 ### LiteralPathDelimiter
 ```powershell
-Import-OfficeCsv -LiteralPath <string[]> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeCsv -LiteralPath <string[]> [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-Delimiter <char>] [-DelimiterText <string>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-ParseErrorAction <CsvParseErrorAction>] [-CollectParseErrors] [-MaxParseErrors <int>] [-MaxFieldLength <int>] [-MaxQuotedFieldLength <int>] [-NormalizeQuotes] [-InternStrings] [-ProgressInterval <int>] [-InferSchema] [-SchemaSampleSize <int>] [-ColumnType <IDictionary>] [-AsHashtable] [-AsDataReader] [-AsDataTable] [<CommonParameters>]
 ```
 
 ### LiteralPathCulture
 ```powershell
-Import-OfficeCsv -LiteralPath <string[]> -UseCulture [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeCsv -LiteralPath <string[]> -UseCulture [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-ParseErrorAction <CsvParseErrorAction>] [-CollectParseErrors] [-MaxParseErrors <int>] [-MaxFieldLength <int>] [-MaxQuotedFieldLength <int>] [-NormalizeQuotes] [-InternStrings] [-ProgressInterval <int>] [-InferSchema] [-SchemaSampleSize <int>] [-ColumnType <IDictionary>] [-AsHashtable] [-AsDataReader] [-AsDataTable] [<CommonParameters>]
 ```
 
 ### LiteralPathDetect
 ```powershell
-Import-OfficeCsv -LiteralPath <string[]> -DetectDelimiter [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-DelimiterCandidates <char[]>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Import-OfficeCsv -LiteralPath <string[]> -DetectDelimiter [-NoHeader] [-Header <string[]>] [-SkipRows <int>] [-DelimiterCandidates <char[]>] [-TrimWhitespace <bool>] [-AllowEmptyLines] [-SkipCommentRowsBeforeHeader <bool>] [-SkipCommentRows] [-CommentCharacter <char>] [-RecognizeW3CFieldsHeader <bool>] [-ColumnCountMismatchPolicy <CsvColumnCountMismatchPolicy>] [-DuplicateHeaderBehavior <CsvDuplicateHeaderBehavior>] [-NullValue <string>] [-DateTimeFormats <string[]>] [-QuoteParsingMode <CsvQuoteParsingMode>] [-StaticColumns <IDictionary>] [-CompressionType <CsvCompressionType>] [-MaxDecompressedBytes <long>] [-Mode <CsvLoadMode>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-ParseErrorAction <CsvParseErrorAction>] [-CollectParseErrors] [-MaxParseErrors <int>] [-MaxFieldLength <int>] [-MaxQuotedFieldLength <int>] [-NormalizeQuotes] [-InternStrings] [-ProgressInterval <int>] [-InferSchema] [-SchemaSampleSize <int>] [-ColumnType <IDictionary>] [-AsHashtable] [-AsDataReader] [-AsDataTable] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -88,6 +88,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -AsDataReader
+Emit a forward-only IDataReader for database bulk-copy workflows.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -AsDataTable
 Emit one DataTable per input file instead of enumerating row objects.
 
@@ -120,6 +136,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -CollectParseErrors
+Collect parse errors and write them as non-terminating errors after each file.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -ColumnCountMismatchPolicy
 Controls how rows with fewer or more fields than the header are handled.
 
@@ -128,6 +160,22 @@ Type: CsvColumnCountMismatchPolicy
 Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values: Strict, PadMissingFieldsAndIgnoreExtraFields
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ColumnType
+Explicit column types used when emitting DataTable or IDataReader output.
+
+```yaml
+Type: IDictionary
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -232,6 +280,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -DelimiterText
+Field delimiter text for multi-character delimiters such as || or ::.
+
+```yaml
+Type: String
+Parameter Sets: PathDelimiter, LiteralPathDelimiter
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -DetectDelimiter
 Detect the delimiter from the first meaningful records.
 
@@ -312,6 +376,38 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -InferSchema
+Infer typed columns when -AsDataTable or -AsDataReader is used.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -InternStrings
+Reuse repeated string values through a per-read cache.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -LiteralPath
 Literal path to one or more CSV files.
 
@@ -334,6 +430,54 @@ Maximum decompressed bytes to read from compressed CSV files.
 ```yaml
 Type: Nullable`1
 Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxFieldLength
+Maximum length allowed for any parsed field.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxParseErrors
+Maximum number of collected parse errors before parsing fails.
+
+```yaml
+Type: Int32
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxQuotedFieldLength
+Maximum length allowed for fields parsed from quoted records.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values:
 
@@ -376,6 +520,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -NormalizeQuotes
+Normalize curly quote characters to straight quotes.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -NullValue
 Token that is materialized as null when importing rows.
 
@@ -384,6 +544,22 @@ Type: String
 Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ParseErrorAction
+How parse errors are handled.
+
+```yaml
+Type: CsvParseErrorAction
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values: Throw, SkipRow
 
 Required: False
 Position: named
@@ -405,6 +581,22 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue, ByPropertyName)
+Accept wildcard characters: True
+```
+
+### -ProgressInterval
+Report progress every N parsed records.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
@@ -430,6 +622,22 @@ Recognize W3C Extended Log File Format #Fields: rows as headers.
 ```yaml
 Type: Boolean
 Parameter Sets: PathDelimiter, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -SchemaSampleSize
+Maximum row count inspected when schema inference is enabled.
+
+```yaml
+Type: Int32
+Parameter Sets: PathDelimiter, Document, PathCulture, PathDetect, LiteralPathDelimiter, LiteralPathCulture, LiteralPathDetect
 Aliases: None
 Possible values:
 

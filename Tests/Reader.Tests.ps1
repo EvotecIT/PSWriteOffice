@@ -38,24 +38,18 @@ Describe 'Reader cmdlets' {
         Get-Command -Name Read-OfficeDocumentAsset -ErrorAction Stop | Should -Not -BeNullOrEmpty
     }
 
-    It 'does not replace caller-registered PDF readers' {
-        $handlerId = 'pswriteoffice.test.pdf'
-        $documentReaderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.DocumentReader' -CommandName 'Get-OfficeDocumentCapability'
+    It 'accepts a caller-configured immutable Reader' {
+        $handlerId = 'pswriteoffice.test.custom'
         $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
+        $builderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.OfficeDocumentReaderBuilder' -CommandName 'Get-OfficeDocumentCapability'
         $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
         $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
-        $pdfRegistrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Pdf' -TypeName 'OfficeIMO.Reader.Pdf.DocumentReaderPdfRegistrationExtensions' -CommandName 'Get-OfficeDocumentCapability'
-
-        $unregisterHandler = $documentReaderType.GetMethod('UnregisterHandler', [type[]] @([string]))
-        $registerHandler = $documentReaderType.GetMethod('RegisterHandler', [type[]] @($registrationType, [bool]))
-        $unregisterPdfHandler = $pdfRegistrationType.GetMethod('UnregisterPdfHandler', [System.Reflection.BindingFlags]'Public, Static')
-        $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
 
         $registration = [Activator]::CreateInstance($registrationType)
         $registration.Id = $handlerId
-        $registration.DisplayName = 'Test PDF Reader'
-        $registration.Kind = [Enum]::Parse($inputKindType, 'Pdf')
-        $registration.Extensions = [string[]]@('.pdf')
+        $registration.DisplayName = 'Test custom Reader'
+        $registration.Kind = [Enum]::Parse($inputKindType, 'Text')
+        $registration.Extensions = [string[]]@('.custom')
         $readPathType = $registrationType.GetProperty('ReadPath').PropertyType
         $registration.ReadPath = [System.Management.Automation.LanguagePrimitives]::ConvertTo({
             param($Path, $Options, $CancellationToken)
@@ -63,99 +57,15 @@ Describe 'Reader cmdlets' {
             [Array]::CreateInstance($chunkType, 0)
         }.GetNewClosure(), $readPathType)
 
-        try {
-            $registerHandler.Invoke($null, @($registration, $true)) | Out-Null
+        $builder = [Activator]::CreateInstance($builderType)
+        $builderType.GetMethod('AddHandler').Invoke($builder, @($registration, $false)) | Out-Null
+        $reader = $builderType.GetMethod('Build').Invoke($builder, @())
 
-            $capabilities = @(Get-OfficeDocumentCapability -ExcludeBuiltIn)
-            ($capabilities | Where-Object Id -EQ $handlerId).Count | Should -Be 1
-            ($capabilities | Where-Object Id -EQ 'officeimo.reader.pdf').Count | Should -Be 0
-        } finally {
-            $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
-            $unregisterPdfHandler.Invoke($null, @()) | Out-Null
-        }
-    }
-
-    It 'does not replace caller-registered RTF readers' {
-        $handlerId = 'pswriteoffice.test.rtf'
-        $documentReaderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.DocumentReader' -CommandName 'Get-OfficeDocumentCapability'
-        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
-        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
-        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
-        $rtfRegistrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Rtf' -TypeName 'OfficeIMO.Reader.Rtf.DocumentReaderRtfRegistrationExtensions' -CommandName 'Get-OfficeDocumentCapability'
-
-        $unregisterHandler = $documentReaderType.GetMethod('UnregisterHandler', [type[]] @([string]))
-        $registerHandler = $documentReaderType.GetMethod('RegisterHandler', [type[]] @($registrationType, [bool]))
-        $unregisterRtfHandler = $rtfRegistrationType.GetMethod('UnregisterRtfHandler', [System.Reflection.BindingFlags]'Public, Static')
-        $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
-        $unregisterRtfHandler.Invoke($null, @()) | Out-Null
-
-        $registration = [Activator]::CreateInstance($registrationType)
-        $registration.Id = $handlerId
-        $registration.DisplayName = 'Test RTF Reader'
-        $registration.Kind = [Enum]::Parse($inputKindType, 'Rtf')
-        $registration.Extensions = [string[]]@('.rtf')
-        $readPathType = $registrationType.GetProperty('ReadPath').PropertyType
-        $registration.ReadPath = [System.Management.Automation.LanguagePrimitives]::ConvertTo({
-            param($Path, $Options, $CancellationToken)
-
-            [Array]::CreateInstance($chunkType, 0)
-        }.GetNewClosure(), $readPathType)
-
-        try {
-            $registerHandler.Invoke($null, @($registration, $true)) | Out-Null
-
-            $capabilities = @(Get-OfficeDocumentCapability -ExcludeBuiltIn)
-            ($capabilities | Where-Object Id -EQ $handlerId).Count | Should -Be 1
-            ($capabilities | Where-Object Id -EQ 'officeimo.reader.rtf').Count | Should -Be 0
-        } finally {
-            $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
-            $unregisterRtfHandler.Invoke($null, @()) | Out-Null
-        }
-    }
-
-    It 'keeps non-conflicting adapter extensions when a caller owns one extension' {
-        $handlerId = 'pswriteoffice.test.html'
-        $documentReaderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.DocumentReader' -CommandName 'Get-OfficeDocumentCapability'
-        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
-        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
-        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
-        $htmlRegistrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Html' -TypeName 'OfficeIMO.Reader.Html.DocumentReaderHtmlRegistrationExtensions' -CommandName 'Get-OfficeDocumentCapability'
-
-        $unregisterHandler = $documentReaderType.GetMethod('UnregisterHandler', [type[]] @([string]))
-        $registerHandler = $documentReaderType.GetMethod('RegisterHandler', [type[]] @($registrationType, [bool]))
-        $unregisterHtmlHandler = $htmlRegistrationType.GetMethod('UnregisterHtmlHandler', [System.Reflection.BindingFlags]'Public, Static')
-        $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
-        $unregisterHtmlHandler.Invoke($null, @()) | Out-Null
-
-        $registration = [Activator]::CreateInstance($registrationType)
-        $registration.Id = $handlerId
-        $registration.DisplayName = 'Test HTML Reader'
-        $registration.Kind = [Enum]::Parse($inputKindType, 'Html')
-        $registration.Extensions = [string[]]@('.html')
-        $readPathType = $registrationType.GetProperty('ReadPath').PropertyType
-        $registration.ReadPath = [System.Management.Automation.LanguagePrimitives]::ConvertTo({
-            param($Path, $Options, $CancellationToken)
-
-            [Array]::CreateInstance($chunkType, 0)
-        }.GetNewClosure(), $readPathType)
-
-        try {
-            $registerHandler.Invoke($null, @($registration, $true)) | Out-Null
-
-            $capabilities = @(Get-OfficeDocumentCapability -ExcludeBuiltIn)
-            $customCapability = $capabilities | Where-Object Id -EQ $handlerId
-            $htmlCapability = $capabilities | Where-Object Id -EQ 'officeimo.reader.html'
-
-            $customCapability | Should -HaveCount 1
-            $htmlCapability | Should -HaveCount 1
-            $customCapability.Extensions | Should -Contain '.html'
-            $htmlCapability.Extensions | Should -Not -Contain '.html'
-            $htmlCapability.Extensions | Should -Contain '.htm'
-            $htmlCapability.Extensions | Should -Contain '.xhtml'
-        } finally {
-            $unregisterHandler.Invoke($null, @($handlerId)) | Out-Null
-            $unregisterHtmlHandler.Invoke($null, @()) | Out-Null
-        }
+        $capabilities = @(Get-OfficeDocumentCapability -Reader $reader -ExcludeBuiltIn)
+        $customCapability = $capabilities | Where-Object Id -EQ $handlerId
+        $customCapability | Should -HaveCount 1
+        $customCapability.Extensions | Should -Contain '.custom'
+        (Get-Command Get-OfficeDocumentChunk).Parameters.Keys | Should -Contain 'Reader'
     }
 
     It 'reads Markdown files as chunks and a document envelope' {
