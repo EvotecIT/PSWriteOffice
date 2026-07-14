@@ -42,7 +42,7 @@ public sealed class ConvertFromOfficeOpenDocumentCommand : PSCmdlet
         var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         var source = OdfDocument.Load(input);
-        ValidateOutputExtension(output, source.Kind);
+        OpenDocumentCommandUtilities.ValidateOfficeExtension(output, source.Kind, nameof(OutputPath));
         if (!ShouldProcess(output, "Convert OpenDocument to Office document")) return;
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         switch (source)
@@ -70,19 +70,4 @@ public sealed class ConvertFromOfficeOpenDocumentCommand : PSCmdlet
         }
     }
 
-    private static void ValidateOutputExtension(string outputPath, OdfDocumentKind kind)
-    {
-        var expected = kind switch
-        {
-            OdfDocumentKind.Text => ".docx",
-            OdfDocumentKind.Spreadsheet => ".xlsx",
-            OdfDocumentKind.Presentation => ".pptx",
-            _ => throw new InvalidOperationException("Unsupported OpenDocument kind.")
-        };
-        var actual = System.IO.Path.GetExtension(outputPath);
-        if (!string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase))
-        {
-            throw new PSArgumentException($"OutputPath must use the {expected} extension for {kind} content.", nameof(OutputPath));
-        }
-    }
 }

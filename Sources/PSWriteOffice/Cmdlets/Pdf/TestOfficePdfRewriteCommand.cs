@@ -1,5 +1,6 @@
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -27,9 +28,12 @@ public sealed class TestOfficePdfRewriteCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var original = PdfDocument.Load(SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath));
-        var rewritten = SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath);
-        var report = original.AssessRewritePreservation(rewritten, Options);
+        var options = Options ?? new PdfRewritePreservationOptions();
+        var original = PdfCommandUtilities.LoadDocument(
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath), options.OriginalReadOptions);
+        var rewritten = PdfCommandUtilities.LoadDocument(
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath), options.RewrittenReadOptions);
+        var report = original.AssessRewritePreservation(rewritten, options);
         if (FailOnLoss.IsPresent) report.ThrowIfFailed();
         WriteObject(report);
     }

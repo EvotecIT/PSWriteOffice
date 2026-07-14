@@ -1,5 +1,6 @@
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -26,6 +27,6 @@ public sealed class GetOfficePdfInteractionMapCommand : PSCmdlet
     public PdfReadOptions? ReadOptions { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() => WriteObject(PdfDocument.Load(
+    protected override void ProcessRecord() => WriteObject(PdfCommandUtilities.LoadDocument(
         SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), ReadOptions).Read.Interactions(Page, Options, ReadOptions));
 }

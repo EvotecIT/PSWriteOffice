@@ -2,6 +2,7 @@ using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Drawing;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -50,7 +51,7 @@ public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
         var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         if (!ShouldProcess(output, $"Export PDF layout overlay as {Format}")) return;
-        var drawing = PdfDocument.Load(input, ReadOptions).Read.LayoutDebugOverlay(Page, Options, LayoutOptions, ReadOptions);
+        var drawing = PdfCommandUtilities.LoadDocument(input, ReadOptions).Read.LayoutDebugOverlay(Page, Options, LayoutOptions, ReadOptions);
         var bytes = Format == OfficeImageExportFormat.Svg
             ? OfficeDrawingSvgExporter.ToSvgBytes(drawing, Scale)
             : OfficeDrawingRasterRenderer.ToPng(drawing, Scale);

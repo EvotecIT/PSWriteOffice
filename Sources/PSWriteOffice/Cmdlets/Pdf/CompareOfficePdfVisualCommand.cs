@@ -1,5 +1,6 @@
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -41,9 +42,9 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var expected = PdfDocument.Load(
+        var expected = PdfCommandUtilities.LoadDocument(
             SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath), ReferenceReadOptions);
-        var actual = PdfDocument.Load(
+        var actual = PdfCommandUtilities.LoadDocument(
             SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath), DifferenceReadOptions);
         var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
         WriteObject(expected.CompareVisual(actual, selection, Options));

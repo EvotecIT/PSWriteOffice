@@ -36,9 +36,16 @@ public sealed class ConvertToOfficeLatexMarkdownCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = ParameterSetName == ParameterSetPath
-            ? LatexDocument.Load(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)).Document
-            : Document;
+        var document = Document;
+        if (ParameterSetName == ParameterSetPath)
+        {
+            var parsed = LatexDocument.Load(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path));
+            if (FailOnLoss.IsPresent && (!parsed.IsLossless || parsed.HasErrors))
+            {
+                throw new InvalidDataException("LaTeX parsing reported errors or could not retain the complete source losslessly.");
+            }
+            document = parsed.Document;
+        }
         var result = document.ToMarkdownDocumentResult(Options);
         if (FailOnLoss.IsPresent) result.RequireNoLoss();
         if (!string.IsNullOrWhiteSpace(OutputPath))

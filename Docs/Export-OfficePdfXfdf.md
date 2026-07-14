@@ -11,7 +11,7 @@ Exports readable PDF form field values as XFDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfXfdf [-Path] <string> [[-OutputPath] <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePdfXfdf [-Path] <string> [[-OutputPath] <string>] [-ReadOptions <PdfReadOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -70,6 +70,22 @@ Possible values:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ReadOptions
+Optional bounded PDF parsing and password settings.
+
+```yaml
+Type: PdfReadOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

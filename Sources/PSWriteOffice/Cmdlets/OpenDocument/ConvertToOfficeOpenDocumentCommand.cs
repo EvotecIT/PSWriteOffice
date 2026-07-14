@@ -60,10 +60,12 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
     {
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         var kind = ResolveKind(out var sourcePath);
-        ValidateOutputExtension(output, kind);
+        OpenDocumentCommandUtilities.ValidateOpenDocumentExtension(output, kind, nameof(OutputPath));
         if (!ShouldProcess(output, "Convert Office document to OpenDocument")) return;
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
-        IDisposable? owned = null;
+        WordDocument? ownedWord = null;
+        ExcelDocument? ownedExcel = null;
+        PowerPointPresentation? ownedPresentation = null;
         try
         {
             object result;
@@ -74,7 +76,7 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
                     if (sourcePath != null)
                     {
                         word = WordDocumentService.LoadDocument(sourcePath, readOnly: true, autoSave: false);
-                        owned = word;
+                        ownedWord = word;
                     }
                     var wordResult = word.ToOpenDocumentResult(WordOptions);
                     if (FailOnLoss.IsPresent) wordResult.RequireNoLoss();
@@ -86,7 +88,7 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
                     if (sourcePath != null)
                     {
                         excel = ExcelDocumentService.LoadDocument(sourcePath, readOnly: true, autoSave: false);
-                        owned = excel;
+                        ownedExcel = excel;
                     }
                     var excelResult = excel.ToOpenDocumentResult(ExcelOptions);
                     if (FailOnLoss.IsPresent) excelResult.RequireNoLoss();
@@ -98,7 +100,7 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
                     if (sourcePath != null)
                     {
                         presentation = PowerPointDocumentService.LoadPresentation(sourcePath);
-                        owned = presentation;
+                        ownedPresentation = presentation;
                     }
                     var presentationResult = presentation.ToOpenDocumentResult(PowerPointOptions);
                     if (FailOnLoss.IsPresent) presentationResult.RequireNoLoss();
@@ -112,7 +114,9 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
         }
         finally
         {
-            owned?.Dispose();
+            if (ownedWord != null) WordDocumentService.CloseDocument(ownedWord);
+            if (ownedExcel != null) ExcelDocumentService.CloseDocument(ownedExcel);
+            if (ownedPresentation != null) PowerPointDocumentService.ClosePresentation(ownedPresentation, save: false, show: false);
         }
     }
 
@@ -132,19 +136,4 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
         };
     }
 
-    private static void ValidateOutputExtension(string outputPath, OdfDocumentKind kind)
-    {
-        var expected = kind switch
-        {
-            OdfDocumentKind.Text => ".odt",
-            OdfDocumentKind.Spreadsheet => ".ods",
-            OdfDocumentKind.Presentation => ".odp",
-            _ => throw new InvalidOperationException("Unsupported OpenDocument conversion kind.")
-        };
-        var actual = System.IO.Path.GetExtension(outputPath);
-        if (!string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase))
-        {
-            throw new PSArgumentException($"OutputPath must use the {expected} extension for {kind} content.", nameof(OutputPath));
-        }
-    }
 }

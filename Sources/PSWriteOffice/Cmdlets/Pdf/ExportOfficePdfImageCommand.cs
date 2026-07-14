@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Drawing;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -63,7 +64,7 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
             ContinueOnError = sourceOptions.ContinueOnError,
             ImageCodec = sourceOptions.ImageCodec
         };
-        var document = PdfDocument.Load(input, ReadOptions);
+        var document = PdfCommandUtilities.LoadDocument(input, ReadOptions);
         IReadOnlyList<PdfPageRenderResult> pages = string.IsNullOrWhiteSpace(PageRange)
             ? document.Read.RenderPages(options: options, readOptions: ReadOptions)
             : document.Read.RenderPages(PageRange!, options, ReadOptions);

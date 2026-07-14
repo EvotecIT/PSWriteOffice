@@ -3,6 +3,7 @@ using System.IO;
 using System.Management.Automation;
 using System.Text;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -35,6 +36,10 @@ public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
     [Parameter]
     public PdfFormFillerOptions? Options { get; set; }
 
+    /// <summary>Optional bounded PDF parsing and password settings for the source form.</summary>
+    [Parameter]
+    public PdfReadOptions? ReadOptions { get; set; }
+
     /// <summary>Maximum UTF-8 byte count accepted from an XFDF file or pipeline. Default: 4 MiB.</summary>
     [Parameter]
     [ValidateRange(1L, long.MaxValue)]
@@ -62,7 +67,7 @@ public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
         var xml = ParameterSetName == "File"
             ? ReadBoundedXfdfFile(SessionState.Path.GetUnresolvedProviderPathFromPSPath(XfdfPath))
             : _pipelineXfdf.ToString();
-        var result = PdfDocument.Load(input).Forms.ImportXfdf(xml, Options);
+        var result = PdfCommandUtilities.LoadDocument(input, ReadOptions).Forms.ImportXfdf(xml, Options);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         result.Save(output);
         if (PassThru.IsPresent) WriteObject(result);

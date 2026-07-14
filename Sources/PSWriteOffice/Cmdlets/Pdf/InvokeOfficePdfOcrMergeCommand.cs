@@ -1,6 +1,7 @@
 using System.Management.Automation;
 using System.Threading.Tasks;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -28,7 +29,7 @@ public sealed class InvokeOfficePdfOcrMergeCommand : AsyncPSCmdlet
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync()
     {
-        var document = PdfDocument.Load(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), ReadOptions);
+        var document = PdfCommandUtilities.LoadDocument(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), ReadOptions);
         WriteObject(await document.Read.OcrAsync(Provider, Options, ReadOptions, CancelToken).ConfigureAwait(false));
     }
 }

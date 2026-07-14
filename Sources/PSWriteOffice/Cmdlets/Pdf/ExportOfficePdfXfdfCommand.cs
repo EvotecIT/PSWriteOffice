@@ -2,6 +2,7 @@ using System.IO;
 using System.Management.Automation;
 using System.Text;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -18,6 +19,10 @@ public sealed class ExportOfficePdfXfdfCommand : PSCmdlet
     [Parameter(Position = 1)]
     public string? OutputPath { get; set; }
 
+    /// <summary>Optional bounded PDF parsing and password settings.</summary>
+    [Parameter]
+    public PdfReadOptions? ReadOptions { get; set; }
+
     /// <summary>Return the written file.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -26,7 +31,7 @@ public sealed class ExportOfficePdfXfdfCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-        var xfdf = PdfDocument.Load(input).Forms.ExportXfdf();
+        var xfdf = PdfCommandUtilities.LoadDocument(input, ReadOptions).Forms.ExportXfdf();
         if (string.IsNullOrWhiteSpace(OutputPath))
         {
             WriteObject(xfdf);

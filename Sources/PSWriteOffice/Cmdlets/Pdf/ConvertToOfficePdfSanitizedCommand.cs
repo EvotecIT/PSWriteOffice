@@ -1,6 +1,7 @@
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
@@ -27,13 +28,17 @@ public sealed class ConvertToOfficePdfSanitizedCommand : PSCmdlet
     [Parameter]
     public PdfSanitizationOptions? Options { get; set; }
 
+    /// <summary>Optional bounded PDF parsing and password settings.</summary>
+    [Parameter]
+    public PdfReadOptions? ReadOptions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         if (!ShouldProcess(output, "Sanitize PDF active content and embedded payloads")) return;
-        var result = PdfDocument.Load(input).Sanitize(Options);
+        var result = PdfCommandUtilities.LoadDocument(input, ReadOptions).Sanitize(Options);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         File.WriteAllBytes(output, result.ToBytes());
         WriteObject(result);

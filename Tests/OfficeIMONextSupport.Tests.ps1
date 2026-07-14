@@ -35,6 +35,9 @@ Describe 'Expanded OfficeIMO support' {
         (Get-Command New-OfficeDocumentReader).Parameters.Keys | Should -Contain 'ProcessOcrOptions'
         (Get-Command Invoke-OfficePdfOcrMerge).Parameters.Keys | Should -Contain 'Provider'
         (Get-Command Import-OfficePdfXfdf).Parameters.Keys | Should -Contain 'MaxXfdfBytes'
+        (Get-Command Import-OfficePdfXfdf).Parameters.Keys | Should -Contain 'ReadOptions'
+        (Get-Command Export-OfficePdfXfdf).Parameters.Keys | Should -Contain 'ReadOptions'
+        (Get-Command ConvertTo-OfficePdfSanitized).Parameters.Keys | Should -Contain 'ReadOptions'
     }
 
     It 'detects, structures, chunks, and batch-reads additional text formats' {
@@ -82,6 +85,20 @@ Describe 'Expanded OfficeIMO support' {
         (Get-OfficeLatex -Path $latexPath -AsResult).IsLossless | Should -BeTrue
         $latexMarkdown = ConvertTo-OfficeLatexMarkdown -Path $latexPath -FailOnLoss
         $latexMarkdown.Value.ToMarkdown() | Should -Match 'Portable report'
+
+        $brokenAsciiDocPath = Join-Path $TestDrive 'broken.adoc'
+        $brokenAsciiDocOutput = Join-Path $TestDrive 'broken-adoc.md'
+        Set-Content -LiteralPath $brokenAsciiDocPath -Encoding UTF8 -Value "----`nunterminated block"
+        { ConvertTo-OfficeAsciiDocMarkdown -Path $brokenAsciiDocPath -OutputPath $brokenAsciiDocOutput -FailOnLoss -ErrorAction Stop } |
+            Should -Throw '*parsing reported errors*'
+        Test-Path -LiteralPath $brokenAsciiDocOutput | Should -BeFalse
+
+        $brokenLatexPath = Join-Path $TestDrive 'broken.tex'
+        $brokenLatexOutput = Join-Path $TestDrive 'broken-latex.md'
+        Set-Content -LiteralPath $brokenLatexPath -Encoding UTF8 -Value '\textbf{unterminated'
+        { ConvertTo-OfficeLatexMarkdown -Path $brokenLatexPath -OutputPath $brokenLatexOutput -FailOnLoss -ErrorAction Stop } |
+            Should -Throw '*parsing reported errors*'
+        Test-Path -LiteralPath $brokenLatexOutput | Should -BeFalse
     }
 
     It 'creates and reloads native ODT, ODS, and ODP packages' {
@@ -145,6 +162,17 @@ Describe 'Expanded OfficeIMO support' {
         { ConvertFrom-OfficeOpenDocument -Path $textPath -OutputPath $wrongOfficeOutput -ErrorAction Stop } |
             Should -Throw '*must use the .docx extension*'
         Test-Path -LiteralPath $wrongOfficeOutput | Should -BeFalse
+
+        $wrongNewPath = Join-Path $TestDrive 'new-spreadsheet.odt'
+        { New-OfficeOpenDocument -Kind Spreadsheet -Path $wrongNewPath -ErrorAction Stop } |
+            Should -Throw '*must use the .ods extension*'
+        Test-Path -LiteralPath $wrongNewPath | Should -BeFalse
+
+        $spreadsheet = New-OfficeOpenDocument -Kind Spreadsheet
+        $wrongSavePath = Join-Path $TestDrive 'saved-spreadsheet.odt'
+        { $spreadsheet | Save-OfficeOpenDocument -Path $wrongSavePath -ErrorAction Stop } |
+            Should -Throw '*must use the .ods extension*'
+        Test-Path -LiteralPath $wrongSavePath | Should -BeFalse
     }
 
     It 'round-trips EML, MSG, TNEF, and mbox artifacts' {
@@ -219,8 +247,39 @@ Describe 'Expanded OfficeIMO support' {
         $before = $presentations.Count
 
         Export-OfficePowerPointImage -Path $powerPointPath -OutputPath (Join-Path $TestDrive 'transient-images') -Format Svg | Out-Null
+        $presentations.Count | Should -Be $before
+
+        Get-OfficePowerPointInspection -Path $powerPointPath | Out-Null
 
         $presentations.Count | Should -Be $before
+    }
+
+    It 'releases path-loaded Office documents after OpenDocument conversion' {
+        $flags = [System.Reflection.BindingFlags]'NonPublic, Static'
+        $wordServiceType = Get-TestPSWriteOfficeType -AssemblyName 'PSWriteOffice' -TypeName 'PSWriteOffice.Services.Word.WordDocumentService' -CommandName 'ConvertTo-OfficeOpenDocument'
+        $excelServiceType = Get-TestPSWriteOfficeType -AssemblyName 'PSWriteOffice' -TypeName 'PSWriteOffice.Services.Excel.ExcelDocumentService' -CommandName 'ConvertTo-OfficeOpenDocument'
+        $powerPointServiceType = Get-TestPSWriteOfficeType -AssemblyName 'PSWriteOffice' -TypeName 'PSWriteOffice.Services.PowerPoint.PowerPointDocumentService' -CommandName 'ConvertTo-OfficeOpenDocument'
+        $wordDocuments = $wordServiceType.GetField('AssociatedPaths', $flags).GetValue($null)
+        $excelDocuments = $excelServiceType.GetField('AssociatedPaths', $flags).GetValue($null)
+        $presentations = $powerPointServiceType.GetField('Presentations', $flags).GetValue($null)
+        $beforeWord = $wordDocuments.Count
+        $beforeExcel = $excelDocuments.Count
+        $beforePowerPoint = $presentations.Count
+
+        $wordPath = Join-Path $TestDrive 'convert.docx'
+        $excelPath = Join-Path $TestDrive 'convert.xlsx'
+        $powerPointPath = Join-Path $TestDrive 'convert.pptx'
+        New-OfficeWord -Path $wordPath { WordSection { WordParagraph -Text 'Convert' } } | Out-Null
+        New-OfficeExcel -Path $excelPath { ExcelSheet 'Data' { ExcelCell -Address A1 -Value 'Convert' } } | Out-Null
+        New-OfficePowerPoint -Path $powerPointPath { PptSlide { PptTitle -Title 'Convert' } } | Out-Null
+
+        ConvertTo-OfficeOpenDocument -Path $wordPath -OutputPath (Join-Path $TestDrive 'convert.odt') | Out-Null
+        ConvertTo-OfficeOpenDocument -Path $excelPath -OutputPath (Join-Path $TestDrive 'convert.ods') | Out-Null
+        ConvertTo-OfficeOpenDocument -Path $powerPointPath -OutputPath (Join-Path $TestDrive 'convert.odp') | Out-Null
+
+        $wordDocuments.Count | Should -Be $beforeWord
+        $excelDocuments.Count | Should -Be $beforeExcel
+        $presentations.Count | Should -Be $beforePowerPoint
     }
 
     It 'returns Word review/comparison and PowerPoint inspection reports' {
@@ -282,6 +341,25 @@ Describe 'Expanded OfficeIMO support' {
         $differenceReadOptions = [Activator]::CreateInstance($pdfReadOptionsType)
         $differenceReadOptions.Limits.MaxInputBytes = 1
         { Compare-OfficePdfVisual -ReferencePath $pdfPath -DifferencePath $pdfPath -DifferenceReadOptions $differenceReadOptions -ErrorAction Stop } |
+            Should -Throw
+
+        $boundedSanitizedOutput = Join-Path $TestDrive 'bounded-sanitized.pdf'
+        { ConvertTo-OfficePdfSanitized -Path $pdfPath -OutputPath $boundedSanitizedOutput -ReadOptions $differenceReadOptions -ErrorAction Stop } |
+            Should -Throw
+        Test-Path -LiteralPath $boundedSanitizedOutput | Should -BeFalse
+
+        $boundedPdfImportOutput = Join-Path $TestDrive 'bounded-source-import.pdf'
+        { Import-OfficePdfXfdf -Path $formPdfPath -Xfdf $xfdf -OutputPath $boundedPdfImportOutput -ReadOptions $differenceReadOptions -ErrorAction Stop } |
+            Should -Throw
+        Test-Path -LiteralPath $boundedPdfImportOutput | Should -BeFalse
+
+        { Export-OfficePdfXfdf -Path $formPdfPath -ReadOptions $differenceReadOptions -ErrorAction Stop } |
+            Should -Throw
+
+        $rewriteOptionsType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Pdf' -TypeName 'OfficeIMO.Pdf.PdfRewritePreservationOptions' -CommandName 'Test-OfficePdfRewrite'
+        $rewriteOptions = [Activator]::CreateInstance($rewriteOptionsType)
+        $rewriteOptions.OriginalReadOptions = $differenceReadOptions
+        { Test-OfficePdfRewrite -ReferencePath $pdfPath -DifferencePath $safePath -Options $rewriteOptions -ErrorAction Stop } |
             Should -Throw
     }
 

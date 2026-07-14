@@ -30,6 +30,7 @@ public sealed class NewOfficeOpenDocumentCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var path = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path!);
+            OpenDocumentCommandUtilities.ValidateOpenDocumentExtension(path, Kind, nameof(Path));
             if (!ShouldProcess(path, "Create OpenDocument package"))
             {
                 WriteObject(document);

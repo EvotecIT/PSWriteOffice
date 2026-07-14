@@ -29,6 +29,7 @@ public sealed class SaveOfficeOpenDocumentCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        OpenDocumentCommandUtilities.ValidateOpenDocumentExtension(output, Document.Kind, nameof(Path));
         if (!ShouldProcess(output, "Save OpenDocument package")) return;
         if (FailOnLoss.IsPresent)
         {

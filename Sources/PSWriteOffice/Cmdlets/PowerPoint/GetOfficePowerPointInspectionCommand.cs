@@ -44,7 +44,10 @@ public sealed class GetOfficePowerPointInspectionCommand : PSCmdlet
         }
         finally
         {
-            owned?.Dispose();
+            if (owned != null)
+            {
+                PowerPointDocumentService.ClosePresentation(owned, save: false, show: false);
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ Removes or quarantines active PDF content and embedded payloads with post-save p
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfSanitized [-Path] <string> [-OutputPath] <string> [-Options <PdfSanitizationOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfSanitized [-Path] <string> [-OutputPath] <string> [-Options <PdfSanitizationOptions>] [-ReadOptions <PdfReadOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -71,6 +71,22 @@ Possible values:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ReadOptions
+Optional bounded PDF parsing and password settings.
+
+```yaml
+Type: PdfReadOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
