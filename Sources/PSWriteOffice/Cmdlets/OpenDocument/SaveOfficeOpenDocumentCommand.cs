@@ -30,9 +30,12 @@ public sealed class SaveOfficeOpenDocumentCommand : PSCmdlet
     {
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         if (!ShouldProcess(output, "Save OpenDocument package")) return;
+        if (FailOnLoss.IsPresent)
+        {
+            Document.Serialize(Options).RequireNoLoss();
+        }
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         var result = Document.Save(output, Options);
-        if (FailOnLoss.IsPresent) result.RequireNoLoss();
         WriteObject(result);
     }
 }

@@ -11,7 +11,7 @@ Creates a native ODT, ODS, or ODP document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeOpenDocument [-Kind] <OdfDocumentKind> [[-Path] <string>] [<CommonParameters>]
+New-OfficeOpenDocument [-Kind] <OdfDocumentKind> [[-Path] <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

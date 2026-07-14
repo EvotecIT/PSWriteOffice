@@ -5,7 +5,7 @@ using OfficeIMO.OpenDocument;
 namespace PSWriteOffice.Cmdlets.OpenDocument;
 
 /// <summary>Creates a native ODT, ODS, or ODP document.</summary>
-[Cmdlet(VerbsCommon.New, "OfficeOpenDocument")]
+[Cmdlet(VerbsCommon.New, "OfficeOpenDocument", SupportsShouldProcess = true)]
 [OutputType(typeof(OdfDocument))]
 public sealed class NewOfficeOpenDocumentCommand : PSCmdlet
 {
@@ -30,6 +30,11 @@ public sealed class NewOfficeOpenDocumentCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var path = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path!);
+            if (!ShouldProcess(path, "Create OpenDocument package"))
+            {
+                WriteObject(document);
+                return;
+            }
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path) ?? SessionState.Path.CurrentFileSystemLocation.Path);
             document.Save(path);
         }

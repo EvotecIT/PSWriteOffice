@@ -34,6 +34,7 @@ Describe 'Expanded OfficeIMO support' {
         (Get-Command New-OfficeDocumentReader).Parameters.Keys | Should -Contain 'TesseractOptions'
         (Get-Command New-OfficeDocumentReader).Parameters.Keys | Should -Contain 'ProcessOcrOptions'
         (Get-Command Invoke-OfficePdfOcrMerge).Parameters.Keys | Should -Contain 'Provider'
+        (Get-Command Import-OfficePdfXfdf).Parameters.Keys | Should -Contain 'MaxXfdfBytes'
     }
 
     It 'detects, structures, chunks, and batch-reads additional text formats' {
@@ -98,6 +99,45 @@ Describe 'Expanded OfficeIMO support' {
             Test-Path -LiteralPath $path | Should -BeTrue
             (Get-OfficeOpenDocument -Path $path).GetType().FullName | Should -Be $case.Type
         }
+    }
+
+    It 'protects OpenDocument destinations and validates conversion extensions' {
+        $whatIfPath = Join-Path $TestDrive 'what-if.odt'
+        New-OfficeOpenDocument -Kind Text -Path $whatIfPath -WhatIf | Out-Null
+        Test-Path -LiteralPath $whatIfPath | Should -BeFalse
+
+        $signedPath = Join-Path $TestDrive 'signed.odt'
+        New-OfficeOpenDocument -Kind Text -Path $signedPath | Out-Null
+        $stream = [System.IO.File]::Open($signedPath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::ReadWrite)
+        try {
+            $archive = [System.IO.Compression.ZipArchive]::new($stream, [System.IO.Compression.ZipArchiveMode]::Update, $false)
+            try {
+                $entry = $archive.CreateEntry('META-INF/documentsignatures.xml')
+                $writer = [System.IO.StreamWriter]::new($entry.Open())
+                try { $writer.Write('<?xml version="1.0"?><signatures/>') } finally { $writer.Dispose() }
+            } finally {
+                $archive.Dispose()
+            }
+        } finally {
+            $stream.Dispose()
+        }
+
+        $signed = Get-OfficeOpenDocument -Path $signedPath
+        $signed.Metadata.Title = 'Invalidates the preserved signature'
+        $odfSaveOptionsType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.OpenDocument' -TypeName 'OfficeIMO.OpenDocument.OdfSaveOptions' -CommandName 'Save-OfficeOpenDocument'
+        $saveOptions = [Activator]::CreateInstance($odfSaveOptionsType)
+        $saveOptions.SignatureHandling = 'RemoveInvalidated'
+        $rejectedPath = Join-Path $TestDrive 'must-not-exist.odt'
+        { $signed | Save-OfficeOpenDocument -Path $rejectedPath -Options $saveOptions -FailOnLoss -ErrorAction Stop } |
+            Should -Throw
+        Test-Path -LiteralPath $rejectedPath | Should -BeFalse
+
+        $excelPath = Join-Path $TestDrive 'extension-source.xlsx'
+        $wrongOutput = Join-Path $TestDrive 'spreadsheet.odt'
+        New-OfficeExcel -Path $excelPath { ExcelSheet 'Data' { ExcelCell -Address A1 -Value 'Extension contract' } } | Out-Null
+        { ConvertTo-OfficeOpenDocument -Path $excelPath -OutputPath $wrongOutput -ErrorAction Stop } |
+            Should -Throw '*must use the .ods extension*'
+        Test-Path -LiteralPath $wrongOutput | Should -BeFalse
     }
 
     It 'round-trips EML, MSG, TNEF, and mbox artifacts' {
@@ -190,6 +230,32 @@ Describe 'Expanded OfficeIMO support' {
             Should -Be 'OfficeIMO.Pdf.PdfVisualComparisonReport'
         (Test-OfficePdfRewrite -ReferencePath $pdfPath -DifferencePath $safePath).GetType().FullName |
             Should -Be 'OfficeIMO.Pdf.PdfRewritePreservationReport'
+
+        $formPdfPath = Join-Path $TestDrive 'advanced-form.pdf'
+        New-OfficePdf -Path $formPdfPath {
+            PdfParagraph 'Advanced PDF form proof'
+            PdfFormField -Name 'Reviewer' -Type Text -Value 'Initial'
+        } | Out-Null
+        $xfdf = Export-OfficePdfXfdf -Path $formPdfPath
+        $xfdfLines = @(($xfdf -replace '><', ">`n<") -split "`n")
+        $xfdfOutput = Join-Path $TestDrive 'advanced-xfdf.pdf'
+        $imported = @($xfdfLines | Import-OfficePdfXfdf -Path $formPdfPath -OutputPath $xfdfOutput -PassThru)
+        $imported | Should -HaveCount 1
+        $imported[0].GetType().FullName | Should -Be 'OfficeIMO.Pdf.PdfDocument'
+        Test-Path -LiteralPath $xfdfOutput | Should -BeTrue
+
+        $xfdfPath = Join-Path $TestDrive 'advanced.xfdf'
+        Set-Content -LiteralPath $xfdfPath -Value $xfdf -Encoding UTF8
+        $boundedOutput = Join-Path $TestDrive 'bounded-xfdf.pdf'
+        { Import-OfficePdfXfdf -Path $formPdfPath -XfdfPath $xfdfPath -OutputPath $boundedOutput -MaxXfdfBytes 8 -ErrorAction Stop } |
+            Should -Throw '*configured limit*'
+        Test-Path -LiteralPath $boundedOutput | Should -BeFalse
+
+        $pdfReadOptionsType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Pdf' -TypeName 'OfficeIMO.Pdf.PdfReadOptions' -CommandName 'Compare-OfficePdfVisual'
+        $differenceReadOptions = [Activator]::CreateInstance($pdfReadOptionsType)
+        $differenceReadOptions.Limits.MaxInputBytes = 1
+        { Compare-OfficePdfVisual -ReferencePath $pdfPath -DifferencePath $pdfPath -DifferenceReadOptions $differenceReadOptions -ErrorAction Stop } |
+            Should -Throw
     }
 
     It 'builds offline Google Docs and Sheets plans and request batches' {

@@ -1,4 +1,3 @@
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
 
@@ -44,8 +43,9 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
     {
         var expected = PdfDocument.Load(
             SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath), ReferenceReadOptions);
-        var actual = File.ReadAllBytes(SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath));
+        var actual = PdfDocument.Load(
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath), DifferenceReadOptions);
         var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
-        WriteObject(expected.CompareVisual(actual, selection, Options, DifferenceReadOptions));
+        WriteObject(expected.CompareVisual(actual, selection, Options));
     }
 }

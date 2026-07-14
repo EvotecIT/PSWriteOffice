@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Management.Automation;
+using System.Text;
 using OfficeIMO.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
@@ -9,6 +11,10 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 [OutputType(typeof(PdfDocument))]
 public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
 {
+    private readonly StringBuilder _pipelineXfdf = new();
+    private long _pipelineXfdfBytes;
+    private bool _hasPipelineXfdf;
+
     /// <summary>Source PDF path.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Path { get; set; } = string.Empty;
@@ -29,6 +35,11 @@ public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
     [Parameter]
     public PdfFormFillerOptions? Options { get; set; }
 
+    /// <summary>Maximum UTF-8 byte count accepted from an XFDF file or pipeline. Default: 4 MiB.</summary>
+    [Parameter]
+    [ValidateRange(1L, long.MaxValue)]
+    public long MaxXfdfBytes { get; set; } = 4L * 1024L * 1024L;
+
     /// <summary>Return the rewritten fluent PDF document.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -36,15 +47,54 @@ public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (ParameterSetName == "Text")
+        {
+            AppendPipelineXfdf(Xfdf);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
         var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         if (!ShouldProcess(output, "Import XFDF into PDF form fields")) return;
         var xml = ParameterSetName == "File"
-            ? File.ReadAllText(SessionState.Path.GetUnresolvedProviderPathFromPSPath(XfdfPath))
-            : Xfdf;
+            ? ReadBoundedXfdfFile(SessionState.Path.GetUnresolvedProviderPathFromPSPath(XfdfPath))
+            : _pipelineXfdf.ToString();
         var result = PdfDocument.Load(input).Forms.ImportXfdf(xml, Options);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         result.Save(output);
         if (PassThru.IsPresent) WriteObject(result);
+    }
+
+    private void AppendPipelineXfdf(string value)
+    {
+        value ??= string.Empty;
+        var valueBytes = Encoding.UTF8.GetByteCount(value);
+        var separatorBytes = _hasPipelineXfdf ? 1L : 0L;
+        if (_pipelineXfdfBytes > MaxXfdfBytes - valueBytes - separatorBytes)
+        {
+            throw new InvalidDataException($"XFDF input exceeds the configured limit of {MaxXfdfBytes} bytes.");
+        }
+        if (_hasPipelineXfdf) _pipelineXfdf.Append('\n');
+        _pipelineXfdf.Append(value);
+        _pipelineXfdfBytes += valueBytes + separatorBytes;
+        _hasPipelineXfdf = true;
+    }
+
+    private string ReadBoundedXfdfFile(string path)
+    {
+        var file = new FileInfo(path);
+        if (file.Length > MaxXfdfBytes)
+        {
+            throw new InvalidDataException($"XFDF file exceeds the configured limit of {MaxXfdfBytes} bytes.");
+        }
+        var xml = File.ReadAllText(path);
+        if (Encoding.UTF8.GetByteCount(xml) > MaxXfdfBytes)
+        {
+            throw new InvalidDataException($"Decoded XFDF exceeds the configured limit of {MaxXfdfBytes} bytes.");
+        }
+        return xml;
     }
 }

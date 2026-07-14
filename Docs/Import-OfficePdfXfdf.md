@@ -11,12 +11,12 @@ Imports bounded DTD-free XFDF through the validated PDF form filler.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Import-OfficePdfXfdf [-Path] <string> -Xfdf <string> -OutputPath <string> [-Options <PdfFormFillerOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Import-OfficePdfXfdf [-Path] <string> -Xfdf <string> -OutputPath <string> [-Options <PdfFormFillerOptions>] [-MaxXfdfBytes <long>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### File
 ```powershell
-Import-OfficePdfXfdf [-Path] <string> -XfdfPath <string> -OutputPath <string> [-Options <PdfFormFillerOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Import-OfficePdfXfdf [-Path] <string> -XfdfPath <string> -OutputPath <string> [-Options <PdfFormFillerOptions>] [-MaxXfdfBytes <long>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,6 +37,22 @@ Import-OfficePdfXfdf -XfdfPath 'C:\Path' -OutputPath 'C:\Path'
 
 
 ## PARAMETERS
+
+### -MaxXfdfBytes
+Maximum UTF-8 byte count accepted from an XFDF file or pipeline. Default: 4 MiB.
+
+```yaml
+Type: Int64
+Parameter Sets: Text, File
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Options
 Optional validated form filling behavior.

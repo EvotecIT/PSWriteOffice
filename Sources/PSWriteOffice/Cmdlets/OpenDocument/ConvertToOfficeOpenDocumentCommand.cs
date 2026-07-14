@@ -59,13 +59,15 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+        var kind = ResolveKind(out var sourcePath);
+        ValidateOutputExtension(output, kind);
         if (!ShouldProcess(output, "Convert Office document to OpenDocument")) return;
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         IDisposable? owned = null;
         try
         {
             object result;
-            switch (ResolveKind(out var sourcePath))
+            switch (kind)
             {
                 case OdfDocumentKind.Text:
                     var word = WordDocument;
@@ -128,5 +130,21 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
             ".pptx" or ".pptm" => OdfDocumentKind.Presentation,
             _ => throw new PSArgumentException("Path must identify a DOCX, XLSX, XLSM, PPTX, or PPTM file.")
         };
+    }
+
+    private static void ValidateOutputExtension(string outputPath, OdfDocumentKind kind)
+    {
+        var expected = kind switch
+        {
+            OdfDocumentKind.Text => ".odt",
+            OdfDocumentKind.Spreadsheet => ".ods",
+            OdfDocumentKind.Presentation => ".odp",
+            _ => throw new InvalidOperationException("Unsupported OpenDocument conversion kind.")
+        };
+        var actual = System.IO.Path.GetExtension(outputPath);
+        if (!string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new PSArgumentException($"OutputPath must use the {expected} extension for {kind} content.", nameof(OutputPath));
+        }
     }
 }
