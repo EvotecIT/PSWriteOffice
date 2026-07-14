@@ -768,6 +768,9 @@ Describe 'Excel DSL surface' {
         }
 
         { Get-ZipEntriesLocal -Path $path } | Should -Throw
+        $autoSavePath = Join-Path $TestDrive 'EncryptedExcelAutoSave.xlsx'
+        { New-OfficeExcel -Path $autoSavePath -Password 'secret' -AutoSave -ErrorAction Stop } |
+            Should -Throw '*require explicit Save-OfficeExcel*'
 
         $doc = Get-OfficeExcel -Path $path -Password 'secret' -ReadOnly
         try {
@@ -785,11 +788,53 @@ Describe 'Excel DSL surface' {
 
         $doc = Get-OfficeExcel -Path $path -Password 'secret'
         try {
+            { $doc | Save-OfficeExcel -Path $path -ErrorAction Stop } |
+                Should -Throw '*Provide -Password*'
             $doc.Sheets[0].Cell(1, 1, 'Must not be saved without a password', $null, $null)
             { $doc | Close-OfficeExcel -Save -ErrorAction Stop } |
                 Should -Throw '*Provide -Password*'
         } finally {
             Close-OfficeExcel -Document $doc
+        }
+
+        $plainCopyPath = Join-Path $TestDrive 'EncryptedExcelPlainCopy.xlsx'
+        $doc = Get-OfficeExcel -Path $path -Password 'secret'
+        try {
+            $doc | Save-OfficeExcel -Path $plainCopyPath
+            $doc.Sheets[0].Cell(1, 1, 'Updated plain copy', $null, $null)
+            $doc | Save-OfficeExcel
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        { Get-ZipEntriesLocal -Path $plainCopyPath } | Should -Not -Throw
+        $plainCopy = Get-OfficeExcel -Path $plainCopyPath -ReadOnly
+        try {
+            $plainValue = $null
+            $plainCopy.Sheets[0].TryGetCellText(1, 1, [ref] $plainValue) | Should -BeTrue
+            $plainValue | Should -Be 'Updated plain copy'
+        } finally {
+            Close-OfficeExcel -Document $plainCopy
+        }
+
+        $encryptedCopyPath = Join-Path $TestDrive 'EncryptedExcelCopy.xlsx'
+        $doc = Get-OfficeExcel -Path $path -Password 'secret'
+        try {
+            $doc | Save-OfficeExcel -Path $encryptedCopyPath -Password 'copy-secret'
+            $doc.Sheets[0].Cell(1, 1, 'Updated encrypted copy', $null, $null)
+            { $doc | Save-OfficeExcel -ErrorAction Stop } | Should -Throw '*Provide -Password*'
+            $doc | Save-OfficeExcel -Password 'copy-secret'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $encryptedCopy = Get-OfficeExcel -Path $encryptedCopyPath -Password 'copy-secret' -ReadOnly
+        try {
+            $copyValue = $null
+            $encryptedCopy.Sheets[0].TryGetCellText(1, 1, [ref] $copyValue) | Should -BeTrue
+            $copyValue | Should -Be 'Updated encrypted copy'
+        } finally {
+            Close-OfficeExcel -Document $encryptedCopy
         }
 
         $doc = Get-OfficeExcel -Path $path -Password 'secret'

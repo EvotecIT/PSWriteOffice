@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Word;
@@ -68,12 +69,20 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
             throw new PSInvalidOperationException("No file path provided. Use -Path or open the document from disk.");
         }
 
+        string savedPath;
         if (!string.IsNullOrWhiteSpace(Path))
         {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
             if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Save Word document"))
             {
                 return;
+            }
+
+            if (string.IsNullOrEmpty(Password) &&
+                WordDocumentService.IsEncryptedSource(Document) &&
+                string.Equals(System.IO.Path.GetFullPath(resolvedPath), System.IO.Path.GetFullPath(associatedPath!), StringComparison.OrdinalIgnoreCase))
+            {
+                throw new PSInvalidOperationException("Provide -Password when saving a document loaded from an encrypted package.");
             }
 
             if (!string.IsNullOrEmpty(Password))
@@ -84,11 +93,7 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
             {
                 Document.Save(resolvedPath);
             }
-
-            if (Show.IsPresent)
-            {
-                FileOpenService.Open(resolvedPath);
-            }
+            savedPath = resolvedPath;
         }
         else
         {
@@ -108,13 +113,15 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
                     throw new PSInvalidOperationException("Provide -Password when saving a document loaded from an encrypted package.");
                 }
 
-                Document.Save();
+                Document.Save(associatedPath!);
             }
+            savedPath = associatedPath!;
+        }
 
-            if (Show.IsPresent)
-            {
-                FileOpenService.Open(associatedPath!);
-            }
+        WordDocumentService.UpdateSaveAssociation(Document, savedPath, !string.IsNullOrEmpty(Password));
+        if (Show.IsPresent)
+        {
+            FileOpenService.Open(savedPath);
         }
 
         SavePdfIfRequested();

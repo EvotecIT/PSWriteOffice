@@ -74,6 +74,11 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (!NoSave.IsPresent && AutoSave.IsPresent && !string.IsNullOrEmpty(Password))
+        {
+            throw new PSArgumentException("Encrypted Word documents require explicit Save-OfficeWord -Password or Close-OfficeWord -Save -Password. -AutoSave cannot be used with -Password.");
+        }
+
         var fullPath = GetResolvedPath();
         var action = NoSave.IsPresent
             ? string.IsNullOrWhiteSpace(TemplatePath)

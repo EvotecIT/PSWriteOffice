@@ -11,6 +11,7 @@ namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelDocumentService
 {
+    private static readonly ConcurrentDictionary<ExcelDocument, string> AssociatedPaths = new();
     private static readonly ConcurrentDictionary<ExcelDocument, string> EncryptedSourcePaths = new();
 
     public static ExcelDocument CreateDocument(string filePath, bool autoSave)
@@ -79,6 +80,7 @@ internal static class ExcelDocumentService
         if (!string.IsNullOrEmpty(password))
         {
             var document = OfficeEncryptedPackageService.LoadExcel(resolvedPath, password!, readOnly, autoSave);
+            AssociatedPaths[document] = resolvedPath;
             EncryptedSourcePaths[document] = resolvedPath;
             return document;
         }
@@ -116,8 +118,9 @@ internal static class ExcelDocumentService
             if (!string.Equals(target, currentPath, StringComparison.OrdinalIgnoreCase))
             {
                 SaveDocumentToPath(document, Path.GetFullPath(target), false, password, saveOptions);
-                var savedAsPath = document.FilePath ?? target;
+                var savedAsPath = Path.GetFullPath(target);
                 document.Dispose();
+                AssociatedPaths.TryRemove(document, out _);
                 EncryptedSourcePaths.TryRemove(document, out _);
                 if (show)
                 {
@@ -146,12 +149,11 @@ internal static class ExcelDocumentService
 
             if (saveOptions == null)
             {
-                document.Save();
+                document.Save(currentPath);
             }
-            else if (!string.IsNullOrWhiteSpace(document.FilePath))
+            else if (!string.IsNullOrWhiteSpace(currentPath))
             {
-                var targetPath = document.FilePath!;
-                document.Save(targetPath, saveOptions);
+                document.Save(currentPath, saveOptions);
             }
             else
             {
@@ -161,6 +163,7 @@ internal static class ExcelDocumentService
 
         var savedPath = document.FilePath ?? filePath ?? throw new InvalidOperationException("No saved file path was available.");
         document.Dispose();
+        AssociatedPaths.TryRemove(document, out _);
         EncryptedSourcePaths.TryRemove(document, out _);
         if (show)
         {
@@ -238,12 +241,18 @@ internal static class ExcelDocumentService
         }
         finally
         {
+            AssociatedPaths.TryRemove(document, out _);
             EncryptedSourcePaths.TryRemove(document, out _);
         }
     }
 
     internal static string? GetAssociatedPath(ExcelDocument document)
     {
+        if (AssociatedPaths.TryGetValue(document, out var associatedPath))
+        {
+            return associatedPath;
+        }
+
         if (!string.IsNullOrWhiteSpace(document.FilePath))
         {
             return document.FilePath;
@@ -253,4 +262,18 @@ internal static class ExcelDocumentService
     }
 
     internal static bool IsEncryptedSource(ExcelDocument document) => EncryptedSourcePaths.ContainsKey(document);
+
+    internal static void UpdateSaveAssociation(ExcelDocument document, string path, bool encrypted)
+    {
+        var resolvedPath = Path.GetFullPath(path);
+        AssociatedPaths[document] = resolvedPath;
+        if (encrypted)
+        {
+            EncryptedSourcePaths[document] = resolvedPath;
+        }
+        else
+        {
+            EncryptedSourcePaths.TryRemove(document, out _);
+        }
+    }
 }

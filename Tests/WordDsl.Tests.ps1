@@ -256,6 +256,9 @@ Describe 'Word DSL surface' {
         }
 
         { Get-ZipEntriesLocal -Path $path } | Should -Throw
+        $autoSavePath = Join-Path $TestDrive 'EncryptedWordAutoSave.docx'
+        { New-OfficeWord -Path $autoSavePath -Password 'secret' -AutoSave -ErrorAction Stop } |
+            Should -Throw '*require explicit Save-OfficeWord*'
 
         $document = Get-OfficeWord -Path $path -Password 'secret' -ReadOnly
         try {
@@ -266,10 +269,48 @@ Describe 'Word DSL surface' {
 
         $document = Get-OfficeWord -Path $path -Password 'secret'
         try {
+            { $document | Save-OfficeWord -Path $path -ErrorAction Stop } |
+                Should -Throw '*Provide -Password*'
             $document.AddParagraph('Updated encrypted Word value') | Out-Null
             $document | Save-OfficeWord -Password 'secret'
         } finally {
             $document | Close-OfficeWord
+        }
+
+        $plainCopyPath = Join-Path $TestDrive 'EncryptedWordPlainCopy.docx'
+        $document = Get-OfficeWord -Path $path -Password 'secret'
+        try {
+            $document | Save-OfficeWord -Path $plainCopyPath
+            $document.AddParagraph('Updated plain Word copy') | Out-Null
+            $document | Save-OfficeWord
+        } finally {
+            $document | Close-OfficeWord
+        }
+
+        { Get-ZipEntriesLocal -Path $plainCopyPath } | Should -Not -Throw
+        $plainCopy = Get-OfficeWord -Path $plainCopyPath -ReadOnly
+        try {
+            $plainCopy.Paragraphs.Text | Should -Contain 'Updated plain Word copy'
+        } finally {
+            $plainCopy | Close-OfficeWord
+        }
+
+        $encryptedCopyPath = Join-Path $TestDrive 'EncryptedWordCopy.docx'
+        $document = Get-OfficeWord -Path $path -Password 'secret'
+        try {
+            $document | Save-OfficeWord -Path $encryptedCopyPath -Password 'copy-secret'
+            $document.AddParagraph('Updated encrypted Word copy') | Out-Null
+            { $document | Save-OfficeWord -ErrorAction Stop } | Should -Throw '*Provide -Password*'
+            $document | Save-OfficeWord -Password 'copy-secret'
+        } finally {
+            $document | Close-OfficeWord
+        }
+
+        $encryptedCopy = Get-OfficeWord -Path $encryptedCopyPath -Password 'copy-secret' -ReadOnly
+        try {
+            $encryptedCopy.Paragraphs.Text | Should -Contain 'Updated encrypted Word copy'
+        } finally {
+            $encryptedCopy | Close-OfficeWord
         }
 
         $document = Get-OfficeWord -Path $path -Password 'secret' -ReadOnly

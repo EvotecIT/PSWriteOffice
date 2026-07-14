@@ -15,6 +15,7 @@ public static partial class WordDocumentService
 {
     private static readonly FieldInfo? DisposedField = typeof(WordDocument).GetField("_disposed", BindingFlags.Instance | BindingFlags.NonPublic);
     private static readonly AsyncLocal<WordDocument[]?> TrackedDocuments = new();
+    private static readonly ConcurrentDictionary<WordDocument, string> AssociatedPaths = new();
     private static readonly ConcurrentDictionary<WordDocument, string> EncryptedSourcePaths = new();
 
     /// <summary>Loads an existing Word document.</summary>
@@ -29,6 +30,7 @@ public static partial class WordDocumentService
         if (!string.IsNullOrEmpty(password))
         {
             var document = RegisterDocument(OfficeEncryptedPackageService.LoadWord(resolvedPath, password!, readOnly, autoSave));
+            AssociatedPaths[document] = resolvedPath;
             EncryptedSourcePaths[document] = resolvedPath;
             return document;
         }
@@ -72,6 +74,7 @@ public static partial class WordDocumentService
         }
         finally
         {
+            AssociatedPaths.TryRemove(document, out _);
             EncryptedSourcePaths.TryRemove(document, out _);
             UnregisterDocument(document);
         }
@@ -86,11 +89,22 @@ public static partial class WordDocumentService
             throw new InvalidOperationException("No file path provided.");
         }
 
-        if (filePath != null)
+        if (!string.IsNullOrWhiteSpace(filePath))
         {
-            SaveDocumentToPath(document, Path.GetFullPath(filePath), false, password);
+            var targetPath = Path.GetFullPath(filePath!);
+            if (!string.Equals(targetPath, associatedPath, StringComparison.OrdinalIgnoreCase))
+            {
+                SaveDocumentToPath(document, targetPath, false, password);
+                CloseDocument(document);
+                if (show)
+                {
+                    FileOpenService.Open(targetPath);
+                }
+                return;
+            }
         }
-        else if (!string.IsNullOrEmpty(password))
+
+        if (!string.IsNullOrEmpty(password))
         {
             var targetPath = associatedPath!;
             OfficeEncryptedPackageService.SaveWord(document, targetPath, password!, false);
@@ -102,10 +116,10 @@ public static partial class WordDocumentService
                 throw new InvalidOperationException("Provide -Password when saving a document loaded from an encrypted package.");
             }
 
-            document.Save();
+            document.Save(associatedPath!);
         }
 
-        var savedPath = document.FilePath ?? filePath ?? associatedPath ?? throw new InvalidOperationException("No saved file path was available.");
+        var savedPath = associatedPath ?? throw new InvalidOperationException("No saved file path was available.");
         CloseDocument(document);
 
         if (show)
@@ -200,6 +214,11 @@ public static partial class WordDocumentService
 
     internal static string? GetAssociatedPath(WordDocument document)
     {
+        if (AssociatedPaths.TryGetValue(document, out var associatedPath))
+        {
+            return associatedPath;
+        }
+
         if (!string.IsNullOrWhiteSpace(document.FilePath))
         {
             return document.FilePath;
@@ -209,4 +228,18 @@ public static partial class WordDocumentService
     }
 
     internal static bool IsEncryptedSource(WordDocument document) => EncryptedSourcePaths.ContainsKey(document);
+
+    internal static void UpdateSaveAssociation(WordDocument document, string path, bool encrypted)
+    {
+        var resolvedPath = Path.GetFullPath(path);
+        AssociatedPaths[document] = resolvedPath;
+        if (encrypted)
+        {
+            EncryptedSourcePaths[document] = resolvedPath;
+        }
+        else
+        {
+            EncryptedSourcePaths.TryRemove(document, out _);
+        }
+    }
 }
