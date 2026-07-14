@@ -54,7 +54,6 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
     {
         ExcelDocument? loadedDocument = null;
         SpreadsheetDocument? spreadsheet = null;
-        MemoryStream? packageStream = null;
         var dispose = false;
 
         try
@@ -72,7 +71,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
 
                 loadedDocument = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 currentDocument = loadedDocument;
-                spreadsheet = SpreadsheetDocument.Open(resolvedPath, false);
+                spreadsheet = currentDocument.OpenXmlDocument;
                 path = resolvedPath;
                 dispose = true;
             }
@@ -84,29 +83,14 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
                 }
 
                 currentDocument = Document;
-                path = Document.FilePath;
-                if (Document.AccessMode == OfficeIMO.Drawing.DocumentAccessMode.ReadOnly)
-                {
-                    if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
-                    {
-                        throw new InvalidOperationException("A read-only in-memory workbook has no package path available for structural summary inspection.");
-                    }
-
-                    spreadsheet = SpreadsheetDocument.Open(path!, false);
-                }
-                else
-                {
-                    packageStream = Document.ToStream();
-                    spreadsheet = SpreadsheetDocument.Open(packageStream, false);
-                }
+                path = ExcelDocumentService.GetAssociatedPath(Document);
+                spreadsheet = Document.OpenXmlDocument;
             }
 
             WriteObject(CreateSummary(spreadsheet, path, IncludeSheets.IsPresent, IncludeSchema.IsPresent, currentDocument));
         }
         finally
         {
-            spreadsheet?.Dispose();
-            packageStream?.Dispose();
             if (dispose)
             {
                 loadedDocument?.Dispose();

@@ -139,6 +139,11 @@ internal static class ExcelDocumentService
         }
         else
         {
+            if (IsEncryptedSource(document))
+            {
+                throw new InvalidOperationException("Provide -Password when saving a workbook loaded from an encrypted package.");
+            }
+
             if (saveOptions == null)
             {
                 document.Save();

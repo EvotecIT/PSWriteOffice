@@ -775,6 +775,19 @@ Describe 'Excel DSL surface' {
             $value = $null
             $doc.Sheets[0].TryGetCellText(1, 1, [ref] $value) | Should -BeTrue
             $value | Should -Be 'Encrypted value'
+            $summary = Get-OfficeExcelSummary -Document $doc -IncludeSheets -IncludeSchema
+            $summary.SheetCount | Should -Be 1
+            $summary.Sheets[0].Name | Should -Be 'Secure'
+            $summary.Schema.Worksheets[0].Name | Should -Be 'Secure'
+        } finally {
+            Close-OfficeExcel -Document $doc
+        }
+
+        $doc = Get-OfficeExcel -Path $path -Password 'secret'
+        try {
+            $doc.Sheets[0].Cell(1, 1, 'Must not be saved without a password', $null, $null)
+            { $doc | Close-OfficeExcel -Save -ErrorAction Stop } |
+                Should -Throw '*Provide -Password*'
         } finally {
             Close-OfficeExcel -Document $doc
         }
@@ -1892,6 +1905,10 @@ Describe 'Excel DSL surface' {
             try {
                 $remoteDocRows = @($remoteDoc | Import-OfficeExcel -Sheet 'Data' -Range 'A1:B3')
                 $remoteDocRows.Count | Should -Be 2
+                $remoteSummary = Get-OfficeExcelSummary -Document $remoteDoc -IncludeSheets -IncludeSchema
+                $remoteSummary.SheetCount | Should -Be 1
+                $remoteSummary.Sheets[0].Name | Should -Be 'Data'
+                $remoteSummary.Schema.Worksheets[0].Name | Should -Be 'Data'
             } finally {
                 Close-OfficeExcel -Document $remoteDoc
             }
