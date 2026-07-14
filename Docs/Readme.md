@@ -7,7 +7,7 @@ Locale: en-US
 ---
 # PSWriteOffice Module
 ## Description
-PowerShell module to create, convert, read, and export Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Reader, and Visio documents without Microsoft Office installed. Powered by OfficeIMO.*.
+PowerShell module to create, convert, read, inspect, and export Office, PDF, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, and Visio files without Microsoft Office installed. Powered by OfficeIMO.*.
 
 ## PSWriteOffice Cmdlets
 ### [Add-OfficeExcelAutoFilter](Add-OfficeExcelAutoFilter.md)
@@ -439,11 +439,26 @@ Compares two Excel worksheets or ranges and returns cell-level differences.
 ### [Compare-OfficeExcelWorkbook](Compare-OfficeExcelWorkbook.md)
 Compares two workbooks by sheets, cells, formulas, styles, tables, comments, names, and worksheet metadata.
 
+### [Compare-OfficePdfVisual](Compare-OfficePdfVisual.md)
+Compares rendered PDF pages and returns pixel-level review artifacts.
+
+### [Compare-OfficeWordDocument](Compare-OfficeWordDocument.md)
+Compares two Word documents and optionally writes a tracked-change redline.
+
+### [ConvertFrom-OfficeAsciiDocMarkdown](ConvertFrom-OfficeAsciiDocMarkdown.md)
+Converts Markdown to native AsciiDoc with fidelity diagnostics.
+
 ### [ConvertFrom-OfficeCsv](ConvertFrom-OfficeCsv.md)
 Converts CSV text to PSCustomObjects or dictionaries.
 
+### [ConvertFrom-OfficeLatexMarkdown](ConvertFrom-OfficeLatexMarkdown.md)
+Converts Markdown to native LaTeX with fidelity diagnostics.
+
 ### [ConvertFrom-OfficeMarkdownHtml](ConvertFrom-OfficeMarkdownHtml.md)
 Converts HTML content to Markdown.
+
+### [ConvertFrom-OfficeOpenDocument](ConvertFrom-OfficeOpenDocument.md)
+Converts native ODT, ODS, or ODP content to Word, Excel, or PowerPoint with fidelity evidence.
 
 ### [ConvertFrom-OfficePdfHtml](ConvertFrom-OfficePdfHtml.md)
 Converts HTML content to a PDF through the first-party OfficeIMO HTML/PDF adapter.
@@ -457,6 +472,9 @@ Creates a Word document from HTML.
 ### [ConvertFrom-OfficeWordMarkdown](ConvertFrom-OfficeWordMarkdown.md)
 Creates a Word document from Markdown.
 
+### [ConvertTo-OfficeAsciiDocMarkdown](ConvertTo-OfficeAsciiDocMarkdown.md)
+Converts AsciiDoc to Markdown with fidelity diagnostics.
+
 ### [ConvertTo-OfficeCsv](ConvertTo-OfficeCsv.md)
 Converts objects or a CSV document into CSV text.
 
@@ -466,11 +484,17 @@ Converts an Excel workbook to an HTML review document.
 ### [ConvertTo-OfficeExcelWorkbook](ConvertTo-OfficeExcelWorkbook.md)
 Converts Excel workbooks between supported .xls and .xlsx formats.
 
+### [ConvertTo-OfficeLatexMarkdown](ConvertTo-OfficeLatexMarkdown.md)
+Converts LaTeX to Markdown with fidelity diagnostics.
+
 ### [ConvertTo-OfficeMarkdown](ConvertTo-OfficeMarkdown.md)
 Converts objects into a Markdown table.
 
 ### [ConvertTo-OfficeMarkdownHtml](ConvertTo-OfficeMarkdownHtml.md)
 Converts Markdown content to HTML.
+
+### [ConvertTo-OfficeOpenDocument](ConvertTo-OfficeOpenDocument.md)
+Converts Word, Excel, or PowerPoint content to native OpenDocument with fidelity evidence.
 
 ### [ConvertTo-OfficePdfFlatAnnotation](ConvertTo-OfficePdfFlatAnnotation.md)
 Flattens supported visual PDF annotations into static page content.
@@ -489,6 +513,9 @@ Applies lossless PDF optimization actions and writes a new PDF.
 
 ### [ConvertTo-OfficePdfRedacted](ConvertTo-OfficePdfRedacted.md)
 Applies rectangle-based PDF redactions and writes a new PDF.
+
+### [ConvertTo-OfficePdfSanitized](ConvertTo-OfficePdfSanitized.md)
+Removes or quarantines active PDF content and embedded payloads with post-save proof.
 
 ### [ConvertTo-OfficePowerPointHtml](ConvertTo-OfficePowerPointHtml.md)
 Converts a PowerPoint deck to an HTML review document.
@@ -532,8 +559,35 @@ Exports objects or a CSV document to a CSV file.
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
 Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
 
+### [Export-OfficeExcelGoogleSpreadsheet](Export-OfficeExcelGoogleSpreadsheet.md)
+Plans, compiles, or exports an Excel workbook to Google Sheets.
+
+### [Export-OfficeExcelImage](Export-OfficeExcelImage.md)
+Exports workbook sheets as PNG or SVG images with one result per sheet.
+
+### [Export-OfficeHtmlImage](Export-OfficeHtmlImage.md)
+Exports an HTML render surface as PNG or SVG with structured diagnostics.
+
+### [Export-OfficePdfImage](Export-OfficePdfImage.md)
+Exports PDF pages as PNG or SVG and normalizes each page to OfficeImageExportResult.
+
+### [Export-OfficePdfLayoutOverlay](Export-OfficePdfLayoutOverlay.md)
+Exports PDF word, line, region, and reading-order diagnostics as PNG or SVG.
+
+### [Export-OfficePdfXfdf](Export-OfficePdfXfdf.md)
+Exports readable PDF form field values as XFDF.
+
+### [Export-OfficePowerPointImage](Export-OfficePowerPointImage.md)
+Exports presentation slides as PNG or SVG images with one result per slide.
+
 ### [Export-OfficeVisioStencilPreviewGallery](Export-OfficeVisioStencilPreviewGallery.md)
 Exports preview artwork from a Visio stencil package into a browsable HTML gallery.
+
+### [Export-OfficeWordGoogleDocument](Export-OfficeWordGoogleDocument.md)
+Plans, compiles, or exports a Word document to Google Docs.
+
+### [Export-OfficeWordImage](Export-OfficeWordImage.md)
+Exports a Word page as PNG or SVG with structured image diagnostics.
 
 ### [Find-OfficeExcel](Find-OfficeExcel.md)
 Finds text in worksheet values.
@@ -553,6 +607,9 @@ Finds Word lists containing matching list-item text.
 ### [Find-OfficeWordTable](Find-OfficeWordTable.md)
 Finds Word tables containing matching cell text.
 
+### [Get-OfficeAsciiDoc](Get-OfficeAsciiDoc.md)
+Parses an AsciiDoc file or source string into OfficeIMO's native document model.
+
 ### [Get-OfficeCsv](Get-OfficeCsv.md)
 Loads a CSV document from disk or parses CSV text.
 
@@ -562,20 +619,38 @@ Reads a supported file into the OfficeIMO shared document read result envelope.
 ### [Get-OfficeDocumentAsset](Get-OfficeDocumentAsset.md)
 Reads or materializes embedded assets discovered by OfficeIMO.Reader from a supported document.
 
+### [Get-OfficeDocumentBatch](Get-OfficeDocumentBatch.md)
+Reads a bounded set of documents asynchronously while retaining input order.
+
 ### [Get-OfficeDocumentCapability](Get-OfficeDocumentCapability.md)
 Lists OfficeIMO.Reader capabilities registered in the current PSWriteOffice process.
 
 ### [Get-OfficeDocumentChunk](Get-OfficeDocumentChunk.md)
 Reads supported Office, PDF, Markdown, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPUB, Visio, and text files into normalized OfficeIMO.Reader chunks.
 
+### [Get-OfficeDocumentDetection](Get-OfficeDocumentDetection.md)
+Detects a document kind from extension and bounded content evidence.
+
+### [Get-OfficeDocumentHierarchy](Get-OfficeDocumentHierarchy.md)
+Creates bounded token-aware chunks and a deterministic document hierarchy.
+
 ### [Get-OfficeDocumentIngest](Get-OfficeDocumentIngest.md)
 Reads a folder into an OfficeIMO.Reader ingestion summary.
+
+### [Get-OfficeDocumentStructured](Get-OfficeDocumentStructured.md)
+Extracts a bounded schema-friendly view of a supported document.
 
 ### [Get-OfficeDocumentTable](Get-OfficeDocumentTable.md)
 Reads structured tables discovered by OfficeIMO.Reader from a supported document.
 
 ### [Get-OfficeDocumentVisual](Get-OfficeDocumentVisual.md)
 Reads visual payloads discovered by OfficeIMO.Reader from a supported document.
+
+### [Get-OfficeEmail](Get-OfficeEmail.md)
+Reads a native EML, MSG, or TNEF artifact with bounded diagnostics.
+
+### [Get-OfficeEmailMailbox](Get-OfficeEmailMailbox.md)
+Reads a native mbox mailbox with bounded per-message diagnostics.
 
 ### [Get-OfficeExcel](Get-OfficeExcel.md)
 Opens an existing Excel workbook.
@@ -652,6 +727,9 @@ Gets worksheet view settings such as frozen panes and gridline visibility.
 ### [Get-OfficeExcelWriteReservation](Get-OfficeExcelWriteReservation.md)
 Gets workbook write-reservation metadata.
 
+### [Get-OfficeLatex](Get-OfficeLatex.md)
+Parses a LaTeX file or source string into OfficeIMO's native document model.
+
 ### [Get-OfficeMarkdown](Get-OfficeMarkdown.md)
 Parses Markdown text or files into a Markdown document model.
 
@@ -666,6 +744,9 @@ Gets the OfficeIMO.Markdown object tree from Markdown content.
 
 ### [Get-OfficeMarkdownTable](Get-OfficeMarkdownTable.md)
 Gets Markdown tables from a Markdown document.
+
+### [Get-OfficeOpenDocument](Get-OfficeOpenDocument.md)
+Loads a native ODT, ODS, or ODP document.
 
 ### [Get-OfficePdf](Get-OfficePdf.md)
 Opens an existing PDF as an OfficeIMO.Pdf document.
@@ -697,6 +778,9 @@ Gets or extracts image resources from a PDF.
 ### [Get-OfficePdfInfo](Get-OfficePdfInfo.md)
 Gets PDF metadata, page information, forms, links, and structural flags.
 
+### [Get-OfficePdfInteractionMap](Get-OfficePdfInteractionMap.md)
+Builds text-selection and interactive hit regions for one PDF page.
+
 ### [Get-OfficePdfOptimization](Get-OfficePdfOptimization.md)
 Gets lossless PDF optimization opportunities without modifying the file.
 
@@ -717,6 +801,9 @@ Gets PDF text encoding and advanced-layout diagnostics for generated text before
 
 ### [Get-OfficePowerPoint](Get-OfficePowerPoint.md)
 Loads an existing PowerPoint presentation.
+
+### [Get-OfficePowerPointInspection](Get-OfficePowerPointInspection.md)
+Runs package, preflight, accessibility, feature, review, animation, signature, and visual inspections.
 
 ### [Get-OfficePowerPointLayout](Get-OfficePowerPointLayout.md)
 Lists slide layouts available in a presentation.
@@ -811,6 +898,9 @@ Gets picture content controls from a Word document.
 ### [Get-OfficeWordRepeatingSection](Get-OfficeWordRepeatingSection.md)
 Gets repeating section content controls from a Word document.
 
+### [Get-OfficeWordReview](Get-OfficeWordReview.md)
+Inspects Word comments, threads, tracked revisions, and unsupported review metadata.
+
 ### [Get-OfficeWordSection](Get-OfficeWordSection.md)
 Gets sections from a Word document.
 
@@ -841,6 +931,9 @@ Imports rows from an Excel workbook as PowerShell objects.
 ### [Import-OfficeExcelDelimitedText](Import-OfficeExcelDelimitedText.md)
 Imports normalized CSV/TSV text into an Excel workbook through OfficeIMO.
 
+### [Import-OfficePdfXfdf](Import-OfficePdfXfdf.md)
+Imports bounded DTD-free XFDF through the validated PDF form filler.
+
 ### [Import-OfficePowerPointSlide](Import-OfficePowerPointSlide.md)
 Imports a slide from another PowerPoint presentation.
 
@@ -865,6 +958,9 @@ Repeats an Excel template row for pipeline data and replaces markers in each ins
 ### [Invoke-OfficeExcelTemplateSheet](Invoke-OfficeExcelTemplateSheet.md)
 Repeats an Excel template worksheet for pipeline data and applies markers in each generated sheet.
 
+### [Invoke-OfficePdfOcrMerge](Invoke-OfficePdfOcrMerge.md)
+Runs an external OCR provider and merges recognized words with native PDF text.
+
 ### [Invoke-OfficeWordMailMerge](Invoke-OfficeWordMailMerge.md)
 Executes a simple mail merge against MERGEFIELD values in a Word document.
 
@@ -886,6 +982,9 @@ Moves a worksheet to a new workbook position.
 ### [Move-OfficePdfPage](Move-OfficePdfPage.md)
 Moves selected pages before another page and writes a new PDF.
 
+### [New-OfficeDocumentReader](New-OfficeDocumentReader.md)
+Creates an immutable fully configured OfficeIMO document reader.
+
 ### [New-OfficeExcel](New-OfficeExcel.md)
 Creates a new Excel workbook using the DSL.
 
@@ -894,6 +993,9 @@ Builds a worksheet dashboard from tabular data using OfficeIMO dashboard default
 
 ### [New-OfficeMarkdown](New-OfficeMarkdown.md)
 Creates a Markdown document using a DSL scriptblock.
+
+### [New-OfficeOpenDocument](New-OfficeOpenDocument.md)
+Creates a native ODT, ODS, or ODP document.
 
 ### [New-OfficePdf](New-OfficePdf.md)
 Creates a PDF document using the OfficeIMO.Pdf composition engine.
@@ -964,11 +1066,29 @@ Renames a PowerPoint section.
 ### [Repair-OfficeExcelWorkbook](Repair-OfficeExcelWorkbook.md)
 Runs OfficeIMO safe workbook repairs for common package, table, view, print, drawing, and calculation artifacts.
 
+### [Resolve-OfficeWordRevision](Resolve-OfficeWordRevision.md)
+Accepts or rejects filtered Word revisions and returns an operation report.
+
+### [Save-OfficeAsciiDoc](Save-OfficeAsciiDoc.md)
+Saves an OfficeIMO AsciiDoc document.
+
+### [Save-OfficeEmail](Save-OfficeEmail.md)
+Saves an email document as EML, MSG, or TNEF with fidelity diagnostics.
+
+### [Save-OfficeEmailMailbox](Save-OfficeEmailMailbox.md)
+Saves a native mbox mailbox with output diagnostics.
+
 ### [Save-OfficeExcel](Save-OfficeExcel.md)
 Saves an Excel workbook without disposing it.
 
+### [Save-OfficeLatex](Save-OfficeLatex.md)
+Saves an OfficeIMO LaTeX document.
+
 ### [Save-OfficeMarkdown](Save-OfficeMarkdown.md)
 Saves a Markdown document and optionally creates a PDF sidecar.
+
+### [Save-OfficeOpenDocument](Save-OfficeOpenDocument.md)
+Saves a native OpenDocument model with entry-level preservation diagnostics.
 
 ### [Save-OfficePdf](Save-OfficePdf.md)
 Saves an OfficeIMO.Pdf document.
@@ -1245,6 +1365,9 @@ Validates Excel template markers against supplied bindings before applying a tem
 
 ### [Test-OfficeExcelWorkbook](Test-OfficeExcelWorkbook.md)
 Runs OfficeIMO workbook diagnostics and optional safe repairs.
+
+### [Test-OfficePdfRewrite](Test-OfficePdfRewrite.md)
+Creates a proof report for user-visible signals preserved by a PDF rewrite.
 
 ### [Unprotect-OfficeExcelSheet](Unprotect-OfficeExcelSheet.md)
 Removes worksheet protection.

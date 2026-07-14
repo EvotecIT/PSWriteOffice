@@ -16,11 +16,15 @@
 
     <PropertyGroup>
         <OfficeIMORoot Condition=" '$(OfficeIMORoot)' == '' ">..\..\..\OfficeIMO</OfficeIMORoot>
-        <UseOfficeIMOProjectReferences Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Html\OfficeIMO.Excel.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Html\OfficeIMO.PowerPoint.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Pdf\OfficeIMO.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Pdf\OfficeIMO.Word.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Pdf\OfficeIMO.Excel.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Pdf\OfficeIMO.Markdown.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Html.Pdf\OfficeIMO.Html.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Pdf\OfficeIMO.PowerPoint.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader\OfficeIMO.Reader.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Pdf\OfficeIMO.Reader.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Html\OfficeIMO.Reader.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Csv\OfficeIMO.Reader.Csv.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Json\OfficeIMO.Reader.Json.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Xml\OfficeIMO.Reader.Xml.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Yaml\OfficeIMO.Reader.Yaml.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Zip\OfficeIMO.Reader.Zip.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Epub\OfficeIMO.Reader.Epub.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Visio\OfficeIMO.Reader.Visio.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Rtf\OfficeIMO.Reader.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf\OfficeIMO.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Rtf\OfficeIMO.Word.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf.Pdf\OfficeIMO.Rtf.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf.Markdown\OfficeIMO.Rtf.Markdown.csproj')">true</UseOfficeIMOProjectReferences>
+        <UseOfficeIMOProjectReferences Condition="Exists('$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Markdown\OfficeIMO.Word.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel\OfficeIMO.Excel.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Html\OfficeIMO.Excel.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint\OfficeIMO.PowerPoint.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Html\OfficeIMO.PowerPoint.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown\OfficeIMO.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Html\OfficeIMO.Markdown.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Pdf\OfficeIMO.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Pdf\OfficeIMO.Word.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.Pdf\OfficeIMO.Excel.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Markdown.Pdf\OfficeIMO.Markdown.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Html.Pdf\OfficeIMO.Html.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.Pdf\OfficeIMO.PowerPoint.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader\OfficeIMO.Reader.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Pdf\OfficeIMO.Reader.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Html\OfficeIMO.Reader.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Csv\OfficeIMO.Reader.Csv.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Json\OfficeIMO.Reader.Json.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Xml\OfficeIMO.Reader.Xml.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Yaml\OfficeIMO.Reader.Yaml.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Zip\OfficeIMO.Reader.Zip.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Epub\OfficeIMO.Reader.Epub.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Visio\OfficeIMO.Reader.Visio.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Rtf\OfficeIMO.Reader.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.AsciiDoc\OfficeIMO.Reader.AsciiDoc.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Latex\OfficeIMO.Reader.Latex.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.OpenDocument\OfficeIMO.Reader.OpenDocument.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Ocr.Process\OfficeIMO.Reader.Ocr.Process.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Reader.Ocr.Tesseract\OfficeIMO.Reader.Ocr.Tesseract.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf\OfficeIMO.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.Rtf\OfficeIMO.Word.Rtf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf.Pdf\OfficeIMO.Rtf.Pdf.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Rtf.Markdown\OfficeIMO.Rtf.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Html\OfficeIMO.Html.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.OpenDocument\OfficeIMO.OpenDocument.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.OpenDocument\OfficeIMO.Word.OpenDocument.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.OpenDocument\OfficeIMO.Excel.OpenDocument.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.PowerPoint.OpenDocument\OfficeIMO.PowerPoint.OpenDocument.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Email\OfficeIMO.Email.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.AsciiDoc\OfficeIMO.AsciiDoc.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.AsciiDoc.Markdown\OfficeIMO.AsciiDoc.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Latex\OfficeIMO.Latex.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Latex.Markdown\OfficeIMO.Latex.Markdown.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.GoogleWorkspace\OfficeIMO.GoogleWorkspace.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Word.GoogleDocs\OfficeIMO.Word.GoogleDocs.csproj') And Exists('$(OfficeIMORoot)\OfficeIMO.Excel.GoogleSheets\OfficeIMO.Excel.GoogleSheets.csproj')">true</UseOfficeIMOProjectReferences>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+        <Reference Include="System.Net.Http" />
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
@@ -89,11 +93,29 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Epub\OfficeIMO.Reader.Epub.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Visio\OfficeIMO.Reader.Visio.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Rtf\OfficeIMO.Reader.Rtf.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.AsciiDoc\OfficeIMO.Reader.AsciiDoc.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Latex\OfficeIMO.Reader.Latex.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.OpenDocument\OfficeIMO.Reader.OpenDocument.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Ocr.Process\OfficeIMO.Reader.Ocr.Process.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Ocr.Tesseract\OfficeIMO.Reader.Ocr.Tesseract.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Rtf\OfficeIMO.Rtf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Rtf\OfficeIMO.Word.Rtf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Rtf.Pdf\OfficeIMO.Rtf.Pdf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Rtf.Markdown\OfficeIMO.Rtf.Markdown.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Html\OfficeIMO.Html.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.OpenDocument\OfficeIMO.OpenDocument.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.OpenDocument\OfficeIMO.Word.OpenDocument.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel.OpenDocument\OfficeIMO.Excel.OpenDocument.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.PowerPoint.OpenDocument\OfficeIMO.PowerPoint.OpenDocument.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Email\OfficeIMO.Email.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.AsciiDoc\OfficeIMO.AsciiDoc.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.AsciiDoc.Markdown\OfficeIMO.AsciiDoc.Markdown.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Latex\OfficeIMO.Latex.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Latex.Markdown\OfficeIMO.Latex.Markdown.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.GoogleWorkspace\OfficeIMO.GoogleWorkspace.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.GoogleDocs\OfficeIMO.Word.GoogleDocs.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel.GoogleSheets\OfficeIMO.Excel.GoogleSheets.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
         <PackageReference Include="OfficeIMO.Drawing" Version="$(OfficeIMOVersion)" />
@@ -124,10 +146,28 @@
         <PackageReference Include="OfficeIMO.Reader.Epub" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Reader.Visio" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Reader.Rtf" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Reader.AsciiDoc" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Reader.Latex" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Reader.OpenDocument" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Reader.Ocr.Process" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Reader.Ocr.Tesseract" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Visio" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Rtf" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Word.Rtf" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Rtf.Pdf" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Rtf.Markdown" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Html" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.OpenDocument" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Word.OpenDocument" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Excel.OpenDocument" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.PowerPoint.OpenDocument" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Email" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.AsciiDoc" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.AsciiDoc.Markdown" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Latex" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Latex.Markdown" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.GoogleWorkspace" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Word.GoogleDocs" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Excel.GoogleSheets" Version="$(OfficeIMOVersion)" />
     </ItemGroup>
 </Project>

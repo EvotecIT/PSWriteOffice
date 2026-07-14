@@ -1,6 +1,6 @@
 # PSWriteOffice
 
-PowerShell-first document automation for Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Reader, and Visio, built on top of `OfficeIMO.*`.
+PowerShell-first document automation for Office, PDF, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, Reader, and Visio, built on top of `OfficeIMO.*`.
 
 📦 PowerShell Gallery
 
@@ -26,15 +26,58 @@ Start here when you want to create polished documents from PowerShell: workbooks
 
 | Area | Status | What it covers now |
 | --- | --- | --- |
-| Word | Mature | Document creation, readers, bookmarks, content controls, fields, HTML conversion, Markdown conversion |
-| Excel | Advanced | Sheets, tables, named ranges, formulas, validation, charts, pivots, comments, TOC/navigation, explicit range readers, chart formatting, smarter links, URL images, summary-sheet linking |
-| PowerPoint | Experimental but useful | Slides, titles, text boxes, bullets, notes, layouts, placeholders, sections, text replacement, slide import, slide copy, transitions, sizing |
-| PDF | Advanced | New PDFs, text, headings, images, tables, panels, bookmarks, metadata, attachments, stamps, watermarks, forms, merge/split/copy/move pages, HTML conversion, text/image/attachment extraction, compliance inspection |
+| Word | Mature | Creation and editing, comparison and redlines, comments and revision reports, HTML/Markdown/OpenDocument conversion, Google Docs planning/export, and PNG/SVG rendering |
+| Excel | Advanced | Sheets, tables, formulas, validation, charts, pivots, comments, navigation, explicit readers, OpenDocument conversion, Google Sheets planning/export, and PNG/SVG rendering |
+| PowerPoint | Advanced | Slides, layouts, themes, notes, sections, transitions, import/copy, accessibility and preflight inspection, OpenDocument conversion, and PNG/SVG rendering |
+| PDF | Advanced | Composition, forms, sanitization, XFDF, visual comparison, interaction maps, layout overlays, OCR merge, rewrite proof, extraction, compliance inspection, and PNG/SVG rendering |
+| OpenDocument | Native | Create, load, save, and convert ODT, ODS, and ODP with conversion diagnostics and fail-on-loss controls |
+| Email | Native | Read and write EML, MSG, and TNEF; read and write mbox mailboxes with bounded diagnostics |
 | RTF | Solid | Create/read/update `.rtf`, replace text, append paragraphs, edit document properties, convert RTF to Word/HTML/PDF, convert Word/HTML to RTF, and read semantic chunks through Reader |
-| Markdown | Solid | Read Markdown, inspect full object trees/headings/front matter/tables, build Markdown with a DSL, render HTML, convert HTML |
+| Markdown and text formats | Solid | Native Markdown, AsciiDoc, and LaTeX parsing plus loss-aware conversions between Markdown and AsciiDoc/LaTeX |
 | CSV | Solid | Read CSV, emit CSV, object-focused data workflows |
-| Reader | New | Unified chunk/document/table/visual/asset/ingest readback over Word, Excel, PowerPoint, Markdown, PDF, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPUB, Visio, and text-like files through `OfficeIMO.Reader` |
+| Reader | Advanced | Content detection, structured extraction, token-aware hierarchy, processors, OCR adapters, and bounded ordered batch reads across Office, OpenDocument, email, PDF, markup, archives, and text formats |
 | Visio | New | DSL diagram creation, built-in and package-backed stencils, create/load/save `.vsdx`, inspect diagrams, generate galleries, export stencil preview galleries, and export SVG/PNG through `OfficeIMO.Visio` |
+
+## Advanced document workflows
+
+Reader commands return OfficeIMO's typed results, so scripts can use detection evidence, structured records, token-aware chunks, diagnostics, and deterministic batch ordering directly:
+
+```powershell
+$detection = Get-OfficeDocumentDetection -Path .\Upload.bin -Mode PreferContent
+$structured = Get-OfficeDocumentStructured -Path .\Report.docx
+$hierarchy = Get-OfficeDocumentHierarchy -Path .\Handbook.pdf
+$reader = New-OfficeDocumentReader -TesseractOptions $tesseract -MaxConcurrentReads 4
+Get-ChildItem .\Inbox -File | Get-OfficeDocumentBatch -Reader $reader
+```
+
+Image export uses the same `OfficeImageExportResult` contract for Word, Excel, PowerPoint, HTML, and PDF output:
+
+```powershell
+Export-OfficeWordImage -Path .\Report.docx -OutputPath .\Report.svg -Format Svg
+Export-OfficeExcelImage -Path .\Data.xlsx -OutputPath .\WorkbookImages -Format Png
+Export-OfficePowerPointImage -Path .\Deck.pptx -OutputPath .\SlideImages -Format Svg
+Export-OfficeHtmlImage -Path .\Report.html -OutputPath .\Report.png
+Export-OfficePdfImage -Path .\Report.pdf -OutputPath .\PdfPages -PageRange '1-3'
+```
+
+Conversions that can simplify or omit source features return typed reports. Use `-FailOnLoss` when approximation is not acceptable:
+
+```powershell
+$odf = ConvertTo-OfficeOpenDocument -Path .\Report.docx -OutputPath .\Report.odt -FailOnLoss
+$asciiDoc = Get-OfficeMarkdown -Path .\Guide.md |
+    ConvertFrom-OfficeAsciiDocMarkdown -OutputPath .\Guide.adoc -FailOnLoss
+$latex = Get-OfficeMarkdown -Path .\Paper.md |
+    ConvertFrom-OfficeLatexMarkdown -OutputPath .\Paper.tex -FailOnLoss
+```
+
+Native email and Google Workspace commands keep provider and credential ownership explicit:
+
+```powershell
+$message = Get-OfficeEmail -Path .\Message.msg -AsResult
+$mailbox = Get-OfficeEmailMailbox -Path .\Archive.mbox -AsResult
+$docsPlan = Export-OfficeWordGoogleDocument -Path .\Report.docx -PlanOnly
+$sheetsBatch = Export-OfficeExcelGoogleSpreadsheet -Path .\Data.xlsx -AsBatch
+```
 
 ## Quick Start 🚀
 
