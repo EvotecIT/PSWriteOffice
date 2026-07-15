@@ -35,12 +35,16 @@ $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $specPath = Join-Path $PSScriptRoot 'Csv\csv-performance.benchmark.ps1'
 $projectPath = Join-Path $repoRoot 'Sources\PSWriteOffice\PSWriteOffice.csproj'
 $moduleManifest = Join-Path $repoRoot 'PSWriteOffice.psd1'
+$benchmarkHelperPath = Join-Path $PSScriptRoot 'Excel\excel-performance.helpers.ps1'
+$resultValidationHelperPath = Join-Path $PSScriptRoot 'Benchmark.ResultValidation.ps1'
 $officeIMOSourceHelperPath = Join-Path $PSScriptRoot 'OfficeIMO.Source.ps1'
 
 Import-Module PSPublishModule -Force -ErrorAction Stop
 if (-not (Get-Command Invoke-BenchmarkSuite -ErrorAction SilentlyContinue)) {
     throw 'The imported PSPublishModule does not expose Invoke-BenchmarkSuite.'
 }
+. $benchmarkHelperPath
+. $resultValidationHelperPath
 . $officeIMOSourceHelperPath
 
 $Engine = @(
@@ -64,6 +68,41 @@ $Scenario = @(
         }
     }
 ) | Select-Object -Unique
+
+$expectedRowCounts = @(Resolve-BenchmarkRequestedRowCount -RowCount $RowCount -Suite $Suite)
+$selectedCases = @(
+    Get-CsvBenchmarkCase -Suite $Suite | Where-Object {
+        -not $Scenario -or $Scenario.Count -eq 0 -or @($Scenario) -contains [string]$_.Name
+    }
+)
+$selectedRuns = @(
+    foreach ($engineName in @($Engine)) {
+        foreach ($case in $selectedCases) {
+            if (Test-CsvBenchmarkEngineSupport -Engine $engineName -Case $case) {
+                [pscustomobject]@{ Engine = $engineName; Case = $case }
+            }
+        }
+    }
+)
+$unsupportedRuns = @(
+    foreach ($engineName in @($Engine)) {
+        foreach ($case in $selectedCases) {
+            if (-not (Test-CsvBenchmarkEngineSupport -Engine $engineName -Case $case)) {
+                [pscustomobject]@{ Engine = $engineName; Case = $case }
+            }
+        }
+    }
+)
+if (-not $ListScenarios.IsPresent -and $selectedRuns.Count -eq 0) {
+    throw "Requested CSV benchmark lanes are unsupported for engines '$($Engine -join ', ')' and scenarios '$($Scenario -join ', ')'."
+}
+if (-not $ListScenarios.IsPresent -and
+    $PSBoundParameters.ContainsKey('Engine') -and
+    $PSBoundParameters.ContainsKey('Scenario') -and
+    $unsupportedRuns.Count -gt 0) {
+    $unsupportedDescriptions = $unsupportedRuns | ForEach-Object { "$($_.Engine) / $($_.Case.Name)" }
+    throw "Requested CSV benchmark lane(s) are unsupported: $($unsupportedDescriptions -join ', ')."
+}
 
 $requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (@($Engine) -contains 'PSWriteOffice')
 if ($requiresPSWriteOffice) {
@@ -125,6 +164,24 @@ if ($ListScenarios.IsPresent) {
 }
 
 $result = Invoke-BenchmarkSuite @invokeSplat
+$failedRows = @($result.Summary | Where-Object { $_.FailureCount -gt 0 -or $_.Status -eq 'Failed' })
+if ($failedRows.Count -gt 0) {
+    $failedDescriptions = $failedRows | ForEach-Object {
+        $reasons = if ($_.FailureReasons -and $_.FailureReasons.Keys.Count -gt 0) {
+            $_.FailureReasons.Keys -join ' | '
+        } else {
+            'No failure reason was recorded.'
+        }
+        "$($_.Engine) $($_.Scenario): $reasons"
+    }
+    throw "Benchmark run $($result.RunId) had failed lane(s): $($failedDescriptions -join '; ')"
+}
+
+Assert-BenchmarkRequestedLaneCompletion `
+    -Summary @($result.Summary) `
+    -ExpectedRun $selectedRuns `
+    -RowCount $expectedRowCounts
+
 $summaryPath = $result.Artifacts['summary.csv']
 if ($summaryPath -and $UpdateReadme.IsPresent) {
     & (Join-Path $PSScriptRoot 'Update-PerformanceBenchmarkReadme.ps1') `

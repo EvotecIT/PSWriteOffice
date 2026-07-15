@@ -40,6 +40,7 @@ $specPath = Join-Path $PSScriptRoot 'Excel\excel-performance.benchmark.ps1'
 $projectPath = Join-Path $repoRoot 'Sources\PSWriteOffice\PSWriteOffice.csproj'
 $moduleManifest = Join-Path $repoRoot 'PSWriteOffice.psd1'
 $benchmarkHelperPath = Join-Path $PSScriptRoot 'Excel\excel-performance.helpers.ps1'
+$resultValidationHelperPath = Join-Path $PSScriptRoot 'Benchmark.ResultValidation.ps1'
 $officeIMOSourceHelperPath = Join-Path $PSScriptRoot 'OfficeIMO.Source.ps1'
 
 Import-Module PSPublishModule -Force -ErrorAction Stop
@@ -70,7 +71,9 @@ $Scenario = @(
 ) | Select-Object -Unique
 
 . $benchmarkHelperPath
+. $resultValidationHelperPath
 . $officeIMOSourceHelperPath
+$expectedRowCounts = @(Resolve-BenchmarkRequestedRowCount -RowCount $RowCount -Suite $Suite)
 $selectedCases = @(
     Get-ExcelBenchmarkCase -Suite $Suite | Where-Object {
         -not $Scenario -or $Scenario.Count -eq 0 -or @($Scenario) -contains [string]$_.Name
@@ -217,14 +220,10 @@ if ($failedRows.Count -gt 0) {
     throw "Benchmark run $($result.RunId) had failed lane(s): $($failedDescriptions -join '; ')"
 }
 
-foreach ($expectedRun in $selectedRuns) {
-    $actual = $result.Summary | Where-Object {
-        $_.Engine -eq $expectedRun.Engine -and $_.Scenario -eq $expectedRun.Case.Name
-    } | Select-Object -First 1
-    if ($null -eq $actual -or $actual.Status -ne 'Succeeded') {
-        throw "Requested benchmark lane '$($expectedRun.Engine) / $($expectedRun.Case.Name)' did not complete successfully."
-    }
-}
+Assert-BenchmarkRequestedLaneCompletion `
+    -Summary @($result.Summary) `
+    -ExpectedRun $selectedRuns `
+    -RowCount $expectedRowCounts
 
 $summaryPath = $result.Artifacts['summary.csv']
 if ($summaryPath -and $UpdateReadme.IsPresent) {

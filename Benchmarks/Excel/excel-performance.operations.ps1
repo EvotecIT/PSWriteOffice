@@ -345,7 +345,21 @@ function Invoke-ExcelBenchmarkObjectsDefault {
     switch ($Engine) {
         PSWriteOffice { $Run.Payload | Export-OfficeExcel -Path $Run.Path -WorksheetName $Run.WorksheetName }
         ImportExcel { $Run.Payload | Export-Excel -Path $Run.Path -WorksheetName $Run.WorksheetName }
-        ExcelFast { Export-Workbook -Destination $Run.Path -InputObject $Run.Payload -SheetName $Run.WorksheetName -Force }
+        ExcelFast {
+            Export-Workbook -Destination $Run.Path -InputObject $Run.Payload -SheetName $Run.WorksheetName -Force
+
+            # ExcelFast 0.0.1-alpha16 writes an empty drawing element inside sheetData,
+            # which is not valid Open XML. Keep its own normalization cost in the timed
+            # operation so the comparison only accepts a standards-valid workbook.
+            $workbook = Get-Workbook -Path $Run.Path
+            try {
+                Save-Workbook -Workbook $workbook -Force
+            } finally {
+                if ($workbook -is [IDisposable]) {
+                    $workbook.Dispose()
+                }
+            }
+        }
     }
 }
 
