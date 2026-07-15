@@ -102,12 +102,7 @@ if ($requiresExcelFast) {
         }
         Import-Module ExcelFast -Force -ErrorAction Stop
     } catch {
-        Write-Warning "Skipping ExcelFast benchmark lanes because ExcelFast could not be prepared. $($_.Exception.Message)"
-        $Engine = @($Engine | Where-Object { $_ -ne 'ExcelFast' })
-        $selectedRuns = @($selectedRuns | Where-Object Engine -NE 'ExcelFast')
-        if ($Engine.Count -eq 0) {
-            throw 'No benchmark engines remain after ExcelFast availability checks.'
-        }
+        throw "ExcelFast was requested but could not be prepared. The comparison cannot continue without the requested competitor lane. $($_.Exception.Message)"
     }
 }
 
@@ -127,11 +122,15 @@ $requiresPSWriteOffice = -not $ListScenarios.IsPresent -and [bool](
     } | Select-Object -First 1
 )
 if ($requiresPSWriteOffice) {
-    if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
-        $env:OfficeIMORoot = $OfficeIMORoot
-    } elseif (-not $env:OfficeIMORoot) {
-        $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
+    if ([string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
+        $OfficeIMORoot = $env:OfficeIMORoot
     }
+    if ([string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
+        throw 'OfficeIMORoot is required for PSWriteOffice performance comparisons. Benchmarks must build against the current OfficeIMO source tree, not a published package.'
+    }
+
+    $OfficeIMORoot = (Resolve-Path -LiteralPath $OfficeIMORoot -ErrorAction Stop).Path
+    $env:OfficeIMORoot = $OfficeIMORoot
 
     if (-not $SkipPSWriteOfficeBuild.IsPresent) {
         & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal
@@ -183,6 +182,28 @@ if ($ListScenarios.IsPresent) {
 }
 
 $result = Invoke-BenchmarkSuite @invokeSplat
+$failedRows = @($result.Summary | Where-Object { $_.FailureCount -gt 0 -or $_.Status -eq 'Failed' })
+if ($failedRows.Count -gt 0) {
+    $failedDescriptions = $failedRows | ForEach-Object {
+        $reasons = if ($_.FailureReasons -and $_.FailureReasons.Keys.Count -gt 0) {
+            $_.FailureReasons.Keys -join ' | '
+        } else {
+            'No failure reason was recorded.'
+        }
+        "$($_.Engine) $($_.Scenario): $reasons"
+    }
+    throw "Benchmark run $($result.RunId) had failed lane(s): $($failedDescriptions -join '; ')"
+}
+
+foreach ($expectedRun in $selectedRuns) {
+    $actual = $result.Summary | Where-Object {
+        $_.Engine -eq $expectedRun.Engine -and $_.Scenario -eq $expectedRun.Case.Name
+    } | Select-Object -First 1
+    if ($null -eq $actual -or $actual.Status -ne 'Succeeded') {
+        throw "Requested benchmark lane '$($expectedRun.Engine) / $($expectedRun.Case.Name)' did not complete successfully."
+    }
+}
+
 $summaryPath = $result.Artifacts['summary.csv']
 if ($summaryPath -and $UpdateReadme.IsPresent) {
     & (Join-Path $PSScriptRoot 'Update-PerformanceBenchmarkReadme.ps1') `

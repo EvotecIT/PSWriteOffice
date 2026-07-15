@@ -290,9 +290,10 @@ development binaries when a selected run includes `PSWriteOffice`. Use
 when reusing an existing local build. Quick and focused runs leave this
 README unchanged unless `-UpdateReadme` is specified.
 
-By default the scripts use the OfficeIMO assemblies packaged with
-PSWriteOffice. Pass `-OfficeIMORoot` only when validating unreleased OfficeIMO
-source changes:
+PSWriteOffice benchmark lanes require the current OfficeIMO source tree. Pass
+`-OfficeIMORoot`, or set the `OfficeIMORoot` environment variable, so the build
+uses direct project references. The wrappers stop instead of falling back to a
+published OfficeIMO package when the source path is missing:
 
 ```powershell
 $evotecRoot = if ($env:EVOTEC_GITHUB_ROOT) { $env:EVOTEC_GITHUB_ROOT } else { 'C:\Support\GitHub' }

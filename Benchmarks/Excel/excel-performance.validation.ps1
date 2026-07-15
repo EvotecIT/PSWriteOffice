@@ -103,6 +103,61 @@ function Test-ExcelBenchmarkOutput {
         Close-OfficeExcel -Document $document
     }
     Test-ExcelBenchmarkOpenXml -Path $Run.Path
+
+    if ([string]$Case.Scenario -in @('objects-default', 'text-objects-default', 'wide-objects-default')) {
+        Test-ExcelBenchmarkTabularValues -Case $Case -Run $Run
+    }
+}
+
+function Test-ExcelBenchmarkTabularValues {
+    param([object] $Case, [object] $Run)
+
+    $actualRows = @(Import-OfficeExcel -Path $Run.Path -WorksheetName $Run.WorksheetName)
+    $expectedRows = @($Run.Payload)
+    assertValue $actualRows.Count $expectedRows.Count -Message "Expected '$($Case.Scenario)' to preserve every data row."
+    if ($expectedRows.Count -eq 0) {
+        return
+    }
+
+    $lastIndex = $expectedRows.Count - 1
+    $middleIndex = [int] [Math]::Floor($lastIndex / 2)
+    $indexes = @(0, $middleIndex, $lastIndex) | Select-Object -Unique
+    foreach ($index in $indexes) {
+        $expected = $expectedRows[$index]
+        $actual = $actualRows[$index]
+        foreach ($property in $expected.PSObject.Properties) {
+            $expectedValue = ConvertTo-ExcelBenchmarkComparableValue -Value $property.Value
+            $actualProperty = $actual.PSObject.Properties[$property.Name]
+            if ($null -eq $actualProperty) {
+                throw "Expected '$($Case.Scenario)' row $index to contain column '$($property.Name)'."
+            }
+
+            $actualValue = ConvertTo-ExcelBenchmarkComparableValue -Value $actualProperty.Value
+            assertValue $actualValue $expectedValue -Message "Expected '$($Case.Scenario)' row $index column '$($property.Name)' to preserve its value."
+        }
+    }
+}
+
+function ConvertTo-ExcelBenchmarkComparableValue {
+    param([AllowNull()][object] $Value)
+
+    if ($null -eq $Value -or $Value -is [DBNull]) {
+        return '<null>'
+    }
+    if ($Value -is [datetime]) {
+        return $Value.ToString('O', [Globalization.CultureInfo]::InvariantCulture)
+    }
+    if ($Value -is [bool]) {
+        return $Value.ToString().ToLowerInvariant()
+    }
+    if ($Value -is [double] -or $Value -is [single]) {
+        return ([Math]::Round([double] $Value, 10)).ToString('G17', [Globalization.CultureInfo]::InvariantCulture)
+    }
+    if ($Value -is [IFormattable]) {
+        return $Value.ToString($null, [Globalization.CultureInfo]::InvariantCulture)
+    }
+
+    return [string] $Value
 }
 
 function Test-CsvBenchmarkOutput {

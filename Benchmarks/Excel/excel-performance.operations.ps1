@@ -311,6 +311,7 @@ function Invoke-ExcelBenchmarkWriteWorkbook {
     switch ([string]$Case.Scenario) {
         objects-table { Invoke-ExcelBenchmarkObjectsTable -Engine $Engine -Run $Run }
         objects-default { Invoke-ExcelBenchmarkObjectsDefault -Engine $Engine -Run $Run }
+        text-objects-default { Invoke-ExcelBenchmarkObjectsDefault -Engine $Engine -Run $Run }
         objects-no-table { Invoke-ExcelBenchmarkObjectsNoTable -Engine $Engine -Run $Run }
         objects-table-autofit { Invoke-ExcelBenchmarkObjectsTableAutofit -Engine $Engine -Run $Run }
         objects-title-freeze { Invoke-ExcelBenchmarkObjectsTitleFreeze -Engine $Engine -Run $Run }

@@ -65,11 +65,15 @@ $Scenario = @(
 
 $requiresPSWriteOffice = -not $ListScenarios.IsPresent -and (@($Engine) -contains 'PSWriteOffice')
 if ($requiresPSWriteOffice) {
-    if (-not [string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
-        $env:OfficeIMORoot = $OfficeIMORoot
-    } elseif (-not $env:OfficeIMORoot) {
-        $env:OfficeIMORoot = Join-Path $repoRoot '.missing-officeimo'
+    if ([string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
+        $OfficeIMORoot = $env:OfficeIMORoot
     }
+    if ([string]::IsNullOrWhiteSpace($OfficeIMORoot)) {
+        throw 'OfficeIMORoot is required for PSWriteOffice performance comparisons. Benchmarks must build against the current OfficeIMO source tree, not a published package.'
+    }
+
+    $OfficeIMORoot = (Resolve-Path -LiteralPath $OfficeIMORoot -ErrorAction Stop).Path
+    $env:OfficeIMORoot = $OfficeIMORoot
 
     if (-not $SkipPSWriteOfficeBuild.IsPresent) {
         & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal

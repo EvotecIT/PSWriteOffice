@@ -65,6 +65,15 @@ function New-ExcelBenchmarkCase {
         [bool] $ValidateWorkbook = $true
     )
 
+    $supportedEngines = @('PSWriteOffice')
+    if ($OperationKey -notin @('WriteCsv', 'ReadCsvSource', 'ReadUsedRangeDataTable', 'ReadTableMetadata', 'ReadNamedRangeMetadata') -and
+        $Name -ne 'dataset-worksheets') {
+        $supportedEngines += 'ImportExcel'
+    }
+    if ($Name -in @('text-objects-default', 'import-default-full', 'import-default-range', 'read-no-header-range')) {
+        $supportedEngines += 'ExcelFast'
+    }
+
     [pscustomobject]@{
         Name = $Name
         Label = $Label
@@ -73,6 +82,7 @@ function New-ExcelBenchmarkCase {
         DataProfile = $Profile
         FileExtension = $FileExtension
         ValidateWorkbook = $ValidateWorkbook
+        SupportedEngines = $supportedEngines -join ','
     }
 }
 
@@ -91,6 +101,7 @@ function Get-ExcelBenchmarkCase {
         New-ExcelBenchmarkCase -Name csv-to-excel -Label 'Create workbook from CSV source' -Suites $workflow -OperationKey CsvToExcel -Profile MixedObjects
         New-ExcelBenchmarkCase -Name objects-table -Label 'Export objects as table' -Suites $table -OperationKey WriteWorkbook -Profile MixedObjects
         New-ExcelBenchmarkCase -Name objects-default -Label 'Export objects default' -Suites $basic -OperationKey WriteWorkbook -Profile MixedObjects
+        New-ExcelBenchmarkCase -Name text-objects-default -Label 'Export text-only objects default' -Suites $basic -OperationKey WriteWorkbook -Profile TextObjects
         New-ExcelBenchmarkCase -Name objects-no-table -Label 'Export objects without a table' -Suites $scale -OperationKey WriteWorkbook -Profile MixedObjects
         New-ExcelBenchmarkCase -Name objects-table-autofit -Label 'Export objects as autofit table' -Suites $standard -OperationKey WriteWorkbook -Profile MixedObjects
         New-ExcelBenchmarkCase -Name objects-title-freeze -Label 'Export objects with title and frozen header' -Suites $workflow -OperationKey WriteWorkbook -Profile MixedObjects
@@ -152,45 +163,7 @@ function Test-ExcelBenchmarkEngineCaseSupport {
         [object] $Case
     )
 
-    $operation = [string]$Case.OperationKey
-    $name = if ($Case.PSObject.Properties['Scenario']) {
-        [string]$Case.Scenario
-    } else {
-        ''
-    }
-    if ($name.Length -eq 0 -and $Case.PSObject.Properties['Name']) {
-        $name = [string]$Case.Name
-    }
-
-    switch ($Engine) {
-        PSWriteOffice { return $true }
-        ImportExcel {
-            return $operation -notin @('WriteCsv', 'ReadCsvSource', 'ReadUsedRangeDataTable', 'ReadTableMetadata', 'ReadNamedRangeMetadata') -and
-                $name -ne 'dataset-worksheets'
-        }
-        ExcelFast {
-            return $name -in @('objects-default', 'wide-objects-default', 'import-default-full', 'import-default-range', 'read-no-header-range')
-        }
-        NativeCsv { return $false }
-        default { return $false }
-    }
-}
-
-function Test-ExcelBenchmarkEngineSupport {
-    param(
-        [Parameter(Mandatory)]
-        [string] $Engine,
-
-        [Parameter(Mandatory)]
-        [object] $Case
-    )
-
-    if (-not (Test-ExcelBenchmarkEngineCaseSupport -Engine $Engine -Case $Case)) {
-        return $false
-    }
-
-    return $Engine -ne 'ExcelFast' -or
-        [bool](Get-Module -ListAvailable ExcelFast | Sort-Object Version -Descending | Select-Object -First 1)
+    return ([string]$Case.SupportedEngines -split ',') -contains $Engine
 }
 
 function Test-CsvBenchmarkEngineSupport {

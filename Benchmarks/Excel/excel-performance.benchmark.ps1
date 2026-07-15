@@ -44,7 +44,7 @@ benchmark 'excel-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks
     skip {
         param($case)
 
-        -not (Test-ExcelBenchmarkEngineSupport -Engine $case.Engine -Case $case)
+        return ([string] $case.SupportedEngines -split ',') -notcontains [string] $case.Engine
     }
 
     engine PSWriteOffice {
@@ -74,6 +74,6 @@ benchmark 'excel-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks
         Test-ExcelBenchmarkOutput -Case $case -Run $run
     }
 
-    comparison Engine -Baseline PSWriteOffice -Metric MedianMs
+    comparison Engine -Baseline PSWriteOffice -Metric MedianMs -TieTolerance 0.05
     artifacts Json, Csv, Markdown
 }
