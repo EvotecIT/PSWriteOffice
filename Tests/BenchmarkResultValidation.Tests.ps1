@@ -1,8 +1,6 @@
 BeforeAll {
     $validationHelperPath = Join-Path $PSScriptRoot '..\Benchmarks\Benchmark.ResultValidation.ps1'
-    $benchmarkHelperPath = Join-Path $PSScriptRoot '..\Benchmarks\Excel\excel-performance.helpers.ps1'
 
-    . $benchmarkHelperPath
     . $validationHelperPath
 }
 
