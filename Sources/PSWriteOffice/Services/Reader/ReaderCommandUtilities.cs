@@ -7,6 +7,9 @@ using OfficeIMO.Reader.Csv;
 using OfficeIMO.Reader.Epub;
 using OfficeIMO.Reader.Html;
 using OfficeIMO.Reader.Json;
+using OfficeIMO.Reader.AsciiDoc;
+using OfficeIMO.Reader.Latex;
+using OfficeIMO.Reader.OpenDocument;
 using OfficeIMO.Reader.Pdf;
 using OfficeIMO.Reader.Rtf;
 using OfficeIMO.Reader.Visio;
@@ -35,7 +38,7 @@ internal static class ReaderCommandUtilities
             : Path.Combine(cmdlet.SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 
-    private static OfficeDocumentReader CreateReader()
+    internal static OfficeDocumentReaderBuilder CreateBuilder()
     {
         return new OfficeDocumentReaderBuilder()
             .AddPdfHandler()
@@ -48,8 +51,12 @@ internal static class ReaderCommandUtilities
             .AddEpubHandler()
             .AddVisioHandler()
             .AddRtfHandler()
-            .Build();
+            .AddAsciiDocHandler()
+            .AddLatexHandler()
+            .AddOpenDocumentHandler();
     }
+
+    private static OfficeDocumentReader CreateReader() => CreateBuilder().Build();
 
     internal static ReaderOptions BuildReaderOptions(
         long? maxInputBytes,

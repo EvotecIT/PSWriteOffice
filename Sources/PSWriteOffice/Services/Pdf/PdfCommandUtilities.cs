@@ -89,6 +89,48 @@ internal static class PdfCommandUtilities
             : new PdfReadOptions { Password = password };
     }
 
+    /// <summary>Loads a fluent PDF after enforcing the configured input-byte budget before payload allocation.</summary>
+    internal static PdfDocument LoadDocument(string path, PdfReadOptions? readOptions = null)
+    {
+        var fullPath = Path.GetFullPath(path);
+        var maxInputBytes = (readOptions?.Limits ?? new PdfReadLimits()).MaxInputBytes;
+        if (maxInputBytes <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(PdfReadLimits.MaxInputBytes), maxInputBytes, "Maximum input bytes must be positive.");
+        }
+
+        using var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var length = stream.Length;
+        if (length > maxInputBytes)
+        {
+            throw new InvalidDataException($"PDF input exceeds the configured limit of {maxInputBytes.ToString(CultureInfo.InvariantCulture)} bytes.");
+        }
+        if (length > int.MaxValue)
+        {
+            throw new InvalidDataException("PDF input is too large to load into a contiguous byte array.");
+        }
+
+        var bytes = new byte[(int)length];
+        var offset = 0;
+        while (offset < bytes.Length)
+        {
+            var read = stream.Read(bytes, offset, bytes.Length - offset);
+            if (read == 0)
+            {
+                Array.Resize(ref bytes, offset);
+                break;
+            }
+            offset += read;
+        }
+
+        if (stream.ReadByte() >= 0)
+        {
+            throw new InvalidDataException("PDF input changed while it was being read.");
+        }
+
+        return PdfDocument.Load(bytes, readOptions);
+    }
+
     internal static PdfFormFillerOptions? CreateFormFillerOptions(PSCmdlet cmdlet, string? appearanceFontPath, string? appearanceFontFamilyName, bool keepNeedAppearances)
     {
         if (string.IsNullOrWhiteSpace(appearanceFontPath) && !keepNeedAppearances)
