@@ -312,8 +312,10 @@ function Test-CsvBenchmarkValueEquivalent {
         return $false
     }
 
-    if ($Expected -is [byte] -or $Expected -is [sbyte] -or $Expected -is [short] -or $Expected -is [ushort] -or
-        $Expected -is [int] -or $Expected -is [uint] -or $Expected -is [long] -or $Expected -is [ulong]) {
+    if ($Expected -is [System.Byte] -or $Expected -is [System.SByte] -or
+        $Expected -is [System.Int16] -or $Expected -is [System.UInt16] -or
+        $Expected -is [System.Int32] -or $Expected -is [System.UInt32] -or
+        $Expected -is [System.Int64] -or $Expected -is [System.UInt64]) {
         foreach ($culture in $cultures) {
             $parsed = [decimal]::Zero
             if ([decimal]::TryParse($actualText, [Globalization.NumberStyles]::Integer, $culture, [ref]$parsed) -and
