@@ -40,6 +40,7 @@ $specPath = Join-Path $PSScriptRoot 'Excel\excel-performance.benchmark.ps1'
 $projectPath = Join-Path $repoRoot 'Sources\PSWriteOffice\PSWriteOffice.csproj'
 $moduleManifest = Join-Path $repoRoot 'PSWriteOffice.psd1'
 $benchmarkHelperPath = Join-Path $PSScriptRoot 'Excel\excel-performance.helpers.ps1'
+$officeIMOSourceHelperPath = Join-Path $PSScriptRoot 'OfficeIMO.Source.ps1'
 
 Import-Module PSPublishModule -Force -ErrorAction Stop
 if (-not (Get-Command Invoke-BenchmarkSuite -ErrorAction SilentlyContinue)) {
@@ -69,6 +70,7 @@ $Scenario = @(
 ) | Select-Object -Unique
 
 . $benchmarkHelperPath
+. $officeIMOSourceHelperPath
 $selectedCases = @(
     Get-ExcelBenchmarkCase -Suite $Suite | Where-Object {
         -not $Scenario -or $Scenario.Count -eq 0 -or @($Scenario) -contains [string]$_.Name
@@ -83,6 +85,25 @@ $selectedRuns = @(
         }
     }
 )
+$unsupportedRuns = @(
+    foreach ($engineName in @($Engine)) {
+        foreach ($case in $selectedCases) {
+            if (-not (Test-ExcelBenchmarkEngineCaseSupport -Engine $engineName -Case $case)) {
+                [pscustomobject]@{ Engine = $engineName; Case = $case }
+            }
+        }
+    }
+)
+if (-not $ListScenarios.IsPresent -and $selectedRuns.Count -eq 0) {
+    throw "Requested Excel benchmark lanes are unsupported for engines '$($Engine -join ', ')' and scenarios '$($Scenario -join ', ')'."
+}
+if (-not $ListScenarios.IsPresent -and
+    $PSBoundParameters.ContainsKey('Engine') -and
+    $PSBoundParameters.ContainsKey('Scenario') -and
+    $unsupportedRuns.Count -gt 0) {
+    $unsupportedDescriptions = $unsupportedRuns | ForEach-Object { "$($_.Engine) / $($_.Case.Name)" }
+    throw "Requested Excel benchmark lane(s) are unsupported: $($unsupportedDescriptions -join ', ')."
+}
 
 $requiresExcelFast = -not $ListScenarios.IsPresent -and
     [bool]($selectedRuns | Where-Object Engine -EQ 'ExcelFast' | Select-Object -First 1)
@@ -129,11 +150,12 @@ if ($requiresPSWriteOffice) {
         throw 'OfficeIMORoot is required for PSWriteOffice performance comparisons. Benchmarks must build against the current OfficeIMO source tree, not a published package.'
     }
 
-    $OfficeIMORoot = (Resolve-Path -LiteralPath $OfficeIMORoot -ErrorAction Stop).Path
+    $OfficeIMORoot = Resolve-OfficeIMOSourceRoot -Path $OfficeIMORoot
     $env:OfficeIMORoot = $OfficeIMORoot
+    $env:UseOfficeIMOProjectReferences = 'true'
 
     if (-not $SkipPSWriteOfficeBuild.IsPresent) {
-        & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal
+        & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal "-p:OfficeIMORoot=$OfficeIMORoot" '-p:UseOfficeIMOProjectReferences=true'
         if ($LASTEXITCODE -ne 0) {
             throw "dotnet build failed for PSWriteOffice ($PSWriteOfficeConfiguration)."
         }

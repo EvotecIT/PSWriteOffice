@@ -35,11 +35,13 @@ $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $specPath = Join-Path $PSScriptRoot 'Csv\csv-performance.benchmark.ps1'
 $projectPath = Join-Path $repoRoot 'Sources\PSWriteOffice\PSWriteOffice.csproj'
 $moduleManifest = Join-Path $repoRoot 'PSWriteOffice.psd1'
+$officeIMOSourceHelperPath = Join-Path $PSScriptRoot 'OfficeIMO.Source.ps1'
 
 Import-Module PSPublishModule -Force -ErrorAction Stop
 if (-not (Get-Command Invoke-BenchmarkSuite -ErrorAction SilentlyContinue)) {
     throw 'The imported PSPublishModule does not expose Invoke-BenchmarkSuite.'
 }
+. $officeIMOSourceHelperPath
 
 $Engine = @(
     foreach ($engineName in @($Engine)) {
@@ -72,11 +74,12 @@ if ($requiresPSWriteOffice) {
         throw 'OfficeIMORoot is required for PSWriteOffice performance comparisons. Benchmarks must build against the current OfficeIMO source tree, not a published package.'
     }
 
-    $OfficeIMORoot = (Resolve-Path -LiteralPath $OfficeIMORoot -ErrorAction Stop).Path
+    $OfficeIMORoot = Resolve-OfficeIMOSourceRoot -Path $OfficeIMORoot
     $env:OfficeIMORoot = $OfficeIMORoot
+    $env:UseOfficeIMOProjectReferences = 'true'
 
     if (-not $SkipPSWriteOfficeBuild.IsPresent) {
-        & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal
+        & dotnet build $projectPath -c $PSWriteOfficeConfiguration -v:minimal "-p:OfficeIMORoot=$OfficeIMORoot" '-p:UseOfficeIMOProjectReferences=true'
         if ($LASTEXITCODE -ne 0) {
             throw "dotnet build failed for PSWriteOffice ($PSWriteOfficeConfiguration)."
         }
