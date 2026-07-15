@@ -5,7 +5,7 @@ $suiteName = input Suite Standard
 $rowCounts = Assert-ExcelBenchmarkRowCount -RowCount (inputInt RowCount (Get-ExcelBenchmarkDefaultRowCount -Suite $suiteName))
 
 benchmark 'csv-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks\CsvPerformance') {
-    policy -Warmup 1 -Iterations (Get-ExcelBenchmarkIterationCount -Suite $suiteName) -Order Rotated -OutlierMode None
+    policy -Warmup (Get-ExcelBenchmarkWarmupCount -Suite $suiteName) -Iterations (Get-CsvBenchmarkIterationCount -Suite $suiteName) -Order GroupedRotated -MemoryCleanup BeforeIteration -OutlierMode None
     profile Current -Cleanup KeepOnFailure
     caseSource (Get-CsvBenchmarkCase -Suite $suiteName)
     axis RowCount $rowCounts

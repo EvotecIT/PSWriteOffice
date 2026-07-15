@@ -13,6 +13,12 @@ cmdlets against PowerShell-facing Excel alternatives:
 - `ImportExcel`
 - `ExcelFast` for the workbook lanes it supports
 
+Excel smoke, standard, and full suites use five measured iterations; large and
+super-large suites use three. The grouped rotation keeps comparable workbook
+engines adjacent and alternates which engine runs first. PowerForge performs an
+explicit managed-memory cleanup after setup and data creation, outside the timed
+operation, so allocations from one engine do not become another engine's GC bill.
+
 Every read comparison uses the same PSWriteOffice-produced workbook shape for
 the selected row count. The competing readers do not benchmark files created by
 their own writers.
@@ -22,6 +28,12 @@ invalid worksheet position. Its write lane therefore includes ExcelFast's own
 `Get-Workbook` and `Save-Workbook` normalization inside the timed operation.
 This keeps ExcelFast in the comparison without reporting malformed-workbook
 speed as a valid result.
+
+ExcelFast's mixed-object writer currently stores booleans, dates, and numbers
+as culture-formatted text cells. Mixed and wide typed write lanes are therefore
+not equivalent and remain excluded. The ExcelFast write comparison uses the
+text-only default shape, while read lanes use the same PSWriteOffice-produced
+typed workbook fixture as every other reader.
 
 Runs that include PSWriteOffice build directly against a complete OfficeIMO
 source checkout. With sibling PSWriteOffice and OfficeIMO checkouts, set the
@@ -136,6 +148,15 @@ PowerShell CSV import/export:
 - `PSWriteOffice`
 - `NativeCsv`
 
+The CSV release gate uses 25 measured iterations for suites that include the
+short 1,000-row lanes. Large and super-large suites use 11 and 7 iterations,
+respectively. PowerForge keeps each scenario comparison together and alternates
+engine order between iterations, so neither engine keeps the first or second
+position. An explicit managed-memory cleanup runs after setup and data creation,
+outside the timed operation, for every engine. Use `-RepeatCount` for an
+intentional diagnostic override; keep the defaults when recording release or
+README results.
+
 The CSV suite also includes dbatools-shaped read scenarios over the same
 generated CSV shape used by `dataplat/dbatools.library/benchmarks/CsvBenchmarks`.
 `csv-dbatools-quick-single-column` and `csv-dbatools-quick-all-columns` cover the
@@ -191,7 +212,7 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPe
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-CsvPerformance.ps1 `
     -Suite Standard `
     -RowCount 1000,5000,10000 `
-    -RepeatCount 3 `
+    -RepeatCount 25 `
     -Engine PSWriteOffice,NativeCsv `
     -UpdateReadme
 ```

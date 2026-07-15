@@ -8,7 +8,7 @@ $skipImportExcelInstall = inputBool SkipImportExcelInstall false
 $skipExcelFastInstall = inputBool SkipExcelFastInstall false
 
 benchmark 'excel-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks\ExcelPerformance') {
-    policy -Warmup 1 -Iterations (Get-ExcelBenchmarkIterationCount -Suite $suiteName) -Order Rotated -OutlierMode None
+    policy -Warmup (Get-ExcelBenchmarkWarmupCount -Suite $suiteName) -Iterations (Get-ExcelBenchmarkIterationCount -Suite $suiteName) -Order GroupedRotated -MemoryCleanup BeforeIteration -OutlierMode None
     profile Current -Cleanup KeepOnFailure
     caseSource (Get-ExcelBenchmarkCase -Suite $suiteName)
     axis RowCount $rowCounts

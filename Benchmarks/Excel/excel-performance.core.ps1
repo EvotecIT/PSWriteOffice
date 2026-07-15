@@ -34,10 +34,36 @@ function Get-ExcelBenchmarkIterationCount {
     param([string] $Suite)
 
     switch ($Suite) {
-        Smoke { 1 }
-        Standard { 3 }
+        Smoke { 5 }
+        Standard { 5 }
         Large { 3 }
         Full { 5 }
+        SuperLarge { 3 }
+        default { 5 }
+    }
+}
+
+function Get-CsvBenchmarkIterationCount {
+    param([string] $Suite)
+
+    switch ($Suite) {
+        Smoke { 25 }
+        Standard { 25 }
+        Large { 11 }
+        Full { 25 }
+        SuperLarge { 7 }
+        default { 25 }
+    }
+}
+
+function Get-ExcelBenchmarkWarmupCount {
+    param([string] $Suite)
+
+    switch ($Suite) {
+        Smoke { 3 }
+        Standard { 3 }
+        Large { 2 }
+        Full { 2 }
         SuperLarge { 1 }
         default { 3 }
     }
