@@ -8,6 +8,9 @@ function Get-ExcelBenchmarkData {
         MixedObjects {
             [pscustomobject]@{ Data = @(New-ExcelBenchmarkRows -Count $Count); ColumnCount = 10; WorksheetName = 'Data' }
         }
+        TextObjects {
+            [pscustomobject]@{ Data = @(New-ExcelBenchmarkTextRows -Count $Count); ColumnCount = 10; WorksheetName = 'Data' }
+        }
         WideObjects {
             [pscustomobject]@{ Data = @(New-ExcelBenchmarkWideRows -Count $Count); ColumnCount = 40; WorksheetName = 'Data' }
         }
@@ -71,6 +74,25 @@ function New-ExcelBenchmarkRows {
             Score = [math]::Round(($i * 1.137) % 1000, 3)
             Owner = 'owner{0}@example.test' -f ($i % 250)
             TicketCount = $i % 17
+            Notes = 'Benchmark row {0}' -f $i
+        }
+    }
+}
+
+function New-ExcelBenchmarkTextRows {
+    param([int] $Count)
+
+    for ($i = 1; $i -le $Count; $i++) {
+        [pscustomobject]@{
+            Id = $i.ToString([Globalization.CultureInfo]::InvariantCulture)
+            Name = 'Server-{0:000000}' -f $i
+            Department = 'Department-{0}' -f ($i % 25)
+            Region = @('NA', 'EU', 'APAC', 'LATAM')[$i % 4]
+            IsEnabled = if (($i % 3) -ne 0) { 'true' } else { 'false' }
+            Created = ([datetime]'2024-01-01').AddMinutes($i).ToString('O', [Globalization.CultureInfo]::InvariantCulture)
+            Score = ([math]::Round(($i * 1.137) % 1000, 3)).ToString([Globalization.CultureInfo]::InvariantCulture)
+            Owner = 'owner{0}@example.test' -f ($i % 250)
+            TicketCount = ($i % 17).ToString([Globalization.CultureInfo]::InvariantCulture)
             Notes = 'Benchmark row {0}' -f $i
         }
     }

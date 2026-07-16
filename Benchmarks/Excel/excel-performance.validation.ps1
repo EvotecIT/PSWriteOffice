@@ -103,6 +103,61 @@ function Test-ExcelBenchmarkOutput {
         Close-OfficeExcel -Document $document
     }
     Test-ExcelBenchmarkOpenXml -Path $Run.Path
+
+    if ([string]$Case.Scenario -in @('objects-default', 'text-objects-default', 'wide-objects-default')) {
+        Test-ExcelBenchmarkTabularValues -Case $Case -Run $Run
+    }
+}
+
+function Test-ExcelBenchmarkTabularValues {
+    param([object] $Case, [object] $Run)
+
+    $actualRows = @(Import-OfficeExcel -Path $Run.Path -WorksheetName $Run.WorksheetName)
+    $expectedRows = @($Run.Payload)
+    assertValue $actualRows.Count $expectedRows.Count -Message "Expected '$($Case.Scenario)' to preserve every data row."
+    if ($expectedRows.Count -eq 0) {
+        return
+    }
+
+    $lastIndex = $expectedRows.Count - 1
+    $middleIndex = [int] [Math]::Floor($lastIndex / 2)
+    $indexes = @(0, $middleIndex, $lastIndex) | Select-Object -Unique
+    foreach ($index in $indexes) {
+        $expected = $expectedRows[$index]
+        $actual = $actualRows[$index]
+        foreach ($property in $expected.PSObject.Properties) {
+            $expectedValue = ConvertTo-ExcelBenchmarkComparableValue -Value $property.Value
+            $actualProperty = $actual.PSObject.Properties[$property.Name]
+            if ($null -eq $actualProperty) {
+                throw "Expected '$($Case.Scenario)' row $index to contain column '$($property.Name)'."
+            }
+
+            $actualValue = ConvertTo-ExcelBenchmarkComparableValue -Value $actualProperty.Value
+            assertValue $actualValue $expectedValue -Message "Expected '$($Case.Scenario)' row $index column '$($property.Name)' to preserve its value."
+        }
+    }
+}
+
+function ConvertTo-ExcelBenchmarkComparableValue {
+    param([AllowNull()][object] $Value)
+
+    if ($null -eq $Value -or $Value -is [DBNull]) {
+        return '<null>'
+    }
+    if ($Value -is [datetime]) {
+        return $Value.ToString('O', [Globalization.CultureInfo]::InvariantCulture)
+    }
+    if ($Value -is [bool]) {
+        return $Value.ToString().ToLowerInvariant()
+    }
+    if ($Value -is [double] -or $Value -is [single]) {
+        return ([Math]::Round([double] $Value, 10)).ToString('G17', [Globalization.CultureInfo]::InvariantCulture)
+    }
+    if ($Value -is [IFormattable]) {
+        return $Value.ToString($null, [Globalization.CultureInfo]::InvariantCulture)
+    }
+
+    return [string] $Value
 }
 
 function Test-CsvBenchmarkOutput {
@@ -128,12 +183,176 @@ function Test-CsvBenchmarkOutput {
     assertPath $path
     $actualRows = if ($Case.OperationKey -eq 'WriteCsvGZip') {
         $table = ConvertFrom-NativeGZipCsvToDataTable -Path $path
-        if ($table -and $table.Rows) { [int]$table.Rows.Count } else { 0 }
+        if ($table -and $table.Rows) { @($table.Select()) } else { @() }
     } else {
-        @(Import-Csv -Path $path).Count
+        @(Import-Csv -Path $path)
     }
-    assertValue $actualRows $expectedRows -Message "Expected $expectedRows rows in '$path'."
-    $Run.RowsProcessed = [int]$actualRows
+    assertValue $actualRows.Count $expectedRows -Message "Expected $expectedRows rows in '$path'."
+    Test-CsvBenchmarkTabularValues -Case $Case -Run $Run -ActualRows $actualRows
+    $Run.RowsProcessed = [int]$actualRows.Count
+}
+
+function Test-CsvBenchmarkTabularValues {
+    param([object] $Case, [object] $Run, [object[]] $ActualRows)
+
+    $expectedRows = if ($Run.Payload -is [Data.DataTable]) {
+        @($Run.Payload.Select())
+    } else {
+        @($Run.Payload)
+    }
+
+    assertValue $ActualRows.Count $expectedRows.Count -Message "Expected '$($Case.Scenario)' to preserve every CSV data row."
+    if ($expectedRows.Count -eq 0) {
+        return
+    }
+
+    $expectedColumns = @(Get-CsvBenchmarkColumnNames -Row $expectedRows[0])
+    $actualColumns = @(Get-CsvBenchmarkColumnNames -Row $ActualRows[0])
+    assertValue ($actualColumns -join [char]31) ($expectedColumns -join [char]31) -Message "Expected '$($Case.Scenario)' to preserve the CSV header and column order."
+
+    for ($rowIndex = 0; $rowIndex -lt $expectedRows.Count; $rowIndex++) {
+        $expectedRow = $expectedRows[$rowIndex]
+        $actualRow = $ActualRows[$rowIndex]
+        foreach ($column in $expectedColumns) {
+            $expectedValue = Get-CsvBenchmarkCellValue -Row $expectedRow -Column $column
+            $actualValue = Get-CsvBenchmarkCellValue -Row $actualRow -Column $column
+            if (-not (Test-CsvBenchmarkValueEquivalent -Expected $expectedValue -Actual $actualValue)) {
+                throw "Expected '$($Case.Scenario)' row $rowIndex column '$column' to preserve value '$expectedValue'; actual value was '$actualValue'."
+            }
+        }
+    }
+}
+
+function Get-CsvBenchmarkColumnNames {
+    param([object] $Row)
+
+    if ($Row -is [Data.DataRow]) {
+        return @($Row.Table.Columns | ForEach-Object { [string]$_.ColumnName })
+    }
+
+    return @($Row.PSObject.Properties | ForEach-Object { [string]$_.Name })
+}
+
+function Get-CsvBenchmarkCellValue {
+    param([object] $Row, [string] $Column)
+
+    if ($Row -is [Data.DataRow]) {
+        return $Row[$Column]
+    }
+
+    return $Row.PSObject.Properties[$Column].Value
+}
+
+function Test-CsvBenchmarkValueEquivalent {
+    param([AllowNull()][object] $Expected, [AllowNull()][object] $Actual)
+
+    if ($Expected -is [Management.Automation.PSObject]) {
+        $Expected = $Expected.PSObject.BaseObject
+    }
+    if ($Actual -is [Management.Automation.PSObject]) {
+        $Actual = $Actual.PSObject.BaseObject
+    }
+
+    if ($null -eq $Expected -or $Expected -is [DBNull]) {
+        return $null -eq $Actual -or $Actual -is [DBNull] -or [string]::IsNullOrEmpty([string]$Actual)
+    }
+
+    if ($Expected -is [string]) {
+        return ([string]$Actual) -ceq $Expected
+    }
+
+    $actualText = [string]$Actual
+    if ($Expected -is [bool]) {
+        $parsed = $false
+        return [bool]::TryParse($actualText, [ref]$parsed) -and $parsed -eq $Expected
+    }
+
+    if ($Expected -is [guid]) {
+        $parsed = [guid]::Empty
+        return [guid]::TryParse($actualText, [ref]$parsed) -and $parsed -eq $Expected
+    }
+
+    $currentCulture = [Globalization.CultureInfo]::CurrentCulture
+    $invariantCulture = [Globalization.CultureInfo]::InvariantCulture
+    $cultures = if ($currentCulture.Name -eq $invariantCulture.Name) {
+        @($invariantCulture)
+    } else {
+        @($currentCulture, $invariantCulture)
+    }
+
+    if ($Expected -is [datetime]) {
+        foreach ($culture in $cultures) {
+            $parsed = [datetime]::MinValue
+            if ([datetime]::TryParse($actualText, $culture, [Globalization.DateTimeStyles]::AllowWhiteSpaces, [ref]$parsed) -and
+                $parsed.Ticks -eq $Expected.Ticks) {
+                return $true
+            }
+        }
+        return $false
+    }
+
+    if ($Expected -is [datetimeoffset]) {
+        foreach ($culture in $cultures) {
+            $parsed = [datetimeoffset]::MinValue
+            if ([datetimeoffset]::TryParse($actualText, $culture, [Globalization.DateTimeStyles]::AllowWhiteSpaces, [ref]$parsed) -and
+                $parsed.UtcTicks -eq $Expected.UtcTicks) {
+                return $true
+            }
+        }
+        return $false
+    }
+
+    if ($Expected -is [timespan]) {
+        foreach ($culture in $cultures) {
+            $parsed = [timespan]::Zero
+            if ([timespan]::TryParse($actualText, $culture, [ref]$parsed) -and $parsed -eq $Expected) {
+                return $true
+            }
+        }
+        return $false
+    }
+
+    if ($Expected -is [System.Byte] -or $Expected -is [System.SByte] -or
+        $Expected -is [System.Int16] -or $Expected -is [System.UInt16] -or
+        $Expected -is [System.Int32] -or $Expected -is [System.UInt32] -or
+        $Expected -is [System.Int64] -or $Expected -is [System.UInt64]) {
+        foreach ($culture in $cultures) {
+            $parsed = [decimal]::Zero
+            if ([decimal]::TryParse($actualText, [Globalization.NumberStyles]::Integer, $culture, [ref]$parsed) -and
+                $parsed -eq [decimal]$Expected) {
+                return $true
+            }
+        }
+        return $false
+    }
+
+    if ($Expected -is [decimal]) {
+        foreach ($culture in $cultures) {
+            $parsed = [decimal]::Zero
+            if ([decimal]::TryParse($actualText, [Globalization.NumberStyles]::Number, $culture, [ref]$parsed) -and
+                $parsed -eq $Expected) {
+                return $true
+            }
+        }
+        return $false
+    }
+
+    if ($Expected -is [double] -or $Expected -is [single]) {
+        $expectedNumber = [double]$Expected
+        $tolerance = [math]::Max(1e-10, [math]::Abs($expectedNumber) * 1e-12)
+        foreach ($culture in $cultures) {
+            $parsed = 0.0
+            $style = [Globalization.NumberStyles]::Float -bor [Globalization.NumberStyles]::AllowThousands
+            if ([double]::TryParse($actualText, $style, $culture, [ref]$parsed) -and
+                [math]::Abs($parsed - $expectedNumber) -le $tolerance) {
+                return $true
+            }
+        }
+        return $false
+    }
+
+    $expectedText = [string]$Expected
+    return $actualText -ceq $expectedText
 }
 
 function Test-ExcelBenchmarkOpenXml {

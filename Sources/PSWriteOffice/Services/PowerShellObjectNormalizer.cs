@@ -267,7 +267,8 @@ internal static class PowerShellObjectNormalizer
             return false;
         }
 
-        if (ps.BaseObject != null &&
+        if (ps.BaseObject is not PSCustomObject &&
+            ps.BaseObject != null &&
             IsScalarClrType(ps.BaseObject.GetType()) &&
             !HasExportableExtendedProperties(ps))
         {
