@@ -38,6 +38,8 @@ Describe 'Expanded OfficeIMO support' {
         (Get-Command Import-OfficePdfXfdf).Parameters.Keys | Should -Contain 'ReadOptions'
         (Get-Command Export-OfficePdfXfdf).Parameters.Keys | Should -Contain 'ReadOptions'
         (Get-Command ConvertTo-OfficePdfSanitized).Parameters.Keys | Should -Contain 'ReadOptions'
+        (Get-Command Export-OfficePdfImage).Parameters.Options.ParameterType.FullName |
+            Should -Be 'OfficeIMO.Pdf.PdfImageExportOptions'
     }
 
     It 'detects, structures, chunks, and batch-reads additional text formats' {
@@ -222,6 +224,7 @@ Describe 'Expanded OfficeIMO support' {
             Export-OfficePowerPointImage -Path $powerPointPath -OutputPath (Join-Path $TestDrive 'ppt-images') -Format Svg
             Export-OfficeHtmlImage -Html '<h1>HTML image</h1>' -OutputPath (Join-Path $TestDrive 'html.svg') -Format Svg
             Export-OfficePdfImage -Path $pdfPath -OutputPath (Join-Path $TestDrive 'pdf-images') -Format Svg
+            Export-OfficePdfImage -Path $pdfPath -OutputPath (Join-Path $TestDrive 'pdf-webp-images') -Format Webp
         )
 
         $results.Count | Should -BeGreaterOrEqual 5
@@ -229,6 +232,9 @@ Describe 'Expanded OfficeIMO support' {
             $result.GetType().FullName | Should -Be 'OfficeIMO.Drawing.OfficeImageExportResult'
             $result.Bytes.Length | Should -BeGreaterThan 0
         }
+        $webp = $results | Where-Object Format -EQ Webp | Select-Object -First 1
+        $webp | Should -Not -BeNullOrEmpty
+        Test-Path -LiteralPath $webp.SavedPath | Should -BeTrue
 
         $htmlLines = @('<html><body>', '<h1>Pipeline heading</h1><p>Pipeline body</p>', '</body></html>')
         $pipelineHtmlPath = Join-Path $TestDrive 'pipeline-html.svg'

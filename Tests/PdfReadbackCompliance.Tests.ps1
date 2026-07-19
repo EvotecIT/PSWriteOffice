@@ -78,7 +78,7 @@ Describe 'PDF readback and compliance cmdlets' {
         $report.Requirements.Count | Should -BeGreaterThan 0
     }
 
-    It 'reports compliance proof status and external validator placeholders' {
+    It 'requires artifact-bound external validator evidence for compliance claims' {
         $document = New-OfficePdf {
             PdfMetadata -Title 'Compliance Proof Draft'
             PdfCompliance -Profile PdfA3B -Groundwork
@@ -94,12 +94,39 @@ Describe 'PDF readback and compliance cmdlets' {
         $proof.ProofStatus | Should -Be 'InternalGaps'
         $proof.CanClaimConformance | Should -BeFalse
 
-        $withEvidence = $document | Get-OfficePdfCompliance -Profile PdfA3B -Proof -ExternalValidator VeraPdf -ExternalProfile 'PDF/A-3b' -ExternalDiagnostic 'veraPDF passed'
+        $unbound = $document | Get-OfficePdfCompliance -Profile PdfA3B -Proof -ExternalValidator VeraPdf -ExternalStatus Passed -ExternalValidatorVersion '1.26.1' -ExternalProfile 'PDF/A-3b' -ExternalDiagnostic 'caller reported veraPDF passed'
+        $unbound.PassedExternalValidationCount | Should -Be 0
+        $unbound.ExternalValidations[0].HasArtifactBinding | Should -BeFalse
+        $unbound.HasRequiredExternalValidation | Should -BeFalse
+        $unbound.MissingExternalValidatorCount | Should -BeGreaterThan 0
+        $unbound.CanClaimConformance | Should -BeFalse
+
+        $artifact = $document.CreateComplianceArtifact($proof.Profile)
+        $validationType = $unbound.ExternalValidations[0].GetType()
+        $validation = $validationType.GetMethod('PassedForArtifact').Invoke($null, [object[]] @(
+            $unbound.ExternalValidations[0].ValidatorKind,
+            'veraPDF',
+            '1.26.1',
+            'veraPDF passed',
+            $artifact.ToBytes(),
+            'PDF/A-3b',
+            $null,
+            $null,
+            $null,
+            0,
+            $null))
+        $withEvidence = $document | Get-OfficePdfCompliance -Profile PdfA3B -Proof -ExternalValidation $validation
         $withEvidence.PassedExternalValidationCount | Should -Be 1
+        $withEvidence.HasArtifactEvidence | Should -BeTrue
+        $withEvidence.ExternalValidations[0].HasArtifactBinding | Should -BeTrue
+        $withEvidence.ExternalValidations[0].ArtifactSha256 | Should -Be $withEvidence.ArtifactSha256
+        $withEvidence.ExternalValidations[0].ValidatorVersion | Should -Be '1.26.1'
         $withEvidence.ExternalValidations[0].Diagnostic | Should -Be 'veraPDF passed'
 
         $fromExitCode = $document | Get-OfficePdfCompliance -Profile PdfA3B -Proof -ExternalValidator VeraPdf -ExternalProfile 'PDF/A-3b' -ExternalDiagnostic 'veraPDF process result' -ExternalExitCode 0 -ExternalExecutablePath 'verapdf' -ExternalArguments '--format text file.pdf'
-        $fromExitCode.PassedExternalValidationCount | Should -Be 1
+        $fromExitCode.PassedExternalValidationCount | Should -Be 0
+        $fromExitCode.ExternalValidations[0].HasArtifactBinding | Should -BeFalse
+        $fromExitCode.HasRequiredExternalValidation | Should -BeFalse
         $fromExitCode.ExternalValidations[0].ExitCode | Should -Be 0
         $fromExitCode.ExternalValidations[0].ExecutablePath | Should -Be 'verapdf'
         $fromExitCode.ExternalValidations[0].Arguments | Should -Be '--format text file.pdf'

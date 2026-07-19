@@ -85,7 +85,7 @@ public sealed class GetOfficeDocumentCommand : OfficeDocumentReaderCommandBase
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        var options = ReaderCommandUtilities.BuildReaderOptions(
+        var configuration = ReaderCommandUtilities.BuildReadConfiguration(
             MaxInputBytes,
             OpenXmlMaxCharactersInPart,
             MaxChars,
@@ -99,8 +99,9 @@ public sealed class GetOfficeDocumentCommand : OfficeDocumentReaderCommandBase
             !NoMarkdownHeadingChunks.IsPresent,
             !NoHashes.IsPresent);
 
+        var reader = ResolveReader(configuration.HandlerOptions);
         WriteObject(AsJson.IsPresent
-            ? EffectiveReader.ReadDocumentJson(path, options, Indented.IsPresent)
-            : EffectiveReader.ReadDocument(path, options));
+            ? reader.ReadDocumentJson(path, configuration.ReaderOptions, Indented.IsPresent)
+            : reader.ReadDocument(path, configuration.ReaderOptions));
     }
 }

@@ -143,6 +143,6 @@ public class NewOfficePowerPointCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(pdfPath);
-        presentation.SaveAsPdf(pdfPath);
+        presentation.SaveAsPdf(pdfPath).RequireSuccess();
     }
 }

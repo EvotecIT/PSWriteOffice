@@ -11,12 +11,12 @@ Gets a generated PDF document compliance readiness report.
 ## SYNTAX
 ### Document (Default)
 ```powershell
-Get-OfficePdfCompliance [-Document <PdfDocument>] [-Profile <PdfComplianceProfile>] [-Proof] [-ExternalValidator <PdfExternalValidatorKind[]>] [-ExternalStatus <PdfExternalValidationStatus>] [-ExternalProfile <string>] [-ExternalDiagnostic <string>] [-ExternalValidatorName <string>] [-ExternalExitCode <int>] [-ExternalSuccessExitCode <int>] [-ExternalExecutablePath <string>] [-ExternalArguments <string>] [<CommonParameters>]
+Get-OfficePdfCompliance [-Document <PdfDocument>] [-Profile <PdfComplianceProfile>] [-Proof] [-ExternalValidator <PdfExternalValidatorKind[]>] [-ExternalValidation <PdfExternalValidationResult[]>] [-ExternalStatus <PdfExternalValidationStatus>] [-ExternalProfile <string>] [-ExternalDiagnostic <string>] [-ExternalValidatorName <string>] [-ExternalValidatorVersion <string>] [-ExternalExitCode <int>] [-ExternalSuccessExitCode <int>] [-ExternalExecutablePath <string>] [-ExternalArguments <string>] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Get-OfficePdfCompliance [-Path] <string> -Profile <PdfComplianceProfile> [-Password <string>] [-Proof] [-ExternalValidator <PdfExternalValidatorKind[]>] [-ExternalStatus <PdfExternalValidationStatus>] [-ExternalProfile <string>] [-ExternalDiagnostic <string>] [-ExternalValidatorName <string>] [-ExternalExitCode <int>] [-ExternalSuccessExitCode <int>] [-ExternalExecutablePath <string>] [-ExternalArguments <string>] [<CommonParameters>]
+Get-OfficePdfCompliance [-Path] <string> -Profile <PdfComplianceProfile> [-Password <string>] [-Proof] [-ExternalValidator <PdfExternalValidatorKind[]>] [-ExternalValidation <PdfExternalValidationResult[]>] [-ExternalStatus <PdfExternalValidationStatus>] [-ExternalProfile <string>] [-ExternalDiagnostic <string>] [-ExternalValidatorName <string>] [-ExternalValidatorVersion <string>] [-ExternalExitCode <int>] [-ExternalSuccessExitCode <int>] [-ExternalExecutablePath <string>] [-ExternalArguments <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -134,7 +134,7 @@ Accept wildcard characters: True
 ```
 
 ### -ExternalStatus
-External validator status to attach when -ExternalValidator is provided.
+Unbound external validator status to attach when -ExternalValidator is provided.
 
 ```yaml
 Type: PdfExternalValidationStatus
@@ -165,6 +165,23 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -ExternalValidation
+Artifact-bound results produced by the external validation lane.
+Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact with the exact validated bytes.
+
+```yaml
+Type: PdfExternalValidationResult[]
+Parameter Sets: Document, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -ExternalValidator
 External validator families whose result should be attached to the proof report.
 
@@ -183,6 +200,22 @@ Accept wildcard characters: True
 
 ### -ExternalValidatorName
 Human-readable external validator name.
+
+```yaml
+Type: String
+Parameter Sets: Document, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ExternalValidatorVersion
+External validator version recorded in the artifact-bound proof evidence.
 
 ```yaml
 Type: String

@@ -38,7 +38,7 @@ public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
+        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
         var markdown = string.IsNullOrWhiteSpace(PageRange)
             ? document.Read.Markdown()
             : document.Read.Markdown(PageRange!);

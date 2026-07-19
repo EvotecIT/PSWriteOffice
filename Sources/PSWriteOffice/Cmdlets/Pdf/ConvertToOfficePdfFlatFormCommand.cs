@@ -41,7 +41,7 @@ public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, keepNeedAppearances: false);
-        var document = PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path));
+        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
         var result = formOptions == null
             ? document.Forms.Flatten()
             : document.Forms.Flatten(formOptions);
@@ -52,7 +52,7 @@ public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        result.Save(outputPath);
+        result.Save(outputPath).RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 }

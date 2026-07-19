@@ -47,7 +47,7 @@ public sealed class MoveOfficePdfPageCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Move(BeforePage, PageRange).Save(outputPath);
+        PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Move(BeforePage, PageRange).Save(outputPath).RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 }

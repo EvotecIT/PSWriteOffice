@@ -25,6 +25,8 @@ public sealed class GetOfficePdfAppendOnlyMutationCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        WriteObject(PdfIncrementalUpdater.AnalyzeAppendOnlyMutation(PdfCommandUtilities.ResolvePath(this, Path)));
+        WriteObject(PdfDocument
+            .Open(PdfCommandUtilities.ResolvePath(this, Path))
+            .AnalyzeAppendOnlyMutation());
     }
 }

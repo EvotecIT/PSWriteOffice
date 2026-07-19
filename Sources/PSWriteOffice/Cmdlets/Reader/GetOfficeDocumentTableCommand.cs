@@ -103,12 +103,13 @@ public sealed class GetOfficeDocumentTableCommand : OfficeDocumentReaderCommandB
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        var options = BuildOptions();
+        var configuration = BuildOptions();
+        var reader = ResolveReader(configuration.HandlerOptions);
 
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = ReaderCommandUtilities.ResolvePath(this, OutputDirectory!);
-            var exports = EffectiveReader.ReadTableExports(path, options, Indented.IsPresent);
+            var exports = reader.ReadTableExports(path, configuration.ReaderOptions, Indented.IsPresent);
             var materialized = exports.WriteTableExportsToDirectory(outputDirectory, new ReaderTableExportMaterializationOptions
             {
                 Overwrite = !NoOverwrite.IsPresent,
@@ -122,16 +123,16 @@ public sealed class GetOfficeDocumentTableCommand : OfficeDocumentReaderCommandB
 
         if (AsExport.IsPresent)
         {
-            WriteObject(EffectiveReader.ReadTableExports(path, options, Indented.IsPresent), enumerateCollection: true);
+            WriteObject(reader.ReadTableExports(path, configuration.ReaderOptions, Indented.IsPresent), enumerateCollection: true);
             return;
         }
 
-        WriteObject(EffectiveReader.ReadTables(path, options), enumerateCollection: true);
+        WriteObject(reader.ReadTables(path, configuration.ReaderOptions), enumerateCollection: true);
     }
 
-    private ReaderOptions BuildOptions()
+    private ReaderCommandConfiguration BuildOptions()
     {
-        return ReaderCommandUtilities.BuildReaderOptions(
+        return ReaderCommandUtilities.BuildReadConfiguration(
             MaxInputBytes,
             OpenXmlMaxCharactersInPart,
             MaxChars,

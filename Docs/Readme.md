@@ -86,7 +86,7 @@ Adds a title block to the current Excel report sheet.
 Adds or reuses a worksheet within the current Excel DSL scope.
 
 ### [Add-OfficeExcelSlicer](Add-OfficeExcelSlicer.md)
-Adds workbook-level slicer cache metadata.
+Adds OfficeIMO-owned workbook slicer binding metadata.
 
 ### [Add-OfficeExcelSparkline](Add-OfficeExcelSparkline.md)
 Adds sparklines to a worksheet.
@@ -107,7 +107,7 @@ Appends one or more data rows to an existing Excel table.
 Adds a threaded comment or reply to an Excel worksheet.
 
 ### [Add-OfficeExcelTimeline](Add-OfficeExcelTimeline.md)
-Adds workbook-level timeline cache metadata.
+Adds OfficeIMO-owned workbook timeline binding metadata.
 
 ### [Add-OfficeExcelValidationCustomFormula](Add-OfficeExcelValidationCustomFormula.md)
 Adds a custom-formula data validation rule to a worksheet range.
@@ -569,7 +569,7 @@ Exports workbook sheets as PNG or SVG images with one result per sheet.
 Exports an HTML render surface as PNG or SVG with structured diagnostics.
 
 ### [Export-OfficePdfImage](Export-OfficePdfImage.md)
-Exports PDF pages as PNG or SVG and normalizes each page to OfficeImageExportResult.
+Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contract.
 
 ### [Export-OfficePdfLayoutOverlay](Export-OfficePdfLayoutOverlay.md)
 Exports PDF word, line, region, and reading-order diagnostics as PNG or SVG.

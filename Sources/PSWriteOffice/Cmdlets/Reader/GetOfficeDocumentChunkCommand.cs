@@ -101,13 +101,14 @@ public sealed class GetOfficeDocumentChunkCommand : OfficeDocumentReaderCommandB
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var options = BuildOptions();
+        var configuration = BuildOptions();
+        var reader = ResolveReader(configuration.HandlerOptions);
 
         if (ParameterSetName == FolderParameterSet)
         {
             var folderPath = ReaderCommandUtilities.ResolvePath(this, FolderPath);
             var folderOptions = ReaderCommandUtilities.BuildFolderOptions(!NoRecurse.IsPresent, MaxFiles, MaxTotalBytes, Extension);
-            foreach (var chunk in EffectiveReader.ReadFolder(folderPath, folderOptions, options))
+            foreach (var chunk in reader.ReadFolder(folderPath, folderOptions, configuration.ReaderOptions))
             {
                 WriteObject(chunk);
             }
@@ -116,15 +117,15 @@ public sealed class GetOfficeDocumentChunkCommand : OfficeDocumentReaderCommandB
         }
 
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        foreach (var chunk in EffectiveReader.Read(path, options))
+        foreach (var chunk in reader.Read(path, configuration.ReaderOptions))
         {
             WriteObject(chunk);
         }
     }
 
-    private ReaderOptions BuildOptions()
+    private ReaderCommandConfiguration BuildOptions()
     {
-        return ReaderCommandUtilities.BuildReaderOptions(
+        return ReaderCommandUtilities.BuildReadConfiguration(
             MaxInputBytes,
             OpenXmlMaxCharactersInPart,
             MaxChars,

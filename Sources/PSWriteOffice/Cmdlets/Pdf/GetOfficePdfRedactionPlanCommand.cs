@@ -65,6 +65,8 @@ public sealed class GetOfficePdfRedactionPlanCommand : PSCmdlet
             ? Area
             : new[] { new PdfRedactionArea(PageNumber, X, Y, Width, Height, Label) };
 
-        WriteObject(PdfRedactionPlanner.Plan(PdfCommandUtilities.ResolvePath(this, Path), areas, options: PdfCommandUtilities.CreateReadOptions(Password)));
+        WriteObject(PdfDocument
+            .Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password))
+            .PlanRedactions(areas));
     }
 }

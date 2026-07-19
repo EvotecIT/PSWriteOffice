@@ -33,7 +33,10 @@ public sealed class GetOfficePdfFormFieldCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var fields = PdfInspector.Inspect(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)).FormFields;
+        var fields = PdfDocument
+            .Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password))
+            .Inspect()
+            .FormFields;
         foreach (var field in fields)
         {
             if (string.IsNullOrWhiteSpace(Name) || string.Equals(field.Name, Name, System.StringComparison.Ordinal))

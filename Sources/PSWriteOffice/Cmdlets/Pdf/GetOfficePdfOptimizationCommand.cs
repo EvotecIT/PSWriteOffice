@@ -29,6 +29,8 @@ public sealed class GetOfficePdfOptimizationCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        WriteObject(PdfDiagnostics.AnalyzeOptimization(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)));
+        WriteObject(PdfDocument
+            .Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password))
+            .AnalyzeOptimization());
     }
 }

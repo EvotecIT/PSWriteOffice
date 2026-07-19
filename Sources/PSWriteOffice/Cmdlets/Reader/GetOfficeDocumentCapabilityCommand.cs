@@ -36,7 +36,7 @@ public sealed class GetOfficeDocumentCapabilityCommand : OfficeDocumentReaderCom
         var includeBuiltIn = !ExcludeBuiltIn.IsPresent;
         var includeCustom = !ExcludeCustom.IsPresent;
         var capabilities = EffectiveReader.GetCapabilities()
-            .Where(capability => capability.IsBuiltIn ? includeBuiltIn : includeCustom)
+            .Where(capability => capability.Origin == ReaderHandlerOrigin.OfficeIMO ? includeBuiltIn : includeCustom)
             .ToArray();
 
         if (Manifest.IsPresent)

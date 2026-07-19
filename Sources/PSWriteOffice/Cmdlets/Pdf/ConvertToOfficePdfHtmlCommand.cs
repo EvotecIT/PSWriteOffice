@@ -151,6 +151,6 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
     {
         return string.IsNullOrEmpty(Password)
             ? PdfLogicalDocument.Load(path)
-            : PdfLogicalDocument.From(PdfReadDocument.Load(path, PdfCommandUtilities.CreateReadOptions(Password)));
+            : PdfLogicalDocument.From(PdfReadDocument.Open(path, PdfCommandUtilities.CreateReadOptions(Password)));
     }
 }

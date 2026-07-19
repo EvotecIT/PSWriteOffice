@@ -50,6 +50,8 @@ $reader = New-OfficeDocumentReader -TesseractOptions $tesseract -MaxConcurrentRe
 Get-ChildItem .\Inbox -File | Get-OfficeDocumentBatch -Reader $reader
 ```
 
+Format-specific Reader settings are captured when handlers are registered. Pass an `OfficeIMO.Reader.All.ReaderAllOptions` instance to `New-OfficeDocumentReader -ReaderAllOptions`; keep ordinary `ReaderOptions` on the individual read command. A caller-supplied reader is treated as immutable, so PSWriteOffice will not silently replace its registered handler settings.
+
 Image export uses the same `OfficeImageExportResult` contract for Word, Excel, PowerPoint, HTML, and PDF output:
 
 ```powershell

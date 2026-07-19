@@ -242,6 +242,6 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(pdfPath);
-        document.SaveAsPdf(pdfPath);
+        document.SaveAsPdf(pdfPath).RequireSuccess();
     }
 }

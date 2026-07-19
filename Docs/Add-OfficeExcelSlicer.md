@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Add-OfficeExcelSlicer
 ## SYNOPSIS
-Adds workbook-level slicer cache metadata.
+Adds OfficeIMO-owned workbook slicer binding metadata.
 
 ## SYNTAX
 ### Context (Default)
@@ -25,7 +25,7 @@ Add-OfficeExcelSlicer -Document <ExcelDocument> -Name <string> [-SourceName <str
 ```
 
 ## DESCRIPTION
-Adds workbook-level slicer cache metadata.
+Adds OfficeIMO-owned workbook slicer binding metadata.
 
 ## EXAMPLES
 
@@ -36,7 +36,7 @@ Get-OfficeExcelDataModel -Path .\Report.xlsx |
     Select-Object -ExpandProperty SlicerCacheCount
 ```
 
-Writes slicer cache package metadata through OfficeIMO. Excel may still be required to materialize full slicer UI shapes.
+Writes portable OfficeIMO binding metadata. It does not create native Excel slicer caches or UI shapes.
 
 ## PARAMETERS
 

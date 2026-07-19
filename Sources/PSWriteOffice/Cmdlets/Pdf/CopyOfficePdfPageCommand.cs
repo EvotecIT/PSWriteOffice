@@ -43,7 +43,7 @@ public sealed class CopyOfficePdfPageCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Extract(PageRange).Save(outputPath);
+        PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Extract(PageRange).Save(outputPath).RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 }

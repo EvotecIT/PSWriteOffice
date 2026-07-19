@@ -48,9 +48,16 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     [Parameter]
     public PdfExternalValidatorKind[]? ExternalValidator { get; set; }
 
-    /// <summary>External validator status to attach when -ExternalValidator is provided.</summary>
+    /// <summary>
+    /// Artifact-bound results produced by the external validation lane.
+    /// Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact with the exact validated bytes.
+    /// </summary>
     [Parameter]
-    public PdfExternalValidationStatus ExternalStatus { get; set; } = PdfExternalValidationStatus.Passed;
+    public PdfExternalValidationResult[]? ExternalValidation { get; set; }
+
+    /// <summary>Unbound external validator status to attach when -ExternalValidator is provided.</summary>
+    [Parameter]
+    public PdfExternalValidationStatus ExternalStatus { get; set; } = PdfExternalValidationStatus.NotRun;
 
     /// <summary>Profile string reported by the external validator, for example PDF/A-3b.</summary>
     [Parameter]
@@ -63,6 +70,10 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     /// <summary>Human-readable external validator name.</summary>
     [Parameter]
     public string? ExternalValidatorName { get; set; }
+
+    /// <summary>External validator version recorded in the artifact-bound proof evidence.</summary>
+    [Parameter]
+    public string? ExternalValidatorVersion { get; set; }
 
     /// <summary>External validator process exit code. When provided, status is inferred from -ExternalSuccessExitCode.</summary>
     [Parameter]
@@ -85,32 +96,60 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     {
         if (ParameterSetName == ParameterSetPath)
         {
-            var readiness = PdfComplianceAnalyzer.AssessReadback(Profile!.Value, PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
-            WriteObject(Proof.IsPresent ? PdfComplianceAnalyzer.AssessProof(readiness, BuildExternalValidationResults()) : readiness);
+            var pathDocument = PdfDocument.Open(
+                PdfCommandUtilities.ResolvePath(this, Path),
+                PdfCommandUtilities.CreateReadOptions(Password));
+            WriteObject(Proof.IsPresent
+                ? AssessProof(pathDocument, Profile!.Value)
+                : pathDocument.AssessCompliance(Profile!.Value));
             return;
         }
 
         var document = Document ?? PdfDslContext.Require(this).Document;
-        var documentReadiness = Profile.HasValue ? document.AssessCompliance(Profile.Value) : document.AssessCompliance();
-        WriteObject(Proof.IsPresent ? PdfComplianceAnalyzer.AssessProof(documentReadiness, BuildExternalValidationResults()) : documentReadiness);
+        var profile = Profile ?? document.AssessCompliance().Profile;
+        WriteObject(Proof.IsPresent
+            ? AssessProof(document, profile)
+            : Profile.HasValue
+                ? document.AssessCompliance(Profile.Value)
+                : document.AssessCompliance());
+    }
+
+    private PdfComplianceProofReport AssessProof(PdfDocument document, PdfComplianceProfile profile)
+    {
+        var artifact = document.CreateComplianceArtifact(profile);
+        return artifact.AssessProof(BuildExternalValidationResults());
     }
 
     private PdfExternalValidationResult[] BuildExternalValidationResults()
     {
+        var suppliedResults = ExternalValidation ?? System.Array.Empty<PdfExternalValidationResult>();
         if (ExternalValidator == null || ExternalValidator.Length == 0)
         {
-            return System.Array.Empty<PdfExternalValidationResult>();
+            return suppliedResults;
         }
 
-        var results = new PdfExternalValidationResult[ExternalValidator.Length];
+        var results = new PdfExternalValidationResult[suppliedResults.Length + ExternalValidator.Length];
+        System.Array.Copy(suppliedResults, results, suppliedResults.Length);
         for (int i = 0; i < ExternalValidator.Length; i++)
         {
             var validator = ExternalValidator[i];
             var name = string.IsNullOrWhiteSpace(ExternalValidatorName) ? validator.ToString() : ExternalValidatorName!;
             var diagnostic = string.IsNullOrWhiteSpace(ExternalDiagnostic) ? ExternalStatus.ToString() : ExternalDiagnostic!;
-            results[i] = ExternalExitCode.HasValue
-                ? PdfExternalValidationResult.FromExitCode(validator, ExternalExitCode.Value, name, diagnostic, ExternalProfile, ExternalExecutablePath, ExternalArguments, ExternalSuccessExitCode)
-                : new PdfExternalValidationResult(validator, ExternalStatus, name, diagnostic, ExternalProfile, ExternalExecutablePath, ExternalArguments);
+            var status = ExternalExitCode.HasValue
+                ? ExternalExitCode.Value == ExternalSuccessExitCode
+                    ? PdfExternalValidationStatus.Passed
+                    : PdfExternalValidationStatus.Failed
+                : ExternalStatus;
+            results[suppliedResults.Length + i] = new PdfExternalValidationResult(
+                validator,
+                status,
+                name,
+                diagnostic,
+                ExternalProfile,
+                ExternalExecutablePath,
+                ExternalArguments,
+                ExternalExitCode,
+                ExternalValidatorVersion);
         }
 
         return results;

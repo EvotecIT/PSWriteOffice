@@ -347,7 +347,7 @@ Describe 'Excel DSL surface' {
         $summary.Schema.HasTimelines | Should -BeTrue
     }
 
-    It 'authors slicer and timeline cache metadata through thin commands' {
+    It 'authors OfficeIMO-owned slicer and timeline binding metadata through thin commands' {
         $path = Join-Path $TestDrive 'DslExcelSlicerTimelineMetadata.xlsx'
 
         New-OfficeExcel -Path $path {
@@ -360,15 +360,15 @@ Describe 'Excel DSL surface' {
         $timeline = Add-OfficeExcelTimeline -Path $path -Name OrderDateTimeline -SourceName OrderDate -PivotTableName SalesPivot -PassThru
 
         $slicer.Kind | Should -Be 'Slicer'
-        $slicer.ContentType | Should -Be 'application/vnd.ms-excel.slicerCache+xml'
+        $slicer.ContentType | Should -Be 'application/vnd.officeimo.excel.slicerCache-metadata+xml'
         $timeline.Kind | Should -Be 'Timeline'
-        $timeline.ContentType | Should -Be 'application/vnd.ms-excel.timelineCache+xml'
+        $timeline.ContentType | Should -Be 'application/vnd.officeimo.excel.timelineCache-metadata+xml'
 
         $summary = Get-OfficeExcelSummary -Path $path -IncludeSchema
         $summary.SlicerPartCount | Should -Be 1
         $summary.TimelinePartCount | Should -Be 1
-        $summary.Schema.HasSlicers | Should -BeTrue
-        $summary.Schema.HasTimelines | Should -BeTrue
+        $summary.Schema.HasSlicers | Should -BeFalse
+        $summary.Schema.HasTimelines | Should -BeFalse
     }
 
     It 'copies workbook packages while preserving package interaction parts' {

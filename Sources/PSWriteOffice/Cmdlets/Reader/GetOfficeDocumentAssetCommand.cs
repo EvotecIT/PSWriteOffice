@@ -106,13 +106,14 @@ public sealed class GetOfficeDocumentAssetCommand : OfficeDocumentReaderCommandB
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        var options = BuildOptions();
+        var configuration = BuildOptions();
+        var reader = ResolveReader(configuration.HandlerOptions);
         Func<OfficeDocumentAsset, bool>? predicate = BuildPredicate();
 
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = ReaderCommandUtilities.ResolvePath(this, OutputDirectory!);
-            var result = EffectiveReader.ReadDocument(path, options);
+            var result = reader.ReadDocument(path, configuration.ReaderOptions);
             var materialized = result.WriteAssetsToDirectory(outputDirectory, new OfficeDocumentAssetMaterializationOptions
             {
                 Overwrite = !NoOverwrite.IsPresent,
@@ -123,13 +124,13 @@ public sealed class GetOfficeDocumentAssetCommand : OfficeDocumentReaderCommandB
             return;
         }
 
-        var assets = EffectiveReader.ReadAssets(path, options);
+        var assets = reader.ReadAssets(path, configuration.ReaderOptions);
         WriteObject(predicate == null ? assets : assets.Where(predicate).ToArray(), enumerateCollection: true);
     }
 
-    private ReaderOptions BuildOptions()
+    private ReaderCommandConfiguration BuildOptions()
     {
-        return ReaderCommandUtilities.BuildReaderOptions(
+        return ReaderCommandUtilities.BuildReadConfiguration(
             MaxInputBytes,
             OpenXmlMaxCharactersInPart,
             MaxChars,

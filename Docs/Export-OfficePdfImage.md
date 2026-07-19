@@ -6,16 +6,16 @@ schema: 2.0.0
 ---
 # Export-OfficePdfImage
 ## SYNOPSIS
-Exports PDF pages as PNG or SVG and normalizes each page to OfficeImageExportResult.
+Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contract.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfImage [-Path] <string> [-OutputPath] <string> [-PageRange <string>] [-Format <OfficeImageExportFormat>] [-Options <PdfPageRenderOptions>] [-ReadOptions <PdfReadOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePdfImage [-Path] <string> [-OutputPath] <string> [-PageRange <string>] [-Format <OfficeImageExportFormat>] [-Options <PdfImageExportOptions>] [-ReadOptions <PdfReadOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Exports PDF pages as PNG or SVG and normalizes each page to OfficeImageExportResult.
+Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contract.
 
 ## EXAMPLES
 
@@ -35,7 +35,7 @@ Output image format.
 Type: OfficeImageExportFormat
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Png, Svg
+Possible values: Png, Svg, Jpeg, Tiff, Webp
 
 Required: False
 Position: named
@@ -45,10 +45,10 @@ Accept wildcard characters: True
 ```
 
 ### -Options
-Optional DPI, scale, thumbnail, limits, and error behavior.
+Optional DPI, scale, thumbnail, encoding, diagnostics, and resource limits.
 
 ```yaml
-Type: PdfPageRenderOptions
+Type: PdfImageExportOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

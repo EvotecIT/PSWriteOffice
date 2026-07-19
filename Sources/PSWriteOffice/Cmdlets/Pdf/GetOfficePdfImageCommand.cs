@@ -41,14 +41,14 @@ public sealed class GetOfficePdfImageCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        var document = PdfDocument.Open(inputPath);
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory!);
             PdfCommandUtilities.EnsureOutputDirectory(outputDirectory);
-            var bytes = File.ReadAllBytes(inputPath);
             var paths = string.IsNullOrWhiteSpace(PageRange)
-                ? PdfImageExtractor.ExtractImages(bytes, outputDirectory, BaseName)
-                : PdfImageExtractor.ExtractImagesByPageRanges(bytes, outputDirectory, BaseName, PdfPageRange.ParseMany(PageRange!));
+                ? document.Read.SaveImages(outputDirectory, BaseName)
+                : document.Read.SaveImages(outputDirectory, PdfPageSelection.Parse(PageRange!), BaseName);
             foreach (var path in paths)
             {
                 WriteObject(new FileInfo(path));
@@ -58,8 +58,8 @@ public sealed class GetOfficePdfImageCommand : PSCmdlet
         }
 
         var images = string.IsNullOrWhiteSpace(PageRange)
-            ? PdfImageExtractor.ExtractImages(inputPath)
-            : PdfImageExtractor.ExtractImagesByPageRanges(inputPath, PdfPageRange.ParseMany(PageRange!));
+            ? document.Read.Images()
+            : document.Read.Images(PageRange!);
         foreach (var image in images)
         {
             WriteObject(image);

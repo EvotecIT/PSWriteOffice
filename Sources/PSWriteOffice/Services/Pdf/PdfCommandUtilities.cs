@@ -128,7 +128,7 @@ internal static class PdfCommandUtilities
             throw new InvalidDataException("PDF input changed while it was being read.");
         }
 
-        return PdfDocument.Load(bytes, readOptions);
+        return PdfDocument.Open(bytes, readOptions);
     }
 
     internal static PdfFormFillerOptions? CreateFormFillerOptions(PSCmdlet cmdlet, string? appearanceFontPath, string? appearanceFontFamilyName, bool keepNeedAppearances)

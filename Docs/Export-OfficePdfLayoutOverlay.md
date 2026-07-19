@@ -28,13 +28,13 @@ Export-OfficePdfLayoutOverlay -Path 'C:\Path'
 ## PARAMETERS
 
 ### -Format
-Output image format.
+Output image format. Layout overlays support only PNG and SVG.
 
 ```yaml
 Type: OfficeImageExportFormat
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Png, Svg
+Possible values: Png, Svg, Jpeg, Tiff, Webp
 
 Required: False
 Position: named

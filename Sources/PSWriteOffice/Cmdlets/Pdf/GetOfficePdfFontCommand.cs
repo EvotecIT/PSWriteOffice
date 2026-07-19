@@ -29,7 +29,10 @@ public sealed class GetOfficePdfFontCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        foreach (var font in PdfDiagnostics.Analyze(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)).Fonts)
+        foreach (var font in PdfDocument
+                     .Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password))
+                     .Diagnostics()
+                     .Fonts)
         {
             if (!string.IsNullOrWhiteSpace(Subtype) && !string.Equals(font.Subtype, Subtype, System.StringComparison.Ordinal))
             {

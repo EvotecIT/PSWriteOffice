@@ -54,16 +54,16 @@ public sealed class GetOfficePdfTextDiagnosticCommand : PSCmdlet
         if (includeEncoding)
         {
             var encodingDiagnostics = fontBytes == null
-                ? PdfTextDiagnostics.AnalyzeWinAnsiText(Text, Source)
-                : PdfTextDiagnostics.AnalyzeEmbeddedFontText(Text, fontBytes, Source, fontName);
+                ? PdfTextPreflight.AnalyzeWinAnsi(Text, Source)
+                : PdfTextPreflight.AnalyzeEmbeddedFont(Text, fontBytes, Source, fontName);
             WriteObject(encodingDiagnostics, enumerateCollection: true);
         }
 
         if (includeAdvanced)
         {
             var shapingDiagnostics = fontBytes == null
-                ? PdfTextDiagnostics.AnalyzeAdvancedTextLayout(Text, Source)
-                : PdfTextDiagnostics.AnalyzeAdvancedTextLayout(Text, fontBytes, Source, fontName);
+                ? PdfTextPreflight.AnalyzeAdvancedLayout(Text, Source)
+                : PdfTextPreflight.AnalyzeAdvancedLayout(Text, fontBytes, Source, fontName);
             WriteObject(shapingDiagnostics, enumerateCollection: true);
         }
     }

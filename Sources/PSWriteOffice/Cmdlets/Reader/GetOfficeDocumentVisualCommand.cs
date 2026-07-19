@@ -98,12 +98,13 @@ public sealed class GetOfficeDocumentVisualCommand : OfficeDocumentReaderCommand
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        var options = BuildOptions();
+        var configuration = BuildOptions();
+        var reader = ResolveReader(configuration.HandlerOptions);
 
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = ReaderCommandUtilities.ResolvePath(this, OutputDirectory!);
-            var exports = EffectiveReader.ReadVisualExports(path, options, Indented.IsPresent);
+            var exports = reader.ReadVisualExports(path, configuration.ReaderOptions, Indented.IsPresent);
             var materialized = exports.WriteVisualExportsToDirectory(outputDirectory, new ReaderVisualExportMaterializationOptions
             {
                 Overwrite = !NoOverwrite.IsPresent,
@@ -116,16 +117,16 @@ public sealed class GetOfficeDocumentVisualCommand : OfficeDocumentReaderCommand
 
         if (AsExport.IsPresent)
         {
-            WriteObject(EffectiveReader.ReadVisualExports(path, options, Indented.IsPresent), enumerateCollection: true);
+            WriteObject(reader.ReadVisualExports(path, configuration.ReaderOptions, Indented.IsPresent), enumerateCollection: true);
             return;
         }
 
-        WriteObject(EffectiveReader.ReadVisuals(path, options), enumerateCollection: true);
+        WriteObject(reader.ReadVisuals(path, configuration.ReaderOptions), enumerateCollection: true);
     }
 
-    private ReaderOptions BuildOptions()
+    private ReaderCommandConfiguration BuildOptions()
     {
-        return ReaderCommandUtilities.BuildReaderOptions(
+        return ReaderCommandUtilities.BuildReadConfiguration(
             MaxInputBytes,
             OpenXmlMaxCharactersInPart,
             MaxChars,

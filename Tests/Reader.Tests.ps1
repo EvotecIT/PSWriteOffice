@@ -16,6 +16,10 @@ Describe 'Reader cmdlets' {
         $capabilities.Id | Should -Contain 'officeimo.reader.word'
         $capabilities.Id | Should -Contain 'officeimo.reader.excel'
         $capabilities.Id | Should -Contain 'officeimo.reader.powerpoint'
+        $capabilities.Id | Should -Contain 'officeimo.reader.markdown'
+        $capabilities.Id | Should -Contain 'officeimo.reader.email'
+        $capabilities.Id | Should -Contain 'officeimo.reader.email.store'
+        $capabilities.Id | Should -Contain 'officeimo.reader.email.address-book'
         $capabilities.Id | Should -Contain 'officeimo.reader.pdf'
         $capabilities.Id | Should -Contain 'officeimo.reader.html'
         $capabilities.Id | Should -Contain 'officeimo.reader.csv'
@@ -40,10 +44,10 @@ Describe 'Reader cmdlets' {
 
     It 'accepts a caller-configured immutable Reader' {
         $handlerId = 'pswriteoffice.test.custom'
-        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
-        $builderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.OfficeDocumentReaderBuilder' -CommandName 'Get-OfficeDocumentCapability'
-        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
-        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
+        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
+        $builderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.OfficeDocumentReaderBuilder' -CommandName 'Get-OfficeDocumentCapability'
+        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
+        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
 
         $registration = [Activator]::CreateInstance($registrationType)
         $registration.Id = $handlerId
@@ -66,6 +70,13 @@ Describe 'Reader cmdlets' {
         $customCapability | Should -HaveCount 1
         $customCapability.Extensions | Should -Contain '.custom'
         (Get-Command Get-OfficeDocumentChunk).Parameters.Keys | Should -Contain 'Reader'
+        (Get-Command New-OfficeDocumentReader).Parameters.Keys | Should -Contain 'ReaderAllOptions'
+
+        $customPath = Join-Path $TestDrive 'source.custom'
+        Set-Content -Path $customPath -Value 'custom reader input' -Encoding UTF8
+
+        { Get-OfficeDocumentChunk -Path $customPath -Reader $reader -NoMarkdownHeadingChunks } |
+            Should -Throw -ExpectedMessage '*immutable OfficeIMO 3 reader*'
     }
 
     It 'reads Markdown files as chunks and a document envelope' {

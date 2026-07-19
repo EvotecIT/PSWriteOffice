@@ -5,14 +5,14 @@ using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
-/// <summary>Adds workbook-level timeline cache metadata.</summary>
+/// <summary>Adds OfficeIMO-owned workbook timeline binding metadata.</summary>
 /// <example>
-///   <summary>Add timeline cache metadata for a pivot date field.</summary>
+///   <summary>Add timeline binding metadata for a pivot date field.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$timeline = Add-OfficeExcelTimeline -Path .\Report.xlsx -Name OrderDateTimeline -SourceName OrderDate -PivotTableName SalesPivot -PassThru
 /// Get-OfficeExcelDataModel -Path .\Report.xlsx |
 ///     Select-Object -ExpandProperty TimelineCacheCount</code>
-///   <para>Writes timeline cache package metadata through OfficeIMO. Excel may still be required to materialize full timeline UI shapes.</para>
+///   <para>Writes portable OfficeIMO binding metadata. It does not create native Excel timeline caches or UI shapes.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelTimeline", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelTimeline")]

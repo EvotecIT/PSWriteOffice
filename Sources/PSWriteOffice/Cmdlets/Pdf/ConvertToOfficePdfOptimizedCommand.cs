@@ -70,7 +70,8 @@ public sealed class ConvertToOfficePdfOptimizedCommand : PSCmdlet
         };
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfOptimizationActionResult result = PdfOptimizer.Optimize(inputPath, outputPath, options);
+        PdfOptimizationActionResult result = PdfDocument.Open(inputPath).Optimize(options);
+        result.ToDocument().Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent ? result : new FileInfo(outputPath));
     }
 }

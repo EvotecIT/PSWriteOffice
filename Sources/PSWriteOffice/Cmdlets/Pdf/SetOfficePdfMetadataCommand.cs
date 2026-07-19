@@ -84,14 +84,11 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            if (Incremental.IsPresent)
-            {
-                PdfIncrementalUpdater.UpdateMetadata(inputPath, outputPath, Title, Author, Subject, Keywords);
-            }
-            else
-            {
-                PdfMetadataEditor.UpdateMetadata(inputPath, outputPath, Title, Author, Subject, Keywords);
-            }
+            var inputDocument = PdfDocument.Open(inputPath);
+            var updatedDocument = Incremental.IsPresent
+                ? inputDocument.AppendMetadataRevision(Title, Author, Subject, Keywords)
+                : inputDocument.UpdateMetadata(Title, Author, Subject, Keywords);
+            updatedDocument.Save(outputPath).RequireSuccess();
 
             WriteObject(new FileInfo(outputPath));
             return;

@@ -88,12 +88,16 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
                 KeepNeedAppearances = KeepNeedAppearances.IsPresent,
                 GenerateAppearanceStreams = !KeepNeedAppearances.IsPresent
             };
-            PdfIncrementalUpdater.UpdateFormFields(inputPath, outputPath, PdfCommandUtilities.ConvertFieldValues(Field), options);
+            PdfDocument
+                .Open(inputPath)
+                .Forms.AppendRevision(PdfCommandUtilities.ConvertFieldValues(Field), options)
+                .Save(outputPath)
+                .RequireSuccess();
             WriteObject(new FileInfo(outputPath));
             return;
         }
 
-        var document = PdfDocument.Load(inputPath);
+        var document = PdfDocument.Open(inputPath);
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
         PdfDocument result;
         if (Field == null || Field.Count == 0)
@@ -130,7 +134,7 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        result.Save(outputPath);
+        result.Save(outputPath).RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 }
