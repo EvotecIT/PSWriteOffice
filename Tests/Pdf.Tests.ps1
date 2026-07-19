@@ -1109,6 +1109,8 @@ startxref
         $plan.FieldName | Should -Be 'Approval'
         $plan.ByteRangeValues.Count | Should -Be 4
         $plan.ComputeSha256Digest().Length | Should -Be 32
+        [Convert]::ToBase64String([IO.File]::ReadAllBytes($preparedPath)) |
+            Should -Be ([Convert]::ToBase64String($plan.PreparedPdf))
 
         $preparedReport = Get-OfficePdfSignature -Path $preparedPath
         $preparedReport.HasSignatures | Should -BeTrue
