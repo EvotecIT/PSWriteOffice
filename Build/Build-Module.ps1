@@ -35,11 +35,6 @@ Build-Module -ModuleName 'PSWriteOffice' -RunMode $RunMode {
     }
     New-ConfigurationManifest @Manifest
 
-    # New-ConfigurationModule -Type ExternalModule -Name 'Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Management'
-    # New-ConfigurationModule -Type RequiredModule -Name 'PSSharedGoods' -Version Latest -Guid Auto
-    # New-ConfigurationModule -Type ApprovedModule -Name 'PSSharedGoods', 'PSWriteColor', 'Connectimo', 'PSUnifi', 'PSWebToolbox', 'PSMyPassword', 'PSPublishModule'
-    # New-ConfigurationModuleSkip -IgnoreFunctionName 'Select-Unique'
-
     $ConfigurationFormat = [ordered] @{
         RemoveComments                              = $false
 
@@ -112,6 +107,6 @@ Build-Module -ModuleName 'PSWriteOffice' -RunMode $RunMode {
     New-ConfigurationArtefact -Type Packed -Enable -Path 'Artefacts\Packed' -ArtefactName '<ModuleName>.v<ModuleVersion>.zip'
 
     # global options for publishing to github/psgallery
-    #New-ConfigurationPublish -Type PowerShellGallery -FilePath 'C:\Support\Important\PowerShellGalleryAPI.txt' -Enabled:$true
-    #New-ConfigurationPublish -Type GitHub -FilePath 'C:\Support\Important\GitHubAPI.txt' -UserName 'EvotecIT' -Enabled:$true
+    New-ConfigurationPublish -Type PowerShellGallery -FilePath 'C:\Support\Important\PowerShellGalleryAPI.txt' -Enabled:$true
+    New-ConfigurationPublish -Type GitHub -FilePath 'C:\Support\Important\GitHubAPI.txt' -UserName 'EvotecIT' -Enabled:$true -GenerateReleaseNotes
 } -ExitCode
