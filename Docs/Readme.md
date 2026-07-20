@@ -637,6 +637,9 @@ Creates bounded token-aware chunks and a deterministic document hierarchy.
 ### [Get-OfficeDocumentIngest](Get-OfficeDocumentIngest.md)
 Reads a folder into an OfficeIMO.Reader ingestion summary.
 
+### [Get-OfficeDocumentPageMarkdown](Get-OfficeDocumentPageMarkdown.md)
+Projects Reader pages into citation-friendly Markdown.
+
 ### [Get-OfficeDocumentStructured](Get-OfficeDocumentStructured.md)
 Extracts a bounded schema-friendly view of a supported document.
 
@@ -1101,6 +1104,9 @@ Saves an OfficeIMO.Visio document.
 
 ### [Save-OfficeWord](Save-OfficeWord.md)
 Saves a Word document without disposing it.
+
+### [Search-OfficeDocument](Search-OfficeDocument.md)
+Searches normalized document blocks and returns Reader-owned page citations for each match.
 
 ### [Set-OfficeExcelActiveSheet](Set-OfficeExcelActiveSheet.md)
 Sets the worksheet that opens as the active sheet.

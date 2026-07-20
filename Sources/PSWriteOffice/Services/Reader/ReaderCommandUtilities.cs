@@ -46,7 +46,8 @@ internal static class ReaderCommandUtilities
         string? excelSheetName,
         string? excelA1Range,
         bool markdownChunkByHeadings,
-        bool computeHashes)
+        bool computeHashes,
+        bool includePageLocations = false)
     {
         var readerOptions = new ReaderOptions
         {
@@ -80,13 +81,15 @@ internal static class ReaderCommandUtilities
             excelChunkRows.HasValue ||
             !string.IsNullOrWhiteSpace(excelSheetName) ||
             !string.IsNullOrWhiteSpace(excelA1Range) ||
-            !markdownChunkByHeadings;
+            !markdownChunkByHeadings ||
+            includePageLocations;
         ReaderAllOptions? handlerOptions = hasHandlerOverrides
             ? new ReaderAllOptions
             {
                 Word = new OfficeIMO.Reader.Word.ReaderWordOptions
                 {
-                    IncludeFootnotes = includeWordFootnotes
+                    IncludeFootnotes = includeWordFootnotes,
+                    IncludePageLocations = includePageLocations
                 },
                 PowerPoint = new OfficeIMO.Reader.PowerPoint.ReaderPowerPointOptions
                 {
@@ -102,6 +105,10 @@ internal static class ReaderCommandUtilities
                 Markdown = new OfficeIMO.Reader.Markdown.ReaderMarkdownOptions
                 {
                     ChunkByHeadings = markdownChunkByHeadings
+                },
+                Rtf = new OfficeIMO.Reader.Rtf.ReaderRtfOptions
+                {
+                    IncludePageLocations = includePageLocations
                 }
             }
             : null;

@@ -12,7 +12,8 @@ Describe 'Expanded OfficeIMO support' {
     It 'exports every new command family' {
         $commands = @(
             'Get-OfficeDocumentDetection', 'Get-OfficeDocumentStructured', 'Get-OfficeDocumentHierarchy',
-            'Get-OfficeDocumentBatch', 'New-OfficeDocumentReader',
+            'Get-OfficeDocumentBatch', 'New-OfficeDocumentReader', 'Search-OfficeDocument',
+            'Get-OfficeDocumentPageMarkdown',
             'Export-OfficeWordImage', 'Export-OfficeExcelImage', 'Export-OfficePowerPointImage',
             'Export-OfficeHtmlImage', 'Export-OfficePdfImage',
             'Compare-OfficeWordDocument', 'Get-OfficeWordReview', 'Resolve-OfficeWordRevision',

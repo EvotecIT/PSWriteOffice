@@ -46,9 +46,14 @@ Reader commands return OfficeIMO's typed results, so scripts can use detection e
 $detection = Get-OfficeDocumentDetection -Path .\Upload.bin -Mode PreferContent
 $structured = Get-OfficeDocumentStructured -Path .\Report.docx
 $hierarchy = Get-OfficeDocumentHierarchy -Path .\Handbook.pdf
+$document = Get-OfficeDocument -Path .\Policy.docx -IncludePageLocations
+$matches = $document | Search-OfficeDocument -Query 'retention period'
+$pageMarkdown = $document | Get-OfficeDocumentPageMarkdown -AsString
 $reader = New-OfficeDocumentReader -TesseractOptions $tesseract -MaxConcurrentReads 4
 Get-ChildItem .\Inbox -File | Get-OfficeDocumentBatch -Reader $reader
 ```
+
+Reader search and page Markdown use OfficeIMO's normalized blocks, page locations, and provenance. `-IncludePageLocations` opts Word into computed pagination and RTF into explicit-break reconstruction; fixed-layout and logical-container formats expose their native page-like locations without it.
 
 Format-specific Reader settings are captured when handlers are registered. Pass an `OfficeIMO.Reader.All.ReaderAllOptions` instance to `New-OfficeDocumentReader -ReaderAllOptions`; keep ordinary `ReaderOptions` on the individual read command. A caller-supplied reader is treated as immutable, so PSWriteOffice will not silently replace its registered handler settings.
 
@@ -264,6 +269,9 @@ Get-OfficeDocumentCapability
 Get-OfficeDocumentChunk -Path .\Report.docx
 Get-OfficeDocumentChunk -Path .\Report.rtf
 Get-OfficeDocument -Path .\Report.pdf -AsJson -Indented
+$document = Get-OfficeDocument -Path .\Policy.docx -IncludePageLocations
+$document | Search-OfficeDocument -Query 'retention period'
+$document | Get-OfficeDocumentPageMarkdown -AsString
 Get-OfficeDocumentAsset -Path .\Deck.pptx -Kind image -OutputDirectory .\reader-assets
 ```
 
