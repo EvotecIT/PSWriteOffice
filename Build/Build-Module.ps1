@@ -15,7 +15,7 @@ Build-Module -ModuleName 'PSWriteOffice' -RunMode $RunMode {
         # ID used to uniquely identify this module
         GUID                   = 'd75a279d-30c2-4c2d-ae0d-12f1f3bf4d39'
         # Version number of this module.
-        ModuleVersion          = '1.0.X'
+        ModuleVersion          = '3.0.X'
         # Author of this module
         Author                 = 'Przemyslaw Klys'
         # Company or vendor of this module
