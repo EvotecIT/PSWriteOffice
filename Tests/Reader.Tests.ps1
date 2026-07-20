@@ -16,6 +16,10 @@ Describe 'Reader cmdlets' {
         $capabilities.Id | Should -Contain 'officeimo.reader.word'
         $capabilities.Id | Should -Contain 'officeimo.reader.excel'
         $capabilities.Id | Should -Contain 'officeimo.reader.powerpoint'
+        $capabilities.Id | Should -Contain 'officeimo.reader.markdown'
+        $capabilities.Id | Should -Contain 'officeimo.reader.email'
+        $capabilities.Id | Should -Contain 'officeimo.reader.email.store'
+        $capabilities.Id | Should -Contain 'officeimo.reader.email.address-book'
         $capabilities.Id | Should -Contain 'officeimo.reader.pdf'
         $capabilities.Id | Should -Contain 'officeimo.reader.html'
         $capabilities.Id | Should -Contain 'officeimo.reader.csv'
@@ -28,22 +32,25 @@ Describe 'Reader cmdlets' {
         $capabilities.Id | Should -Contain 'officeimo.reader.rtf'
     }
 
-    It 'exports Reader table, visual, asset, and ingestion cmdlets' {
+    It 'exports Reader projection and ingestion cmdlets' {
         Get-Command -Name Get-OfficeDocumentTable -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Get-OfficeDocumentVisual -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Get-OfficeDocumentAsset -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Get-OfficeDocumentIngest -ErrorAction Stop | Should -Not -BeNullOrEmpty
+        Get-Command -Name Search-OfficeDocument -ErrorAction Stop | Should -Not -BeNullOrEmpty
+        Get-Command -Name Get-OfficeDocumentPageMarkdown -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Read-OfficeDocumentTable -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Read-OfficeDocumentVisual -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Read-OfficeDocumentAsset -ErrorAction Stop | Should -Not -BeNullOrEmpty
+        (Get-Command -Name Get-OfficeDocument).Parameters.Keys | Should -Contain 'IncludePageLocations'
     }
 
     It 'accepts a caller-configured immutable Reader' {
         $handlerId = 'pswriteoffice.test.custom'
-        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
-        $builderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.OfficeDocumentReaderBuilder' -CommandName 'Get-OfficeDocumentCapability'
-        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
-        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
+        $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
+        $builderType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.OfficeDocumentReaderBuilder' -CommandName 'Get-OfficeDocumentCapability'
+        $inputKindType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.ReaderInputKind' -CommandName 'Get-OfficeDocumentCapability'
+        $chunkType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.ReaderChunk' -CommandName 'Get-OfficeDocumentCapability'
 
         $registration = [Activator]::CreateInstance($registrationType)
         $registration.Id = $handlerId
@@ -66,6 +73,13 @@ Describe 'Reader cmdlets' {
         $customCapability | Should -HaveCount 1
         $customCapability.Extensions | Should -Contain '.custom'
         (Get-Command Get-OfficeDocumentChunk).Parameters.Keys | Should -Contain 'Reader'
+        (Get-Command New-OfficeDocumentReader).Parameters.Keys | Should -Contain 'ReaderAllOptions'
+
+        $customPath = Join-Path $TestDrive 'source.custom'
+        Set-Content -Path $customPath -Value 'custom reader input' -Encoding UTF8
+
+        { Get-OfficeDocumentChunk -Path $customPath -Reader $reader -NoMarkdownHeadingChunks } |
+            Should -Throw -ExpectedMessage '*immutable OfficeIMO 3 reader*'
     }
 
     It 'reads Markdown files as chunks and a document envelope' {
@@ -128,6 +142,29 @@ Describe 'Reader cmdlets' {
         ($chunks.Text -join "`n") | Should -Match 'Reader RTF adapter'
         ($chunks.Text -join "`n") | Should -Match 'Semantic chunk text'
         ($chunks.Text -join "`n") | Should -Not -Match '\\rtf1'
+    }
+
+    It 'searches page-aware Reader results and projects page Markdown' {
+        $path = Join-Path $TestDrive 'page-aware.rtf'
+        [System.IO.File]::WriteAllText(
+            $path,
+            '{\rtf1\ansi First page text\page Second page retention period}',
+            [System.Text.Encoding]::ASCII)
+
+        $document = Get-OfficeDocument -Path $path -IncludePageLocations
+        $document.Pages.Count | Should -Be 2
+
+        $matches = $document | Search-OfficeDocument -Query 'retention period' -WholeWord
+        $matches.Hits | Should -HaveCount 1
+        $matches.PageNumbers | Should -Be @(2)
+        $matches.Hits[0].Pages[0].Provenance.ToString() | Should -Be 'ExplicitBreak'
+
+        $pageMarkdown = @($document | Get-OfficeDocumentPageMarkdown)
+        $pageMarkdown | Should -HaveCount 2
+        $pageMarkdown[1].Markdown | Should -Match 'Second page retention period'
+
+        $combined = $document | Get-OfficeDocumentPageMarkdown -AsString
+        $combined | Should -Match '<!-- page: 2/2; provenance: ExplicitBreak -->'
     }
 
     It 'reads Markdown tables and materializes deterministic table sidecars' {

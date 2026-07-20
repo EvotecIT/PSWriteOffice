@@ -94,7 +94,7 @@ public sealed class GetOfficeDocumentIngestCommand : OfficeDocumentReaderCommand
     {
         var folderPath = ReaderCommandUtilities.ResolvePath(this, FolderPath);
         var folderOptions = ReaderCommandUtilities.BuildFolderOptions(!NoRecurse.IsPresent, MaxFiles, MaxTotalBytes, Extension);
-        var options = ReaderCommandUtilities.BuildReaderOptions(
+        var configuration = ReaderCommandUtilities.BuildReadConfiguration(
             MaxInputBytes,
             OpenXmlMaxCharactersInPart,
             MaxChars,
@@ -108,6 +108,11 @@ public sealed class GetOfficeDocumentIngestCommand : OfficeDocumentReaderCommand
             !NoMarkdownHeadingChunks.IsPresent,
             !NoHashes.IsPresent);
 
-        WriteObject(EffectiveReader.ReadFolderDetailed(folderPath, folderOptions, options, includeChunks: !NoChunks.IsPresent));
+        var reader = ResolveReader(configuration.HandlerOptions);
+        WriteObject(reader.ReadFolderDetailed(
+            folderPath,
+            folderOptions,
+            configuration.ReaderOptions,
+            includeChunks: !NoChunks.IsPresent));
     }
 }

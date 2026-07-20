@@ -120,7 +120,7 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
                 throw new PSArgumentException("Use page resize, rotation, or box editing as separate Set-OfficePdfPage operations.");
             }
 
-            PdfPageEditor.ResizePages(inputPath, outputPath, resizeOptions, pages);
+            PdfDocument.Open(inputPath).Pages.Resize(resizeOptions, pages).Save(outputPath).RequireSuccess();
             WriteObject(new FileInfo(outputPath));
             return;
         }
@@ -132,7 +132,17 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
                 throw new PSArgumentException("-BoxName requires -Left, -Bottom, -Right, and -Top.");
             }
 
-            PdfPageEditor.SetPageBox(inputPath, outputPath, BoxName!, Left.Value, Bottom.Value, Right.Value, Top.Value, pages);
+            PdfDocument
+                .Open(inputPath)
+                .Pages.SetPageBox(
+                    (PdfPageBoundaryBox) Enum.Parse(typeof(PdfPageBoundaryBox), BoxName!, ignoreCase: true),
+                    Left.Value,
+                    Bottom.Value,
+                    Right.Value,
+                    Top.Value,
+                    pages)
+                .Save(outputPath)
+                .RequireSuccess();
             WriteObject(new FileInfo(outputPath));
             return;
         }
@@ -142,11 +152,11 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
             throw new PSArgumentException("Provide -Rotation, -BoxName with coordinates, or page resize options.");
         }
 
-        var document = PdfDocument.Load(inputPath);
+        var document = PdfDocument.Open(inputPath);
         var result = string.IsNullOrWhiteSpace(PageRange)
             ? document.Pages.Rotate(Rotation)
             : document.Pages.Rotate(Rotation, PageRange!);
-        result.Save(outputPath);
+        result.Save(outputPath).RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 

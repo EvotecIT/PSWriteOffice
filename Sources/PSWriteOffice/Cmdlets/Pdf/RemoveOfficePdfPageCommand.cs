@@ -43,7 +43,7 @@ public sealed class RemoveOfficePdfPageCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Delete(PageRange).Save(outputPath);
+        PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Delete(PageRange).Save(outputPath).RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 }

@@ -183,8 +183,8 @@ internal static class MarkdownOptionUtilities
             options.BaseDirectory = Path.GetFullPath(fallbackBaseDirectory!);
         }
 
-        if (source.PdfIncludeLocalImages.HasValue) options.IncludeLocalImages = source.PdfIncludeLocalImages.Value;
-        if (source.PdfIncludeDataUriImages.HasValue) options.IncludeDataUriImages = source.PdfIncludeDataUriImages.Value;
+        if (source.PdfIncludeLocalImages.HasValue) options.ResourcePolicy.AllowLocalFileAccess = source.PdfIncludeLocalImages.Value;
+        if (source.PdfIncludeDataUriImages.HasValue) options.ResourcePolicy.AllowDataUris = source.PdfIncludeDataUriImages.Value;
         if (source.PdfRestrictLocalImagesToBaseDirectory.HasValue) options.RestrictLocalImagesToBaseDirectory = source.PdfRestrictLocalImagesToBaseDirectory.Value;
         if (source.PdfMaximumDataUriImageBytes.HasValue) options.MaximumDataUriImageBytes = source.PdfMaximumDataUriImageBytes.Value;
         if (source.PdfDefaultImageWidth.HasValue) options.DefaultImageWidth = source.PdfDefaultImageWidth.Value;
@@ -198,7 +198,7 @@ internal static class MarkdownOptionUtilities
         return options;
     }
 
-    internal static void SetPdfResultVariables(IMarkdownPdfOptionSource source, PSCmdlet command, OfficeIMO.Pdf.PdfDocumentConversionResult result)
+    internal static void SetPdfResultVariables(IMarkdownPdfOptionSource source, PSCmdlet command, OfficeIMO.Pdf.PdfSaveResult result)
     {
         SetVariable(command, source.PdfWarningVariable, result.Warnings);
         SetVariable(command, source.PdfConversionReportVariable, result.Report);

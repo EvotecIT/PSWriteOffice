@@ -85,18 +85,27 @@ public sealed class JoinOfficePdfCommand : PSCmdlet
             MyInvocation.BoundParameters.ContainsKey(nameof(ResizeMode)) ||
             ResizeMargin.HasValue);
 
-        if (FlattenVisualAnnotations.IsPresent || resizeOptions != null)
+        var documents = Path
+            .Select(path => PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, path)))
+            .ToArray();
+        if (documents.Length == 0)
         {
-            PdfMerger.MergeFiles(new PdfMergeOptions
-            {
-                FlattenVisualAnnotations = FlattenVisualAnnotations.IsPresent,
-                ResizePages = resizeOptions
-            }, Path.Select(path => PdfCommandUtilities.ResolvePath(this, path)), outputPath);
+            throw new PSArgumentException("Provide at least one input PDF path.", nameof(Path));
         }
-        else
+
+        PdfDocument Prepare(PdfDocument document)
         {
-            PdfMerger.MergeFiles(Path.Select(path => PdfCommandUtilities.ResolvePath(this, path)), outputPath);
+            var prepared = FlattenVisualAnnotations.IsPresent
+                ? document.FlattenVisualAnnotations()
+                : document;
+            return resizeOptions == null
+                ? prepared
+                : prepared.Pages.Resize(resizeOptions);
         }
+
+        var combined = PdfDocument.Merge(documents.Select(Prepare));
+
+        combined.Save(outputPath).RequireSuccess();
 
         if (PassThru.IsPresent)
         {

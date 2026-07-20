@@ -24,8 +24,9 @@ public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
     [ValidateRange(1, int.MaxValue)]
     public int Page { get; set; } = 1;
 
-    /// <summary>Output image format.</summary>
+    /// <summary>Output image format. Layout overlays support only PNG and SVG.</summary>
     [Parameter]
+    [ValidateSet(nameof(OfficeImageExportFormat.Png), nameof(OfficeImageExportFormat.Svg))]
     public OfficeImageExportFormat Format { get; set; } = OfficeImageExportFormat.Svg;
 
     /// <summary>Output scale.</summary>
@@ -52,9 +53,12 @@ public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         if (!ShouldProcess(output, $"Export PDF layout overlay as {Format}")) return;
         var drawing = PdfCommandUtilities.LoadDocument(input, ReadOptions).Read.LayoutDebugOverlay(Page, Options, LayoutOptions, ReadOptions);
-        var bytes = Format == OfficeImageExportFormat.Svg
-            ? OfficeDrawingSvgExporter.ToSvgBytes(drawing, Scale)
-            : OfficeDrawingRasterRenderer.ToPng(drawing, Scale);
+        var bytes = Format switch
+        {
+            OfficeImageExportFormat.Svg => OfficeDrawingSvgExporter.ToSvgBytes(drawing, Scale, OfficeSvgSizeUnit.Pixel),
+            OfficeImageExportFormat.Png => OfficeDrawingRasterRenderer.ToPng(drawing, Scale),
+            _ => throw new PSArgumentException("PDF layout overlays support only PNG and SVG output.", nameof(Format))
+        };
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         File.WriteAllBytes(output, bytes);
         WriteObject(new OfficeImageExportResult(Format,

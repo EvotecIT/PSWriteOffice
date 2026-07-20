@@ -81,11 +81,18 @@ public sealed class GetOfficeDocumentCommand : OfficeDocumentReaderCommandBase
     [Parameter]
     public SwitchParameter NoHashes { get; set; }
 
+    /// <summary>
+    /// Compute Word page locations and reconstruct RTF pages from explicit page and section breaks.
+    /// PDF and logical-container formats expose their native page-like locations without this switch.
+    /// </summary>
+    [Parameter]
+    public SwitchParameter IncludePageLocations { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var path = ReaderCommandUtilities.ResolvePath(this, Path);
-        var options = ReaderCommandUtilities.BuildReaderOptions(
+        var configuration = ReaderCommandUtilities.BuildReadConfiguration(
             MaxInputBytes,
             OpenXmlMaxCharactersInPart,
             MaxChars,
@@ -97,10 +104,12 @@ public sealed class GetOfficeDocumentCommand : OfficeDocumentReaderCommandBase
             ExcelSheetName,
             ExcelA1Range,
             !NoMarkdownHeadingChunks.IsPresent,
-            !NoHashes.IsPresent);
+            !NoHashes.IsPresent,
+            IncludePageLocations.IsPresent);
 
+        var reader = ResolveReader(configuration.HandlerOptions);
         WriteObject(AsJson.IsPresent
-            ? EffectiveReader.ReadDocumentJson(path, options, Indented.IsPresent)
-            : EffectiveReader.ReadDocument(path, options));
+            ? reader.ReadDocumentJson(path, configuration.ReaderOptions, Indented.IsPresent)
+            : reader.ReadDocument(path, configuration.ReaderOptions));
     }
 }

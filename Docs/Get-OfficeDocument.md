@@ -11,7 +11,7 @@ Reads a supported file into the OfficeIMO shared document read result envelope.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocument [-Path] <string> [-AsJson] [-Indented] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
+Get-OfficeDocument [-Path] <string> [-AsJson] [-Indented] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-IncludePageLocations] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -111,6 +111,23 @@ Accept wildcard characters: True
 
 ### -ExcludeWordFootnotes
 Exclude Word footnotes.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IncludePageLocations
+Compute Word page locations and reconstruct RTF pages from explicit page and section breaks.
+PDF and logical-container formats expose their native page-like locations without this switch.
 
 ```yaml
 Type: SwitchParameter

@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Add-OfficeExcelTimeline
 ## SYNOPSIS
-Adds workbook-level timeline cache metadata.
+Adds OfficeIMO-owned workbook timeline binding metadata.
 
 ## SYNTAX
 ### Context (Default)
@@ -25,7 +25,7 @@ Add-OfficeExcelTimeline -Document <ExcelDocument> -Name <string> [-SourceName <s
 ```
 
 ## DESCRIPTION
-Adds workbook-level timeline cache metadata.
+Adds OfficeIMO-owned workbook timeline binding metadata.
 
 ## EXAMPLES
 
@@ -36,7 +36,7 @@ Get-OfficeExcelDataModel -Path .\Report.xlsx |
     Select-Object -ExpandProperty TimelineCacheCount
 ```
 
-Writes timeline cache package metadata through OfficeIMO. Excel may still be required to materialize full timeline UI shapes.
+Writes portable OfficeIMO binding metadata. It does not create native Excel timeline caches or UI shapes.
 
 ## PARAMETERS
 

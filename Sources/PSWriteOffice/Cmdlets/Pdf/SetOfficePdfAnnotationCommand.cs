@@ -74,7 +74,10 @@ public sealed class SetOfficePdfAnnotationCommand : PSCmdlet
         };
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfAnnotationEditResult result = PdfAnnotationEditor.UpdateAnnotation(inputPath, outputPath, ObjectNumber, options);
+        PdfAnnotationEditResult result = PdfDocument
+            .Open(inputPath)
+            .Annotations.Update(ObjectNumber, options);
+        result.ToDocument().Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent ? result : new FileInfo(outputPath));
     }
 }

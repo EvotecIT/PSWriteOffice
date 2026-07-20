@@ -52,7 +52,7 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
+        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
         if (AsTextBlock.IsPresent)
         {
             if (AsMarkdown.IsPresent || ByPage.IsPresent)

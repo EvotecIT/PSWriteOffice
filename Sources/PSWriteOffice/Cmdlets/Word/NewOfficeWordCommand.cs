@@ -182,14 +182,15 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         if (PdfAllowSystemFontEmbedding.IsPresent || !string.IsNullOrWhiteSpace(PdfFontFamily))
         {
-            document.SaveAsPdf(pdfPath, new PdfSaveOptions
+            var pdfOptions = new PdfSaveOptions
             {
-                FontFamily = PdfFontFamily,
-                AllowSystemFontEmbedding = PdfAllowSystemFontEmbedding.IsPresent
-            });
+                FontFamily = PdfFontFamily
+            };
+            pdfOptions.ResourcePolicy.AllowSystemFontEmbedding = PdfAllowSystemFontEmbedding.IsPresent;
+            document.SaveAsPdf(pdfPath, pdfOptions).RequireSuccess();
             return;
         }
 
-        document.SaveAsPdf(pdfPath);
+        document.SaveAsPdf(pdfPath).RequireSuccess();
     }
 }

@@ -33,7 +33,10 @@ public sealed class GetOfficePdfAnnotationCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        foreach (var annotation in PdfInspector.Inspect(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)).Annotations)
+        foreach (var annotation in PdfDocument
+                     .Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password))
+                     .Inspect()
+                     .Annotations)
         {
             if (!string.IsNullOrWhiteSpace(Subtype) && !string.Equals(annotation.Subtype, Subtype, System.StringComparison.Ordinal))
             {

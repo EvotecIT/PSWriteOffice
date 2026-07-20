@@ -227,7 +227,7 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            LoadRtfDocument().SaveAsPdf(outputPath, options);
+            LoadRtfDocument().SaveAsPdf(outputPath, options).RequireSuccess();
 
             if (PassThru.IsPresent)
             {

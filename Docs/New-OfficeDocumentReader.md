@@ -11,7 +11,7 @@ Creates an immutable fully configured OfficeIMO document reader.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeDocumentReader [-Processor <IOfficeDocumentProcessor[]>] [-OcrEngine <IOfficeOcrEngine>] [-TesseractOptions <TesseractOcrEngineOptions>] [-ProcessOcrOptions <ProcessOfficeOcrEngineOptions>] [-OcrOptions <OfficeDocumentOcrExecutionOptions>] [-MaxConcurrentReads <int>] [-ProcessorFailureBehavior <OfficeDocumentProcessorFailureBehavior>] [<CommonParameters>]
+New-OfficeDocumentReader [-ReaderAllOptions <ReaderAllOptions>] [-Processor <IOfficeDocumentProcessor[]>] [-OcrEngine <IOfficeOcrEngine>] [-TesseractOptions <TesseractOcrEngineOptions>] [-ProcessOcrOptions <ProcessOfficeOcrEngineOptions>] [-OcrOptions <OfficeDocumentOcrExecutionOptions>] [-MaxConcurrentReads <int>] [-ProcessorFailureBehavior <OfficeDocumentProcessorFailureBehavior>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -116,6 +116,22 @@ Type: OfficeDocumentProcessorFailureBehavior
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Throw, ContinueWithDiagnostic, StopWithDiagnostic
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ReaderAllOptions
+Optional format-specific settings captured while OfficeIMO Reader handlers are registered.
+
+```yaml
+Type: ReaderAllOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named

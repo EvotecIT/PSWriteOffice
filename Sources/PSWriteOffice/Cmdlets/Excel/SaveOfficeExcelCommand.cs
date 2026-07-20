@@ -183,6 +183,6 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(pdfPath);
-        Document.SaveAsPdf(pdfPath);
+        Document.SaveAsPdf(pdfPath).RequireSuccess();
     }
 }

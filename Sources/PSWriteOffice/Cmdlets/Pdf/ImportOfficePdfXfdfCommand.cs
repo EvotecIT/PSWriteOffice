@@ -69,7 +69,7 @@ public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
             : _pipelineXfdf.ToString();
         var result = PdfCommandUtilities.LoadDocument(input, ReadOptions).Forms.ImportXfdf(xml, Options);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
-        result.Save(output);
+        result.Save(output).RequireSuccess();
         if (PassThru.IsPresent) WriteObject(result);
     }
 

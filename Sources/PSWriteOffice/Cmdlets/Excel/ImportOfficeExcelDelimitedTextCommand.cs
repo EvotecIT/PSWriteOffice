@@ -4,6 +4,7 @@ using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using OfficeIMO.Reader.Csv;
+using OfficeIMO.Reader.Excel;
 using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;

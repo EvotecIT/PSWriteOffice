@@ -40,7 +40,7 @@ public sealed class GetOfficePdfAttachmentCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var attachments = PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)).Read.Attachments();
+        var attachments = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)).Read.Attachments();
         string? outputDirectory = null;
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {

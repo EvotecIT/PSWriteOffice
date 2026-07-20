@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Reader;
+using OfficeIMO.Reader.All;
 using OfficeIMO.Reader.Ocr.Process;
 using OfficeIMO.Reader.Ocr.Tesseract;
 using PSWriteOffice.Services.Reader;
@@ -20,6 +21,10 @@ namespace PSWriteOffice.Cmdlets.Reader;
 [OutputType(typeof(OfficeDocumentReader))]
 public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
 {
+    /// <summary>Optional format-specific settings captured while OfficeIMO Reader handlers are registered.</summary>
+    [Parameter]
+    public ReaderAllOptions? ReaderAllOptions { get; set; }
+
     /// <summary>Additional ordered processors to run after document extraction.</summary>
     [Parameter]
     public IOfficeDocumentProcessor[]? Processor { get; set; }
@@ -61,7 +66,7 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
             throw new PSArgumentException("Specify only one of -OcrEngine, -TesseractOptions, or -ProcessOcrOptions.");
         }
 
-        var builder = ReaderCommandUtilities.CreateBuilder()
+        var builder = ReaderCommandUtilities.CreateBuilder(ReaderAllOptions)
             .WithProcessorFailureBehavior(ProcessorFailureBehavior);
         if (MaxConcurrentReads.HasValue) builder.WithMaxConcurrentReads(MaxConcurrentReads.Value);
         if (Processor != null) builder.AddProcessors(Processor.Where(static value => value != null));

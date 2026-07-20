@@ -59,7 +59,10 @@ public sealed class RemoveOfficePdfAnnotationCommand : PSCmdlet
         };
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfAnnotationEditResult result = PdfAnnotationEditor.RemoveAnnotations(inputPath, outputPath, options);
+        PdfAnnotationEditResult result = PdfDocument
+            .Open(inputPath)
+            .Annotations.Remove(options);
+        result.ToDocument().Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent ? result : new FileInfo(outputPath));
     }
 }

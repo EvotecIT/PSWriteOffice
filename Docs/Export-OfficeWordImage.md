@@ -56,7 +56,7 @@ Output image format.
 Type: OfficeImageExportFormat
 Parameter Sets: Path, Document
 Aliases: None
-Possible values: Png, Svg
+Possible values: Png, Svg, Jpeg, Tiff, Webp
 
 Required: False
 Position: named

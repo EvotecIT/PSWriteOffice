@@ -47,9 +47,12 @@ public sealed class SetOfficePdfSignatureCommand : PSCmdlet
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
 
-        PdfIncrementalUpdater.ApplyExternalSignature(inputPath, outputPath, File.ReadAllBytes(signaturePath));
+        var document = PdfDocument
+            .Open(inputPath)
+            .CompleteExternalSignature(File.ReadAllBytes(signaturePath));
+        document.Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent
-            ? PdfSignatureValidator.Validate(outputPath)
+            ? document.ValidateSignatures()
             : new FileInfo(outputPath));
     }
 }

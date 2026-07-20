@@ -148,14 +148,15 @@ public sealed class SaveOfficeWordCommand : PSCmdlet
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         if (PdfAllowSystemFontEmbedding.IsPresent || !string.IsNullOrWhiteSpace(PdfFontFamily))
         {
-            Document.SaveAsPdf(pdfPath, new PdfSaveOptions
+            var pdfOptions = new PdfSaveOptions
             {
-                FontFamily = PdfFontFamily,
-                AllowSystemFontEmbedding = PdfAllowSystemFontEmbedding.IsPresent
-            });
+                FontFamily = PdfFontFamily
+            };
+            pdfOptions.ResourcePolicy.AllowSystemFontEmbedding = PdfAllowSystemFontEmbedding.IsPresent;
+            Document.SaveAsPdf(pdfPath, pdfOptions).RequireSuccess();
             return;
         }
 
-        Document.SaveAsPdf(pdfPath);
+        Document.SaveAsPdf(pdfPath).RequireSuccess();
     }
 }

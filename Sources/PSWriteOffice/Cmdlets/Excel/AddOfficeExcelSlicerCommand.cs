@@ -5,14 +5,14 @@ using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
-/// <summary>Adds workbook-level slicer cache metadata.</summary>
+/// <summary>Adds OfficeIMO-owned workbook slicer binding metadata.</summary>
 /// <example>
-///   <summary>Add slicer cache metadata for a pivot field.</summary>
+///   <summary>Add slicer binding metadata for a pivot field.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$slicer = Add-OfficeExcelSlicer -Path .\Report.xlsx -Name RegionSlicer -SourceName Region -PivotTableName SalesPivot -PassThru
 /// Get-OfficeExcelDataModel -Path .\Report.xlsx |
 ///     Select-Object -ExpandProperty SlicerCacheCount</code>
-///   <para>Writes slicer cache package metadata through OfficeIMO. Excel may still be required to materialize full slicer UI shapes.</para>
+///   <para>Writes portable OfficeIMO binding metadata. It does not create native Excel slicer caches or UI shapes.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelSlicer", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelSlicer")]

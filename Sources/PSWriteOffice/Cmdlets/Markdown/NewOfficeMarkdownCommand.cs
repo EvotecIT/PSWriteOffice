@@ -233,5 +233,6 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
         var options = MarkdownOptionUtilities.BuildPdfOptions(this, this, fallbackBaseDirectory);
         var result = document.SaveAsPdf(pdfPath, options);
         MarkdownOptionUtilities.SetPdfResultVariables(this, this, result);
+        result.RequireSuccess();
     }
 }

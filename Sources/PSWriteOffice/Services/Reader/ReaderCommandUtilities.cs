@@ -3,25 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Reader;
-using OfficeIMO.Reader.Csv;
-using OfficeIMO.Reader.Epub;
-using OfficeIMO.Reader.Html;
-using OfficeIMO.Reader.Json;
-using OfficeIMO.Reader.AsciiDoc;
-using OfficeIMO.Reader.Latex;
-using OfficeIMO.Reader.OpenDocument;
-using OfficeIMO.Reader.Pdf;
-using OfficeIMO.Reader.Rtf;
-using OfficeIMO.Reader.Visio;
-using OfficeIMO.Reader.Xml;
-using OfficeIMO.Reader.Yaml;
-using OfficeIMO.Reader.Zip;
+using OfficeIMO.Reader.All;
 
 namespace PSWriteOffice.Services.Reader;
 
 internal static class ReaderCommandUtilities
 {
-    private static readonly Lazy<OfficeDocumentReader> SharedReader = new(CreateReader);
+    private static readonly Lazy<OfficeDocumentReader> SharedReader = new(() => CreateReader());
 
     internal static OfficeDocumentReader Reader => SharedReader.Value;
 
@@ -38,27 +26,15 @@ internal static class ReaderCommandUtilities
             : Path.Combine(cmdlet.SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 
-    internal static OfficeDocumentReaderBuilder CreateBuilder()
+    internal static OfficeDocumentReaderBuilder CreateBuilder(ReaderAllOptions? options = null)
     {
         return new OfficeDocumentReaderBuilder()
-            .AddPdfHandler()
-            .AddHtmlHandler()
-            .AddCsvHandler()
-            .AddJsonHandler()
-            .AddXmlHandler()
-            .AddYamlHandler()
-            .AddZipHandler()
-            .AddEpubHandler()
-            .AddVisioHandler()
-            .AddRtfHandler()
-            .AddAsciiDocHandler()
-            .AddLatexHandler()
-            .AddOpenDocumentHandler();
+            .AddAllOfficeIMOHandlers(options);
     }
 
-    private static OfficeDocumentReader CreateReader() => CreateBuilder().Build();
+    internal static OfficeDocumentReader CreateReader(ReaderAllOptions? options = null) => CreateBuilder(options).Build();
 
-    internal static ReaderOptions BuildReaderOptions(
+    internal static ReaderCommandConfiguration BuildReadConfiguration(
         long? maxInputBytes,
         long? openXmlMaxCharactersInPart,
         int? maxChars,
@@ -70,53 +46,74 @@ internal static class ReaderCommandUtilities
         string? excelSheetName,
         string? excelA1Range,
         bool markdownChunkByHeadings,
-        bool computeHashes)
+        bool computeHashes,
+        bool includePageLocations = false)
     {
-        var options = new ReaderOptions
+        var readerOptions = new ReaderOptions
         {
-            IncludeWordFootnotes = includeWordFootnotes,
-            IncludePowerPointNotes = includePowerPointNotes,
-            ExcelHeadersInFirstRow = excelHeadersInFirstRow,
-            MarkdownChunkByHeadings = markdownChunkByHeadings,
             ComputeHashes = computeHashes
         };
 
         if (maxInputBytes.HasValue)
         {
-            options.MaxInputBytes = maxInputBytes.Value;
+            readerOptions.MaxInputBytes = maxInputBytes.Value;
         }
 
         if (openXmlMaxCharactersInPart.HasValue)
         {
-            options.OpenXmlMaxCharactersInPart = openXmlMaxCharactersInPart.Value;
+            readerOptions.OpenXmlMaxCharactersInPart = openXmlMaxCharactersInPart.Value;
         }
 
         if (maxChars.HasValue)
         {
-            options.MaxChars = maxChars.Value;
+            readerOptions.MaxChars = maxChars.Value;
         }
 
         if (maxTableRows.HasValue)
         {
-            options.MaxTableRows = maxTableRows.Value;
+            readerOptions.MaxTableRows = maxTableRows.Value;
         }
 
-        if (excelChunkRows.HasValue)
-        {
-            options.ExcelChunkRows = excelChunkRows.Value;
-        }
+        var hasHandlerOverrides =
+            !includeWordFootnotes ||
+            !includePowerPointNotes ||
+            !excelHeadersInFirstRow ||
+            excelChunkRows.HasValue ||
+            !string.IsNullOrWhiteSpace(excelSheetName) ||
+            !string.IsNullOrWhiteSpace(excelA1Range) ||
+            !markdownChunkByHeadings ||
+            includePageLocations;
+        ReaderAllOptions? handlerOptions = hasHandlerOverrides
+            ? new ReaderAllOptions
+            {
+                Word = new OfficeIMO.Reader.Word.ReaderWordOptions
+                {
+                    IncludeFootnotes = includeWordFootnotes,
+                    IncludePageLocations = includePageLocations
+                },
+                PowerPoint = new OfficeIMO.Reader.PowerPoint.ReaderPowerPointOptions
+                {
+                    IncludeNotes = includePowerPointNotes
+                },
+                Excel = new OfficeIMO.Reader.Excel.ReaderExcelOptions
+                {
+                    HeadersInFirstRow = excelHeadersInFirstRow,
+                    ChunkRows = excelChunkRows ?? 200,
+                    SheetName = string.IsNullOrWhiteSpace(excelSheetName) ? null : excelSheetName,
+                    A1Range = string.IsNullOrWhiteSpace(excelA1Range) ? null : excelA1Range
+                },
+                Markdown = new OfficeIMO.Reader.Markdown.ReaderMarkdownOptions
+                {
+                    ChunkByHeadings = markdownChunkByHeadings
+                },
+                Rtf = new OfficeIMO.Reader.Rtf.ReaderRtfOptions
+                {
+                    IncludePageLocations = includePageLocations
+                }
+            }
+            : null;
 
-        if (!string.IsNullOrWhiteSpace(excelSheetName))
-        {
-            options.ExcelSheetName = excelSheetName;
-        }
-
-        if (!string.IsNullOrWhiteSpace(excelA1Range))
-        {
-            options.ExcelA1Range = excelA1Range;
-        }
-
-        return options;
+        return new ReaderCommandConfiguration(readerOptions, handlerOptions);
     }
 
     internal static ReaderFolderOptions BuildFolderOptions(bool recurse, int? maxFiles, long? maxTotalBytes, string[]? extension)
@@ -146,4 +143,17 @@ internal static class ReaderCommandUtilities
 
         return options;
     }
+}
+
+internal sealed class ReaderCommandConfiguration
+{
+    internal ReaderCommandConfiguration(ReaderOptions readerOptions, ReaderAllOptions? handlerOptions)
+    {
+        ReaderOptions = readerOptions;
+        HandlerOptions = handlerOptions;
+    }
+
+    internal ReaderOptions ReaderOptions { get; }
+
+    internal ReaderAllOptions? HandlerOptions { get; }
 }

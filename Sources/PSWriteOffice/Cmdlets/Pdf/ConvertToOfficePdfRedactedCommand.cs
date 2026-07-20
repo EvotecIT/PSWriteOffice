@@ -89,7 +89,11 @@ public sealed class ConvertToOfficePdfRedactedCommand : PSCmdlet
         };
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfRedactionApplier.Apply(inputPath, outputPath, areas, options, readOptions: PdfCommandUtilities.CreateReadOptions(Password));
+        PdfDocument
+            .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password))
+            .ApplyRedactions(areas, options)
+            .Save(outputPath)
+            .RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 }

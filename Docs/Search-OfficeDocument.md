@@ -4,51 +4,53 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Export-OfficePdfImage
+# Search-OfficeDocument
 ## SYNOPSIS
-Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contract.
+Searches normalized document blocks and returns Reader-owned page citations for each match.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfImage [-Path] <string> [-OutputPath] <string> [-PageRange <string>] [-Format <OfficeImageExportFormat>] [-Options <PdfImageExportOptions>] [-ReadOptions <PdfReadOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Search-OfficeDocument [-InputObject] <OfficeDocumentReadResult> [-Query] <string> [-MatchCase] [-WholeWord] [-MaximumResults <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contract.
+Searches normalized document blocks and returns Reader-owned page citations for each match.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> Export-OfficePdfImage -Path .\Report.pdf -OutputPath .\Pages -PageRange '1-3,5'
+PS> $document = Get-OfficeDocument -Path .\Policy.docx -IncludePageLocations
+$matches = $document | Search-OfficeDocument -Query 'retention period'
+$matches.Hits | Select-Object -ExpandProperty Pages
 ```
 
-Writes the selected pages and returns normalized image results with rendering diagnostics.
+Uses OfficeIMO.Reader search and location contracts without reparsing document text in PowerShell.
 
 ## PARAMETERS
 
-### -Format
-Output image format.
+### -InputObject
+Normalized document returned by Get-OfficeDocument.
 
 ```yaml
-Type: OfficeImageExportFormat
+Type: OfficeDocumentReadResult
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Png, Svg, Jpeg, Tiff, Webp
+Possible values:
 
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
-### -Options
-Optional DPI, scale, thumbnail, encoding, diagnostics, and resource limits.
+### -MatchCase
+Use case-sensitive ordinal matching.
 
 ```yaml
-Type: PdfImageExportOptions
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -60,8 +62,24 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -OutputPath
-Destination folder.
+### -MaximumResults
+Maximum number of occurrences to return.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Query
+Text to find in normalized document blocks.
 
 ```yaml
 Type: String
@@ -76,43 +94,11 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
-### -PageRange
-Optional one-based ranges such as 1-3,5.
+### -WholeWord
+Return only occurrences surrounded by non-word characters.
 
 ```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Path
-Path to the PDF.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -ReadOptions
-Optional bounded PDF parsing settings.
-
-```yaml
-Type: PdfReadOptions
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -129,11 +115,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `OfficeIMO.Reader.OfficeDocumentReadResult`
 
 ## OUTPUTS
 
-- `OfficeIMO.Drawing.OfficeImageExportResult`
+- `OfficeIMO.Reader.OfficeDocumentSearchResult`
 
 ## RELATED LINKS
 

@@ -152,7 +152,7 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            document.SaveAsPdf(outputPath, options);
+            document.SaveAsPdf(outputPath, options).RequireSuccess();
             if (Open.IsPresent)
             {
                 FileOpenService.Open(outputPath);

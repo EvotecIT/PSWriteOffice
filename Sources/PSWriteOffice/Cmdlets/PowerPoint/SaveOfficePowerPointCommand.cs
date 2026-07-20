@@ -75,6 +75,6 @@ public class SaveOfficePowerPointCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(pdfPath);
-        Presentation.SaveAsPdf(pdfPath);
+        Presentation.SaveAsPdf(pdfPath).RequireSuccess();
     }
 }

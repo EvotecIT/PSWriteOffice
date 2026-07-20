@@ -213,7 +213,7 @@ public sealed class NewOfficePdfCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(savePath!);
-        document.Save(savePath!);
+        document.Save(savePath!).RequireSuccess();
 
         if (Show.IsPresent)
         {

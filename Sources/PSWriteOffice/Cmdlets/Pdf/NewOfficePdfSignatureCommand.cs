@@ -90,7 +90,10 @@ public sealed class NewOfficePdfSignatureCommand : PSCmdlet
             ReservedSignatureContentsBytes = ReservedBytes
         };
 
-        PdfExternalSignaturePreparation preparation = PdfIncrementalUpdater.PrepareExternalSignature(inputPath, outputPath, options);
+        PdfExternalSignaturePreparation preparation = PdfDocument
+            .Open(inputPath)
+            .PrepareExternalSignature(options);
+        PdfDocument.Open(preparation.PreparedPdf).Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent ? preparation : new FileInfo(outputPath));
     }
 }

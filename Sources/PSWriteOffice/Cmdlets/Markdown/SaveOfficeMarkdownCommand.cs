@@ -185,6 +185,7 @@ public sealed class SaveOfficeMarkdownCommand : PSCmdlet
             var options = MarkdownOptionUtilities.BuildPdfOptions(this, this, ResolvePdfBaseDirectory(savedFile));
             var result = Document.SaveAsPdf(pdfPath, options);
             MarkdownOptionUtilities.SetPdfResultVariables(this, this, result);
+            result.RequireSuccess();
         }
 
         WriteObject(PassThru.IsPresent ? Document : savedFile ?? (object)Document);

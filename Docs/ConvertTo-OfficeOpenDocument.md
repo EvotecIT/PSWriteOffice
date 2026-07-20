@@ -209,9 +209,9 @@ OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## OUTPUTS
 
-- `OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdtDocument, OfficeIMO.OpenDocument, Version=2.0.1.0, Culture=neutral, PublicKeyToken=null]]
-OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdsDocument, OfficeIMO.OpenDocument, Version=2.0.1.0, Culture=neutral, PublicKeyToken=null]]
-OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdpPresentation, OfficeIMO.OpenDocument, Version=2.0.1.0, Culture=neutral, PublicKeyToken=null]]`
+- `OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdtDocument, OfficeIMO.OpenDocument, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null]]
+OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdsDocument, OfficeIMO.OpenDocument, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null]]
+OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdpPresentation, OfficeIMO.OpenDocument, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null]]`
 
 ## RELATED LINKS
 
