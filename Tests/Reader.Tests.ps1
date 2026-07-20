@@ -43,6 +43,30 @@ Describe 'Reader cmdlets' {
         Get-Command -Name Read-OfficeDocumentVisual -ErrorAction Stop | Should -Not -BeNullOrEmpty
         Get-Command -Name Read-OfficeDocumentAsset -ErrorAction Stop | Should -Not -BeNullOrEmpty
         (Get-Command -Name Get-OfficeDocument).Parameters.Keys | Should -Contain 'IncludePageLocations'
+        $searchParameters = (Get-Command -Name Search-OfficeDocument).Parameters.Keys
+        $searchParameters | Should -Contain 'Path'
+        $searchParameters | Should -Contain 'Recurse'
+        $searchParameters | Should -Contain 'MaxDocuments'
+        $searchParameters | Should -Contain 'NoDocumentLimit'
+        $searchParameters | Should -Contain 'MaxStoreItems'
+        $searchParameters | Should -Contain 'AllStoreItems'
+        $searchParameters | Should -Contain 'AllResults'
+        $searchParameters | Should -Contain 'Reader'
+
+        $batchParameters = (Get-Command -Name Get-OfficeDocumentBatch).Parameters.Keys
+        $batchParameters | Should -Contain 'MaxDocuments'
+        $batchParameters | Should -Contain 'MaxDegreeOfParallelism'
+        $batchParameters | Should -Contain 'ContinueOnError'
+
+        $readerParameters = (Get-Command -Name New-OfficeDocumentReader).Parameters.Keys
+        $readerParameters | Should -Contain 'TesseractLanguage'
+        $readerParameters | Should -Contain 'MaxStoreItems'
+
+        foreach ($commandName in 'Get-OfficeDocument', 'Get-OfficeDocumentChunk', 'Get-OfficeDocumentIngest') {
+            $parameters = (Get-Command -Name $commandName).Parameters.Keys
+            $parameters | Should -Contain 'MaxStoreItems'
+            $parameters | Should -Contain 'AllStoreItems'
+        }
     }
 
     It 'accepts a caller-configured immutable Reader' {
@@ -165,6 +189,124 @@ Describe 'Reader cmdlets' {
 
         $combined = $document | Get-OfficeDocumentPageMarkdown -AsString
         $combined | Should -Match '<!-- page: 2/2; provenance: ExplicitBreak -->'
+    }
+
+    It 'searches Word Excel Markdown PST and OST together through PowerShell-native parameters' {
+        $folder = Join-Path $TestDrive 'mixed-search'
+        $nested = Join-Path $folder 'nested'
+        New-Item -Path $nested -ItemType Directory | Out-Null
+
+        $wordPath = Join-Path $folder 'policy.docx'
+        New-OfficeWord -Path $wordPath {
+            WordSection { WordParagraph -Text 'Synthetic Word evidence' }
+        } | Out-Null
+
+        $excelPath = Join-Path $folder 'register.xlsx'
+        New-OfficeExcel -Path $excelPath {
+            ExcelSheet 'Data' { ExcelCell -Address A1 -Value 'Synthetic Excel evidence' }
+        } | Out-Null
+
+        $markdownPath = Join-Path $nested 'notes.md'
+        Set-Content -Path $markdownPath -Value '# Notes', 'Synthetic Markdown evidence' -Encoding UTF8
+        $pstPath = Join-Path $folder 'mail.pst'
+        $ostPath = Join-Path $nested 'offline.ost'
+        [System.IO.File]::WriteAllBytes(
+            $pstPath,
+            [Convert]::FromBase64String((Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Assets\SyntheticMailStore.pst.b64') -Raw).Trim()))
+        [System.IO.File]::WriteAllBytes(
+            $ostPath,
+            [Convert]::FromBase64String((Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Assets\SyntheticMailStore.ost.b64') -Raw).Trim()))
+        Set-Content -Path (Join-Path $folder 'broken.docx') -Value 'not an OpenXML package' -Encoding UTF8
+        Set-Content -Path (Join-Path $folder 'ignored.bin') -Value 'Synthetic unsupported input' -Encoding UTF8
+
+        $readErrors = @()
+        $matches = @(Search-OfficeDocument -Path $folder -Recurse -Query 'Synthetic' `
+                -MaxDocuments 10 -MaxStoreItems 10 -MaximumResults 10 -MaxDegreeOfParallelism 2 `
+                -ErrorVariable +readErrors -ErrorAction SilentlyContinue)
+
+        ($matches.Path | Select-Object -Unique) | Should -HaveCount 5
+        $matches.Path | Should -Contain $wordPath
+        $matches.Path | Should -Contain $excelPath
+        $matches.Path | Should -Contain $markdownPath
+        $matches.Path | Should -Contain $pstPath
+        $matches.Path | Should -Contain $ostPath
+        $matches.DocumentType | Should -Contain 'Word'
+        $matches.DocumentType | Should -Contain 'Excel'
+        $matches.DocumentType | Should -Contain 'Markdown'
+        ($matches | Where-Object DocumentType -EQ 'Email').Path | Select-Object -Unique | Should -HaveCount 2
+        $matches.Match | Should -Not -Contain $null
+        $matches.DocumentLimitReached | Should -Not -Contain $true
+        $matches.SourceLimitReached | Should -Not -Contain $true
+        $readErrors | Should -HaveCount 1
+
+        $unlimited = @(Search-OfficeDocument -Path $markdownPath -Query 'Synthetic' `
+                -NoDocumentLimit -AllStoreItems -AllResults)
+        $unlimited | Should -HaveCount 1
+
+        $store = Get-OfficeDocument -Path $pstPath -AllStoreItems
+        $store.Kind.ToString() | Should -Be 'Email'
+        $store.Metadata | Where-Object Name -EQ 'SelectionLimitReached' |
+            Select-Object -ExpandProperty Value | Should -Not -Contain 'True'
+    }
+
+    It 'reports a configurable document ceiling without requiring collection objects' {
+        $folder = Join-Path $TestDrive 'bounded-search'
+        New-Item -Path $folder -ItemType Directory | Out-Null
+        1..3 | ForEach-Object {
+            Set-Content -Path (Join-Path $folder ("document-{0}.md" -f $_)) `
+                -Value "Synthetic bounded document $_" -Encoding UTF8
+        }
+
+        $warnings = @()
+        $matches = @(Search-OfficeDocument -Path $folder -Query 'Synthetic' -MaxDocuments 2 `
+                -WarningVariable +warnings -WarningAction SilentlyContinue)
+
+        ($matches.Path | Select-Object -Unique) | Should -HaveCount 2
+        $matches.DocumentLimitReached | Should -Not -Contain $false
+        ($warnings -join ' ') | Should -Match 'configured document ceiling \(2\)'
+    }
+
+    It 'continues a batch after an individual document fails' {
+        $folder = Join-Path $TestDrive 'resilient-batch'
+        New-Item -Path $folder -ItemType Directory | Out-Null
+        $goodPath = Join-Path $folder 'good.md'
+        Set-Content -Path $goodPath -Value '# Good batch document' -Encoding UTF8
+        Set-Content -Path (Join-Path $folder 'broken.docx') -Value 'not an OpenXML package' -Encoding UTF8
+
+        $readErrors = @()
+        $documents = @(Get-OfficeDocumentBatch -Path $folder -MaxDocuments 10 `
+                -MaxDegreeOfParallelism 2 -ContinueOnError `
+                -ErrorVariable +readErrors -ErrorAction SilentlyContinue)
+
+        $documents | Should -HaveCount 1
+        $documents[0].Source.Path | Should -Be $goodPath
+        $readErrors | Should -HaveCount 1
+    }
+
+    It 'creates configurable readers without requiring OfficeIMO option objects' {
+        $reader = New-OfficeDocumentReader -TesseractLanguage 'eng+pol' `
+            -TesseractTimeoutSeconds 30 -MaxStoreItems 2500 -MaxConcurrentReads 2
+
+        $reader | Should -Not -BeNullOrEmpty
+        $reader.MaxConcurrentReads | Should -Be 2
+        $reader.ProcessorPipeline.Count | Should -Be 1
+    }
+
+    It 'uses caller-selected search concurrency and rejects an undersized immutable Reader' {
+        $path = Join-Path $TestDrive 'configured-search.md'
+        Set-Content -Path $path -Value '# Concurrency', 'Synthetic configurable search' -Encoding UTF8
+        $reader = New-OfficeDocumentReader -MaxConcurrentReads 6
+
+        $matches = @(Search-OfficeDocument -Path $path -Query 'Synthetic' `
+                -Reader $reader -MaxDegreeOfParallelism 6)
+
+        $matches | Should -HaveCount 1
+        $matches[0].Path | Should -Be $path
+        {
+            Search-OfficeDocument -Path $path -Query 'Synthetic' `
+                -Reader (New-OfficeDocumentReader -MaxConcurrentReads 2) `
+                -MaxDegreeOfParallelism 3 -ErrorAction Stop
+        } | Should -Throw -ExpectedMessage '*requested batch concurrency (3)*Reader limit (2)*'
     }
 
     It 'reads Markdown tables and materializes deterministic table sidecars' {

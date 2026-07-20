@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Reader;
 using OfficeIMO.Reader.All;
+using OfficeIMO.Reader.Email;
 
 namespace PSWriteOffice.Services.Reader;
 
@@ -26,13 +28,53 @@ internal static class ReaderCommandUtilities
             : Path.Combine(cmdlet.SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 
+    internal static IReadOnlyList<string> ResolvePaths(PSCmdlet cmdlet, string path)
+    {
+        try
+        {
+            var resolved = cmdlet.SessionState.Path.GetResolvedProviderPathFromPSPath(path, out _);
+            return resolved.Count > 0
+                ? resolved.ToArray()
+                : new[] { ResolvePath(cmdlet, path) };
+        }
+        catch (ItemNotFoundException)
+        {
+            return new[] { ResolvePath(cmdlet, path) };
+        }
+    }
+
     internal static OfficeDocumentReaderBuilder CreateBuilder(ReaderAllOptions? options = null)
     {
         return new OfficeDocumentReaderBuilder()
             .AddAllOfficeIMOHandlers(options);
     }
 
-    internal static OfficeDocumentReader CreateReader(ReaderAllOptions? options = null) => CreateBuilder(options).Build();
+    internal static OfficeDocumentReader CreateReader(
+        ReaderAllOptions? options = null,
+        int? maxConcurrentReads = null)
+    {
+        OfficeDocumentReaderBuilder builder = CreateBuilder(options);
+        if (maxConcurrentReads.HasValue)
+        {
+            builder.WithMaxConcurrentReads(maxConcurrentReads.Value);
+        }
+
+        return builder.Build();
+    }
+
+    internal static void ValidateBatchConcurrency(
+        OfficeDocumentReader reader,
+        ReaderBatchOptions batchOptions)
+    {
+        if (batchOptions.MaxDegreeOfParallelism.HasValue &&
+            batchOptions.MaxDegreeOfParallelism.Value > reader.MaxConcurrentReads)
+        {
+            throw new PSArgumentException(
+                $"The requested batch concurrency ({batchOptions.MaxDegreeOfParallelism.Value}) exceeds the " +
+                $"immutable Reader limit ({reader.MaxConcurrentReads}). Create one with " +
+                "New-OfficeDocumentReader -MaxConcurrentReads set to the same or a higher value.");
+        }
+    }
 
     internal static ReaderCommandConfiguration BuildReadConfiguration(
         long? maxInputBytes,
@@ -47,7 +89,8 @@ internal static class ReaderCommandUtilities
         string? excelA1Range,
         bool markdownChunkByHeadings,
         bool computeHashes,
-        bool includePageLocations = false)
+        bool includePageLocations = false,
+        int? maxStoreItems = null)
     {
         var readerOptions = new ReaderOptions
         {
@@ -82,7 +125,8 @@ internal static class ReaderCommandUtilities
             !string.IsNullOrWhiteSpace(excelSheetName) ||
             !string.IsNullOrWhiteSpace(excelA1Range) ||
             !markdownChunkByHeadings ||
-            includePageLocations;
+            includePageLocations ||
+            maxStoreItems.HasValue;
         ReaderAllOptions? handlerOptions = hasHandlerOverrides
             ? new ReaderAllOptions
             {
@@ -109,11 +153,82 @@ internal static class ReaderCommandUtilities
                 Rtf = new OfficeIMO.Reader.Rtf.ReaderRtfOptions
                 {
                     IncludePageLocations = includePageLocations
-                }
+                },
+                Email = maxStoreItems.HasValue
+                    ? new ReaderEmailHandlersOptions
+                    {
+                        Stores = new ReaderEmailStoreOptions
+                        {
+                            MaxItems = maxStoreItems.Value
+                        }
+                    }
+                    : null
             }
             : null;
 
         return new ReaderCommandConfiguration(readerOptions, handlerOptions);
+    }
+
+    internal static ReaderCommandConfiguration BuildSearchConfiguration(
+        bool includePageLocations,
+        int? maxStoreItems)
+    {
+        return BuildReadConfiguration(
+            maxInputBytes: null,
+            openXmlMaxCharactersInPart: null,
+            maxChars: null,
+            maxTableRows: null,
+            includeWordFootnotes: true,
+            includePowerPointNotes: true,
+            excelHeadersInFirstRow: true,
+            excelChunkRows: null,
+            excelSheetName: null,
+            excelA1Range: null,
+            markdownChunkByHeadings: true,
+            computeHashes: false,
+            includePageLocations,
+            maxStoreItems);
+    }
+
+    internal static bool HasSourceLimit(OfficeDocumentReadResult document)
+    {
+        return document.Metadata.Any(static entry =>
+                   string.Equals(entry.Name, "SelectionLimitReached", StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(entry.Value, "True", StringComparison.OrdinalIgnoreCase)) ||
+               document.Diagnostics.Any(static diagnostic =>
+                   diagnostic.Category == OfficeDocumentDiagnosticCategory.Limit);
+    }
+
+    internal static IReadOnlyList<string> CollectDocumentPaths(
+        IEnumerable<string> paths,
+        int maxDocuments,
+        out bool limitReached)
+    {
+        if (paths == null) throw new ArgumentNullException(nameof(paths));
+        if (maxDocuments < 1) throw new ArgumentOutOfRangeException(nameof(maxDocuments));
+
+        var comparer = Path.DirectorySeparatorChar == '\\'
+            ? StringComparer.OrdinalIgnoreCase
+            : StringComparer.Ordinal;
+        var unique = new HashSet<string>(comparer);
+        var result = new List<string>(Math.Min(maxDocuments, 256));
+        limitReached = false;
+        foreach (var path in paths)
+        {
+            if (!unique.Add(path))
+            {
+                continue;
+            }
+            if (result.Count >= maxDocuments)
+            {
+                limitReached = true;
+                break;
+            }
+
+            result.Add(path);
+        }
+
+        return result;
     }
 
     internal static ReaderFolderOptions BuildFolderOptions(bool recurse, int? maxFiles, long? maxTotalBytes, string[]? extension)

@@ -11,7 +11,7 @@ Reads a folder into an OfficeIMO.Reader ingestion summary.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentIngest [-FolderPath] <string> [-NoRecurse] [-MaxFiles <int>] [-MaxTotalBytes <long>] [-Extension <string[]>] [-NoChunks] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
+Get-OfficeDocumentIngest [-FolderPath] <string> [-NoRecurse] [-MaxFiles <int>] [-MaxTotalBytes <long>] [-Extension <string[]>] [-NoChunks] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-MaxStoreItems <int>] [-AllStoreItems] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,12 +22,28 @@ Reads a folder into an OfficeIMO.Reader ingestion summary.
 ### EXAMPLE 1
 ```powershell
 PS> $ingest = Get-OfficeDocumentIngest -FolderPath .\Reports -Extension docx,pdf,rtf -MaxFiles 50
-$ingest.Files | Select-Object Path, Status, ChunkCount
+$ingest.Files | Select-Object Path, Parsed, ChunksProduced
 ```
 
 Reads supported files from a folder and returns the ingestion summary with per-file status and chunk counts.
 
 ## PARAMETERS
+
+### -AllStoreItems
+Project every matching item from each email store.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -ExcelA1Range
 Optional Excel A1 range to read.
@@ -175,6 +191,22 @@ Accept wildcard characters: True
 
 ### -MaxInputBytes
 Maximum input size in bytes.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxStoreItems
+Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.
 
 ```yaml
 Type: Nullable`1

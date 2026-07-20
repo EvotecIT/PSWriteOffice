@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 1.0.3
+Help Version: 3.0.1
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -620,7 +620,7 @@ Reads a supported file into the OfficeIMO shared document read result envelope.
 Reads or materializes embedded assets discovered by OfficeIMO.Reader from a supported document.
 
 ### [Get-OfficeDocumentBatch](Get-OfficeDocumentBatch.md)
-Reads a bounded set of documents asynchronously while retaining input order.
+Reads supported files and folders with adjustable concurrency and limits.
 
 ### [Get-OfficeDocumentCapability](Get-OfficeDocumentCapability.md)
 Lists OfficeIMO.Reader capabilities registered in the current PSWriteOffice process.
@@ -1106,7 +1106,7 @@ Saves an OfficeIMO.Visio document.
 Saves a Word document without disposing it.
 
 ### [Search-OfficeDocument](Search-OfficeDocument.md)
-Searches normalized document blocks and returns Reader-owned page citations for each match.
+Searches one Reader result or every supported document below file and folder paths.
 
 ### [Set-OfficeExcelActiveSheet](Set-OfficeExcelActiveSheet.md)
 Sets the worksheet that opens as the active sheet.

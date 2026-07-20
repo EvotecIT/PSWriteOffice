@@ -9,7 +9,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 ///   <summary>Ingest a report folder.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$ingest = Get-OfficeDocumentIngest -FolderPath .\Reports -Extension docx,pdf,rtf -MaxFiles 50
-/// $ingest.Files | Select-Object Path, Status, ChunkCount</code>
+/// $ingest.Files | Select-Object Path, Parsed, ChunksProduced</code>
 ///   <para>Reads supported files from a folder and returns the ingestion summary with per-file status and chunk counts.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentIngest")]
@@ -89,6 +89,15 @@ public sealed class GetOfficeDocumentIngestCommand : OfficeDocumentReaderCommand
     [Parameter]
     public SwitchParameter NoHashes { get; set; }
 
+    /// <summary>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? MaxStoreItems { get; set; }
+
+    /// <summary>Project every matching item from each email store.</summary>
+    [Parameter]
+    public SwitchParameter AllStoreItems { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -106,7 +115,9 @@ public sealed class GetOfficeDocumentIngestCommand : OfficeDocumentReaderCommand
             ExcelSheetName,
             ExcelA1Range,
             !NoMarkdownHeadingChunks.IsPresent,
-            !NoHashes.IsPresent);
+            !NoHashes.IsPresent,
+            includePageLocations: false,
+            maxStoreItems: ResolveStoreItemLimit(MaxStoreItems, AllStoreItems));
 
         var reader = ResolveReader(configuration.HandlerOptions);
         WriteObject(reader.ReadFolderDetailed(
