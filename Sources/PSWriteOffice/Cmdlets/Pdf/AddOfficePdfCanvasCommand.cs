@@ -51,6 +51,11 @@ public sealed class AddOfficePdfCanvasCommand : PSCmdlet
     [ValidateRange(0D, 1D)]
     public double Opacity { get; set; } = 1D;
 
+    /// <summary>Configures native generated-PDF rendering options for canvas content, including embedded fonts and text shaping.</summary>
+    /// <remarks>The callback receives a <see cref="PdfOptions"/> instance. Page geometry, margins, and encryption remain controlled by the stamping operation.</remarks>
+    [Parameter]
+    public ScriptBlock? ConfigureRendering { get; set; }
+
     /// <summary>Password used to authenticate an encrypted input PDF.</summary>
     [Parameter]
     public string? Password { get; set; }
@@ -73,10 +78,18 @@ public sealed class AddOfficePdfCanvasCommand : PSCmdlet
 
         var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
         var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), readOptions);
+        PdfOptions? renderingOptions = null;
+        if (ConfigureRendering is not null)
+        {
+            renderingOptions = new PdfOptions();
+            _ = ConfigureRendering.Invoke(renderingOptions);
+        }
+
         var options = new PdfCanvasStampOptions
         {
             BehindContent = BehindContent.IsPresent,
-            Opacity = Opacity
+            Opacity = Opacity,
+            RenderingOptions = renderingOptions
         };
         if (!string.IsNullOrWhiteSpace(PageRange))
         {

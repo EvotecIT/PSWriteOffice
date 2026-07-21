@@ -219,11 +219,18 @@ Describe 'General existing-page visual stamping' {
             PdfParagraph 'Canvas page two'
         } | Out-Null
 
-        Add-OfficePdfCanvas -Path $source -OutputPath $output -PageRange 1 -Content {
+        (Get-Command Add-OfficePdfCanvas).Parameters.Keys | Should -Contain 'ConfigureRendering'
+        $configured = [System.Collections.Generic.List[bool]]::new()
+        Add-OfficePdfCanvas -Path $source -OutputPath $output -PageRange 1 -ConfigureRendering {
+            param($options)
+            $configured.Add($true)
+            $options.CompressContentStreams = $false
+        } -Content {
             param($canvas, $page)
             $null = $canvas.Text("Canvas overlay $($page.PageNumber)/$($page.PageCount)", 36, 36, $page.Width - 72, 24, 11)
         } | Should -BeOfType System.IO.FileInfo
 
+        $configured | Should -HaveCount 1
         $pages = @(Get-OfficePdfText -Path $output -ByPage)
         $pages[0].Text | Should -Match 'Canvas overlay 1/2'
         $pages[1].Text | Should -Not -Match 'Canvas overlay'

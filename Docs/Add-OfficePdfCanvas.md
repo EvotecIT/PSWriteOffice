@@ -11,7 +11,7 @@ Draws arbitrary visual canvas content on existing PDF pages.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePdfCanvas [-Content] <scriptblock> -Path <string> -OutputPath <string> [-PageRange <string>] [-BehindContent] [-Opacity <double>] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfCanvas [-Content] <scriptblock> -Path <string> -OutputPath <string> [-PageRange <string>] [-BehindContent] [-Opacity <double>] [-ConfigureRendering <scriptblock>] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,6 +38,22 @@ Place the generated canvas behind existing page content.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ConfigureRendering
+The callback receives a PdfOptions instance. Page geometry, margins, and encryption remain controlled by the stamping operation.
+
+```yaml
+Type: ScriptBlock
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
