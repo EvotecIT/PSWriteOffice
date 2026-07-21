@@ -11,12 +11,12 @@ Applies rectangle-based PDF redactions and writes a new PDF.
 ## SYNTAX
 ### Rectangle (Default)
 ```powershell
-ConvertTo-OfficePdfRedacted [-Path] <string> [-OutputPath] <string> -PageNumber <int> -X <double> -Y <double> -Width <double> -Height <double> [-Label <string>] [-FillColor <string>] [-OnlyPaintMatches] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfRedacted [-Path] <string> [-OutputPath] <string> -PageNumber <int> -X <double> -Y <double> -Width <double> -Height <double> [-Label <string>] [-FillColor <string>] [-OnlyPaintMatches] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Area
 ```powershell
-ConvertTo-OfficePdfRedacted [-Path] <string> [-OutputPath] <string> -Area <PdfRedactionArea[]> [-FillColor <string>] [-OnlyPaintMatches] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfRedacted [-Path] <string> [-OutputPath] <string> -Area <PdfRedactionArea[]> [-FillColor <string>] [-OnlyPaintMatches] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -75,6 +75,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed modification restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Rectangle, Area
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

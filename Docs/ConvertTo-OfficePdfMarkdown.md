@@ -11,7 +11,7 @@ Converts PDF logical text readback to Markdown.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfMarkdown [-Path] <string> [-PageRange <string>] [-Password <string>] [-OutputPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfMarkdown [-Path] <string> [-PageRange <string>] [-Password <string>] [-IgnorePermissionRestrictions] [-OutputPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,22 @@ Get-Content $markdownPath -TotalCount 20
 Writes Markdown readback for selected pages to a file.
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -OutputPath
 Optional output Markdown file path.

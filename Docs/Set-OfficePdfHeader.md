@@ -6,21 +6,21 @@ schema: 2.0.0
 ---
 # Set-OfficePdfHeader
 ## SYNOPSIS
-Sets running PDF header text.
+Sets a simple or fully composed running PDF header.
 
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficePdfHeader [-Text] <string> [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfHeader [[-Text] <string>] [-Compose <scriptblock>] [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficePdfHeader [-Text] <string> -Document <PdfDocument> [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfHeader [[-Text] <string>] -Document <PdfDocument> [-Compose <scriptblock>] [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Sets running PDF header text.
+Sets a simple or fully composed running PDF header.
 
 ## EXAMPLES
 
@@ -35,6 +35,26 @@ PS> New-OfficePdf -Path .\Examples\Documents\PdfHeader.pdf {
 
 Sets header text for the generated PDF.
 
+### EXAMPLE 2
+```powershell
+PS> New-OfficePdf -Path .\Examples\Documents\RichHeader.pdf {
+    Set-OfficePdfHeader -Compose {
+        param($header)
+        $label = New-OfficeTextRun -Text 'Service report ' -Bold | ConvertTo-OfficePdfTextRun
+        $pageStyle = New-OfficeTextRun -Italic | ConvertTo-OfficePdfTextRun
+        $null = $header.Text({
+            param($text)
+            $null = $text.Run($label).CurrentPage($pageStyle)
+        })
+        $null = $header.FirstPageText('Service report cover')
+        $null = $header.EvenPagesZones('Service report', $null, 'Page {page}/{pages}')
+    }
+    Add-OfficePdfParagraph -Text 'Generated report body.'
+}
+```
+
+The native composer owns rich runs, page tokens, zones, images, shapes, and page variants.
+
 ## PARAMETERS
 
 ### -Align
@@ -45,6 +65,23 @@ Type: PdfAlign
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Left, Center, Right, Justify
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Compose
+Advanced header composer. The script receives a PdfHeaderCompose and can configure
+default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
 
 Required: False
 Position: named
@@ -110,7 +147,7 @@ Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
-Required: True
+Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False

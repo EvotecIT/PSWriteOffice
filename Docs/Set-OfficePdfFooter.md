@@ -6,21 +6,21 @@ schema: 2.0.0
 ---
 # Set-OfficePdfFooter
 ## SYNOPSIS
-Sets running PDF footer text.
+Sets a simple or fully composed running PDF footer.
 
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficePdfFooter [[-Text] <string>] [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfFooter [[-Text] <string>] [-Compose <scriptblock>] [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficePdfFooter [[-Text] <string>] -Document <PdfDocument> [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfFooter [[-Text] <string>] -Document <PdfDocument> [-Compose <scriptblock>] [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Sets running PDF footer text.
+Sets a simple or fully composed running PDF footer.
 
 ## EXAMPLES
 
@@ -36,6 +36,24 @@ PS> New-OfficePdf -Path .\Examples\Documents\PdfFooter.pdf {
 
 Uses page placeholders in a running footer.
 
+### EXAMPLE 2
+```powershell
+PS> New-OfficePdf -Path .\Examples\Documents\RichFooter.pdf {
+    Set-OfficePdfFooter -Compose {
+        param($footer)
+        $label = New-OfficeTextRun -Text 'Confidential - page ' -Bold | ConvertTo-OfficePdfTextRun
+        $pageStyle = New-OfficeTextRun -Italic | ConvertTo-OfficePdfTextRun
+        $null = $footer.AlignRight().Text({
+            param($text)
+            $null = $text.Run($label).CurrentPage($pageStyle).Text(' of ').TotalPages($pageStyle)
+        })
+    }
+    Add-OfficePdfParagraph -Text 'Generated report body.'
+}
+```
+
+Styled page tokens remain live until the document is rendered.
+
 ## PARAMETERS
 
 ### -Align
@@ -46,6 +64,23 @@ Type: PdfAlign
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Left, Center, Right, Justify
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Compose
+Advanced footer composer. The script receives a PdfFooterCompose and can configure
+default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
+
+```yaml
+Type: ScriptBlock
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
 
 Required: False
 Position: named

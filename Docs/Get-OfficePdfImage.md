@@ -11,7 +11,7 @@ Gets or extracts image resources from a PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfImage [-Path] <string> [-PageRange <string>] [-OutputDirectory <string>] [-BaseName <string>] [<CommonParameters>]
+Get-OfficePdfImage [-Path] <string> [-PageRange <string>] [-OutputDirectory <string>] [-BaseName <string>] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,6 +48,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -OutputDirectory
 Optional directory where images should be written.
 
@@ -66,6 +82,22 @@ Accept wildcard characters: True
 
 ### -PageRange
 Optional page ranges such as 1-3,5.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
 
 ```yaml
 Type: String

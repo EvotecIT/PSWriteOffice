@@ -25,14 +25,38 @@ public sealed class TestOfficePdfRewriteCommand : PSCmdlet
     [Parameter]
     public SwitchParameter FailOnLoss { get; set; }
 
+    /// <summary>Password used to authenticate the original PDF.</summary>
+    [Parameter]
+    public string? ReferencePassword { get; set; }
+
+    /// <summary>After authentication, explicitly ignore restrictions on the original PDF.</summary>
+    [Parameter]
+    public SwitchParameter IgnoreReferencePermissionRestrictions { get; set; }
+
+    /// <summary>Password used to authenticate the rewritten PDF.</summary>
+    [Parameter]
+    public string? DifferencePassword { get; set; }
+
+    /// <summary>After authentication, explicitly ignore restrictions on the rewritten PDF.</summary>
+    [Parameter]
+    public SwitchParameter IgnoreDifferencePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var options = Options ?? new PdfRewritePreservationOptions();
         var original = PdfCommandUtilities.LoadDocument(
-            SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath), options.OriginalReadOptions);
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath),
+            PdfCommandUtilities.CreateReadOptions(
+                options.OriginalReadOptions,
+                ReferencePassword,
+                IgnoreReferencePermissionRestrictions.IsPresent));
         var rewritten = PdfCommandUtilities.LoadDocument(
-            SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath), options.RewrittenReadOptions);
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath),
+            PdfCommandUtilities.CreateReadOptions(
+                options.RewrittenReadOptions,
+                DifferencePassword,
+                IgnoreDifferencePermissionRestrictions.IsPresent));
         var report = original.AssessRewritePreservation(rewritten, options);
         if (FailOnLoss.IsPresent) report.ThrowIfFailed();
         WriteObject(report);

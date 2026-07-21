@@ -32,13 +32,26 @@ public sealed class ConvertToOfficePdfSanitizedCommand : PSCmdlet
     [Parameter]
     public PdfReadOptions? ReadOptions { get; set; }
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed modification restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         if (!ShouldProcess(output, "Sanitize PDF active content and embedded payloads")) return;
-        var result = PdfCommandUtilities.LoadDocument(input, ReadOptions).Sanitize(Options);
+        var result = PdfCommandUtilities.LoadDocument(
+            input,
+            PdfCommandUtilities.CreateReadOptions(
+                ReadOptions,
+                Password,
+                IgnorePermissionRestrictions.IsPresent)).Sanitize(Options);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         File.WriteAllBytes(output, result.ToBytes());
         WriteObject(result);

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Text;
 
 namespace PSWriteOffice.Services.Pdf;
@@ -82,11 +83,34 @@ internal static class PdfCommandUtilities
             : PdfDslContext.Require(cmdlet).Document;
     }
 
-    internal static PdfReadOptions? CreateReadOptions(string? password)
+    internal static PdfReadOptions? CreateReadOptions(string? password, bool ignorePermissionRestrictions = false)
     {
-        return string.IsNullOrEmpty(password)
-            ? null
-            : new PdfReadOptions { Password = password };
+        return CreateReadOptions(null, password, ignorePermissionRestrictions);
+    }
+
+    internal static PdfReadOptions? CreateReadOptions(
+        PdfReadOptions? readOptions,
+        string? password,
+        bool ignorePermissionRestrictions = false)
+    {
+        if (readOptions == null && string.IsNullOrEmpty(password) && !ignorePermissionRestrictions)
+        {
+            return null;
+        }
+
+        var effective = readOptions ?? PdfReadOptions.Default;
+        return new PdfReadOptions
+        {
+            ParsingMode = effective.ParsingMode,
+            Limits = effective.Limits,
+            Password = string.IsNullOrEmpty(password) ? effective.Password : password,
+            PermissionPolicy = ignorePermissionRestrictions
+                ? PdfPermissionPolicy.IgnoreRestrictions
+                : effective.PermissionPolicy,
+            PreferToUnicode = effective.PreferToUnicode,
+            UseWinAnsiFallback = effective.UseWinAnsiFallback,
+            AdjustKerningFromTJ = effective.AdjustKerningFromTJ
+        };
     }
 
     /// <summary>Loads a fluent PDF after enforcing the configured input-byte budget before payload allocation.</summary>
@@ -225,7 +249,11 @@ internal static class PdfCommandUtilities
         return options;
     }
 
-    internal static string[][] ConvertToTableRows(object[] inputObject, string[]? property, string[]? header)
+    internal static string[][] ConvertToTableRows(
+        object[] inputObject,
+        string[]? property,
+        string[]? header,
+        string collectionSeparator = ", ")
     {
         if (inputObject.Length == 0)
         {
@@ -246,26 +274,35 @@ internal static class PdfCommandUtilities
             rows.Add(propertyNames);
         }
 
+        var normalizationOptions = CreateTableNormalizationOptions(collectionSeparator);
         foreach (var item in inputObject)
         {
-            if (item is IDictionary dictionary)
+            if (PowerShellObjectNormalizer.TryProjectItem(
+                    item,
+                    propertyNames,
+                    out _,
+                    out var values,
+                    normalizationOptions))
             {
-                rows.Add(propertyNames.Select(name => TryGetDictionaryValue(dictionary, name, out var value)
-                    ? Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty
-                    : string.Empty).ToArray());
+                rows.Add(values
+                    .Select(value => PowerShellObjectNormalizer.NormalizeCellText(value, normalizationOptions))
+                    .ToArray());
                 continue;
             }
 
-            var psObject = PSObject.AsPSObject(item);
-            rows.Add(propertyNames.Select(name => Convert.ToString(psObject.Properties[name]?.Value, CultureInfo.InvariantCulture) ?? string.Empty).ToArray());
+            rows.Add(new[] { PowerShellObjectNormalizer.NormalizeCellText(item, normalizationOptions) });
         }
 
         return rows.ToArray();
     }
 
-    internal static string[][] ConvertDataRows(IEnumerable rows, string[]? header = null)
+    internal static string[][] ConvertDataRows(
+        IEnumerable rows,
+        string[]? header = null,
+        string collectionSeparator = ", ")
     {
         var result = new List<string[]>();
+        var normalizationOptions = CreateTableNormalizationOptions(collectionSeparator);
         if (header != null && header.Length > 0)
         {
             result.Add(header);
@@ -281,11 +318,14 @@ internal static class PdfCommandUtilities
 
             if (row is IEnumerable enumerable && row is not string)
             {
-                result.Add(enumerable.Cast<object?>().Select(value => Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty).ToArray());
+                result.Add(enumerable
+                    .Cast<object?>()
+                    .Select(value => PowerShellObjectNormalizer.NormalizeCellText(value, normalizationOptions))
+                    .ToArray());
                 continue;
             }
 
-            result.Add(new[] { Convert.ToString(row, CultureInfo.InvariantCulture) ?? string.Empty });
+            result.Add(new[] { PowerShellObjectNormalizer.NormalizeCellText(row, normalizationOptions) });
         }
 
         if (result.Count == 0)
@@ -294,6 +334,22 @@ internal static class PdfCommandUtilities
         }
 
         return result.ToArray();
+    }
+
+    internal static PowerShellObjectNormalizerOptions CreateTableNormalizationOptions(string collectionSeparator)
+    {
+        if (collectionSeparator == null)
+        {
+            throw new PSArgumentNullException(nameof(collectionSeparator));
+        }
+
+        return new PowerShellObjectNormalizerOptions
+        {
+            NormalizeCollectionValues = true,
+            CollectionSeparator = collectionSeparator,
+            Culture = CultureInfo.InvariantCulture,
+            FormatScalarValuesAsText = true
+        };
     }
 
     internal static IReadOnlyDictionary<string, string> ConvertFieldValues(IDictionary fieldValues)

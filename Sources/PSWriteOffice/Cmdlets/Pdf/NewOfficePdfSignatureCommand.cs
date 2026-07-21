@@ -30,6 +30,14 @@ public sealed class NewOfficePdfSignatureCommand : PSCmdlet
     [Parameter(Mandatory = true, Position = 1)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed signature-field restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Signature field name to append.</summary>
     [Parameter]
     public string FieldName { get; set; } = "Signature1";
@@ -90,10 +98,11 @@ public sealed class NewOfficePdfSignatureCommand : PSCmdlet
             ReservedSignatureContentsBytes = ReservedBytes
         };
 
+        var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
         PdfExternalSignaturePreparation preparation = PdfDocument
-            .Open(inputPath)
+            .Open(inputPath, readOptions)
             .PrepareExternalSignature(options);
-        PdfDocument.Open(preparation.PreparedPdf).Save(outputPath).RequireSuccess();
+        PdfDocument.Open(preparation.PreparedPdf, readOptions).Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent ? preparation : new FileInfo(outputPath));
     }
 }

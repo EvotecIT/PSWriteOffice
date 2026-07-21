@@ -11,7 +11,7 @@ Removes PDF annotations matching friendly filters.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Remove-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> [-ObjectNumber <int>] [-PageNumber <int>] [-Subtype <string>] [-KeepPopups] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-ObjectNumber <int>] [-PageNumber <int>] [-Subtype <string>] [-KeepPopups] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -26,6 +26,22 @@ Remove-OfficePdfAnnotation -Path 'C:\Path'
 
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed annotation-modification restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -KeepPopups
 Keep popup annotations linked from matching annotations through /Popup.
@@ -96,6 +112,22 @@ Return the annotation edit result instead of the output file.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

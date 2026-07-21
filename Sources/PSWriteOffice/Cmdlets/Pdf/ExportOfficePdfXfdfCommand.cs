@@ -23,6 +23,14 @@ public sealed class ExportOfficePdfXfdfCommand : PSCmdlet
     [Parameter]
     public PdfReadOptions? ReadOptions { get; set; }
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed form-reading restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Return the written file.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -31,7 +39,11 @@ public sealed class ExportOfficePdfXfdfCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-        var xfdf = PdfCommandUtilities.LoadDocument(input, ReadOptions).Forms.ExportXfdf();
+        var readOptions = PdfCommandUtilities.CreateReadOptions(
+            ReadOptions,
+            Password,
+            IgnorePermissionRestrictions.IsPresent);
+        var xfdf = PdfCommandUtilities.LoadDocument(input, readOptions).Forms.ExportXfdf();
         if (string.IsNullOrWhiteSpace(OutputPath))
         {
             WriteObject(xfdf);

@@ -11,7 +11,7 @@ Compares rendered PDF pages and returns pixel-level review artifacts.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Compare-OfficePdfVisual [-ReferencePath] <string> [-DifferencePath] <string> [-PageRange <string>] [-Options <PdfVisualComparisonOptions>] [-ReferenceReadOptions <PdfReadOptions>] [-DifferenceReadOptions <PdfReadOptions>] [<CommonParameters>]
+Compare-OfficePdfVisual [-ReferencePath] <string> [-DifferencePath] <string> [-PageRange <string>] [-Options <PdfVisualComparisonOptions>] [-ReferenceReadOptions <PdfReadOptions>] [-DifferenceReadOptions <PdfReadOptions>] [-ReferencePassword <string>] [-IgnoreReferencePermissionRestrictions] [-DifferencePassword <string>] [-IgnoreDifferencePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,6 +27,22 @@ PS> $options = [OfficeIMO.Pdf.PdfVisualComparisonOptions]::new(); $options.Allow
 Returns per-page difference ratios, images, and diagnostics.
 
 ## PARAMETERS
+
+### -DifferencePassword
+Password used to authenticate the actual PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -DifferencePath
 Actual PDF path.
@@ -60,6 +76,38 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -IgnoreDifferencePermissionRestrictions
+After authentication, explicitly ignore restrictions on the actual PDF.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnoreReferencePermissionRestrictions
+After authentication, explicitly ignore restrictions on the expected PDF.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Options
 Optional render, tolerance, alignment, background, and ignored regions.
 
@@ -78,6 +126,22 @@ Accept wildcard characters: True
 
 ### -PageRange
 Optional one-based ranges such as 1-3,5.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ReferencePassword
+Password used to authenticate the expected PDF.
 
 ```yaml
 Type: String

@@ -11,7 +11,7 @@ Applies lossless PDF optimization actions and writes a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfOptimized [-Path] <string> [-OutputPath] <string> [-NoCompressStreams] [-KeepUnreferencedObjects] [-KeepDuplicateStreams] [-AllowLarger] [-MinimumStreamCompressionBytes <int>] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfOptimized [-Path] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-NoCompressStreams] [-KeepUnreferencedObjects] [-KeepDuplicateStreams] [-AllowLarger] [-MinimumStreamCompressionBytes <int>] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,22 @@ Writes a smaller PDF when safe lossless optimization actions can reduce the file
 
 ### -AllowLarger
 Write the optimized candidate even when it is not smaller than the source PDF.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed modification restrictions.
 
 ```yaml
 Type: SwitchParameter
@@ -129,6 +145,22 @@ Return the optimization action report instead of the output file.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

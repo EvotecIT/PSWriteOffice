@@ -11,7 +11,7 @@ Gets page annotations and action evidence from a PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfAnnotation [-Path] <string> [-Subtype <string>] [-PageNumber <int>] [-WithAction] [-Password <string>] [<CommonParameters>]
+Get-OfficePdfAnnotation [-Path] <string> [-Subtype <string>] [-PageNumber <int>] [-WithAction] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -26,6 +26,22 @@ Get-OfficePdfAnnotation -Path 'C:\Path'
 
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed usage restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -PageNumber
 Optional one-based page number filter.

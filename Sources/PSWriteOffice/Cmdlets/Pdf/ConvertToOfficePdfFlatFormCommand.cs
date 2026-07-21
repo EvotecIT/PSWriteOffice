@@ -29,6 +29,14 @@ public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
     [Parameter(Mandatory = true, Position = 1)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed form-modification restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>TrueType or OpenType/CFF font file used to synthesize Unicode form field appearances while flattening.</summary>
     [Parameter]
     public string? AppearanceFontPath { get; set; }
@@ -41,7 +49,9 @@ public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, keepNeedAppearances: false);
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
+        var document = PdfDocument.Open(
+            PdfCommandUtilities.ResolvePath(this, Path),
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var result = formOptions == null
             ? document.Forms.Flatten()
             : document.Forms.Flatten(formOptions);

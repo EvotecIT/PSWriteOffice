@@ -57,6 +57,11 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     [Parameter]
     public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
+    /// <summary>Text used between items when a property or cell contains a collection.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string CollectionSeparator { get; set; } = ", ";
+
     /// <summary>Table alignment.</summary>
     [Parameter]
     public PdfAlign Align { get; set; } = PdfAlign.Left;
@@ -233,7 +238,8 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     private void RenderTable(PdfDocument document, object[] inputRows)
     {
         var projectedRows = TableViewProjection.Project(inputRows, View);
-        if (OfficeTableSpecParser.TryCreate(projectedRows, Property, Header, out var tableSpec))
+        var normalizationOptions = PdfCommandUtilities.CreateTableNormalizationOptions(CollectionSeparator);
+        if (OfficeTableSpecParser.TryCreate(projectedRows, Property, Header, out var tableSpec, normalizationOptions))
         {
             var style = ApplyPdfCellStyles(CreateStyle(), tableSpec.Placements);
             document.Table(ToPdfRows(tableSpec), Align, style);
@@ -242,10 +248,10 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
 
         var rowArrayInput = projectedRows.All(item => item is IEnumerable && item is not string && item is not IDictionary);
         string[][] rows = rowArrayInput
-            ? PdfCommandUtilities.ConvertDataRows(projectedRows, Header)
+            ? PdfCommandUtilities.ConvertDataRows(projectedRows, Header, CollectionSeparator)
             : projectedRows.Length == 1 && projectedRows[0] is IEnumerable enumerable && projectedRows[0] is not string && projectedRows[0] is not IDictionary
-            ? PdfCommandUtilities.ConvertDataRows(enumerable, Header)
-            : PdfCommandUtilities.ConvertToTableRows(projectedRows, Property, Header);
+            ? PdfCommandUtilities.ConvertDataRows(enumerable, Header, CollectionSeparator)
+            : PdfCommandUtilities.ConvertToTableRows(projectedRows, Property, Header, CollectionSeparator);
 
         document.Table(rows, Align, CreateStyle());
     }
@@ -261,6 +267,11 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
 
     private static PdfTableCell ToPdfCell(OfficeTableCellSpec cell)
     {
+        if (cell.NativeCell is PdfTableCell typedCell)
+        {
+            return typedCell;
+        }
+
         if (cell.HasRuns)
         {
             var runs = PdfRichTextRunBuilder.ToTextRuns(OfficeTableCellTextRunStyle.Apply(cell.Runs!.ToArray(), cell.Style));
