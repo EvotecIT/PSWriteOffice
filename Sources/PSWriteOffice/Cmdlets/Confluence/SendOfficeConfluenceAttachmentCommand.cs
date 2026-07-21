@@ -62,11 +62,18 @@ public sealed class SendOfficeConfluenceAttachmentCommand : AsyncPSCmdlet
             return;
         }
 
-        var upload = new ConfluenceAttachmentUpload
+        using var content = new FileStream(
+            resolvedPath,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            81920,
+            useAsync: true);
+        var upload = new ConfluenceAttachmentStreamUpload
         {
             FileName = uploadName,
             ContentType = ContentType,
-            Content = File.ReadAllBytes(resolvedPath),
+            Content = content,
             Comment = Comment,
             MinorEdit = MinorEdit
         };

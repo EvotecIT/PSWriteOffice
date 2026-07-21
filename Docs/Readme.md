@@ -1054,6 +1054,9 @@ Protects a Word document with a password.
 ### [Publish-OfficeConfluencePage](Publish-OfficeConfluencePage.md)
 Plans, creates, or updates a Confluence Cloud page.
 
+### [Remove-OfficeConfluencePage](Remove-OfficeConfluencePage.md)
+Plans or deletes a Confluence Cloud page.
+
 ### [Remove-OfficeExcelComment](Remove-OfficeExcelComment.md)
 Removes a comment (note) from a worksheet cell.
 

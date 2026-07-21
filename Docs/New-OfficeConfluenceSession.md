@@ -16,7 +16,7 @@ New-OfficeConfluenceSession [-SiteUri] <uri> -Credential <pscredential> [-Applic
 
 ### Bearer
 ```powershell
-New-OfficeConfluenceSession [-SiteUri] <uri> -AccessToken <securestring> [-ApplicationName <string>] [-RequestTimeoutSeconds <int>] [-MaxRetryCount <int>] [<CommonParameters>]
+New-OfficeConfluenceSession [-SiteUri] <uri> -AccessToken <securestring> -CloudId <string> [-ApplicationName <string>] [-RequestTimeoutSeconds <int>] [-MaxRetryCount <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -59,6 +59,22 @@ Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CloudId
+Atlassian Cloud identifier required for OAuth bearer-token routing.
+
+```yaml
+Type: String
+Parameter Sets: Bearer
+Aliases: None
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False

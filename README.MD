@@ -101,7 +101,21 @@ $plan.RelativeUri
 $plan.Payload
 ```
 
-For a live write, create a session with an Atlassian email/API-token credential or an OAuth bearer token, then pass it through `-Session`. `Set-OfficeConfluenceManagedSection` provides a pure before/after operation for generated sections so surrounding owner-authored storage content can be preserved.
+For a live write, create a session with an Atlassian email/API-token credential or an OAuth bearer token, then pass it through `-Session`. OAuth uses Atlassian's cloud-ID gateway, so bearer sessions require `-CloudId`:
+
+```powershell
+$session = New-OfficeConfluenceSession `
+    -SiteUri 'https://example.atlassian.net/' `
+    -AccessToken $secureAccessToken `
+    -CloudId $cloudId
+
+Publish-OfficeConfluencePage -Session $session -SpaceId 42 -Title 'Daily status' -Content $markdown
+
+# Review a destructive request first; omit -PlanOnly only when ready.
+Remove-OfficeConfluencePage -PageId 12345 -Purge -PlanOnly
+```
+
+`Set-OfficeConfluenceManagedSection` provides a pure before/after operation for generated sections so surrounding owner-authored storage content can be preserved. File-based attachment uploads and downloads stream through the shared OfficeIMO client; byte-array output remains available when `Get-OfficeConfluenceAttachment` is called without `-OutFile`.
 
 ## Quick Start 🚀
 

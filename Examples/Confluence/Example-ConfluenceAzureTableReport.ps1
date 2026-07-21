@@ -13,13 +13,17 @@ param(
 
     [string] $AzureTableFilter,
 
-    [OfficeIMO.Confluence.ConfluenceSession] $ConfluenceSession,
+    [object] $ConfluenceSession,
 
     [switch] $Publish
 )
 
 Import-Module DbaClientX -ErrorAction Stop
 Import-Module PSWriteOffice -ErrorAction Stop
+
+if ($null -ne $ConfluenceSession -and $ConfluenceSession -isnot [OfficeIMO.Confluence.ConfluenceSession]) {
+    throw '-ConfluenceSession must be an OfficeIMO.Confluence.ConfluenceSession created by New-OfficeConfluenceSession.'
+}
 
 $entities = @(
     Get-DbaXAzureTableEntity `

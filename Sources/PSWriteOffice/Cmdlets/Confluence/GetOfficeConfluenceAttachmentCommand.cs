@@ -80,14 +80,46 @@ public sealed class GetOfficeConfluenceAttachmentCommand : AsyncPSCmdlet
                 return;
             }
 
-            var content = await client.DownloadAttachmentAsync(PageId, AttachmentId, CancelToken).ConfigureAwait(false);
             var directory = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(directory))
             {
                 Directory.CreateDirectory(directory);
             }
+            else
+            {
+                directory = Directory.GetCurrentDirectory();
+            }
 
-            File.WriteAllBytes(path, content);
+            string temporaryPath = Path.Combine(directory, "." + Path.GetFileName(path) + "." + Guid.NewGuid().ToString("N") + ".tmp");
+            try
+            {
+                using (var destination = new FileStream(
+                           temporaryPath,
+                           FileMode.CreateNew,
+                           FileAccess.Write,
+                           FileShare.None,
+                           81920,
+                           useAsync: true))
+                {
+                    await client.DownloadAttachmentAsync(PageId, AttachmentId, destination, CancelToken).ConfigureAwait(false);
+                }
+
+                if (Force.IsPresent)
+                {
+                    ReplaceFile(temporaryPath, path);
+                }
+                else
+                {
+                    File.Move(temporaryPath, path);
+                }
+            }
+            finally
+            {
+                if (File.Exists(temporaryPath))
+                {
+                    File.Delete(temporaryPath);
+                }
+            }
             WriteObject(new FileInfo(path));
             return;
         }
@@ -123,5 +155,33 @@ public sealed class GetOfficeConfluenceAttachmentCommand : AsyncPSCmdlet
             }
         }
         while (cursor != null);
+    }
+
+    private static void ReplaceFile(string temporaryPath, string destinationPath)
+    {
+#if FRAMEWORK
+        for (var attempt = 0; attempt < 3; attempt++)
+        {
+            try
+            {
+                File.Move(temporaryPath, destinationPath);
+                return;
+            }
+            catch (IOException) when (File.Exists(destinationPath))
+            {
+                try
+                {
+                    File.Replace(temporaryPath, destinationPath, null);
+                    return;
+                }
+                catch (FileNotFoundException) when (attempt < 2)
+                {
+                }
+            }
+        }
+        throw new IOException($"Could not atomically replace file '{destinationPath}'.");
+#else
+        File.Move(temporaryPath, destinationPath, overwrite: true);
+#endif
     }
 }

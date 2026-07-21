@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Management.Automation;
 using System.Threading.Tasks;
 using OfficeIMO.Adf;
@@ -25,6 +26,7 @@ public sealed class PublishOfficeConfluencePageCommand : AsyncPSCmdlet
 {
     private const string ParameterSetCreate = "Create";
     private const string ParameterSetUpdate = "Update";
+    private readonly List<string> _contentRecords = new();
 
     /// <summary>Configured session required for live create or update operations.</summary>
     [Parameter]
@@ -80,9 +82,17 @@ public sealed class PublishOfficeConfluencePageCommand : AsyncPSCmdlet
     public SwitchParameter FailOnLoss { get; set; }
 
     /// <inheritdoc />
-    protected override async Task ProcessRecordAsync()
+    protected override Task ProcessRecordAsync()
     {
-        var converted = ConvertContent();
+        _contentRecords.Add(Content);
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    protected override async Task EndProcessingAsync()
+    {
+        string content = string.Join(Environment.NewLine, _contentRecords);
+        var converted = ConvertContent(content);
         if (FailOnLoss.IsPresent && !converted.Report.IsLossless)
         {
             throw new InvalidOperationException("Confluence page conversion reported one or more fidelity losses.");
@@ -138,21 +148,21 @@ public sealed class PublishOfficeConfluencePageCommand : AsyncPSCmdlet
         WriteObject(await updateClient.UpdatePageAsync(update, CancelToken).ConfigureAwait(false));
     }
 
-    private (ConfluencePageBody Body, AdfConversionReport Report) ConvertContent()
+    private (ConfluencePageBody Body, AdfConversionReport Report) ConvertContent(string content)
     {
         if (ContentFormat == OfficeConfluenceContentFormat.Markdown)
         {
-            var result = ConfluenceContentConverter.FromMarkdown(Content, BodyFormat);
+            var result = ConfluenceContentConverter.FromMarkdown(content, BodyFormat);
             return (result.Value, result.Report);
         }
 
         if (ContentFormat is OfficeConfluenceContentFormat.Html or OfficeConfluenceContentFormat.Storage)
         {
-            var result = ConfluenceContentConverter.FromHtml(Content, BodyFormat);
+            var result = ConfluenceContentConverter.FromHtml(content, BodyFormat);
             return (result.Value, result.Report);
         }
 
-        var document = AdfDocument.Parse(Content);
+        var document = AdfDocument.Parse(content);
         var validation = document.Validate();
         if (!validation.IsValid)
         {

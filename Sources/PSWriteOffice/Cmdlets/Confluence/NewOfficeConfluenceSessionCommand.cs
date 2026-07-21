@@ -32,6 +32,11 @@ public sealed class NewOfficeConfluenceSessionCommand : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetBearer)]
     public SecureString AccessToken { get; set; } = null!;
 
+    /// <summary>Atlassian Cloud identifier required for OAuth bearer-token routing.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetBearer)]
+    [ValidateNotNullOrEmpty]
+    public string CloudId { get; set; } = string.Empty;
+
     /// <summary>Application name sent with requests.</summary>
     [Parameter]
     [ValidateNotNullOrEmpty]
@@ -56,6 +61,7 @@ public sealed class NewOfficeConfluenceSessionCommand : PSCmdlet
         WriteObject(new ConfluenceSession(credentialSource, new ConfluenceSessionOptions
         {
             SiteUri = SiteUri,
+            CloudId = ParameterSetName == ParameterSetBearer ? CloudId : null,
             ApplicationName = ApplicationName,
             RequestTimeout = TimeSpan.FromSeconds(RequestTimeoutSeconds),
             MaxRetryCount = MaxRetryCount
