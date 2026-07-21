@@ -37,6 +37,7 @@ Start here when you want to create polished documents from PowerShell: workbooks
 | CSV | Solid | Read CSV, emit CSV, object-focused data workflows |
 | Reader | Advanced | Content detection, structured extraction, token-aware hierarchy, processors, OCR adapters, and bounded ordered batch reads across Office, OpenDocument, email, PDF, markup, archives, and text formats |
 | Visio | New | DSL diagram creation, built-in and package-backed stencils, create/load/save `.vsdx`, inspect diagrams, generate galleries, export stencil preview galleries, and export SVG/PNG through `OfficeIMO.Visio` |
+| Confluence Cloud | New | ADF and storage-format page reads, dry-run create/update plans, loss-aware Markdown/HTML conversion, managed sections, and attachment transfer |
 
 ## Advanced document workflows
 
@@ -85,6 +86,22 @@ $mailbox = Get-OfficeEmailMailbox -Path .\Archive.mbox -AsResult
 $docsPlan = Export-OfficeWordGoogleDocument -Path .\Report.docx -PlanOnly
 $sheetsBatch = Export-OfficeExcelGoogleSpreadsheet -Path .\Data.xlsx -AsBatch
 ```
+
+Confluence writes can be reviewed before a session or tenant is involved:
+
+```powershell
+$plan = Publish-OfficeConfluencePage `
+    -SpaceId 42 `
+    -Title 'Daily status' `
+    -Content "# Ready`n`nGenerated from the current report." `
+    -PlanOnly
+
+$plan.Method
+$plan.RelativeUri
+$plan.Payload
+```
+
+For a live write, create a session with an Atlassian email/API-token credential or an OAuth bearer token, then pass it through `-Session`. `Set-OfficeConfluenceManagedSection` provides a pure before/after operation for generated sections so surrounding owner-authored storage content can be preserved.
 
 ## Quick Start 🚀
 

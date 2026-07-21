@@ -23,9 +23,9 @@ Build-Module -ModuleName 'PSWriteOffice' -RunMode $RunMode {
         # Copyright statement for this module
         Copyright              = "(c) 2011 - $((Get-Date).Year) Przemyslaw Klys @ Evotec. All rights reserved."
         # Description of the functionality provided by this module
-        Description            = 'PowerShell module to create, convert, read, inspect, and export Office, PDF, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, and Visio files without Microsoft Office installed. Powered by OfficeIMO.*.'
+        Description            = 'PowerShell module to create, convert, read, inspect, and export Office, PDF, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, Visio, and Confluence content without Microsoft Office installed. Powered by OfficeIMO.*.'
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags                   = @('officeimo', 'word', 'excel', 'powerpoint', 'pdf', 'opendocument', 'email', 'markdown', 'asciidoc', 'latex', 'csv', 'docx', 'xlsx', 'pptx', 'openxml', 'windows', 'linux', 'macos')
+        Tags                   = @('officeimo', 'word', 'excel', 'powerpoint', 'pdf', 'opendocument', 'email', 'markdown', 'asciidoc', 'latex', 'csv', 'confluence', 'adf', 'atlassian', 'docx', 'xlsx', 'pptx', 'openxml', 'windows', 'linux', 'macos')
         # A URL to the main website for this project.
         ProjectUri             = 'https://github.com/EvotecIT/PSWriteOffice'
 
