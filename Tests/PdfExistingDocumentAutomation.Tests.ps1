@@ -109,6 +109,77 @@ Describe 'Authenticated PDF automation' {
         Get-OfficePdfText -Path $output | Should -Match 'Restricted source one'
         Get-OfficePdfText -Path $output | Should -Match 'Restricted source two'
     }
+
+    It 'executes page mutations through the authenticated document contract' {
+        $source = Join-Path $TestDrive 'restricted-pages.pdf'
+        $moved = Join-Path $TestDrive 'restricted-pages-moved.pdf'
+        $removed = Join-Path $TestDrive 'restricted-pages-removed.pdf'
+        $rotated = Join-Path $TestDrive 'restricted-pages-rotated.pdf'
+        New-OfficePdf -Path $source -Password 'open' -OwnerPassword 'owner' -Permission -3904 {
+            PdfParagraph 'Restricted page one'
+            PdfPageBreak
+            PdfParagraph 'Restricted page two'
+            PdfPageBreak
+            PdfParagraph 'Restricted page three'
+        } | Out-Null
+
+        Move-OfficePdfPage -Path $source -PageRange 1 -BeforePage 4 -OutputPath $moved `
+            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+        Remove-OfficePdfPage -Path $source -PageRange 2 -OutputPath $removed `
+            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+        Set-OfficePdfPage -Path $source -PageRange 1 -Rotation 90 -OutputPath $rotated `
+            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+
+        $movedPages = @(Get-OfficePdfText -Path $moved -ByPage)
+        $movedPages[2].Text | Should -Match 'Restricted page one'
+        (Get-OfficePdfInfo -Path $removed).PageCount | Should -Be 2
+        (Get-OfficePdfInfo -Path $rotated).PageCount | Should -Be 3
+    }
+
+    It 'fills authenticated restricted forms through the shared read contract' {
+        $source = Join-Path $TestDrive 'restricted-form.pdf'
+        $output = Join-Path $TestDrive 'restricted-form-filled.pdf'
+        New-OfficePdf -Path $source -Password 'open' -OwnerPassword 'owner' -Permission -3904 {
+            PdfParagraph 'Restricted form'
+            PdfFormField -Name Name -Type Text -Value Ada
+        } | Out-Null
+
+        Set-OfficePdfForm -Path $source -OutputPath $output -Field @{ Name = 'Grace' } `
+            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+
+        (Get-OfficePdfFormField -Path $output -Name Name).Value | Should -Be 'Grace'
+    }
+
+    It 'sanitizes and updates metadata on authenticated restricted PDFs' {
+        $source = Join-Path $TestDrive 'restricted-rewrite.pdf'
+        $metadata = Join-Path $TestDrive 'restricted-metadata.pdf'
+        $sanitized = Join-Path $TestDrive 'restricted-sanitized.pdf'
+        New-OfficePdf -Path $source -Password 'open' -OwnerPassword 'owner' -Permission -3904 {
+            PdfParagraph 'Restricted rewrite source'
+        } | Out-Null
+
+        Set-OfficePdfMetadata -Path $source -OutputPath $metadata -Title 'Authenticated metadata' `
+            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+        $sanitization = ConvertTo-OfficePdfSanitized -Path $source -OutputPath $sanitized `
+            -Password 'open' -IgnorePermissionRestrictions
+
+        (Get-OfficePdfInfo -Path $metadata).Metadata.Title | Should -Be 'Authenticated metadata'
+        Get-OfficePdfText -Path $sanitized | Should -Match 'Restricted rewrite source'
+        $sanitization.MutationPlan.Warnings | Should -Contain 'Output.EncryptionWillBeRemoved'
+    }
+
+    It 'proves rewrites between independently authenticated document instances' {
+        $source = Join-Path $TestDrive 'restricted-proof.pdf'
+        New-OfficePdf -Path $source -Password 'open' -OwnerPassword 'owner' -Permission -3904 {
+            PdfParagraph 'Restricted rewrite proof'
+        } | Out-Null
+
+        $report = Test-OfficePdfRewrite -ReferencePath $source -DifferencePath $source `
+            -ReferencePassword 'open' -IgnoreReferencePermissionRestrictions `
+            -DifferencePassword 'open' -IgnoreDifferencePermissionRestrictions
+
+        $report.IsPreserved | Should -BeTrue
+    }
 }
 
 Describe 'General existing-page visual stamping' {
