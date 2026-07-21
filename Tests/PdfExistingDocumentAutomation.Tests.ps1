@@ -115,6 +115,7 @@ Describe 'Authenticated PDF automation' {
         $moved = Join-Path $TestDrive 'restricted-pages-moved.pdf'
         $removed = Join-Path $TestDrive 'restricted-pages-removed.pdf'
         $rotated = Join-Path $TestDrive 'restricted-pages-rotated.pdf'
+        $boxed = Join-Path $TestDrive 'restricted-pages-boxed.pdf'
         New-OfficePdf -Path $source -Password 'open' -OwnerPassword 'owner' -Permission -3904 {
             PdfParagraph 'Restricted page one'
             PdfPageBreak
@@ -129,16 +130,24 @@ Describe 'Authenticated PDF automation' {
             -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
         Set-OfficePdfPage -Path $source -PageRange 1 -Rotation 90 -OutputPath $rotated `
             -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+        Set-OfficePdfPage -Path $source -PageRange 1 -BoxName CropBox `
+            -Left 10 -Bottom 10 -Right 300 -Top 500 -OutputPath $boxed `
+            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
 
         $movedPages = @(Get-OfficePdfText -Path $moved -ByPage)
         $movedPages[2].Text | Should -Match 'Restricted page one'
         (Get-OfficePdfInfo -Path $removed).PageCount | Should -Be 2
         (Get-OfficePdfInfo -Path $rotated).PageCount | Should -Be 3
+        (Get-OfficePdfInfo -Path $boxed).Pages[0].Geometry.CropBox.Width | Should -Be 290
     }
 
     It 'fills authenticated restricted forms through the shared read contract' {
         $source = Join-Path $TestDrive 'restricted-form.pdf'
         $output = Join-Path $TestDrive 'restricted-form-filled.pdf'
+        $flat = Join-Path $TestDrive 'restricted-form-flat.pdf'
+        $filledAndFlat = Join-Path $TestDrive 'restricted-form-filled-flat.pdf'
+        $incremental = Join-Path $TestDrive 'restricted-form-incremental.pdf'
+        $imported = Join-Path $TestDrive 'restricted-form-imported.pdf'
         New-OfficePdf -Path $source -Password 'open' -OwnerPassword 'owner' -Permission -3904 {
             PdfParagraph 'Restricted form'
             PdfFormField -Name Name -Type Text -Value Ada
@@ -146,8 +155,22 @@ Describe 'Authenticated PDF automation' {
 
         Set-OfficePdfForm -Path $source -OutputPath $output -Field @{ Name = 'Grace' } `
             -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+        ConvertTo-OfficePdfFlatForm -Path $source -OutputPath $flat `
+            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+        Set-OfficePdfForm -Path $source -OutputPath $filledAndFlat -Field @{ Name = 'Flattened' } -Flatten `
+            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+        Set-OfficePdfForm -Path $source -OutputPath $incremental -Field @{ Name = 'Incremental' } -Incremental `
+            -Password 'owner' | Should -BeOfType System.IO.FileInfo
+        $xfdf = Export-OfficePdfXfdf -Path $source -Password 'open' -IgnorePermissionRestrictions
+        $xfdf = $xfdf -replace '>Ada<', '>Imported<'
+        Import-OfficePdfXfdf -Path $source -Xfdf $xfdf -OutputPath $imported `
+            -Password 'open' -IgnorePermissionRestrictions
 
         (Get-OfficePdfFormField -Path $output -Name Name).Value | Should -Be 'Grace'
+        (Get-OfficePdfInfo -Path $flat).FormFieldCount | Should -Be 0
+        (Get-OfficePdfInfo -Path $filledAndFlat).FormFieldCount | Should -Be 0
+        (Get-OfficePdfFormField -Path $incremental -Name Name -Password 'owner').Value | Should -Be 'Incremental'
+        (Get-OfficePdfFormField -Path $imported -Name Name).Value | Should -Be 'Imported'
     }
 
     It 'sanitizes and updates metadata on authenticated restricted PDFs' {
@@ -169,14 +192,18 @@ Describe 'Authenticated PDF automation' {
     }
 
     It 'proves rewrites between independently authenticated document instances' {
-        $source = Join-Path $TestDrive 'restricted-proof.pdf'
-        New-OfficePdf -Path $source -Password 'open' -OwnerPassword 'owner' -Permission -3904 {
+        $reference = Join-Path $TestDrive 'restricted-proof-reference.pdf'
+        $difference = Join-Path $TestDrive 'restricted-proof-difference.pdf'
+        New-OfficePdf -Path $reference -Password 'reference-open' -OwnerPassword 'reference-owner' -Permission -3904 {
+            PdfParagraph 'Restricted rewrite proof'
+        } | Out-Null
+        New-OfficePdf -Path $difference -Password 'difference-open' -OwnerPassword 'difference-owner' -Permission -3904 {
             PdfParagraph 'Restricted rewrite proof'
         } | Out-Null
 
-        $report = Test-OfficePdfRewrite -ReferencePath $source -DifferencePath $source `
-            -ReferencePassword 'open' -IgnoreReferencePermissionRestrictions `
-            -DifferencePassword 'open' -IgnoreDifferencePermissionRestrictions
+        $report = Test-OfficePdfRewrite -ReferencePath $reference -DifferencePath $difference `
+            -ReferencePassword 'reference-open' -IgnoreReferencePermissionRestrictions `
+            -DifferencePassword 'difference-open' -IgnoreDifferencePermissionRestrictions
 
         $report.IsPreserved | Should -BeTrue
     }
