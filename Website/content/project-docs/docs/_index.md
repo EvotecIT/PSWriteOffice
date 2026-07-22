@@ -1,18 +1,33 @@
 ---
-title: "PSWriteOffice Docs"
-description: "Curated documentation workspace for PSWriteOffice."
+title: "PSWriteOffice Documentation"
+description: "Workflow guides for 464 PowerShell cmdlets across Office, PDF, Reader, Visio, and open formats."
 layout: docs
 ---
 
-PSWriteOffice provides PowerShell commands for creating, converting, and reading Word, Excel, PowerPoint, PDF, RTF, Markdown, CSV, Reader, and Visio files through OfficeIMO.
+PSWriteOffice is the PowerShell surface for OfficeIMO. Use these guides to choose a workflow, compose or inspect a document, and then move into generated command reference for exact parameters and examples.
 
 ## Start here
 
-- [Project overview](./overview/)
-- [Install](./install/)
-- [Back to project overview](/projects/pswriteoffice/)
+- [What PSWriteOffice covers](/docs/pswriteoffice/overview/)
+- [Install and verify](/docs/pswriteoffice/install/)
+- [Choose a workflow](/docs/pswriteoffice/choosing-a-workflow/)
+- [Command families](/docs/pswriteoffice/command-families/)
+
+## Document workflows
+
+- [Word automation](/docs/pswriteoffice/word/)
+- [Excel automation](/docs/pswriteoffice/excel/)
+- [PowerPoint automation](/docs/pswriteoffice/powerpoint/)
+- [PDF automation](/docs/pswriteoffice/pdf/)
+- [Reader and extraction](/docs/pswriteoffice/reader/)
+- [Visio diagrams](/docs/pswriteoffice/visio/)
+- [Markdown, RTF, CSV, OpenDocument, email, AsciiDoc, and LaTeX](/docs/pswriteoffice/open-text-formats/)
+- [Automation patterns](/docs/pswriteoffice/automation-patterns/)
+- [Troubleshooting and diagnostics](/docs/pswriteoffice/troubleshooting/)
+- [PSWriteOffice product overview](/products/pswriteoffice/)
 
 ## Notes
 
-- API reference lives under `/projects/pswriteoffice/api/`.
-- Curated examples stay under `/projects/pswriteoffice/examples/`.
+- The [command reference](/api/powershell/) is generated from the module manifest and external help.
+- The [curated example gallery](https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples) uses runnable patterns from the repository.
+- The family totals shown on the site come from `PSWriteOffice.psd1`; documentation validation fails if an exported command is left uncategorized.

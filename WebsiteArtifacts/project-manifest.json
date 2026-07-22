@@ -1,25 +1,26 @@
 {
   "slug": "pswriteoffice",
   "name": "PSWriteOffice",
-  "description": "PSWriteOffice website artifacts for the Evotec multi-project hub.",
+  "description": "PowerShell document automation across Word, Excel, PowerPoint, PDF, Reader, Visio, and open text formats.",
   "mode": "hub-full",
   "contentMode": "hybrid",
   "status": "active",
   "listed": false,
-  "version": "1.0.3",
-  "generatedAt": "2026-06-27T20:17:11.2406613+00:00",
+  "version": "3.0.0",
   "sourceRef": "main",
   "links": {
     "source": "https://github.com/EvotecIT/PSWriteOffice"
   },
   "surfaces": {
-    "docs": false,
+    "docs": true,
     "apiPowerShell": true,
     "apiDotNet": false,
-    "examples": false
+    "examples": true
   },
   "artifacts": {
     "api": "WebsiteArtifacts/apidocs",
-    "examples": "Examples"
+    "docs": "Website/content/project-docs/docs",
+    "examples": "Website/content/examples",
+    "documentationCatalog": "WebsiteArtifacts/documentation/command-catalog.json"
   }
 }
