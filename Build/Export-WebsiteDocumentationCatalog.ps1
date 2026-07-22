@@ -167,7 +167,12 @@ $catalog = [ordered]@{
 
 $parent = Split-Path -Parent $OutputPath
 New-Item -ItemType Directory -Path $parent -Force | Out-Null
-$catalog | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $OutputPath -Encoding utf8
+$catalogJson = $catalog | ConvertTo-Json -Depth 8 -Compress
+$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText(
+    [System.IO.Path]::GetFullPath($OutputPath),
+    $catalogJson + "`n",
+    $utf8WithoutBom)
 
 [PSCustomObject]@{
     OutputPath = (Resolve-Path -LiteralPath $OutputPath).Path
