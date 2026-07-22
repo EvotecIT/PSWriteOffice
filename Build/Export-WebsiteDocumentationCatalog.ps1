@@ -1,6 +1,7 @@
 param(
     [string] $RepositoryRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path,
-    [string] $OutputPath = ''
+    [string] $OutputPath = '',
+    [string] $ManifestPath = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -9,8 +10,14 @@ if ([string]::IsNullOrWhiteSpace($OutputPath)) {
     $OutputPath = Join-Path $RepositoryRoot 'WebsiteArtifacts\documentation\command-catalog.json'
 }
 
-$manifestPath = Join-Path $RepositoryRoot 'PSWriteOffice.psd1'
-$manifest = Import-PowerShellDataFile -LiteralPath $manifestPath
+if ([string]::IsNullOrWhiteSpace($ManifestPath)) {
+    $ManifestPath = Join-Path $RepositoryRoot 'PSWriteOffice.psd1'
+}
+if (-not (Test-Path -LiteralPath $ManifestPath -PathType Leaf)) {
+    throw "PSWriteOffice manifest was not found at '$ManifestPath'."
+}
+
+$manifest = Import-PowerShellDataFile -LiteralPath $ManifestPath
 $commands = @($manifest.CmdletsToExport) |
     Where-Object { -not [string]::IsNullOrWhiteSpace($_) -and $_ -ne '*' } |
     Sort-Object -Unique

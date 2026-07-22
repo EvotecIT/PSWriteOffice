@@ -5,6 +5,7 @@ BeforeAll {
     $script:projectManifestPath = Join-Path $script:repoRoot 'WebsiteArtifacts\project-manifest.json'
     $script:moduleManifestPath = Join-Path $script:repoRoot 'PSWriteOffice.psd1'
     $script:apiRoot = Join-Path $script:repoRoot 'WebsiteArtifacts\apidocs\powershell'
+    $script:sourceSnapshotManifestPath = Join-Path $script:apiRoot 'PSWriteOffice.psd1'
 }
 
 Describe 'PSWriteOffice website documentation catalog' {
@@ -24,17 +25,22 @@ Describe 'PSWriteOffice website documentation catalog' {
 
     It 'keeps the committed catalog deterministic and current' {
         $outputPath = Join-Path $TestDrive 'command-catalog.json'
-        & $script:catalogScript -RepositoryRoot $script:repoRoot -OutputPath $outputPath | Out-Null
+        & $script:catalogScript `
+            -RepositoryRoot $script:repoRoot `
+            -OutputPath $outputPath `
+            -ManifestPath $script:sourceSnapshotManifestPath | Out-Null
 
         (Get-Content -LiteralPath $outputPath -Raw).Trim() |
             Should -Be (Get-Content -LiteralPath $script:catalogPath -Raw).Trim()
     }
 
-    It 'publishes real docs, examples, and API surfaces at the module version' {
-        $module = Import-PowerShellDataFile -LiteralPath $script:moduleManifestPath
+    It 'publishes real docs, examples, and API surfaces at the source snapshot version' {
+        $sourceSnapshot = Import-PowerShellDataFile -LiteralPath $script:sourceSnapshotManifestPath
+        $catalog = Get-Content -LiteralPath $script:catalogPath -Raw | ConvertFrom-Json
         $project = Get-Content -LiteralPath $script:projectManifestPath -Raw | ConvertFrom-Json
 
-        $project.version | Should -Be ([string] $module.ModuleVersion)
+        $project.version | Should -Be ([string] $sourceSnapshot.ModuleVersion)
+        $catalog.module.version | Should -Be ([string] $sourceSnapshot.ModuleVersion)
         $project.surfaces.docs | Should -BeTrue
         $project.surfaces.examples | Should -BeTrue
         $project.surfaces.apiPowerShell | Should -BeTrue
