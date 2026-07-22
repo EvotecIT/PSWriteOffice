@@ -28,6 +28,29 @@ function Get-HelpCommandNames {
         Sort-Object -Unique
 }
 
+function Get-RelativeFilePath {
+    param(
+        [Parameter(Mandatory)][string] $BasePath,
+        [Parameter(Mandatory)][string] $Path
+    )
+
+    $baseFullPath = [System.IO.Path]::GetFullPath($BasePath)
+    $separator = [System.IO.Path]::DirectorySeparatorChar.ToString()
+    if (-not $baseFullPath.EndsWith($separator, [System.StringComparison]::Ordinal)) {
+        $baseFullPath += $separator
+    }
+
+    $targetFullPath = [System.IO.Path]::GetFullPath($Path)
+    $baseUri = [System.Uri] $baseFullPath
+    $targetUri = [System.Uri] $targetFullPath
+    if (-not [string]::Equals($baseUri.Scheme, $targetUri.Scheme, [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $targetFullPath
+    }
+
+    $relativeUri = $baseUri.MakeRelativeUri($targetUri).ToString()
+    return [System.Uri]::UnescapeDataString($relativeUri).Replace('/', [System.IO.Path]::DirectorySeparatorChar)
+}
+
 function Find-CompleteBuiltModule {
     $unpackedRoot = Join-Path $RepositoryRoot 'Artefacts\Unpacked'
     if (-not (Test-Path -LiteralPath $unpackedRoot -PathType Container)) {
@@ -129,7 +152,7 @@ try {
         $implementingType = $command.ImplementingType
         if ($implementingType -and $sourceFilesByType.ContainsKey($implementingType.Name)) {
             $sourceFullPath = $sourceFilesByType[$implementingType.Name]
-            $sourcePath = [System.IO.Path]::GetRelativePath($RepositoryRoot, $sourceFullPath).Replace('\', '/')
+            $sourcePath = (Get-RelativeFilePath -BasePath $RepositoryRoot -Path $sourceFullPath).Replace('\', '/')
             $typePattern = '\bclass\s+' + [regex]::Escape($implementingType.Name) + '\b'
             $typeMatch = Select-String -LiteralPath $sourceFullPath -Pattern $typePattern | Select-Object -First 1
             if ($typeMatch) {
