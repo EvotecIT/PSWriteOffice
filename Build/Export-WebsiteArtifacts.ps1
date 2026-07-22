@@ -12,6 +12,7 @@ if ([string]::IsNullOrWhiteSpace($ArtifactsRoot)) {
 
 $moduleName = 'PSWriteOffice'
 $manifestPath = Join-Path $RepositoryRoot "$moduleName.psd1"
+$sourceManifestBytes = [System.IO.File]::ReadAllBytes($manifestPath)
 $manifest = Import-PowerShellDataFile -LiteralPath $manifestPath
 $expectedCommands = @($manifest.CmdletsToExport) |
     Where-Object { -not [string]::IsNullOrWhiteSpace($_) -and $_ -ne '*' } |
@@ -58,12 +59,14 @@ function Find-CompleteBuiltModule {
     return $null
 }
 
-$builtModule = Find-CompleteBuiltModule
-if (-not $builtModule -and -not $SkipBuild) {
+$builtModule = $null
+if (-not $SkipBuild) {
     & (Join-Path $RepositoryRoot 'Build\Build-Module.ps1') -RunMode Build
-    if ($LASTEXITCODE -ne 0) {
-        throw "PSWriteOffice module build failed with exit code $LASTEXITCODE."
+    if (-not $?) {
+        throw 'PSWriteOffice module build failed.'
     }
+    $builtModule = Find-CompleteBuiltModule
+} else {
     $builtModule = Find-CompleteBuiltModule
 }
 
@@ -106,6 +109,11 @@ try {
 
     $commandMetadata = foreach ($commandName in $expectedCommands) {
         $command = $commandsByName[$commandName]
+        $declaredAliases = @()
+        if ($command.ImplementingType) {
+            $declaredAliases = @($command.ImplementingType.GetCustomAttributes([System.Management.Automation.AliasAttribute], $true) |
+                ForEach-Object { $_.AliasNames })
+        }
         $sourcePath = $null
         $sourceLine = $null
         $implementingType = $command.ImplementingType
@@ -122,7 +130,9 @@ try {
         $entry = [ordered]@{
             name = $commandName
             kind = 'Cmdlet'
-            aliases = @($aliasesByTarget[$commandName] | Sort-Object -Unique)
+            aliases = @(@($aliasesByTarget[$commandName]) + $declaredAliases |
+                Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+                Sort-Object -Unique)
         }
         if ($sourcePath) {
             $entry.sourcePath = $sourcePath
@@ -139,7 +149,7 @@ $apiRoot = Join-Path $ArtifactsRoot 'apidocs\powershell'
 New-Item -ItemType Directory -Path $apiRoot -Force | Out-Null
 
 Copy-Item -LiteralPath $builtModule.HelpPath -Destination (Join-Path $apiRoot "$moduleName-help.xml") -Force
-Copy-Item -LiteralPath $manifestPath -Destination (Join-Path $apiRoot "$moduleName.psd1") -Force
+[System.IO.File]::WriteAllBytes((Join-Path $apiRoot "$moduleName.psd1"), $sourceManifestBytes)
 
 $metadata = [ordered]@{
     schemaVersion = 1

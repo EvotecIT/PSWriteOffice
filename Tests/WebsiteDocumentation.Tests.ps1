@@ -53,10 +53,13 @@ Describe 'PSWriteOffice website documentation catalog' {
         $manifestCommands = @($apiManifest.CmdletsToExport) | Sort-Object -Unique
         $helpCommands = @($help.helpItems.command | ForEach-Object { [string] $_.details.name }) | Sort-Object -Unique
         $metadataCommands = @($metadata.commands | ForEach-Object { [string] $_.name }) | Sort-Object -Unique
+        $expectedAliases = @($module.AliasesToExport) | Sort-Object -Unique
+        $metadataAliases = @($metadata.commands.aliases) | Sort-Object -Unique
 
         $manifestCommands | Should -Be $expected
         $helpCommands | Should -Be $expected
         $metadataCommands | Should -Be $expected
+        $metadataAliases | Should -Be $expectedAliases
         @($metadata.commands | Where-Object { -not $_.sourcePath }).Count | Should -Be 0
     }
 }
