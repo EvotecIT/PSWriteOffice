@@ -34,6 +34,19 @@ Describe 'PSWriteOffice website documentation catalog' {
             Should -Be (Get-Content -LiteralPath $script:catalogPath -Raw).Trim()
     }
 
+    It 'accepts a filename-only catalog output path' {
+        Push-Location $TestDrive
+        try {
+            & $script:catalogScript `
+                -RepositoryRoot $script:repoRoot `
+                -OutputPath 'command-catalog.json' | Out-Null
+
+            Test-Path -LiteralPath (Join-Path $TestDrive 'command-catalog.json') | Should -BeTrue
+        } finally {
+            Pop-Location
+        }
+    }
+
     It 'publishes real docs, examples, and API surfaces at the source snapshot version' {
         $sourceSnapshot = Import-PowerShellDataFile -LiteralPath $script:sourceSnapshotManifestPath
         $catalog = Get-Content -LiteralPath $script:catalogPath -Raw | ConvertFrom-Json
@@ -67,5 +80,10 @@ Describe 'PSWriteOffice website documentation catalog' {
         $metadataCommands | Should -Be $expected
         $metadataAliases | Should -Be $expectedAliases
         @($metadata.commands | Where-Object { -not $_.sourcePath }).Count | Should -Be 0
+
+        $exportCsv = $metadata.commands | Where-Object name -EQ 'Export-OfficeCsv'
+        $exportCsv.sourcePath | Should -Be 'Sources/PSWriteOffice/Cmdlets/Csv/ExportOfficeCsvCommand.cs'
+        (Get-Content -LiteralPath (Join-Path $script:repoRoot $exportCsv.sourcePath))[$exportCsv.sourceLine - 1] |
+            Should -Match '\bclass\s+ExportOfficeCsvCommand\b'
     }
 }

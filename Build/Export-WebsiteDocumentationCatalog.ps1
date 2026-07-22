@@ -165,17 +165,20 @@ $catalog = [ordered]@{
     families = @($families)
 }
 
-$parent = Split-Path -Parent $OutputPath
-New-Item -ItemType Directory -Path $parent -Force | Out-Null
+$resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
+$parent = [System.IO.Path]::GetDirectoryName($resolvedOutputPath)
+if (-not [string]::IsNullOrWhiteSpace($parent)) {
+    New-Item -ItemType Directory -Path $parent -Force | Out-Null
+}
 $catalogJson = $catalog | ConvertTo-Json -Depth 8 -Compress
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText(
-    [System.IO.Path]::GetFullPath($OutputPath),
+    $resolvedOutputPath,
     $catalogJson + "`n",
     $utf8WithoutBom)
 
 [PSCustomObject]@{
-    OutputPath = (Resolve-Path -LiteralPath $OutputPath).Path
+    OutputPath = $resolvedOutputPath
     CommandCount = $commands.Count
     AliasCount = $aliases.Count
     FamilyCount = $families.Count

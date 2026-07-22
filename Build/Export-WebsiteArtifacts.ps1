@@ -75,11 +75,21 @@ if (-not $builtModule) {
 }
 
 $sourceFilesByType = @{}
+$sourceFilePriorityByType = @{}
 foreach ($sourceFile in Get-ChildItem -LiteralPath (Join-Path $RepositoryRoot 'Sources\PSWriteOffice\Cmdlets') -Recurse -Filter '*.cs' -File) {
-    $sourceFilesByType[$sourceFile.BaseName] = $sourceFile.FullName
     $sourceText = Get-Content -LiteralPath $sourceFile.FullName -Raw
-    foreach ($typeMatch in [regex]::Matches($sourceText, '\b(?:sealed\s+)?class\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)\b')) {
-        $sourceFilesByType[$typeMatch.Groups['name'].Value] = $sourceFile.FullName
+    $containsCmdletDeclaration = $sourceText -match '(?m)^\s*\[(?:System\.Management\.Automation\.)?Cmdlet(?:Attribute)?\s*\('
+    $typeNames = @($sourceFile.BaseName) + @(
+        [regex]::Matches($sourceText, '\b(?:sealed\s+)?(?:partial\s+)?class\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)\b') |
+            ForEach-Object { $_.Groups['name'].Value }
+    )
+
+    foreach ($typeName in @($typeNames | Sort-Object -Unique)) {
+        $priority = $(if ($containsCmdletDeclaration) { 2 } else { 0 }) + $(if ($sourceFile.BaseName -eq $typeName) { 1 } else { 0 })
+        if (-not $sourceFilesByType.ContainsKey($typeName) -or $priority -gt $sourceFilePriorityByType[$typeName]) {
+            $sourceFilesByType[$typeName] = $sourceFile.FullName
+            $sourceFilePriorityByType[$typeName] = $priority
+        }
     }
 }
 
