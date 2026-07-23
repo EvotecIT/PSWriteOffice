@@ -2,12 +2,12 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 1.0.3
+Help Version: 3.0.1
 Locale: en-US
 ---
 # PSWriteOffice Module
 ## Description
-PowerShell module to create, convert, read, inspect, and export Office, PDF, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, and Visio files without Microsoft Office installed. Powered by OfficeIMO.*.
+PowerShell module to create, convert, read, inspect, and export Office, PDF, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, Visio, and Confluence content without Microsoft Office installed. Powered by OfficeIMO.*.
 
 ## PSWriteOffice Cmdlets
 ### [Add-OfficeExcelAutoFilter](Add-OfficeExcelAutoFilter.md)
@@ -610,6 +610,12 @@ Finds Word tables containing matching cell text.
 ### [Get-OfficeAsciiDoc](Get-OfficeAsciiDoc.md)
 Parses an AsciiDoc file or source string into OfficeIMO's native document model.
 
+### [Get-OfficeConfluenceAttachment](Get-OfficeConfluenceAttachment.md)
+Lists or downloads Confluence page attachments.
+
+### [Get-OfficeConfluencePage](Get-OfficeConfluencePage.md)
+Reads one page or streams a filtered Confluence Cloud page listing.
+
 ### [Get-OfficeCsv](Get-OfficeCsv.md)
 Loads a CSV document from disk or parses CSV text.
 
@@ -985,6 +991,9 @@ Moves a worksheet to a new workbook position.
 ### [Move-OfficePdfPage](Move-OfficePdfPage.md)
 Moves selected pages before another page and writes a new PDF.
 
+### [New-OfficeConfluenceSession](New-OfficeConfluenceSession.md)
+Creates an in-memory Confluence Cloud session.
+
 ### [New-OfficeDocumentReader](New-OfficeDocumentReader.md)
 Creates an immutable fully configured OfficeIMO document reader.
 
@@ -1041,6 +1050,12 @@ Protects workbook structure or windows metadata. This is not file encryption.
 
 ### [Protect-OfficeWordDocument](Protect-OfficeWordDocument.md)
 Protects a Word document with a password.
+
+### [Publish-OfficeConfluencePage](Publish-OfficeConfluencePage.md)
+Plans, creates, or updates a Confluence Cloud page.
+
+### [Remove-OfficeConfluencePage](Remove-OfficeConfluencePage.md)
+Plans or deletes a Confluence Cloud page.
 
 ### [Remove-OfficeExcelComment](Remove-OfficeExcelComment.md)
 Removes a comment (note) from a worksheet cell.
@@ -1107,6 +1122,12 @@ Saves a Word document without disposing it.
 
 ### [Search-OfficeDocument](Search-OfficeDocument.md)
 Searches normalized document blocks and returns Reader-owned page citations for each match.
+
+### [Send-OfficeConfluenceAttachment](Send-OfficeConfluenceAttachment.md)
+Uploads or versions a Confluence page attachment.
+
+### [Set-OfficeConfluenceManagedSection](Set-OfficeConfluenceManagedSection.md)
+Safely replaces one marker-delimited section in a Confluence storage body.
 
 ### [Set-OfficeExcelActiveSheet](Set-OfficeExcelActiveSheet.md)
 Sets the worksheet that opens as the active sheet.
