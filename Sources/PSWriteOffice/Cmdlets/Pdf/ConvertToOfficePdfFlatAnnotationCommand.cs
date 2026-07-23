@@ -25,10 +25,20 @@ public sealed class ConvertToOfficePdfFlatAnnotationCommand : PSCmdlet
     [Parameter(Mandatory = true, Position = 1)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed modification restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var result = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).FlattenVisualAnnotations();
+        var result = PdfDocument.Open(
+            PdfCommandUtilities.ResolvePath(this, Path),
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent)).FlattenVisualAnnotations();
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write flattened annotation PDF"))
         {

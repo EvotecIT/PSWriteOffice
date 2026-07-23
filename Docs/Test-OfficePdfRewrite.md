@@ -11,7 +11,7 @@ Creates a proof report for user-visible signals preserved by a PDF rewrite.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Test-OfficePdfRewrite [-ReferencePath] <string> [-DifferencePath] <string> [-Options <PdfRewritePreservationOptions>] [-FailOnLoss] [<CommonParameters>]
+Test-OfficePdfRewrite [-ReferencePath] <string> [-DifferencePath] <string> [-Options <PdfRewritePreservationOptions>] [-FailOnLoss] [-ReferencePassword <string>] [-IgnoreReferencePermissionRestrictions] [-DifferencePassword <string>] [-IgnoreDifferencePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -26,6 +26,22 @@ Test-OfficePdfRewrite -DifferencePath 'C:\Path'
 
 
 ## PARAMETERS
+
+### -DifferencePassword
+Password used to authenticate the rewritten PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -DifferencePath
 Rewritten PDF path.
@@ -59,11 +75,59 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -IgnoreDifferencePermissionRestrictions
+After authentication, explicitly ignore restrictions on the rewritten PDF.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnoreReferencePermissionRestrictions
+After authentication, explicitly ignore restrictions on the original PDF.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Options
 Optional required preservation signals and limits.
 
 ```yaml
 Type: PdfRewritePreservationOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -ReferencePassword
+Password used to authenticate the original PDF.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

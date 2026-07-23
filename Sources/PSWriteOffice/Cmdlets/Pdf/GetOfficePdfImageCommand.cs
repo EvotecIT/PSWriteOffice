@@ -37,11 +37,21 @@ public sealed class GetOfficePdfImageCommand : PSCmdlet
     [Parameter]
     public string BaseName { get; set; } = "image";
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
-        var document = PdfDocument.Open(inputPath);
+        var document = PdfDocument.Open(
+            inputPath,
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory!);

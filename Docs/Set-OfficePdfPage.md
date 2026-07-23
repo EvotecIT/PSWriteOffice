@@ -11,7 +11,7 @@ Sets page-level PDF properties and writes a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfPage -Path <string> -OutputPath <string> [-PageRange <string>] [-Rotation <int>] [-BoxName <string>] [-Left <double>] [-Bottom <double>] [-Right <double>] [-Top <double>] [-PageSize <string>] [-Width <double>] [-Height <double>] [-Landscape] [-ResizeMode <PdfPageResizeMode>] [-ResizeMargin <double>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficePdfPage -Path <string> -OutputPath <string> [-PageRange <string>] [-Rotation <int>] [-BoxName <string>] [-Left <double>] [-Bottom <double>] [-Right <double>] [-Top <double>] [-PageSize <string>] [-Width <double>] [-Height <double>] [-Landscape] [-ResizeMode <PdfPageResizeMode>] [-ResizeMargin <double>] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -69,6 +69,22 @@ Custom page height in points when -PageSize Custom is used.
 
 ```yaml
 Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed page-modification restrictions.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -146,6 +162,22 @@ Accept wildcard characters: True
 
 ### -PageSize
 Resize selected pages to a known OfficeIMO page size such as A4, Letter, or Custom.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
 
 ```yaml
 Type: String

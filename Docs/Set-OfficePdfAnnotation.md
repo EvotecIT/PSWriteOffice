@@ -11,7 +11,7 @@ Updates a single indirect PDF annotation.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> -ObjectNumber <int> [-Contents <string>] [-Title <string>] [-Name <string>] [-Flags <int>] [-Color <string>] [-RemoveAction] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> -ObjectNumber <int> [-Password <string>] [-IgnorePermissionRestrictions] [-Contents <string>] [-Title <string>] [-Name <string>] [-Flags <int>] [-Color <string>] [-RemoveAction] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -64,6 +64,22 @@ Replacement annotation flags.
 
 ```yaml
 Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed annotation-modification restrictions.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -128,6 +144,22 @@ Return the annotation edit result instead of the output file.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

@@ -20,6 +20,14 @@ public sealed class RemoveOfficePdfAnnotationCommand : PSCmdlet
     [Parameter(Mandatory = true, Position = 1)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed annotation-modification restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Specific annotation object number to remove.</summary>
     [Parameter]
     public int? ObjectNumber { get; set; }
@@ -60,7 +68,7 @@ public sealed class RemoveOfficePdfAnnotationCommand : PSCmdlet
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         PdfAnnotationEditResult result = PdfDocument
-            .Open(inputPath)
+            .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Annotations.Remove(options);
         result.ToDocument().Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent ? result : new FileInfo(outputPath));

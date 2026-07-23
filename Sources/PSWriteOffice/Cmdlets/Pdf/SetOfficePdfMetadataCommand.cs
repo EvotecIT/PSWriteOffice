@@ -47,6 +47,14 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetFile)]
     public string? OutputPath { get; set; }
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter(ParameterSetName = ParameterSetFile)]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed metadata-modification restrictions.</summary>
+    [Parameter(ParameterSetName = ParameterSetFile)]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Document title.</summary>
     [Parameter]
     public string? Title { get; set; }
@@ -84,7 +92,9 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            var inputDocument = PdfDocument.Open(inputPath);
+            var inputDocument = PdfDocument.Open(
+                inputPath,
+                PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
             var updatedDocument = Incremental.IsPresent
                 ? inputDocument.AppendMetadataRevision(Title, Author, Subject, Keywords)
                 : inputDocument.UpdateMetadata(Title, Author, Subject, Keywords);

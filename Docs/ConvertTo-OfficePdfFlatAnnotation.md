@@ -11,7 +11,7 @@ Flattens supported visual PDF annotations into static page content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfFlatAnnotation [-Path] <string> [-OutputPath] <string> [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfFlatAnnotation [-Path] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,6 +28,22 @@ Paints supported annotation appearance streams into page content and writes a ne
 
 ## PARAMETERS
 
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed modification restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -OutputPath
 Output PDF path.
 
@@ -39,6 +55,22 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True

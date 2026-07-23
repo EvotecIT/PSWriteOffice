@@ -11,7 +11,7 @@ Joins multiple PDF files into a single PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Join-OfficePdf [-Path] <string[]> [-OutputPath] <string> [-PassThru] [-FlattenVisualAnnotations] [-PageSize <string>] [-Width <double>] [-Height <double>] [-Landscape] [-ResizeMode <PdfPageResizeMode>] [-ResizeMargin <double>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficePdf [-Path] <string[]> [-OutputPath] <string> [-Password <string[]>] [-IgnorePermissionRestrictions] [-PassThru] [-PassThruReport] [-FlattenVisualAnnotations] [-PageSize <string>] [-Width <double>] [-Height <double>] [-Landscape] [-ResizeMode <PdfPageResizeMode>] [-ResizeMargin <double>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,6 +28,17 @@ Get-OfficePdfInfo -Path .\Examples\Documents\Combined.pdf | Select-Object PageCo
 ```
 
 Writes a single PDF containing the input documents in the requested order, then checks the result.
+
+### EXAMPLE 2
+```powershell
+PS> $result = Join-OfficePdf -Path .\Restricted.pdf, .\Appendix.pdf `
+    -Password 'source-password', $null -IgnorePermissionRestrictions `
+    -OutputPath .\Combined.pdf -PassThruReport
+$result.Sources | Select-Object SourceIndex, PasswordAuthenticationRole, PermissionRestrictionsIgnored
+$result.Decisions | Select-Object Structure, Mode, Action
+```
+
+A valid password remains mandatory. The explicit switch ignores usage flags after authentication and the report records every source decision.
 
 ## PARAMETERS
 
@@ -52,6 +63,23 @@ Custom output page height in points when -PageSize Custom is used.
 
 ```yaml
 Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed usage restrictions such as copying or assembly.
+This does not discover, bypass, or crack a missing password.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -116,6 +144,38 @@ Emit the saved file.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -PassThruReport
+Emit the per-source merge inventory, permission decisions, and output security readback.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Passwords used to authenticate encrypted sources. Supply one value for every source, or one value to reuse for all sources.
+
+```yaml
+Type: String[]
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -200,7 +260,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.IO.FileInfo`
+- `System.IO.FileInfo
+OfficeIMO.Pdf.PdfMergeReport`
 
 ## RELATED LINKS
 

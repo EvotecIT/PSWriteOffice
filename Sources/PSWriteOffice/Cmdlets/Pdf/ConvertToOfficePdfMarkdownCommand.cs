@@ -31,6 +31,10 @@ public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Optional output Markdown file path.</summary>
     [Parameter]
     public string? OutputPath { get; set; }
@@ -38,7 +42,9 @@ public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
+        var document = PdfDocument.Open(
+            PdfCommandUtilities.ResolvePath(this, Path),
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var markdown = string.IsNullOrWhiteSpace(PageRange)
             ? document.Read.Markdown()
             : document.Read.Markdown(PageRange!);

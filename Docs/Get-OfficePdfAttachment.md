@@ -11,7 +11,7 @@ Gets or extracts embedded file attachments from a PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfAttachment [-Path] <string> [-Name <string>] [-OutputDirectory <string>] [-Password <string>] [<CommonParameters>]
+Get-OfficePdfAttachment [-Path] <string> [-Name <string>] [-OutputDirectory <string>] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,6 +31,22 @@ $proof
 First returns attachment metadata, then writes embedded files to disk.
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Name
 Optional attachment name or file name filter.
