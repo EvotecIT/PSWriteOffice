@@ -88,6 +88,15 @@ public sealed class GetOfficeDocumentCommand : OfficeDocumentReaderCommandBase
     [Parameter]
     public SwitchParameter IncludePageLocations { get; set; }
 
+    /// <summary>Maximum PST, OST, OLM, or EMLX items projected from the store. The default is 1,000.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? MaxStoreItems { get; set; }
+
+    /// <summary>Project every matching item from an email store.</summary>
+    [Parameter]
+    public SwitchParameter AllStoreItems { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -105,7 +114,8 @@ public sealed class GetOfficeDocumentCommand : OfficeDocumentReaderCommandBase
             ExcelA1Range,
             !NoMarkdownHeadingChunks.IsPresent,
             !NoHashes.IsPresent,
-            IncludePageLocations.IsPresent);
+            IncludePageLocations.IsPresent,
+            ResolveStoreItemLimit(MaxStoreItems, AllStoreItems));
 
         var reader = ResolveReader(configuration.HandlerOptions);
         WriteObject(AsJson.IsPresent

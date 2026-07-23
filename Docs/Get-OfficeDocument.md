@@ -11,7 +11,7 @@ Reads a supported file into the OfficeIMO shared document read result envelope.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocument [-Path] <string> [-AsJson] [-Indented] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-IncludePageLocations] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
+Get-OfficeDocument [-Path] <string> [-AsJson] [-Indented] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-IncludePageLocations] [-MaxStoreItems <int>] [-AllStoreItems] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,6 +28,22 @@ $json | Set-Content -Path .\Report.reader.json
 Reads a supported document and stores the normalized Reader result for indexing or diagnostics.
 
 ## PARAMETERS
+
+### -AllStoreItems
+Project every matching item from an email store.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -AsJson
 Return the read result as JSON.
@@ -176,6 +192,22 @@ Accept wildcard characters: True
 
 ### -MaxInputBytes
 Maximum input size in bytes.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxStoreItems
+Maximum PST, OST, OLM, or EMLX items projected from the store. The default is 1,000.
 
 ```yaml
 Type: Nullable`1

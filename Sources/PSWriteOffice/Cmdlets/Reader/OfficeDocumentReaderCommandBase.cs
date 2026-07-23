@@ -34,4 +34,15 @@ public abstract class OfficeDocumentReaderCommandBase : PSCmdlet
             ? ReaderCommandUtilities.Reader
             : ReaderCommandUtilities.CreateReader(handlerOptions);
     }
+
+    /// <summary>Resolves mutually exclusive bounded and unlimited email-store settings.</summary>
+    protected static int? ResolveStoreItemLimit(int? maxStoreItems, SwitchParameter allStoreItems)
+    {
+        if (allStoreItems.IsPresent && maxStoreItems.HasValue)
+        {
+            throw new PSArgumentException("Specify either -MaxStoreItems or -AllStoreItems, not both.");
+        }
+
+        return allStoreItems.IsPresent ? int.MaxValue : maxStoreItems;
+    }
 }
