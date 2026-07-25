@@ -15,6 +15,9 @@ public interface IAsyncCmdletPipeline {
     /// <summary>Writes an error record to the PowerShell error stream.</summary>
     void WriteError(ErrorRecord errorRecord);
 
+    /// <summary>Reports a terminating error on the PowerShell pipeline thread.</summary>
+    void ThrowTerminatingError(ErrorRecord errorRecord);
+
     /// <summary>Writes a warning message to the PowerShell warning stream.</summary>
     void WriteWarning(string message);
 
@@ -26,6 +29,9 @@ public interface IAsyncCmdletPipeline {
 
     /// <summary>Writes an information record to the PowerShell information stream.</summary>
     void WriteInformation(InformationRecord informationRecord);
+
+    /// <summary>Writes tagged information to the PowerShell information stream.</summary>
+    void WriteInformation(object messageData, string[] tags);
 
     /// <summary>Writes a progress record to the PowerShell progress stream.</summary>
     void WriteProgress(ProgressRecord progressRecord);
