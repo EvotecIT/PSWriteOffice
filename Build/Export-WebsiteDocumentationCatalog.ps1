@@ -33,7 +33,7 @@ $familyDefinitions = @(
         match = { param($name) $name -match 'OfficeWord' }
     }
     [ordered]@{
-        id = 'excel'; title = 'Excel'; description = 'Build, read, convert, validate, repair, compare, and publish XLS, XLSX, and XLSB workbook workflows.'
+        id = 'excel'; title = 'Excel'; description = 'Build, read, convert, validate, repair, compare, and publish XLS and XLSX workbook workflows.'
         docs = 'excel'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Excel'
         samples = @('New-OfficeExcel', 'Add-OfficeExcelTable', 'Add-OfficeExcelPivotTable', 'Test-OfficeExcelWorkbook', 'ConvertTo-OfficeExcelWorkbook')
         match = { param($name) $name -match 'OfficeExcel' }
