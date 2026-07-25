@@ -33,6 +33,9 @@ public interface IAsyncCmdletPipeline {
     /// <summary>Runs ShouldProcess on the PowerShell pipeline thread.</summary>
     bool ShouldProcess(string? target, string action);
 
+    /// <summary>Runs ShouldContinue on the PowerShell pipeline thread.</summary>
+    bool ShouldContinue(string query, string caption);
+
     /// <summary>Prompts for credentials on the PowerShell pipeline thread.</summary>
     PSCredential? PromptForCredential(string caption, string message, string userName, string targetName);
 }
