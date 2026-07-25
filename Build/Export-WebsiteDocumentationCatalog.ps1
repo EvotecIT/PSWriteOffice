@@ -27,15 +27,15 @@ $aliases = @($manifest.AliasesToExport) |
 
 $familyDefinitions = @(
     [ordered]@{
-        id = 'word'; title = 'Word'; description = 'Create, inspect, update, review, merge, protect, and convert DOCX documents.'
+        id = 'word'; title = 'Word'; description = 'Create, inspect, update, review, merge, protect, and convert DOC and DOCX documents.'
         docs = 'word'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Word'
-        samples = @('New-OfficeWord', 'Add-OfficeWordTable', 'Get-OfficeWordReview', 'Invoke-OfficeWordMailMerge')
+        samples = @('New-OfficeWord', 'Add-OfficeWordTable', 'Get-OfficeWordReview', 'Invoke-OfficeWordMailMerge', 'ConvertTo-OfficeWordDocument')
         match = { param($name) $name -match 'OfficeWord' }
     }
     [ordered]@{
-        id = 'excel'; title = 'Excel'; description = 'Build, read, validate, repair, compare, and publish workbook reports and dashboards.'
+        id = 'excel'; title = 'Excel'; description = 'Build, read, convert, validate, repair, compare, and publish XLS, XLSX, and XLSB workbook workflows.'
         docs = 'excel'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Excel'
-        samples = @('New-OfficeExcel', 'Add-OfficeExcelTable', 'Add-OfficeExcelPivotTable', 'Test-OfficeExcelWorkbook')
+        samples = @('New-OfficeExcel', 'Add-OfficeExcelTable', 'Add-OfficeExcelPivotTable', 'Test-OfficeExcelWorkbook', 'ConvertTo-OfficeExcelWorkbook')
         match = { param($name) $name -match 'OfficeExcel' }
     }
     [ordered]@{
