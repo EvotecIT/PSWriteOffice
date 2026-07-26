@@ -1,12 +1,12 @@
 {
   "slug": "pswriteoffice",
   "name": "PSWriteOffice",
-  "description": "PowerShell document automation across Word, Excel, PowerPoint, PDF, Reader, Visio, and open text formats.",
+  "description": "PowerShell document automation across Word, Excel, PowerPoint, PDF, Reader, Confluence, Visio, and open text formats.",
   "mode": "hub-full",
   "contentMode": "hybrid",
   "status": "active",
   "listed": false,
-  "version": "3.0.0",
+  "version": "3.0.1",
   "sourceRef": "main",
   "links": {
     "source": "https://github.com/EvotecIT/PSWriteOffice"

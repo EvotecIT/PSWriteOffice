@@ -57,6 +57,12 @@ $familyDefinitions = @(
         match = { param($name) $name -match 'OfficeDocument' -and $name -ne 'Get-OfficeDocumentPageMarkdown' }
     }
     [ordered]@{
+        id = 'confluence'; title = 'Confluence Cloud'; description = 'Plan and publish pages, preserve managed sections, and transfer attachments through OfficeIMO.Confluence.'
+        docs = 'confluence'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Confluence'
+        samples = @('New-OfficeConfluenceSession', 'Publish-OfficeConfluencePage', 'Set-OfficeConfluenceManagedSection', 'Send-OfficeConfluenceAttachment')
+        match = { param($name) $name -match 'OfficeConfluence' }
+    }
+    [ordered]@{
         id = 'visio'; title = 'Visio'; description = 'Create, inspect, arrange, and export VSDX diagrams with built-in and imported stencils.'
         docs = 'visio'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Visio'
         samples = @('New-OfficeVisio', 'Add-OfficeVisioStencilShape', 'Get-OfficeVisioInfo', 'ConvertTo-OfficeVisioSvg')

@@ -1925,6 +1925,22 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/AsciiDoc/GetOfficeAsciiDocCommand.cs#L10"
     },
     {
+      "name": "Get-OfficeConfluenceAttachment",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/GetOfficeConfluenceAttachmentCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/GetOfficeConfluenceAttachmentCommand.cs#L19"
+    },
+    {
+      "name": "Get-OfficeConfluencePage",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/GetOfficeConfluencePageCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/GetOfficeConfluencePageCommand.cs#L19"
+    },
+    {
       "name": "Get-OfficeCsv",
       "kind": "Cmdlet",
       "aliases": [],
@@ -3054,6 +3070,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/MoveOfficePdfPageCommand.cs#L21"
     },
     {
+      "name": "New-OfficeConfluenceSession",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/NewOfficeConfluenceSessionCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/NewOfficeConfluenceSessionCommand.cs#L18"
+    },
+    {
       "name": "New-OfficeDocumentReader",
       "kind": "Cmdlet",
       "aliases": [],
@@ -3242,6 +3266,22 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/ProtectOfficeWordDocumentCommand.cs#L21"
     },
     {
+      "name": "Publish-OfficeConfluencePage",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/PublishOfficeConfluencePageCommand.cs",
+      "sourceLine": 25,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/PublishOfficeConfluencePageCommand.cs#L25"
+    },
+    {
+      "name": "Remove-OfficeConfluencePage",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/RemoveOfficeConfluencePageCommand.cs",
+      "sourceLine": 22,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/RemoveOfficeConfluencePageCommand.cs#L22"
+    },
+    {
       "name": "Remove-OfficeExcelComment",
       "kind": "Cmdlet",
       "aliases": [
@@ -3427,6 +3467,22 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Reader/SearchOfficeDocumentCommand.cs",
       "sourceLine": 17,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Reader/SearchOfficeDocumentCommand.cs#L17"
+    },
+    {
+      "name": "Send-OfficeConfluenceAttachment",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/SendOfficeConfluenceAttachmentCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/SendOfficeConfluenceAttachmentCommand.cs#L17"
+    },
+    {
+      "name": "Set-OfficeConfluenceManagedSection",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/SetOfficeConfluenceManagedSectionCommand.cs",
+      "sourceLine": 15,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/SetOfficeConfluenceManagedSectionCommand.cs#L15"
     },
     {
       "name": "Set-OfficeExcelActiveSheet",

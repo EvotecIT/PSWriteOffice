@@ -17,6 +17,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | Markdown | 25 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Visio | 20 | [Visio diagrams](/docs/pswriteoffice/visio/) |
 | Reader and extraction | 13 | [Reader and extraction](/docs/pswriteoffice/reader/) |
+| Confluence Cloud | 7 | [Confluence Cloud publishing](/docs/pswriteoffice/confluence/) |
 | RTF | 5 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | CSV | 5 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | OpenDocument | 5 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
@@ -26,7 +27,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | HTML assets | 1 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Shared authoring primitives | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
 
-The total is 464 cmdlets. Aliases are intentionally counted separately because they provide a shorter DSL without replacing the canonical command names in help and automation.
+The total is 471 cmdlets. Aliases are intentionally counted separately because they provide a shorter DSL without replacing the canonical command names in help and automation.
 
 ## Reference versus guide
 
