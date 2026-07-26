@@ -26,10 +26,22 @@ public sealed class InvokeOfficePdfOcrMergeCommand : AsyncPSCmdlet
     [Parameter]
     public PdfReadOptions? ReadOptions { get; set; }
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync()
     {
-        var document = PdfCommandUtilities.LoadDocument(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), ReadOptions);
-        WriteObject(await document.Read.OcrAsync(Provider, Options, ReadOptions, CancelToken).ConfigureAwait(false));
+        var readOptions = PdfCommandUtilities.CreateReadOptions(
+            ReadOptions,
+            Password,
+            IgnorePermissionRestrictions.IsPresent);
+        var document = PdfCommandUtilities.LoadDocument(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), readOptions);
+        WriteObject(await document.Read.OcrAsync(Provider, Options, readOptions, CancelToken).ConfigureAwait(false));
     }
 }

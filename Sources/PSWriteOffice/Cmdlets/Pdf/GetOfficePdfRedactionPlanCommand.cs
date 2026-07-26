@@ -58,6 +58,10 @@ public sealed class GetOfficePdfRedactionPlanCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -66,7 +70,9 @@ public sealed class GetOfficePdfRedactionPlanCommand : PSCmdlet
             : new[] { new PdfRedactionArea(PageNumber, X, Y, Width, Height, Label) };
 
         WriteObject(PdfDocument
-            .Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password))
+            .Open(
+                PdfCommandUtilities.ResolvePath(this, Path),
+                PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .PlanRedactions(areas));
     }
 }

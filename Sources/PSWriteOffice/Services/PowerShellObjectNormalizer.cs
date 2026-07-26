@@ -68,6 +68,18 @@ internal static class PowerShellObjectNormalizer
         return NormalizePSObject(PSObject.AsPSObject(item), options);
     }
 
+    /// <summary>Normalizes one value for display in an Office table cell.</summary>
+    public static string NormalizeCellText(object? value, PowerShellObjectNormalizerOptions? options = null)
+    {
+        options ??= PowerShellObjectNormalizerOptions.Default;
+        if (value is PSObject psObject)
+        {
+            value = psObject.BaseObject;
+        }
+
+        return NormalizeCellValueToText(value, options) ?? string.Empty;
+    }
+
     public static bool TryProjectItem(object? item, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions? options = null)
     {
         options ??= PowerShellObjectNormalizerOptions.Default;

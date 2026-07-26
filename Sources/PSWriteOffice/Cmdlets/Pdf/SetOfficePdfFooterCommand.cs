@@ -4,7 +4,7 @@ using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
-/// <summary>Sets running PDF footer text.</summary>
+/// <summary>Sets a simple or fully composed running PDF footer.</summary>
 /// <example>
 ///   <summary>Add page numbers to a generated PDF.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -15,6 +15,23 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///     Add-OfficePdfParagraph -Text 'The footer includes generated page numbers.'
 /// }</code>
 ///   <para>Uses page placeholders in a running footer.</para>
+/// </example>
+/// <example>
+///   <summary>Compose a styled footer with page tokens.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\RichFooter.pdf {
+///     Set-OfficePdfFooter -Compose {
+///         param($footer)
+///         $label = New-OfficeTextRun -Text 'Confidential - page ' -Bold | ConvertTo-OfficePdfTextRun
+///         $pageStyle = New-OfficeTextRun -Italic | ConvertTo-OfficePdfTextRun
+///         $null = $footer.AlignRight().Text({
+///             param($text)
+///             $null = $text.Run($label).CurrentPage($pageStyle).Text(' of ').TotalPages($pageStyle)
+///         })
+///     }
+///     Add-OfficePdfParagraph -Text 'Generated report body.'
+/// }</code>
+///   <para>Styled page tokens remain live until the document is rendered.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfFooter", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfFooter")]
@@ -32,6 +49,13 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
     [Parameter(Position = 0)]
     public string Text { get; set; } = "Page {page}/{pages}";
 
+    /// <summary>
+    /// Advanced footer composer. The script receives a <see cref="PdfFooterCompose"/> and can configure
+    /// default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
+    /// </summary>
+    [Parameter]
+    public ScriptBlock? Compose { get; set; }
+
     /// <summary>Footer alignment.</summary>
     [Parameter]
     public PdfAlign Align { get; set; } = PdfAlign.Center;
@@ -47,6 +71,11 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (Compose != null && MyInvocation.BoundParameters.ContainsKey(nameof(Text)))
+        {
+            throw new PSArgumentException("Use either -Text or -Compose, not both.");
+        }
+
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         document.Footer(footer =>
         {
@@ -55,7 +84,14 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
             {
                 footer.FontSize(FontSize.Value);
             }
-            footer.Text(Text);
+            if (Compose != null)
+            {
+                Compose.Invoke(footer);
+            }
+            else
+            {
+                footer.Text(Text);
+            }
         });
 
         if (PassThru.IsPresent)

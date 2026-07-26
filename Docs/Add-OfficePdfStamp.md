@@ -11,12 +11,12 @@ Adds a text or image stamp to an existing PDF.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficePdfStamp -Path <string> -OutputPath <string> -Text <string> [-PageRange <string>] [-X <double>] [-Y <double>] [-FontSize <double>] [-Color <string>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfStamp -Path <string> -OutputPath <string> -Text <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <double>] [-Y <double>] [-FontSize <double>] [-Color <string>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Image
 ```powershell
-Add-OfficePdfStamp -Path <string> -OutputPath <string> -Image <string> [-PageRange <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfStamp -Path <string> -OutputPath <string> -Image <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -94,6 +94,23 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed usage restrictions.
+This does not discover, bypass, or crack a missing password.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Text, Image
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Image
 Image path to stamp.
 
@@ -128,6 +145,22 @@ Accept wildcard characters: True
 
 ### -PageRange
 Stamp selected pages, for example 1-3,5. Omit to stamp every page.
+
+```yaml
+Type: String
+Parameter Sets: Text, Image
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted input PDF.
 
 ```yaml
 Type: String

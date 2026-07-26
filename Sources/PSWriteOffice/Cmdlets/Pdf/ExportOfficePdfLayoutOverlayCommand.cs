@@ -46,13 +46,25 @@ public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
     [Parameter]
     public PdfReadOptions? ReadOptions { get; set; }
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
         if (!ShouldProcess(output, $"Export PDF layout overlay as {Format}")) return;
-        var drawing = PdfCommandUtilities.LoadDocument(input, ReadOptions).Read.LayoutDebugOverlay(Page, Options, LayoutOptions, ReadOptions);
+        var readOptions = PdfCommandUtilities.CreateReadOptions(
+            ReadOptions,
+            Password,
+            IgnorePermissionRestrictions.IsPresent);
+        var drawing = PdfCommandUtilities.LoadDocument(input, readOptions).Read.LayoutDebugOverlay(Page, Options, LayoutOptions, readOptions);
         var bytes = Format switch
         {
             OfficeImageExportFormat.Svg => OfficeDrawingSvgExporter.ToSvgBytes(drawing, Scale, OfficeSvgSizeUnit.Pixel),

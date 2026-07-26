@@ -26,7 +26,22 @@ public sealed class GetOfficePdfInteractionMapCommand : PSCmdlet
     [Parameter]
     public PdfReadOptions? ReadOptions { get; set; }
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord() => WriteObject(PdfCommandUtilities.LoadDocument(
-        SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), ReadOptions).Read.Interactions(Page, Options, ReadOptions));
+    protected override void ProcessRecord()
+    {
+        var readOptions = PdfCommandUtilities.CreateReadOptions(
+            ReadOptions,
+            Password,
+            IgnorePermissionRestrictions.IsPresent);
+        WriteObject(PdfCommandUtilities.LoadDocument(
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), readOptions).Read.Interactions(Page, Options, readOptions));
+    }
 }

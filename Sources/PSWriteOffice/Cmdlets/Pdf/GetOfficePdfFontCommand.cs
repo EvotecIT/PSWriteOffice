@@ -26,11 +26,17 @@ public sealed class GetOfficePdfFontCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         foreach (var font in PdfDocument
-                     .Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password))
+                     .Open(
+                         PdfCommandUtilities.ResolvePath(this, Path),
+                         PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
                      .Diagnostics()
                      .Fonts)
         {

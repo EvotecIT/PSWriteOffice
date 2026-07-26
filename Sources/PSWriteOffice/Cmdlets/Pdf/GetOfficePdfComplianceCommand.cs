@@ -40,6 +40,10 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetPath)]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed usage restrictions.</summary>
+    [Parameter(ParameterSetName = ParameterSetPath)]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Return a proof report that combines readiness with required external validator evidence placeholders.</summary>
     [Parameter]
     public SwitchParameter Proof { get; set; }
@@ -98,7 +102,7 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
         {
             var pathDocument = PdfDocument.Open(
                 PdfCommandUtilities.ResolvePath(this, Path),
-                PdfCommandUtilities.CreateReadOptions(Password));
+                PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
             WriteObject(Proof.IsPresent
                 ? AssessProof(pathDocument, Profile!.Value)
                 : pathDocument.AssessCompliance(Profile!.Value));

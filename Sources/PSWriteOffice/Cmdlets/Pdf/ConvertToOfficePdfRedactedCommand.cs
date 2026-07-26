@@ -68,6 +68,10 @@ public sealed class ConvertToOfficePdfRedactedCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed modification restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -90,7 +94,7 @@ public sealed class ConvertToOfficePdfRedactedCommand : PSCmdlet
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         PdfDocument
-            .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password))
+            .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .ApplyRedactions(areas, options)
             .Save(outputPath)
             .RequireSuccess();

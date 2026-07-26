@@ -45,6 +45,10 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Optional output text file path.</summary>
     [Parameter]
     public string? OutputPath { get; set; }
@@ -52,7 +56,9 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
+        var document = PdfDocument.Open(
+            PdfCommandUtilities.ResolvePath(this, Path),
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         if (AsTextBlock.IsPresent)
         {
             if (AsMarkdown.IsPresent || ByPage.IsPresent)

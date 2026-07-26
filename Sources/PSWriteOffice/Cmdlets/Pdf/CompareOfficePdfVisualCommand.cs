@@ -39,13 +39,37 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
     [Parameter]
     public PdfReadOptions? DifferenceReadOptions { get; set; }
 
+    /// <summary>Password used to authenticate the expected PDF.</summary>
+    [Parameter]
+    public string? ReferencePassword { get; set; }
+
+    /// <summary>After authentication, explicitly ignore restrictions on the expected PDF.</summary>
+    [Parameter]
+    public SwitchParameter IgnoreReferencePermissionRestrictions { get; set; }
+
+    /// <summary>Password used to authenticate the actual PDF.</summary>
+    [Parameter]
+    public string? DifferencePassword { get; set; }
+
+    /// <summary>After authentication, explicitly ignore restrictions on the actual PDF.</summary>
+    [Parameter]
+    public SwitchParameter IgnoreDifferencePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var expected = PdfCommandUtilities.LoadDocument(
-            SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath), ReferenceReadOptions);
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath),
+            PdfCommandUtilities.CreateReadOptions(
+                ReferenceReadOptions,
+                ReferencePassword,
+                IgnoreReferencePermissionRestrictions.IsPresent));
         var actual = PdfCommandUtilities.LoadDocument(
-            SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath), DifferenceReadOptions);
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath),
+            PdfCommandUtilities.CreateReadOptions(
+                DifferenceReadOptions,
+                DifferencePassword,
+                IgnoreDifferencePermissionRestrictions.IsPresent));
         var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
         WriteObject(expected.CompareVisual(actual, selection, Options));
     }

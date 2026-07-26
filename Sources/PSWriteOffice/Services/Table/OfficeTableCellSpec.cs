@@ -15,6 +15,17 @@ public sealed class OfficeTableCellSpec
     /// <param name="style">Optional cell-level style hints consumed by supported table renderers.</param>
     /// <param name="runs">Optional rich text runs used as the cell text when supported by the renderer.</param>
     public OfficeTableCellSpec(string? text, int columnSpan = 1, int rowSpan = 1, OfficeTableCellStyle? style = null, IReadOnlyList<OfficeTextRunSpec>? runs = null)
+        : this(text, columnSpan, rowSpan, style, runs, nativeCell: null)
+    {
+    }
+
+    internal OfficeTableCellSpec(
+        string? text,
+        int columnSpan,
+        int rowSpan,
+        OfficeTableCellStyle? style,
+        IReadOnlyList<OfficeTextRunSpec>? runs,
+        object? nativeCell)
     {
         if (columnSpan < 1)
         {
@@ -31,6 +42,7 @@ public sealed class OfficeTableCellSpec
         ColumnSpan = columnSpan;
         RowSpan = rowSpan;
         Style = style;
+        NativeCell = nativeCell;
     }
 
     /// <summary>Cell text.</summary>
@@ -48,13 +60,18 @@ public sealed class OfficeTableCellSpec
     /// <summary>Optional rich text runs for renderers that support inline cell formatting.</summary>
     public IReadOnlyList<OfficeTextRunSpec>? Runs { get; }
 
+    /// <summary>Renderer-owned typed cell payload retained without widening the cross-format public contract.</summary>
+    internal object? NativeCell { get; }
+
     internal bool HasSpan => ColumnSpan > 1 || RowSpan > 1;
 
     internal bool HasStyle => Style?.HasAnyValue == true;
 
     internal bool HasRuns => Runs is { Count: > 0 };
 
-    internal bool HasStructuredMarker => HasSpan || HasStyle || HasRuns;
+    internal bool HasNativeCell => NativeCell != null;
+
+    internal bool HasStructuredMarker => HasSpan || HasStyle || HasRuns || HasNativeCell;
 }
 
 /// <summary>Optional logical table cell style hints for renderers that support per-cell formatting.</summary>

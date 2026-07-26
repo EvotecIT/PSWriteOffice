@@ -4,7 +4,7 @@ using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
-/// <summary>Sets running PDF header text.</summary>
+/// <summary>Sets a simple or fully composed running PDF header.</summary>
 /// <example>
 ///   <summary>Add a running report header.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -14,6 +14,25 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///     Add-OfficePdfParagraph -Text 'The header repeats on generated pages.'
 /// }</code>
 ///   <para>Sets header text for the generated PDF.</para>
+/// </example>
+/// <example>
+///   <summary>Compose styled default, first-page, and even-page headers.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>New-OfficePdf -Path .\Examples\Documents\RichHeader.pdf {
+///     Set-OfficePdfHeader -Compose {
+///         param($header)
+///         $label = New-OfficeTextRun -Text 'Service report ' -Bold | ConvertTo-OfficePdfTextRun
+///         $pageStyle = New-OfficeTextRun -Italic | ConvertTo-OfficePdfTextRun
+///         $null = $header.Text({
+///             param($text)
+///             $null = $text.Run($label).CurrentPage($pageStyle)
+///         })
+///         $null = $header.FirstPageText('Service report cover')
+///         $null = $header.EvenPagesZones('Service report', $null, 'Page {page}/{pages}')
+///     }
+///     Add-OfficePdfParagraph -Text 'Generated report body.'
+/// }</code>
+///   <para>The native composer owns rich runs, page tokens, zones, images, shapes, and page variants.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfHeader", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfHeader")]
@@ -28,8 +47,15 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
     public PdfDocument Document { get; set; } = null!;
 
     /// <summary>Header text. Supports {page} and {pages}.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
-    public string Text { get; set; } = string.Empty;
+    [Parameter(Position = 0)]
+    public string? Text { get; set; }
+
+    /// <summary>
+    /// Advanced header composer. The script receives a <see cref="PdfHeaderCompose"/> and can configure
+    /// default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
+    /// </summary>
+    [Parameter]
+    public ScriptBlock? Compose { get; set; }
 
     /// <summary>Header alignment.</summary>
     [Parameter]
@@ -46,6 +72,17 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        var hasText = MyInvocation.BoundParameters.ContainsKey(nameof(Text));
+        if (Compose != null && hasText)
+        {
+            throw new PSArgumentException("Use either -Text or -Compose, not both.");
+        }
+
+        if (Compose == null && (!hasText || Text == null))
+        {
+            throw new PSArgumentException("Provide -Text or -Compose.");
+        }
+
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         document.Header(header =>
         {
@@ -54,7 +91,14 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
             {
                 header.FontSize(FontSize.Value);
             }
-            header.Text(Text);
+            if (Compose != null)
+            {
+                Compose.Invoke(header);
+            }
+            else
+            {
+                header.Text(Text!);
+            }
         });
 
         if (PassThru.IsPresent)

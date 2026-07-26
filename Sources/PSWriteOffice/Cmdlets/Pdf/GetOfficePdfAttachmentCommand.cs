@@ -37,10 +37,16 @@ public sealed class GetOfficePdfAttachmentCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var attachments = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password)).Read.Attachments();
+        var attachments = PdfDocument.Open(
+            PdfCommandUtilities.ResolvePath(this, Path),
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent)).Read.Attachments();
         string? outputDirectory = null;
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {

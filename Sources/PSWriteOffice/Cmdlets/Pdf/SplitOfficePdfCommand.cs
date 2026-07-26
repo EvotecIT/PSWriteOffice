@@ -56,6 +56,10 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed assembly restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Pad numeric split names to the width required by the source page count.</summary>
     [Parameter]
     public SwitchParameter PadIndex { get; set; }
@@ -68,7 +72,9 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory);
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), PdfCommandUtilities.CreateReadOptions(Password));
+        var document = PdfDocument.Open(
+            PdfCommandUtilities.ResolvePath(this, Path),
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var outputs = CreateOutputs(document);
         foreach (var output in outputs)
         {

@@ -37,6 +37,14 @@ public sealed class MoveOfficePdfPageCommand : PSCmdlet
     [Parameter(Mandatory = true)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed assembly restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -47,7 +55,10 @@ public sealed class MoveOfficePdfPageCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path)).Pages.Move(BeforePage, PageRange).Save(outputPath).RequireSuccess();
+        PdfDocument.Open(
+                PdfCommandUtilities.ResolvePath(this, Path),
+                PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
+            .Pages.Move(BeforePage, PageRange).Save(outputPath).RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 }

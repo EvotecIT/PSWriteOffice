@@ -44,6 +44,17 @@ public sealed class AddOfficePdfStampCommand : PSCmdlet
     [Parameter(Mandatory = true)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted input PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>
+    /// After successful password authentication, explicitly ignore owner-imposed usage restrictions.
+    /// This does not discover, bypass, or crack a missing password.
+    /// </summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Text to stamp.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
     public string? Text { get; set; }
@@ -92,16 +103,17 @@ public sealed class AddOfficePdfStampCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path));
-        PdfDocument result = ParameterSetName == ParameterSetImage
-            ? StampImage(document)
-            : StampText(document);
-
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
         if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write stamped PDF"))
         {
             return;
         }
+
+        var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
+        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), readOptions);
+        PdfDocument result = ParameterSetName == ParameterSetImage
+            ? StampImage(document)
+            : StampText(document);
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath).RequireSuccess();

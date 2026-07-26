@@ -11,12 +11,12 @@ Imports bounded DTD-free XFDF through the validated PDF form filler.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Import-OfficePdfXfdf [-Path] <string> -Xfdf <string> -OutputPath <string> [-Options <PdfFormFillerOptions>] [-ReadOptions <PdfReadOptions>] [-MaxXfdfBytes <long>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Import-OfficePdfXfdf [-Path] <string> -Xfdf <string> -OutputPath <string> [-Options <PdfFormFillerOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-MaxXfdfBytes <long>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### File
 ```powershell
-Import-OfficePdfXfdf [-Path] <string> -XfdfPath <string> -OutputPath <string> [-Options <PdfFormFillerOptions>] [-ReadOptions <PdfReadOptions>] [-MaxXfdfBytes <long>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Import-OfficePdfXfdf [-Path] <string> -XfdfPath <string> -OutputPath <string> [-Options <PdfFormFillerOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-MaxXfdfBytes <long>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,6 +37,22 @@ Import-OfficePdfXfdf -XfdfPath 'C:\Path' -OutputPath 'C:\Path'
 
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed form-modification restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Text, File
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -MaxXfdfBytes
 Maximum UTF-8 byte count accepted from an XFDF file or pipeline. Default: 4 MiB.
@@ -91,6 +107,22 @@ Return the rewritten fluent PDF document.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Text, File
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate the source form.
+
+```yaml
+Type: String
 Parameter Sets: Text, File
 Aliases: None
 Possible values:

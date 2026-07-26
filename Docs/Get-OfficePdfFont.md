@@ -11,7 +11,7 @@ Gets PDF font diagnostics for embedding and ToUnicode repair-readiness workflows
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfFont [-Path] <string> [-Subtype <string>] [-NeedsReview] [-Password <string>] [<CommonParameters>]
+Get-OfficePdfFont [-Path] <string> [-Subtype <string>] [-NeedsReview] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -26,6 +26,22 @@ Get-OfficePdfFont -Path 'C:\Path'
 
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -NeedsReview
 Return only fonts that need embedding or ToUnicode review.

@@ -40,6 +40,14 @@ public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
     [Parameter]
     public PdfReadOptions? ReadOptions { get; set; }
 
+    /// <summary>Password used to authenticate the source form.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed form-modification restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Maximum UTF-8 byte count accepted from an XFDF file or pipeline. Default: 4 MiB.</summary>
     [Parameter]
     [ValidateRange(1L, long.MaxValue)]
@@ -67,7 +75,12 @@ public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
         var xml = ParameterSetName == "File"
             ? ReadBoundedXfdfFile(SessionState.Path.GetUnresolvedProviderPathFromPSPath(XfdfPath))
             : _pipelineXfdf.ToString();
-        var result = PdfCommandUtilities.LoadDocument(input, ReadOptions).Forms.ImportXfdf(xml, Options);
+        var result = PdfCommandUtilities.LoadDocument(
+            input,
+            PdfCommandUtilities.CreateReadOptions(
+                ReadOptions,
+                Password,
+                IgnorePermissionRestrictions.IsPresent)).Forms.ImportXfdf(xml, Options);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         result.Save(output).RequireSuccess();
         if (PassThru.IsPresent) WriteObject(result);

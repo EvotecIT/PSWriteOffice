@@ -46,9 +46,11 @@ internal static class OfficeTableSpecParser
         IReadOnlyList<object> rows,
         string[]? propertyNames,
         string[]? header,
-        out OfficeTableSpec spec)
+        out OfficeTableSpec spec,
+        PowerShellObjectNormalizerOptions? normalizationOptions = null)
     {
         spec = null!;
+        normalizationOptions ??= PowerShellObjectNormalizerOptions.Default;
         if (rows.Count == 0)
         {
             return false;
@@ -81,11 +83,11 @@ internal static class OfficeTableSpecParser
 
             if (IsExplicitRow(row))
             {
-                tableRows.Add(CreateExplicitRow(row));
+                tableRows.Add(CreateExplicitRow(row, normalizationOptions));
                 continue;
             }
 
-            if (PowerShellObjectNormalizer.TryProjectItem(row, columns, out var projectedColumns, out var values))
+            if (PowerShellObjectNormalizer.TryProjectItem(row, columns, out var projectedColumns, out var values, normalizationOptions))
             {
                 columns ??= projectedColumns;
                 if (allowDefaultHeader && !headerRowIndex.HasValue && columns.Length > 0)
@@ -94,11 +96,11 @@ internal static class OfficeTableSpecParser
                     tableRows.Insert(0, columns.Select(static value => new OfficeTableCellSpec(value)).ToArray());
                 }
 
-                tableRows.Add(values.Select(ToCell).ToArray());
+                tableRows.Add(values.Select(value => ToCell(value, normalizationOptions)).ToArray());
                 continue;
             }
 
-            tableRows.Add(new[] { ToCell(row) });
+            tableRows.Add(new[] { ToCell(row, normalizationOptions) });
         }
 
         if (tableRows.Count == 0)
@@ -113,14 +115,14 @@ internal static class OfficeTableSpecParser
     internal static bool TryCreateCell(object? value, out OfficeTableCellSpec spec)
         => TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, allowRunEnumerable: true, out spec);
 
-    private static OfficeTableCellSpec[] CreateExplicitRow(object row)
+    private static OfficeTableCellSpec[] CreateExplicitRow(object row, PowerShellObjectNormalizerOptions normalizationOptions)
     {
         var cells = new List<OfficeTableCellSpec>();
         foreach (var value in Enumerate(row))
         {
             cells.Add(TryCreateCell(value, requireExplicitCellShape: false, allowStyleOnlyCell: true, allowRunEnumerable: true, out var spec)
                 ? spec
-                : ToCell(value));
+                : ToCell(value, normalizationOptions));
         }
 
         return cells.ToArray();
@@ -149,8 +151,8 @@ internal static class OfficeTableSpecParser
         return false;
     }
 
-    private static OfficeTableCellSpec ToCell(object? value)
-        => new(Convert.ToString(UnwrapPSObject(value), CultureInfo.InvariantCulture));
+    private static OfficeTableCellSpec ToCell(object? value, PowerShellObjectNormalizerOptions normalizationOptions)
+        => new(PowerShellObjectNormalizer.NormalizeCellText(UnwrapPSObject(value), normalizationOptions));
 
     private static bool TryCreateCell(
         object? value,
