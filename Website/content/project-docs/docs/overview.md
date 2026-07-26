@@ -1,21 +1,33 @@
 ---
-title: "PSWriteOffice Overview"
-description: "When to use PSWriteOffice and what it covers."
+title: "What PSWriteOffice Covers"
+description: "A map of the module's 464 cmdlets, 15 workflow families, and relationship to OfficeIMO."
 layout: docs
 ---
 
-Use PSWriteOffice when a PowerShell workflow needs to create, convert, inspect, or publish Office-style documents without automating the Office desktop applications.
+Use PSWriteOffice when a PowerShell job needs to create, convert, inspect, repair, or publish documents without automating desktop Office applications. The module is a thin PowerShell surface over the OfficeIMO libraries, so scripts and .NET applications use the same document engines and file-format behavior.
 
-It is the PowerShell-facing layer over OfficeIMO and is useful for Word reports, Excel workbooks, PowerPoint decks, PDFs, RTF documents, Markdown and CSV workflows, Visio diagrams, and unified readback through Reader adapters.
+The current manifest exports 464 cmdlets and 354 aliases across 15 documented families. Those totals are generated from `PSWriteOffice.psd1`, not maintained as marketing copy.
 
-## Common tasks
+## Choose the surface by outcome
 
-- Generate Word documents from structured data, including sections, headers, footers, tables, charts, and conversion bridges.
-- Build Excel workbooks with tables, ranges, formulas, charts, pivots, comments, images, links, and navigation sheets.
-- Export Excel workbooks to semantic or visual HTML review files.
-- Create PowerPoint decks for repeatable status reporting with slide notes, sections, copying, import, transitions, themes, and layouts.
-- Export PowerPoint decks to semantic or visual HTML review files.
-- Compose and inspect PDFs, including merge/split workflows, metadata, stamps, forms, attachments, extraction, and compliance checks.
-- Create, read, update, and convert RTF files, including Word, HTML, PDF, and Markdown bridge workflows.
-- Read existing files through Reader chunks, document envelopes, tables, visuals, assets, and ingest pipelines for Word, Excel, PowerPoint, Markdown, PDF, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPUB, Visio, and text-like files.
-- Generate Visio `.vsdx` diagrams with a PowerShell DSL, stencils, inspection, reference galleries, stencil preview galleries, and SVG/PNG export.
+| Need | Start with | Why |
+| --- | --- | --- |
+| Produce a report or template-driven artifact | Word, Excel, PowerPoint, or PDF DSL | Script blocks keep composition close to the data and make repeated jobs readable. |
+| Update an existing file | `Get-*`, `Set-*`, `Update-*`, and `Save-*` commands | The object remains in the OfficeIMO model while the script performs targeted changes. |
+| Review or diagnose files | inspection, preflight, comparison, and HTML export commands | Read-only diagnostics can run before a job decides whether to change or reject an artifact. |
+| Normalize many formats | Reader commands | One result model exposes documents, chunks, hierarchy, tables, visuals, assets, warnings, and provenance. |
+| Convert between formats | focused `ConvertFrom-*` and `ConvertTo-*` commands | Conversion behavior stays in the matching OfficeIMO adapter instead of shelling out to Office. |
+
+## Major families
+
+- **Excel — 155 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, and HTML review.
+- **Word — 91 commands:** sections, paragraphs, lists, tables, fields, content controls, review, mail merge, protection, merging, and conversion.
+- **PDF — 74 commands:** composition, text and image extraction, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, and diagnostics.
+- **PowerPoint — 57 commands:** slides, sections, shapes, charts, tables, notes, themes, layouts, transitions, import, inspection, and HTML review.
+- **Markdown, Visio, Reader, and open formats:** typed Markdown, VSDX diagrams and stencils, normalized extraction, RTF, CSV, ODT/ODS/ODP, email, AsciiDoc, and LaTeX workflows.
+
+## How the documentation fits together
+
+Conceptual guides answer which workflow to choose and how objects move through a script. The generated [command reference](/api/powershell/) owns parameter sets, accepted values, pipeline behavior, and source links. The [example gallery](https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples) provides copyable end-to-end scripts.
+
+When a guide and command page appear to disagree, use the current command reference and report the guide mismatch. The catalog validation prevents command totals from drifting, while examples and help remain the executable source for exact syntax.
