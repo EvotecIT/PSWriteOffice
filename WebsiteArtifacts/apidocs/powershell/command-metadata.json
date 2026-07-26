@@ -576,6 +576,16 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfBookmarkCommand.cs#L24"
     },
     {
+      "name": "Add-OfficePdfCanvas",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PdfCanvasStamp"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfCanvasCommand.cs",
+      "sourceLine": 26,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfCanvasCommand.cs#L26"
+    },
+    {
       "name": "Add-OfficePdfFormField",
       "kind": "Cmdlet",
       "aliases": [
@@ -635,6 +645,16 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfPageBreakCommand.cs",
       "sourceLine": 22,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfPageBreakCommand.cs#L22"
+    },
+    {
+      "name": "Add-OfficePdfPageOverlay",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PdfPageOverlay"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfPageOverlayCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfPageOverlayCommand.cs#L19"
     },
     {
       "name": "Add-OfficePdfPanel",
@@ -1649,6 +1669,16 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfSanitizedCommand.cs",
       "sourceLine": 17,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfSanitizedCommand.cs#L17"
+    },
+    {
+      "name": "ConvertTo-OfficePdfTextRun",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PdfNativeTextRun"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfTextRunCommand.cs",
+      "sourceLine": 29,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfTextRunCommand.cs#L29"
     },
     {
       "name": "ConvertTo-OfficePowerPointHtml",
@@ -3020,8 +3050,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/JoinOfficePdfCommand.cs",
-      "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/JoinOfficePdfCommand.cs#L21"
+      "sourceLine": 31,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/JoinOfficePdfCommand.cs#L31"
     },
     {
       "name": "Join-OfficeWordDocument",
@@ -3124,8 +3154,38 @@
         "PdfTableCell"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellCommand.cs#L19"
+    },
+    {
+      "name": "New-OfficePdfTableCellCheckBox",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PdfTableCellCheckBox"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellCheckBoxCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellCheckBoxCommand.cs#L17"
+    },
+    {
+      "name": "New-OfficePdfTableCellField",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PdfTableCellField"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellFieldCommand.cs",
       "sourceLine": 18,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellCommand.cs#L18"
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellFieldCommand.cs#L18"
+    },
+    {
+      "name": "New-OfficePdfTableCellImage",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PdfTableCellImage"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellImageCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfTableCellImageCommand.cs#L19"
     },
     {
       "name": "New-OfficePowerPoint",
@@ -3916,8 +3976,8 @@
         "PdfFooter"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfFooterCommand.cs",
-      "sourceLine": 22,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfFooterCommand.cs#L22"
+      "sourceLine": 39,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfFooterCommand.cs#L39"
     },
     {
       "name": "Set-OfficePdfForm",
@@ -3934,8 +3994,8 @@
         "PdfHeader"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfHeaderCommand.cs",
-      "sourceLine": 21,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfHeaderCommand.cs#L21"
+      "sourceLine": 40,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SetOfficePdfHeaderCommand.cs#L40"
     },
     {
       "name": "Set-OfficePdfMetadata",

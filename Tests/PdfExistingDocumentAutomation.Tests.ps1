@@ -59,6 +59,10 @@ Describe 'Authenticated PDF automation' {
             $parameters | Should -Contain 'IgnorePermissionRestrictions'
         }
 
+        $overlayParameters = (Get-Command Add-OfficePdfPageOverlay).Parameters.Keys
+        $overlayParameters | Should -Contain 'ReadOptions'
+        $overlayParameters | Should -Contain 'SourceReadOptions'
+
         foreach ($name in @('Compare-OfficePdfVisual', 'Test-OfficePdfRewrite')) {
             $parameters = (Get-Command $name).Parameters.Keys
             $parameters | Should -Contain 'ReferencePassword'
@@ -201,11 +205,24 @@ Describe 'Authenticated PDF automation' {
             PdfParagraph 'Restricted rewrite proof'
         } | Out-Null
 
+        $readOptionsType = (Get-Command Add-OfficePdfPageOverlay).Parameters['ReadOptions'].ParameterType
+        $referenceReadOptions = [Activator]::CreateInstance($readOptionsType)
+        $differenceReadOptions = [Activator]::CreateInstance($readOptionsType)
+        $referenceReadOptions.Limits.MaxInputBytes = 10MB
+        $differenceReadOptions.Limits.MaxInputBytes = 10MB
+        $rewriteOptionsType = (Get-Command Test-OfficePdfRewrite).Parameters['Options'].ParameterType
+        $rewriteOptions = [Activator]::CreateInstance($rewriteOptionsType)
+        $rewriteOptions.OriginalReadOptions = $referenceReadOptions
+        $rewriteOptions.RewrittenReadOptions = $differenceReadOptions
+
         $report = Test-OfficePdfRewrite -ReferencePath $reference -DifferencePath $difference `
+            -Options $rewriteOptions `
             -ReferencePassword 'reference-open' -IgnoreReferencePermissionRestrictions `
             -DifferencePassword 'difference-open' -IgnoreDifferencePermissionRestrictions
 
         $report.IsPreserved | Should -BeTrue
+        [object]::ReferenceEquals($rewriteOptions.OriginalReadOptions, $referenceReadOptions) | Should -BeTrue
+        [object]::ReferenceEquals($rewriteOptions.RewrittenReadOptions, $differenceReadOptions) | Should -BeTrue
     }
 }
 
@@ -261,6 +278,22 @@ Describe 'General existing-page visual stamping' {
         $overlayPages[0].Text | Should -Not -Match 'Source page two'
         $overlayPages[1].Text | Should -Match 'Source.*page.*two'
         (Get-OfficePdfText -Path $underlay) | Should -Match 'Source.*page.*one'
+    }
+
+    It 'rejects an oversized overlay source before the shared stream overload reads it' {
+        $target = Join-Path $TestDrive 'bounded-overlay-target.pdf'
+        $source = Join-Path $TestDrive 'bounded-overlay-source.pdf'
+        $output = Join-Path $TestDrive 'bounded-overlay-output.pdf'
+        New-OfficePdf -Path $target { PdfParagraph 'Target' } | Out-Null
+        New-OfficePdf -Path $source { PdfParagraph 'Source' } | Out-Null
+        $readOptionsType = (Get-Command Add-OfficePdfPageOverlay).Parameters['SourceReadOptions'].ParameterType
+        $sourceReadOptions = [Activator]::CreateInstance($readOptionsType)
+        $sourceReadOptions.Limits.MaxInputBytes = 1
+
+        { Add-OfficePdfPageOverlay -Path $target -SourcePath $source -OutputPath $output `
+                -SourceReadOptions $sourceReadOptions -ErrorAction Stop } |
+            Should -Throw '*configured limit*'
+        Test-Path -LiteralPath $output | Should -BeFalse
     }
 }
 

@@ -45,19 +45,36 @@ public sealed class TestOfficePdfRewriteCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var options = Options ?? new PdfRewritePreservationOptions();
+        var originalReadOptions = PdfCommandUtilities.CreateReadOptions(
+            options.OriginalReadOptions,
+            ReferencePassword,
+            IgnoreReferencePermissionRestrictions.IsPresent);
+        var rewrittenReadOptions = PdfCommandUtilities.CreateReadOptions(
+            options.RewrittenReadOptions,
+            DifferencePassword,
+            IgnoreDifferencePermissionRestrictions.IsPresent);
         var original = PdfCommandUtilities.LoadDocument(
             SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath),
-            PdfCommandUtilities.CreateReadOptions(
-                options.OriginalReadOptions,
-                ReferencePassword,
-                IgnoreReferencePermissionRestrictions.IsPresent));
+            originalReadOptions);
         var rewritten = PdfCommandUtilities.LoadDocument(
             SessionState.Path.GetUnresolvedProviderPathFromPSPath(DifferencePath),
-            PdfCommandUtilities.CreateReadOptions(
-                options.RewrittenReadOptions,
-                DifferencePassword,
-                IgnoreDifferencePermissionRestrictions.IsPresent));
-        var report = original.AssessRewritePreservation(rewritten, options);
+            rewrittenReadOptions);
+
+        var suppliedOriginalReadOptions = options.OriginalReadOptions;
+        var suppliedRewrittenReadOptions = options.RewrittenReadOptions;
+        PdfRewritePreservationReport report;
+        try
+        {
+            options.OriginalReadOptions = originalReadOptions;
+            options.RewrittenReadOptions = rewrittenReadOptions;
+            report = original.AssessRewritePreservation(rewritten, options);
+        }
+        finally
+        {
+            options.OriginalReadOptions = suppliedOriginalReadOptions;
+            options.RewrittenReadOptions = suppliedRewrittenReadOptions;
+        }
+
         if (FailOnLoss.IsPresent) report.ThrowIfFailed();
         WriteObject(report);
     }

@@ -77,6 +77,10 @@ public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Underlay { get; set; }
 
+    /// <summary>Optional bounded read settings for the target PDF.</summary>
+    [Parameter]
+    public PdfReadOptions? ReadOptions { get; set; }
+
     /// <summary>Password used to authenticate the target PDF.</summary>
     [Parameter]
     public string? Password { get; set; }
@@ -93,6 +97,10 @@ public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IgnoreSourcePermissionRestrictions { get; set; }
 
+    /// <summary>Optional bounded read settings for the imported source PDF.</summary>
+    [Parameter]
+    public PdfReadOptions? SourceReadOptions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -102,7 +110,14 @@ public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
             return;
         }
 
-        var targetReadOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
+        var targetReadOptions = PdfCommandUtilities.CreateReadOptions(
+            ReadOptions,
+            Password,
+            IgnorePermissionRestrictions.IsPresent);
+        var sourceReadOptions = PdfCommandUtilities.CreateReadOptions(
+            SourceReadOptions,
+            SourcePassword,
+            IgnoreSourcePermissionRestrictions.IsPresent);
         var options = new PdfPageOverlayOptions
         {
             SourcePageNumber = SourcePageNumber,
@@ -114,18 +129,21 @@ public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
             Width = Width,
             Height = Height,
             Opacity = Opacity,
-            SourceReadOptions = PdfCommandUtilities.CreateReadOptions(SourcePassword, IgnoreSourcePermissionRestrictions.IsPresent)
+            SourceReadOptions = sourceReadOptions
         };
         if (!string.IsNullOrWhiteSpace(PageRange))
         {
             options.UseTargetPages(PageRange!);
         }
 
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), targetReadOptions);
+        var document = PdfCommandUtilities.LoadDocument(
+            PdfCommandUtilities.ResolvePath(this, Path),
+            targetReadOptions);
         var sourcePath = PdfCommandUtilities.ResolvePath(this, SourcePath);
+        using var sourceStream = PdfCommandUtilities.OpenBoundedReadStream(sourcePath, sourceReadOptions);
         var result = Underlay.IsPresent
-            ? document.Stamp.UnderlayPage(sourcePath, options, targetReadOptions)
-            : document.Stamp.OverlayPage(sourcePath, options, targetReadOptions);
+            ? document.Stamp.UnderlayPage(sourceStream, options, targetReadOptions)
+            : document.Stamp.OverlayPage(sourceStream, options, targetReadOptions);
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath).RequireSuccess();

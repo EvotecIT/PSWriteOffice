@@ -116,23 +116,8 @@ internal static class PdfCommandUtilities
     /// <summary>Loads a fluent PDF after enforcing the configured input-byte budget before payload allocation.</summary>
     internal static PdfDocument LoadDocument(string path, PdfReadOptions? readOptions = null)
     {
-        var fullPath = Path.GetFullPath(path);
-        var maxInputBytes = (readOptions?.Limits ?? new PdfReadLimits()).MaxInputBytes;
-        if (maxInputBytes <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(PdfReadLimits.MaxInputBytes), maxInputBytes, "Maximum input bytes must be positive.");
-        }
-
-        using var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var stream = OpenBoundedReadStream(path, readOptions);
         var length = stream.Length;
-        if (length > maxInputBytes)
-        {
-            throw new InvalidDataException($"PDF input exceeds the configured limit of {maxInputBytes.ToString(CultureInfo.InvariantCulture)} bytes.");
-        }
-        if (length > int.MaxValue)
-        {
-            throw new InvalidDataException("PDF input is too large to load into a contiguous byte array.");
-        }
 
         var bytes = new byte[(int)length];
         var offset = 0;
@@ -153,6 +138,31 @@ internal static class PdfCommandUtilities
         }
 
         return PdfDocument.Open(bytes, readOptions);
+    }
+
+    /// <summary>Opens a PDF stream only after enforcing the configured input-byte budget.</summary>
+    internal static FileStream OpenBoundedReadStream(string path, PdfReadOptions? readOptions = null)
+    {
+        var fullPath = Path.GetFullPath(path);
+        var maxInputBytes = (readOptions?.Limits ?? new PdfReadLimits()).MaxInputBytes;
+        if (maxInputBytes <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(PdfReadLimits.MaxInputBytes), maxInputBytes, "Maximum input bytes must be positive.");
+        }
+
+        var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        if (stream.Length > maxInputBytes)
+        {
+            stream.Dispose();
+            throw new InvalidDataException($"PDF input exceeds the configured limit of {maxInputBytes.ToString(CultureInfo.InvariantCulture)} bytes.");
+        }
+        if (stream.Length > int.MaxValue)
+        {
+            stream.Dispose();
+            throw new InvalidDataException("PDF input is too large to load into a contiguous byte array.");
+        }
+
+        return stream;
     }
 
     internal static PdfFormFillerOptions? CreateFormFillerOptions(PSCmdlet cmdlet, string? appearanceFontPath, string? appearanceFontFamilyName, bool keepNeedAppearances)
