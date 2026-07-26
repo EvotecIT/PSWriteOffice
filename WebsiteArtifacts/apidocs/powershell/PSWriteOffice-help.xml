@@ -26633,6 +26633,18 @@ links, form fields, and outlines are separate PDF operations and are rejected by
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ReadOptions</maml:name>
+          <maml:description>
+            <maml:para>Optional bounded read settings for the target PDF.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfReadOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>SourcePageNumber</maml:name>
           <maml:description>
             <maml:para>One-based page number imported from the source PDF.</maml:para>
@@ -26664,6 +26676,18 @@ links, form fields, and outlines are separate PDF operations and are rejected by
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>SourceReadOptions</maml:name>
+          <maml:description>
+            <maml:para>Optional bounded read settings for the imported source PDF.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfReadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -26872,6 +26896,18 @@ links, form fields, and outlines are separate PDF operations and are rejected by
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ReadOptions</maml:name>
+        <maml:description>
+          <maml:para>Optional bounded read settings for the target PDF.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfReadOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>SourcePageNumber</maml:name>
         <maml:description>
           <maml:para>One-based page number imported from the source PDF.</maml:para>
@@ -26903,6 +26939,18 @@ links, form fields, and outlines are separate PDF operations and are rejected by
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>SourceReadOptions</maml:name>
+        <maml:description>
+          <maml:para>Optional bounded read settings for the imported source PDF.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfReadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -84582,6 +84630,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Get-OfficeDocument</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Project every matching item from an email store.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>AsJson</maml:name>
           <maml:description>
             <maml:para>Return the read result as JSON.</maml:para>
@@ -84702,6 +84762,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Maximum PST, OST, OLM, or EMLX items projected from the store. The default is 1,000.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>MaxTableRows</maml:name>
           <maml:description>
             <maml:para>Maximum table rows per emitted table chunk.</maml:para>
@@ -84788,6 +84860,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AllStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Project every matching item from an email store.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>AsJson</maml:name>
         <maml:description>
@@ -84900,6 +84984,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:name>MaxInputBytes</maml:name>
         <maml:description>
           <maml:para>Maximum input size in bytes.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Maximum PST, OST, OLM, or EMLX items projected from the store. The default is 1,000.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
         <dev:type>
@@ -85586,19 +85682,31 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       <command:verb>Get</command:verb>
       <command:noun>OfficeDocumentBatch</command:noun>
       <maml:description>
-        <maml:para>Reads a bounded set of documents asynchronously while retaining input order.</maml:para>
+        <maml:para>Reads supported files and folders with adjustable concurrency and limits.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads a bounded set of documents asynchronously while retaining input order.</maml:para>
+      <maml:para>Reads supported files and folders with adjustable concurrency and limits.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Get-OfficeDocumentBatch</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Project every matching item from each email store.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>BatchOptions</maml:name>
           <maml:description>
-            <maml:para>Optional maximum document count and degree of parallelism.</maml:para>
+            <maml:para>Advanced batch settings supplied by a .NET host.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ReaderBatchOptions</command:parameterValue>
           <dev:type>
@@ -85607,10 +85715,94 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ContinueOnError</maml:name>
+          <maml:description>
+            <maml:para>Report individual read errors and continue processing other documents.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Extensions">
+          <maml:name>Extension</maml:name>
+          <maml:description>
+            <maml:para>Optional extensions to include. Registered Reader formats are used automatically when omitted.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IncludePageLocations</maml:name>
+          <maml:description>
+            <maml:para>Compute Word and RTF page locations when supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxDegreeOfParallelism</maml:name>
+          <maml:description>
+            <maml:para>Maximum document reads in flight.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxDocuments</maml:name>
+          <maml:description>
+            <maml:para>Maximum documents accepted in one batch. The default is 500.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoDocumentLimit</maml:name>
+          <maml:description>
+            <maml:para>Remove the document-count ceiling.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="True (ByValue, ByPropertyName)" position="0" aliases="FullName,FilePath">
           <maml:name>Path</maml:name>
           <maml:description>
-            <maml:para>Paths to read.</maml:para>
+            <maml:para>File, directory, or wildcard paths to read.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
           <dev:type>
@@ -85622,7 +85814,7 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>Reader</maml:name>
           <maml:description>
-            <maml:para>Optional immutable reader with caller-configured processors.</maml:para>
+            <maml:para>Advanced immutable Reader configured by a .NET host.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">OfficeDocumentReader</command:parameterValue>
           <dev:type>
@@ -85634,7 +85826,7 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>ReaderOptions</maml:name>
           <maml:description>
-            <maml:para>Optional source-reading limits and format behavior.</maml:para>
+            <maml:para>Advanced source-reading settings supplied by a .NET host.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ReaderOptions</command:parameterValue>
           <dev:type>
@@ -85643,13 +85835,37 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Recurse</maml:name>
+          <maml:description>
+            <maml:para>Search subdirectories when a path names a directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AllStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Project every matching item from each email store.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>BatchOptions</maml:name>
         <maml:description>
-          <maml:para>Optional maximum document count and degree of parallelism.</maml:para>
+          <maml:para>Advanced batch settings supplied by a .NET host.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ReaderBatchOptions</command:parameterValue>
         <dev:type>
@@ -85658,10 +85874,94 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ContinueOnError</maml:name>
+        <maml:description>
+          <maml:para>Report individual read errors and continue processing other documents.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Extensions">
+        <maml:name>Extension</maml:name>
+        <maml:description>
+          <maml:para>Optional extensions to include. Registered Reader formats are used automatically when omitted.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IncludePageLocations</maml:name>
+        <maml:description>
+          <maml:para>Compute Word and RTF page locations when supported.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxDegreeOfParallelism</maml:name>
+        <maml:description>
+          <maml:para>Maximum document reads in flight.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxDocuments</maml:name>
+        <maml:description>
+          <maml:para>Maximum documents accepted in one batch. The default is 500.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NoDocumentLimit</maml:name>
+        <maml:description>
+          <maml:para>Remove the document-count ceiling.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="True (ByValue, ByPropertyName)" position="0" aliases="FullName,FilePath">
         <maml:name>Path</maml:name>
         <maml:description>
-          <maml:para>Paths to read.</maml:para>
+          <maml:para>File, directory, or wildcard paths to read.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
         <dev:type>
@@ -85673,7 +85973,7 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>Reader</maml:name>
         <maml:description>
-          <maml:para>Optional immutable reader with caller-configured processors.</maml:para>
+          <maml:para>Advanced immutable Reader configured by a .NET host.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">OfficeDocumentReader</command:parameterValue>
         <dev:type>
@@ -85685,7 +85985,7 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>ReaderOptions</maml:name>
         <maml:description>
-          <maml:para>Optional source-reading limits and format behavior.</maml:para>
+          <maml:para>Advanced source-reading settings supplied by a .NET host.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ReaderOptions</command:parameterValue>
         <dev:type>
@@ -85693,6 +85993,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Recurse</maml:name>
+        <maml:description>
+          <maml:para>Search subdirectories when a path names a directory.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes>
@@ -85716,13 +86028,13 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>----------  Example 1: Read documents with four operations in flight.  ----------</maml:title>
+        <maml:title>----------  Example 1: Read supported files below a folder with four reads in flight.  ----------</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$batch = [OfficeIMO.Reader.ReaderBatchOptions]::new(); $batch.MaxDegreeOfParallelism = 4; Get-ChildItem .\Reports -File | Get-OfficeDocumentBatch -BatchOptions $batch</dev:code>
+        <dev:code>Get-OfficeDocumentBatch -Path .\Reports -Recurse -MaxDegreeOfParallelism 4 -ContinueOnError</dev:code>
         <dev:remarks>
-          <maml:para>OfficeIMO.Reader bounds concurrency and returns results in pipeline input order.</maml:para>
+          <maml:para>PSWriteOffice discovers registered formats and reports individual read failures without requiring .NET option objects.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -85893,6 +86205,18 @@ extraction, hashing, and chunk shaping.</maml:para>
       <command:syntaxItem parameterSetName="File">
         <maml:name>Get-OfficeDocumentChunk</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Project every matching item from each email store.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>ExcelA1Range</maml:name>
           <maml:description>
             <maml:para>Optional Excel A1 range to read.</maml:para>
@@ -85968,6 +86292,18 @@ extraction, hashing, and chunk shaping.</maml:para>
           <maml:name>MaxInputBytes</maml:name>
           <maml:description>
             <maml:para>Maximum input size in bytes.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
           <dev:type>
@@ -86063,6 +86399,18 @@ extraction, hashing, and chunk shaping.</maml:para>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Folder">
         <maml:name>Get-OfficeDocumentChunk</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Project every matching item from each email store.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>ExcelA1Range</maml:name>
           <maml:description>
@@ -86184,6 +86532,18 @@ extraction, hashing, and chunk shaping.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>MaxTableRows</maml:name>
           <maml:description>
             <maml:para>Maximum table rows per emitted table chunk.</maml:para>
@@ -86282,6 +86642,18 @@ extraction, hashing, and chunk shaping.</maml:para>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AllStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Project every matching item from each email store.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>ExcelA1Range</maml:name>
         <maml:description>
@@ -86394,6 +86766,18 @@ extraction, hashing, and chunk shaping.</maml:para>
         <maml:name>MaxInputBytes</maml:name>
         <maml:description>
           <maml:para>Maximum input size in bytes.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
         <dev:type>
@@ -86917,6 +87301,18 @@ extraction, hashing, and chunk shaping.</maml:para>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Get-OfficeDocumentIngest</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Project every matching item from each email store.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>ExcelA1Range</maml:name>
           <maml:description>
             <maml:para>Optional Excel A1 range to read.</maml:para>
@@ -87037,6 +87433,18 @@ extraction, hashing, and chunk shaping.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>MaxTableRows</maml:name>
           <maml:description>
             <maml:para>Maximum table rows per emitted table chunk.</maml:para>
@@ -87147,6 +87555,18 @@ extraction, hashing, and chunk shaping.</maml:para>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AllStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Project every matching item from each email store.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>ExcelA1Range</maml:name>
         <maml:description>
@@ -87259,6 +87679,18 @@ extraction, hashing, and chunk shaping.</maml:para>
         <maml:name>MaxInputBytes</maml:name>
         <maml:description>
           <maml:para>Maximum input size in bytes.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
         <dev:type>
@@ -87402,7 +87834,7 @@ extraction, hashing, and chunk shaping.</maml:para>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>$ingest = Get-OfficeDocumentIngest -FolderPath .\Reports -Extension docx,pdf,rtf -MaxFiles 50
-            $ingest.Files | Select-Object Path, Status, ChunkCount</dev:code>
+            $ingest.Files | Select-Object Path, Parsed, ChunksProduced</dev:code>
         <dev:remarks>
           <maml:para>Reads supported files from a folder and returns the ingestion summary with per-file status and chunk counts.</maml:para>
         </dev:remarks>
@@ -121744,9 +122176,33 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>New-OfficeDocumentReader</maml:name>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Project every matching item from each email store.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>MaxConcurrentReads</maml:name>
           <maml:description>
             <maml:para>Maximum asynchronous reads allowed in flight.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
           <dev:type>
@@ -121824,11 +122280,59 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
           <maml:name>ReaderAllOptions</maml:name>
           <maml:description>
-            <maml:para>Optional format-specific settings captured while OfficeIMO Reader handlers are registered.</maml:para>
+            <maml:para>Advanced format-specific settings supplied by a .NET host.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ReaderAllOptions</command:parameterValue>
           <dev:type>
             <maml:name>ReaderAllOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TesseractDataPath</maml:name>
+          <maml:description>
+            <maml:para>Optional Tesseract tessdata directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TesseractDpi</maml:name>
+          <maml:description>
+            <maml:para>Optional input DPI passed to Tesseract.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TesseractExecutablePath</maml:name>
+          <maml:description>
+            <maml:para>Tesseract executable path or command name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TesseractLanguage</maml:name>
+          <maml:description>
+            <maml:para>Tesseract language expression such as eng or eng+pol.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -121845,13 +122349,61 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TesseractTimeoutSeconds</maml:name>
+          <maml:description>
+            <maml:para>Maximum Tesseract process duration in seconds. The default is 120.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>UseTesseract</maml:name>
+          <maml:description>
+            <maml:para>Enable the built-in Tesseract command-line OCR adapter with default settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AllStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Project every matching item from each email store.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>MaxConcurrentReads</maml:name>
         <maml:description>
           <maml:para>Maximum asynchronous reads allowed in flight.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
         <dev:type>
@@ -121929,11 +122481,59 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>ReaderAllOptions</maml:name>
         <maml:description>
-          <maml:para>Optional format-specific settings captured while OfficeIMO Reader handlers are registered.</maml:para>
+          <maml:para>Advanced format-specific settings supplied by a .NET host.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ReaderAllOptions</command:parameterValue>
         <dev:type>
           <maml:name>ReaderAllOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TesseractDataPath</maml:name>
+        <maml:description>
+          <maml:para>Optional Tesseract tessdata directory.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TesseractDpi</maml:name>
+        <maml:description>
+          <maml:para>Optional input DPI passed to Tesseract.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TesseractExecutablePath</maml:name>
+        <maml:description>
+          <maml:para>Tesseract executable path or command name.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TesseractLanguage</maml:name>
+        <maml:description>
+          <maml:para>Tesseract language expression such as eng or eng+pol.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -121949,6 +122549,30 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TesseractTimeoutSeconds</maml:name>
+        <maml:description>
+          <maml:para>Maximum Tesseract process duration in seconds. The default is 120.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>UseTesseract</maml:name>
+        <maml:description>
+          <maml:para>Enable the built-in Tesseract command-line OCR adapter with default settings.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />
@@ -121970,7 +122594,7 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ocr = [OfficeIMO.Reader.Ocr.Tesseract.TesseractOcrEngineOptions]::new(); $ocr.Language = 'eng+pol'; $reader = New-OfficeDocumentReader -TesseractOptions $ocr -ProcessorFailureBehavior ContinueWithDiagnostic</dev:code>
+        <dev:code>$reader = New-OfficeDocumentReader -TesseractLanguage 'eng+pol' -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic</dev:code>
         <dev:remarks>
           <maml:para>The returned reader can be supplied to every PSWriteOffice Reader command.</maml:para>
         </dev:remarks>
@@ -135739,15 +136363,27 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
       <command:verb>Search</command:verb>
       <command:noun>OfficeDocument</command:noun>
       <maml:description>
-        <maml:para>Searches normalized document blocks and returns Reader-owned page citations for each match.</maml:para>
+        <maml:para>Searches one Reader result or every supported document below file and folder paths.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Searches normalized document blocks and returns Reader-owned page citations for each match.</maml:para>
+      <maml:para>Searches one Reader result or every supported document below file and folder paths.</maml:para>
     </maml:description>
     <command:syntax>
-      <command:syntaxItem parameterSetName="__AllParameterSets">
+      <command:syntaxItem parameterSetName="Document">
         <maml:name>Search-OfficeDocument</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllResults</maml:name>
+          <maml:description>
+            <maml:para>Return every occurrence from each document instead of applying the default result ceiling.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="none">
           <maml:name>InputObject</maml:name>
           <maml:description>
@@ -135772,10 +136408,10 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="MaxResultsPerDocument">
           <maml:name>MaximumResults</maml:name>
           <maml:description>
-            <maml:para>Maximum number of occurrences to return.</maml:para>
+            <maml:para>Maximum occurrences returned per document. The default is 1,000.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -135809,8 +136445,251 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Path">
+        <maml:name>Search-OfficeDocument</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllResults</maml:name>
+          <maml:description>
+            <maml:para>Return every occurrence from each document instead of applying the default result ceiling.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AllStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Project every matching item from each email store.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Extensions">
+          <maml:name>Extension</maml:name>
+          <maml:description>
+            <maml:para>Optional extensions to include. Registered Reader formats are used automatically when omitted.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IncludePageLocations</maml:name>
+          <maml:description>
+            <maml:para>Compute Word and RTF page locations when supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MatchCase</maml:name>
+          <maml:description>
+            <maml:para>Use case-sensitive ordinal matching.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxDegreeOfParallelism</maml:name>
+          <maml:description>
+            <maml:para>Maximum document reads in flight.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxDocuments</maml:name>
+          <maml:description>
+            <maml:para>Maximum documents accepted in one search. The default is 500.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="MaxResultsPerDocument">
+          <maml:name>MaximumResults</maml:name>
+          <maml:description>
+            <maml:para>Maximum occurrences returned per document. The default is 1,000.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1000</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxStoreItems</maml:name>
+          <maml:description>
+            <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <dev:type>
+            <maml:name>Nullable`1</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoDocumentLimit</maml:name>
+          <maml:description>
+            <maml:para>Remove the document-count ceiling.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="True (ByValue, ByPropertyName)" position="0" aliases="FullName,FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>File, directory, or wildcard path to search.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Query</maml:name>
+          <maml:description>
+            <maml:para>Text to find in normalized document blocks.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Reader</maml:name>
+          <maml:description>
+            <maml:para>Advanced immutable Reader configured by a .NET host or New-OfficeDocumentReader.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeDocumentReader</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeDocumentReader</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Recurse</maml:name>
+          <maml:description>
+            <maml:para>Search subdirectories.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>StopOnError</maml:name>
+          <maml:description>
+            <maml:para>Terminate the search when one document cannot be read. The default reports the error and continues.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+          <maml:name>WholeWord</maml:name>
+          <maml:description>
+            <maml:para>Return only occurrences surrounded by non-word characters.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AllResults</maml:name>
+        <maml:description>
+          <maml:para>Return every occurrence from each document instead of applying the default result ceiling.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AllStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Project every matching item from each email store.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="named" aliases="Extensions">
+        <maml:name>Extension</maml:name>
+        <maml:description>
+          <maml:para>Optional extensions to include. Registered Reader formats are used automatically when omitted.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IncludePageLocations</maml:name>
+        <maml:description>
+          <maml:para>Compute Word and RTF page locations when supported.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="none">
         <maml:name>InputObject</maml:name>
         <maml:description>
@@ -135836,9 +136715,33 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxDegreeOfParallelism</maml:name>
+        <maml:description>
+          <maml:para>Maximum document reads in flight.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxDocuments</maml:name>
+        <maml:description>
+          <maml:para>Maximum documents accepted in one search. The default is 500.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="MaxResultsPerDocument">
         <maml:name>MaximumResults</maml:name>
         <maml:description>
-          <maml:para>Maximum number of occurrences to return.</maml:para>
+          <maml:para>Maximum occurrences returned per document. The default is 1,000.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -135846,6 +136749,42 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>1000</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxStoreItems</maml:name>
+        <maml:description>
+          <maml:para>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <dev:type>
+          <maml:name>Nullable`1</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NoDocumentLimit</maml:name>
+        <maml:description>
+          <maml:para>Remove the document-count ceiling.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="True (ByValue, ByPropertyName)" position="0" aliases="FullName,FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>File, directory, or wildcard path to search.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="1" aliases="none">
         <maml:name>Query</maml:name>
@@ -135858,6 +136797,42 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Reader</maml:name>
+        <maml:description>
+          <maml:para>Advanced immutable Reader configured by a .NET host or New-OfficeDocumentReader.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeDocumentReader</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeDocumentReader</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Recurse</maml:name>
+        <maml:description>
+          <maml:para>Search subdirectories.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
+        <maml:name>StopOnError</maml:name>
+        <maml:description>
+          <maml:para>Terminate the search when one document cannot be read. The default reports the error and continues.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="none">
         <maml:name>WholeWord</maml:name>
@@ -135878,12 +136853,25 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
           <maml:name>OfficeIMO.Reader.OfficeDocumentReadResult</maml:name>
         </dev:type>
       </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String[]</maml:name>
+        </dev:type>
+      </command:inputType>
     </command:inputTypes>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
           <maml:name>OfficeIMO.Reader.OfficeDocumentSearchResult</maml:name>
         </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>PSWriteOffice.Models.Reader.OfficeDocumentSearchMatch</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>PowerShell-friendly occurrence returned by a path-based document search.</maml:para>
+        </maml:description>
       </command:returnValue>
     </command:returnValues>
     <maml:alertSet>
@@ -135893,15 +136881,23 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>----------  Example 1: Find text and inspect its page citations.  ----------</maml:title>
+        <maml:title>----------  Example 1: Search a mixed document folder without constructing .NET option objects.  ----------</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$document = Get-OfficeDocument -Path .\Policy.docx -IncludePageLocations
-            $matches = $document | Search-OfficeDocument -Query 'retention period'
-            $matches.Hits | Select-Object -ExpandProperty Pages</dev:code>
+        <dev:code>Search-OfficeDocument -Path .\Evidence -Recurse -Query 'retention period'</dev:code>
         <dev:remarks>
-          <maml:para>Uses OfficeIMO.Reader search and location contracts without reparsing document text in PowerShell.</maml:para>
+          <maml:para>Automatically reads supported Word, Excel, PowerPoint, PDF, email, PST, OST, and other registered formats.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>----------  Example 2: Remove the default document, store-item, and result ceilings.  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Search-OfficeDocument -Path .\Evidence -Recurse -Query 'invoice' -NoDocumentLimit -AllStoreItems -AllResults</dev:code>
+        <dev:remarks>
+          <maml:para>Unlimited modes are explicit because very large stores and document collections can consume substantial resources.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
