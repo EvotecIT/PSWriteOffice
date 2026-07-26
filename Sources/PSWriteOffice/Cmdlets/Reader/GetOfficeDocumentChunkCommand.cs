@@ -98,6 +98,15 @@ public sealed class GetOfficeDocumentChunkCommand : OfficeDocumentReaderCommandB
     [Parameter]
     public SwitchParameter NoHashes { get; set; }
 
+    /// <summary>Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int? MaxStoreItems { get; set; }
+
+    /// <summary>Project every matching item from each email store.</summary>
+    [Parameter]
+    public SwitchParameter AllStoreItems { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -137,6 +146,8 @@ public sealed class GetOfficeDocumentChunkCommand : OfficeDocumentReaderCommandB
             ExcelSheetName,
             ExcelA1Range,
             !NoMarkdownHeadingChunks.IsPresent,
-            !NoHashes.IsPresent);
+            !NoHashes.IsPresent,
+            includePageLocations: false,
+            maxStoreItems: ResolveStoreItemLimit(MaxStoreItems, AllStoreItems));
     }
 }

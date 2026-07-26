@@ -79,6 +79,7 @@ Describe 'Office document PDF sidecar exports' {
             ExcelSheet 'Data' {
                 ExcelCell -Address 'A1' -Value 'Excel PDF export smoke'
                 ExcelCell -Address 'B1' -Value 42
+                ExcelAutoFit
             }
         } | Out-Null
 

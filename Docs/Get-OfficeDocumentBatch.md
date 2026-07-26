@@ -6,30 +6,46 @@ schema: 2.0.0
 ---
 # Get-OfficeDocumentBatch
 ## SYNOPSIS
-Reads a bounded set of documents asynchronously while retaining input order.
+Reads supported files and folders with adjustable concurrency and limits.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentBatch [-Path] <string[]> [-Reader <OfficeDocumentReader>] [-ReaderOptions <ReaderOptions>] [-BatchOptions <ReaderBatchOptions>] [<CommonParameters>]
+Get-OfficeDocumentBatch [-Path] <string[]> [-Recurse] [-Extension <string[]>] [-MaxDocuments <int>] [-NoDocumentLimit] [-MaxDegreeOfParallelism <int>] [-MaxStoreItems <int>] [-AllStoreItems] [-IncludePageLocations] [-ContinueOnError] [-Reader <OfficeDocumentReader>] [-ReaderOptions <ReaderOptions>] [-BatchOptions <ReaderBatchOptions>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Reads a bounded set of documents asynchronously while retaining input order.
+Reads supported files and folders with adjustable concurrency and limits.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> $batch = [OfficeIMO.Reader.ReaderBatchOptions]::new(); $batch.MaxDegreeOfParallelism = 4; Get-ChildItem .\Reports -File | Get-OfficeDocumentBatch -BatchOptions $batch
+PS> Get-OfficeDocumentBatch -Path .\Reports -Recurse -MaxDegreeOfParallelism 4 -ContinueOnError
 ```
 
-OfficeIMO.Reader bounds concurrency and returns results in pipeline input order.
+PSWriteOffice discovers registered formats and reports individual read failures without requiring .NET option objects.
 
 ## PARAMETERS
 
+### -AllStoreItems
+Project every matching item from each email store.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -BatchOptions
-Optional maximum document count and degree of parallelism.
+Advanced batch settings supplied by a .NET host.
 
 ```yaml
 Type: ReaderBatchOptions
@@ -44,8 +60,120 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -ContinueOnError
+Report individual read errors and continue processing other documents.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Extension
+Optional extensions to include. Registered Reader formats are used automatically when omitted.
+
+```yaml
+Type: String[]
+Parameter Sets: __AllParameterSets
+Aliases: Extensions
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IncludePageLocations
+Compute Word and RTF page locations when supported.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxDegreeOfParallelism
+Maximum document reads in flight.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxDocuments
+Maximum documents accepted in one batch. The default is 500.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxStoreItems
+Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoDocumentLimit
+Remove the document-count ceiling.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Path
-Paths to read.
+File, directory, or wildcard paths to read.
 
 ```yaml
 Type: String[]
@@ -61,7 +189,7 @@ Accept wildcard characters: True
 ```
 
 ### -Reader
-Optional immutable reader with caller-configured processors.
+Advanced immutable Reader configured by a .NET host.
 
 ```yaml
 Type: OfficeDocumentReader
@@ -77,10 +205,26 @@ Accept wildcard characters: True
 ```
 
 ### -ReaderOptions
-Optional source-reading limits and format behavior.
+Advanced source-reading settings supplied by a .NET host.
 
 ```yaml
 Type: ReaderOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Recurse
+Search subdirectories when a path names a directory.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

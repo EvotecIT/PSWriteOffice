@@ -35,27 +35,31 @@ Start here when you want to create polished documents from PowerShell: workbooks
 | RTF | Solid | Create/read/update `.rtf`, replace text, append paragraphs, edit document properties, convert RTF to Word/HTML/PDF, convert Word/HTML to RTF, and read semantic chunks through Reader |
 | Markdown and text formats | Solid | Native Markdown, AsciiDoc, and LaTeX parsing plus loss-aware conversions between Markdown and AsciiDoc/LaTeX |
 | CSV | Solid | Read CSV, emit CSV, object-focused data workflows |
-| Reader | Advanced | Content detection, structured extraction, token-aware hierarchy, processors, OCR adapters, and bounded ordered batch reads across Office, OpenDocument, email, PDF, markup, archives, and text formats |
+| Reader | Advanced | Mixed-format discovery and resilient search across Office, OpenDocument, PST/OST and other email sources, PDF, markup, archives, and text formats, plus structured extraction, hierarchy, processors, and OCR adapters |
 | Visio | New | DSL diagram creation, built-in and package-backed stencils, create/load/save `.vsdx`, inspect diagrams, generate galleries, export stencil preview galleries, and export SVG/PNG through `OfficeIMO.Visio` |
 
 ## Advanced document workflows
 
-Reader commands return OfficeIMO's typed results, so scripts can use detection evidence, structured records, token-aware chunks, diagnostics, and deterministic batch ordering directly:
+Search a file, a PST/OST, several paths, or a whole mixed-format folder with ordinary PowerShell parameters. Registered formats are discovered automatically, individual unreadable files are reported without stopping the rest of the search, and each match includes its source path and document type:
 
 ```powershell
-$detection = Get-OfficeDocumentDetection -Path .\Upload.bin -Mode PreferContent
-$structured = Get-OfficeDocumentStructured -Path .\Report.docx
-$hierarchy = Get-OfficeDocumentHierarchy -Path .\Handbook.pdf
-$document = Get-OfficeDocument -Path .\Policy.docx -IncludePageLocations
-$matches = $document | Search-OfficeDocument -Query 'retention period'
-$pageMarkdown = $document | Get-OfficeDocumentPageMarkdown -AsString
-$reader = New-OfficeDocumentReader -TesseractOptions $tesseract -MaxConcurrentReads 4
-Get-ChildItem .\Inbox -File | Get-OfficeDocumentBatch -Reader $reader
+$matches = Search-OfficeDocument `
+    -Path .\Evidence, .\Mail\Archive.pst, .\Mail\Offline.ost `
+    -Recurse `
+    -Query 'retention period' `
+    -MaxDocuments 5000 `
+    -MaxStoreItems 25000 `
+    -MaximumResults 100 `
+    -MaxDegreeOfParallelism 4 `
+    -IncludePageLocations
+
+$matches | Select-Object Path, DocumentType, Match, Pages,
+    DocumentLimitReached, SourceLimitReached, SearchLimitReached
 ```
 
-Reader search and page Markdown use OfficeIMO's normalized blocks, page locations, and provenance. `-IncludePageLocations` opts Word into computed pagination and RTF into explicit-break reconstruction; fixed-layout and logical-container formats expose their native page-like locations without it.
+The safe defaults are 500 documents, 1,000 items from each email store, and 1,000 matches per document. Change those values directly, or intentionally remove all three ceilings with `-NoDocumentLimit -AllStoreItems -AllResults`. Warnings and the three `*LimitReached` result properties make partial scans visible. See [the complete mixed-document example](Examples/Reader/Example-MixedDocumentSearch.ps1) for result grouping and per-file error handling.
 
-Format-specific Reader settings are captured when handlers are registered. Pass an `OfficeIMO.Reader.All.ReaderAllOptions` instance to `New-OfficeDocumentReader -ReaderAllOptions`; keep ordinary `ReaderOptions` on the individual read command. A caller-supplied reader is treated as immutable, so PSWriteOffice will not silently replace its registered handler settings.
+Reader search and page Markdown use OfficeIMO's normalized blocks, page locations, and provenance. `-IncludePageLocations` opts Word into computed pagination and RTF into explicit-break reconstruction; fixed-layout and logical-container formats expose their native page-like locations without it. Advanced .NET hosts can still supply an immutable Reader, but normal PowerShell use does not require OfficeIMO option objects, methods, or collection types.
 
 Image export uses the same `OfficeImageExportResult` contract for Word, Excel, PowerPoint, HTML, and PDF output:
 
@@ -269,6 +273,7 @@ Get-OfficeDocumentCapability
 Get-OfficeDocumentChunk -Path .\Report.docx
 Get-OfficeDocumentChunk -Path .\Report.rtf
 Get-OfficeDocument -Path .\Report.pdf -AsJson -Indented
+Search-OfficeDocument -Path .\Evidence -Recurse -Query 'retention period' -MaxDocuments 2000 -MaxStoreItems 10000
 $document = Get-OfficeDocument -Path .\Policy.docx -IncludePageLocations
 $document | Search-OfficeDocument -Query 'retention period'
 $document | Get-OfficeDocumentPageMarkdown -AsString
