@@ -155,6 +155,7 @@ public sealed class SearchOfficeDocumentCommand : AsyncPSCmdlet
         var documentPaths = ReaderCommandUtilities.CollectDocumentPaths(
             expandedPaths,
             batchOptions.MaxDocuments,
+            folderOptions.Extensions,
             out _documentLimitReached);
         if (_documentLimitReached)
         {

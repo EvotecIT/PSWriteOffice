@@ -119,6 +119,7 @@ public sealed class GetOfficeDocumentBatchCommand : AsyncPSCmdlet
         var documentPaths = ReaderCommandUtilities.CollectDocumentPaths(
             expandedPaths,
             batchOptions.MaxDocuments,
+            folderOptions.Extensions,
             out bool documentLimitReached);
         if (documentLimitReached)
         {

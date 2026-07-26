@@ -202,6 +202,7 @@ internal static class ReaderCommandUtilities
     internal static IReadOnlyList<string> CollectDocumentPaths(
         IEnumerable<string> paths,
         int maxDocuments,
+        IEnumerable<string>? extensions,
         out bool limitReached)
     {
         if (paths == null) throw new ArgumentNullException(nameof(paths));
@@ -211,10 +212,19 @@ internal static class ReaderCommandUtilities
             ? StringComparer.OrdinalIgnoreCase
             : StringComparer.Ordinal;
         var unique = new HashSet<string>(comparer);
+        HashSet<string>? allowedExtensions = extensions == null
+            ? null
+            : new HashSet<string>(extensions, StringComparer.OrdinalIgnoreCase);
         var result = new List<string>(Math.Min(maxDocuments, 256));
         limitReached = false;
         foreach (var path in paths)
         {
+            if (allowedExtensions is { Count: > 0 } &&
+                !allowedExtensions.Contains(Path.GetExtension(path)))
+            {
+                continue;
+            }
+
             if (!unique.Add(path))
             {
                 continue;

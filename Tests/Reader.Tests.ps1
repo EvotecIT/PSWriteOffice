@@ -266,6 +266,37 @@ Describe 'Reader cmdlets' {
         ($warnings -join ' ') | Should -Match 'configured document ceiling \(2\)'
     }
 
+    It 'applies extension filters before explicit paths consume the search ceiling' {
+        $folder = Join-Path $TestDrive 'explicit-extension-filter'
+        New-Item -Path $folder -ItemType Directory | Out-Null
+        $excludedPath = Join-Path $folder 'first.json'
+        $includedPath = Join-Path $folder 'second.md'
+        Set-Content -Path $excludedPath -Value '{ "text": "Synthetic excluded document" }' -Encoding UTF8
+        Set-Content -Path $includedPath -Value '# Synthetic included document' -Encoding UTF8
+
+        $matches = @(Search-OfficeDocument -Path @($excludedPath, $includedPath) `
+                -Extension md -Query 'Synthetic' -MaxDocuments 1)
+
+        $matches | Should -HaveCount 1
+        $matches[0].Path | Should -Be $includedPath
+        $matches[0].DocumentLimitReached | Should -BeFalse
+    }
+
+    It 'applies extension filters to wildcard-expanded batch paths' {
+        $folder = Join-Path $TestDrive 'wildcard-extension-filter'
+        New-Item -Path $folder -ItemType Directory | Out-Null
+        Set-Content -Path (Join-Path $folder 'first.json') `
+            -Value '{ "text": "Synthetic excluded document" }' -Encoding UTF8
+        $includedPath = Join-Path $folder 'second.md'
+        Set-Content -Path $includedPath -Value '# Synthetic included document' -Encoding UTF8
+
+        $documents = @(Get-OfficeDocumentBatch -Path (Join-Path $folder '*') `
+                -Extension md -MaxDocuments 1)
+
+        $documents | Should -HaveCount 1
+        $documents[0].Source.Path | Should -Be $includedPath
+    }
+
     It 'continues a batch after an individual document fails' {
         $folder = Join-Path $TestDrive 'resilient-batch'
         New-Item -Path $folder -ItemType Directory | Out-Null
