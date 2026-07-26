@@ -110,7 +110,7 @@ public abstract partial class AsyncPSCmdlet : PSCmdlet, IDisposable, IAsyncCmdle
                 catch (Exception exception)
                 {
                     TryPublish(new PipelineReply(value: null, exception));
-                    throw;
+                    return;
                 }
 
                 TryPublish(reply);
