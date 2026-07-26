@@ -1,5 +1,6 @@
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.Table;
 using PSWriteOffice.Services.Text;
 
@@ -79,6 +80,41 @@ public sealed class NewOfficePdfTableCellCommand : PSCmdlet
     [Parameter]
     public PdfCellVerticalAlign? VerticalAlign { get; set; }
 
+    /// <summary>Typed check boxes rendered inside the cell.</summary>
+    [Parameter]
+    [Alias("CheckBoxes")]
+    public PdfTableCellCheckBox[]? CheckBox { get; set; }
+
+    /// <summary>Typed images rendered inside the cell.</summary>
+    [Parameter]
+    [Alias("Images")]
+    public PdfTableCellImage[]? Image { get; set; }
+
+    /// <summary>Typed text or choice form fields rendered inside the cell.</summary>
+    [Parameter]
+    [Alias("FormFields")]
+    public PdfTableCellFormField[]? FormField { get; set; }
+
+    /// <summary>Absolute or catalog-base-relative URI linked from the cell.</summary>
+    [Parameter]
+    public string? LinkUri { get; set; }
+
+    /// <summary>Named PDF destination linked from the cell.</summary>
+    [Parameter]
+    public string? LinkDestinationName { get; set; }
+
+    /// <summary>Accessible annotation text for the cell link.</summary>
+    [Parameter]
+    public string? LinkContents { get; set; }
+
+    /// <summary>Named PDF destination defined at this cell.</summary>
+    [Parameter]
+    public string? NamedDestinationName { get; set; }
+
+    /// <summary>Keep the cell content on one visual line.</summary>
+    [Parameter]
+    public SwitchParameter NoWrap { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -88,7 +124,89 @@ public sealed class NewOfficePdfTableCellCommand : PSCmdlet
         }
 
         var runs = Run is { Length: > 0 } ? OfficeTextRunParser.ParseMany(Run) : null;
-        WriteObject(new OfficeTableCellSpec(Text, ColumnSpan, RowSpan, CreateStyle(), runs));
+        var style = CreateStyle();
+        if (!HasTypedPdfContent())
+        {
+            WriteObject(new OfficeTableCellSpec(Text, ColumnSpan, RowSpan, style, runs));
+            return;
+        }
+
+        var nativeCell = CreateTypedPdfCell(style, runs);
+        WriteObject(new OfficeTableCellSpec(
+            nativeCell.Text,
+            nativeCell.ColumnSpan,
+            nativeCell.RowSpan,
+            style,
+            runs: null,
+            nativeCell: nativeCell));
+    }
+
+    private bool HasTypedPdfContent()
+        => CheckBox is { Length: > 0 } ||
+           Image is { Length: > 0 } ||
+           FormField is { Length: > 0 } ||
+           LinkUri != null ||
+           LinkDestinationName != null ||
+           LinkContents != null ||
+           NamedDestinationName != null ||
+           NoWrap.IsPresent;
+
+    private PdfTableCell CreateTypedPdfCell(OfficeTableCellStyle? style, OfficeTextRunSpec[]? runs)
+    {
+        PdfTableCell cell;
+        if (runs is { Length: > 0 })
+        {
+            var styledRuns = OfficeTableCellTextRunStyle.Apply(runs, style);
+            cell = new PdfTableCell(
+                PdfRichTextRunBuilder.ToTextRuns(styledRuns),
+                ColumnSpan,
+                LinkUri,
+                LinkContents,
+                RowSpan,
+                CheckBox,
+                FormField,
+                Image,
+                LinkDestinationName,
+                NamedDestinationName);
+        }
+        else if (style?.HasTextStyle == true)
+        {
+            var run = new TextRun(
+                Text ?? string.Empty,
+                bold: style.Bold,
+                underline: style.Underline,
+                color: PdfCommandUtilities.ParseColor(style.TextColor),
+                italic: style.Italic,
+                strike: style.Strike,
+                fontSize: style.FontSize);
+            cell = new PdfTableCell(
+                new[] { run },
+                ColumnSpan,
+                LinkUri,
+                LinkContents,
+                RowSpan,
+                CheckBox,
+                FormField,
+                Image,
+                LinkDestinationName,
+                NamedDestinationName);
+        }
+        else
+        {
+            cell = new PdfTableCell(
+                Text,
+                ColumnSpan,
+                LinkUri,
+                LinkContents,
+                RowSpan,
+                CheckBox,
+                FormField,
+                Image,
+                LinkDestinationName,
+                NamedDestinationName);
+        }
+
+        return NoWrap.IsPresent ? cell.WithNoWrap() : cell;
     }
 
     private OfficeTableCellStyle? CreateStyle()

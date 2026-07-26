@@ -22,11 +22,21 @@ public sealed class GetOfficePdfAppendOnlyMutationCommand : PSCmdlet
     [Alias("FilePath")]
     public string Path { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed usage restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         WriteObject(PdfDocument
-            .Open(PdfCommandUtilities.ResolvePath(this, Path))
+            .Open(
+                PdfCommandUtilities.ResolvePath(this, Path),
+                PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .AnalyzeAppendOnlyMutation());
     }
 }

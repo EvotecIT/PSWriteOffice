@@ -11,7 +11,7 @@ Extracts text or Markdown from a PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfText [-Path] <string> [-PageRange <string>] [-AsMarkdown] [-ByPage] [-AsTextBlock] [-Password <string>] [-OutputPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Get-OfficePdfText [-Path] <string> [-PageRange <string>] [-AsMarkdown] [-ByPage] [-AsTextBlock] [-Password <string>] [-IgnorePermissionRestrictions] [-OutputPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -66,6 +66,22 @@ Accept wildcard characters: True
 
 ### -ByPage
 Return one object per page with PageNumber and Text properties.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
 
 ```yaml
 Type: SwitchParameter

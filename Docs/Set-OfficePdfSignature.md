@@ -11,7 +11,7 @@ Injects externally produced CMS, CAdES, or timestamp signature bytes into a prep
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfSignature [-Path] <string> [-SignaturePath] <string> [-OutputPath] <string> [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficePdfSignature [-Path] <string> [-SignaturePath] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,6 +28,22 @@ PS> Set-OfficePdfSignature -Path .\Prepared.pdf -SignaturePath .\signature.der -
 Writes a PDF with the reserved /Contents hex slot patched in place.
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed signature restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -OutputPath
 Output signed PDF path.
@@ -50,6 +66,22 @@ Return a signature validation report for the written PDF instead of only the out
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted prepared PDF.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

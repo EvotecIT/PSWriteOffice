@@ -11,7 +11,7 @@ Copies selected PDF pages into a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Copy-OfficePdfPage -Path <string> -PageRange <string> -OutputPath <string> [-WhatIf] [-Confirm] [<CommonParameters>]
+Copy-OfficePdfPage -Path <string> -PageRange <string> -OutputPath <string> [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,6 +31,22 @@ $proof
 Copies selected pages and inspects the resulting PDF.
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed assembly restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -OutputPath
 Output PDF path.
@@ -58,6 +74,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

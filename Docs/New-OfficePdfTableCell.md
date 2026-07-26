@@ -11,7 +11,7 @@ Creates a reusable PDF table cell definition for explicit table rows.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficePdfTableCell [[-Text] <string>] [-Run <Object[]>] [-ColumnSpan <int>] [-RowSpan <int>] [-TextColor <string>] [-FillColor <string>] [-FontSize <double>] [-Bold] [-Italic] [-Underline] [-UnderlineStyle <string>] [-Strike] [-Align <PdfColumnAlign>] [-VerticalAlign <PdfCellVerticalAlign>] [<CommonParameters>]
+New-OfficePdfTableCell [[-Text] <string>] [-Run <Object[]>] [-ColumnSpan <int>] [-RowSpan <int>] [-TextColor <string>] [-FillColor <string>] [-FontSize <double>] [-Bold] [-Italic] [-Underline] [-UnderlineStyle <string>] [-Strike] [-Align <PdfColumnAlign>] [-VerticalAlign <PdfCellVerticalAlign>] [-CheckBox <PdfTableCellCheckBox[]>] [-Image <PdfTableCellImage[]>] [-FormField <PdfTableCellFormField[]>] [-LinkUri <string>] [-LinkDestinationName <string>] [-LinkContents <string>] [-NamedDestinationName <string>] [-NoWrap] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,6 +51,22 @@ Render the cell text in bold.
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -CheckBox
+Typed check boxes rendered inside the cell.
+
+```yaml
+Type: PdfTableCellCheckBox[]
+Parameter Sets: __AllParameterSets
+Aliases: CheckBoxes
 Possible values:
 
 Required: False
@@ -108,8 +124,120 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -FormField
+Typed text or choice form fields rendered inside the cell.
+
+```yaml
+Type: PdfTableCellFormField[]
+Parameter Sets: __AllParameterSets
+Aliases: FormFields
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Image
+Typed images rendered inside the cell.
+
+```yaml
+Type: PdfTableCellImage[]
+Parameter Sets: __AllParameterSets
+Aliases: Images
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Italic
 Render the cell text in italics.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -LinkContents
+Accessible annotation text for the cell link.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -LinkDestinationName
+Named PDF destination linked from the cell.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -LinkUri
+Absolute or catalog-base-relative URI linked from the cell.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NamedDestinationName
+Named PDF destination defined at this cell.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -NoWrap
+Keep the cell content on one visual line.
 
 ```yaml
 Type: SwitchParameter

@@ -31,6 +31,14 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
     [Parameter(Mandatory = true)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed form-modification restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Field values keyed by form field name.</summary>
     [Parameter]
     public Hashtable? Field { get; set; }
@@ -89,7 +97,7 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
                 GenerateAppearanceStreams = !KeepNeedAppearances.IsPresent
             };
             PdfDocument
-                .Open(inputPath)
+                .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
                 .Forms.AppendRevision(PdfCommandUtilities.ConvertFieldValues(Field), options)
                 .Save(outputPath)
                 .RequireSuccess();
@@ -97,7 +105,9 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
             return;
         }
 
-        var document = PdfDocument.Open(inputPath);
+        var document = PdfDocument.Open(
+            inputPath,
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
         PdfDocument result;
         if (Field == null || Field.Count == 0)

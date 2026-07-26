@@ -52,7 +52,7 @@ $familyDefinitions = @(
     }
     [ordered]@{
         id = 'reader'; title = 'Reader and extraction'; description = 'Detect formats and extract normalized documents, chunks, tables, visuals, assets, and ingest results.'
-        docs = 'reader'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Documents'
+        docs = 'reader'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Reader'
         samples = @('New-OfficeDocumentReader', 'Get-OfficeDocumentChunk', 'Get-OfficeDocumentTable', 'Search-OfficeDocument')
         match = { param($name) $name -match 'OfficeDocument' -and $name -ne 'Get-OfficeDocumentPageMarkdown' }
     }

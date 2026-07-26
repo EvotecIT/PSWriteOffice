@@ -21,7 +21,7 @@ Set-OfficePdfMetadata -Document <PdfDocument> [-Title <string>] [-Author <string
 
 ### File
 ```powershell
-Set-OfficePdfMetadata -Path <string> -OutputPath <string> [-Title <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-PassThru] [-Incremental] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficePdfMetadata -Path <string> -OutputPath <string> [-Password <string>] [-IgnorePermissionRestrictions] [-Title <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-PassThru] [-Incremental] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -81,6 +81,22 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: True
 ```
 
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed metadata-modification restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: File
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Incremental
 Append a metadata-only incremental PDF revision instead of rewriting the existing PDF bytes.
 
@@ -135,6 +151,22 @@ Emit the updated document.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Context, Document, File
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: File
 Aliases: None
 Possible values:
 

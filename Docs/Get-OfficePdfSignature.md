@@ -11,7 +11,7 @@ Gets lightweight PDF signature structure and preservation validation.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfSignature [-Path] <string> [-Password <string>] [<CommonParameters>]
+Get-OfficePdfSignature [-Path] <string> [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,22 @@ $report.Findings
 Reads signature structure and reports whether OfficeIMO.Pdf found structural issues.
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed usage restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Password
 Password used to inspect a Standard password-encrypted PDF.

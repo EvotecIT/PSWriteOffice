@@ -42,6 +42,14 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
     [Parameter]
     public PdfReadOptions? ReadOptions { get; set; }
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -50,9 +58,13 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
         if (!ShouldProcess(output, $"Export PDF pages as {Format}")) return;
         Directory.CreateDirectory(output);
         var options = Options ?? new PdfImageExportOptions();
-        var document = PdfCommandUtilities.LoadDocument(input, ReadOptions);
+        var readOptions = PdfCommandUtilities.CreateReadOptions(
+            ReadOptions,
+            Password,
+            IgnorePermissionRestrictions.IsPresent);
+        var document = PdfCommandUtilities.LoadDocument(input, readOptions);
         var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
-        var pages = document.Read.ExportImages(Format, options, selection, ReadOptions);
+        var pages = document.Read.ExportImages(Format, options, selection, readOptions);
         for (int index = 0; index < pages.Count; index++)
         {
             var page = pages[index];

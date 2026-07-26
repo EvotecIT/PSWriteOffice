@@ -34,6 +34,10 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
     [Parameter]
     public string? Password { get; set; }
 
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Optional output HTML file path.</summary>
     [Parameter]
     [Alias("OutPath")]
@@ -149,8 +153,9 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
 
     private PdfLogicalDocument LoadLogicalDocument(string path)
     {
-        return string.IsNullOrEmpty(Password)
+        var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
+        return readOptions == null
             ? PdfLogicalDocument.Load(path)
-            : PdfLogicalDocument.From(PdfReadDocument.Open(path, PdfCommandUtilities.CreateReadOptions(Password)));
+            : PdfLogicalDocument.From(PdfReadDocument.Open(path, readOptions));
     }
 }

@@ -11,7 +11,7 @@ Gets PDF diagnostics, stream statistics, feature markers, and read/rewrite block
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfDiagnostic [-Path] <string> [-Password <string>] [<CommonParameters>]
+Get-OfficePdfDiagnostic [-Path] <string> [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,22 @@ $diagnostic.Findings
 Returns an OfficeIMO.Pdf diagnostic report for migration and troubleshooting workflows.
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed usage restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Password
 Password used to analyze a Standard password-encrypted PDF.

@@ -181,6 +181,9 @@ Adds a decorative generated PDF page background shape or band.
 ### [Add-OfficePdfBookmark](Add-OfficePdfBookmark.md)
 Adds a named bookmark at the current generated PDF flow position.
 
+### [Add-OfficePdfCanvas](Add-OfficePdfCanvas.md)
+Draws arbitrary visual canvas content on existing PDF pages.
+
 ### [Add-OfficePdfFormField](Add-OfficePdfFormField.md)
 Adds a simple AcroForm field to a generated PDF document.
 
@@ -198,6 +201,9 @@ Adds a bullet or numbered list to a PDF document.
 
 ### [Add-OfficePdfPageBreak](Add-OfficePdfPageBreak.md)
 Adds a page break to a PDF document.
+
+### [Add-OfficePdfPageOverlay](Add-OfficePdfPageOverlay.md)
+Overlays or underlays one source PDF page on selected pages of another PDF.
 
 ### [Add-OfficePdfPanel](Add-OfficePdfPanel.md)
 Adds a visually separated panel paragraph to a PDF document.
@@ -517,6 +523,9 @@ Applies rectangle-based PDF redactions and writes a new PDF.
 ### [ConvertTo-OfficePdfSanitized](ConvertTo-OfficePdfSanitized.md)
 Removes or quarantines active PDF content and embedded payloads with post-save proof.
 
+### [ConvertTo-OfficePdfTextRun](ConvertTo-OfficePdfTextRun.md)
+Converts reusable Office text run specifications to native PDF text runs.
+
 ### [ConvertTo-OfficePowerPointHtml](ConvertTo-OfficePowerPointHtml.md)
 Converts a PowerPoint deck to an HTML review document.
 
@@ -626,7 +635,7 @@ Reads a supported file into the OfficeIMO shared document read result envelope.
 Reads or materializes embedded assets discovered by OfficeIMO.Reader from a supported document.
 
 ### [Get-OfficeDocumentBatch](Get-OfficeDocumentBatch.md)
-Reads a bounded set of documents asynchronously while retaining input order.
+Reads supported files and folders with adjustable concurrency and limits.
 
 ### [Get-OfficeDocumentCapability](Get-OfficeDocumentCapability.md)
 Lists OfficeIMO.Reader capabilities registered in the current PSWriteOffice process.
@@ -1018,6 +1027,15 @@ Prepares an existing PDF for external digital signing by appending a signature f
 ### [New-OfficePdfTableCell](New-OfficePdfTableCell.md)
 Creates a reusable PDF table cell definition for explicit table rows.
 
+### [New-OfficePdfTableCellCheckBox](New-OfficePdfTableCellCheckBox.md)
+Creates a typed check box for a PDF table cell.
+
+### [New-OfficePdfTableCellField](New-OfficePdfTableCellField.md)
+Creates a typed text or choice field for a PDF table cell.
+
+### [New-OfficePdfTableCellImage](New-OfficePdfTableCellImage.md)
+Creates a typed image for a PDF table cell.
+
 ### [New-OfficePowerPoint](New-OfficePowerPoint.md)
 Creates a PowerPoint presentation using the DSL.
 
@@ -1121,7 +1139,7 @@ Saves an OfficeIMO.Visio document.
 Saves a Word document without disposing it.
 
 ### [Search-OfficeDocument](Search-OfficeDocument.md)
-Searches normalized document blocks and returns Reader-owned page citations for each match.
+Searches one Reader result or every supported document below file and folder paths.
 
 ### [Send-OfficeConfluenceAttachment](Send-OfficeConfluenceAttachment.md)
 Uploads or versions a Confluence page attachment.
@@ -1277,13 +1295,13 @@ Sets generated PDF compliance profile and readiness groundwork.
 Configures Factur-X/ZUGFeRD e-invoice groundwork on a generated PDF document.
 
 ### [Set-OfficePdfFooter](Set-OfficePdfFooter.md)
-Sets running PDF footer text.
+Sets a simple or fully composed running PDF footer.
 
 ### [Set-OfficePdfForm](Set-OfficePdfForm.md)
 Fills and optionally flattens simple AcroForm fields in an existing PDF.
 
 ### [Set-OfficePdfHeader](Set-OfficePdfHeader.md)
-Sets running PDF header text.
+Sets a simple or fully composed running PDF header.
 
 ### [Set-OfficePdfMetadata](Set-OfficePdfMetadata.md)
 Sets PDF document metadata on generated documents or existing PDF files.

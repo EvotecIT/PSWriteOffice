@@ -11,12 +11,12 @@ Reads supported Office, PDF, Markdown, RTF, HTML, CSV, JSON, XML, YAML, ZIP, EPU
 ## SYNTAX
 ### File (Default)
 ```powershell
-Get-OfficeDocumentChunk [-Path] <string> [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
+Get-OfficeDocumentChunk [-Path] <string> [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-MaxStoreItems <int>] [-AllStoreItems] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ### Folder
 ```powershell
-Get-OfficeDocumentChunk -FolderPath <string> [-NoRecurse] [-MaxFiles <int>] [-MaxTotalBytes <long>] [-Extension <string[]>] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
+Get-OfficeDocumentChunk -FolderPath <string> [-NoRecurse] [-MaxFiles <int>] [-MaxTotalBytes <long>] [-Extension <string[]>] [-MaxInputBytes <long>] [-OpenXmlMaxCharactersInPart <long>] [-MaxChars <int>] [-MaxTableRows <int>] [-ExcludeWordFootnotes] [-ExcludePowerPointNotes] [-NoExcelHeaders] [-ExcelChunkRows <int>] [-ExcelSheetName <string>] [-ExcelA1Range <string>] [-NoMarkdownHeadingChunks] [-NoHashes] [-MaxStoreItems <int>] [-AllStoreItems] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,6 +34,22 @@ PS> New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review'
 Creates a small RTF file and reads it back through the Reader adapter as normalized chunks.
 
 ## PARAMETERS
+
+### -AllStoreItems
+Project every matching item from each email store.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: File, Folder
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -ExcelA1Range
 Optional Excel A1 range to read.
@@ -181,6 +197,22 @@ Accept wildcard characters: True
 
 ### -MaxInputBytes
 Maximum input size in bytes.
+
+```yaml
+Type: Nullable`1
+Parameter Sets: File, Folder
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -MaxStoreItems
+Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.
 
 ```yaml
 Type: Nullable`1

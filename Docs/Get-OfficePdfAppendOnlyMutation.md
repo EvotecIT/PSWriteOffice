@@ -11,7 +11,7 @@ Gets append-only PDF mutation support and blockers for an existing PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfAppendOnlyMutation [-Path] <string> [<CommonParameters>]
+Get-OfficePdfAppendOnlyMutation [-Path] <string> [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,38 @@ $plan.Blockers
 Returns OfficeIMO.Pdf append-only mutation support and blocker details.
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed usage restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Path
 PDF file path.

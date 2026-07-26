@@ -11,7 +11,7 @@ Builds text-selection and interactive hit regions for one PDF page.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfInteractionMap [-Path] <string> [-Page <int>] [-Options <PdfPageInteractionOptions>] [-ReadOptions <PdfReadOptions>] [<CommonParameters>]
+Get-OfficePdfInteractionMap [-Path] <string> [-Page <int>] [-Options <PdfPageInteractionOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -26,6 +26,22 @@ Get-OfficePdfInteractionMap -Path 'C:\Path'
 
 
 ## PARAMETERS
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
 
 ### -Options
 Optional text-region limits.
@@ -48,6 +64,22 @@ One-based page number.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

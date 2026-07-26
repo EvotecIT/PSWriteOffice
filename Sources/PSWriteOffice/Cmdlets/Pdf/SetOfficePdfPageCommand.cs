@@ -85,6 +85,14 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
     [Parameter(Mandatory = true)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed page-modification restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -96,6 +104,7 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
         int[] pages = string.IsNullOrWhiteSpace(PageRange)
             ? Array.Empty<int>()
             : PdfPageRange.ParseMany(PageRange!).SelectMany(ExpandPageRange).Distinct().ToArray();
@@ -120,7 +129,7 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
                 throw new PSArgumentException("Use page resize, rotation, or box editing as separate Set-OfficePdfPage operations.");
             }
 
-            PdfDocument.Open(inputPath).Pages.Resize(resizeOptions, pages).Save(outputPath).RequireSuccess();
+            PdfDocument.Open(inputPath, readOptions).Pages.Resize(resizeOptions, pages).Save(outputPath).RequireSuccess();
             WriteObject(new FileInfo(outputPath));
             return;
         }
@@ -133,7 +142,7 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
             }
 
             PdfDocument
-                .Open(inputPath)
+                .Open(inputPath, readOptions)
                 .Pages.SetPageBox(
                     (PdfPageBoundaryBox) Enum.Parse(typeof(PdfPageBoundaryBox), BoxName!, ignoreCase: true),
                     Left.Value,
@@ -152,7 +161,7 @@ public sealed class SetOfficePdfPageCommand : PSCmdlet
             throw new PSArgumentException("Provide -Rotation, -BoxName with coordinates, or page resize options.");
         }
 
-        var document = PdfDocument.Open(inputPath);
+        var document = PdfDocument.Open(inputPath, readOptions);
         var result = string.IsNullOrWhiteSpace(PageRange)
             ? document.Pages.Rotate(Rotation)
             : document.Pages.Rotate(Rotation, PageRange!);

@@ -11,7 +11,7 @@ Prepares an existing PDF for external digital signing by appending a signature f
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficePdfSignature [-Path] <string> [-OutputPath] <string> [-FieldName <string>] [-Filter <string>] [-SubFilter <PdfExternalSignatureSubFilter>] [-Name <string>] [-Reason <string>] [-Location <string>] [-ContactInfo <string>] [-ReservedBytes <int>] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficePdfSignature [-Path] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-FieldName <string>] [-Filter <string>] [-SubFilter <PdfExternalSignatureSubFilter>] [-Name <string>] [-Reason <string>] [-Location <string>] [-ContactInfo <string>] [-ReservedBytes <int>] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -78,6 +78,22 @@ Accept pipeline input: False
 Accept wildcard characters: True
 ```
 
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed signature-field restrictions.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
 ### -Location
 Signing location stored in the signature dictionary.
 
@@ -131,6 +147,22 @@ Return the OfficeIMO.Pdf preparation report instead of only the output file.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

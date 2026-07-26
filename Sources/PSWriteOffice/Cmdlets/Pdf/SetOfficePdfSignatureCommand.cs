@@ -30,6 +30,14 @@ public sealed class SetOfficePdfSignatureCommand : PSCmdlet
     [Parameter(Mandatory = true, Position = 2)]
     public string OutputPath { get; set; } = string.Empty;
 
+    /// <summary>Password used to authenticate an encrypted prepared PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed signature restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <summary>Return a signature validation report for the written PDF instead of only the output file.</summary>
     [Parameter]
     public SwitchParameter PassThruReport { get; set; }
@@ -48,7 +56,7 @@ public sealed class SetOfficePdfSignatureCommand : PSCmdlet
         PdfCommandUtilities.EnsureDirectory(outputPath);
 
         var document = PdfDocument
-            .Open(inputPath)
+            .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .CompleteExternalSignature(File.ReadAllBytes(signaturePath));
         document.Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent

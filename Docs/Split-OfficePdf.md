@@ -11,7 +11,7 @@ Splits a PDF into page, range, count, or bookmark files.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Split-OfficePdf [-Path] <string> [-OutputDirectory] <string> [-Prefix <string>] [-PagesPerDocument <int>] [-PageRange <string[]>] [-BookmarkName <string[]>] [-ByBookmark] [-Password <string>] [-PadIndex] [-IndexWidth <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Split-OfficePdf [-Path] <string> [-OutputDirectory] <string> [-Prefix <string>] [-PagesPerDocument <int>] [-PageRange <string[]>] [-BookmarkName <string[]>] [-ByBookmark] [-Password <string>] [-IgnorePermissionRestrictions] [-PadIndex] [-IndexWidth <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -47,6 +47,22 @@ Accept wildcard characters: True
 
 ### -ByBookmark
 Create one PDF for every readable bookmark when -BookmarkName is not supplied.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: True
+```
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed assembly restrictions.
 
 ```yaml
 Type: SwitchParameter
