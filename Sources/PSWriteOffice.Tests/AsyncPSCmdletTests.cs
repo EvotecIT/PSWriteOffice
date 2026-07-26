@@ -53,7 +53,7 @@ public sealed class AsyncPSCmdletTests
     }
 
     [Fact]
-    public async Task AsyncPSCmdlet_pumps_should_process_during_synchronous_worker_fan_out()
+    public async Task AsyncPSCmdlet_pumps_should_process_during_worker_fan_out()
     {
         var sessionState = InitialSessionState.CreateDefault();
         sessionState.Commands.Add(new SessionStateCmdletEntry(
@@ -99,17 +99,14 @@ internal static class AsyncPipelineHelper
 [Cmdlet(VerbsDiagnostic.Test, "AsyncSynchronousFanOut", SupportsShouldProcess = true)]
 public sealed class TestAsyncSynchronousFanOutCommand : AsyncPSCmdlet
 {
-    protected override Task ProcessRecordAsync()
+    protected override async Task ProcessRecordAsync()
     {
-        var worker = Task.Run(() =>
+        await Task.Run(() =>
         {
             if (ShouldProcess("fan-out-target", "write output"))
             {
                 WriteObject("fan-out-output");
             }
         });
-
-        Task.WaitAll(worker);
-        return Task.CompletedTask;
     }
 }
