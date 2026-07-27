@@ -27,7 +27,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | HTML assets | 1 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Shared authoring primitives | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
 
-The total is 471 cmdlets. Aliases are intentionally counted separately because they provide a shorter DSL without replacing the canonical command names in help and automation.
+The total is 477 cmdlets. Aliases are intentionally counted separately because they provide a shorter DSL without replacing the canonical command names in help and automation.
 
 ## Reference versus guide
 
