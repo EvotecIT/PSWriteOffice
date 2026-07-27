@@ -2,6 +2,7 @@
 title: "PSWriteOffice vs Office Interop, Graph, and LibreOffice"
 description: "Compare PSWriteOffice with Microsoft Office COM automation, Microsoft Graph and Office Scripts, and LibreOffice headless document workflows."
 layout: docs
+meta.seo_title: "PSWriteOffice Automation Options"
 ---
 
 PSWriteOffice exposes OfficeIMO's managed document engines through PowerShell. It creates, reads, edits, converts, renders, searches, and verifies supported Office, PDF, email, OneNote, Visio, open, and text formats without launching desktop Microsoft Office.
