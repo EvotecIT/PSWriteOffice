@@ -1,6 +1,6 @@
 ---
 title: "Publish to Confluence Cloud"
-description: "Plan and publish Confluence pages, preserve managed sections, and transfer attachments."
+description: "Plan and publish Confluence pages, preserve managed sections, and transfer attachments. Includes PowerShell examples, safety notes, and cmdlet links."
 layout: docs
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "PSWriteOffice Documentation"
-description: "Workflow guides for 471 PowerShell cmdlets across Office, PDF, Reader, Confluence Cloud, Visio, and open formats."
+description: "Workflow guides for 471 PowerShell cmdlets across Office, PDF, Reader, Confluence Cloud, Visio, and open formats. Includes examples and cmdlet links."
 layout: docs
 ---
 

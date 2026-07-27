@@ -1,6 +1,6 @@
 ---
 title: "What PSWriteOffice Covers"
-description: "A map of the module's 471 cmdlets, 16 workflow families, and relationship to OfficeIMO."
+description: "A map of the module's 471 cmdlets, 16 workflow families, and relationship to OfficeIMO. Includes examples and cmdlet links."
 layout: docs
 ---
 

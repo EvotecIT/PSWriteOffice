@@ -1,6 +1,6 @@
 ---
 title: "PSWriteOffice Command Families"
-description: "The generated map of all exported cmdlets and the conceptual guide for each family."
+description: "The generated map of all exported cmdlets and the conceptual guide for each family. Includes PowerShell examples, validation notes, and cmdlet links."
 layout: docs
 ---
 
