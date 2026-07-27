@@ -123,6 +123,7 @@ Describe 'PSWriteOffice website documentation catalog' {
         $exportedCommands = @($module.CmdletsToExport)
         $guideSlugs = @(
             'compare-importexcel-excelfast'
+            'compare-office-automation-options'
             'migrate-from-legacy-modules'
             'migrate-from-pswriteword'
             'migrate-from-pswriteexcel'
