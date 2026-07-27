@@ -1,5 +1,5 @@
 ---
-title: "Migrate from PSWriteWord, PSWriteExcel, and PSWritePDF"
+title: "Migrate Legacy Modules to PSWriteOffice"
 description: "Move legacy PowerShell document scripts to PSWriteOffice with practical command mappings, replacement examples, and compatibility checks."
 layout: docs
 ---
