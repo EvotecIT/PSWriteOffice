@@ -95,7 +95,7 @@ See the [benchmark methodology and complete result matrix](https://github.com/Ev
 - its public examples cover the report shape and operational constraints;
 - avoiding migration risk matters more than consolidating document formats.
 
-See the official [ImportExcel repository](https://github.com/dfinke/ImportExcel) and [PowerShell Gallery package](https://www.powershellgallery.com/packages/ImportExcel).
+See the official [ImportExcel repository](https://github.com/dfinke/ImportExcel) and [ImportExcel PowerShell Gallery package](https://www.powershellgallery.com/packages/ImportExcel).
 
 ## Choose ExcelFast when
 
@@ -104,7 +104,7 @@ See the official [ImportExcel repository](https://github.com/dfinke/ImportExcel)
 - the required workbook features are present in the current command surface;
 - performance is evaluated with output validation rather than elapsed time alone.
 
-See the official [ExcelFast repository](https://github.com/JustinGrote/ExcelFast) and [PowerShell Gallery package](https://www.powershellgallery.com/packages/ExcelFast).
+See the official [ExcelFast repository](https://github.com/JustinGrote/ExcelFast) and [ExcelFast PowerShell Gallery package](https://www.powershellgallery.com/packages/ExcelFast).
 
 ## Choose PSWriteOffice when
 
