@@ -6,6 +6,8 @@ BeforeAll {
     $script:moduleManifestPath = Join-Path $script:repoRoot 'PSWriteOffice.psd1'
     $script:apiRoot = Join-Path $script:repoRoot 'WebsiteArtifacts\apidocs\powershell'
     $script:sourceSnapshotManifestPath = Join-Path $script:apiRoot 'PSWriteOffice.psd1'
+    $script:commandFamiliesGuidePath = Join-Path $script:repoRoot 'Website\content\project-docs\docs\command-families.md'
+    $script:overviewGuidePath = Join-Path $script:repoRoot 'Website\content\project-docs\docs\overview.md'
 }
 
 Describe 'PSWriteOffice website documentation catalog' {
@@ -32,6 +34,33 @@ Describe 'PSWriteOffice website documentation catalog' {
 
         (Get-Content -LiteralPath $outputPath -Raw).Trim() |
             Should -Be (Get-Content -LiteralPath $script:catalogPath -Raw).Trim()
+    }
+
+    It 'keeps guide family counts aligned with the generated catalog' {
+        $catalog = Get-Content -LiteralPath $script:catalogPath -Raw | ConvertFrom-Json
+        $expected = @{}
+        foreach ($family in $catalog.families) {
+            $expected[[string] $family.title] = [int] $family.commandCount
+        }
+
+        $tableRows = [regex]::Matches(
+            (Get-Content -LiteralPath $script:commandFamiliesGuidePath -Raw),
+            '(?m)^\|\s*(?<title>[^|]+?)\s*\|\s*(?<count>\d+)\s*\|')
+        $tableRows.Count | Should -Be $expected.Count
+        foreach ($row in $tableRows) {
+            $title = $row.Groups['title'].Value.Trim()
+            $expected.ContainsKey($title) | Should -BeTrue -Because "'$title' should be a generated command family"
+            [int] $row.Groups['count'].Value | Should -Be $expected[$title] -Because "'$title' should match the generated catalog"
+        }
+
+        $overviewRows = [regex]::Matches(
+            (Get-Content -LiteralPath $script:overviewGuidePath -Raw),
+            '(?m)^-\s+\*\*(?<title>.+?)\s+—\s+(?<count>\d+)\s+commands:')
+        foreach ($row in $overviewRows) {
+            $title = $row.Groups['title'].Value.Trim()
+            $expected.ContainsKey($title) | Should -BeTrue -Because "'$title' should be a generated command family"
+            [int] $row.Groups['count'].Value | Should -Be $expected[$title] -Because "'$title' should match the generated catalog"
+        }
     }
 
     It 'accepts a filename-only catalog output path' {
