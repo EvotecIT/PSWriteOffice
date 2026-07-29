@@ -1,6 +1,6 @@
 ---
 title: "PSWriteOffice Command Families"
-description: "The generated map of all exported cmdlets and the conceptual guide for each family."
+description: "The generated map of all exported cmdlets and the conceptual guide for each family. Includes PowerShell examples, validation notes, and cmdlet links."
 layout: docs
 ---
 
@@ -12,7 +12,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | --- | ---: | --- |
 | Excel | 155 | [Excel automation](/docs/pswriteoffice/excel/) |
 | Word | 91 | [Word automation](/docs/pswriteoffice/word/) |
-| PDF | 74 | [PDF automation](/docs/pswriteoffice/pdf/) |
+| PDF | 80 | [PDF automation](/docs/pswriteoffice/pdf/) |
 | PowerPoint | 57 | [PowerPoint automation](/docs/pswriteoffice/powerpoint/) |
 | Markdown | 25 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Visio | 20 | [Visio diagrams](/docs/pswriteoffice/visio/) |
@@ -27,7 +27,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | HTML assets | 1 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Shared authoring primitives | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
 
-The total is 471 cmdlets. Aliases are intentionally counted separately because they provide a shorter DSL without replacing the canonical command names in help and automation.
+The total is 477 cmdlets. Aliases are intentionally counted separately because they provide a shorter DSL without replacing the canonical command names in help and automation.
 
 ## Reference versus guide
 

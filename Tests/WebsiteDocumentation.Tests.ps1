@@ -6,6 +6,10 @@ BeforeAll {
     $script:moduleManifestPath = Join-Path $script:repoRoot 'PSWriteOffice.psd1'
     $script:apiRoot = Join-Path $script:repoRoot 'WebsiteArtifacts\apidocs\powershell'
     $script:sourceSnapshotManifestPath = Join-Path $script:apiRoot 'PSWriteOffice.psd1'
+    $script:commandFamiliesGuidePath = Join-Path $script:repoRoot 'Website\content\project-docs\docs\command-families.md'
+    $script:overviewGuidePath = Join-Path $script:repoRoot 'Website\content\project-docs\docs\overview.md'
+    $script:projectDocsRoot = Join-Path $script:repoRoot 'Website\content\project-docs\docs'
+    $script:projectDocsIndexPath = Join-Path $script:projectDocsRoot '_index.md'
 }
 
 Describe 'PSWriteOffice website documentation catalog' {
@@ -32,6 +36,33 @@ Describe 'PSWriteOffice website documentation catalog' {
 
         (Get-Content -LiteralPath $outputPath -Raw).Trim() |
             Should -Be (Get-Content -LiteralPath $script:catalogPath -Raw).Trim()
+    }
+
+    It 'keeps guide family counts aligned with the generated catalog' {
+        $catalog = Get-Content -LiteralPath $script:catalogPath -Raw | ConvertFrom-Json
+        $expected = @{}
+        foreach ($family in $catalog.families) {
+            $expected[[string] $family.title] = [int] $family.commandCount
+        }
+
+        $tableRows = [regex]::Matches(
+            (Get-Content -LiteralPath $script:commandFamiliesGuidePath -Raw),
+            '(?m)^\|\s*(?<title>[^|]+?)\s*\|\s*(?<count>\d+)\s*\|')
+        $tableRows.Count | Should -Be $expected.Count
+        foreach ($row in $tableRows) {
+            $title = $row.Groups['title'].Value.Trim()
+            $expected.ContainsKey($title) | Should -BeTrue -Because "'$title' should be a generated command family"
+            [int] $row.Groups['count'].Value | Should -Be $expected[$title] -Because "'$title' should match the generated catalog"
+        }
+
+        $overviewRows = [regex]::Matches(
+            (Get-Content -LiteralPath $script:overviewGuidePath -Raw),
+            '(?m)^-\s+\*\*(?<title>.+?)\s+—\s+(?<count>\d+)\s+commands:')
+        foreach ($row in $overviewRows) {
+            $title = $row.Groups['title'].Value.Trim()
+            $expected.ContainsKey($title) | Should -BeTrue -Because "'$title' should be a generated command family"
+            [int] $row.Groups['count'].Value | Should -Be $expected[$title] -Because "'$title' should match the generated catalog"
+        }
     }
 
     It 'accepts a filename-only catalog output path' {
@@ -85,5 +116,46 @@ Describe 'PSWriteOffice website documentation catalog' {
         $exportCsv.sourcePath | Should -Be 'Sources/PSWriteOffice/Cmdlets/Csv/ExportOfficeCsvCommand.cs'
         (Get-Content -LiteralPath (Join-Path $script:repoRoot $exportCsv.sourcePath))[$exportCsv.sourceLine - 1] |
             Should -Match '\bclass\s+ExportOfficeCsvCommand\b'
+    }
+
+    It 'publishes discoverable comparison and legacy migration guides against current commands' {
+        $module = Import-PowerShellDataFile -LiteralPath $script:moduleManifestPath
+        $exportedCommands = @($module.CmdletsToExport)
+        $guideSlugs = @(
+            'compare-importexcel-excelfast'
+            'compare-office-automation-options'
+            'migrate-from-legacy-modules'
+            'migrate-from-pswriteword'
+            'migrate-from-pswriteexcel'
+            'migrate-from-pswritepdf'
+        )
+        $index = Get-Content -LiteralPath $script:projectDocsIndexPath -Raw
+
+        foreach ($slug in $guideSlugs) {
+            $path = Join-Path $script:projectDocsRoot "$slug.md"
+            Test-Path -LiteralPath $path | Should -BeTrue
+            $content = Get-Content -LiteralPath $path -Raw
+            $description = [regex]::Match($content, '(?m)^description:\s*"(?<value>[^"]+)"$').Groups['value'].Value
+
+            $description.Length | Should -BeGreaterOrEqual 120 -Because "$slug needs a useful search summary"
+            $description.Length | Should -BeLessOrEqual 160 -Because "$slug should avoid routine search-result truncation"
+            $content | Should -Not -Match '(?m)^#\s+' -Because 'the page title already renders the only H1'
+            $index | Should -Match ([regex]::Escape("/docs/pswriteoffice/$slug/"))
+        }
+
+        foreach ($command in @(
+            'New-OfficeWord'
+            'Join-OfficeWordDocument'
+            'New-OfficeExcel'
+            'Import-OfficeExcel'
+            'New-OfficePdf'
+            'Join-OfficePdf'
+            'Split-OfficePdf'
+            'Get-OfficePdfText'
+            'Set-OfficePdfForm'
+            'ConvertFrom-OfficePdfHtml'
+        )) {
+            $exportedCommands | Should -Contain $command -Because 'migration mappings must point at an exported command'
+        }
     }
 }

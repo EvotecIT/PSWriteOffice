@@ -1,6 +1,6 @@
 ---
 title: "Automate PDF Workflows"
-description: "Author, inspect, combine, annotate, sign, preflight, optimize, redact, and extract PDF files."
+description: "Author, inspect, combine, annotate, sign, preflight, optimize, redact, and extract PDF files. Includes examples and cmdlet links."
 layout: docs
 ---
 
