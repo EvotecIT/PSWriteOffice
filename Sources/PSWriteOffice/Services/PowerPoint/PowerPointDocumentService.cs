@@ -34,7 +34,10 @@ public static class PowerPointDocumentService
         }
 
         var resolvedPath = Path.GetFullPath(filePath);
-        var presentation = PowerPointPresentation.Create(resolvedPath);
+        var presentation = PowerPointPresentation.Create(resolvedPath, new PowerPointCreateOptions
+        {
+            PersistenceMode = DocumentPersistenceMode.Explicit
+        });
         Track(presentation, resolvedPath, encrypted: false);
         return presentation;
     }
@@ -91,6 +94,11 @@ public static class PowerPointDocumentService
         }
 
         var resolvedPath = Path.GetFullPath(string.IsNullOrWhiteSpace(filePath) ? associatedPath! : filePath!);
+        string? targetDirectory = Path.GetDirectoryName(resolvedPath);
+        if (!string.IsNullOrWhiteSpace(targetDirectory))
+        {
+            Directory.CreateDirectory(targetDirectory);
+        }
         if (!string.IsNullOrEmpty(password))
         {
             OfficeEncryptedPackageService.SavePowerPoint(presentation, resolvedPath, password!);

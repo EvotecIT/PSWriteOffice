@@ -69,7 +69,7 @@ Describe 'PowerPoint cmdlets' {
     }
 
     It 'saves an external OfficeIMO presentation without closing it and supports save as' {
-        $savedAsPath = Join-Path $TestDrive 'PowerPointExternal.Copy.pptx'
+        $savedAsPath = Join-Path (Join-Path $TestDrive 'save-as-output') 'PowerPointExternal.Copy.pptx'
         $seedPath = Join-Path $TestDrive 'PowerPointTypeSeed.pptx'
         $seed = New-OfficePowerPoint -FilePath $seedPath -NoSave
         $presentationType = $seed.GetType()
@@ -97,6 +97,22 @@ Describe 'PowerPoint cmdlets' {
         $reloaded = Get-OfficePowerPoint -FilePath $savedAsPath
         try {
             $reloaded.Slides.Count | Should -Be 2
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
+    It 'does not persist edits made after save when closed without save' {
+        $path = Join-Path $TestDrive 'PowerPointExplicitClose.pptx'
+        $presentation = New-OfficePowerPoint -FilePath $path -NoSave
+        Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
+        Save-OfficePowerPoint -Presentation $presentation
+        Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
+        Close-OfficePowerPoint -Presentation $presentation
+
+        $reloaded = Get-OfficePowerPoint -FilePath $path
+        try {
+            $reloaded.Slides.Count | Should -Be 1
         } finally {
             Close-OfficePowerPoint -Presentation $reloaded
         }

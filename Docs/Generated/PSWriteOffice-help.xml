@@ -115291,19 +115291,43 @@ System.IO.FileInfo</maml:name>
       <command:verb>Save</command:verb>
       <command:noun>OfficePowerPoint</command:noun>
       <maml:description>
-        <maml:para>Saves a presentation to disk.</maml:para>
+        <maml:para>Saves a presentation without disposing it.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Invokes the PowerPoint service to persist the document and optionally launch it.</maml:para>
+      <maml:para>Use Close-OfficePowerPoint -Save when the presentation should be saved and closed.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Save-OfficePowerPoint</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Emit the still-open presentation for further processing.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
           <maml:name>Password</maml:name>
           <maml:description>
             <maml:para>Password used to save the presentation as an encrypted package.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Optional save-as path.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -115351,10 +115375,34 @@ System.IO.FileInfo</maml:name>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Emit the still-open presentation for further processing.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
         <maml:name>Password</maml:name>
         <maml:description>
           <maml:para>Password used to save the presentation as an encrypted package.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Optional save-as path.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -115410,7 +115458,7 @@ System.IO.FileInfo</maml:name>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>System.Object</maml:name>
+          <maml:name>OfficeIMO.PowerPoint.PowerPointPresentation</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
