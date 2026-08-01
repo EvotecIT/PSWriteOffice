@@ -56,6 +56,66 @@ Describe 'Visio cmdlets' {
         $bytes[3] | Should -Be 71
     }
 
+    It 'normalizes extensionless Visio image paths before confirmation and output' {
+        $path = Join-Path $TestDrive 'extensionless.vsdx'
+        New-OfficeVisio -Path $path {
+            VisioRectangle -Text 'Extensionless' -X 2 -Y 2 -Width 2 -Height 1
+        } | Out-Null
+
+        $svgBasePath = Join-Path $TestDrive 'extensionless-svg'
+        $pngBasePath = Join-Path $TestDrive 'extensionless-png'
+        (ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgBasePath).FullName |
+            Should -Be ($svgBasePath + '.svg')
+        (ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngBasePath).FullName |
+            Should -Be ($pngBasePath + '.png')
+    }
+
+    It 'does not load or render path-based Visio image output under WhatIf' {
+        $missingPath = Join-Path $TestDrive 'missing.vsdx'
+
+        { ConvertTo-OfficeVisioSvg -Path $missingPath -OutputPath (Join-Path $TestDrive 'whatif-svg') -WhatIf } |
+            Should -Not -Throw
+        { ConvertTo-OfficeVisioPng -Path $missingPath -OutputPath (Join-Path $TestDrive 'whatif-png') -WhatIf } |
+            Should -Not -Throw
+    }
+
+    It 'saves to the associated path without closing the Visio document' {
+        $path = Join-Path $TestDrive 'associated-save.vsdx'
+        $document = New-OfficeVisio -Path $path -PassThru
+        $document.Pages[0].AddRectangle(2, 2, 2, 1, 'First save') | Out-Null
+
+        $savedFile = $document | Save-OfficeVisio
+        $savedFile | Should -BeOfType System.IO.FileInfo
+        $savedFile.FullName | Should -Be $path
+
+        $document.Pages[0].AddRectangle(5, 2, 2, 1, 'Second save') | Out-Null
+        $returned = $document | Save-OfficeVisio -PassThru
+        [object]::ReferenceEquals($document, $returned) | Should -BeTrue
+        $document.Pages[0].Shapes.Count | Should -Be 2
+    }
+
+    It 'exports multiple Visio pages through the format-neutral image command' {
+        $path = Join-Path $TestDrive 'generic-export.vsdx'
+        $output = Join-Path $TestDrive 'generic-images'
+        New-OfficeVisio -Path $path {
+            VisioRectangle -Text 'Page one' -X 2 -Y 2 -Width 2 -Height 1
+            VisioPage 'Second' {
+                VisioRectangle -Text 'Page two' -X 2 -Y 2 -Width 2 -Height 1
+            }
+        } | Out-Null
+
+        $results = @(Export-OfficeVisioImage -Path $path -OutputPath $output -Format Svg)
+        $results | Should -HaveCount 2
+        $results | ForEach-Object {
+            $_.GetType().FullName | Should -Be 'OfficeIMO.Drawing.OfficeImageExportResult'
+            Test-Path -LiteralPath $_.SavedPath | Should -BeTrue
+        }
+
+        $movedPath = Join-Path $TestDrive 'generic-export-moved.vsdx'
+        Move-Item -LiteralPath $path -Destination $movedPath
+        Test-Path -LiteralPath $movedPath | Should -BeTrue
+    }
+
     It 'creates a diagram through the Visio DSL' {
         $path = Join-Path $TestDrive 'dsl.vsdx'
         $svgPath = Join-Path $TestDrive 'dsl.svg'

@@ -1,5 +1,7 @@
 using System.IO;
 using System.Management.Automation;
+using System.Text;
+using OfficeIMO.Drawing;
 using OfficeIMO.Visio;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Visio;
@@ -79,38 +81,53 @@ public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = VisioCommandUtilities.ResolveDocument(this, Document, Path);
-        var options = VisioCommandUtilities.BuildSvgOptions(
+        var options = VisioCommandUtilities.BuildImageOptions(
+            this,
             PageIndex,
             PixelsPerInch,
             BackgroundColor,
             Transparent.IsPresent,
             NoText.IsPresent,
+            fontFilePath: null,
+            fontFaceName: null,
+            fontCollectionIndex: null,
             NoStencilArtwork.IsPresent,
             NoConnectorLabels.IsPresent,
             NoConnectorLabelOverlapResolution.IsPresent,
+            supersampling: null,
             IncludeXmlDeclaration.IsPresent);
+
+        string? targetPath = null;
 
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
-            var fullPath = VisioCommandUtilities.ResolvePath(this, OutputPath!);
-            if (!ShouldProcess(fullPath, "Write Visio SVG"))
+            targetPath = VisioCommandUtilities.ResolveImageOutputPath(
+                this,
+                OutputPath!,
+                OfficeImageExportFormat.Svg);
+            if (!ShouldProcess(targetPath, "Write Visio SVG"))
             {
                 return;
             }
+        }
 
-            VisioCommandUtilities.EnsureDirectory(fullPath);
-            document.SaveAsSvg(fullPath, options);
+        var document = VisioCommandUtilities.ResolveDocument(this, Document, Path);
+        OfficeImageExportResult result = document.ExportImage(OfficeImageExportFormat.Svg, options);
+
+        if (targetPath != null)
+        {
+            VisioCommandUtilities.EnsureDirectory(targetPath);
+            OfficeImageExportResult saved = result.Save(targetPath);
 
             if (Show.IsPresent)
             {
-                FileOpenService.Open(fullPath);
+                FileOpenService.Open(saved.SavedPath!);
             }
 
-            WriteObject(new FileInfo(fullPath));
+            WriteObject(new FileInfo(saved.SavedPath!));
             return;
         }
 
-        WriteObject(document.ToSvg(options));
+        WriteObject(Encoding.UTF8.GetString(result.Bytes));
     }
 }

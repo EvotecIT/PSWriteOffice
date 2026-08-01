@@ -1,5 +1,6 @@
 using System.IO;
 using System.Management.Automation;
+using OfficeIMO.Drawing;
 using OfficeIMO.Visio;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Visio;
@@ -91,8 +92,7 @@ public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = VisioCommandUtilities.ResolveDocument(this, Document, Path);
-        var options = VisioCommandUtilities.BuildPngOptions(
+        var options = VisioCommandUtilities.BuildImageOptions(
             this,
             PageIndex,
             PixelsPerInch,
@@ -105,28 +105,40 @@ public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
             NoStencilArtwork.IsPresent,
             NoConnectorLabels.IsPresent,
             NoConnectorLabelOverlapResolution.IsPresent,
-            Supersampling);
+            Supersampling,
+            includeSvgXmlDeclaration: false);
+
+        string? targetPath = null;
 
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {
-            var fullPath = VisioCommandUtilities.ResolvePath(this, OutputPath!);
-            if (!ShouldProcess(fullPath, "Write Visio PNG"))
+            targetPath = VisioCommandUtilities.ResolveImageOutputPath(
+                this,
+                OutputPath!,
+                OfficeImageExportFormat.Png);
+            if (!ShouldProcess(targetPath, "Write Visio PNG"))
             {
                 return;
             }
+        }
 
-            VisioCommandUtilities.EnsureDirectory(fullPath);
-            document.SaveAsPng(fullPath, options);
+        var document = VisioCommandUtilities.ResolveDocument(this, Document, Path);
+        OfficeImageExportResult result = document.ExportImage(OfficeImageExportFormat.Png, options);
+
+        if (targetPath != null)
+        {
+            VisioCommandUtilities.EnsureDirectory(targetPath);
+            OfficeImageExportResult saved = result.Save(targetPath);
 
             if (Show.IsPresent)
             {
-                FileOpenService.Open(fullPath);
+                FileOpenService.Open(saved.SavedPath!);
             }
 
-            WriteObject(new FileInfo(fullPath));
+            WriteObject(new FileInfo(saved.SavedPath!));
             return;
         }
 
-        WriteObject(document.ToPng(options), enumerateCollection: false);
+        WriteObject(result.Bytes, enumerateCollection: false);
     }
 }

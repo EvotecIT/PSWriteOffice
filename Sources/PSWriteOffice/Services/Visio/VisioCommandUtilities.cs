@@ -30,6 +30,29 @@ internal static class VisioCommandUtilities
         }
     }
 
+    internal static string ResolveImageOutputPath(
+        PSCmdlet cmdlet,
+        string path,
+        OfficeImageExportFormat format)
+    {
+        var resolvedPath = ResolvePath(cmdlet, path);
+        var extension = Path.GetExtension(resolvedPath);
+        if (string.IsNullOrEmpty(extension))
+        {
+            return resolvedPath + format.GetFileExtension();
+        }
+
+        if (!format.HasFileExtension(extension))
+        {
+            throw new PSArgumentException(
+                $"Output path extension '{extension}' does not match the selected {format} format. " +
+                $"Use {format.GetFileExtension()} or omit the extension.",
+                nameof(path));
+        }
+
+        return resolvedPath;
+    }
+
     internal static VisioDocument ResolveDocument(PSCmdlet cmdlet, VisioDocument? document, string? path)
     {
         if (document != null)
@@ -45,37 +68,7 @@ internal static class VisioCommandUtilities
         return VisioDocument.Load(ResolvePath(cmdlet, path!));
     }
 
-    internal static VisioSvgSaveOptions BuildSvgOptions(
-        int pageIndex,
-        double? pixelsPerInch,
-        string? backgroundColor,
-        bool transparent,
-        bool noText,
-        bool noStencilArtwork,
-        bool noConnectorLabels,
-        bool noConnectorLabelOverlapResolution,
-        bool includeXmlDeclaration)
-    {
-        var options = new VisioSvgSaveOptions
-        {
-            PageIndex = pageIndex,
-            RenderText = !noText,
-            RenderStencilArtwork = !noStencilArtwork,
-            RenderConnectorLabels = !noConnectorLabels,
-            ResolveConnectorLabelOverlaps = !noConnectorLabelOverlapResolution,
-            IncludeXmlDeclaration = includeXmlDeclaration
-        };
-
-        if (pixelsPerInch.HasValue)
-        {
-            options.PixelsPerInch = pixelsPerInch.Value;
-        }
-
-        options.BackgroundColor = ResolveBackgroundColor(backgroundColor, transparent);
-        return options;
-    }
-
-    internal static VisioPngSaveOptions BuildPngOptions(
+    internal static VisioImageExportOptions BuildImageOptions(
         PSCmdlet cmdlet,
         int pageIndex,
         double? pixelsPerInch,
@@ -88,9 +81,10 @@ internal static class VisioCommandUtilities
         bool noStencilArtwork,
         bool noConnectorLabels,
         bool noConnectorLabelOverlapResolution,
-        int? supersampling)
+        int? supersampling,
+        bool includeSvgXmlDeclaration)
     {
-        var options = new VisioPngSaveOptions
+        var options = new VisioImageExportOptions
         {
             PageIndex = pageIndex,
             RenderText = !noText,
@@ -99,12 +93,13 @@ internal static class VisioCommandUtilities
             FontCollectionIndex = fontCollectionIndex,
             RenderStencilArtwork = !noStencilArtwork,
             RenderConnectorLabels = !noConnectorLabels,
-            ResolveConnectorLabelOverlaps = !noConnectorLabelOverlapResolution
+            ResolveConnectorLabelOverlaps = !noConnectorLabelOverlapResolution,
+            IncludeSvgXmlDeclaration = includeSvgXmlDeclaration
         };
 
         if (pixelsPerInch.HasValue)
         {
-            options.PixelsPerInch = pixelsPerInch.Value;
+            options.TargetDpi = pixelsPerInch.Value;
         }
 
         if (supersampling.HasValue)
@@ -116,11 +111,11 @@ internal static class VisioCommandUtilities
         return options;
     }
 
-    private static OfficeColor? ResolveBackgroundColor(string? color, bool transparent)
+    private static OfficeColor ResolveBackgroundColor(string? color, bool transparent)
     {
         if (transparent)
         {
-            return null;
+            return OfficeColor.Transparent;
         }
 
         return string.IsNullOrWhiteSpace(color) ? OfficeColor.White : OfficeColor.Parse(color!);
