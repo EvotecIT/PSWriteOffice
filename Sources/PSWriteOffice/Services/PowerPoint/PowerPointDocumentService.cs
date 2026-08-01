@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using OfficeIMO.Drawing;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services;
@@ -87,6 +88,7 @@ public static class PowerPointDocumentService
     public static string SavePresentation(PowerPointPresentation presentation, bool show, string? password = null, string? filePath = null)
     {
         if (presentation == null) throw new ArgumentNullException(nameof(presentation));
+        EnsureExternalPresentationUsesExplicitPersistence(presentation);
         var associatedPath = GetAssociatedPath(presentation);
         if (string.IsNullOrWhiteSpace(filePath) && string.IsNullOrWhiteSpace(associatedPath))
         {
@@ -107,7 +109,7 @@ public static class PowerPointDocumentService
         {
             bool trackedEncryptedSource = Presentations.TryGetValue(presentation, out var association) &&
                 association.Encrypted &&
-                string.Equals(resolvedPath, Path.GetFullPath(associatedPath!), StringComparison.OrdinalIgnoreCase);
+                PathsIdentifySameFile(resolvedPath, Path.GetFullPath(associatedPath!));
             if (trackedEncryptedSource || IsEncryptedTarget(resolvedPath))
             {
                 throw new InvalidOperationException("Provide -Password when saving a presentation loaded from an encrypted package.");
@@ -129,6 +131,8 @@ public static class PowerPointDocumentService
     /// <summary>Closes a presentation, optionally saving and opening it first.</summary>
     public static void ClosePresentation(PowerPointPresentation presentation, bool save, bool show, string? password = null)
     {
+        if (presentation == null) throw new ArgumentNullException(nameof(presentation));
+        EnsureExternalPresentationUsesExplicitPersistence(presentation);
         string? savedPath = null;
         if (save || show)
         {
@@ -165,6 +169,27 @@ public static class PowerPointDocumentService
         }
 
         return OfficeEncryptedPackageService.HasCompoundFileSignature(path);
+    }
+
+    private static void EnsureExternalPresentationUsesExplicitPersistence(
+        PowerPointPresentation presentation)
+    {
+        if (!Presentations.TryGetValue(presentation, out _) &&
+            presentation.PersistenceMode == DocumentPersistenceMode.SaveOnDispose)
+        {
+            throw new InvalidOperationException(
+                "External presentations using SaveOnDispose cannot be managed safely. " +
+                "Create or load the presentation with DocumentPersistenceMode.Explicit before using PSWriteOffice save or close commands.");
+        }
+    }
+
+    private static bool PathsIdentifySameFile(string left, string right)
+    {
+        StringComparison comparison = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
+                                      RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        return string.Equals(Path.GetFullPath(left), Path.GetFullPath(right), comparison);
     }
 
     private static void Track(PowerPointPresentation presentation, string path, bool encrypted)

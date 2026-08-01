@@ -118,6 +118,80 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'rejects external SaveOnDispose presentations before tracking them' {
+        $path = Join-Path $TestDrive 'PowerPointExternalAutoSave.pptx'
+        $presentationType = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType('OfficeIMO.PowerPoint.PowerPointPresentation', $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        $optionsType = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType('OfficeIMO.PowerPoint.PowerPointCreateOptions', $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        $modeType = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType('OfficeIMO.Drawing.DocumentPersistenceMode', $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        $options = [Activator]::CreateInstance($optionsType)
+        $options.PersistenceMode = [Enum]::Parse($modeType, 'SaveOnDispose')
+        $create = $presentationType.GetMethods() | Where-Object {
+            $_.Name -eq 'Create' -and
+            $_.GetParameters().Count -eq 2 -and
+            $_.GetParameters()[0].ParameterType -eq [string]
+        } | Select-Object -First 1
+        $presentation = $create.Invoke($null, [object[]]@([string] $path, $options))
+        try {
+            Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
+
+            { Save-OfficePowerPoint -Presentation $presentation -Path $path -ErrorAction Stop } |
+                Should -Throw '*DocumentPersistenceMode.Explicit*'
+            { Close-OfficePowerPoint -Presentation $presentation -ErrorAction Stop } |
+                Should -Throw '*DocumentPersistenceMode.Explicit*'
+        } finally {
+            $presentation.Dispose()
+        }
+
+        Test-Path -LiteralPath $path | Should -BeTrue
+    }
+
+    It 'treats case-distinct encrypted source paths separately on case-sensitive systems' {
+        if (-not [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+                [System.Runtime.InteropServices.OSPlatform]::Linux)) {
+            return
+        }
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.PowerPoint.PowerPointPresentation' -MethodName 'OpenEncrypted')) {
+            return
+        }
+
+        $sourcePath = Join-Path $TestDrive 'Deck.pptx'
+        $savedAsPath = Join-Path $TestDrive 'deck.pptx'
+        New-OfficePowerPoint -Path $sourcePath -Password 'secret' {
+            PptSlide { PptTitle -Title 'Encrypted source' }
+        }
+
+        $presentation = Get-OfficePowerPoint -FilePath $sourcePath -Password 'secret'
+        try {
+            Save-OfficePowerPoint -Presentation $presentation -Path $savedAsPath
+        } finally {
+            Close-OfficePowerPoint -Presentation $presentation -ErrorAction SilentlyContinue
+        }
+
+        Test-Path -LiteralPath $sourcePath | Should -BeTrue
+        Test-Path -LiteralPath $savedAsPath | Should -BeTrue
+        $encryptedReload = Get-OfficePowerPoint -FilePath $sourcePath -Password 'secret'
+        try {
+            $encryptedReload.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $encryptedReload
+        }
+        $reloaded = Get-OfficePowerPoint -FilePath $savedAsPath
+        try {
+            $reloaded.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
     It 'saves an encrypted presentation through the canonical path writer' {
         if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.PowerPoint.PowerPointPresentation' -MethodName 'OpenEncrypted')) {
             return
