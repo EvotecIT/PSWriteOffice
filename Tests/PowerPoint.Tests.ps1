@@ -181,6 +181,34 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'does not overwrite a different encrypted target from a tracked presentation without a password' {
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.PowerPoint.PowerPointPresentation' -MethodName 'OpenEncrypted')) {
+            return
+        }
+
+        $sourcePath = Join-Path $TestDrive 'TrackedNormalPowerPoint.pptx'
+        $encryptedTarget = Join-Path $TestDrive 'ProtectedPowerPointTarget.pptx'
+        New-OfficePowerPoint -Path $encryptedTarget -Password 'secret' {
+            PptSlide { PptTitle -Title 'Protected target' }
+        }
+
+        $presentation = New-OfficePowerPoint -Path $sourcePath -NoSave
+        try {
+            Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
+            { Save-OfficePowerPoint -Presentation $presentation -Path $encryptedTarget -ErrorAction Stop } |
+                Should -Throw '*Provide -Password*'
+        } finally {
+            Close-OfficePowerPoint -Presentation $presentation -ErrorAction SilentlyContinue
+        }
+
+        $reloaded = Get-OfficePowerPoint -FilePath $encryptedTarget -Password 'secret'
+        try {
+            $reloaded.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
     It 'loads owned inspection sources as explicit read-only presentations' {
         $path = Join-Path $TestDrive 'PowerPointReadOnly.pptx'
         New-OfficePowerPoint -Path $path { PptSlide { PptTitle -Title 'Read only' } } | Out-Null

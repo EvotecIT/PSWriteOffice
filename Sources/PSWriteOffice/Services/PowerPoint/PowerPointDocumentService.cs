@@ -108,7 +108,7 @@ public static class PowerPointDocumentService
             bool trackedEncryptedSource = Presentations.TryGetValue(presentation, out var association) &&
                 association.Encrypted &&
                 string.Equals(resolvedPath, Path.GetFullPath(associatedPath!), StringComparison.OrdinalIgnoreCase);
-            if (trackedEncryptedSource || IsExternalEncryptedTarget(presentation, resolvedPath))
+            if (trackedEncryptedSource || IsEncryptedTarget(resolvedPath))
             {
                 throw new InvalidOperationException("Provide -Password when saving a presentation loaded from an encrypted package.");
             }
@@ -150,13 +150,8 @@ public static class PowerPointDocumentService
         }
     }
 
-    private static bool IsExternalEncryptedTarget(PowerPointPresentation presentation, string path)
+    private static bool IsEncryptedTarget(string path)
     {
-        if (Presentations.TryGetValue(presentation, out _))
-        {
-            return false;
-        }
-
         string extension = Path.GetExtension(path);
         if (!extension.Equals(".pptx", StringComparison.OrdinalIgnoreCase) &&
             !extension.Equals(".pptm", StringComparison.OrdinalIgnoreCase) &&
