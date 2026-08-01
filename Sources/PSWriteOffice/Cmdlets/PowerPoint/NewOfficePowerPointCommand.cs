@@ -111,6 +111,8 @@ public class NewOfficePowerPointCommand : PSCmdlet
 
             SavePdfIfRequested(presentation);
             PowerPointDocumentService.SavePresentation(presentation, Open.IsPresent, Password);
+            PowerPointDocumentService.ClosePresentation(presentation, save: false, show: false);
+            presentation = null;
 
             if (PassThru.IsPresent)
             {
@@ -119,7 +121,10 @@ public class NewOfficePowerPointCommand : PSCmdlet
         }
         catch (Exception ex)
         {
-            presentation?.Dispose();
+            if (presentation != null)
+            {
+                PowerPointDocumentService.ClosePresentation(presentation, save: false, show: false);
+            }
             WriteError(new ErrorRecord(ex, "PowerPointCreateFailed", ErrorCategory.InvalidOperation, FilePath));
         }
     }

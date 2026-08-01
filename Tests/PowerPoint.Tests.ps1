@@ -68,6 +68,97 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'saves an external OfficeIMO presentation without closing it and supports save as' {
+        $savedAsPath = Join-Path $TestDrive 'PowerPointExternal.Copy.pptx'
+        $seedPath = Join-Path $TestDrive 'PowerPointTypeSeed.pptx'
+        $seed = New-OfficePowerPoint -FilePath $seedPath -NoSave
+        $presentationType = $seed.GetType()
+        Close-OfficePowerPoint -Presentation $seed
+        $create = $presentationType.GetMethods() |
+            Where-Object { $_.Name -eq 'Create' -and $_.GetParameters().Count -eq 0 } |
+            Select-Object -First 1
+        $presentation = $create.Invoke($null, @())
+        try {
+            Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
+
+            $returned = Save-OfficePowerPoint -Presentation $presentation -Path $savedAsPath -PassThru
+            [object]::ReferenceEquals($presentation, $returned) | Should -BeTrue
+            Test-Path -LiteralPath $savedAsPath | Should -BeTrue
+
+            Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
+            Save-OfficePowerPoint -Presentation $presentation
+            $presentation.Slides.Count | Should -Be 2
+        } finally {
+            if ($presentation) {
+                Close-OfficePowerPoint -Presentation $presentation -ErrorAction SilentlyContinue
+            }
+        }
+
+        $reloaded = Get-OfficePowerPoint -FilePath $savedAsPath
+        try {
+            $reloaded.Slides.Count | Should -Be 2
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
+    It 'saves an encrypted presentation through the canonical path writer' {
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.PowerPoint.PowerPointPresentation' -MethodName 'OpenEncrypted')) {
+            return
+        }
+
+        $sourcePath = Join-Path $TestDrive 'EncryptedPowerPointSource.pptx'
+        $savedAsPath = Join-Path (Join-Path $TestDrive 'encrypted-output') 'EncryptedPowerPoint.Copy.pptx'
+        $presentation = New-OfficePowerPoint -Path $sourcePath -NoSave
+        try {
+            Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
+            Save-OfficePowerPoint -Presentation $presentation -Path $savedAsPath -Password 'secret'
+            Test-Path -LiteralPath $savedAsPath | Should -BeTrue
+        } finally {
+            Close-OfficePowerPoint -Presentation $presentation
+        }
+
+        $reloaded = Get-OfficePowerPoint -FilePath $savedAsPath -Password 'secret'
+        try {
+            $reloaded.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
+    It 'loads owned inspection sources as explicit read-only presentations' {
+        $path = Join-Path $TestDrive 'PowerPointReadOnly.pptx'
+        New-OfficePowerPoint -Path $path { PptSlide { PptTitle -Title 'Read only' } } | Out-Null
+
+        $presentation = [PSWriteOffice.Services.PowerPoint.PowerPointDocumentService]::LoadPresentation($path, $null, $true)
+        try {
+            $presentation.AccessMode.ToString() | Should -Be 'ReadOnly'
+            $presentation.PersistenceMode.ToString() | Should -Be 'Explicit'
+        } finally {
+            [PSWriteOffice.Services.PowerPoint.PowerPointDocumentService]::ClosePresentation($presentation, $false, $false)
+        }
+    }
+
+    It 'preserves the existing PowerPoint service method signatures' {
+        $serviceType = [PSWriteOffice.Services.PowerPoint.PowerPointDocumentService]
+        $load = $serviceType.GetMethods() | Where-Object {
+            $_.Name -eq 'LoadPresentation' -and
+            $_.GetParameters().Count -eq 2 -and
+            $_.GetParameters()[0].ParameterType -eq [string] -and
+            $_.GetParameters()[1].ParameterType -eq [string]
+        }
+        $save = $serviceType.GetMethods() | Where-Object {
+            $_.Name -eq 'SavePresentation' -and
+            $_.GetParameters().Count -eq 3 -and
+            $_.GetParameters()[1].ParameterType -eq [bool] -and
+            $_.GetParameters()[2].ParameterType -eq [string]
+        }
+
+        $load | Should -HaveCount 1
+        $save | Should -HaveCount 1
+        $save.ReturnType | Should -Be ([void])
+    }
+
     It 'round-trips encrypted presentations through lifecycle cmdlets' {
         if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.PowerPoint.PowerPointPresentation' -MethodName 'OpenEncrypted')) {
             (Get-Command New-OfficePowerPoint).Parameters.Keys | Should -Contain 'Password'

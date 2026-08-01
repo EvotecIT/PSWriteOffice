@@ -55,17 +55,17 @@ internal static class OfficeEncryptedPackageService
         }
     }
 
-    public static PowerPointPresentation OpenPowerPoint(string path, string password)
+    public static PowerPointPresentation OpenPowerPoint(string path, string password, bool readOnly = false)
     {
         return PowerPointPresentation.LoadEncrypted(path, password, new PowerPointLoadOptions
         {
-            AccessMode = DocumentAccessMode.ReadWrite,
+            AccessMode = readOnly ? DocumentAccessMode.ReadOnly : DocumentAccessMode.ReadWrite,
             PersistenceMode = DocumentPersistenceMode.Explicit
         });
     }
 
-    public static void SavePowerPoint(PowerPointPresentation presentation, Stream stream, string password)
+    public static void SavePowerPoint(PowerPointPresentation presentation, string path, string password)
     {
-        presentation.SaveEncrypted(stream, password);
+        presentation.SaveEncrypted(path, password);
     }
 }

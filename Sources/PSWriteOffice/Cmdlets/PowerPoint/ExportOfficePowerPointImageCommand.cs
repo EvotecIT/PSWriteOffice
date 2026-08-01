@@ -51,7 +51,7 @@ public sealed class ExportOfficePowerPointImageCommand : PSCmdlet
             if (ParameterSetName == "Path")
             {
                 var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-                owned = PowerPointDocumentService.LoadPresentation(input);
+                owned = PowerPointDocumentService.LoadPresentation(input, readOnly: true);
                 presentation = owned;
             }
             IReadOnlyList<OfficeImageExportResult> results = presentation.SaveAsImages(output, Format, Options);
