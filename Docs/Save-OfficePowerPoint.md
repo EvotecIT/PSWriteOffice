@@ -6,16 +6,16 @@ schema: 2.0.0
 ---
 # Save-OfficePowerPoint
 ## SYNOPSIS
-Saves a presentation to disk.
+Saves a presentation without disposing it.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficePowerPoint -Presentation <PowerPointPresentation> [-Show] [-Password <string>] [-PdfPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficePowerPoint -Presentation <PowerPointPresentation> [-Path <string>] [-Show] [-Password <string>] [-PdfPath <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Invokes the PowerPoint service to persist the document and optionally launch it.
+Use Close-OfficePowerPoint -Save when the presentation should be saved and closed.
 
 ## EXAMPLES
 
@@ -31,20 +31,52 @@ Saves the current presentation and exports a PDF sidecar.
 
 ## PARAMETERS
 
+### -PassThru
+Emit the still-open presentation for further processing.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases:
+Possible values:
+
+Required: False
+Position: named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Password
 Password used to save the presentation as an encrypted package.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases:
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
+```
+
+### -Path
+Optional save-as path.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
 ```
 
 ### -PdfPath
@@ -53,14 +85,14 @@ Optional PDF path to create from the same presentation.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases:
 Possible values:
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Presentation
@@ -69,14 +101,14 @@ Presentation instance to save.
 ```yaml
 Type: PowerPointPresentation
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases:
 Possible values:
 
 Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Show
@@ -85,14 +117,14 @@ Launch the saved file in the default viewer.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases:
 Possible values:
 
 Required: False
 Position: named
-Default value: None
+Default value: False
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -104,7 +136,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## RELATED LINKS
 

@@ -9,6 +9,26 @@ namespace PSWriteOffice.Services;
 
 internal static class OfficeEncryptedPackageService
 {
+    internal static bool HasCompoundFileSignature(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return false;
+        }
+
+        byte[] signature = new byte[8];
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+        if (stream.Read(signature, 0, signature.Length) != signature.Length)
+        {
+            return false;
+        }
+
+        return signature[0] == 0xD0 && signature[1] == 0xCF &&
+            signature[2] == 0x11 && signature[3] == 0xE0 &&
+            signature[4] == 0xA1 && signature[5] == 0xB1 &&
+            signature[6] == 0x1A && signature[7] == 0xE1;
+    }
+
     public static ExcelDocument LoadExcel(string path, string password, bool readOnly, bool autoSave)
     {
         if (autoSave)

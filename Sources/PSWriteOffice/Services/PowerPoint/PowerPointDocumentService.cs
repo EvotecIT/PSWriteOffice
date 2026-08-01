@@ -97,8 +97,10 @@ public static class PowerPointDocumentService
         }
         else
         {
-            if (Presentations.TryGetValue(presentation, out var association) && association.Encrypted &&
-                string.Equals(resolvedPath, Path.GetFullPath(associatedPath!), StringComparison.OrdinalIgnoreCase))
+            bool trackedEncryptedSource = Presentations.TryGetValue(presentation, out var association) &&
+                association.Encrypted &&
+                string.Equals(resolvedPath, Path.GetFullPath(associatedPath!), StringComparison.OrdinalIgnoreCase);
+            if (trackedEncryptedSource || IsExternalEncryptedTarget(presentation, resolvedPath))
             {
                 throw new InvalidOperationException("Provide -Password when saving a presentation loaded from an encrypted package.");
             }
@@ -119,9 +121,10 @@ public static class PowerPointDocumentService
     /// <summary>Closes a presentation, optionally saving and opening it first.</summary>
     public static void ClosePresentation(PowerPointPresentation presentation, bool save, bool show, string? password = null)
     {
+        string? savedPath = null;
         if (save || show)
         {
-            SavePresentation(presentation, show, password);
+            savedPath = SavePresentation(presentation, show: false, password, filePath: null);
         }
 
         try
@@ -132,6 +135,33 @@ public static class PowerPointDocumentService
         {
             Presentations.Remove(presentation);
         }
+
+        if (show && savedPath != null)
+        {
+            FileOpenService.Open(savedPath);
+        }
+    }
+
+    private static bool IsExternalEncryptedTarget(PowerPointPresentation presentation, string path)
+    {
+        if (Presentations.TryGetValue(presentation, out _))
+        {
+            return false;
+        }
+
+        string extension = Path.GetExtension(path);
+        if (!extension.Equals(".pptx", StringComparison.OrdinalIgnoreCase) &&
+            !extension.Equals(".pptm", StringComparison.OrdinalIgnoreCase) &&
+            !extension.Equals(".potx", StringComparison.OrdinalIgnoreCase) &&
+            !extension.Equals(".potm", StringComparison.OrdinalIgnoreCase) &&
+            !extension.Equals(".ppsx", StringComparison.OrdinalIgnoreCase) &&
+            !extension.Equals(".ppsm", StringComparison.OrdinalIgnoreCase) &&
+            !extension.Equals(".ppam", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return OfficeEncryptedPackageService.HasCompoundFileSignature(path);
     }
 
     private static void Track(PowerPointPresentation presentation, string path, bool encrypted)

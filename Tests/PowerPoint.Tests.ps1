@@ -126,6 +126,45 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'does not overwrite an externally loaded encrypted presentation without a password' {
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.PowerPoint.PowerPointPresentation' -MethodName 'LoadEncrypted')) {
+            return
+        }
+
+        $sourcePath = Join-Path $TestDrive 'EncryptedExternalPowerPoint.pptx'
+        New-OfficePowerPoint -Path $sourcePath -Password 'secret' {
+            PptSlide { PptTitle -Title 'Encrypted external deck' }
+        }
+
+        $presentationType = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType('OfficeIMO.PowerPoint.PowerPointPresentation', $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        $loadEncrypted = $presentationType.GetMethods() | Where-Object {
+            $_.Name -eq 'LoadEncrypted' -and
+            $_.GetParameters().Count -eq 3 -and
+            $_.GetParameters()[0].ParameterType -eq [string] -and
+            $_.GetParameters()[1].ParameterType -eq [string]
+        } | Select-Object -First 1
+        $presentation = $loadEncrypted.Invoke(
+            $null,
+            [object[]]@([string] $sourcePath, [string] 'secret', $null))
+        try {
+            { Save-OfficePowerPoint -Presentation $presentation -Path $sourcePath -ErrorAction Stop } |
+                Should -Throw '*Provide -Password*'
+            Save-OfficePowerPoint -Presentation $presentation -Path $sourcePath -Password 'secret'
+        } finally {
+            Close-OfficePowerPoint -Presentation $presentation -ErrorAction SilentlyContinue
+        }
+
+        $reloaded = Get-OfficePowerPoint -FilePath $sourcePath -Password 'secret'
+        try {
+            $reloaded.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
     It 'loads owned inspection sources as explicit read-only presentations' {
         $path = Join-Path $TestDrive 'PowerPointReadOnly.pptx'
         New-OfficePowerPoint -Path $path { PptSlide { PptTitle -Title 'Read only' } } | Out-Null

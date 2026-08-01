@@ -3,6 +3,7 @@ using System.IO;
 using System.Management.Automation;
 using OfficeIMO.PowerPoint;
 using OfficeIMO.PowerPoint.Pdf;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.PowerPoint;
 
@@ -110,9 +111,18 @@ public class NewOfficePowerPointCommand : PSCmdlet
             }
 
             SavePdfIfRequested(presentation);
-            PowerPointDocumentService.SavePresentation(presentation, Open.IsPresent, Password);
+            var savedPath = PowerPointDocumentService.SavePresentation(
+                presentation,
+                show: false,
+                Password,
+                filePath: null);
             PowerPointDocumentService.ClosePresentation(presentation, save: false, show: false);
             presentation = null;
+
+            if (Open.IsPresent)
+            {
+                FileOpenService.Open(savedPath);
+            }
 
             if (PassThru.IsPresent)
             {
