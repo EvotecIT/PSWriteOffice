@@ -77207,6 +77207,241 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>Export-OfficeVisioImage</command:name>
+      <command:verb>Export</command:verb>
+      <command:noun>OfficeVisioImage</command:noun>
+      <maml:description>
+        <maml:para>Exports selected Visio pages through the format-neutral OfficeIMO image pipeline.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Exports selected Visio pages through the format-neutral OfficeIMO image pipeline.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="Path">
+        <maml:name>Export-OfficeVisioImage</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>Output image format.</maml:para>
+            <maml:para>Possible values: Png, Svg, Jpeg, Tiff, Webp</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeImageExportFormat</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Png</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Optional page selection, size, concurrency, and rendering settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisioImageExportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>VisioImageExportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Destination folder.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Path to a Visio document.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Document">
+        <maml:name>Export-OfficeVisioImage</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
+          <maml:name>Document</maml:name>
+          <maml:description>
+            <maml:para>Open Visio document instance.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">VisioDocument</command:parameterValue>
+          <dev:type>
+            <maml:name>VisioDocument</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>Output image format.</maml:para>
+            <maml:para>Possible values: Png, Svg, Jpeg, Tiff, Webp</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeImageExportFormat</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Png</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Optional page selection, size, concurrency, and rendering settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">VisioImageExportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>VisioImageExportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Destination folder.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
+        <maml:name>Document</maml:name>
+        <maml:description>
+          <maml:para>Open Visio document instance.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">VisioDocument</command:parameterValue>
+        <dev:type>
+          <maml:name>VisioDocument</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Format</maml:name>
+        <maml:description>
+          <maml:para>Output image format.</maml:para>
+          <maml:para>Possible values: Png, Svg, Jpeg, Tiff, Webp</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeImageExportFormat</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>Png</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Optional page selection, size, concurrency, and rendering settings.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">VisioImageExportOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>VisioImageExportOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Destination folder.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Path to a Visio document.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>OfficeIMO.Visio.VisioDocument</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Drawing.OfficeImageExportResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>----------  Example 1: Export every page as PNG.  ----------</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Export-OfficeVisioImage -Path .\diagram.vsdx -OutputPath .\Images -Format Png</dev:code>
+        <dev:remarks>
+          <maml:para>Writes one PNG per selected page and returns one result object per file.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>Export-OfficeVisioStencilPreviewGallery</command:name>
       <command:verb>Export</command:verb>
       <command:noun>OfficeVisioStencilPreviewGallery</command:noun>
