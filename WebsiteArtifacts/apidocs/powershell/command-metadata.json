@@ -1268,10 +1268,12 @@
     {
       "name": "Add-OfficeWordTableOfContents",
       "kind": "Cmdlet",
-      "aliases": [],
+      "aliases": [
+        "WordTableOfContents"
+      ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentsCommand.cs",
-      "sourceLine": 24,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentsCommand.cs#L24"
+      "sourceLine": 25,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTableOfContentsCommand.cs#L25"
     },
     {
       "name": "Add-OfficeWordTableRow",

@@ -23,7 +23,7 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
 
     /// <summary>Optional section break type.</summary>
     [Parameter]
-    public SectionMarkValues? BreakType { get; set; }
+    public WordSectionBreakType? BreakType { get; set; }
 
     /// <summary>Emit the created <see cref="WordSection"/>.</summary>
     [Parameter]
@@ -33,7 +33,7 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);
-        var section = context.AcquireSection(BreakType);
+        var section = context.AcquireSection(ToSectionMark(BreakType));
 
         using (context.Push(section))
         {
@@ -45,4 +45,15 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
             WriteObject(section);
         }
     }
+
+    private static SectionMarkValues? ToSectionMark(WordSectionBreakType? breakType) => breakType switch
+    {
+        null => null,
+        WordSectionBreakType.NextPage => SectionMarkValues.NextPage,
+        WordSectionBreakType.NextColumn => SectionMarkValues.NextColumn,
+        WordSectionBreakType.Continuous => SectionMarkValues.Continuous,
+        WordSectionBreakType.EvenPage => SectionMarkValues.EvenPage,
+        WordSectionBreakType.OddPage => SectionMarkValues.OddPage,
+        _ => throw new PSArgumentOutOfRangeException(nameof(BreakType), breakType, "Unsupported Word section break type.")
+    };
 }

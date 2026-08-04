@@ -20,6 +20,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <para>Creates a navigable report outline and marks the TOC for refresh when the document opens.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordTableOfContents")]
+[Alias("WordTableOfContents")]
 [OutputType(typeof(WordTableOfContent))]
 public sealed class AddOfficeWordTableOfContentsCommand : PSCmdlet
 {

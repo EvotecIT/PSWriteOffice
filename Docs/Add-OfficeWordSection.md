@@ -11,7 +11,7 @@ Adds or reuses a section inside the current Word document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordSection [[-Content] <scriptblock>] [-BreakType <SectionMarkValues>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordSection [[-Content] <scriptblock>] [-BreakType <WordSectionBreakType>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,10 +32,10 @@ Creates a document and inserts a section that contains a single paragraph.
 Optional section break type.
 
 ```yaml
-Type: Nullable`1
+Type: WordSectionBreakType
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: NextPage, NextColumn, Continuous, EvenPage, OddPage
 
 Required: False
 Position: named

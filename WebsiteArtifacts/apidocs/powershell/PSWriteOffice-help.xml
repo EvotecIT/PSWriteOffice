@@ -44895,9 +44895,16 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
           <maml:description>
             <maml:para>Optional section break type.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordSectionBreakType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">NextPage</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">NextColumn</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Continuous</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">EvenPage</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OddPage</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordSectionBreakType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -44934,9 +44941,16 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <maml:description>
           <maml:para>Optional section break type.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordSectionBreakType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">NextPage</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">NextColumn</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Continuous</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">EvenPage</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OddPage</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordSectionBreakType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>

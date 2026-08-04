@@ -388,6 +388,7 @@ Describe 'Word DSL surface' {
         )
 
         New-OfficeWord -Path $path {
+            WordTableOfContents -Style Template1
             WordSection {
                 WordParagraph { WordText 'Alias smoke' }
                 WordList {
@@ -401,6 +402,39 @@ Describe 'Word DSL surface' {
         }
 
         Test-Path $path | Should -BeTrue
+        (Get-Command WordNew).ResolvedCommandName | Should -Be 'New-OfficeWord'
+        (Get-Command WordCheckBox).ResolvedCommandName | Should -Be 'Add-OfficeWordCheckBox'
+        (Get-Command WordDatePicker).ResolvedCommandName | Should -Be 'Add-OfficeWordDatePicker'
+        (Get-Command WordDropDownList).ResolvedCommandName | Should -Be 'Add-OfficeWordDropDownList'
+        (Get-Command WordTableCondition).ResolvedCommandName | Should -Be 'Add-OfficeWordTableCondition'
+        (Get-Command WordTableOfContents).ResolvedCommandName | Should -Be 'Add-OfficeWordTableOfContents'
+        (Get-Command WordSection).ResolvedCommandName | Should -Be 'Add-OfficeWordSection'
+    }
+
+    It 'creates multiple continuous sections from a PowerShell-friendly break type' {
+        $path = Join-Path $TestDrive 'DslContinuousSections.docx'
+
+        New-OfficeWord -Path $path {
+            1..8 | ForEach-Object {
+                Add-OfficeWordSection {
+                    Add-OfficeWordParagraph -Text "Section $_"
+                } -BreakType Continuous
+            }
+        }
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.Sections.Count | Should -Be 8
+        } finally {
+            $document.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+        $continuousBreaks = $documentXml.SelectNodes("//w:sectPr/w:type[@w:val='continuous']", $namespaceManager)
+
+        @($continuousBreaks).Count | Should -Be 7
     }
 
     It 'supports paragraphs, lists, images, and nested tables inside table cells' {
