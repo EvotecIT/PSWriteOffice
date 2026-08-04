@@ -124,7 +124,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
 
     /// <summary>Load mode controlling materialization.</summary>
     [Parameter]
-    public CsvLoadMode Mode { get; set; } = CsvLoadMode.Stream;
+    public CsvReadMode Mode { get; set; } = CsvReadMode.Stream;
 
     /// <summary>Culture used for type conversions.</summary>
     [Parameter]
@@ -166,10 +166,10 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
         var csvText = _textInput.ToString();
 
         _rowWriter.Reset();
-        if (Mode == CsvLoadMode.Stream && !RequiresMaterializedRows())
+        if (Mode == CsvReadMode.Stream)
         {
-            using var reader = new StringReader(csvText);
-            CsvDocument.ReadRowsReusable(reader, WriteRow, options);
+            using var reader = CsvDocument.OpenTextDataReader(csvText, options);
+            _rowWriter.WriteDataReaderRows(reader, _asHashtable, this);
             return;
         }
 
@@ -210,8 +210,7 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
             DuplicateHeaderBehavior = CsvDuplicateHeaderBehavior.Throw,
-            ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
-            Mode = Mode
+            ColumnCountMismatchPolicy = ColumnCountMismatchPolicy
         };
 
         CsvPowerShellOptionBuilder.ApplyTextLoadOptions(
@@ -230,12 +229,4 @@ public sealed class ConvertFromOfficeCsvCommand : PSCmdlet
         return options;
     }
 
-    private bool RequiresMaterializedRows() =>
-        NullValue != null ||
-        StaticColumns is { Count: > 0 };
-
-    private void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row)
-    {
-        _rowWriter.WriteRow(header, row, _asHashtable, this);
-    }
 }

@@ -113,23 +113,27 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
     {
         var count = 0;
         var range = string.IsNullOrWhiteSpace(Range) ? sheet.GetUsedRangeA1() : Range!;
-        using var reader = document.CreateReader();
-        var sheetReader = reader.GetSheet(sheet.Name);
-        foreach (var cell in sheetReader.EnumerateRange(range))
+        var (firstRow, firstColumn, lastRow, lastColumn) = A1.ParseRange(range);
+        for (var row = firstRow; row <= lastRow; row++)
         {
-            if (cell.Value is not string text)
+            for (var column = firstColumn; column <= lastColumn; column++)
             {
-                continue;
-            }
+                if (!sheet.TryGetCellValueSnapshot(row, column, out var snapshot) ||
+                    snapshot?.Kind != ExcelCellValueKind.Text)
+                {
+                    continue;
+                }
 
-            var updated = ReplaceString(text, out var cellReplacements);
-            if (cellReplacements == 0)
-            {
-                continue;
-            }
+                var text = snapshot.Text;
+                var updated = ReplaceString(text, out var cellReplacements);
+                if (cellReplacements == 0)
+                {
+                    continue;
+                }
 
-            sheet.CellValue(cell.Row, cell.Column, updated);
-            count += cellReplacements;
+                sheet.CellValue(row, column, updated);
+                count += cellReplacements;
+            }
         }
 
         return count;

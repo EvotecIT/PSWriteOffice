@@ -739,8 +739,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             DelimiterText = DelimiterText,
             Encoding = Encoding ?? _appendEncoding,
             Culture = Culture ?? CultureInfo.InvariantCulture,
-            CompressionType = CompressionType,
-            Mode = CsvLoadMode.Stream
+            CompressionType = CompressionType
         };
 
         return CsvDocument.Load(path, options).Header.ToArray();

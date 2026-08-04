@@ -182,7 +182,7 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         PdfCommandUtilities.EnsureDirectory(pdfPath);
         if (PdfAllowSystemFontEmbedding.IsPresent || !string.IsNullOrWhiteSpace(PdfFontFamily))
         {
-            var pdfOptions = new PdfSaveOptions
+            var pdfOptions = new WordPdfSaveOptions
             {
                 FontFamily = PdfFontFamily
             };

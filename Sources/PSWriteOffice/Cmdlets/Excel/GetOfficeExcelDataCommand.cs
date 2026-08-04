@@ -1,15 +1,15 @@
 using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Drawing;
 using OfficeIMO.Excel;
-using OfficeIMO.Excel.Fluent;
 using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
 /// <summary>Reads worksheet data as dictionaries or PSCustomObjects.</summary>
-/// <para>Uses the first row as headers and materializes rows via the OfficeIMO Excel fluent reader.</para>
+/// <para>Uses the first row as headers and streams rows through the OfficeIMO Excel data reader.</para>
 /// <example>
 ///   <summary>Read the used range as PSCustomObjects.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -72,26 +72,24 @@ public sealed class GetOfficeExcelDataCommand : PSCmdlet
 
         try
         {
-            var fluent = document.Read();
-            ExcelFluentReadSheet sheetScope = string.IsNullOrWhiteSpace(Sheet)
-                ? fluent.Sheet(0)
-                : fluent.Sheet(Sheet!);
-
-            ExcelFluentReadRange rangeScope = string.IsNullOrWhiteSpace(Range)
-                ? sheetScope.UsedRange()
-                : sheetScope.Range(Range!);
-
-            if (NumericAsDecimal.IsPresent)
+            var options = new ExcelReadOptions
             {
-                rangeScope.NumericAsDecimal();
-            }
+                SheetName = string.IsNullOrWhiteSpace(Sheet) ? null : Sheet,
+                SheetIndex = string.IsNullOrWhiteSpace(Sheet) ? 0 : null,
+                A1Range = string.IsNullOrWhiteSpace(Range) ? null : Range,
+                HasHeaderRow = true,
+                NumericAsDecimal = NumericAsDecimal.IsPresent
+            };
 
             var prevalidatedOutputProperties = false;
-            foreach (var row in rangeScope.AsRows())
+            using var reader = document.CreateDataReader(options);
+            while (reader.Read())
             {
-                if (row == null)
+                var row = new Dictionary<string, object?>(reader.FieldCount, StringComparer.OrdinalIgnoreCase);
+                for (var field = 0; field < reader.FieldCount; field++)
                 {
-                    continue;
+                    var value = reader.GetValue(field);
+                    row[reader.GetName(field)] = value == DBNull.Value ? null : value;
                 }
 
                 if (AsHashtable.IsPresent)

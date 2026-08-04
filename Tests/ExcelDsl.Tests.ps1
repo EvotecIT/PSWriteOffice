@@ -3631,8 +3631,8 @@ Describe 'Excel DSL surface' {
     It 'finds, replaces, and edits Excel row values' {
         $path = Join-Path $TestDrive 'ExcelFindReplaceEditRows.xlsx'
         $rows = @(
-            [PSCustomObject]@{ Name = 'Ada'; Status = 'Draft' }
-            [PSCustomObject]@{ Name = 'Grace'; Status = 'Draft' }
+            [PSCustomObject]@{ Name = 'Ada'; Status = 'Draft'; Score = 12 }
+            [PSCustomObject]@{ Name = 'Grace'; Status = 'Draft'; Score = 21 }
         )
 
         New-OfficeExcel -Path $path {
@@ -3642,7 +3642,12 @@ Describe 'Excel DSL surface' {
         }
 
         @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text 'Draft').Count | Should -Be 2
+        $numericMatch = @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text '12' -Exact)
+        $numericMatch.Count | Should -Be 1
+        $numericMatch[0].Value | Should -BeOfType ([double])
+        $numericMatch[0].Value | Should -Be 12
         Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue 'Draft' -NewValue 'Ready' | Should -Be 2
+        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue '12' -NewValue 'Twelve' | Should -Be 0
         Edit-OfficeExcelRow -Path $path -Sheet 'Data' -ScriptBlock {
             param($row)
             if ($row.CellByHeader('Name').Value -eq 'Ada') {
@@ -3650,9 +3655,10 @@ Describe 'Excel DSL surface' {
             }
         }
 
-        $updated = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:B3')
+        $updated = @(Import-OfficeExcel -Path $path -WorksheetName 'Data' -Range 'A1:C3')
         $updated[0].Status | Should -Be 'Done'
         $updated[1].Status | Should -Be 'Ready'
+        $updated[0].Score | Should -Be 12
         @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text '^Done$' -Regex).Count | Should -Be 1
     }
 

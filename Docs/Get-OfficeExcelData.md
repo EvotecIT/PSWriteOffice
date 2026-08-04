@@ -15,7 +15,7 @@ Get-OfficeExcelData [[-Path] <string>] [-Document <ExcelDocument>] [-Sheet <stri
 ```
 
 ## DESCRIPTION
-Uses the first row as headers and materializes rows via the OfficeIMO Excel fluent reader.
+Uses the first row as headers and materializes rows via the OfficeIMO Excel data reader.
 
 ## EXAMPLES
 

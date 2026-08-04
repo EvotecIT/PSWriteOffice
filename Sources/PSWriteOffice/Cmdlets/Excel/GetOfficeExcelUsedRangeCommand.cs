@@ -73,19 +73,19 @@ public sealed class GetOfficeExcelUsedRangeCommand : AsyncPSCmdlet
     protected override async Task ProcessRecordAsync()
     {
         var options = ExcelReadOutputService.CreateOptions(NumericAsDecimal.IsPresent);
-        using var reader = await CreateReaderAsync(options).ConfigureAwait(false);
-        var sheetReader = ExcelReadOutputService.ResolveSheetReader(reader, Sheet, SheetIndex);
-        var usedRange = sheetReader.GetUsedRangeA1();
-        var table = sheetReader.ReadRangeAsDataTable(usedRange, HeadersInFirstRow);
+        options.CancellationToken = CancelToken;
+        ExcelReadOutputService.ConfigureSelection(options, Sheet, SheetIndex ?? (Sheet == null ? 0 : null), null, HeadersInFirstRow);
+        using var reader = await CreateDataReaderAsync(options).ConfigureAwait(false);
+        var table = ExcelReadOutputService.ReadCurrentResultAsDataTable(reader);
 
         ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent);
     }
 
-    private async Task<ExcelDocumentReader> CreateReaderAsync(ExcelReadOptions options)
+    private async Task<ExcelWorkbookDataReader> CreateDataReaderAsync(ExcelReadOptions options)
     {
         if (ParameterSetName == ParameterSetDocument)
         {
-            return Document.CreateReader(options);
+            return Document.CreateDataReader(options);
         }
 
         if (ParameterSetName == ParameterSetUri)
@@ -95,7 +95,7 @@ public sealed class GetOfficeExcelUsedRangeCommand : AsyncPSCmdlet
                 throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
             }
 
-            return await ExcelDocumentReader.OpenAsync(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp), CancelToken)
+            return await ExcelDocument.OpenDataReaderAsync(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp), CancelToken)
                 .ConfigureAwait(false);
         }
 
@@ -105,6 +105,6 @@ public sealed class GetOfficeExcelUsedRangeCommand : AsyncPSCmdlet
             throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
-        return ExcelDocumentReader.Open(resolvedPath, options);
+        return ExcelDocument.OpenDataReader(resolvedPath, options);
     }
 }

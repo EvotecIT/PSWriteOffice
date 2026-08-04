@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
 using OfficeIMO.Excel;
@@ -70,15 +71,31 @@ public sealed class FindOfficeExcelCommand : PSCmdlet
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
             var range = string.IsNullOrWhiteSpace(Range) ? sheet.GetUsedRangeA1() : Range!;
-            using var reader = document.CreateReader();
-            var sheetReader = reader.GetSheet(sheet.Name);
-            foreach (var cell in sheetReader.EnumerateRange(range))
+            var (firstRow, firstColumn, _, _) = A1.ParseRange(range);
+            var options = new ExcelReadOptions
             {
-                var cellText = Convert.ToString(cell.Value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
-                if (IsMatch(cellText))
+                SheetName = sheet.Name,
+                A1Range = range,
+                HasHeaderRow = false
+            };
+
+            using var reader = document.CreateDataReader(options);
+            var row = firstRow;
+            while (reader.Read())
+            {
+                for (var fieldIndex = 0; fieldIndex < reader.FieldCount; fieldIndex++)
                 {
-                    WriteObject(CreateRecord(sheet.Name, cell.Row, cell.Column, cell.Value));
+                    var value = reader.IsDBNull(fieldIndex) ? null : reader.GetValue(fieldIndex);
+                    var cellText = Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty;
+                    if (!IsMatch(cellText))
+                    {
+                        continue;
+                    }
+
+                    WriteObject(CreateRecord(sheet.Name, row, firstColumn + fieldIndex, value));
                 }
+
+                row++;
             }
         }
     }

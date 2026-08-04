@@ -170,7 +170,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Excel.RowEdit`
+- `PSWriteOffice.Services.Excel.ExcelPowerShellRowEdit`: Header-aware editable worksheet row used by Edit-OfficeExcelRow.
 
 ## RELATED LINKS
 

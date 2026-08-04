@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
@@ -252,7 +253,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetLiteralPathDelimiter)]
     [Parameter(ParameterSetName = ParameterSetLiteralPathCulture)]
     [Parameter(ParameterSetName = ParameterSetLiteralPathDetect)]
-    public CsvLoadMode Mode { get; set; } = CsvLoadMode.Stream;
+    public CsvReadMode Mode { get; set; } = CsvReadMode.Stream;
 
     /// <summary>Culture used for type conversions.</summary>
     [Parameter(ParameterSetName = ParameterSetPathDelimiter)]
@@ -383,7 +384,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                     throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
                 }
 
-                if (Mode == CsvLoadMode.Stream && !RequiresMaterializedRows())
+                if (Mode == CsvReadMode.Stream && !RequiresMaterializedRows())
                 {
                     _rowWriter.Reset();
                     _parseErrors.Clear();
@@ -395,16 +396,10 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
                     {
                         WriteDataTable(resolved, options, System.IO.Path.GetFileNameWithoutExtension(resolved));
                     }
-#if NET8_0_OR_GREATER
-                    else if (!_asHashtable && !NormalizeQuotes.IsPresent && !InternStrings.IsPresent)
-                    {
-                        var visitor = new CsvPowerShellRowSpanVisitor(_rowWriter, this);
-                        CsvDocument.ReadRowFieldSpans(resolved, ref visitor, options);
-                    }
-#endif
                     else
                     {
-                        CsvDocument.ReadRowsReusable(resolved, WriteRow, options);
+                        using var reader = CsvDocument.OpenDataReader(resolved, options);
+                        _rowWriter.WriteDataReaderRows(reader, _asHashtable, this);
                     }
 
                     WriteCollectedParseErrors(resolved);
@@ -450,8 +445,10 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteDataTable(string path, CsvLoadOptions options, string? tableName)
     {
-        var document = CsvDocument.Load(path, options);
-        WriteObject(PSObject.AsPSObject(document.ToDataTable(CreateDataTableOptions(tableName))), enumerateCollection: false);
+        using var reader = CsvDocument.OpenDataReader(path, options, CreateDataReaderOptions());
+        var table = new DataTable(tableName ?? string.Empty);
+        table.Load(reader);
+        WriteObject(PSObject.AsPSObject(table), enumerateCollection: false);
     }
 
     private void WriteDataReader(CsvDocument document)
@@ -461,7 +458,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
 
     private void WriteDataReader(string path, CsvLoadOptions options)
     {
-        WriteObject(PSObject.AsPSObject(CsvDocument.CreateDataReader(path, options, CreateDataReaderOptions())), enumerateCollection: false);
+        WriteObject(PSObject.AsPSObject(CsvDocument.OpenDataReader(path, options, CreateDataReaderOptions())), enumerateCollection: false);
     }
 
     /// <inheritdoc />
@@ -474,9 +471,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
     private bool RequiresMaterializedRows() =>
         _asDataTable ||
         (_asDataReader && CollectParseErrors.IsPresent) ||
-        (_asDataReader && ProgressInterval.HasValue) ||
-        NullValue != null ||
-        StaticColumns is { Count: > 0 };
+        (_asDataReader && ProgressInterval.HasValue);
 
     private void ApplyCultureDelimiter()
     {
@@ -545,7 +540,6 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             CommentCharacter = CommentCharacter,
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
-            Mode = Mode,
             CancellationToken = _cancellation.Token,
             ProgressReportInterval = ProgressInterval ?? 0,
             ProgressCallback = ProgressInterval.HasValue ? WriteCsvProgress : null,
@@ -579,17 +573,7 @@ public sealed class ImportOfficeCsvCommand : PSCmdlet
             options.Encoding = Encoding;
         }
 
-        if (_asDataReader && CollectParseErrors.IsPresent && options.Mode == CsvLoadMode.Stream)
-        {
-            options.Mode = CsvLoadMode.InMemory;
-        }
-
         return options;
-    }
-
-    private void WriteRow(IReadOnlyList<string> header, IReadOnlyList<string> row)
-    {
-        _rowWriter.WriteRow(header, row, _asHashtable, this);
     }
 
     private CsvDataTableOptions CreateDataTableOptions(string? tableName) =>
