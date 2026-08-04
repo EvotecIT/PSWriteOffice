@@ -37,7 +37,8 @@ public sealed class GetOfficePowerPointInspectionCommand : PSCmdlet
             if (ParameterSetName == "Path")
             {
                 owned = PowerPointDocumentService.LoadPresentation(
-                    SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path));
+                    SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path),
+                    readOnly: true);
                 presentation = owned;
             }
             WriteObject(presentation.Inspect(Options));

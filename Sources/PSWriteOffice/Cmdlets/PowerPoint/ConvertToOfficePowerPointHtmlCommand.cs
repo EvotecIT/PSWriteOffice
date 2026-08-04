@@ -124,7 +124,7 @@ public sealed class ConvertToOfficePowerPointHtmlCommand : PSCmdlet
         }
 
         dispose = true;
-        return PowerPointDocumentService.LoadPresentation(PdfCommandUtilities.ResolvePath(this, Path), Password);
+        return PowerPointDocumentService.LoadPresentation(PdfCommandUtilities.ResolvePath(this, Path), Password, readOnly: true);
     }
 
     private PowerPointHtmlSaveOptions CreateOptions()

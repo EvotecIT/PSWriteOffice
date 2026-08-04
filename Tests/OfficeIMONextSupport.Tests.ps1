@@ -248,30 +248,23 @@ Describe 'Expanded OfficeIMO support' {
     It 'releases path-loaded PowerPoint presentations after image export' {
         $powerPointPath = Join-Path $TestDrive 'transient.pptx'
         New-OfficePowerPoint -Path $powerPointPath { PptSlide { PptTitle -Title 'Transient' } } | Out-Null
-        $serviceType = Get-TestPSWriteOfficeType -AssemblyName 'PSWriteOffice' -TypeName 'PSWriteOffice.Services.PowerPoint.PowerPointDocumentService' -CommandName 'Export-OfficePowerPointImage'
-        $presentationsField = $serviceType.GetField('Presentations', [System.Reflection.BindingFlags]'NonPublic, Static')
-        $presentations = $presentationsField.GetValue($null)
-        $before = $presentations.Count
 
         Export-OfficePowerPointImage -Path $powerPointPath -OutputPath (Join-Path $TestDrive 'transient-images') -Format Svg | Out-Null
-        $presentations.Count | Should -Be $before
-
         Get-OfficePowerPointInspection -Path $powerPointPath | Out-Null
 
-        $presentations.Count | Should -Be $before
+        $renamedPath = Join-Path $TestDrive 'transient-renamed.pptx'
+        Move-Item -LiteralPath $powerPointPath -Destination $renamedPath
+        Test-Path -LiteralPath $renamedPath | Should -BeTrue
     }
 
     It 'releases path-loaded Office documents after OpenDocument conversion' {
         $flags = [System.Reflection.BindingFlags]'NonPublic, Static'
         $wordServiceType = Get-TestPSWriteOfficeType -AssemblyName 'PSWriteOffice' -TypeName 'PSWriteOffice.Services.Word.WordDocumentService' -CommandName 'ConvertTo-OfficeOpenDocument'
         $excelServiceType = Get-TestPSWriteOfficeType -AssemblyName 'PSWriteOffice' -TypeName 'PSWriteOffice.Services.Excel.ExcelDocumentService' -CommandName 'ConvertTo-OfficeOpenDocument'
-        $powerPointServiceType = Get-TestPSWriteOfficeType -AssemblyName 'PSWriteOffice' -TypeName 'PSWriteOffice.Services.PowerPoint.PowerPointDocumentService' -CommandName 'ConvertTo-OfficeOpenDocument'
         $wordDocuments = $wordServiceType.GetField('AssociatedPaths', $flags).GetValue($null)
         $excelDocuments = $excelServiceType.GetField('AssociatedPaths', $flags).GetValue($null)
-        $presentations = $powerPointServiceType.GetField('Presentations', $flags).GetValue($null)
         $beforeWord = $wordDocuments.Count
         $beforeExcel = $excelDocuments.Count
-        $beforePowerPoint = $presentations.Count
 
         $wordPath = Join-Path $TestDrive 'convert.docx'
         $excelPath = Join-Path $TestDrive 'convert.xlsx'
@@ -286,7 +279,9 @@ Describe 'Expanded OfficeIMO support' {
 
         $wordDocuments.Count | Should -Be $beforeWord
         $excelDocuments.Count | Should -Be $beforeExcel
-        $presentations.Count | Should -Be $beforePowerPoint
+        $movedPowerPointPath = Join-Path $TestDrive 'convert-moved.pptx'
+        Move-Item -LiteralPath $powerPointPath -Destination $movedPowerPointPath
+        Test-Path -LiteralPath $movedPowerPointPath | Should -BeTrue
     }
 
     It 'returns Word review/comparison and PowerPoint inspection reports' {

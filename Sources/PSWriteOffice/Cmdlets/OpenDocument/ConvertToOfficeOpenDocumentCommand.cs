@@ -99,7 +99,7 @@ public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet
                     var presentation = PowerPointPresentation;
                     if (sourcePath != null)
                     {
-                        presentation = PowerPointDocumentService.LoadPresentation(sourcePath);
+                        presentation = PowerPointDocumentService.LoadPresentation(sourcePath, readOnly: true);
                         ownedPresentation = presentation;
                     }
                     var presentationResult = presentation.ToOpenDocumentResult(PowerPointOptions);
