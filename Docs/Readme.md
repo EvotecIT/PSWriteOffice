@@ -589,6 +589,9 @@ Exports readable PDF form field values as XFDF.
 ### [Export-OfficePowerPointImage](Export-OfficePowerPointImage.md)
 Exports presentation slides as PNG or SVG images with one result per slide.
 
+### [Export-OfficeVisioImage](Export-OfficeVisioImage.md)
+Exports selected Visio pages through the format-neutral OfficeIMO image pipeline.
+
 ### [Export-OfficeVisioStencilPreviewGallery](Export-OfficeVisioStencilPreviewGallery.md)
 Exports preview artwork from a Visio stencil package into a browsable HTML gallery.
 

@@ -41,13 +41,26 @@ public sealed class SaveOfficeVisioCommand : PSCmdlet
     {
         if (string.IsNullOrWhiteSpace(Path))
         {
-            if (!ShouldProcess("Visio document", "Save"))
+            var associatedPath = Document.FilePath;
+            if (string.IsNullOrWhiteSpace(associatedPath))
+            {
+                throw new PSInvalidOperationException("No file path provided. Use -Path or load the document from disk.");
+            }
+
+            var targetPath = associatedPath!;
+
+            if (!ShouldProcess(targetPath, "Save Visio document"))
             {
                 return;
             }
 
             Document.Save();
-            WriteObject(Document);
+            if (Show.IsPresent)
+            {
+                FileOpenService.Open(targetPath);
+            }
+
+            WriteObject(PassThru.IsPresent ? Document : new FileInfo(targetPath));
             return;
         }
 
