@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -33,7 +32,7 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var context = WordDslContext.Require(this);
-        var section = context.AcquireSection(ToSectionMark(BreakType));
+        var section = context.AcquireSection(BreakType);
 
         using (context.Push(section))
         {
@@ -45,15 +44,4 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
             WriteObject(section);
         }
     }
-
-    private static SectionMarkValues? ToSectionMark(WordSectionBreakType? breakType) => breakType switch
-    {
-        null => null,
-        WordSectionBreakType.NextPage => SectionMarkValues.NextPage,
-        WordSectionBreakType.NextColumn => SectionMarkValues.NextColumn,
-        WordSectionBreakType.Continuous => SectionMarkValues.Continuous,
-        WordSectionBreakType.EvenPage => SectionMarkValues.EvenPage,
-        WordSectionBreakType.OddPage => SectionMarkValues.OddPage,
-        _ => throw new PSArgumentOutOfRangeException(nameof(BreakType), breakType, "Unsupported Word section break type.")
-    };
 }
