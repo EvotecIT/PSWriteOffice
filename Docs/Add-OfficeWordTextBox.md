@@ -11,7 +11,7 @@ Adds an OfficeIMO Word text box to the current Word DSL location.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordTextBox [-Text] <string> [-WrapText <WrapTextImage>] [-WidthCentimeters <double>] [-HeightCentimeters <double>] [-HorizontalOffsetCentimeters <double>] [-VerticalOffsetCentimeters <double>] [-HorizontalAlignment <WordHorizontalAlignmentValues>] [-HorizontalPositionRelativeFrom <HorizontalRelativePositionValues>] [-VerticalPositionRelativeFrom <VerticalRelativePositionValues>] [-AutoFit <WordTextBoxAutoFitType>] [-AutoFitToTextSize] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTextBox [-Text] <string> [-WrapText <WrapTextImage>] [-WidthCentimeters <Double>] [-HeightCentimeters <Double>] [-HorizontalOffsetCentimeters <Double>] [-VerticalOffsetCentimeters <Double>] [-HorizontalAlignment <WordHorizontalAlignmentValues>] [-HorizontalPositionRelativeFrom <WordHorizontalRelativePosition>] [-VerticalPositionRelativeFrom <WordVerticalRelativePosition>] [-AutoFit <WordTextBoxAutoFitType>] [-AutoFitToTextSize] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,16 +34,16 @@ Creates a native OfficeIMO Word text box and applies sizing/positioning through 
 Explicit OfficeIMO text-box autofit mode.
 
 ```yaml
-Type: Nullable`1
+Type: WordTextBoxAutoFitType
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: NoAutoFit, ShrinkTextOnOverflow, ResizeShapeToFitText
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AutoFitToTextSize
@@ -59,14 +59,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeightCentimeters
 Height in centimeters.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -75,30 +75,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HorizontalAlignment
 Horizontal alignment for anchored text boxes.
 
 ```yaml
-Type: Nullable`1
+Type: WordHorizontalAlignmentValues
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Left, Center, Right, Outside, Inside
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HorizontalOffsetCentimeters
 Horizontal offset in centimeters.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -107,23 +107,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HorizontalPositionRelativeFrom
 Horizontal relative position anchor.
 
 ```yaml
-Type: Nullable`1
+Type: WordHorizontalRelativePosition
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Margin, Page, Column, Character, LeftMargin, RightMargin, InsideMargin, OutsideMargin
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -139,7 +139,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -155,14 +155,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -VerticalOffsetCentimeters
 Vertical offset in centimeters.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -171,30 +171,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -VerticalPositionRelativeFrom
 Vertical relative position anchor.
 
 ```yaml
-Type: Nullable`1
+Type: WordVerticalRelativePosition
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Margin, Page, Paragraph, Line, TopMargin, BottomMargin, InsideMargin, OutsideMargin
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WidthCentimeters
 Width in centimeters.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -203,7 +203,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WrapText
@@ -219,7 +219,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

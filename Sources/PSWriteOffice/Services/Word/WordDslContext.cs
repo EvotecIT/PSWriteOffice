@@ -123,7 +123,7 @@ internal sealed class WordDslContext : IDisposable
 
         _initialSectionConsumed = true;
         return breakType.HasValue
-            ? Document.AddSection(breakType.Value)
+            ? Document.AddSectionWithBreakType(breakType.Value)
             : Document.AddSection();
     }
 

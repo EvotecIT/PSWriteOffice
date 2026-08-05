@@ -11,7 +11,7 @@ Protects a Word document with a password.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Protect-OfficeWordDocument [-Password] <string> [-Document <WordDocument>] [-ProtectionType <DocumentProtectionValues>] [-PassThru] [<CommonParameters>]
+Protect-OfficeWordDocument [-Password] <string> [-Document <WordDocument>] [-ProtectionType <WordDocumentProtectionType>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,7 +44,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -60,7 +60,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Password
@@ -76,23 +76,23 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ProtectionType
 Protection type (defaults to ReadOnly).
 
 ```yaml
-Type: DocumentProtectionValues
+Type: WordDocumentProtectionType
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: None, ReadOnly, Comments, TrackedChanges, Forms
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -104,7 +104,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

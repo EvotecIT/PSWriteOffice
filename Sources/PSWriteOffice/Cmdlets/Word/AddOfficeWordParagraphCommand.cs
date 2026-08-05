@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -42,7 +41,7 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
 
     /// <summary>Paragraph justification.</summary>
     [Parameter]
-    public JustificationValues? Alignment { get; set; }
+    public WordParagraphAlignment? Alignment { get; set; }
 
     /// <summary>Paragraph style.</summary>
     [Parameter]
@@ -70,7 +69,7 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
 
         if (Alignment.HasValue)
         {
-            paragraph.ParagraphAlignment = Alignment.Value;
+            paragraph.SetParagraphAlignment(Alignment.Value);
         }
 
         if (Style.HasValue)

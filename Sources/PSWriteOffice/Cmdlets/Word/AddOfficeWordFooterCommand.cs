@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -19,7 +18,7 @@ public sealed class AddOfficeWordFooterCommand : PSCmdlet
 {
     /// <summary>The footer kind (Default/First/Even).</summary>
     [Parameter]
-    public HeaderFooterValues Type { get; set; } = HeaderFooterValues.Default;
+    public WordHeaderFooterType Type { get; set; } = WordHeaderFooterType.Default;
 
     /// <summary>DSL scriptblock executed within the footer context.</summary>
     [Parameter(Position = 0)]
@@ -30,7 +29,7 @@ public sealed class AddOfficeWordFooterCommand : PSCmdlet
     {
         var context = WordDslContext.Require(this);
         var section = context.RequireSection();
-        var footer = section.GetOrCreateFooter(Type);
+        var footer = section.GetOrCreateFooterWithType(Type);
 
         using (context.Push(footer))
         {

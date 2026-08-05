@@ -1,6 +1,6 @@
 using System;
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
+using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
@@ -39,7 +39,7 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
 
     /// <summary>Optional underline style.</summary>
     [Parameter]
-    public UnderlineValues? Underline { get; set; }
+    public WordUnderlineStyle? Underline { get; set; }
 
     /// <summary>Run color (#RRGGBB).</summary>
     [Parameter]

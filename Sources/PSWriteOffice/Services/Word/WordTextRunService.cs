@@ -28,13 +28,17 @@ internal static class WordTextRunService
         string text,
         bool bold,
         bool italic,
-        UnderlineValues? underline,
+        WordUnderlineStyle? underline,
         bool strike,
         string? color,
         int? fontSize,
         string? fontName)
     {
-        var run = paragraph.AddFormattedText(text, bold, italic, underline);
+        var run = paragraph.AddFormattedText(text, bold, italic);
+        if (underline.HasValue)
+        {
+            run.SetUnderlineStyle(underline.Value);
+        }
         ApplyAdditionalStyle(run, strike, color, null, fontSize, fontName);
         return run;
     }

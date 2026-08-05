@@ -1,5 +1,5 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
+using OfficeIMO.Word;
 using PSWriteOffice.Services.Table;
 using PSWriteOffice.Services.Text;
 
@@ -65,7 +65,7 @@ public sealed class NewOfficeWordTableCellCommand : PSCmdlet
 
     /// <summary>Optional Word underline style.</summary>
     [Parameter]
-    public UnderlineValues? UnderlineStyle { get; set; }
+    public WordUnderlineStyle? UnderlineStyle { get; set; }
 
     /// <summary>Render the cell text with strikethrough.</summary>
     [Parameter]
@@ -73,11 +73,11 @@ public sealed class NewOfficeWordTableCellCommand : PSCmdlet
 
     /// <summary>Horizontal cell alignment.</summary>
     [Parameter]
-    public JustificationValues? Align { get; set; }
+    public WordParagraphAlignment? Align { get; set; }
 
     /// <summary>Vertical cell alignment.</summary>
     [Parameter]
-    public TableVerticalAlignmentValues? VerticalAlign { get; set; }
+    public WordTableVerticalAlignment? VerticalAlign { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()

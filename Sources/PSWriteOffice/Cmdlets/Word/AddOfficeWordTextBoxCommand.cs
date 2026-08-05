@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -52,11 +51,11 @@ public sealed class AddOfficeWordTextBoxCommand : PSCmdlet
 
     /// <summary>Horizontal relative position anchor.</summary>
     [Parameter]
-    public HorizontalRelativePositionValues? HorizontalPositionRelativeFrom { get; set; }
+    public WordHorizontalRelativePosition? HorizontalPositionRelativeFrom { get; set; }
 
     /// <summary>Vertical relative position anchor.</summary>
     [Parameter]
-    public VerticalRelativePositionValues? VerticalPositionRelativeFrom { get; set; }
+    public WordVerticalRelativePosition? VerticalPositionRelativeFrom { get; set; }
 
     /// <summary>Explicit OfficeIMO text-box autofit mode.</summary>
     [Parameter]
@@ -104,12 +103,12 @@ public sealed class AddOfficeWordTextBoxCommand : PSCmdlet
 
         if (HorizontalPositionRelativeFrom.HasValue)
         {
-            textBox.HorizontalPositionRelativeFrom = HorizontalPositionRelativeFrom.Value;
+            textBox.SetHorizontalPositionRelativeFrom(HorizontalPositionRelativeFrom.Value);
         }
 
         if (VerticalPositionRelativeFrom.HasValue)
         {
-            textBox.VerticalPositionRelativeFrom = VerticalPositionRelativeFrom.Value;
+            textBox.SetVerticalPositionRelativeFrom(VerticalPositionRelativeFrom.Value);
         }
 
         if (AutoFit.HasValue)

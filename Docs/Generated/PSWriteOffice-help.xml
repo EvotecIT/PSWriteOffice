@@ -34238,7 +34238,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
     <command:syntax>
       <command:syntaxItem parameterSetName="Index">
         <maml:name>Add-OfficePowerPointSlide</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Content</maml:name>
           <maml:description>
             <maml:para>Nested DSL content executed within the slide scope.</maml:para>
@@ -34250,7 +34250,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Layout</maml:name>
           <maml:description>
             <maml:para>Layout index to use (matches the template’s built-in layouts).</maml:para>
@@ -34262,7 +34262,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Master</maml:name>
           <maml:description>
             <maml:para>Slide master index to use.</maml:para>
@@ -34274,7 +34274,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Presentation</maml:name>
           <maml:description>
             <maml:para>Presentation to update (optional inside New-OfficePowerPoint).</maml:para>
@@ -34289,7 +34289,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Name">
         <maml:name>Add-OfficePowerPointSlide</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>CaseSensitive</maml:name>
           <maml:description>
             <maml:para>Use case-sensitive matching for layout names.</maml:para>
@@ -34301,7 +34301,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Content</maml:name>
           <maml:description>
             <maml:para>Nested DSL content executed within the slide scope.</maml:para>
@@ -34313,7 +34313,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>LayoutName</maml:name>
           <maml:description>
             <maml:para>Layout name to use (case-insensitive by default).</maml:para>
@@ -34325,7 +34325,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Master</maml:name>
           <maml:description>
             <maml:para>Slide master index to use.</maml:para>
@@ -34337,7 +34337,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Presentation</maml:name>
           <maml:description>
             <maml:para>Presentation to update (optional inside New-OfficePowerPoint).</maml:para>
@@ -34352,7 +34352,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Type">
         <maml:name>Add-OfficePowerPointSlide</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Content</maml:name>
           <maml:description>
             <maml:para>Nested DSL content executed within the slide scope.</maml:para>
@@ -34364,19 +34364,57 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>LayoutType</maml:name>
           <maml:description>
             <maml:para>Layout type to use.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">SlideLayoutValues</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">PowerPointSlideLayoutType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Title</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Text</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoColumnText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Table</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndChart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChartAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Diagram</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Chart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndClipArt</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ClipArtAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TitleOnly</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Blank</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndObject</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectOnly</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndMedia</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MediaAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectOverText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextOverObject</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndTwoObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoObjectsAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoObjectsOverText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">FourObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">VerticalText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ClipArtAndVerticalText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">VerticalTitleAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">VerticalTitleAndTextOverChart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectAndTwoObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoObjectsAndObject</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">SectionHeader</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoTextAndTwoObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PictureText</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>SlideLayoutValues</maml:name>
+            <maml:name>PowerPointSlideLayoutType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Master</maml:name>
           <maml:description>
             <maml:para>Slide master index to use.</maml:para>
@@ -34388,7 +34426,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Presentation</maml:name>
           <maml:description>
             <maml:para>Presentation to update (optional inside New-OfficePowerPoint).</maml:para>
@@ -34403,7 +34441,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>CaseSensitive</maml:name>
         <maml:description>
           <maml:para>Use case-sensitive matching for layout names.</maml:para>
@@ -34415,7 +34453,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Content</maml:name>
         <maml:description>
           <maml:para>Nested DSL content executed within the slide scope.</maml:para>
@@ -34427,7 +34465,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Layout</maml:name>
         <maml:description>
           <maml:para>Layout index to use (matches the template’s built-in layouts).</maml:para>
@@ -34439,7 +34477,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>LayoutName</maml:name>
         <maml:description>
           <maml:para>Layout name to use (case-insensitive by default).</maml:para>
@@ -34451,19 +34489,57 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>LayoutType</maml:name>
         <maml:description>
           <maml:para>Layout type to use.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">SlideLayoutValues</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">PowerPointSlideLayoutType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Title</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Text</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoColumnText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Table</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndChart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChartAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Diagram</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Chart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndClipArt</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ClipArtAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TitleOnly</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Blank</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndObject</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectOnly</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndMedia</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MediaAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectOverText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextOverObject</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndTwoObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoObjectsAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoObjectsOverText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">FourObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VerticalText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ClipArtAndVerticalText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VerticalTitleAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VerticalTitleAndTextOverChart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectAndTwoObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoObjectsAndObject</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">SectionHeader</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoTextAndTwoObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PictureText</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>SlideLayoutValues</maml:name>
+          <maml:name>PowerPointSlideLayoutType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Master</maml:name>
         <maml:description>
           <maml:para>Slide master index to use.</maml:para>
@@ -34475,7 +34551,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Presentation</maml:name>
         <maml:description>
           <maml:para>Presentation to update (optional inside New-OfficePowerPoint).</maml:para>
@@ -34495,13 +34571,7 @@ OfficeIMO.PowerPoint.PowerPointSlide</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>System.Object</maml:name>
-        </dev:type>
-      </command:returnValue>
-    </command:returnValues>
+    <command:returnValues />
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -39174,19 +39244,24 @@ table formatting, borders, and style choices are preserved.</maml:para>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeWordBreak</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>BreakType</maml:name>
           <maml:description>
-            <maml:para>Optional OpenXML break type, for example Page or Column.</maml:para>
+            <maml:para>Optional break type, for example Page or Column.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordBreakType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Page</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Column</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextWrapping</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordBreakType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Count</maml:name>
           <maml:description>
             <maml:para>Number of breaks to add.</maml:para>
@@ -39198,7 +39273,7 @@ table formatting, borders, and style choices are preserved.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Paragraph</maml:name>
           <maml:description>
             <maml:para>Target paragraph. When omitted, the current DSL paragraph is used or created.</maml:para>
@@ -39210,7 +39285,7 @@ table formatting, borders, and style choices are preserved.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Emit the paragraph returned by the final break for additional native OfficeIMO chaining.</maml:para>
@@ -39225,19 +39300,24 @@ table formatting, borders, and style choices are preserved.</maml:para>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>BreakType</maml:name>
         <maml:description>
-          <maml:para>Optional OpenXML break type, for example Page or Column.</maml:para>
+          <maml:para>Optional break type, for example Page or Column.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordBreakType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Page</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Column</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextWrapping</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordBreakType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Count</maml:name>
         <maml:description>
           <maml:para>Number of breaks to add.</maml:para>
@@ -39249,7 +39329,7 @@ table formatting, borders, and style choices are preserved.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Paragraph</maml:name>
         <maml:description>
           <maml:para>Target paragraph. When omitted, the current DSL paragraph is used or created.</maml:para>
@@ -39261,7 +39341,7 @@ table formatting, borders, and style choices are preserved.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
           <maml:para>Emit the paragraph returned by the final break for additional native OfficeIMO chaining.</maml:para>
@@ -42005,7 +42085,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeWordFooter</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Content</maml:name>
           <maml:description>
             <maml:para>DSL scriptblock executed within the footer context.</maml:para>
@@ -42017,14 +42097,19 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Type</maml:name>
           <maml:description>
             <maml:para>The footer kind (Default/First/Even).</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">HeaderFooterValues</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordHeaderFooterType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Default</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">First</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Even</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>HeaderFooterValues</maml:name>
+            <maml:name>WordHeaderFooterType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -42032,7 +42117,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Content</maml:name>
         <maml:description>
           <maml:para>DSL scriptblock executed within the footer context.</maml:para>
@@ -42044,14 +42129,19 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Type</maml:name>
         <maml:description>
           <maml:para>The footer kind (Default/First/Even).</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">HeaderFooterValues</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordHeaderFooterType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Default</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">First</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Even</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>HeaderFooterValues</maml:name>
+          <maml:name>WordHeaderFooterType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -42064,13 +42154,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>System.Object</maml:name>
-        </dev:type>
-      </command:returnValue>
-    </command:returnValues>
+    <command:returnValues />
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -42229,7 +42313,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeWordHeader</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Content</maml:name>
           <maml:description>
             <maml:para>DSL scriptblock to execute inside the header.</maml:para>
@@ -42241,14 +42325,19 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Type</maml:name>
           <maml:description>
             <maml:para>The header type to modify.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">HeaderFooterValues</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordHeaderFooterType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Default</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">First</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Even</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>HeaderFooterValues</maml:name>
+            <maml:name>WordHeaderFooterType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -42256,7 +42345,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Content</maml:name>
         <maml:description>
           <maml:para>DSL scriptblock to execute inside the header.</maml:para>
@@ -42268,14 +42357,19 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Type</maml:name>
         <maml:description>
           <maml:para>The header type to modify.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">HeaderFooterValues</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordHeaderFooterType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Default</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">First</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Even</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>HeaderFooterValues</maml:name>
+          <maml:name>WordHeaderFooterType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -42288,13 +42382,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>System.Object</maml:name>
-        </dev:type>
-      </command:returnValue>
-    </command:returnValues>
+    <command:returnValues />
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -43378,19 +43466,33 @@ OfficeIMO.Word.WordParagraph</maml:name>
     <command:syntax>
       <command:syntaxItem parameterSetName="Text">
         <maml:name>Add-OfficeWordParagraph</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Alignment</maml:name>
           <maml:description>
             <maml:para>Paragraph justification.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordParagraphAlignment</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Start</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">End</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Both</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MediumKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Distribute</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">NumTab</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">HighKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">LowKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ThaiDistribute</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordParagraphAlignment</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Emit the WordParagraph for further use.</maml:para>
@@ -43402,19 +43504,45 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Style</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Runs">
+          <maml:name>Run</maml:name>
           <maml:description>
-            <maml:para>Paragraph style.</maml:para>
+            <maml:para>Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Object[]</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Object[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Style</maml:name>
+          <maml:description>
+            <maml:para>Paragraph style.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">WordParagraphStyles</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading1</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading3</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading4</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading6</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading7</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading8</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading9</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ListParagraph</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>WordParagraphStyles</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>StyleId</maml:name>
           <maml:description>
             <maml:para>Paragraph style id, including custom style ids from a template document.</maml:para>
@@ -43426,7 +43554,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Text</maml:name>
           <maml:description>
             <maml:para>Optional initial paragraph text.</maml:para>
@@ -43441,19 +43569,33 @@ OfficeIMO.Word.WordParagraph</maml:name>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Content">
         <maml:name>Add-OfficeWordParagraph</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Alignment</maml:name>
           <maml:description>
             <maml:para>Paragraph justification.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordParagraphAlignment</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Start</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">End</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Both</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MediumKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Distribute</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">NumTab</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">HighKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">LowKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ThaiDistribute</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordParagraphAlignment</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Content</maml:name>
           <maml:description>
             <maml:para>Nested DSL content (runs, lists, images).</maml:para>
@@ -43465,7 +43607,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Emit the WordParagraph for further use.</maml:para>
@@ -43477,19 +43619,33 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Style</maml:name>
           <maml:description>
             <maml:para>Paragraph style.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordParagraphStyles</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading1</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading3</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading4</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading5</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading6</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading7</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading8</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Heading9</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ListParagraph</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordParagraphStyles</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>StyleId</maml:name>
           <maml:description>
             <maml:para>Paragraph style id, including custom style ids from a template document.</maml:para>
@@ -43501,7 +43657,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Text</maml:name>
           <maml:description>
             <maml:para>Optional initial paragraph text.</maml:para>
@@ -43516,19 +43672,33 @@ OfficeIMO.Word.WordParagraph</maml:name>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Alignment</maml:name>
         <maml:description>
           <maml:para>Paragraph justification.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordParagraphAlignment</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Start</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">End</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Both</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MediumKashida</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Distribute</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">NumTab</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">HighKashida</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">LowKashida</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ThaiDistribute</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordParagraphAlignment</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Content</maml:name>
         <maml:description>
           <maml:para>Nested DSL content (runs, lists, images).</maml:para>
@@ -43540,7 +43710,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
           <maml:para>Emit the WordParagraph for further use.</maml:para>
@@ -43552,19 +43722,45 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Style</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Runs">
+        <maml:name>Run</maml:name>
         <maml:description>
-          <maml:para>Paragraph style.</maml:para>
+          <maml:para>Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Object[]</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Object[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Style</maml:name>
+        <maml:description>
+          <maml:para>Paragraph style.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">WordParagraphStyles</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Normal</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading2</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading3</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading4</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading5</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading6</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading7</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading8</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Heading9</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ListParagraph</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>WordParagraphStyles</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>StyleId</maml:name>
         <maml:description>
           <maml:para>Paragraph style id, including custom style ids from a template document.</maml:para>
@@ -43576,7 +43772,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Text</maml:name>
         <maml:description>
           <maml:para>Optional initial paragraph text.</maml:para>
@@ -43596,13 +43792,7 @@ OfficeIMO.Word.WordParagraph</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>System.Object</maml:name>
-        </dev:type>
-      </command:returnValue>
-    </command:returnValues>
+    <command:returnValues />
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -45857,9 +46047,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
       <maml:para>Supports bold/italic/underline and color tweaks for quick DSL composition.</maml:para>
     </maml:description>
     <command:syntax>
-      <command:syntaxItem parameterSetName="__AllParameterSets">
+      <command:syntaxItem parameterSetName="Text">
         <maml:name>Add-OfficeWordText</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Bold</maml:name>
           <maml:description>
             <maml:para>Apply bold formatting.</maml:para>
@@ -45871,7 +46061,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Color</maml:name>
           <maml:description>
             <maml:para>Run color (#RRGGBB).</maml:para>
@@ -45883,7 +46073,31 @@ cells. This keeps existing-document editing simple without forcing callers back 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Font,FontFamily,Typeface">
+          <maml:name>FontName</maml:name>
+          <maml:description>
+            <maml:para>Font name or family.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>FontSize</maml:name>
+          <maml:description>
+            <maml:para>Font size in points.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Italic</maml:name>
           <maml:description>
             <maml:para>Apply italic formatting.</maml:para>
@@ -45895,7 +46109,19 @@ cells. This keeps existing-document editing simple without forcing callers back 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Strike</maml:name>
+          <maml:description>
+            <maml:para>Render text with strikethrough.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Text</maml:name>
           <maml:description>
             <maml:para>Text segments to append.</maml:para>
@@ -45907,14 +46133,153 @@ cells. This keeps existing-document editing simple without forcing callers back 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Underline</maml:name>
           <maml:description>
             <maml:para>Optional underline style.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordUnderlineStyle</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Single</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Words</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Thick</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dotted</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DottedHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashedHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashLong</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashLongHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotDash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashDotHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotDotDash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashDotDotHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WavyHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WavyDouble</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordUnderlineStyle</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Run">
+        <maml:name>Add-OfficeWordText</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Bold</maml:name>
+          <maml:description>
+            <maml:para>Apply bold formatting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Color</maml:name>
+          <maml:description>
+            <maml:para>Run color (#RRGGBB).</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Font,FontFamily,Typeface">
+          <maml:name>FontName</maml:name>
+          <maml:description>
+            <maml:para>Font name or family.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>FontSize</maml:name>
+          <maml:description>
+            <maml:para>Font size in points.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Italic</maml:name>
+          <maml:description>
+            <maml:para>Apply italic formatting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Runs">
+          <maml:name>Run</maml:name>
+          <maml:description>
+            <maml:para>Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Strike</maml:name>
+          <maml:description>
+            <maml:para>Render text with strikethrough.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Underline</maml:name>
+          <maml:description>
+            <maml:para>Optional underline style.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">WordUnderlineStyle</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Single</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Words</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Thick</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dotted</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DottedHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashedHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashLong</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashLongHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotDash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashDotHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotDotDash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashDotDotHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WavyHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WavyDouble</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>WordUnderlineStyle</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -45922,7 +46287,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Bold</maml:name>
         <maml:description>
           <maml:para>Apply bold formatting.</maml:para>
@@ -45934,7 +46299,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Color</maml:name>
         <maml:description>
           <maml:para>Run color (#RRGGBB).</maml:para>
@@ -45946,7 +46311,31 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Font,FontFamily,Typeface">
+        <maml:name>FontName</maml:name>
+        <maml:description>
+          <maml:para>Font name or family.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>FontSize</maml:name>
+        <maml:description>
+          <maml:para>Font size in points.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Italic</maml:name>
         <maml:description>
           <maml:para>Apply italic formatting.</maml:para>
@@ -45958,7 +46347,31 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Runs">
+        <maml:name>Run</maml:name>
+        <maml:description>
+          <maml:para>Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Object[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Strike</maml:name>
+        <maml:description>
+          <maml:para>Render text with strikethrough.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Text</maml:name>
         <maml:description>
           <maml:para>Text segments to append.</maml:para>
@@ -45970,14 +46383,34 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Underline</maml:name>
         <maml:description>
           <maml:para>Optional underline style.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordUnderlineStyle</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Single</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Words</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Thick</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dotted</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DottedHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashedHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashLong</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashLongHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotDash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashDotHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotDotDash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashDotDotHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WavyHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WavyDouble</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordUnderlineStyle</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -45990,13 +46423,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>System.Object</maml:name>
-        </dev:type>
-      </command:returnValue>
-    </command:returnValues>
+    <command:returnValues />
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -46031,19 +46458,24 @@ cells. This keeps existing-document editing simple without forcing callers back 
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeWordTextBox</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>AutoFit</maml:name>
           <maml:description>
             <maml:para>Explicit OfficeIMO text-box autofit mode.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordTextBoxAutoFitType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">NoAutoFit</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ShrinkTextOnOverflow</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ResizeShapeToFitText</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordTextBoxAutoFitType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>AutoFitToTextSize</maml:name>
           <maml:description>
             <maml:para>Resize the text box to fit its text.</maml:para>
@@ -46055,55 +46487,72 @@ cells. This keeps existing-document editing simple without forcing callers back 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>HeightCentimeters</maml:name>
           <maml:description>
             <maml:para>Height in centimeters.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>HorizontalAlignment</maml:name>
           <maml:description>
             <maml:para>Horizontal alignment for anchored text boxes.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordHorizontalAlignmentValues</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Outside</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Inside</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordHorizontalAlignmentValues</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>HorizontalOffsetCentimeters</maml:name>
           <maml:description>
             <maml:para>Horizontal offset in centimeters.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>HorizontalPositionRelativeFrom</maml:name>
           <maml:description>
             <maml:para>Horizontal relative position anchor.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordHorizontalRelativePosition</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Margin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Page</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Column</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Character</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">LeftMargin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">RightMargin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">InsideMargin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OutsideMargin</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordHorizontalRelativePosition</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Emit the created text box.</maml:para>
@@ -46115,7 +46564,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Text</maml:name>
           <maml:description>
             <maml:para>Text to place inside the text box.</maml:para>
@@ -46127,43 +46576,53 @@ cells. This keeps existing-document editing simple without forcing callers back 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>VerticalOffsetCentimeters</maml:name>
           <maml:description>
             <maml:para>Vertical offset in centimeters.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>VerticalPositionRelativeFrom</maml:name>
           <maml:description>
             <maml:para>Vertical relative position anchor.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordVerticalRelativePosition</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Margin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Page</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Paragraph</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Line</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopMargin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomMargin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">InsideMargin</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">OutsideMargin</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordVerticalRelativePosition</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>WidthCentimeters</maml:name>
           <maml:description>
             <maml:para>Width in centimeters.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Double</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>WrapText</maml:name>
           <maml:description>
             <maml:para>Word text wrapping mode.</maml:para>
@@ -46187,19 +46646,24 @@ cells. This keeps existing-document editing simple without forcing callers back 
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>AutoFit</maml:name>
         <maml:description>
           <maml:para>Explicit OfficeIMO text-box autofit mode.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordTextBoxAutoFitType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">NoAutoFit</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ShrinkTextOnOverflow</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ResizeShapeToFitText</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordTextBoxAutoFitType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>AutoFitToTextSize</maml:name>
         <maml:description>
           <maml:para>Resize the text box to fit its text.</maml:para>
@@ -46211,55 +46675,72 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>HeightCentimeters</maml:name>
         <maml:description>
           <maml:para>Height in centimeters.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>HorizontalAlignment</maml:name>
         <maml:description>
           <maml:para>Horizontal alignment for anchored text boxes.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordHorizontalAlignmentValues</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Outside</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Inside</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordHorizontalAlignmentValues</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>HorizontalOffsetCentimeters</maml:name>
         <maml:description>
           <maml:para>Horizontal offset in centimeters.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>HorizontalPositionRelativeFrom</maml:name>
         <maml:description>
           <maml:para>Horizontal relative position anchor.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordHorizontalRelativePosition</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Margin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Page</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Column</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Character</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">LeftMargin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RightMargin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">InsideMargin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OutsideMargin</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordHorizontalRelativePosition</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
           <maml:para>Emit the created text box.</maml:para>
@@ -46271,7 +46752,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Text</maml:name>
         <maml:description>
           <maml:para>Text to place inside the text box.</maml:para>
@@ -46283,43 +46764,53 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>VerticalOffsetCentimeters</maml:name>
         <maml:description>
           <maml:para>Vertical offset in centimeters.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>VerticalPositionRelativeFrom</maml:name>
         <maml:description>
           <maml:para>Vertical relative position anchor.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordVerticalRelativePosition</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Margin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Page</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Paragraph</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Line</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopMargin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BottomMargin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">InsideMargin</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OutsideMargin</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordVerticalRelativePosition</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>WidthCentimeters</maml:name>
         <maml:description>
           <maml:para>Width in centimeters.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Double</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>WrapText</maml:name>
         <maml:description>
           <maml:para>Word text wrapping mode.</maml:para>
@@ -109711,19 +110202,45 @@ OfficeIMO.Rtf.RtfDocument</maml:name>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>New-OfficeWordTableCell</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
-          <maml:name>Text</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Align</maml:name>
           <maml:description>
-            <maml:para>Cell text.</maml:para>
+            <maml:para>Horizontal cell alignment.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordParagraphAlignment</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Start</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">End</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Both</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MediumKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Distribute</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">NumTab</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">HighKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">LowKashida</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ThaiDistribute</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>WordParagraphAlignment</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Bold</maml:name>
+          <maml:description>
+            <maml:para>Render the cell text in bold.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ColumnSpan</maml:name>
           <maml:description>
             <maml:para>Number of logical columns covered by the cell.</maml:para>
@@ -109735,7 +110252,43 @@ OfficeIMO.Rtf.RtfDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="BackgroundColor,CellFill">
+          <maml:name>FillColor</maml:name>
+          <maml:description>
+            <maml:para>Cell fill color. Named colors and hexadecimal colors are accepted.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>FontSize</maml:name>
+          <maml:description>
+            <maml:para>Cell font size in points.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Italic</maml:name>
+          <maml:description>
+            <maml:para>Render the cell text in italics.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RowSpan</maml:name>
           <maml:description>
             <maml:para>Number of logical rows covered by the cell.</maml:para>
@@ -109747,10 +110300,157 @@ OfficeIMO.Rtf.RtfDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Runs">
+          <maml:name>Run</maml:name>
+          <maml:description>
+            <maml:para>Rich text runs for the cell. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Strike</maml:name>
+          <maml:description>
+            <maml:para>Render the cell text with strikethrough.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>Text</maml:name>
+          <maml:description>
+            <maml:para>Cell text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Color,FontColor">
+          <maml:name>TextColor</maml:name>
+          <maml:description>
+            <maml:para>Cell text color. Named colors and hexadecimal colors are accepted.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Underline</maml:name>
+          <maml:description>
+            <maml:para>Render the cell text with underline.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>UnderlineStyle</maml:name>
+          <maml:description>
+            <maml:para>Optional Word underline style.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">WordUnderlineStyle</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Single</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Words</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Thick</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dotted</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DottedHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashedHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashLong</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashLongHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotDash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashDotHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DotDotDash</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DashDotDotHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WavyHeavy</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">WavyDouble</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>WordUnderlineStyle</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>VerticalAlign</maml:name>
+          <maml:description>
+            <maml:para>Vertical cell alignment.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">WordTableVerticalAlignment</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Top</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Bottom</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>WordTableVerticalAlignment</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Align</maml:name>
+        <maml:description>
+          <maml:para>Horizontal cell alignment.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">WordParagraphAlignment</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Left</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Start</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Right</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">End</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Both</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MediumKashida</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Distribute</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">NumTab</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">HighKashida</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">LowKashida</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ThaiDistribute</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>WordParagraphAlignment</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Bold</maml:name>
+        <maml:description>
+          <maml:para>Render the cell text in bold.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ColumnSpan</maml:name>
         <maml:description>
           <maml:para>Number of logical columns covered by the cell.</maml:para>
@@ -109762,7 +110462,43 @@ OfficeIMO.Rtf.RtfDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="BackgroundColor,CellFill">
+        <maml:name>FillColor</maml:name>
+        <maml:description>
+          <maml:para>Cell fill color. Named colors and hexadecimal colors are accepted.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>FontSize</maml:name>
+        <maml:description>
+          <maml:para>Cell font size in points.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Italic</maml:name>
+        <maml:description>
+          <maml:para>Render the cell text in italics.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RowSpan</maml:name>
         <maml:description>
           <maml:para>Number of logical rows covered by the cell.</maml:para>
@@ -109774,7 +110510,31 @@ OfficeIMO.Rtf.RtfDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Runs">
+        <maml:name>Run</maml:name>
+        <maml:description>
+          <maml:para>Rich text runs for the cell. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Object[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Object[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Strike</maml:name>
+        <maml:description>
+          <maml:para>Render the cell text with strikethrough.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Text</maml:name>
         <maml:description>
           <maml:para>Cell text.</maml:para>
@@ -109782,6 +110542,79 @@ OfficeIMO.Rtf.RtfDocument</maml:name>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Color,FontColor">
+        <maml:name>TextColor</maml:name>
+        <maml:description>
+          <maml:para>Cell text color. Named colors and hexadecimal colors are accepted.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Underline</maml:name>
+        <maml:description>
+          <maml:para>Render the cell text with underline.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>UnderlineStyle</maml:name>
+        <maml:description>
+          <maml:para>Optional Word underline style.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">WordUnderlineStyle</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Single</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Words</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Thick</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dotted</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DottedHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashedHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashLong</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashLongHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotDash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashDotHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DotDotDash</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DashDotDotHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Wave</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WavyHeavy</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WavyDouble</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>WordUnderlineStyle</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>VerticalAlign</maml:name>
+        <maml:description>
+          <maml:para>Vertical cell alignment.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">WordTableVerticalAlignment</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Top</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Bottom</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>WordTableVerticalAlignment</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -109799,6 +110632,9 @@ OfficeIMO.Rtf.RtfDocument</maml:name>
         <dev:type>
           <maml:name>PSWriteOffice.Services.Table.OfficeTableCellSpec</maml:name>
         </dev:type>
+        <maml:description>
+          <maml:para>Describes a logical table cell that can be rendered by multiple Office table surfaces.</maml:para>
+        </maml:description>
       </command:returnValue>
     </command:returnValues>
     <maml:alertSet>
@@ -109808,7 +110644,7 @@ OfficeIMO.Rtf.RtfDocument</maml:name>
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Create a merged Word table cell definition.</maml:title>
+        <maml:title>Create a full-width Word table section row.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
@@ -111681,7 +112517,7 @@ System.IO.FileInfo</maml:name>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Protect-OfficeWordDocument</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
             <maml:para>Document to protect when provided explicitly.</maml:para>
@@ -111693,7 +112529,7 @@ System.IO.FileInfo</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Emit the protected document.</maml:para>
@@ -111705,7 +112541,7 @@ System.IO.FileInfo</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Password</maml:name>
           <maml:description>
             <maml:para>Password to apply.</maml:para>
@@ -111717,14 +112553,21 @@ System.IO.FileInfo</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ProtectionType</maml:name>
           <maml:description>
             <maml:para>Protection type (defaults to ReadOnly).</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">DocumentProtectionValues</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordDocumentProtectionType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ReadOnly</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Comments</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TrackedChanges</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Forms</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>DocumentProtectionValues</maml:name>
+            <maml:name>WordDocumentProtectionType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -111732,7 +112575,7 @@ System.IO.FileInfo</maml:name>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
           <maml:para>Document to protect when provided explicitly.</maml:para>
@@ -111744,7 +112587,7 @@ System.IO.FileInfo</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
           <maml:para>Emit the protected document.</maml:para>
@@ -111756,7 +112599,7 @@ System.IO.FileInfo</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="0" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Password</maml:name>
         <maml:description>
           <maml:para>Password to apply.</maml:para>
@@ -111768,14 +112611,21 @@ System.IO.FileInfo</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ProtectionType</maml:name>
         <maml:description>
           <maml:para>Protection type (defaults to ReadOnly).</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">DocumentProtectionValues</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordDocumentProtectionType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ReadOnly</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Comments</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TrackedChanges</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Forms</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>DocumentProtectionValues</maml:name>
+          <maml:name>WordDocumentProtectionType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -111788,13 +112638,7 @@ System.IO.FileInfo</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>System.Object</maml:name>
-        </dev:type>
-      </command:returnValue>
-    </command:returnValues>
+    <command:returnValues />
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -140383,7 +141227,7 @@ contents, then save or close the presentation.</maml:para>
     <command:syntax>
       <command:syntaxItem parameterSetName="Index">
         <maml:name>Set-OfficePowerPointSlideLayout</maml:name>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Layout</maml:name>
           <maml:description>
             <maml:para>Layout index to use.</maml:para>
@@ -140395,7 +141239,7 @@ contents, then save or close the presentation.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Master</maml:name>
           <maml:description>
             <maml:para>Slide master index to use.</maml:para>
@@ -140407,7 +141251,7 @@ contents, then save or close the presentation.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Slide</maml:name>
           <maml:description>
             <maml:para>Slide to update (optional inside a slide DSL scope).</maml:para>
@@ -140422,7 +141266,7 @@ contents, then save or close the presentation.</maml:para>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Name">
         <maml:name>Set-OfficePowerPointSlideLayout</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>CaseSensitive</maml:name>
           <maml:description>
             <maml:para>Use case-sensitive matching for layout names.</maml:para>
@@ -140434,7 +141278,7 @@ contents, then save or close the presentation.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>LayoutName</maml:name>
           <maml:description>
             <maml:para>Layout name to use.</maml:para>
@@ -140446,7 +141290,7 @@ contents, then save or close the presentation.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Master</maml:name>
           <maml:description>
             <maml:para>Slide master index to use.</maml:para>
@@ -140458,7 +141302,7 @@ contents, then save or close the presentation.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Slide</maml:name>
           <maml:description>
             <maml:para>Slide to update (optional inside a slide DSL scope).</maml:para>
@@ -140473,19 +141317,57 @@ contents, then save or close the presentation.</maml:para>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Type">
         <maml:name>Set-OfficePowerPointSlideLayout</maml:name>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>LayoutType</maml:name>
           <maml:description>
             <maml:para>Layout type to use.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">SlideLayoutValues</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">PowerPointSlideLayoutType</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Title</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Text</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoColumnText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Table</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndChart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChartAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Diagram</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Chart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndClipArt</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ClipArtAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TitleOnly</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Blank</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndObject</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectOnly</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndMedia</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">MediaAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectOverText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextOverObject</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TextAndTwoObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoObjectsAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoObjectsOverText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">FourObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">VerticalText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ClipArtAndVerticalText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">VerticalTitleAndText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">VerticalTitleAndTextOverChart</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectAndTwoObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoObjectsAndObject</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">SectionHeader</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TwoTextAndTwoObjects</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ObjectText</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PictureText</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>SlideLayoutValues</maml:name>
+            <maml:name>PowerPointSlideLayoutType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Master</maml:name>
           <maml:description>
             <maml:para>Slide master index to use.</maml:para>
@@ -140497,7 +141379,7 @@ contents, then save or close the presentation.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Slide</maml:name>
           <maml:description>
             <maml:para>Slide to update (optional inside a slide DSL scope).</maml:para>
@@ -140512,7 +141394,7 @@ contents, then save or close the presentation.</maml:para>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>CaseSensitive</maml:name>
         <maml:description>
           <maml:para>Use case-sensitive matching for layout names.</maml:para>
@@ -140524,7 +141406,7 @@ contents, then save or close the presentation.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Layout</maml:name>
         <maml:description>
           <maml:para>Layout index to use.</maml:para>
@@ -140536,7 +141418,7 @@ contents, then save or close the presentation.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>LayoutName</maml:name>
         <maml:description>
           <maml:para>Layout name to use.</maml:para>
@@ -140548,19 +141430,57 @@ contents, then save or close the presentation.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>LayoutType</maml:name>
         <maml:description>
           <maml:para>Layout type to use.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">SlideLayoutValues</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">PowerPointSlideLayoutType</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Title</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Text</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoColumnText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Table</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndChart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChartAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Diagram</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Chart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndClipArt</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ClipArtAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TitleOnly</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Blank</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndObject</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectOnly</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Object</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndMedia</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MediaAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectOverText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextOverObject</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TextAndTwoObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoObjectsAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoObjectsOverText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">FourObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VerticalText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ClipArtAndVerticalText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VerticalTitleAndText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">VerticalTitleAndTextOverChart</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectAndTwoObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoObjectsAndObject</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">SectionHeader</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TwoTextAndTwoObjects</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ObjectText</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PictureText</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>SlideLayoutValues</maml:name>
+          <maml:name>PowerPointSlideLayoutType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Master</maml:name>
         <maml:description>
           <maml:para>Slide master index to use.</maml:para>
@@ -140572,7 +141492,7 @@ contents, then save or close the presentation.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Slide</maml:name>
         <maml:description>
           <maml:para>Slide to update (optional inside a slide DSL scope).</maml:para>
@@ -145304,7 +146224,7 @@ OfficeIMO.Word.WordDocument</maml:name>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Set-OfficeWordTableCell</maml:name>
-        <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>Cell</maml:name>
           <maml:description>
             <maml:para>Table cell to update.</maml:para>
@@ -145316,7 +146236,7 @@ OfficeIMO.Word.WordDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>CopyParagraphs</maml:name>
           <maml:description>
             <maml:para>Copy paragraphs while merging cells.</maml:para>
@@ -145328,43 +146248,43 @@ OfficeIMO.Word.WordDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FitText</maml:name>
           <maml:description>
             <maml:para>Whether text should fit within the cell.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Boolean</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MergeDown</maml:name>
           <maml:description>
             <maml:para>Number of cells to merge downward.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MergeRight</maml:name>
           <maml:description>
             <maml:para>Number of cells to merge to the right.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
             <maml:para>Emit the updated table cell.</maml:para>
@@ -145376,7 +146296,7 @@ OfficeIMO.Word.WordDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ShadingFillColor</maml:name>
           <maml:description>
             <maml:para>Cell shading fill color as #RRGGBB.</maml:para>
@@ -145388,7 +146308,7 @@ OfficeIMO.Word.WordDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ShadingPattern</maml:name>
           <maml:description>
             <maml:para>Cell shading pattern.</maml:para>
@@ -145440,31 +146360,31 @@ OfficeIMO.Word.WordDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>SplitHorizontal</maml:name>
           <maml:description>
             <maml:para>Number of columns to split the cell into.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>SplitVertical</maml:name>
           <maml:description>
             <maml:para>Number of rows to split the cell into.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Text</maml:name>
           <maml:description>
             <maml:para>Replace the visible cell text.</maml:para>
@@ -145476,31 +146396,45 @@ OfficeIMO.Word.WordDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TextDirection</maml:name>
           <maml:description>
             <maml:para>Cell text direction.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordTextDirection</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">LeftToRightTopToBottom</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">LeftToRightTopToBottom2010</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopToBottomRightToLeft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopToBottomRightToLeft2010</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomToTopLeftToRight</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">BottomToTopLeftToRight2010</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">LeftToRightTopToBottomRotated</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">LeftToRightTopToBottomRotated2010</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopToBottomRightToLeftRotated</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopToBottomRightToLeftRotated2010</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopToBottomLeftToRightRotated</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">TopToBottomLeftToRightRotated2010</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>WordTextDirection</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Width</maml:name>
           <maml:description>
             <maml:para>Cell width value.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>WidthType</maml:name>
           <maml:description>
             <maml:para>Cell width unit type.</maml:para>
@@ -145518,14 +146452,14 @@ OfficeIMO.Word.WordDocument</maml:name>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>WrapText</maml:name>
           <maml:description>
             <maml:para>Whether text wraps in the cell.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
           <dev:type>
-            <maml:name>Nullable`1</maml:name>
+            <maml:name>Boolean</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -145533,7 +146467,7 @@ OfficeIMO.Word.WordDocument</maml:name>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="0" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>Cell</maml:name>
         <maml:description>
           <maml:para>Table cell to update.</maml:para>
@@ -145545,7 +146479,7 @@ OfficeIMO.Word.WordDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>CopyParagraphs</maml:name>
         <maml:description>
           <maml:para>Copy paragraphs while merging cells.</maml:para>
@@ -145557,43 +146491,43 @@ OfficeIMO.Word.WordDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>FitText</maml:name>
         <maml:description>
           <maml:para>Whether text should fit within the cell.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MergeDown</maml:name>
         <maml:description>
           <maml:para>Number of cells to merge downward.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MergeRight</maml:name>
         <maml:description>
           <maml:para>Number of cells to merge to the right.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
           <maml:para>Emit the updated table cell.</maml:para>
@@ -145605,7 +146539,7 @@ OfficeIMO.Word.WordDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ShadingFillColor</maml:name>
         <maml:description>
           <maml:para>Cell shading fill color as #RRGGBB.</maml:para>
@@ -145617,7 +146551,7 @@ OfficeIMO.Word.WordDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ShadingPattern</maml:name>
         <maml:description>
           <maml:para>Cell shading pattern.</maml:para>
@@ -145669,31 +146603,31 @@ OfficeIMO.Word.WordDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>SplitHorizontal</maml:name>
         <maml:description>
           <maml:para>Number of columns to split the cell into.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>SplitVertical</maml:name>
         <maml:description>
           <maml:para>Number of rows to split the cell into.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Text</maml:name>
         <maml:description>
           <maml:para>Replace the visible cell text.</maml:para>
@@ -145705,31 +146639,45 @@ OfficeIMO.Word.WordDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TextDirection</maml:name>
         <maml:description>
           <maml:para>Cell text direction.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordTextDirection</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">LeftToRightTopToBottom</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">LeftToRightTopToBottom2010</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopToBottomRightToLeft</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopToBottomRightToLeft2010</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BottomToTopLeftToRight</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">BottomToTopLeftToRight2010</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">LeftToRightTopToBottomRotated</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">LeftToRightTopToBottomRotated2010</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopToBottomRightToLeftRotated</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopToBottomRightToLeftRotated2010</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopToBottomLeftToRightRotated</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TopToBottomLeftToRightRotated2010</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>WordTextDirection</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Width</maml:name>
         <maml:description>
           <maml:para>Cell width value.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>WidthType</maml:name>
         <maml:description>
           <maml:para>Cell width unit type.</maml:para>
@@ -145747,14 +146695,14 @@ OfficeIMO.Word.WordDocument</maml:name>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="true" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>WrapText</maml:name>
         <maml:description>
           <maml:para>Whether text wraps in the cell.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Nullable`1</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
         <dev:type>
-          <maml:name>Nullable`1</maml:name>
+          <maml:name>Boolean</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>

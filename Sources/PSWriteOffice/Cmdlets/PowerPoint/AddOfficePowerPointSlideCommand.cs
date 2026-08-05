@@ -1,6 +1,5 @@
 using System;
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Presentation;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services.PowerPoint;
 
@@ -46,7 +45,7 @@ public class AddOfficePowerPointSlideCommand : PSCmdlet
 
     /// <summary>Layout type to use.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetByType)]
-    public SlideLayoutValues LayoutType { get; set; }
+    public PowerPointSlideLayoutType LayoutType { get; set; }
 
     /// <summary>Use case-sensitive matching for layout names.</summary>
     [Parameter(ParameterSetName = ParameterSetByName)]
@@ -75,7 +74,7 @@ public class AddOfficePowerPointSlideCommand : PSCmdlet
                     slide = presentation.AddSlide(LayoutName, Master, ignoreCase: !CaseSensitive.IsPresent);
                     break;
                 case ParameterSetByType:
-                    slide = presentation.AddSlide(LayoutType, Master);
+                    slide = presentation.AddSlideWithLayoutType(LayoutType, Master);
                     break;
                 default:
                     slide = presentation.AddSlide(Master, Layout);

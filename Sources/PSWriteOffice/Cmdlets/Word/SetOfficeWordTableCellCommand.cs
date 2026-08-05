@@ -105,7 +105,7 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
     public string? WidthType { get; set; }
 
     /// <summary>Cell text direction.</summary>
-    [Parameter] public TextDirectionValues? TextDirection { get; set; }
+    [Parameter] public WordTextDirection? TextDirection { get; set; }
 
     /// <summary>Whether text wraps in the cell.</summary>
     [Parameter] public bool? WrapText { get; set; }
@@ -144,7 +144,7 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
         if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingPattern))) Cell.ShadingPattern = new ShadingPatternValues(ToOpenXmlToken(ShadingPattern));
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Width))) Cell.Width = Width;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(WidthType))) Cell.WidthType = new TableWidthUnitValues(ToOpenXmlToken(WidthType));
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(TextDirection))) Cell.TextDirection = TextDirection;
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(TextDirection))) Cell.SetTextDirection(TextDirection);
         if (MyInvocation.BoundParameters.ContainsKey(nameof(WrapText))) Cell.WrapText = WrapText ?? false;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(FitText))) Cell.FitText = FitText ?? false;
         if (MergeRight.HasValue) Cell.MergeHorizontally(MergeRight.Value, CopyParagraphs.IsPresent);

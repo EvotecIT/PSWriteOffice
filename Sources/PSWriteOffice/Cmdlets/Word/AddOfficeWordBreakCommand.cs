@@ -1,6 +1,5 @@
 using System;
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -23,9 +22,9 @@ public sealed class AddOfficeWordBreakCommand : PSCmdlet
     [Parameter(ValueFromPipeline = true)]
     public WordParagraph? Paragraph { get; set; }
 
-    /// <summary>Optional OpenXML break type, for example Page or Column.</summary>
+    /// <summary>Optional break type, for example Page or Column.</summary>
     [Parameter]
-    public BreakValues? BreakType { get; set; }
+    public WordBreakType? BreakType { get; set; }
 
     /// <summary>Number of breaks to add.</summary>
     [Parameter]
@@ -44,7 +43,9 @@ public sealed class AddOfficeWordBreakCommand : PSCmdlet
 
         for (var index = 0; index < Count; index++)
         {
-            current = current.AddBreak(BreakType);
+            current = BreakType.HasValue
+                ? current.AddBreakWithType(BreakType.Value)
+                : current.AddBreak();
         }
 
         if (PassThru.IsPresent)

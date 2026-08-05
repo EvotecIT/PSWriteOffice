@@ -11,7 +11,7 @@ Adds a break to a Word paragraph.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordBreak [-Paragraph <WordParagraph>] [-BreakType <BreakValues>] [-Count <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordBreak [-Paragraph <WordParagraph>] [-BreakType <WordBreakType>] [-Count <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,19 +29,19 @@ Writes both lines in the same paragraph separated by a soft break.
 ## PARAMETERS
 
 ### -BreakType
-Optional OpenXML break type, for example Page or Column.
+Optional break type, for example Page or Column.
 
 ```yaml
-Type: Nullable`1
+Type: WordBreakType
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Page, Column, TextWrapping
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Count
@@ -57,7 +57,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Paragraph
@@ -73,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -89,7 +89,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

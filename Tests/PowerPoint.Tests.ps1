@@ -349,11 +349,11 @@ Describe 'PowerPoint cmdlets' {
 
         $layouts = Get-OfficePowerPointLayout -Presentation $presentation
         $layouts.Count | Should -BeGreaterThan 0
-        $layoutType = $layouts | Where-Object { $_.Type } | Select-Object -First 1
+        $layoutType = $layouts | Where-Object { $_.LayoutType } | Select-Object -First 1
         if ($layoutType) {
             $layoutMaster = $layoutType.MasterIndex
             $layoutIndex = $layoutType.LayoutIndex
-            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.Type -Master $layoutType.MasterIndex
+            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.LayoutType -Master $layoutType.MasterIndex
         } elseif ($layouts[0].Name) {
             $layoutMaster = $layouts[0].MasterIndex
             $layoutIndex = $layouts[0].LayoutIndex
@@ -908,11 +908,11 @@ Describe 'PowerPoint cmdlets' {
         $layouts = Get-OfficePowerPointLayout -Presentation $presentation
         $layouts.Count | Should -BeGreaterThan 0
 
-        $layoutType = $layouts | Where-Object { $_.Type } | Select-Object -First 1
+        $layoutType = $layouts | Where-Object { $_.LayoutType } | Select-Object -First 1
         if ($layoutType) {
             $layoutMaster = $layoutType.MasterIndex
             $layoutIndex = $layoutType.LayoutIndex
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.Type -Master $layoutType.MasterIndex
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.LayoutType -Master $layoutType.MasterIndex
         } elseif ($layouts[0].Name) {
             $layoutMaster = $layouts[0].MasterIndex
             $layoutIndex = $layouts[0].LayoutIndex
@@ -1273,8 +1273,8 @@ Describe 'PowerPoint cmdlets' {
         Set-OfficePowerPointThemeFonts -Presentation $presentation -MajorLatin 'Aptos' -MinorLatin 'Calibri' -AllMasters
         Set-OfficePowerPointThemeName -Presentation $presentation -Name 'Contoso Theme' -AllMasters
 
-        if ($alternativeLayout.Type) {
-            $slide | Set-OfficePowerPointSlideLayout -LayoutType $alternativeLayout.Type -Master $alternativeLayout.MasterIndex | Out-Null
+        if ($alternativeLayout.LayoutType) {
+            $slide | Set-OfficePowerPointSlideLayout -LayoutType $alternativeLayout.LayoutType -Master $alternativeLayout.MasterIndex | Out-Null
         } elseif ($alternativeLayout.Name) {
             $slide | Set-OfficePowerPointSlideLayout -LayoutName $alternativeLayout.Name -Master $alternativeLayout.MasterIndex | Out-Null
         } else {
