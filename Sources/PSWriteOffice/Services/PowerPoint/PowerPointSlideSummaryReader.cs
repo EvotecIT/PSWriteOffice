@@ -115,13 +115,13 @@ internal static class PowerPointSlideSummaryReader
 
     private static string? ResolveTitle(PowerPointSlide slide)
     {
-        var title = slide.GetPlaceholder(PlaceholderValues.Title)?.Text;
+        var title = slide.GetPlaceholder(PowerPointPlaceholderType.Title)?.Text;
         if (!string.IsNullOrWhiteSpace(title))
         {
             return title;
         }
 
-        title = slide.GetPlaceholder(PlaceholderValues.CenteredTitle)?.Text;
+        title = slide.GetPlaceholder(PowerPointPlaceholderType.CenteredTitle)?.Text;
         if (!string.IsNullOrWhiteSpace(title))
         {
             return title;

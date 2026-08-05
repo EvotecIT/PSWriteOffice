@@ -82,7 +82,7 @@ public sealed class SetOfficeExcelChartTrendlineCommand : PSCmdlet
     {
         try
         {
-            if (!OpenXmlValueParser.TryParse(Type, out C.TrendlineValues trendlineType))
+            if (!OpenXmlValueParser.TryParse(Type, out ExcelChartTrendlineType trendlineType))
             {
                 throw new PSArgumentException($"Unknown trendline type '{Type}'.");
             }

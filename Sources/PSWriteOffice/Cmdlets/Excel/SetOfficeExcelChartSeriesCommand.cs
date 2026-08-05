@@ -110,7 +110,7 @@ public sealed class SetOfficeExcelChartSeriesCommand : PSCmdlet
                 !string.IsNullOrWhiteSpace(MarkerFillColor) || !string.IsNullOrWhiteSpace(MarkerLineColor) || MarkerLineWidthPoints.HasValue;
             if (markerRequested)
             {
-                if (!OpenXmlValueParser.TryParse(markerStyleName, out C.MarkerStyleValues markerStyle))
+                if (!OpenXmlValueParser.TryParse(markerStyleName, out ExcelChartMarkerStyle markerStyle))
                 {
                     throw new PSArgumentException($"Unknown MarkerStyle '{MarkerStyle}'.");
                 }

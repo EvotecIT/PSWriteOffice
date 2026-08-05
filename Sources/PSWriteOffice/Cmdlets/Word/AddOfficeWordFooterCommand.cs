@@ -29,7 +29,7 @@ public sealed class AddOfficeWordFooterCommand : PSCmdlet
     {
         var context = WordDslContext.Require(this);
         var section = context.RequireSection();
-        var footer = section.GetOrCreateFooterWithType(Type);
+        var footer = section.GetOrCreateFooter(Type);
 
         using (context.Push(footer))
         {

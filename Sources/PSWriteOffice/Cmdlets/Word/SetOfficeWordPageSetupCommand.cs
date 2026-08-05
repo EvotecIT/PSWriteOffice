@@ -222,10 +222,10 @@ public sealed class SetOfficeWordPageSetupCommand : PSCmdlet
         }
     }
 
-    private PageOrientationValues ResolveOrientation()
+    private WordPageOrientation ResolveOrientation()
     {
         return string.Equals(Orientation, "Landscape", StringComparison.OrdinalIgnoreCase)
-            ? PageOrientationValues.Landscape
-            : PageOrientationValues.Portrait;
+            ? WordPageOrientation.Landscape
+            : WordPageOrientation.Portrait;
     }
 }

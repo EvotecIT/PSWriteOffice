@@ -69,7 +69,7 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
 
         if (Alignment.HasValue)
         {
-            paragraph.SetParagraphAlignment(Alignment.Value);
+            paragraph.ParagraphAlignment = Alignment.Value;
         }
 
         if (Style.HasValue)

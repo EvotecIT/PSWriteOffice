@@ -928,7 +928,7 @@ Describe 'PowerPoint cmdlets' {
 
         $layoutPlaceholder = $layoutPlaceholders | Where-Object { $_.PlaceholderType } | Select-Object -First 1
         if ($layoutPlaceholder) {
-            $layoutPlaceholderType = $layoutPlaceholder.PlaceholderType.Value
+            $layoutPlaceholderType = $layoutPlaceholder.PlaceholderType.ToString()
             $boundsBox = Set-OfficePowerPointLayoutPlaceholderBounds -Presentation $presentation -Master $layoutMaster -Layout $layoutIndex -PlaceholderType $layoutPlaceholderType -Index $layoutPlaceholder.PlaceholderIndex -Left 48 -Top 36 -Width 620 -Height 180 -PassThru
             $boundsBox.LeftPoints | Should -Be 48
             $boundsBox.TopPoints | Should -Be 36
@@ -1139,11 +1139,12 @@ Describe 'PowerPoint cmdlets' {
                 $layoutPlaceholders.Count | Should -BeGreaterThan 0
                 $layoutPlaceholder = $layoutPlaceholders | Where-Object { $_.PlaceholderType } | Select-Object -First 1
                 if ($layoutPlaceholder) {
-                    $placeholder = Get-OfficePowerPointPlaceholder -PlaceholderType $layoutPlaceholder.PlaceholderType.Value -Index $layoutPlaceholder.PlaceholderIndex
+                    $placeholderType = $layoutPlaceholder.PlaceholderType.ToString()
+                    $placeholder = Get-OfficePowerPointPlaceholder -PlaceholderType $placeholderType -Index $layoutPlaceholder.PlaceholderIndex
                     if ($placeholder -and ((
-                            $layoutPlaceholder.PlaceholderType.Value -eq [DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title
+                            $placeholderType -eq 'Title'
                         ) -or (
-                            $layoutPlaceholder.PlaceholderType.Value -eq [DocumentFormat.OpenXml.Presentation.PlaceholderValues]::CenteredTitle
+                            $placeholderType -eq 'CenteredTitle'
                         ))) {
                         $placeholder | Should -Not -BeNullOrEmpty
                         $placeholder.Text | Should -Be 'DSL Slide'

@@ -108,7 +108,7 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
         PowerPointPresentation? presentation = null;
         try
         {
-            if (!OpenXmlValueParser.TryParse<PlaceholderValues>(PlaceholderType, out var placeholderType))
+            if (!OpenXmlValueParser.TryParse<PowerPointPlaceholderType>(PlaceholderType, out var placeholderType))
             {
                 throw new PSArgumentException($"Unknown placeholder type '{PlaceholderType}'.", nameof(PlaceholderType));
             }
@@ -124,7 +124,7 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
                 throw new PSArgumentException("Specify a style name, style properties, or bullet/numbering settings.");
             }
 
-            A.TextAutoNumberSchemeValues? numbering = ResolveNumbering();
+            PowerPointNumberingScheme? numbering = ResolveNumbering();
             char? bulletChar = ResolveBulletChar();
 
             presentation = Presentation ?? PowerPointDslContext.Require(this).Presentation;
@@ -216,14 +216,14 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
         return hasStyleName || hasStyleOverrides || hasBulletSettings;
     }
 
-    private A.TextAutoNumberSchemeValues? ResolveNumbering()
+    private PowerPointNumberingScheme? ResolveNumbering()
     {
         if (string.IsNullOrWhiteSpace(Numbering))
         {
             return null;
         }
 
-        if (!OpenXmlValueParser.TryParse<A.TextAutoNumberSchemeValues>(Numbering, out var numbering))
+        if (!OpenXmlValueParser.TryParse<PowerPointNumberingScheme>(Numbering, out var numbering))
         {
             throw new PSArgumentException($"Unknown numbering scheme '{Numbering}'.", nameof(Numbering));
         }

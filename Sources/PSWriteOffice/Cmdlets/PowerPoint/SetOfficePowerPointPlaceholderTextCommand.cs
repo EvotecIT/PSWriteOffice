@@ -53,7 +53,7 @@ public sealed class SetOfficePowerPointPlaceholderTextCommand : PSCmdlet
     {
         try
         {
-            if (!OpenXmlValueParser.TryParse<PlaceholderValues>(PlaceholderType, out var placeholderType))
+            if (!OpenXmlValueParser.TryParse<PowerPointPlaceholderType>(PlaceholderType, out var placeholderType))
             {
                 throw new PSArgumentException($"Unknown placeholder type '{PlaceholderType}'.", nameof(PlaceholderType));
             }

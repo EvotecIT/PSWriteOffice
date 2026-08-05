@@ -1,6 +1,5 @@
 using System;
 using System.Management.Automation;
-using C = DocumentFormat.OpenXml.Drawing.Charts;
 using OfficeIMO.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
@@ -81,15 +80,15 @@ public sealed class SetOfficeExcelChartLegendCommand : PSCmdlet
         }
     }
 
-    private static C.LegendPositionValues ResolveLegendPosition(string value)
+    private static ExcelChartLegendPosition ResolveLegendPosition(string value)
     {
         return value switch
         {
-            "Bottom" => C.LegendPositionValues.Bottom,
-            "Left" => C.LegendPositionValues.Left,
-            "Right" => C.LegendPositionValues.Right,
-            "Top" => C.LegendPositionValues.Top,
-            "TopRight" => C.LegendPositionValues.TopRight,
+            "Bottom" => ExcelChartLegendPosition.Bottom,
+            "Left" => ExcelChartLegendPosition.Left,
+            "Right" => ExcelChartLegendPosition.Right,
+            "Top" => ExcelChartLegendPosition.Top,
+            "TopRight" => ExcelChartLegendPosition.TopRight,
             _ => throw new PSArgumentException($"Unsupported legend position '{value}'.")
         };
     }

@@ -24,7 +24,7 @@ Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text '
 $layoutPlaceholders = Get-OfficePowerPointLayoutPlaceholder -Slide $slide
 $placeholder = $layoutPlaceholders | Where-Object { $_.PlaceholderType } | Select-Object -First 1
 if ($placeholder) {
-    $placeholderType = $placeholder.PlaceholderType.Value
+    $placeholderType = $placeholder.PlaceholderType.ToString()
     Set-OfficePowerPointLayoutPlaceholderBounds -Presentation $presentation -Master $layout.MasterIndex -Layout $layout.LayoutIndex `
         -PlaceholderType $placeholderType -Index $placeholder.PlaceholderIndex -Left 60 -Top 140 -Width 520 -Height 240 | Out-Null
     Set-OfficePowerPointLayoutPlaceholderTextMargins -Presentation $presentation -Master $layout.MasterIndex -Layout $layout.LayoutIndex `

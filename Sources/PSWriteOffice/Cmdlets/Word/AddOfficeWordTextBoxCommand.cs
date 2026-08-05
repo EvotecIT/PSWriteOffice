@@ -103,12 +103,12 @@ public sealed class AddOfficeWordTextBoxCommand : PSCmdlet
 
         if (HorizontalPositionRelativeFrom.HasValue)
         {
-            textBox.SetHorizontalPositionRelativeFrom(HorizontalPositionRelativeFrom.Value);
+            textBox.HorizontalPositionRelativeFrom = HorizontalPositionRelativeFrom.Value;
         }
 
         if (VerticalPositionRelativeFrom.HasValue)
         {
-            textBox.SetVerticalPositionRelativeFrom(VerticalPositionRelativeFrom.Value);
+            textBox.VerticalPositionRelativeFrom = VerticalPositionRelativeFrom.Value;
         }
 
         if (AutoFit.HasValue)

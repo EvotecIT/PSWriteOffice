@@ -10,7 +10,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>List slide titles.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficePowerPointSlide -Presentation $ppt | ForEach-Object { $_.GetPlaceholder([DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title).Text }</code>
+///   <code>Get-OfficePowerPointSlide -Presentation $ppt | Get-OfficePowerPointPlaceholder -PlaceholderType Title | Select-Object -ExpandProperty Text</code>
 ///   <para>Streams each slide so you can read the title placeholder text.</para>
 /// </example>
 /// <example>

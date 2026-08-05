@@ -110,14 +110,14 @@ public sealed class SetOfficeWordTextStyleCommand : PSCmdlet
         if (IsBound(nameof(Italic))) text.Italic = Italic ?? false;
         if (!string.IsNullOrWhiteSpace(Underline))
         {
-            text.Underline = ParseOpenXmlValue<UnderlineValues>(Underline!, nameof(Underline));
+            text.Underline = ParseOpenXmlValue<WordUnderlineStyle>(Underline!, nameof(Underline));
         }
         if (IsBound(nameof(Color))) text.ColorHex = Color ?? string.Empty;
         if (IsBound(nameof(FontSize))) text.FontSize = FontSize;
         if (IsBound(nameof(FontFamily))) text.FontFamily = FontFamily;
         if (!string.IsNullOrWhiteSpace(Highlight))
         {
-            text.Highlight = ParseOpenXmlValue<HighlightColorValues>(Highlight!, nameof(Highlight));
+            text.Highlight = ParseOpenXmlValue<WordHighlightColor>(Highlight!, nameof(Highlight));
         }
         if (IsBound(nameof(Strike))) text.Strike = Strike ?? false;
         if (IsBound(nameof(DoubleStrike))) text.DoubleStrike = DoubleStrike ?? false;

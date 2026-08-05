@@ -74,7 +74,7 @@ public class AddOfficePowerPointSlideCommand : PSCmdlet
                     slide = presentation.AddSlide(LayoutName, Master, ignoreCase: !CaseSensitive.IsPresent);
                     break;
                 case ParameterSetByType:
-                    slide = presentation.AddSlideWithLayoutType(LayoutType, Master);
+                    slide = presentation.AddSlide(LayoutType, Master);
                     break;
                 default:
                     slide = presentation.AddSlide(Master, Layout);

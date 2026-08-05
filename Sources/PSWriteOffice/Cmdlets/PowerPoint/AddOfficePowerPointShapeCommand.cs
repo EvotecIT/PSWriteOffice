@@ -1,9 +1,8 @@
 using System;
 using System.Management.Automation;
-using System.Reflection;
-using DocumentFormat.OpenXml.Drawing;
 using OfficeIMO.Drawing;
 using OfficeIMO.PowerPoint;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.PowerPoint;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
@@ -123,22 +122,18 @@ public sealed class AddOfficePowerPointShapeCommand : PSCmdlet
         return OfficeColor.Parse(color!).ToRgbHex().ToLowerInvariant();
     }
 
-    private static ShapeTypeValues ResolveShapeType(string? shapeType)
+    private static PowerPointShapeType ResolveShapeType(string? shapeType)
     {
         if (string.IsNullOrWhiteSpace(shapeType))
         {
-            return ShapeTypeValues.Rectangle;
+            return PowerPointShapeType.Rectangle;
         }
 
-        var property = typeof(ShapeTypeValues).GetProperty(
-            shapeType,
-            BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
-
-        if (property == null)
+        if (!OpenXmlValueParser.TryParse<PowerPointShapeType>(shapeType, out var parsed))
         {
             throw new PSArgumentException($"Unknown shape type '{shapeType}'.", nameof(ShapeType));
         }
 
-        return (ShapeTypeValues)property.GetValue(null)!;
+        return parsed;
     }
 }

@@ -21,7 +21,7 @@ Supports pipeline-friendly iteration over Slides or direct index selection.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficePowerPointSlide -Presentation $ppt | ForEach-Object { $_.GetPlaceholder([DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title).Text }
+PS> Get-OfficePowerPointSlide -Presentation $ppt | Get-OfficePowerPointPlaceholder -PlaceholderType Title | Select-Object -ExpandProperty Text
 ```
 
 Streams each slide so you can read the title placeholder text.

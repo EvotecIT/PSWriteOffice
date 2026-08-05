@@ -105,7 +105,7 @@ public sealed class AddOfficeExcelSparklineCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var sheet = ResolveSheet();
-        if (!OpenXmlValueParser.TryParse<SparklineTypeValues>(Type, out var sparklineType))
+        if (!OpenXmlValueParser.TryParse<ExcelSparklineType>(Type, out var sparklineType))
         {
             throw new PSArgumentException($"Unknown sparkline type '{Type}'.", nameof(Type));
         }

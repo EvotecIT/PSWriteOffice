@@ -61,7 +61,7 @@ public sealed class GetOfficePowerPointLayoutPlaceholderCommand : PSCmdlet
         }
     }
 
-    private static bool TryResolvePlaceholderType(string? placeholderType, out PlaceholderValues value)
+    private static bool TryResolvePlaceholderType(string? placeholderType, out PowerPointPlaceholderType value)
     {
         value = default;
         if (string.IsNullOrWhiteSpace(placeholderType))
@@ -69,16 +69,6 @@ public sealed class GetOfficePowerPointLayoutPlaceholderCommand : PSCmdlet
             return false;
         }
 
-        var property = typeof(PlaceholderValues).GetProperty(
-            placeholderType,
-            BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
-
-        if (property == null)
-        {
-            return false;
-        }
-
-        value = (PlaceholderValues)property.GetValue(null)!;
-        return true;
+        return Enum.TryParse(placeholderType, true, out value);
     }
 }

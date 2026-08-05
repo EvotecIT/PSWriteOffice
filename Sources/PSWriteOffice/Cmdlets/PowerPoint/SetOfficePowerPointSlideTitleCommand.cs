@@ -32,8 +32,8 @@ public class SetOfficePowerPointSlideTitleCommand : PSCmdlet
         try
         {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
-            var titleBox = slide.GetPlaceholder(PlaceholderValues.Title) ??
-                           slide.GetPlaceholder(PlaceholderValues.CenteredTitle);
+            var titleBox = slide.GetPlaceholder(PowerPointPlaceholderType.Title) ??
+                           slide.GetPlaceholder(PowerPointPlaceholderType.CenteredTitle);
 
             if (titleBox != null)
             {

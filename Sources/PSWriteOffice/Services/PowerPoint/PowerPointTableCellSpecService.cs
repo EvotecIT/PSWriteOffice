@@ -61,13 +61,13 @@ internal static class PowerPointTableCellSpecService
         }
 
         if (!string.IsNullOrWhiteSpace(style.Align) &&
-            OpenXmlValueParser.TryParse<A.TextAlignmentTypeValues>(style.Align, out var alignment))
+            OpenXmlValueParser.TryParse<PowerPointTextAlignment>(style.Align, out var alignment))
         {
             cell.HorizontalAlignment = alignment;
         }
 
         if (!string.IsNullOrWhiteSpace(style.VerticalAlign) &&
-            OpenXmlValueParser.TryParse<A.TextAnchoringTypeValues>(style.VerticalAlign, out var verticalAlignment))
+            OpenXmlValueParser.TryParse<PowerPointTextVerticalAlignment>(style.VerticalAlign, out var verticalAlignment))
         {
             cell.VerticalAlignment = verticalAlignment;
         }

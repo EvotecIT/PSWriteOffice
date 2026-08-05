@@ -1,5 +1,4 @@
 using System;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 
 namespace PSWriteOffice.Services.Word;
@@ -8,7 +7,7 @@ public static partial class WordDocumentService
 {
     /// <summary>Adds text runs to the specified paragraph.</summary>
     public static WordParagraph AddText(WordDocument? document, WordParagraph? paragraph, string[] text, bool?[]? bold,
-        bool?[]? italic, UnderlineValues?[]? underline, string[]? color, JustificationValues? alignment,
+        bool?[]? italic, WordUnderlineStyle?[]? underline, string[]? color, WordParagraphAlignment? alignment,
         WordParagraphStyles? style)
     {
         if (bold != null && bold.Length != text.Length)
@@ -41,6 +40,11 @@ public static partial class WordDocumentService
         var boldArray = bold;
         var italicArray = italic;
         var underlineArray = underline;
+
+        if (alignment.HasValue)
+        {
+            para.ParagraphAlignment = alignment.Value;
+        }
 
         for (var t = 0; t < text.Length; t++)
         {

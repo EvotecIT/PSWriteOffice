@@ -184,7 +184,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         return LanguagePrimitives.IsTrue(result[result.Count - 1]);
     }
 
-    private static TableLayoutValues? ResolveLegacyLayout(string? layout)
+    private static WordTableLayoutMode? ResolveLegacyLayout(string? layout)
     {
         if (string.IsNullOrWhiteSpace(layout))
         {
@@ -202,8 +202,8 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         return string.Equals(layout, "Autofit", StringComparison.OrdinalIgnoreCase)
-            ? TableLayoutValues.Autofit
-            : TableLayoutValues.Fixed;
+            ? WordTableLayoutMode.Autofit
+            : WordTableLayoutMode.Fixed;
     }
 
     private static void ApplyLayout(WordTable table, string? layout)
@@ -230,7 +230,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         IReadOnlyList<object?> normalizedRows,
         WordTableStyle style,
         bool includeHeader,
-        TableLayoutValues? layout)
+        WordTableLayoutMode? layout)
     {
         if (context.CurrentTableCell == null)
         {
@@ -244,7 +244,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         WordDslContext context,
         OfficeTableSpec spec,
         WordTableStyle style,
-        TableLayoutValues? layout)
+        WordTableLayoutMode? layout)
     {
         if (spec.RowCount == 0 || spec.ColumnCount == 0)
         {
@@ -315,7 +315,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         IReadOnlyList<object?> items,
         WordTableStyle style,
         bool includeHeader,
-        TableLayoutValues? layout)
+        WordTableLayoutMode? layout)
     {
         if (items.Count == 0)
         {
@@ -465,13 +465,13 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         if (!string.IsNullOrWhiteSpace(style.Align) &&
-            OpenXmlValueParser.TryParse<JustificationValues>(style.Align, out var alignment))
+            OpenXmlValueParser.TryParse<WordParagraphAlignment>(style.Align, out var alignment))
         {
             paragraph.ParagraphAlignment = alignment;
         }
 
         if (!string.IsNullOrWhiteSpace(style.VerticalAlign) &&
-            OpenXmlValueParser.TryParse<TableVerticalAlignmentValues>(style.VerticalAlign, out var verticalAlignment))
+            OpenXmlValueParser.TryParse<WordTableVerticalAlignment>(style.VerticalAlign, out var verticalAlignment))
         {
             cell.VerticalAlignment = verticalAlignment;
         }

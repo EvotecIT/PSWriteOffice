@@ -29,7 +29,7 @@ public sealed class AddOfficeWordHeaderCommand : PSCmdlet
     {
         var context = WordDslContext.Require(this);
         var section = context.RequireSection();
-        var header = section.GetOrCreateHeaderWithType(Type);
+        var header = section.GetOrCreateHeader(Type);
 
         using (context.Push(header))
         {

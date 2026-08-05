@@ -1,6 +1,5 @@
 using System;
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Spreadsheet;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
@@ -94,7 +93,7 @@ public sealed class AddOfficeExcelConditionalIconSetCommand : PSCmdlet
             throw new PSArgumentException("Provide either PercentThresholds or NumberThresholds, not both.");
         }
 
-        if (!OpenXmlValueParser.TryParse<IconSetValues>(IconSet, out var iconSet))
+        if (!OpenXmlValueParser.TryParse<ExcelIconSet>(IconSet, out var iconSet))
         {
             throw new PSArgumentException($"Unknown icon set '{IconSet}'.", nameof(IconSet));
         }

@@ -572,7 +572,7 @@ Describe 'Word DSL surface' {
             $document.Tables.Count | Should -Be 3
             $document.Tables[0].LayoutMode.ToString() | Should -Be 'AutoFitToContents'
             $document.Tables[1].LayoutMode.ToString() | Should -Be 'AutoFitToWindow'
-            $document.Tables[2].LayoutType.Value | Should -Be 'fixed'
+            $document.Tables[2].LayoutType.ToString() | Should -Be 'Fixed'
         } finally {
             $document.Dispose()
         }
@@ -1136,7 +1136,7 @@ Describe 'Word DSL surface' {
             $document.CoverPageProperties.Abstract | Should -Be 'Executive summary'
             $document.CoverPageProperties.CompanyEmail | Should -Be 'reports@example.test'
             $document.Sections[0].PageSettings.PageSize.ToString() | Should -Be 'A4'
-            $document.Sections[0].PageOrientation.Value | Should -Be 'landscape'
+            $document.Sections[0].PageOrientation.ToString() | Should -Be 'Landscape'
             $document.Sections[0].Margins.Type.ToString() | Should -Be 'Narrow'
             $document.Sections[0].ColumnCount | Should -Be 2
             $document.Sections[0].ColumnsSpace | Should -Be 720
@@ -1647,7 +1647,7 @@ Describe 'Word DSL surface' {
 
             $cell.ShadingFillColorHex | Should -Be 'DDEEFF'
             $cell.Width | Should -Be 2400
-            $cell.WidthType.Value | Should -Be 'dxa'
+            $cell.WidthType.ToString() | Should -Be 'Dxa'
         } finally {
             $document.Dispose()
         }
@@ -1796,7 +1796,7 @@ Describe 'Word DSL surface' {
         try {
             $styledParagraph = $document.Paragraphs | Where-Object Text -EQ 'Executive Summary' | Select-Object -First 1
             $styledParagraph.Style.ToString() | Should -Be 'Heading2'
-            $styledParagraph.ParagraphAlignment.Value | Should -Be 'center'
+            $styledParagraph.ParagraphAlignment.ToString() | Should -Be 'Center'
             $styledParagraph.LineSpacingBeforePoints | Should -Be 6
             $styledParagraph.LineSpacingAfterPoints | Should -Be 12
             $styledParagraph.IndentationBeforePoints | Should -Be 18
@@ -1810,11 +1810,11 @@ Describe 'Word DSL surface' {
             $styledText.Text | Should -Be 'Styled text'
             $styledText.Bold | Should -BeTrue
             $styledText.Italic | Should -BeTrue
-            $styledText.Underline.Value | Should -Be 'single'
+            $styledText.Underline.ToString() | Should -Be 'Single'
             $styledText.ColorHex | Should -Be 'c00000'
             $styledText.FontSize | Should -Be 14
             $styledText.FontFamily | Should -Be 'Aptos'
-            $styledText.Highlight.Value | Should -Be 'yellow'
+            $styledText.Highlight.ToString() | Should -Be 'Yellow'
             $styledText.CapsStyle.ToString() | Should -Be 'SmallCaps'
             $styledText.Strike | Should -BeTrue
             $styledText.CharacterStyle.ToString() | Should -Be 'Heading2Char'

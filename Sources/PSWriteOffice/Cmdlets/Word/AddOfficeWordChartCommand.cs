@@ -290,15 +290,15 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
         return OfficeColor.Parse(colorValue);
     }
 
-    private static LegendPositionValues ResolveLegendPosition(string position)
+    private static WordChartLegendPosition ResolveLegendPosition(string position)
     {
         return position switch
         {
-            "Left" => LegendPositionValues.Left,
-            "Top" => LegendPositionValues.Top,
-            "Bottom" => LegendPositionValues.Bottom,
-            "TopRight" => LegendPositionValues.TopRight,
-            _ => LegendPositionValues.Right
+            "Left" => WordChartLegendPosition.Left,
+            "Top" => WordChartLegendPosition.Top,
+            "Bottom" => WordChartLegendPosition.Bottom,
+            "TopRight" => WordChartLegendPosition.TopRight,
+            _ => WordChartLegendPosition.Right
         };
     }
 

@@ -44,7 +44,7 @@ public sealed class AddOfficeWordBreakCommand : PSCmdlet
         for (var index = 0; index < Count; index++)
         {
             current = BreakType.HasValue
-                ? current.AddBreakWithType(BreakType.Value)
+                ? current.AddBreak(BreakType.Value)
                 : current.AddBreak();
         }
 

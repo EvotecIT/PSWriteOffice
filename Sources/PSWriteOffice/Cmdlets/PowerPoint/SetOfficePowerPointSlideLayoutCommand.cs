@@ -57,7 +57,7 @@ public sealed class SetOfficePowerPointSlideLayoutCommand : PSCmdlet
                     slide.SetLayout(LayoutName, Master, ignoreCase: !CaseSensitive.IsPresent);
                     break;
                 case ParameterSetByType:
-                    slide.SetLayoutWithType(LayoutType, Master);
+                    slide.SetLayout(LayoutType, Master);
                     break;
                 default:
                     slide.SetLayout(Master, Layout);
