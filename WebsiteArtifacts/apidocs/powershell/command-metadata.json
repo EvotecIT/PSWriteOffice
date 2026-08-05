@@ -59,8 +59,8 @@
         "ExcelConditionalIconSet"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalIconSetCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalIconSetCommand.cs#L19"
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalIconSetCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelConditionalRule",
@@ -862,8 +862,8 @@
         "PptShape"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointShapeCommand.cs",
-      "sourceLine": 25,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointShapeCommand.cs#L25"
+      "sourceLine": 24,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointShapeCommand.cs#L24"
     },
     {
       "name": "Add-OfficePowerPointSlide",
@@ -3599,16 +3599,16 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartDataLabelsCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartDataLabelsCommand.cs#L17"
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartDataLabelsCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelChartLegend",
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartLegendCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartLegendCommand.cs#L17"
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/SetOfficeExcelChartLegendCommand.cs#L16"
     },
     {
       "name": "Set-OfficeExcelChartPoint",
