@@ -71,31 +71,13 @@ public sealed class FindOfficeExcelCommand : PSCmdlet
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
             var range = string.IsNullOrWhiteSpace(Range) ? sheet.GetUsedRangeA1() : Range!;
-            var (firstRow, firstColumn, _, _) = A1.ParseRange(range);
-            var options = new ExcelReadOptions
+            foreach (var cell in sheet.EnumerateRange(range))
             {
-                SheetName = sheet.Name,
-                A1Range = range,
-                HasHeaderRow = false
-            };
-
-            using var reader = document.CreateDataReader(options);
-            var row = firstRow;
-            while (reader.Read())
-            {
-                for (var fieldIndex = 0; fieldIndex < reader.FieldCount; fieldIndex++)
+                var cellText = Convert.ToString(cell.Value, CultureInfo.InvariantCulture) ?? string.Empty;
+                if (IsMatch(cellText))
                 {
-                    var value = reader.IsDBNull(fieldIndex) ? null : reader.GetValue(fieldIndex);
-                    var cellText = Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty;
-                    if (!IsMatch(cellText))
-                    {
-                        continue;
-                    }
-
-                    WriteObject(CreateRecord(sheet.Name, row, firstColumn + fieldIndex, value));
+                    WriteObject(CreateRecord(sheet.Name, cell.Row, cell.Column, cell.Value));
                 }
-
-                row++;
             }
         }
     }

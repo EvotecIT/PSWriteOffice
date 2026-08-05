@@ -92,7 +92,7 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
 
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
-            replacements += ReplaceInSheet(document, sheet);
+            replacements += ReplaceInSheet(sheet);
         }
 
         workbook.SaveIfOwned();
@@ -109,31 +109,25 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
         WriteObject(replacements);
     }
 
-    private int ReplaceInSheet(ExcelDocument document, ExcelSheet sheet)
+    private int ReplaceInSheet(ExcelSheet sheet)
     {
         var count = 0;
         var range = string.IsNullOrWhiteSpace(Range) ? sheet.GetUsedRangeA1() : Range!;
-        var (firstRow, firstColumn, lastRow, lastColumn) = A1.ParseRange(range);
-        for (var row = firstRow; row <= lastRow; row++)
+        foreach (var cell in sheet.EnumerateRange(range))
         {
-            for (var column = firstColumn; column <= lastColumn; column++)
+            if (cell.Value is not string text)
             {
-                if (!sheet.TryGetCellValueSnapshot(row, column, out var snapshot) ||
-                    snapshot?.Kind != ExcelCellValueKind.Text)
-                {
-                    continue;
-                }
-
-                var text = snapshot.Text;
-                var updated = ReplaceString(text, out var cellReplacements);
-                if (cellReplacements == 0)
-                {
-                    continue;
-                }
-
-                sheet.CellValue(row, column, updated);
-                count += cellReplacements;
+                continue;
             }
+
+            var updated = ReplaceString(text, out var cellReplacements);
+            if (cellReplacements == 0)
+            {
+                continue;
+            }
+
+            sheet.CellValue(cell.Row, cell.Column, updated);
+            count += cellReplacements;
         }
 
         return count;

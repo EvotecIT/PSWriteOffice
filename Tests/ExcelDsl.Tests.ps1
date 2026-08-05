@@ -3662,6 +3662,23 @@ Describe 'Excel DSL surface' {
         @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text '^Done$' -Regex).Count | Should -Be 1
     }
 
+    It 'updates text in sparse worksheets without scanning the rectangular used range' {
+        $path = Join-Path $TestDrive 'ExcelSparseTextReplacement.xlsx'
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Draft'
+                Set-OfficeExcelCell -Address 'XFD1048576' -Value 'Draft'
+            }
+        }
+
+        $matches = @(Find-OfficeExcel -Path $path -Sheet 'Data' -Text 'Draft' -Exact)
+        $matches.Count | Should -Be 2
+        @($matches | ForEach-Object { $_.Address }) | Should -Contain 'A1'
+        @($matches | ForEach-Object { $_.Address }) | Should -Contain 'XFD1048576'
+        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue 'Draft' -NewValue 'Ready' | Should -Be 2
+    }
+
     It 'counts threaded comments in workbook summaries' {
         $path = Join-Path $TestDrive 'DslExcelThreadedComments.xlsx'
         $rows = @(
