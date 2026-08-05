@@ -160,7 +160,7 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
             useCachedFormulaResult: !string.Equals(FormulaMode, "FormulaText", StringComparison.OrdinalIgnoreCase),
             culture: ResolveCulture());
         options.CancellationToken = AsDataReader.IsPresent ? CancellationToken.None : CancelToken;
-        options.InferSchema = AsDataReader.IsPresent;
+        options.InferSchema = AsDataReader.IsPresent || AsDataTable.IsPresent;
         options.SchemaSampleRows = SchemaSampleSize;
         options.MaxDataReaderChunkRows = ChunkRows;
 

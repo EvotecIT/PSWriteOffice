@@ -127,7 +127,7 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
             output.Properties.Add(new PSNoteProperty("Range", result.Range));
             output.Properties.Add(new PSNoteProperty("RowCount", rowCount));
             output.Properties.Add(new PSNoteProperty("ColumnCount", columnCount));
-            output.Properties.Add(new PSNoteProperty("Delimiter", Delimiter.HasValue ? Delimiter.Value.ToString() : null));
+            output.Properties.Add(new PSNoteProperty("Delimiter", result.Delimiter.ToString()));
             output.Properties.Add(new PSNoteProperty("Warnings", Array.Empty<string>()));
             WriteObject(output);
         }
