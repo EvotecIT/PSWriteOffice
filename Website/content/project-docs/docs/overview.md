@@ -1,6 +1,6 @@
 ---
 title: "What PSWriteOffice Covers"
-description: "A map of the module's manifest-derived command surface, workflow families, and relationship to OfficeIMO."
+description: "A practical map of PSWriteOffice's manifest-derived commands, workflow families, OfficeIMO relationship, and supported automation outcomes."
 layout: docs
 ---
 
