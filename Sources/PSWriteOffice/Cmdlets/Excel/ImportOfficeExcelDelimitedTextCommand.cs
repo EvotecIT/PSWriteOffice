@@ -123,7 +123,7 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
                 rowCount = Math.Max(0, lastRow - firstRow + (NoHeader.IsPresent ? 1 : 0));
                 columnCount = lastColumn - firstColumn + 1;
             }
-            output.Properties.Add(new PSNoteProperty("TableName", NoTable.IsPresent ? null : result.SheetName));
+            output.Properties.Add(new PSNoteProperty("TableName", result.TableName));
             output.Properties.Add(new PSNoteProperty("Range", result.Range));
             output.Properties.Add(new PSNoteProperty("RowCount", rowCount));
             output.Properties.Add(new PSNoteProperty("ColumnCount", columnCount));

@@ -134,6 +134,23 @@ Describe 'CSV and Excel mutation contracts' {
         $result.RowCount | Should -Be 1
     }
 
+    It 'reports the actual sanitized and unique table name for downstream commands' {
+        $csv = Join-Path $TestDrive 'source-table-name.csv'
+        $xlsx = Join-Path $TestDrive 'created-table-name.xlsx'
+        Set-Content -LiteralPath $csv -Value "Name,Value`r`nAlpha,1" -Encoding UTF8
+        [pscustomobject]@{ Name = 'Existing'; Value = 0 } |
+            Export-OfficeExcel -Path $xlsx -WorksheetName Seed -TableName Sales_Data
+
+        $result = Import-OfficeExcelDelimitedText -Path $xlsx -SourcePath $csv -SheetName 'Sales Data' -PassThru
+
+        $result.TableName | Should -Be 'Sales_Data2'
+        $table = Get-OfficeExcelTable -Path $xlsx | Where-Object Name -eq $result.TableName
+        $table.Name | Should -Be $result.TableName
+        [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+            Add-OfficeExcelTableRow -Path $xlsx -Sheet 'Sales Data' -TableName $result.TableName
+        @(Import-OfficeExcel -Path $xlsx -WorksheetName 'Sales Data').Count | Should -Be 2
+    }
+
     It 'preserves the first data row when importing headerless CSV into Excel' {
         $csv = Join-Path $TestDrive 'source-no-header.csv'
         $xlsx = Join-Path $TestDrive 'created-no-header.xlsx'
