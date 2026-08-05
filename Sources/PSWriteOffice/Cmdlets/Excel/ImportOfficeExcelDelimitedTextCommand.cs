@@ -101,6 +101,7 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
         var result = workbook.Document.ImportCsvFile(source, new ExcelCsvImportOptions
         {
             SheetName = string.IsNullOrWhiteSpace(SheetName) ? "Import" : SheetName!,
+            IncludeHeaders = !NoHeader.IsPresent,
             CreateTable = !NoTable.IsPresent,
             LoadOptions = loadOptions,
             ReaderOptions = new CsvDataReaderOptions
@@ -119,7 +120,7 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
             if (!string.IsNullOrWhiteSpace(result.Range))
             {
                 var (firstRow, firstColumn, lastRow, lastColumn) = A1.ParseRange(result.Range);
-                rowCount = Math.Max(0, lastRow - firstRow);
+                rowCount = Math.Max(0, lastRow - firstRow + (NoHeader.IsPresent ? 1 : 0));
                 columnCount = lastColumn - firstColumn + 1;
             }
             output.Properties.Add(new PSNoteProperty("TableName", NoTable.IsPresent ? null : result.SheetName));

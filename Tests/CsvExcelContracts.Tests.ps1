@@ -108,6 +108,20 @@ Describe 'CSV and Excel mutation contracts' {
         $rows[0].Name | Should -Be 'Row1'
     }
 
+    It 'preserves the first data row when importing headerless CSV into Excel' {
+        $csv = Join-Path $TestDrive 'source-no-header.csv'
+        $xlsx = Join-Path $TestDrive 'created-no-header.xlsx'
+        Set-Content -LiteralPath $csv -Value "Alpha,1`r`nBeta,2" -Encoding UTF8
+
+        $result = Import-OfficeExcelDelimitedText -Path $xlsx -SourcePath $csv -NoHeader -PassThru
+
+        $result.RowCount | Should -Be 2
+        $rows = @(Import-OfficeExcel -Path $xlsx -WorksheetName Import -NoHeader)
+        $rows.Count | Should -Be 2
+        $rows[0].Column1 | Should -Be 'Alpha'
+        $rows[0].Column2 | Should -Be 1
+    }
+
     It 'projects scalar Excel table rows into the existing Value column' {
         $xlsx = Join-Path $TestDrive 'scalar-table-row.xlsx'
         $rows = @(
