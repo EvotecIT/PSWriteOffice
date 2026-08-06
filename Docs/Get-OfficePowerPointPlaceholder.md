@@ -11,7 +11,7 @@ Gets placeholder text boxes from a slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePowerPointPlaceholder [-Slide <PowerPointSlide>] [-PlaceholderType <string>] [-Index <uint>] [<CommonParameters>]
+Get-OfficePowerPointPlaceholder [-Slide <PowerPointSlide>] [-PlaceholderType <string>] [-Index <UInt32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,7 +39,7 @@ Uses the current slide context.
 Optional placeholder index.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -48,7 +48,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PlaceholderType
@@ -64,7 +64,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Slide
@@ -80,7 +80,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

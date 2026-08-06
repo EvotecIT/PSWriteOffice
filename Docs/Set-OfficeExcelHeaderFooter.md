@@ -11,12 +11,12 @@ Sets worksheet header and footer text and optional images.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelHeaderFooter [-HeaderLeft <string>] [-HeaderCenter <string>] [-HeaderRight <string>] [-FooterLeft <string>] [-FooterCenter <string>] [-FooterRight <string>] [-DifferentFirstPage] [-DifferentOddEven] [-AlignWithMargins <bool>] [-ScaleWithDocument <bool>] [-HeaderImagePath <string>] [-HeaderImageUrl <string>] [-HeaderImagePosition <HeaderFooterPosition>] [-FooterImagePath <string>] [-FooterImageUrl <string>] [-FooterImagePosition <HeaderFooterPosition>] [-ImageWidthPoints <double>] [-ImageHeightPoints <double>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelHeaderFooter [-HeaderLeft <string>] [-HeaderCenter <string>] [-HeaderRight <string>] [-FooterLeft <string>] [-FooterCenter <string>] [-FooterRight <string>] [-DifferentFirstPage] [-DifferentOddEven] [-AlignWithMargins <bool>] [-ScaleWithDocument <bool>] [-HeaderImagePath <string>] [-HeaderImageUrl <string>] [-HeaderImagePosition <ExcelHeaderFooterPosition>] [-FooterImagePath <string>] [-FooterImageUrl <string>] [-FooterImagePosition <ExcelHeaderFooterPosition>] [-ImageWidthPoints <Double>] [-ImageHeightPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelHeaderFooter -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-HeaderLeft <string>] [-HeaderCenter <string>] [-HeaderRight <string>] [-FooterLeft <string>] [-FooterCenter <string>] [-FooterRight <string>] [-DifferentFirstPage] [-DifferentOddEven] [-AlignWithMargins <bool>] [-ScaleWithDocument <bool>] [-HeaderImagePath <string>] [-HeaderImageUrl <string>] [-HeaderImagePosition <HeaderFooterPosition>] [-FooterImagePath <string>] [-FooterImageUrl <string>] [-FooterImagePosition <HeaderFooterPosition>] [-ImageWidthPoints <double>] [-ImageHeightPoints <double>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelHeaderFooter -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderLeft <string>] [-HeaderCenter <string>] [-HeaderRight <string>] [-FooterLeft <string>] [-FooterCenter <string>] [-FooterRight <string>] [-DifferentFirstPage] [-DifferentOddEven] [-AlignWithMargins <bool>] [-ScaleWithDocument <bool>] [-HeaderImagePath <string>] [-HeaderImageUrl <string>] [-HeaderImagePosition <ExcelHeaderFooterPosition>] [-FooterImagePath <string>] [-FooterImageUrl <string>] [-FooterImagePosition <ExcelHeaderFooterPosition>] [-ImageWidthPoints <Double>] [-ImageHeightPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DifferentFirstPage
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DifferentOddEven
@@ -78,7 +78,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -94,7 +94,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FooterCenter
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FooterImagePath
@@ -126,14 +126,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FooterImagePosition
 Footer image position.
 
 ```yaml
-Type: HeaderFooterPosition
+Type: ExcelHeaderFooterPosition
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Left, Center, Right
@@ -142,7 +142,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FooterImageUrl
@@ -158,7 +158,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FooterLeft
@@ -174,7 +174,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FooterRight
@@ -190,7 +190,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderCenter
@@ -206,7 +206,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderImagePath
@@ -222,14 +222,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderImagePosition
 Header image position.
 
 ```yaml
-Type: HeaderFooterPosition
+Type: ExcelHeaderFooterPosition
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Left, Center, Right
@@ -238,7 +238,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderImageUrl
@@ -254,7 +254,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderLeft
@@ -270,7 +270,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderRight
@@ -286,14 +286,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ImageHeightPoints
 Image height in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -302,14 +302,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ImageWidthPoints
 Image width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -318,7 +318,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -334,7 +334,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ScaleWithDocument
@@ -350,7 +350,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -366,14 +366,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -382,7 +382,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -394,7 +394,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

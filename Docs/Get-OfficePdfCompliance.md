@@ -11,12 +11,12 @@ Gets a generated PDF document compliance readiness report.
 ## SYNTAX
 ### Document (Default)
 ```powershell
-Get-OfficePdfCompliance [-Document <PdfDocument>] [-Profile <PdfComplianceProfile>] [-Proof] [-ExternalValidator <PdfExternalValidatorKind[]>] [-ExternalValidation <PdfExternalValidationResult[]>] [-ExternalStatus <PdfExternalValidationStatus>] [-ExternalProfile <string>] [-ExternalDiagnostic <string>] [-ExternalValidatorName <string>] [-ExternalValidatorVersion <string>] [-ExternalExitCode <int>] [-ExternalSuccessExitCode <int>] [-ExternalExecutablePath <string>] [-ExternalArguments <string>] [<CommonParameters>]
+Get-OfficePdfCompliance [-Document <PdfDocument>] [-Profile <PdfComplianceProfile>] [-Proof] [-ExternalValidator <PdfExternalValidatorKind[]>] [-ExternalValidation <PdfExternalValidationResult[]>] [-ExternalStatus <PdfExternalValidationStatus>] [-ExternalProfile <string>] [-ExternalDiagnostic <string>] [-ExternalValidatorName <string>] [-ExternalValidatorVersion <string>] [-ExternalExitCode <Int32>] [-ExternalSuccessExitCode <int>] [-ExternalExecutablePath <string>] [-ExternalArguments <string>] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Get-OfficePdfCompliance [-Path] <string> -Profile <PdfComplianceProfile> [-Password <string>] [-IgnorePermissionRestrictions] [-Proof] [-ExternalValidator <PdfExternalValidatorKind[]>] [-ExternalValidation <PdfExternalValidationResult[]>] [-ExternalStatus <PdfExternalValidationStatus>] [-ExternalProfile <string>] [-ExternalDiagnostic <string>] [-ExternalValidatorName <string>] [-ExternalValidatorVersion <string>] [-ExternalExitCode <int>] [-ExternalSuccessExitCode <int>] [-ExternalExecutablePath <string>] [-ExternalArguments <string>] [<CommonParameters>]
+Get-OfficePdfCompliance [-Path] <string> -Profile <PdfComplianceProfile> [-Password <string>] [-IgnorePermissionRestrictions] [-Proof] [-ExternalValidator <PdfExternalValidatorKind[]>] [-ExternalValidation <PdfExternalValidationResult[]>] [-ExternalStatus <PdfExternalValidationStatus>] [-ExternalProfile <string>] [-ExternalDiagnostic <string>] [-ExternalValidatorName <string>] [-ExternalValidatorVersion <string>] [-ExternalExitCode <Int32>] [-ExternalSuccessExitCode <int>] [-ExternalExecutablePath <string>] [-ExternalArguments <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,7 +50,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalArguments
@@ -66,7 +66,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalDiagnostic
@@ -82,7 +82,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalExecutablePath
@@ -98,14 +98,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalExitCode
 External validator process exit code. When provided, status is inferred from -ExternalSuccessExitCode.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document, Path
 Aliases: None
 Possible values:
@@ -114,7 +114,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalProfile
@@ -130,7 +130,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalStatus
@@ -146,7 +146,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalSuccessExitCode
@@ -162,7 +162,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalValidation
@@ -179,7 +179,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalValidator
@@ -195,7 +195,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalValidatorName
@@ -211,7 +211,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExternalValidatorVersion
@@ -227,7 +227,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IgnorePermissionRestrictions
@@ -243,7 +243,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Password
@@ -259,7 +259,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -275,23 +275,23 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Profile
 Compliance profile to assess. When omitted, the document's configured profile is used.
 
 ```yaml
-Type: Nullable`1
+Type: PdfComplianceProfile
 Parameter Sets: Document, Path
 Aliases: None
-Possible values:
+Possible values: None, PdfA2B, PdfA2U, PdfA2A, PdfA3B, PdfA3U, PdfA3A, PdfUa1, FacturX, Zugferd, PdfA4, PdfA4E, PdfA4F, PdfUa2
 
 Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Proof
@@ -307,7 +307,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -315,13 +315,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.Pdf.PdfDocument
-System.String`
+- `OfficeIMO.Pdf.PdfDocument`
+- `System.String`
 
 ## OUTPUTS
 
-- `OfficeIMO.Pdf.PdfComplianceReadinessReport
-OfficeIMO.Pdf.PdfComplianceProofReport`
+- `OfficeIMO.Pdf.PdfComplianceReadinessReport`
+- `OfficeIMO.Pdf.PdfComplianceProofReport`
 
 ## RELATED LINKS
 

@@ -11,17 +11,17 @@ Lists Excel template markers such as {{Name}} and optionally shows whether suppl
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Get-OfficeExcelTemplateMarker [-Sheet <string>] [-SheetIndex <int>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
+Get-OfficeExcelTemplateMarker [-Sheet <string>] [-SheetIndex <Int32>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Get-OfficeExcelTemplateMarker [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
+Get-OfficeExcelTemplateMarker [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeExcelTemplateMarker -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
+Get-OfficeExcelTemplateMarker -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,7 +51,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -67,7 +67,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MissingOnly
@@ -83,7 +83,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -99,14 +99,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) to inspect. Defaults to the current DSL sheet or all workbook sheets.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -115,7 +115,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Value
@@ -131,7 +131,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

@@ -11,7 +11,7 @@ Gets cells from an OfficeIMO Word table.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeWordTableCell [-Table] <WordTable> [-Row <int>] [-Column <int>] [<CommonParameters>]
+Get-OfficeWordTableCell [-Table] <WordTable> [-Row <Int32>] [-Column <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,7 +35,7 @@ Gets a zero-based table cell from an OfficeIMO table object and inspects its par
 Optional zero-based column index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -44,14 +44,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Row
 Optional zero-based row index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -60,7 +60,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Table
@@ -76,7 +76,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

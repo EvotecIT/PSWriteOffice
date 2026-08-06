@@ -11,17 +11,17 @@ Compares two Excel worksheets or ranges and returns cell-level differences.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Compare-OfficeExcelRange [-InputPath] <string> [-RightPath <string>] [-LeftSheet <string>] [-LeftSheetIndex <int>] [-RightSheet <string>] [-RightSheetIndex <int>] [-LeftRange <string>] [-RightRange <string>] [-TrimStrings] [-IgnoreCase] [-StrictNullEmpty] [<CommonParameters>]
+Compare-OfficeExcelRange [-InputPath] <string> [-RightPath <string>] [-LeftSheet <string>] [-LeftSheetIndex <Int32>] [-RightSheet <string>] [-RightSheetIndex <Int32>] [-LeftRange <string>] [-RightRange <string>] [-TrimStrings] [-IgnoreCase] [-StrictNullEmpty] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Compare-OfficeExcelRange -Document <ExcelDocument> [-RightDocument <ExcelDocument>] [-LeftSheet <string>] [-LeftSheetIndex <int>] [-RightSheet <string>] [-RightSheetIndex <int>] [-LeftRange <string>] [-RightRange <string>] [-TrimStrings] [-IgnoreCase] [-StrictNullEmpty] [<CommonParameters>]
+Compare-OfficeExcelRange -Document <ExcelDocument> [-RightDocument <ExcelDocument>] [-LeftSheet <string>] [-LeftSheetIndex <Int32>] [-RightSheet <string>] [-RightSheetIndex <Int32>] [-LeftRange <string>] [-RightRange <string>] [-TrimStrings] [-IgnoreCase] [-StrictNullEmpty] [<CommonParameters>]
 ```
 
 ### Context
 ```powershell
-Compare-OfficeExcelRange [-RightDocument <ExcelDocument>] [-LeftSheet <string>] [-LeftSheetIndex <int>] [-RightSheet <string>] [-RightSheetIndex <int>] [-LeftRange <string>] [-RightRange <string>] [-TrimStrings] [-IgnoreCase] [-StrictNullEmpty] [<CommonParameters>]
+Compare-OfficeExcelRange [-RightDocument <ExcelDocument>] [-LeftSheet <string>] [-LeftSheetIndex <Int32>] [-RightSheet <string>] [-RightSheetIndex <Int32>] [-LeftRange <string>] [-RightRange <string>] [-TrimStrings] [-IgnoreCase] [-StrictNullEmpty] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -54,7 +54,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IgnoreCase
@@ -70,7 +70,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -86,7 +86,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LeftRange
@@ -102,7 +102,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LeftSheet
@@ -118,14 +118,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LeftSheetIndex
 Left worksheet index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Document, Context
 Aliases: None
 Possible values:
@@ -134,7 +134,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RightDocument
@@ -150,7 +150,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RightPath
@@ -166,7 +166,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RightRange
@@ -182,7 +182,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RightSheet
@@ -198,14 +198,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RightSheetIndex
 Right worksheet index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Document, Context
 Aliases: None
 Possible values:
@@ -214,7 +214,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StrictNullEmpty
@@ -230,7 +230,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TrimStrings
@@ -246,7 +246,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

@@ -11,17 +11,17 @@ Gets worksheet view settings such as frozen panes and gridline visibility.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Get-OfficeExcelWorksheetView [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+Get-OfficeExcelWorksheetView [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Get-OfficeExcelWorksheetView [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+Get-OfficeExcelWorksheetView [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeExcelWorksheetView -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+Get-OfficeExcelWorksheetView -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,7 +53,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -69,7 +69,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -85,14 +85,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) to inspect. Defaults to the current DSL sheet or all workbook sheets.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

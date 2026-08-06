@@ -280,7 +280,7 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
 
         if (cell.Style?.HasTextStyle == true)
         {
-            var run = new TextRun(
+            var run = new PdfTextRun(
                 cell.Text,
                 bold: cell.Style.Bold,
                 underline: cell.Style.Underline,

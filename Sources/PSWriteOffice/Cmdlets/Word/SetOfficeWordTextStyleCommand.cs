@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Word;
@@ -72,7 +71,7 @@ public sealed class SetOfficeWordTextStyleCommand : PSCmdlet
 
     /// <summary>Capitalization style.</summary>
     [Parameter]
-    public CapsStyle? CapsStyle { get; set; }
+    public WordCapsStyle? CapsStyle { get; set; }
 
     /// <summary>Character spacing in twentieths of a point.</summary>
     [Parameter]

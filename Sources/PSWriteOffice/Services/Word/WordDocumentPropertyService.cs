@@ -10,8 +10,8 @@ namespace PSWriteOffice.Services.Word;
 
 internal static class WordDocumentPropertyService
 {
-    private static readonly IReadOnlyDictionary<string, Func<BuiltinDocumentProperties, object?>> BuiltInReaders =
-        new Dictionary<string, Func<BuiltinDocumentProperties, object?>>(StringComparer.OrdinalIgnoreCase)
+    private static readonly IReadOnlyDictionary<string, Func<WordBuiltinDocumentProperties, object?>> BuiltInReaders =
+        new Dictionary<string, Func<WordBuiltinDocumentProperties, object?>>(StringComparer.OrdinalIgnoreCase)
         {
             ["Title"] = properties => properties.Title,
             ["Subject"] = properties => properties.Subject,
@@ -27,8 +27,8 @@ internal static class WordDocumentPropertyService
             ["LastPrinted"] = properties => properties.LastPrinted
         };
 
-    private static readonly IReadOnlyDictionary<string, Action<BuiltinDocumentProperties, object?>> BuiltInWriters =
-        new Dictionary<string, Action<BuiltinDocumentProperties, object?>>(StringComparer.OrdinalIgnoreCase)
+    private static readonly IReadOnlyDictionary<string, Action<WordBuiltinDocumentProperties, object?>> BuiltInWriters =
+        new Dictionary<string, Action<WordBuiltinDocumentProperties, object?>>(StringComparer.OrdinalIgnoreCase)
         {
             ["Title"] = (properties, value) => properties.Title = ConvertToString(value),
             ["Subject"] = (properties, value) => properties.Subject = ConvertToString(value),

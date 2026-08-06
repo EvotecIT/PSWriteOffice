@@ -249,7 +249,7 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
         return ExcelDslContext.Require(this).RequireSheet();
     }
 
-    private void ApplyPreset(ColumnStyleByHeaderBuilder builder, string style)
+    private void ApplyPreset(ExcelColumnStyleByHeaderBuilder builder, string style)
     {
         switch (style)
         {

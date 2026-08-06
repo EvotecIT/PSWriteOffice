@@ -11,12 +11,12 @@ Converts an Excel workbook to an HTML review document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeExcelHtml [-Path] <string> [-Password <string>] [-OutputPath <string>] [-Profile <OfficeExcelHtmlProfile>] [-Theme <OfficeVisualThemeKind>] [-Title <string>] [-MaxRowsPerSheet <int>] [-EmptyCellText <string>] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeExcelHtml [-Path] <string> [-Password <string>] [-OutputPath <string>] [-Profile <OfficeExcelHtmlProfile>] [-Theme <OfficeVisualThemeKind>] [-Title <string>] [-MaxRowsPerSheet <Int32>] [-EmptyCellText <string>] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Workbook
 ```powershell
-ConvertTo-OfficeExcelHtml -Workbook <ExcelDocument> [-OutputPath <string>] [-Profile <OfficeExcelHtmlProfile>] [-Theme <OfficeVisualThemeKind>] [-Title <string>] [-MaxRowsPerSheet <int>] [-EmptyCellText <string>] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeExcelHtml -Workbook <ExcelDocument> [-OutputPath <string>] [-Profile <OfficeExcelHtmlProfile>] [-Theme <OfficeVisualThemeKind>] [-Title <string>] [-MaxRowsPerSheet <Int32>] [-EmptyCellText <string>] [-NoDefaultStyles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,14 +53,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxRowsPerSheet
 Maximum number of used rows to emit per worksheet.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Workbook
 Aliases: None
 Possible values:
@@ -69,7 +69,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoDefaultStyles
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutputPath
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -117,7 +117,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Password
@@ -133,7 +133,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -149,7 +149,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Profile
@@ -165,7 +165,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Theme
@@ -181,7 +181,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Title
@@ -197,7 +197,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Workbook
@@ -213,7 +213,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -221,13 +221,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `System.String
-OfficeIMO.Excel.ExcelDocument`
+- `System.String`
+- `OfficeIMO.Excel.ExcelDocument`
 
 ## OUTPUTS
 
-- `System.String
-System.IO.FileInfo`
+- `System.String`
+- `System.IO.FileInfo`
 
 ## RELATED LINKS
 

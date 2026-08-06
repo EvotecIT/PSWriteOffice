@@ -11,12 +11,12 @@ Sets a simple or fully composed running PDF header.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficePdfHeader [[-Text] <string>] [-Compose <scriptblock>] [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfHeader [[-Text] <string>] [-Compose <scriptblock>] [-Align <PdfAlign>] [-FontSize <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficePdfHeader [[-Text] <string>] -Document <PdfDocument> [-Compose <scriptblock>] [-Align <PdfAlign>] [-FontSize <double>] [-PassThru] [<CommonParameters>]
+Set-OfficePdfHeader [[-Text] <string>] -Document <PdfDocument> [-Compose <scriptblock>] [-Align <PdfAlign>] [-FontSize <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -70,7 +70,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Compose
@@ -87,7 +87,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -103,14 +103,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSize
 Header font size in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -119,7 +119,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -135,7 +135,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -151,7 +151,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

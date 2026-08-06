@@ -39,7 +39,7 @@ Open Visio document instance.
 ```yaml
 Type: VisioDocument
 Parameter Sets: Document
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True
@@ -52,17 +52,15 @@ Accept wildcard characters: False
 ### -Format
 Output image format.
 
-Possible values: Png, Svg, Jpeg, Tiff, Webp
-
 ```yaml
 Type: OfficeImageExportFormat
 Parameter Sets: Path, Document
-Aliases:
+Aliases: None
 Possible values: Png, Svg, Jpeg, Tiff, Webp
 
 Required: False
 Position: named
-Default value: Png
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -73,7 +71,7 @@ Optional page selection, size, concurrency, and rendering settings.
 ```yaml
 Type: VisioImageExportOptions
 Parameter Sets: Path, Document
-Aliases:
+Aliases: None
 Possible values:
 
 Required: False
@@ -89,7 +87,7 @@ Destination folder.
 ```yaml
 Type: String
 Parameter Sets: Path, Document
-Aliases:
+Aliases: None
 Possible values:
 
 Required: True

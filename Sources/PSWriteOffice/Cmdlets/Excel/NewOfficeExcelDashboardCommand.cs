@@ -118,7 +118,7 @@ public sealed class NewOfficeExcelDashboardCommand : PSCmdlet
     {
         var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         var table = ExcelTabularInputService.ToDataTable(rows, TableName);
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out TableStyle style))
+        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
         {
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }

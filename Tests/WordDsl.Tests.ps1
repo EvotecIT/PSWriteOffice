@@ -570,9 +570,13 @@ Describe 'Word DSL surface' {
         $document = Get-OfficeWord -Path $path -ReadOnly
         try {
             $document.Tables.Count | Should -Be 3
-            $document.Tables[0].LayoutMode.ToString() | Should -Be 'AutoFitToContents'
-            $document.Tables[1].LayoutMode.ToString() | Should -Be 'AutoFitToWindow'
-            $document.Tables[2].LayoutType.ToString() | Should -Be 'Fixed'
+            $document.Tables[0].LayoutMode.ToString() | Should -Be 'AutoFit'
+            $document.Tables[0].WidthType.ToString() | Should -Be 'Auto'
+            $document.Tables[0].Width | Should -Be 0
+            $document.Tables[1].LayoutMode.ToString() | Should -Be 'Fixed'
+            $document.Tables[1].WidthType.ToString() | Should -Be 'Pct'
+            $document.Tables[1].Width | Should -Be 5000
+            $document.Tables[2].LayoutMode.ToString() | Should -Be 'Fixed'
         } finally {
             $document.Dispose()
         }

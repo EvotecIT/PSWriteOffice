@@ -30,7 +30,7 @@ public sealed class AddOfficeWordTableOfContentsCommand : PSCmdlet
 
     /// <summary>Table of contents template style.</summary>
     [Parameter]
-    public TableOfContentStyle Style { get; set; } = TableOfContentStyle.Template1;
+    public WordTableOfContentsStyle Style { get; set; } = WordTableOfContentsStyle.Template1;
 
     /// <summary>Emit the created table of contents.</summary>
     [Parameter]

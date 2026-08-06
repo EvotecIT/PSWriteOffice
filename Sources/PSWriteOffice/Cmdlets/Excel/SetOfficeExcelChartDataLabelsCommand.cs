@@ -1,5 +1,7 @@
 using System;
 using System.Management.Automation;
+using OfficeIMO;
+using OfficeIMO.Drawing;
 using OfficeIMO.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
@@ -119,20 +121,20 @@ public sealed class SetOfficeExcelChartDataLabelsCommand : PSCmdlet
         }
     }
 
-    private static ExcelChartDataLabelPosition? ResolveDataLabelPosition(string? value)
+    private static OfficeChartDataLabelPosition? ResolveDataLabelPosition(string? value)
     {
         return value switch
         {
             null => null,
-            "BestFit" => ExcelChartDataLabelPosition.BestFit,
-            "Bottom" => ExcelChartDataLabelPosition.Bottom,
-            "Center" => ExcelChartDataLabelPosition.Center,
-            "InsideBase" => ExcelChartDataLabelPosition.InsideBase,
-            "InsideEnd" => ExcelChartDataLabelPosition.InsideEnd,
-            "Left" => ExcelChartDataLabelPosition.Left,
-            "OutsideEnd" => ExcelChartDataLabelPosition.OutsideEnd,
-            "Right" => ExcelChartDataLabelPosition.Right,
-            "Top" => ExcelChartDataLabelPosition.Top,
+            "BestFit" => OfficeChartDataLabelPosition.BestFit,
+            "Bottom" => OfficeChartDataLabelPosition.Bottom,
+            "Center" => OfficeChartDataLabelPosition.Center,
+            "InsideBase" => OfficeChartDataLabelPosition.InsideBase,
+            "InsideEnd" => OfficeChartDataLabelPosition.InsideEnd,
+            "Left" => OfficeChartDataLabelPosition.Left,
+            "OutsideEnd" => OfficeChartDataLabelPosition.OutsideEnd,
+            "Right" => OfficeChartDataLabelPosition.Right,
+            "Top" => OfficeChartDataLabelPosition.Top,
             _ => throw new PSArgumentException($"Unsupported data label position '{value}'.")
         };
     }

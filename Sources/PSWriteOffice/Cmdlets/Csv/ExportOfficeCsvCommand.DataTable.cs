@@ -97,20 +97,13 @@ public sealed partial class ExportOfficeCsvCommand
             ValidateDataTableAppendHeader(table, appendHeader);
         }
 
-        using var writer = CreateTextWriter(append: true, options);
+        using var csvWriter = CreateRowWriter(append: true, options);
         if (appendHeader is { Length: > 0 })
         {
-            using var csvWriter = new CsvObjectWriter(writer, options);
             WriteDataTableRows(table, csvWriter, appendHeader);
             return;
         }
 
-        WriteDataTable(writer, table, options);
-    }
-
-    private static void WriteDataTable(TextWriter writer, DataTable table, CsvSaveOptions options)
-    {
-        using var csvWriter = new CsvObjectWriter(writer, options, leaveOpen: true);
         using var reader = table.CreateDataReader();
         csvWriter.WriteDataReader(reader);
     }
@@ -162,7 +155,7 @@ public sealed partial class ExportOfficeCsvCommand
         }
     }
 
-    private static void WriteDataTableRows(DataTable table, CsvObjectWriter writer, IReadOnlyList<string> columns)
+    private static void WriteDataTableRows(DataTable table, CsvRowWriter writer, IReadOnlyList<string> columns)
     {
         foreach (DataRow row in table.Rows)
         {

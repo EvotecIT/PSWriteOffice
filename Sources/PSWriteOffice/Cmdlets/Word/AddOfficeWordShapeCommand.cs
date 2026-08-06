@@ -31,7 +31,7 @@ public sealed class AddOfficeWordShapeCommand : PSCmdlet
 {
     /// <summary>Shape type to add.</summary>
     [Parameter]
-    public ShapeType Type { get; set; } = ShapeType.Rectangle;
+    public WordShapeType Type { get; set; } = WordShapeType.Rectangle;
 
     /// <summary>Width in points.</summary>
     [Parameter]

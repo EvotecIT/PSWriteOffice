@@ -11,12 +11,12 @@ Adds grouped subtotal summary rows for a worksheet data range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelSubtotalSummary -GroupColumn <string> -ValueColumn <string[]> [-HeaderRow <int>] [-DataStartRow <int>] [-DataEndRow <int>] [-SummaryStartRow <int>] [-Function <string>] [-NoHeader] [-NoGrandTotal] [-NoOutline] [-HideDetailRows] [-OutlineLevel <int>] [-LabelSuffix <string>] [-GrandTotalLabel <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSubtotalSummary -GroupColumn <string> -ValueColumn <string[]> [-HeaderRow <Int32>] [-DataStartRow <Int32>] [-DataEndRow <Int32>] [-SummaryStartRow <Int32>] [-Function <string>] [-NoHeader] [-NoGrandTotal] [-NoOutline] [-HideDetailRows] [-OutlineLevel <int>] [-LabelSuffix <string>] [-GrandTotalLabel <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelSubtotalSummary -Document <ExcelDocument> -GroupColumn <string> -ValueColumn <string[]> [-Sheet <string>] [-SheetIndex <int>] [-HeaderRow <int>] [-DataStartRow <int>] [-DataEndRow <int>] [-SummaryStartRow <int>] [-Function <string>] [-NoHeader] [-NoGrandTotal] [-NoOutline] [-HideDetailRows] [-OutlineLevel <int>] [-LabelSuffix <string>] [-GrandTotalLabel <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSubtotalSummary -Document <ExcelDocument> -GroupColumn <string> -ValueColumn <string[]> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderRow <Int32>] [-DataStartRow <Int32>] [-DataEndRow <Int32>] [-SummaryStartRow <Int32>] [-Function <string>] [-NoHeader] [-NoGrandTotal] [-NoOutline] [-HideDetailRows] [-OutlineLevel <int>] [-LabelSuffix <string>] [-GrandTotalLabel <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,7 +37,7 @@ Writes SUBTOTAL formulas below the data range and applies row outline metadata t
 Last data row. Defaults to the last row of the used range.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -46,14 +46,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DataStartRow
 First data row. Defaults to the row after HeaderRow.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -78,7 +78,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Function
@@ -94,7 +94,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -GrandTotalLabel
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -GroupColumn
@@ -126,14 +126,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderRow
 Header row that contains source labels. Defaults to the first row of the used range.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -142,7 +142,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HideDetailRows
@@ -158,7 +158,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LabelSuffix
@@ -174,7 +174,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoGrandTotal
@@ -190,7 +190,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoHeader
@@ -206,7 +206,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoOutline
@@ -222,7 +222,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutlineLevel
@@ -238,7 +238,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -254,7 +254,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -270,14 +270,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -286,14 +286,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SummaryStartRow
 First row for the generated summary block.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -302,7 +302,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ValueColumn
@@ -318,7 +318,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

@@ -24,7 +24,7 @@ public sealed class SetOfficePowerPointSlideTransitionCommand : PSCmdlet
 
     /// <summary>Transition to apply.</summary>
     [Parameter(Mandatory = true)]
-    public SlideTransition Transition { get; set; }
+    public PowerPointSlideTransition Transition { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()

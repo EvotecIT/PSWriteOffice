@@ -11,17 +11,17 @@ Gets manual row and column page breaks from Excel worksheets.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Get-OfficeExcelPageBreak [-Sheet <string>] [-SheetIndex <int>] [-Row] [-Column] [<CommonParameters>]
+Get-OfficeExcelPageBreak [-Sheet <string>] [-SheetIndex <Int32>] [-Row] [-Column] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Get-OfficeExcelPageBreak [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Row] [-Column] [<CommonParameters>]
+Get-OfficeExcelPageBreak [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row] [-Column] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeExcelPageBreak -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row] [-Column] [<CommonParameters>]
+Get-OfficeExcelPageBreak -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Row] [-Column] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,7 +53,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -69,7 +69,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -85,7 +85,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Row
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -117,14 +117,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) to inspect. Defaults to the current DSL sheet or all workbook sheets.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -133,7 +133,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

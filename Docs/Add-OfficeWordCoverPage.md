@@ -11,7 +11,7 @@ Adds a built-in cover page template to a Word document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordCoverPage [-Template] <CoverPageTemplate> [-Document <WordDocument>] [-PublishDate <string>] [-Abstract <string>] [-CompanyAddress <string>] [-CompanyEmail <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordCoverPage [-Template] <WordCoverPageTemplate> [-Document <WordDocument>] [-PublishDate <string>] [-Abstract <string>] [-CompanyAddress <string>] [-CompanyEmail <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,7 +41,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CompanyAddress
@@ -57,7 +57,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CompanyEmail
@@ -73,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -89,7 +89,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -105,7 +105,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PublishDate
@@ -121,14 +121,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Template
 Cover page template to insert.
 
 ```yaml
-Type: CoverPageTemplate
+Type: WordCoverPageTemplate
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Austin, Banded, Facet, Grid, IonDark, IonLight, Element, Wisp, ViewMaster, SliceLight, SliceDark, SideLine, Semaphore, Retrospect
@@ -137,7 +137,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

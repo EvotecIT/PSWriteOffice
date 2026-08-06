@@ -11,7 +11,7 @@ Sets a formula in a worksheet cell.
 ## SYNTAX
 ### Coordinates
 ```powershell
-Set-OfficeExcelFormula -Formula <string> [-Row <int>] [-Column <int>] [<CommonParameters>]
+Set-OfficeExcelFormula -Formula <string> [-Row <Int32>] [-Column <Int32>] [<CommonParameters>]
 ```
 
 ### Address
@@ -46,14 +46,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Column
 1-based column index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Coordinates
 Aliases: None
 Possible values:
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Formula
@@ -78,14 +78,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Row
 1-based row index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Coordinates
 Aliases: None
 Possible values:
@@ -94,7 +94,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -106,7 +106,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

@@ -11,12 +11,12 @@ Gets pivot tables defined in a workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelPivotTable [-InputPath] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+Get-OfficeExcelPivotTable [-InputPath] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeExcelPivotTable -Document <ExcelDocument> [-Name <string>] [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+Get-OfficeExcelPivotTable -Document <ExcelDocument> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -49,7 +49,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -65,7 +65,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -81,7 +81,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -97,14 +97,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Optional sheet index (0-based) filter.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:
@@ -113,7 +113,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

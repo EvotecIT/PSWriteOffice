@@ -11,22 +11,22 @@ Sets a hyperlink on a worksheet cell.
 ## SYNTAX
 ### ContextExternal (Default)
 ```powershell
-Set-OfficeExcelHyperlink -Url <string> [-Row <int>] [-Column <int>] [-Address <string>] [-Display <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelHyperlink -Url <string> [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-Display <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentExternal
 ```powershell
-Set-OfficeExcelHyperlink -Document <ExcelDocument> -Url <string> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-Display <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelHyperlink -Document <ExcelDocument> -Url <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-Display <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentInternal
 ```powershell
-Set-OfficeExcelHyperlink -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-Location <string>] [-TargetSheet <string>] [-TargetAddress <string>] [-Display <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelHyperlink -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-Location <string>] [-TargetSheet <string>] [-TargetAddress <string>] [-Display <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ### ContextInternal
 ```powershell
-Set-OfficeExcelHyperlink [-Row <int>] [-Column <int>] [-Address <string>] [-Location <string>] [-TargetSheet <string>] [-TargetAddress <string>] [-Display <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelHyperlink [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-Location <string>] [-TargetSheet <string>] [-TargetAddress <string>] [-Display <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -63,14 +63,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Column
 1-based column index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: ContextExternal, DocumentExternal, DocumentInternal, ContextInternal
 Aliases: None
 Possible values:
@@ -79,7 +79,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Display
@@ -95,7 +95,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -111,7 +111,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Location
@@ -127,7 +127,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoStyle
@@ -143,7 +143,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -159,14 +159,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Row
 1-based row index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: ContextExternal, DocumentExternal, DocumentInternal, ContextInternal
 Aliases: None
 Possible values:
@@ -175,7 +175,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -191,14 +191,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: DocumentExternal, DocumentInternal
 Aliases: None
 Possible values:
@@ -207,7 +207,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetAddress
@@ -223,7 +223,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetSheet
@@ -239,7 +239,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Url
@@ -255,7 +255,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -267,7 +267,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

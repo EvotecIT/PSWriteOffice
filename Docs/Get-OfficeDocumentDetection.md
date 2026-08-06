@@ -11,7 +11,7 @@ Detects a document kind from extension and bounded content evidence.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentDetection [-Path] <string> [-Mode <ReaderDetectionMode>] [-MaxProbeBytes <int>] [-MaxContainerEntries <int>] [-NoContainerInspection] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
+Get-OfficeDocumentDetection [-Path] <string> [-Mode <ReaderDetectionMode>] [-MaxProbeBytes <Int32>] [-MaxContainerEntries <Int32>] [-NoContainerInspection] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,7 +32,7 @@ Returns the selected kind, confidence, media type, and evidence used by OfficeIM
 Maximum archive entries inspected while classifying container formats.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -41,14 +41,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxProbeBytes
 Maximum prefix bytes inspected for signatures and text markers.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -57,7 +57,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Mode
@@ -73,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoContainerInspection
@@ -89,7 +89,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -105,11 +105,11 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Reader
-{{ Fill Reader Description }}
+Optional immutable OfficeIMO reader with caller-configured handlers and processors.
 
 ```yaml
 Type: OfficeDocumentReader
@@ -121,7 +121,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

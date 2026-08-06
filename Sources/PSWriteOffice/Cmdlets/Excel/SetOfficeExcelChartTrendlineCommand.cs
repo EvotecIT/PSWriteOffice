@@ -1,5 +1,6 @@
 using System;
 using System.Management.Automation;
+using OfficeIMO.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services;
@@ -82,7 +83,7 @@ public sealed class SetOfficeExcelChartTrendlineCommand : PSCmdlet
     {
         try
         {
-            if (!OpenXmlValueParser.TryParse(Type, out ExcelChartTrendlineType trendlineType))
+            if (!OpenXmlValueParser.TryParse(Type, out OfficeChartTrendlineType trendlineType))
             {
                 throw new PSArgumentException($"Unknown trendline type '{Type}'.");
             }

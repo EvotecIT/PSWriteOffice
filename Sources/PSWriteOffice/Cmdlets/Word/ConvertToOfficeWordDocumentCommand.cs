@@ -85,11 +85,11 @@ public sealed class ConvertToOfficeWordDocumentCommand : PSCmdlet
                 WordDocument.Convert(sourcePath, outputPath, new WordDocumentConversionOptions
                 {
                     FileConflictPolicy = Force.IsPresent
-                        ? WordConversionFileConflictPolicy.Replace
-                        : WordConversionFileConflictPolicy.FailIfExists,
+                        ? OfficeConversionFileConflictPolicy.Replace
+                        : OfficeConversionFileConflictPolicy.FailIfExists,
                     LossPolicy = AllowLossyLegacyConversion.IsPresent
-                        ? WordConversionLossPolicy.Allow
-                        : WordConversionLossPolicy.Block
+                        ? OfficeConversionLossPolicy.Allow
+                        : OfficeConversionLossPolicy.Block
                 });
             }
 

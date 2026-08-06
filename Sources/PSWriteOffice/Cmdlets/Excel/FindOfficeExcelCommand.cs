@@ -70,7 +70,7 @@ public sealed class FindOfficeExcelCommand : PSCmdlet
         var document = workbook.Document;
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
-            var range = string.IsNullOrWhiteSpace(Range) ? sheet.GetUsedRangeA1() : Range!;
+            var range = string.IsNullOrWhiteSpace(Range) ? sheet.UsedRangeA1 : Range!;
             foreach (var cell in sheet.EnumerateRange(range))
             {
                 var cellText = Convert.ToString(cell.Value, CultureInfo.InvariantCulture) ?? string.Empty;

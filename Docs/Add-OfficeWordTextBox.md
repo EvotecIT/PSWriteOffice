@@ -11,7 +11,7 @@ Adds an OfficeIMO Word text box to the current Word DSL location.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordTextBox [-Text] <string> [-WrapText <WrapTextImage>] [-WidthCentimeters <Double>] [-HeightCentimeters <Double>] [-HorizontalOffsetCentimeters <Double>] [-VerticalOffsetCentimeters <Double>] [-HorizontalAlignment <WordHorizontalAlignmentValues>] [-HorizontalPositionRelativeFrom <WordHorizontalRelativePosition>] [-VerticalPositionRelativeFrom <WordVerticalRelativePosition>] [-AutoFit <WordTextBoxAutoFitType>] [-AutoFitToTextSize] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTextBox [-Text] <string> [-WrapText <WordImageTextWrapping>] [-WidthCentimeters <Double>] [-HeightCentimeters <Double>] [-HorizontalOffsetCentimeters <Double>] [-VerticalOffsetCentimeters <Double>] [-HorizontalAlignment <WordTextBoxHorizontalAlignment>] [-HorizontalPositionRelativeFrom <WordHorizontalRelativePosition>] [-VerticalPositionRelativeFrom <WordVerticalRelativePosition>] [-AutoFit <WordTextBoxAutoFitType>] [-AutoFitToTextSize] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -82,7 +82,7 @@ Accept wildcard characters: False
 Horizontal alignment for anchored text boxes.
 
 ```yaml
-Type: WordHorizontalAlignmentValues
+Type: WordTextBoxHorizontalAlignment
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Left, Center, Right, Outside, Inside
@@ -210,7 +210,7 @@ Accept wildcard characters: False
 Word text wrapping mode.
 
 ```yaml
-Type: WrapTextImage
+Type: WordImageTextWrapping
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: InLineWithText, Square, Tight, Through, TopAndBottom, BehindText, InFrontOfText

@@ -30,7 +30,7 @@ public sealed class SetOfficeWordImageCommand : PSCmdlet
     [Parameter] public double? Height { get; set; }
 
     /// <summary>Text wrapping mode.</summary>
-    [Parameter] public WrapTextImage? Wrap { get; set; }
+    [Parameter] public WordImageTextWrapping? Wrap { get; set; }
 
     /// <summary>Top crop value.</summary>
     [Parameter] public int? CropTop { get; set; }

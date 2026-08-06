@@ -11,12 +11,12 @@ Applies a friendly AutoFilter condition by header name.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelAutoFilter [-Header] <string> [-Range <string>] [-Value <string[]>] [-Contains <string>] [-DoesNotContain <string>] [-StartsWith <string>] [-EndsWith <string>] [-GreaterThanOrEqual <double>] [-LessThanOrEqual <double>] [-NotEqual <double>] [-Between <double[]>] [-NotBetween <double[]>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelAutoFilter [-Header] <string> [-Range <string>] [-Value <string[]>] [-Contains <string>] [-DoesNotContain <string>] [-StartsWith <string>] [-EndsWith <string>] [-GreaterThanOrEqual <Double>] [-LessThanOrEqual <Double>] [-NotEqual <Double>] [-Between <double[]>] [-NotBetween <double[]>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelAutoFilter [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-Value <string[]>] [-Contains <string>] [-DoesNotContain <string>] [-StartsWith <string>] [-EndsWith <string>] [-GreaterThanOrEqual <double>] [-LessThanOrEqual <double>] [-NotEqual <double>] [-Between <double[]>] [-NotBetween <double[]>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelAutoFilter [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-Value <string[]>] [-Contains <string>] [-DoesNotContain <string>] [-StartsWith <string>] [-EndsWith <string>] [-GreaterThanOrEqual <Double>] [-LessThanOrEqual <Double>] [-NotEqual <Double>] [-Between <double[]>] [-NotBetween <double[]>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Contains
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -78,7 +78,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DoesNotContain
@@ -94,7 +94,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -EndsWith
@@ -110,14 +110,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -GreaterThanOrEqual
 Numeric greater-than-or-equal condition.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -126,7 +126,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Header
@@ -142,14 +142,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LessThanOrEqual
 Numeric less-than-or-equal condition.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -158,7 +158,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NotBetween
@@ -174,14 +174,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NotEqual
 Numeric not-equal condition.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -190,7 +190,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -206,7 +206,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Range
@@ -222,7 +222,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -238,14 +238,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -254,7 +254,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StartsWith
@@ -270,7 +270,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Value
@@ -286,7 +286,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -298,7 +298,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

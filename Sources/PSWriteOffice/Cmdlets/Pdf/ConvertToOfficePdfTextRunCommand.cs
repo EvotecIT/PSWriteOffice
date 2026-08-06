@@ -6,7 +6,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Converts reusable Office text run specifications to native PDF text runs.</summary>
 /// <remarks>
-/// Use this adapter when an OfficeIMO PDF callback requires a native <see cref="TextRun"/>,
+/// Use this adapter when an OfficeIMO PDF callback requires a native <see cref="PdfTextRun"/>,
 /// such as a rich generated header or footer. Styling remains owned by <c>New-OfficeTextRun</c>.
 /// </remarks>
 /// <example>
@@ -25,7 +25,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficePdfTextRun")]
 [Alias("PdfNativeTextRun")]
-[OutputType(typeof(TextRun))]
+[OutputType(typeof(PdfTextRun))]
 public sealed class ConvertToOfficePdfTextRunCommand : PSCmdlet
 {
     /// <summary>One or more values accepted by New-OfficeTextRun, including run specifications and hashtables.</summary>

@@ -11,12 +11,12 @@ Adds a semantic row with percentage-based columns to a generated PDF document.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficePdfRow [-Column] <Object[]> [-Gap <double>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-KeepTogether] [-KeepWithNext] [-ColumnSeparatorColor <string>] [-ColumnSeparatorWidth <double>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfRow [-Column] <Object[]> [-Gap <Double>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-KeepTogether] [-KeepWithNext] [-ColumnSeparatorColor <string>] [-ColumnSeparatorWidth <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficePdfRow [-Column] <Object[]> -Document <PdfDocument> [-Gap <double>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-KeepTogether] [-KeepWithNext] [-ColumnSeparatorColor <string>] [-ColumnSeparatorWidth <double>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfRow [-Column] <Object[]> -Document <PdfDocument> [-Gap <Double>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-KeepTogether] [-KeepWithNext] [-ColumnSeparatorColor <string>] [-ColumnSeparatorWidth <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -75,7 +75,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ColumnSeparatorColor
@@ -91,14 +91,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ColumnSeparatorWidth
 Optional vertical separator width in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -107,7 +107,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -123,14 +123,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Gap
 Horizontal gutter between columns in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -139,7 +139,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -KeepTogether
@@ -155,7 +155,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -KeepWithNext
@@ -171,7 +171,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -187,14 +187,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SpacingAfter
 Vertical spacing after the row in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -203,14 +203,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SpacingBefore
 Vertical spacing before the row in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -219,7 +219,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

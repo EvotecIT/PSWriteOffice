@@ -38,7 +38,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     private const string ParameterSetDocumentPathCulture = "DocumentPathCulture";
     private const string ParameterSetDocumentLiteralPathDelimiter = "DocumentLiteralPathDelimiter";
     private const string ParameterSetDocumentLiteralPathCulture = "DocumentLiteralPathCulture";
-    private CsvObjectWriter? _streamingWriter;
+    private CsvRowWriter? _streamingWriter;
     private readonly CsvPowerShellObjectProjector _objectProjector = new();
     private string? _resolvedPath;
     private string[]? _appendHeader;
@@ -278,8 +278,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             ValidateDocumentAppendHeader(document, appendHeader);
         }
 
-        using var writer = CreateTextWriter(append: true, options);
-        using var csvWriter = new CsvObjectWriter(writer, options);
+        using var csvWriter = CreateRowWriter(append: true, options);
 
         if (appendHeader is { Length: > 0 })
         {
@@ -309,7 +308,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         }
     }
 
-    private CsvObjectWriter? EnsureStreamingWriter(object? firstValue)
+    private CsvRowWriter? EnsureStreamingWriter(object? firstValue)
     {
         if (_streamingWriter != null)
         {
@@ -339,13 +338,12 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
             }
         }
 
-        var fileWriter = CreateTextWriter(Append.IsPresent, options);
-        _streamingWriter = new CsvObjectWriter(fileWriter, options);
+        _streamingWriter = CreateRowWriter(Append.IsPresent, options);
         _wroteOutput = true;
         return _streamingWriter;
     }
 
-    private CsvObjectWriter? EnsureStreamingWriterForColumns(
+    private CsvRowWriter? EnsureStreamingWriterForColumns(
         IReadOnlyList<string> sourceColumns,
         out IReadOnlyList<string> effectiveColumns,
         Action<IReadOnlyList<string>>? validateBeforeOpen = null,
@@ -389,8 +387,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
         validateBeforeOpen?.Invoke(effectiveColumns);
         _objectProjector.UseColumns(effectiveColumns, validateColumns: validateFollowingObjects);
-        var fileWriter = CreateTextWriter(Append.IsPresent, options);
-        _streamingWriter = new CsvObjectWriter(fileWriter, options);
+        _streamingWriter = CreateRowWriter(Append.IsPresent, options);
         _wroteOutput = true;
         return _streamingWriter;
     }
@@ -549,10 +546,10 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
 
     private string? GetTargetPathForErrors() => IsLiteralPathParameterSet() ? LiteralPath : Path;
 
-    private TextWriter CreateTextWriter(bool append, CsvSaveOptions options)
+    private CsvRowWriter CreateRowWriter(bool append, CsvSaveOptions options)
     {
         var appendToContent = append && _appendToExistingFile;
-        var compressionType = CsvFile.ResolveCompression(options.CompressionType, _resolvedPath!);
+        var compressionType = CsvRowWriter.ResolveCompression(options.CompressionType, _resolvedPath!);
         if (appendToContent && compressionType != CsvCompressionType.None)
         {
             throw new NotSupportedException("Appending to compressed CSV files is not supported.");
@@ -566,7 +563,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         }
 
         options.Encoding = encoding;
-        return CsvFile.CreateTextWriter(_resolvedPath!, options, append: appendToContent, bufferSize: StreamWriterBufferSize);
+        return CsvRowWriter.CreateFile(_resolvedPath!, options, append: appendToContent, bufferSize: StreamWriterBufferSize);
     }
 
     private static bool IsCompressedAppendTarget(CsvCompressionType requestedCompressionType, string path)
@@ -579,7 +576,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
                 HasZLibPayload(path);
         }
 
-        return CsvFile.ResolveCompression(requestedCompressionType, path) != CsvCompressionType.None ||
+        return CsvRowWriter.ResolveCompression(requestedCompressionType, path) != CsvCompressionType.None ||
             HasCompressedFileExtension(path) ||
             HasGZipHeader(path) ||
             HasDeflatePayload(path) ||
@@ -892,7 +889,7 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         return requiredColumns.All(columns.Contains);
     }
 
-    private static void WriteDocumentRows(CsvDocument document, CsvObjectWriter writer, IReadOnlyList<string> columns, bool projectByName)
+    private static void WriteDocumentRows(CsvDocument document, CsvRowWriter writer, IReadOnlyList<string> columns, bool projectByName)
     {
         foreach (var row in document.AsEnumerable())
         {

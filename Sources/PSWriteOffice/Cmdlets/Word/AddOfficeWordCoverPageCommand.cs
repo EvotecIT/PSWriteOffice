@@ -20,7 +20,7 @@ public sealed class AddOfficeWordCoverPageCommand : PSCmdlet
 {
     /// <summary>Cover page template to insert.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public CoverPageTemplate Template { get; set; }
+    public WordCoverPageTemplate Template { get; set; }
 
     /// <summary>Document to update. Defaults to the current Word DSL or tracked document.</summary>
     [Parameter(ValueFromPipeline = true)]

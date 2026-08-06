@@ -105,7 +105,7 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             throw new ArgumentOutOfRangeException("StartRow/StartColumn must be 1 or greater.");
         }
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out TableStyle style))
+        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
         {
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }

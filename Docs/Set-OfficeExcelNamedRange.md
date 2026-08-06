@@ -11,12 +11,12 @@ Creates or updates a named range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelNamedRange [-Name] <string> [-Range] <string> [-Hidden] [-ValidationMode <NameValidationMode>] [-Global] [-Save] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelNamedRange [-Name] <string> [-Range] <string> [-Hidden] [-ValidationMode <ExcelDefinedNameValidationMode>] [-Global] [-Save] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelNamedRange [-Name] <string> [-Range] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Hidden] [-ValidationMode <NameValidationMode>] [-Save] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelNamedRange [-Name] <string> [-Range] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Hidden] [-ValidationMode <ExcelDefinedNameValidationMode>] [-Save] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Global
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Hidden
@@ -78,7 +78,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -94,7 +94,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Range
@@ -126,7 +126,7 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Save
@@ -142,7 +142,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -158,14 +158,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -174,14 +174,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ValidationMode
 Validate or sanitize the defined name.
 
 ```yaml
-Type: NameValidationMode
+Type: ExcelDefinedNameValidationMode
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Sanitize, Strict
@@ -190,7 +190,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -202,7 +202,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

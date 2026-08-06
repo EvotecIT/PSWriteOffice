@@ -196,7 +196,7 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
             {
                 if (document.Sheets.Count == 0)
                 {
-                    document.AddWorksheet(string.Empty, SheetNameValidationMode.Sanitize);
+                    document.AddWorksheet(string.Empty, ExcelSheetNameValidationMode.Sanitize);
                 }
                 var saveOptions = ExcelDocumentService.CreateSaveOptions(
                     SafePreflight.IsPresent,

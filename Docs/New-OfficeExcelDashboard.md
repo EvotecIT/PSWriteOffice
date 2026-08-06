@@ -11,17 +11,17 @@ Builds a worksheet dashboard from tabular data using OfficeIMO dashboard default
 ## SYNTAX
 ### Context (Default)
 ```powershell
-New-OfficeExcelDashboard [-InputObject] <Object> [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeExcelDashboard [-InputObject] <Object> [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <Int32>] [-ChartColumn <Int32>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-New-OfficeExcelDashboard [-InputObject] <Object> -InputPath <string> [-Sheet <string>] [-SheetIndex <int>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeExcelDashboard [-InputObject] <Object> -InputPath <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <Int32>] [-ChartColumn <Int32>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-New-OfficeExcelDashboard [-InputObject] <Object> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <int>] [-ChartColumn <int>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeExcelDashboard [-InputObject] <Object> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <Int32>] [-ChartColumn <Int32>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,7 +42,7 @@ Writes a table and chart into the current Excel DSL worksheet.
 Top-left chart column.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -51,7 +51,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ChartPreset
@@ -67,14 +67,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ChartRow
 Top-left chart row.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -83,7 +83,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ChartTitle
@@ -99,7 +99,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -115,7 +115,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputObject
@@ -131,7 +131,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -147,7 +147,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoAutoFilter
@@ -163,7 +163,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoAutoFit
@@ -179,7 +179,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoChart
@@ -195,7 +195,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -211,7 +211,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -227,14 +227,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Path or Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:
@@ -243,7 +243,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Subtitle
@@ -259,7 +259,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TableColumn
@@ -275,7 +275,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TableName
@@ -291,7 +291,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TableRow
@@ -307,7 +307,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TableStyle
@@ -323,7 +323,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Title
@@ -339,7 +339,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

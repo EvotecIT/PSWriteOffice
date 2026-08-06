@@ -11,12 +11,12 @@ Renames a workbook or sheet-scoped Excel named range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Rename-OfficeExcelNamedRange [-Name] <string> [-NewName] <string> [-Global] [-ValidationMode <NameValidationMode>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
+Rename-OfficeExcelNamedRange [-Name] <string> [-NewName] <string> [-Global] [-ValidationMode <ExcelDefinedNameValidationMode>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Rename-OfficeExcelNamedRange [-Name] <string> [-NewName] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-ValidationMode <NameValidationMode>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
+Rename-OfficeExcelNamedRange [-Name] <string> [-NewName] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-ValidationMode <ExcelDefinedNameValidationMode>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,7 +48,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Global
@@ -64,7 +64,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -80,7 +80,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NewName
@@ -96,7 +96,7 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -112,7 +112,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Save
@@ -128,7 +128,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -144,14 +144,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Zero-based worksheet index for a sheet-scoped operation.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -160,14 +160,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ValidationMode
 Defined-name validation mode.
 
 ```yaml
-Type: NameValidationMode
+Type: ExcelDefinedNameValidationMode
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Sanitize, Strict
@@ -176,7 +176,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

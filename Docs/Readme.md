@@ -1133,7 +1133,7 @@ Saves a native OpenDocument model with entry-level preservation diagnostics.
 Saves an OfficeIMO.Pdf document.
 
 ### [Save-OfficePowerPoint](Save-OfficePowerPoint.md)
-Saves a presentation to disk.
+Saves a presentation without disposing it.
 
 ### [Save-OfficeVisio](Save-OfficeVisio.md)
 Saves an OfficeIMO.Visio document.

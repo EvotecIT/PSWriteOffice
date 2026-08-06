@@ -11,12 +11,12 @@ Configures page setup options on a worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelPageSetup [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPageSetup [-FitToWidth <UInt32>] [-FitToHeight <UInt32>] [-Scale <UInt32>] [-PageOrder <ExcelPageOrder>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelPageSetup -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelPageSetup -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-FitToWidth <UInt32>] [-FitToHeight <UInt32>] [-Scale <UInt32>] [-PageOrder <ExcelPageOrder>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,14 +46,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FitToHeight
 Number of pages to fit vertically.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -62,14 +62,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FitToWidth
 Number of pages to fit horizontally.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -78,23 +78,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageOrder
 Multi-page print order.
 
 ```yaml
-Type: Nullable`1
+Type: ExcelPageOrder
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: DownThenOver, OverThenDown
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -110,14 +110,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Scale
 Manual scale percentage (10-400).
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -126,7 +126,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -142,14 +142,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -158,7 +158,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -170,7 +170,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

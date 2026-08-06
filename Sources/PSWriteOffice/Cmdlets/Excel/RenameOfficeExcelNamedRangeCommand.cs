@@ -48,7 +48,7 @@ public sealed class RenameOfficeExcelNamedRangeCommand : PSCmdlet
 
     /// <summary>Defined-name validation mode.</summary>
     [Parameter]
-    public NameValidationMode ValidationMode { get; set; } = NameValidationMode.Sanitize;
+    public ExcelDefinedNameValidationMode ValidationMode { get; set; } = ExcelDefinedNameValidationMode.Sanitize;
     /// <summary>Emit a result object.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }

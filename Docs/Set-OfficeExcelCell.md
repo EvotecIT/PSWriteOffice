@@ -11,7 +11,7 @@ Sets a cell value, formula, or number format within the current worksheet.
 ## SYNTAX
 ### Coordinates
 ```powershell
-Set-OfficeExcelCell [-Row <int>] [-Column <int>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
+Set-OfficeExcelCell [-Row <Int32>] [-Column <Int32>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
 ```
 
 ### Address
@@ -46,7 +46,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor
@@ -62,14 +62,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Column
 1-based column index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Coordinates
 Aliases: None
 Possible values:
@@ -78,7 +78,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Formula
@@ -94,7 +94,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -GradientDegree
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -GradientFrom
@@ -126,7 +126,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -GradientTo
@@ -142,7 +142,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NumberFormat
@@ -158,14 +158,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Row
 1-based row index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Coordinates
 Aliases: None
 Possible values:
@@ -174,7 +174,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Value
@@ -190,7 +190,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -202,7 +202,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

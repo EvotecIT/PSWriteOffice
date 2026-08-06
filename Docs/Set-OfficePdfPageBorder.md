@@ -11,12 +11,12 @@ Sets or clears the generated PDF page border decoration.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficePdfPageBorder [-Color <string>] [-Width <double>] [-Inset <double>] [-Opacity <double>] [-DashStyle <OfficeStrokeDashStyle>] [-Clear] [-PassThru] [<CommonParameters>]
+Set-OfficePdfPageBorder [-Color <string>] [-Width <Double>] [-Inset <Double>] [-Opacity <Double>] [-DashStyle <OfficeStrokeDashStyle>] [-Clear] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficePdfPageBorder -Document <PdfDocument> [-Color <string>] [-Width <double>] [-Inset <double>] [-Opacity <double>] [-DashStyle <OfficeStrokeDashStyle>] [-Clear] [-PassThru] [<CommonParameters>]
+Set-OfficePdfPageBorder -Document <PdfDocument> [-Color <string>] [-Width <Double>] [-Inset <Double>] [-Opacity <Double>] [-DashStyle <OfficeStrokeDashStyle>] [-Clear] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -49,7 +49,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Color
@@ -65,7 +65,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DashStyle
@@ -81,7 +81,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -97,14 +97,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Inset
 Distance from the page edge to the border path in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -113,14 +113,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Opacity
 Border opacity from 0 through 1.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -129,7 +129,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -145,14 +145,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Border stroke width in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -161,7 +161,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

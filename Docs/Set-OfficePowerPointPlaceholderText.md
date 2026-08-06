@@ -11,7 +11,7 @@ Sets text in a slide placeholder.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePowerPointPlaceholderText -PlaceholderType <string> -Text <string> [-Slide <PowerPointSlide>] [-Index <uint>] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
+Set-OfficePowerPointPlaceholderText -PlaceholderType <string> -Text <string> [-Slide <PowerPointSlide>] [-Index <UInt32>] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,14 +45,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Index
 Optional placeholder index.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -61,7 +61,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -77,7 +77,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PlaceholderType
@@ -93,7 +93,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Slide
@@ -109,7 +109,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -125,7 +125,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

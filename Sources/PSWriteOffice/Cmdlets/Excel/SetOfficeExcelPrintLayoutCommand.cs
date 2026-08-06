@@ -1,5 +1,6 @@
 using System;
 using System.Management.Automation;
+using OfficeIMO;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -49,7 +50,7 @@ public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
 
     /// <summary>Optional orientation override.</summary>
     [Parameter]
-    public ExcelPageOrientation? Orientation { get; set; }
+    public OfficePageOrientation? Orientation { get; set; }
 
     /// <summary>Optional margin preset override.</summary>
     [Parameter]

@@ -202,7 +202,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         }
 
         return string.Equals(layout, "Autofit", StringComparison.OrdinalIgnoreCase)
-            ? WordTableLayoutMode.Autofit
+            ? WordTableLayoutMode.AutoFit
             : WordTableLayoutMode.Fixed;
     }
 
@@ -215,13 +215,13 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
         if (string.Equals(layout, "AutoFitToContents", StringComparison.OrdinalIgnoreCase))
         {
-            table.LayoutMode = WordTableLayoutType.AutoFitToContents;
+            table.AutoFitToContents();
             return;
         }
 
         if (string.Equals(layout, "AutoFitToWindow", StringComparison.OrdinalIgnoreCase))
         {
-            table.LayoutMode = WordTableLayoutType.AutoFitToWindow;
+            table.AutoFitToWindow();
         }
     }
 
@@ -257,7 +257,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
         if (layout.HasValue)
         {
-            table.LayoutType = layout.Value;
+            table.LayoutMode = layout.Value;
         }
 
         foreach (var placement in spec.Placements)
@@ -338,7 +338,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var table = cell.AddTable(rowCount, columns.Count, style);
         if (layout.HasValue)
         {
-            table.LayoutType = layout.Value;
+            table.LayoutMode = layout.Value;
         }
 
         var rowIndex = 0;

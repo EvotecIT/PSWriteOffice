@@ -11,7 +11,7 @@ Sets the transition used when advancing to a slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePowerPointSlideTransition -Transition <SlideTransition> [-Slide <PowerPointSlide>] [<CommonParameters>]
+Set-OfficePowerPointSlideTransition -Transition <PowerPointSlideTransition> [-Slide <PowerPointSlide>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,14 +41,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Transition
 Transition to apply.
 
 ```yaml
-Type: SlideTransition
+Type: PowerPointSlideTransition
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: None, Fade, Wipe, BlindsVertical, BlindsHorizontal, CombHorizontal, CombVertical, PushUp, PushDown, PushLeft, PushRight, Cut, Flash, WarpIn, WarpOut, Prism, FerrisLeft, FerrisRight, Morph, Random, CheckerHorizontal, CheckerVertical, CoverLeft, CoverUp, CoverRight, CoverDown, CoverLeftUp, CoverRightUp, CoverLeftDown, CoverRightDown, Dissolve, FadeThroughBlack, UncoverLeft, UncoverUp, UncoverRight, UncoverDown, UncoverLeftUp, UncoverRightUp, UncoverLeftDown, UncoverRightDown, RandomBarsHorizontal, RandomBarsVertical, StripsLeftUp, StripsRightUp, StripsLeftDown, StripsRightDown, WipeUp, WipeRight, WipeDown, BoxOut, BoxIn, SplitHorizontalOut, SplitHorizontalIn, SplitVerticalOut, SplitVerticalIn, Diamond, Plus, Wedge, Newsflash, WheelOneSpoke, WheelTwoSpokes, WheelThreeSpokes, WheelFourSpokes, WheelEightSpokes, Circle, CutThroughBlack
@@ -57,7 +57,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

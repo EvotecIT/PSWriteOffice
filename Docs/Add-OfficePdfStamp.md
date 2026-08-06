@@ -11,12 +11,12 @@ Adds a text or image stamp to an existing PDF.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficePdfStamp -Path <string> -OutputPath <string> -Text <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <double>] [-Y <double>] [-FontSize <double>] [-Color <string>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfStamp -Path <string> -OutputPath <string> -Text <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <Double>] [-Y <Double>] [-FontSize <double>] [-Color <string>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Image
 ```powershell
-Add-OfficePdfStamp -Path <string> -OutputPath <string> -Image <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfStamp -Path <string> -OutputPath <string> -Image <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <Double>] [-Y <Double>] [-Width <Double>] [-Height <Double>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -59,7 +59,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSize
@@ -75,14 +75,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Height
 Rendered image height in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Image
 Aliases: None
 Possible values:
@@ -91,7 +91,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IgnorePermissionRestrictions
@@ -108,7 +108,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Image
@@ -124,7 +124,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutputPath
@@ -140,7 +140,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageRange
@@ -156,7 +156,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Password
@@ -172,7 +172,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -188,7 +188,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Rotation
@@ -204,7 +204,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -220,7 +220,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Watermark
@@ -236,14 +236,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Rendered image width in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Image
 Aliases: None
 Possible values:
@@ -252,14 +252,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -X
 X coordinate in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Text, Image
 Aliases: None
 Possible values:
@@ -268,14 +268,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Y
 Y coordinate in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Text, Image
 Aliases: None
 Possible values:
@@ -284,7 +284,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

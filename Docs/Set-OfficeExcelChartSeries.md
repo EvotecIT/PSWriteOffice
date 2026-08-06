@@ -11,12 +11,12 @@ Configures Excel chart series colors, line style, and markers.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesIndex <int> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <double>] [-MarkerStyle <string>] [-MarkerSize <int>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <double>] [<CommonParameters>]
+Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesIndex <int> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <string>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesName <string> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <double>] [-MarkerStyle <string>] [-MarkerSize <int>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <double>] [<CommonParameters>]
+Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesName <string> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <string>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillColor
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IgnoreCase
@@ -78,7 +78,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineColor
@@ -94,14 +94,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineWidthPoints
 Series line width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MarkerFillColor
@@ -126,7 +126,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MarkerLineColor
@@ -142,14 +142,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MarkerLineWidthPoints
 Marker line width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -158,14 +158,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MarkerSize
 Marker size.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -174,7 +174,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MarkerStyle
@@ -190,7 +190,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SeriesIndex
@@ -206,7 +206,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SeriesName
@@ -222,7 +222,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

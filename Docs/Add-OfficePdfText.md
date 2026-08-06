@@ -11,12 +11,12 @@ Adds a rich inline-text paragraph to a generated PDF document.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficePdfText [[-Text] <string[]>] [-Run <Object[]>] [-Align <PdfAlign>] [-Color <string>] [-BackgroundColor <string>] [-FontSize <double>] [-Font <PdfStandardFont>] [-Bold] [-Italic] [-Underline] [-Strike] [-Baseline <PdfTextBaseline>] [-LinkUri <string>] [-LinkDestinationName <string>] [-LinkContents <string>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfText [[-Text] <string[]>] [-Run <Object[]>] [-Align <PdfAlign>] [-Color <string>] [-BackgroundColor <string>] [-FontSize <Double>] [-Font <PdfStandardFont>] [-Bold] [-Italic] [-Underline] [-Strike] [-Baseline <PdfTextBaseline>] [-LinkUri <string>] [-LinkDestinationName <string>] [-LinkContents <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficePdfText [[-Text] <string[]>] -Document <PdfDocument> [-Run <Object[]>] [-Align <PdfAlign>] [-Color <string>] [-BackgroundColor <string>] [-FontSize <double>] [-Font <PdfStandardFont>] [-Bold] [-Italic] [-Underline] [-Strike] [-Baseline <PdfTextBaseline>] [-LinkUri <string>] [-LinkDestinationName <string>] [-LinkContents <string>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfText [[-Text] <string[]>] -Document <PdfDocument> [-Run <Object[]>] [-Align <PdfAlign>] [-Color <string>] [-BackgroundColor <string>] [-FontSize <Double>] [-Font <PdfStandardFont>] [-Bold] [-Italic] [-Underline] [-Strike] [-Baseline <PdfTextBaseline>] [-LinkUri <string>] [-LinkDestinationName <string>] [-LinkContents <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -64,7 +64,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor
@@ -80,7 +80,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Baseline
@@ -96,7 +96,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Bold
@@ -112,7 +112,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Color
@@ -128,7 +128,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -144,30 +144,30 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Font
 Standard PDF font for -Text input.
 
 ```yaml
-Type: Nullable`1
+Type: PdfStandardFont
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: Helvetica, HelveticaOblique, HelveticaBold, HelveticaBoldOblique, TimesRoman, TimesItalic, TimesBold, TimesBoldItalic, Courier, CourierOblique, CourierBold, CourierBoldOblique
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSize
 Font size for -Text input in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -176,7 +176,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Italic
@@ -192,7 +192,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LinkContents
@@ -208,7 +208,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LinkDestinationName
@@ -224,7 +224,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LinkUri
@@ -240,7 +240,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -256,7 +256,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Run
@@ -272,7 +272,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Strike
@@ -288,7 +288,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -304,7 +304,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Underline
@@ -320,7 +320,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

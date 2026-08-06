@@ -171,7 +171,7 @@ public sealed class NewOfficePdfTableCellCommand : PSCmdlet
         }
         else if (style?.HasTextStyle == true)
         {
-            var run = new TextRun(
+            var run = new PdfTextRun(
                 Text ?? string.Empty,
                 bold: style.Bold,
                 underline: style.Underline,

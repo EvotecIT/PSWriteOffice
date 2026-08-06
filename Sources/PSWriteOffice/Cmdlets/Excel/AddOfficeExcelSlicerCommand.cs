@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Packaging;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -61,7 +60,7 @@ public sealed class AddOfficeExcelSlicerCommand : PSCmdlet
             return;
         }
 
-        ExtendedPart part = workbook.Document.AddWorkbookSlicerCache(new ExcelSlicerCacheOptions
+        ExcelPackagePartInfo part = workbook.Document.AddWorkbookSlicerCache(new ExcelSlicerCacheOptions
         {
             Name = Name,
             SourceName = SourceName,

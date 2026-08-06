@@ -325,7 +325,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
             throw new PSArgumentException("Provide at least one data row.", nameof(InputObject));
         }
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out TableStyle style))
+        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
         {
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }

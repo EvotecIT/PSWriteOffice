@@ -25,7 +25,7 @@ public sealed class AddOfficeWordTextBoxCommand : PSCmdlet
 
     /// <summary>Word text wrapping mode.</summary>
     [Parameter]
-    public WrapTextImage WrapText { get; set; } = WrapTextImage.Square;
+    public WordImageTextWrapping WrapText { get; set; } = WordImageTextWrapping.Square;
 
     /// <summary>Width in centimeters.</summary>
     [Parameter]
@@ -47,7 +47,7 @@ public sealed class AddOfficeWordTextBoxCommand : PSCmdlet
 
     /// <summary>Horizontal alignment for anchored text boxes.</summary>
     [Parameter]
-    public WordHorizontalAlignmentValues? HorizontalAlignment { get; set; }
+    public WordTextBoxHorizontalAlignment? HorizontalAlignment { get; set; }
 
     /// <summary>Horizontal relative position anchor.</summary>
     [Parameter]

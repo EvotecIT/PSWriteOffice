@@ -158,7 +158,7 @@ public sealed class AddOfficeExcelSubtotalSummaryCommand : PSCmdlet
 
     private static (int FirstRow, int FirstColumn, int LastRow, int LastColumn) ResolveUsedRange(ExcelSheet sheet)
     {
-        if (!A1.TryParseRange(sheet.GetUsedRangeA1(), out int firstRow, out int firstColumn, out int lastRow, out int lastColumn))
+        if (!A1.TryParseRange(sheet.UsedRangeA1, out int firstRow, out int firstColumn, out int lastRow, out int lastColumn))
         {
             throw new PSArgumentException("Unable to resolve the worksheet used range.");
         }

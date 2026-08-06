@@ -71,7 +71,7 @@ public sealed class AddOfficeExcelDataSetCommand : PSCmdlet
             throw new PSArgumentNullException(nameof(DataSet));
         }
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out TableStyle style))
+        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
         {
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }

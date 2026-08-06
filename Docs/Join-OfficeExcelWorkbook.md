@@ -11,12 +11,12 @@ Merges worksheets from one or more workbooks into a target workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Join-OfficeExcelWorkbook [-InputPath] <string> [[-SourcePath] <string[]>] [-SourceDocument <ExcelDocument>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [-ValidationMode <SheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeExcelWorkbook [-InputPath] <string> [[-SourcePath] <string[]>] [-SourceDocument <ExcelDocument>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Join-OfficeExcelWorkbook [[-SourcePath] <string[]>] -Document <ExcelDocument> [-SourceDocument <ExcelDocument>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [-ValidationMode <SheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeExcelWorkbook [[-SourcePath] <string[]>] -Document <ExcelDocument> [-SourceDocument <ExcelDocument>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -57,7 +57,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -73,7 +73,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -89,7 +89,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetNamePrefix
@@ -105,7 +105,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourceDocument
@@ -121,7 +121,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourcePath
@@ -137,7 +137,7 @@ Required: False
 Position: 1
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourceSheet
@@ -153,14 +153,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ValidationMode
 Controls how invalid or duplicate destination sheet names are handled.
 
 ```yaml
-Type: SheetNameValidationMode
+Type: ExcelSheetNameValidationMode
 Parameter Sets: Path, Document
 Aliases: None
 Possible values: None, Sanitize, Strict
@@ -169,7 +169,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -177,8 +177,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.Excel.ExcelDocument
-System.String[]`
+- `OfficeIMO.Excel.ExcelDocument`
+- `System.String[]`
 
 ## OUTPUTS
 

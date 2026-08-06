@@ -61,7 +61,7 @@ public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
 
     /// <summary>Controls how invalid or duplicate destination sheet names are handled.</summary>
     [Parameter]
-    public SheetNameValidationMode ValidationMode { get; set; } = SheetNameValidationMode.Sanitize;
+    public ExcelSheetNameValidationMode ValidationMode { get; set; } = ExcelSheetNameValidationMode.Sanitize;
 
     /// <summary>Controls whether cross-workbook copies use package-level copy or value materialization.</summary>
     [Parameter]
@@ -145,7 +145,7 @@ public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
             ? ExcelDocumentService.LoadDocument(resolvedTargetPath, readOnly: false, autoSave: false)
             : ExcelDocument.Create(resolvedTargetPath, new ExcelCreateOptions
             {
-                PersistenceMode = OfficeIMO.Drawing.DocumentPersistenceMode.Explicit
+                PersistenceMode = DocumentPersistenceMode.Explicit
             });
 
         return new ExcelWorkbookCommandScope(document, ownsDocument: true);

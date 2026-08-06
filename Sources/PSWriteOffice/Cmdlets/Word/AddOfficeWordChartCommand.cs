@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using OfficeIMO;
 using OfficeIMO.Drawing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
@@ -290,15 +291,15 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
         return OfficeColor.Parse(colorValue);
     }
 
-    private static WordChartLegendPosition ResolveLegendPosition(string position)
+    private static OfficeChartLegendPosition ResolveLegendPosition(string position)
     {
         return position switch
         {
-            "Left" => WordChartLegendPosition.Left,
-            "Top" => WordChartLegendPosition.Top,
-            "Bottom" => WordChartLegendPosition.Bottom,
-            "TopRight" => WordChartLegendPosition.TopRight,
-            _ => WordChartLegendPosition.Right
+            "Left" => OfficeChartLegendPosition.Left,
+            "Top" => OfficeChartLegendPosition.Top,
+            "Bottom" => OfficeChartLegendPosition.Bottom,
+            "TopRight" => OfficeChartLegendPosition.TopRight,
+            _ => OfficeChartLegendPosition.Right
         };
     }
 

@@ -129,7 +129,7 @@ Describe 'PowerPoint cmdlets' {
             Where-Object { $null -ne $_ } |
             Select-Object -First 1
         $modeType = [AppDomain]::CurrentDomain.GetAssemblies() |
-            ForEach-Object { $_.GetType('OfficeIMO.Drawing.DocumentPersistenceMode', $false) } |
+            ForEach-Object { $_.GetType('OfficeIMO.DocumentPersistenceMode', $false) } |
             Where-Object { $null -ne $_ } |
             Select-Object -First 1
         $options = [Activator]::CreateInstance($optionsType)
@@ -1064,7 +1064,7 @@ Describe 'PowerPoint cmdlets' {
         Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Transition Demo' | Out-Null
 
         $updatedSlide = $slide | Set-OfficePowerPointSlideTransition -Transition Fade
-        $fadeTransition = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.PowerPoint' -TypeName 'OfficeIMO.PowerPoint.SlideTransition' -Name 'Fade' -CommandName 'New-OfficePowerPoint'
+        $fadeTransition = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.PowerPoint' -TypeName 'OfficeIMO.PowerPoint.PowerPointSlideTransition' -Name 'Fade' -CommandName 'New-OfficePowerPoint'
         $updatedSlide.Transition | Should -Be $fadeTransition
 
         $slideSize = Set-OfficePowerPointSlideSize -Presentation $presentation -WidthCm 25.4 -HeightCm 14.0

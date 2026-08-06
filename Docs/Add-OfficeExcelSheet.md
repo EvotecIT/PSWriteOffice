@@ -11,7 +11,7 @@ Adds or reuses a worksheet within the current Excel DSL scope.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelSheet [[-Name] <string>] [[-Content] <scriptblock>] [-ValidationMode <SheetNameValidationMode>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSheet [[-Name] <string>] [[-Content] <scriptblock>] [-ValidationMode <ExcelSheetNameValidationMode>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,7 +41,7 @@ Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -57,7 +57,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -73,14 +73,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ValidationMode
 Controls how invalid sheet names are handled.
 
 ```yaml
-Type: SheetNameValidationMode
+Type: ExcelSheetNameValidationMode
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: None, Sanitize, Strict
@@ -89,7 +89,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -101,7 +101,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

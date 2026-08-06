@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using OfficeIMO;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -32,7 +33,7 @@ public sealed class SetOfficeExcelOrientationCommand : PSCmdlet
 
     /// <summary>Orientation to apply.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    public ExcelPageOrientation Orientation { get; set; }
+    public OfficePageOrientation Orientation { get; set; }
 
     /// <summary>Emit the worksheet after applying the orientation.</summary>
     [Parameter]

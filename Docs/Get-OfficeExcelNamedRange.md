@@ -11,17 +11,17 @@ Gets defined names (named ranges) from an Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelNamedRange [-InputPath] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+Get-OfficeExcelNamedRange [-InputPath] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Uri
 ```powershell
-Get-OfficeExcelNamedRange [-Uri] <uri> [-AllowHttp] [-Name <string>] [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+Get-OfficeExcelNamedRange [-Uri] <uri> [-AllowHttp] [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeExcelNamedRange -Document <ExcelDocument> [-Name <string>] [-Sheet <string>] [-SheetIndex <int>] [<CommonParameters>]
+Get-OfficeExcelNamedRange -Document <ExcelDocument> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -54,7 +54,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -70,7 +70,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -86,7 +86,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -102,7 +102,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -118,14 +118,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Optional sheet index (0-based) for sheet-scoped names.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Uri, Document
 Aliases: None
 Possible values:
@@ -134,7 +134,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Uri
@@ -150,7 +150,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

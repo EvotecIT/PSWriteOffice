@@ -11,7 +11,7 @@ Appends or inserts a row in an existing PowerPoint table.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointTableRow [-InputObject] <Object> [[-Value] <Object>] [-TemplateRowIndex <int>] [-Index <int>] [-PassThru] [<CommonParameters>]
+Add-OfficePowerPointTableRow [-InputObject] <Object> [[-Value] <Object>] [-TemplateRowIndex <Int32>] [-Index <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -47,7 +47,7 @@ Resolves the table from shape metadata, inserts a formatted row at index 1, and 
 Optional zero-based index where the row should be inserted. Defaults to appending at the end.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -56,7 +56,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputObject
@@ -72,7 +72,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -88,14 +88,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TemplateRowIndex
 Optional zero-based template row index to clone. Defaults to the last existing row.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -104,7 +104,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Value
@@ -120,7 +120,7 @@ Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

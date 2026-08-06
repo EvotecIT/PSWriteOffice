@@ -16,7 +16,7 @@ Set-OfficeWordBackground [-Color] <string> [-Document <WordDocument>] [-PassThru
 
 ### Image
 ```powershell
-Set-OfficeWordBackground [-ImagePath] <string> [-Document <WordDocument>] [-Width <double>] [-Height <double>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordBackground [-ImagePath] <string> [-Document <WordDocument>] [-Width <Double>] [-Height <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -58,7 +58,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -74,14 +74,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Height
 Optional background image height in pixels.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Image
 Aliases: None
 Possible values:
@@ -90,7 +90,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ImagePath
@@ -106,7 +106,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -122,14 +122,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Optional background image width in pixels.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Image
 Aliases: None
 Possible values:
@@ -138,7 +138,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

@@ -46,7 +46,7 @@ public sealed class SetOfficeExcelNamedRangeCommand : PSCmdlet
 
     /// <summary>Validate or sanitize the defined name.</summary>
     [Parameter]
-    public NameValidationMode ValidationMode { get; set; } = NameValidationMode.Sanitize;
+    public ExcelDefinedNameValidationMode ValidationMode { get; set; } = ExcelDefinedNameValidationMode.Sanitize;
 
     /// <summary>Force a workbook-global name even inside a sheet block.</summary>
     [Parameter(ParameterSetName = ParameterSetContext)]

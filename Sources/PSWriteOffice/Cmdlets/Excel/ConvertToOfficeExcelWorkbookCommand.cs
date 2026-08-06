@@ -79,11 +79,11 @@ public sealed class ConvertToOfficeExcelWorkbookCommand : PSCmdlet
             ExcelDocument.Convert(sourcePath, outputPath, new ExcelDocumentConversionOptions
             {
                 FileConflictPolicy = Force.IsPresent
-                    ? ExcelConversionFileConflictPolicy.Replace
-                    : ExcelConversionFileConflictPolicy.FailIfExists,
+                    ? OfficeConversionFileConflictPolicy.Replace
+                    : OfficeConversionFileConflictPolicy.FailIfExists,
                 LossPolicy = AllowLossyLegacyConversion.IsPresent
-                    ? ExcelConversionLossPolicy.Allow
-                    : ExcelConversionLossPolicy.Block
+                    ? OfficeConversionLossPolicy.Allow
+                    : OfficeConversionLossPolicy.Block
             });
 
             if (Open.IsPresent)

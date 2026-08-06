@@ -11,7 +11,7 @@ Adds a basic OfficeIMO Word shape to the current paragraph.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordShape [-Type <ShapeType>] [-Width <double>] [-Height <double>] [-Left <double>] [-Top <double>] [-FillColor <string>] [-StrokeColor <string>] [-StrokeWidth <double>] [-Title <string>] [-Description <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordShape [-Type <WordShapeType>] [-Width <double>] [-Height <double>] [-Left <Double>] [-Top <Double>] [-FillColor <string>] [-StrokeColor <string>] [-StrokeWidth <Double>] [-Title <string>] [-Description <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -54,7 +54,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillColor
@@ -70,7 +70,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Height
@@ -86,14 +86,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Left
 Anchored left position in points. When omitted, the shape is inline.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -102,7 +102,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -118,7 +118,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StrokeColor
@@ -134,14 +134,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StrokeWidth
 Stroke width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -150,7 +150,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Title
@@ -166,14 +166,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Top
 Anchored top position in points. When omitted, the shape is inline.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -182,14 +182,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Type
 Shape type to add.
 
 ```yaml
-Type: ShapeType
+Type: WordShapeType
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Rectangle, Ellipse, Line, RoundedRectangle, Triangle, Diamond, Pentagon, Hexagon, Parallelogram, Trapezoid, Chevron, Plus, RightArrow, LeftArrow, UpArrow, DownArrow, LeftRightArrow, Star5, Heart, Cloud, Donut, Can, Cube
@@ -198,7 +198,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
@@ -214,7 +214,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

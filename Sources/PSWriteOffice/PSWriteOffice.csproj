@@ -47,7 +47,7 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' == 'true'">
-        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Drawing\OfficeIMO.Drawing.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Core\OfficeIMO.Core.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Adf\OfficeIMO.Adf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Confluence\OfficeIMO.Confluence.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word\OfficeIMO.Word.csproj" />
@@ -90,7 +90,7 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel.GoogleSheets\OfficeIMO.Excel.GoogleSheets.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
-        <PackageReference Include="OfficeIMO.Drawing" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Core" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Adf" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Confluence" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Word" Version="$(OfficeIMOVersion)" />

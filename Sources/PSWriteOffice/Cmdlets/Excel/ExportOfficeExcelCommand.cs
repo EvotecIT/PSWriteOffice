@@ -315,7 +315,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("Use either -AppendToTable or -NoTable, but not both.");
         }
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out TableStyle style))
+        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
         {
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }
@@ -499,7 +499,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         bool preserveWorkbook,
         int dataStartRow,
         bool includeHeaders,
-        TableStyle style,
+        ExcelTableStyle style,
         ExcelColumnFormatPlan? columnFormatPlan,
         out string range)
     {
@@ -521,7 +521,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         }
 
         sheet.InsertObjects<object?>(items, includeHeaders, dataStartRow);
-        range = sheet.GetUsedRangeA1();
+        range = sheet.UsedRangeA1;
         if (string.IsNullOrWhiteSpace(range))
         {
             return false;
@@ -651,7 +651,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return IncludeHeaderInColumnFormat.IsPresent || (plan?.Rules.Any(static rule => rule.IncludeHeader) ?? false);
     }
 
-    private string ExportDataReader(ExcelSheet sheet, IDataReader reader, TableStyle style, ExcelColumnFormatPlan? columnFormatPlan)
+    private string ExportDataReader(ExcelSheet sheet, IDataReader reader, ExcelTableStyle style, ExcelColumnFormatPlan? columnFormatPlan)
     {
         var dataStartRow = StartRow;
         var fieldCount = reader.FieldCount;
@@ -703,7 +703,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return range;
     }
 
-    private void ExportDataSet(ExcelDocument document, DataSet dataSet, TableStyle style, ExcelColumnFormatPlan? columnFormatPlan)
+    private void ExportDataSet(ExcelDocument document, DataSet dataSet, ExcelTableStyle style, ExcelColumnFormatPlan? columnFormatPlan)
     {
         if (dataSet.Tables.Count == 0)
         {
@@ -835,7 +835,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             document.RemoveWorksheet(WorksheetName);
         }
 
-        return document.GetOrCreateSheet(WorksheetName, SheetNameValidationMode.Sanitize);
+        return document.GetOrCreateSheet(WorksheetName, ExcelSheetNameValidationMode.Sanitize);
     }
 
     private DataTable BuildDataTable()
@@ -889,7 +889,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         }
     }
 
-    private string WriteData(ExcelSheet sheet, DataTable table, int startRow, bool includeHeaders, TableStyle style, bool appendRawRows, string? appendTableName, string? tableName)
+    private string WriteData(ExcelSheet sheet, DataTable table, int startRow, bool includeHeaders, ExcelTableStyle style, bool appendRawRows, string? appendTableName, string? tableName)
     {
         if (appendRawRows &&
             !NoTable.IsPresent &&
@@ -942,7 +942,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         return $"{A1.CellReference(startRow, StartColumn)}:{A1.CellReference(endRow, endColumn)}";
     }
 
-    private void ApplyTableStyleOptions(ExcelSheet sheet, string? tableOrRange, TableStyle style)
+    private void ApplyTableStyleOptions(ExcelSheet sheet, string? tableOrRange, ExcelTableStyle style)
     {
         ExcelTableStyleOptionService.Apply(
             sheet,
@@ -1050,7 +1050,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return null;
         }
 
-        var usedRange = sheet.GetUsedRangeA1();
+        var usedRange = sheet.UsedRangeA1;
         if (!A1.TryParseRange(usedRange, out var firstRow, out var firstColumn, out var lastRow, out var lastColumn))
         {
             var (row, column) = A1.ParseCellRef(usedRange);
@@ -1125,7 +1125,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return StartRow;
         }
 
-        var usedRange = sheet.GetUsedRangeA1();
+        var usedRange = sheet.UsedRangeA1;
         if (A1.TryParseRange(usedRange, out _, out _, out var lastRow, out _))
         {
             return lastRow + 1;
@@ -1258,7 +1258,7 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     {
         var sheet = document.Sheets.FirstOrDefault(existing =>
             string.Equals(existing.Name, sheetName, StringComparison.OrdinalIgnoreCase));
-        return sheet ?? document.AddWorksheet(sheetName, SheetNameValidationMode.None);
+        return sheet ?? document.AddWorksheet(sheetName, ExcelSheetNameValidationMode.None);
     }
 
     private static bool IsInvalidWorksheetNameCharacter(char ch)
