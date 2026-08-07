@@ -50,6 +50,21 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     [Parameter]
     public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
+    /// <summary>Text used between items when a cell contains a collection.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string CollectionSeparator { get; set; } = ", ";
+
+    /// <summary>Text used between entries when a cell contains a dictionary.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryEntrySeparator { get; set; } = "; ";
+
+    /// <summary>Text used between a dictionary key and value.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryKeyValueSeparator { get; set; } = ": ";
+
     /// <summary>Legacy switch that maps to <see cref="OfficeTableView.Transpose"/>.</summary>
     [Parameter]
     public SwitchParameter Transpose { get; set; }
@@ -85,6 +100,10 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var context = WordDslContext.Require(this);
         var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
         var tableRows = TableViewProjection.Project(rows, effectiveView);
+        var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
+            CollectionSeparator,
+            DictionaryEntrySeparator,
+            DictionaryKeyValueSeparator);
         var legacyLayout = ResolveLegacyLayout(Layout);
         int? conditionHeaderRowIndex = NoHeader.IsPresent ? null : 0;
         WordTable table;
@@ -92,7 +111,8 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
                 tableRows,
                 propertyNames: null,
                 header: NoHeader.IsPresent ? Array.Empty<string>() : null,
-                out var tableSpec))
+                out var tableSpec,
+                normalizerOptions))
         {
             table = CreateTable(context, tableSpec, Style, legacyLayout);
             conditionHeaderRowIndex = tableSpec.HeaderRowIndex;
@@ -101,7 +121,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         {
             table = CreateTable(
                 context,
-                PowerShellObjectNormalizer.NormalizeItems(tableRows),
+                PowerShellObjectNormalizer.NormalizeItems(tableRows, normalizerOptions),
                 Style,
                 includeHeader: !NoHeader.IsPresent,
                 layout: legacyLayout);

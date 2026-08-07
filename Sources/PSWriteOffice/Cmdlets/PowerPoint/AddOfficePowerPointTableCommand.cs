@@ -49,6 +49,21 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetInputObject)]
     public OfficeTableView View { get; set; } = OfficeTableView.Normal;
 
+    /// <summary>Text used between items when a cell contains a collection.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObject)]
+    [AllowEmptyString]
+    public string CollectionSeparator { get; set; } = ", ";
+
+    /// <summary>Text used between entries when a cell contains a dictionary.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObject)]
+    [AllowEmptyString]
+    public string DictionaryEntrySeparator { get; set; } = "; ";
+
+    /// <summary>Text used between a dictionary key and value.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObject)]
+    [AllowEmptyString]
+    public string DictionaryKeyValueSeparator { get; set; } = ": ";
+
     /// <summary>Row count for an empty table.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetSize)]
     public int Rows { get; set; }
@@ -124,17 +139,22 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         TableInputCollector.AddInput(items, InputObject);
         var inputRows = TableInputCollector.RequireRows(items, nameof(InputObject));
         var projectedRows = TableViewProjection.Project(inputRows, View);
+        var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
+            CollectionSeparator,
+            DictionaryEntrySeparator,
+            DictionaryKeyValueSeparator);
         var explicitHeaders = ResolveExplicitHeaders();
         if (OfficeTableSpecParser.TryCreate(
                 projectedRows,
                 propertyNames: explicitHeaders,
                 header: NoHeader.IsPresent ? Array.Empty<string>() : explicitHeaders,
-                out var tableSpec))
+                out var tableSpec,
+                normalizerOptions))
         {
             return CreateStructuredTable(slide, tableSpec);
         }
 
-        var normalized = PowerShellObjectNormalizer.NormalizeItems(projectedRows);
+        var normalized = PowerShellObjectNormalizer.NormalizeItems(projectedRows, normalizerOptions);
         var rows = NormalizeRows(normalized);
         var headers = ResolveHeaders(rows);
 

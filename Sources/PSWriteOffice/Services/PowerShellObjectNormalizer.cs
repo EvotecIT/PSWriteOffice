@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace PSWriteOffice.Services;
 
-internal static class PowerShellObjectNormalizer
+internal static partial class PowerShellObjectNormalizer
 {
     private static readonly ConcurrentDictionary<Type, bool> ClrProjectionCandidateCache = new();
     private static readonly ConcurrentDictionary<Type, ClrProjectionPlan> ClrProjectionPlanCache = new();
@@ -50,9 +50,9 @@ internal static class PowerShellObjectNormalizer
             return NormalizePSObject(psObject, options);
         }
 
-        if (item is IDictionary dict)
+        if (PowerShellDictionaryAdapter.TryGetEntries(item, options.MaxCollectionItems, out var dictionaryEntries))
         {
-            return dict;
+            return ProjectDictionaryMap(dictionaryEntries, options);
         }
 
         if (IsScalarClrType(item.GetType()))
@@ -60,9 +60,9 @@ internal static class PowerShellObjectNormalizer
             return NormalizeCellValue(item, options);
         }
 
-        if (TryGetClrProjectionPlan(item.GetType(), out _))
+        if (TryGetClrProjectionPlan(item.GetType(), out var plan))
         {
-            return item;
+            return ProjectClrObjectMap(item, plan, options);
         }
 
         return NormalizePSObject(PSObject.AsPSObject(item), options);
@@ -78,6 +78,13 @@ internal static class PowerShellObjectNormalizer
         }
 
         return NormalizeCellValueToText(value, options) ?? string.Empty;
+    }
+
+    /// <summary>Normalizes one value while preserving scalar types used by Office file formats.</summary>
+    public static object? NormalizeCellValueForTable(object? value, PowerShellObjectNormalizerOptions? options = null)
+    {
+        options ??= PowerShellObjectNormalizerOptions.Default;
+        return NormalizeCellValue(value, options);
     }
 
     public static bool TryProjectItem(object? item, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions? options = null)
@@ -107,9 +114,9 @@ internal static class PowerShellObjectNormalizer
             return TryProjectPSObject(psObject, columns, out projectedColumns, out values, options);
         }
 
-        if (item is IDictionary dictionary)
+        if (PowerShellDictionaryAdapter.TryGetEntries(item, options.MaxCollectionItems, out var dictionaryEntries))
         {
-            ProjectDictionary(dictionary, columns, out projectedColumns, out values);
+            ProjectDictionary(dictionaryEntries, columns, out projectedColumns, out values, options);
             return true;
         }
 
@@ -155,9 +162,9 @@ internal static class PowerShellObjectNormalizer
             return true;
         }
 
-        if (item is IDictionary dictionary)
+        if (PowerShellDictionaryAdapter.TryGetEntries(item, options.MaxCollectionItems, out var dictionaryEntries))
         {
-            ProjectDictionaryInto(dictionary, columns, values);
+            ProjectDictionaryInto(dictionaryEntries, columns, values, options);
             return true;
         }
 
@@ -188,7 +195,7 @@ internal static class PowerShellObjectNormalizer
 
         options ??= PowerShellObjectNormalizerOptions.Default;
 
-        if (item == null || item is IDictionary)
+        if (item == null || PowerShellDictionaryAdapter.IsDictionaryLike(item))
         {
             return false;
         }
@@ -199,7 +206,7 @@ internal static class PowerShellObjectNormalizer
         }
 
         var ps = item as PSObject ?? PSObject.AsPSObject(item);
-        if (ps.BaseObject is IDictionary)
+        if (PowerShellDictionaryAdapter.IsDictionaryLike(ps.BaseObject))
         {
             return false;
         }
@@ -263,7 +270,7 @@ internal static class PowerShellObjectNormalizer
 
         options ??= PowerShellObjectNormalizerOptions.Default;
 
-        if (item == null || item is IDictionary)
+        if (item == null || PowerShellDictionaryAdapter.IsDictionaryLike(item))
         {
             return false;
         }
@@ -274,7 +281,7 @@ internal static class PowerShellObjectNormalizer
         }
 
         var ps = item as PSObject ?? PSObject.AsPSObject(item);
-        if (ps.BaseObject is IDictionary)
+        if (PowerShellDictionaryAdapter.IsDictionaryLike(ps.BaseObject))
         {
             return false;
         }
@@ -470,9 +477,9 @@ internal static class PowerShellObjectNormalizer
 
     private static object? NormalizePSObject(PSObject ps, PowerShellObjectNormalizerOptions options)
     {
-        if (ps.BaseObject is IDictionary dict)
+        if (PowerShellDictionaryAdapter.TryGetEntries(ps.BaseObject, options.MaxCollectionItems, out var dictionaryEntries))
         {
-            return dict;
+            return ProjectDictionaryMap(dictionaryEntries, options);
         }
 
         Dictionary<string, object?>? result = null;
@@ -519,9 +526,9 @@ internal static class PowerShellObjectNormalizer
 
     private static bool TryProjectPSObject(PSObject ps, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
     {
-        if (ps.BaseObject is IDictionary dictionary)
+        if (PowerShellDictionaryAdapter.TryGetEntries(ps.BaseObject, options.MaxCollectionItems, out var dictionaryEntries))
         {
-            ProjectDictionary(dictionary, columns, out projectedColumns, out values);
+            ProjectDictionary(dictionaryEntries, columns, out projectedColumns, out values, options);
             return true;
         }
 
@@ -598,9 +605,9 @@ internal static class PowerShellObjectNormalizer
 
     private static void ProjectPSObjectInto(PSObject ps, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
     {
-        if (ps.BaseObject is IDictionary dictionary)
+        if (PowerShellDictionaryAdapter.TryGetEntries(ps.BaseObject, options.MaxCollectionItems, out var dictionaryEntries))
         {
-            ProjectDictionaryInto(dictionary, columns, values);
+            ProjectDictionaryInto(dictionaryEntries, columns, values, options);
             return;
         }
 
@@ -637,22 +644,28 @@ internal static class PowerShellObjectNormalizer
         }
     }
 
-    private static void ProjectDictionary(IDictionary dictionary, string[]? columns, out string[] projectedColumns, out object?[] values)
+    private static void ProjectDictionary(
+        IReadOnlyList<PowerShellDictionaryEntry> entries,
+        string[]? columns,
+        out string[] projectedColumns,
+        out object?[] values,
+        PowerShellObjectNormalizerOptions options)
     {
         if (columns == null)
         {
             var names = new List<string>();
             var rowValues = new List<object?>();
-            foreach (DictionaryEntry entry in dictionary)
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in entries)
             {
                 var key = entry.Key?.ToString();
-                if (string.IsNullOrWhiteSpace(key))
+                if (string.IsNullOrWhiteSpace(key) || !seen.Add(key!))
                 {
                     continue;
                 }
 
                 names.Add(key!);
-                rowValues.Add(entry.Value);
+                rowValues.Add(NormalizeCellValue(entry.Value, options));
             }
 
             projectedColumns = names.ToArray();
@@ -664,82 +677,39 @@ internal static class PowerShellObjectNormalizer
         values = new object?[columns.Length];
         for (var i = 0; i < columns.Length; i++)
         {
-            values[i] = GetDictionaryValue(dictionary, columns[i]);
+            values[i] = NormalizeCellValue(PowerShellDictionaryAdapter.GetValue(entries, columns[i]), options);
         }
     }
 
-    private static void ProjectDictionaryInto(IDictionary dictionary, string[] columns, object?[] values)
+    private static void ProjectDictionaryInto(
+        IReadOnlyList<PowerShellDictionaryEntry> entries,
+        string[] columns,
+        object?[] values,
+        PowerShellObjectNormalizerOptions options)
     {
         for (var i = 0; i < columns.Length; i++)
         {
-            values[i] = GetDictionaryValue(dictionary, columns[i]);
+            values[i] = NormalizeCellValue(PowerShellDictionaryAdapter.GetValue(entries, columns[i]), options);
         }
     }
 
-    private static Dictionary<string, object?> ProjectDataRowDictionary(DataRow row, PowerShellObjectNormalizerOptions options)
+    private static Dictionary<string, object?> ProjectDictionaryMap(
+        IReadOnlyList<PowerShellDictionaryEntry> entries,
+        PowerShellObjectNormalizerOptions options)
     {
-        var columns = row.Table.Columns;
-        var result = new Dictionary<string, object?>(columns.Count, StringComparer.OrdinalIgnoreCase);
-        foreach (DataColumn column in columns)
+        var result = new Dictionary<string, object?>(entries.Count, StringComparer.OrdinalIgnoreCase);
+        foreach (var entry in entries)
         {
-            result[column.ColumnName] = NormalizeCellValue(row[column], options);
+            var key = entry.Key?.ToString();
+            if (string.IsNullOrWhiteSpace(key) || result.ContainsKey(key!))
+            {
+                continue;
+            }
+
+            result[key!] = NormalizeCellValue(entry.Value, options);
         }
 
         return result;
-    }
-
-    private static bool TryGetDataRow(object item, out DataRow row)
-    {
-        if (item is PSObject psObject)
-        {
-            item = psObject.BaseObject;
-        }
-
-        if (item is DataRow dataRow)
-        {
-            row = dataRow;
-            return true;
-        }
-
-        if (item is DataRowView dataRowView)
-        {
-            row = dataRowView.Row;
-            return true;
-        }
-
-        row = null!;
-        return false;
-    }
-
-    private static void ProjectDataRow(DataRow row, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
-    {
-        if (columns == null)
-        {
-            var tableColumns = row.Table.Columns;
-            projectedColumns = new string[tableColumns.Count];
-            values = new object?[tableColumns.Count];
-            for (var i = 0; i < tableColumns.Count; i++)
-            {
-                var column = tableColumns[i];
-                projectedColumns[i] = column.ColumnName;
-                values[i] = NormalizeCellValue(row[column], options);
-            }
-
-            return;
-        }
-
-        projectedColumns = columns;
-        values = new object?[columns.Length];
-        ProjectDataRowInto(row, columns, values, options);
-    }
-
-    private static void ProjectDataRowInto(DataRow row, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
-    {
-        for (var i = 0; i < columns.Length; i++)
-        {
-            var column = GetDataColumn(row.Table.Columns, columns[i]);
-            values[i] = column == null ? null : NormalizeCellValue(row[column], options);
-        }
     }
 
     private static void ProjectClrObject(object item, ClrProjectionPlan plan, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
@@ -777,6 +747,23 @@ internal static class PowerShellObjectNormalizer
 
             values[i] = value;
         }
+    }
+
+    private static Dictionary<string, object?> ProjectClrObjectMap(
+        object item,
+        ClrProjectionPlan plan,
+        PowerShellObjectNormalizerOptions options)
+    {
+        var result = new Dictionary<string, object?>(plan.Properties.Count, StringComparer.OrdinalIgnoreCase);
+        foreach (var property in plan.Properties)
+        {
+            if (TryReadClrProperty(item, property, property.Name, options, out var value))
+            {
+                result[property.Name] = value;
+            }
+        }
+
+        return result;
     }
 
     private static void ProjectClrObjectInto(object item, ClrProjectionPlan plan, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
@@ -826,42 +813,6 @@ internal static class PowerShellObjectNormalizer
     private static Exception UnwrapClrPropertyException(Exception exception) =>
         exception is TargetInvocationException { InnerException: not null } ? exception.InnerException : exception;
 
-    private static object? GetDictionaryValue(IDictionary dictionary, string column)
-    {
-        if (dictionary.Contains(column))
-        {
-            return dictionary[column];
-        }
-
-        foreach (DictionaryEntry entry in dictionary)
-        {
-            if (string.Equals(entry.Key?.ToString(), column, StringComparison.OrdinalIgnoreCase))
-            {
-                return entry.Value;
-            }
-        }
-
-        return null;
-    }
-
-    private static DataColumn? GetDataColumn(DataColumnCollection columns, string columnName)
-    {
-        if (columns.Contains(columnName))
-        {
-            return columns[columnName];
-        }
-
-        foreach (DataColumn column in columns)
-        {
-            if (string.Equals(column.ColumnName, columnName, StringComparison.OrdinalIgnoreCase))
-            {
-                return column;
-            }
-        }
-
-        return null;
-    }
-
     private static bool ShouldExportProperty(PSPropertyInfo property)
     {
         if (!property.IsGettable)
@@ -883,20 +834,9 @@ internal static class PowerShellObjectNormalizer
             return normalized;
         }
 
-        if (value is IDictionary)
+        if (PowerShellCellValueFormatter.TryFormatComplexValue(value, options, out var complexText))
         {
-            return value;
-        }
-
-        if (value is IEnumerable enumerable)
-        {
-            var values = new List<string>();
-            foreach (var item in enumerable)
-            {
-                values.Add(ConvertValueToString(item));
-            }
-
-            return string.Join(options.CollectionSeparator, values);
+            return complexText;
         }
 
         return value;
@@ -931,20 +871,9 @@ internal static class PowerShellObjectNormalizer
             return charValue.ToString();
         }
 
-        if (value is IDictionary)
+        if (PowerShellCellValueFormatter.TryFormatComplexValue(value, options, out var complexText))
         {
-            return value.ToString();
-        }
-
-        if (options.NormalizeCollectionValues && value is IEnumerable enumerable)
-        {
-            var values = new List<string>();
-            foreach (var item in enumerable)
-            {
-                values.Add(ConvertValueToString(item));
-            }
-
-            return string.Join(options.CollectionSeparator, values);
+            return complexText;
         }
 
         return value is IFormattable fallbackFormattable
@@ -985,16 +914,6 @@ internal static class PowerShellObjectNormalizer
         }
 
         return false;
-    }
-
-    private static string ConvertValueToString(object? value)
-    {
-        if (value == null)
-        {
-            return string.Empty;
-        }
-
-        return LanguagePrimitives.ConvertTo(value, typeof(string), CultureInfo.InvariantCulture) as string ?? string.Empty;
     }
 
     private static bool TryGetClrProjectionPlan(Type type, out ClrProjectionPlan plan)
@@ -1071,25 +990,4 @@ internal static class PowerShellObjectNormalizer
         public IReadOnlyDictionary<string, PropertyInfo> PropertiesByName { get; }
     }
 
-}
-
-internal sealed class PowerShellObjectNormalizerOptions
-{
-    internal static readonly PowerShellObjectNormalizerOptions Default = new();
-
-    public bool IncludeUnexportableProperties { get; set; }
-
-    public ActionPreference PropertyErrorAction { get; set; } = ActionPreference.SilentlyContinue;
-
-    public Action<string, Exception>? PropertyErrorCallback { get; set; }
-
-    public Func<string, Exception, object?>? UnexportablePropertyValueFactory { get; set; }
-
-    public bool NormalizeCollectionValues { get; set; } = true;
-
-    public string CollectionSeparator { get; set; } = ", ";
-
-    public CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
-
-    public bool FormatScalarValuesAsText { get; set; }
 }
