@@ -15,26 +15,36 @@ internal static class TableViewProjection
     {
         return view switch
         {
-            OfficeTableView.Normal => rows.ToArray(),
-            OfficeTableView.Transpose => TransposeRows(ExpandSingleTabularInput(rows)),
+            OfficeTableView.Normal => ExpandTabularInputs(rows).ToArray(),
+            OfficeTableView.Transpose => TransposeRows(ExpandTabularInputs(rows)),
             _ => throw new PSArgumentException($"Unsupported table view '{view}'.", nameof(view))
         };
     }
 
-    private static IReadOnlyList<object> ExpandSingleTabularInput(IReadOnlyList<object> rows)
+    private static IReadOnlyList<object> ExpandTabularInputs(IReadOnlyList<object> rows)
     {
-        if (rows.Count != 1)
+        var expanded = new List<object>(rows.Count);
+        foreach (var row in rows)
         {
-            return rows;
+            var source = row is PSObject psObject ? psObject.BaseObject : row;
+            switch (source)
+            {
+                case DataTable table:
+                    expanded.AddRange(table.Rows.Cast<DataRow>().Cast<object>());
+                    break;
+                case DataView view:
+                    expanded.AddRange(view.Cast<DataRowView>().Cast<object>());
+                    break;
+                case IDataReader reader:
+                    expanded.AddRange(ReadDataReaderRows(reader));
+                    break;
+                default:
+                    expanded.Add(row);
+                    break;
+            }
         }
 
-        return rows[0] switch
-        {
-            DataTable table => table.Rows.Cast<DataRow>().Cast<object>().ToArray(),
-            DataView view => view.Cast<DataRowView>().Cast<object>().ToArray(),
-            IDataReader reader => ReadDataReaderRows(reader),
-            _ => rows
-        };
+        return expanded;
     }
 
     private static IReadOnlyList<object> ReadDataReaderRows(IDataReader reader)

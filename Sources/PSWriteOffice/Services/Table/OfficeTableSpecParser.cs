@@ -315,7 +315,7 @@ internal static class OfficeTableSpecParser
     {
         row = UnwrapPSObject(row)!;
         return row is IEnumerable and not string and not IDictionary and not DataTable and not DataView and not IDataReader and not DataSet &&
-               !IsGenericDictionary(row);
+               !PowerShellDictionaryAdapter.IsDictionaryLike(row);
     }
 
     private static IEnumerable<object?> Enumerate(object row)
@@ -422,23 +422,4 @@ internal static class OfficeTableSpecParser
     private static object? UnwrapPSObject(object? value)
         => value is PSObject psObject ? psObject.BaseObject : value;
 
-    private static bool IsGenericDictionary(object value)
-    {
-        foreach (var interfaceType in value.GetType().GetInterfaces())
-        {
-            if (!interfaceType.IsGenericType)
-            {
-                continue;
-            }
-
-            var genericDefinition = interfaceType.GetGenericTypeDefinition();
-            if (genericDefinition == typeof(IDictionary<,>) ||
-                genericDefinition == typeof(IReadOnlyDictionary<,>))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

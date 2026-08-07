@@ -135,6 +135,21 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     [Parameter]
     public string[]? ExcludeProperty { get; set; }
 
+    /// <summary>Text used between items when a cell contains a collection.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string CollectionSeparator { get; set; } = ", ";
+
+    /// <summary>Text used between entries when a cell contains a dictionary.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryEntrySeparator { get; set; } = "; ";
+
+    /// <summary>Text used between a dictionary key and value.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryKeyValueSeparator { get; set; } = ": ";
+
     /// <summary>Header-to-format map. Values may be preset names such as Text, Currency, Percent, Date, or custom Excel number formats.</summary>
     [Parameter]
     public Hashtable? ColumnFormat { get; set; }
@@ -396,7 +411,11 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             if (reader != null && CanExportReaderDirectly(isAppendingToExistingSheet))
             {
                 var readerSheet = PrepareSheet(document);
-                var readerRange = ExportDataReader(readerSheet, reader, style, columnFormatPlan);
+                var readerRange = ExportDataReader(
+                    readerSheet,
+                    new NormalizingDataReader(reader, CreateNormalizerOptions()),
+                    style,
+                    columnFormatPlan);
                 if (!string.IsNullOrWhiteSpace(readerRange))
                 {
                     WriteVerbose($"Exported data reader to {readerSheet.Name}!{readerRange}.");
@@ -520,7 +539,10 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return false;
         }
 
-        sheet.InsertObjects<object?>(items, includeHeaders, dataStartRow);
+        var normalizedItems = PowerShellObjectNormalizer
+            .NormalizeItems(items, CreateNormalizerOptions())
+            .ToList();
+        sheet.InsertObjects<object?>(normalizedItems, includeHeaders, dataStartRow);
         range = sheet.UsedRangeA1;
         if (string.IsNullOrWhiteSpace(range))
         {
@@ -852,6 +874,9 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
     {
         return new PowerShellObjectNormalizerOptions
         {
+            CollectionSeparator = CollectionSeparator,
+            DictionaryEntrySeparator = DictionaryEntrySeparator,
+            DictionaryKeyValueSeparator = DictionaryKeyValueSeparator,
             IncludeUnexportableProperties = IncludeUnexportableProperties.IsPresent,
             PropertyErrorAction = PropertyConversionErrorAction,
             PropertyErrorCallback = PropertyConversionErrorAction == ActionPreference.Continue

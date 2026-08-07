@@ -264,6 +264,17 @@ internal static class PdfCommandUtilities
         string[]? property,
         string[]? header,
         string collectionSeparator = ", ")
+        => ConvertToTableRows(
+            inputObject,
+            property,
+            header,
+            CreateTableNormalizationOptions(collectionSeparator));
+
+    internal static string[][] ConvertToTableRows(
+        object[] inputObject,
+        string[]? property,
+        string[]? header,
+        PowerShellObjectNormalizerOptions normalizationOptions)
     {
         if (inputObject.Length == 0)
         {
@@ -272,7 +283,7 @@ internal static class PdfCommandUtilities
 
         var propertyNames = property != null && property.Length > 0
             ? property
-            : GetPropertyNames(inputObject[0]);
+            : GetPropertyNames(inputObject[0], normalizationOptions);
 
         var rows = new List<string[]>();
         if (header != null && header.Length > 0)
@@ -284,7 +295,6 @@ internal static class PdfCommandUtilities
             rows.Add(propertyNames);
         }
 
-        var normalizationOptions = CreateTableNormalizationOptions(collectionSeparator);
         foreach (var item in inputObject)
         {
             if (PowerShellObjectNormalizer.TryProjectItem(
@@ -310,9 +320,14 @@ internal static class PdfCommandUtilities
         IEnumerable rows,
         string[]? header = null,
         string collectionSeparator = ", ")
+        => ConvertDataRows(rows, header, CreateTableNormalizationOptions(collectionSeparator));
+
+    internal static string[][] ConvertDataRows(
+        IEnumerable rows,
+        string[]? header,
+        PowerShellObjectNormalizerOptions normalizationOptions)
     {
         var result = new List<string[]>();
-        var normalizationOptions = CreateTableNormalizationOptions(collectionSeparator);
         if (header != null && header.Length > 0)
         {
             result.Add(header);
@@ -346,20 +361,23 @@ internal static class PdfCommandUtilities
         return result.ToArray();
     }
 
-    internal static PowerShellObjectNormalizerOptions CreateTableNormalizationOptions(string collectionSeparator)
+    internal static PowerShellObjectNormalizerOptions CreateTableNormalizationOptions(
+        string collectionSeparator,
+        string dictionaryEntrySeparator = "; ",
+        string dictionaryKeyValueSeparator = ": ")
     {
         if (collectionSeparator == null)
         {
             throw new PSArgumentNullException(nameof(collectionSeparator));
         }
 
-        return new PowerShellObjectNormalizerOptions
-        {
-            NormalizeCollectionValues = true,
-            CollectionSeparator = collectionSeparator,
-            Culture = CultureInfo.InvariantCulture,
-            FormatScalarValuesAsText = true
-        };
+        var options = PowerShellObjectNormalizerOptions.ForTable(
+            collectionSeparator,
+            dictionaryEntrySeparator,
+            dictionaryKeyValueSeparator);
+        options.Culture = CultureInfo.InvariantCulture;
+        options.FormatScalarValuesAsText = true;
+        return options;
     }
 
     internal static IReadOnlyDictionary<string, string> ConvertFieldValues(IDictionary fieldValues)
@@ -395,11 +413,18 @@ internal static class PdfCommandUtilities
         }
     }
 
-    private static string[] GetPropertyNames(object item)
+    private static string[] GetPropertyNames(
+        object item,
+        PowerShellObjectNormalizerOptions normalizationOptions)
     {
-        if (item is IDictionary dictionary)
+        if (PowerShellObjectNormalizer.TryProjectItem(
+                item,
+                columns: null,
+                out var columns,
+                out _,
+                normalizationOptions))
         {
-            return dictionary.Keys.Cast<object>().Select(key => Convert.ToString(key, CultureInfo.InvariantCulture) ?? string.Empty).ToArray();
+            return columns;
         }
 
         return PSObject.AsPSObject(item).Properties

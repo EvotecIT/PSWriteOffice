@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Excel;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
+using PSWriteOffice.Services.Table;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -272,10 +274,12 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
 [Alias("ExcelReportTable")]
 public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
 {
+    private readonly List<object?> _items = new();
+
     /// <summary>Objects to flatten and render as a table.</summary>
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [Alias("Data")]
-    public object[] InputObject { get; set; } = Array.Empty<object>();
+    public object? InputObject { get; set; }
 
     /// <summary>Optional section title displayed above the table.</summary>
     [Parameter(Position = 1)]
@@ -284,6 +288,29 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
     /// <summary>Built-in table style to apply.</summary>
     [Parameter]
     public string TableStyle { get; set; } = "TableStyleMedium9";
+
+    /// <summary>Properties to include, in the requested column order.</summary>
+    [Parameter]
+    public string[]? Property { get; set; }
+
+    /// <summary>Properties to exclude from the rendered table.</summary>
+    [Parameter]
+    public string[]? ExcludeProperty { get; set; }
+
+    /// <summary>Text used between items when a cell contains a collection.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string CollectionSeparator { get; set; } = ", ";
+
+    /// <summary>Text used between entries when a cell contains a dictionary.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryEntrySeparator { get; set; } = "; ";
+
+    /// <summary>Text used between a dictionary key and value.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
     /// <summary>Emphasize the first table column when the selected style supports it.</summary>
     [Parameter]
@@ -320,10 +347,22 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (InputObject.Length == 0)
-        {
-            throw new PSArgumentException("Provide at least one data row.", nameof(InputObject));
-        }
+        TableInputCollector.AddInput(_items, InputObject, preserveTabularInput: true);
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        var inputRows = TableInputCollector.RequireRows(_items, nameof(InputObject));
+        var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
+            CollectionSeparator,
+            DictionaryEntrySeparator,
+            DictionaryKeyValueSeparator);
+        var table = ExcelTabularInputService.ToDataTable(
+            inputRows,
+            copyExistingTables: true,
+            normalizerOptions: normalizerOptions);
+        var reportRows = ExcelTabularInputService.ToDictionaryRows(table);
 
         if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
         {
@@ -332,8 +371,13 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
 
         var composer = ExcelDslContext.Require(this).RequireComposer();
         var range = composer.TableFrom(
-            InputObject,
+            reportRows,
             Title,
+            configure: options =>
+            {
+                options.Columns = NormalizePropertyList(Property);
+                options.ExcludeProperties = NormalizePropertyList(ExcludeProperty) ?? Array.Empty<string>();
+            },
             style: style,
             autoFilter: !NoAutoFilter.IsPresent,
             freezeHeaderRow: !NoFreezeHeaderRow.IsPresent,
@@ -350,6 +394,22 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
         {
             WriteObject(range);
         }
+    }
+
+    private static string[]? NormalizePropertyList(string[]? properties)
+    {
+        if (properties == null || properties.Length == 0)
+        {
+            return null;
+        }
+
+        var normalized = properties
+            .Where(static property => !string.IsNullOrWhiteSpace(property))
+            .Select(static property => property.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        return normalized.Length == 0 ? null : normalized;
     }
 }
 

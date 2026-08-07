@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.Table;
 using PSWriteOffice.Services.Text;
@@ -61,6 +62,16 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     [Parameter]
     [AllowEmptyString]
     public string CollectionSeparator { get; set; } = ", ";
+
+    /// <summary>Text used between entries when a cell contains a dictionary.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryEntrySeparator { get; set; } = "; ";
+
+    /// <summary>Text used between a dictionary key and value.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
     /// <summary>Table alignment.</summary>
     [Parameter]
@@ -238,7 +249,10 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     private void RenderTable(PdfDocument document, object[] inputRows)
     {
         var projectedRows = TableViewProjection.Project(inputRows, View);
-        var normalizationOptions = PdfCommandUtilities.CreateTableNormalizationOptions(CollectionSeparator);
+        var normalizationOptions = PdfCommandUtilities.CreateTableNormalizationOptions(
+            CollectionSeparator,
+            DictionaryEntrySeparator,
+            DictionaryKeyValueSeparator);
         if (OfficeTableSpecParser.TryCreate(projectedRows, Property, Header, out var tableSpec, normalizationOptions))
         {
             var style = ApplyPdfCellStyles(CreateStyle(), tableSpec.Placements);
@@ -246,15 +260,19 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
             return;
         }
 
-        var rowArrayInput = projectedRows.All(item => item is IEnumerable && item is not string && item is not IDictionary);
+        var rowArrayInput = projectedRows.All(IsRowEnumerable);
         string[][] rows = rowArrayInput
-            ? PdfCommandUtilities.ConvertDataRows(projectedRows, Header, CollectionSeparator)
-            : projectedRows.Length == 1 && projectedRows[0] is IEnumerable enumerable && projectedRows[0] is not string && projectedRows[0] is not IDictionary
-            ? PdfCommandUtilities.ConvertDataRows(enumerable, Header, CollectionSeparator)
-            : PdfCommandUtilities.ConvertToTableRows(projectedRows, Property, Header, CollectionSeparator);
+            ? PdfCommandUtilities.ConvertDataRows(projectedRows, Header, normalizationOptions)
+            : projectedRows.Length == 1 && IsRowEnumerable(projectedRows[0]) && projectedRows[0] is IEnumerable enumerable
+            ? PdfCommandUtilities.ConvertDataRows(enumerable, Header, normalizationOptions)
+            : PdfCommandUtilities.ConvertToTableRows(projectedRows, Property, Header, normalizationOptions);
 
         document.Table(rows, Align, CreateStyle());
     }
+
+    private static bool IsRowEnumerable(object item)
+        => item is IEnumerable and not string and not IDictionary &&
+           !PowerShellDictionaryAdapter.IsDictionaryLike(item);
 
     private static PdfTableCell[][] ToPdfRows(OfficeTableSpec table)
     {

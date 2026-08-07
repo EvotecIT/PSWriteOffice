@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Markdown;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Markdown;
 using PSWriteOffice.Services.Table;
 
@@ -48,6 +49,21 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
     /// <summary>Projection to apply before writing the table.</summary>
     [Parameter]
     public OfficeTableView View { get; set; } = OfficeTableView.Normal;
+
+    /// <summary>Text used between items when a cell contains a collection.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string CollectionSeparator { get; set; } = ", ";
+
+    /// <summary>Text used between entries when a cell contains a dictionary.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryEntrySeparator { get; set; } = "; ";
+
+    /// <summary>Text used between a dictionary key and value.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
     /// <summary>Disable automatic alignment heuristics for tables.</summary>
     [Parameter]
@@ -102,7 +118,11 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
     private void RenderTable(MarkdownDoc doc, object[] rows)
     {
         var projectedRows = TableViewProjection.Project(rows, View);
-        var normalizedRows = projectedRows.Select(NormalizeItem).ToArray();
+        var options = PowerShellObjectNormalizerOptions.ForTable(
+            CollectionSeparator,
+            DictionaryEntrySeparator,
+            DictionaryKeyValueSeparator);
+        var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(projectedRows, options);
         if (DisableAutoAlign.IsPresent)
         {
             doc.TableFrom(normalizedRows);
@@ -123,54 +143,6 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
         var items = new List<object?>();
         TableInputCollector.AddInput(items, value);
         return TableInputCollector.RequireRows(items, nameof(InputObject));
-    }
-
-    private static object? NormalizeItem(object? item)
-    {
-        if (item == null)
-        {
-            return null;
-        }
-
-        if (IsScalar(item))
-        {
-            return item;
-        }
-
-        var ps = PSObject.AsPSObject(item);
-        if (ps.BaseObject is IDictionary dict)
-        {
-            return dict;
-        }
-
-        var properties = ps.Properties
-            .Where(p => p.MemberType == PSMemberTypes.NoteProperty || p.MemberType == PSMemberTypes.Property)
-            .Select(p => p.Name)
-            .Where(n => !string.IsNullOrWhiteSpace(n))
-            .ToList();
-
-        if (properties.Count > 0)
-        {
-            var result = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-            foreach (var name in properties)
-            {
-                result[name] = ps.Properties[name]?.Value;
-            }
-            return result;
-        }
-
-        return item;
-    }
-
-    private static bool IsScalar(object item)
-    {
-        var type = item.GetType();
-        return type.IsPrimitive
-            || item is string
-            || item is decimal
-            || item is DateTime
-            || item is DateTimeOffset
-            || item is Guid;
     }
 
     private MarkdownDoc ResolveDocument()

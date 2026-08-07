@@ -20,6 +20,8 @@ internal static class ExcelTabularInputService
             throw new ArgumentNullException(nameof(input));
         }
 
+        normalizerOptions ??= PowerShellObjectNormalizerOptions.Default;
+
         var items = new List<object?>();
         foreach (var item in input)
         {
@@ -41,12 +43,12 @@ internal static class ExcelTabularInputService
             var single = Unwrap(items[0]);
             if (single is DataTable dataTable)
             {
-                return copyExistingTables ? dataTable.Copy() : dataTable;
+                return NormalizeTabularValues(dataTable, copyExistingTables, normalizerOptions);
             }
 
             if (single is DataView dataView)
             {
-                return dataView.ToTable();
+                return NormalizeTabularValues(dataView.ToTable(), copyExistingTable: false, normalizerOptions);
             }
 
             if (single is IDataReader reader)
@@ -55,7 +57,7 @@ internal static class ExcelTabularInputService
                     ? new DataTable()
                     : new DataTable(tableName);
                 dataTableFromReader.Load(reader);
-                return dataTableFromReader;
+                return NormalizeTabularValues(dataTableFromReader, copyExistingTable: false, normalizerOptions);
             }
         }
 
@@ -76,7 +78,7 @@ internal static class ExcelTabularInputService
 
             if (rows.Count > 0)
             {
-                return FromDataRows(rows);
+                return NormalizeTabularValues(FromDataRows(rows), copyExistingTable: false, normalizerOptions);
             }
         }
 
@@ -96,7 +98,7 @@ internal static class ExcelTabularInputService
 
             if (rows.Count > 0)
             {
-                return FromDataRows(rows);
+                return NormalizeTabularValues(FromDataRows(rows), copyExistingTable: false, normalizerOptions);
             }
         }
 
@@ -107,6 +109,31 @@ internal static class ExcelTabularInputService
 
         var normalized = PowerShellObjectNormalizer.NormalizeItems(items, normalizerOptions);
         return ExcelObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
+    }
+
+    /// <summary>Projects a normalized DataTable into dictionary rows accepted by generic report composers.</summary>
+    public static object[] ToDictionaryRows(DataTable table)
+    {
+        if (table == null)
+        {
+            throw new ArgumentNullException(nameof(table));
+        }
+
+        var rows = new object[table.Rows.Count];
+        for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
+        {
+            var sourceRow = table.Rows[rowIndex];
+            var row = new Dictionary<string, object?>(table.Columns.Count, StringComparer.OrdinalIgnoreCase);
+            foreach (DataColumn column in table.Columns)
+            {
+                var value = sourceRow[column];
+                row[column.ColumnName] = value == DBNull.Value ? null : value;
+            }
+
+            rows[rowIndex] = row;
+        }
+
+        return rows;
     }
 
     private static bool TryProjectToDataTable(
@@ -241,6 +268,89 @@ internal static class ExcelTabularInputService
         }
 
         return result;
+    }
+
+    private static DataTable NormalizeTabularValues(
+        DataTable source,
+        bool copyExistingTable,
+        PowerShellObjectNormalizerOptions options)
+    {
+        object?[][]? normalizedRows = null;
+        for (var rowIndex = 0; rowIndex < source.Rows.Count; rowIndex++)
+        {
+            var sourceRow = source.Rows[rowIndex];
+            object?[]? normalizedRow = null;
+            for (var columnIndex = 0; columnIndex < source.Columns.Count; columnIndex++)
+            {
+                var value = sourceRow[columnIndex];
+                var normalized = PowerShellObjectNormalizer.NormalizeCellValueForTable(value, options);
+                if (normalizedRow == null && !CellValuesEqual(value, normalized))
+                {
+                    if (normalizedRows == null)
+                    {
+                        normalizedRows = new object?[source.Rows.Count][];
+                        for (var previousRowIndex = 0; previousRowIndex < rowIndex; previousRowIndex++)
+                        {
+                            normalizedRows[previousRowIndex] = source.Rows[previousRowIndex].ItemArray.Cast<object?>().ToArray();
+                        }
+                    }
+                    normalizedRow = new object?[source.Columns.Count];
+                    for (var copyIndex = 0; copyIndex < columnIndex; copyIndex++)
+                    {
+                        normalizedRow[copyIndex] = sourceRow[copyIndex];
+                    }
+                }
+
+                if (normalizedRow != null)
+                {
+                    normalizedRow[columnIndex] = normalized;
+                }
+            }
+
+            if (normalizedRows != null)
+            {
+                normalizedRows[rowIndex] = normalizedRow ?? sourceRow.ItemArray.Cast<object?>().ToArray();
+            }
+        }
+
+        if (normalizedRows == null)
+        {
+            return copyExistingTable ? source.Copy() : source;
+        }
+
+        var result = new DataTable(source.TableName)
+        {
+            CaseSensitive = source.CaseSensitive,
+            Locale = source.Locale,
+            Namespace = source.Namespace,
+            Prefix = source.Prefix
+        };
+        foreach (DataColumn column in source.Columns)
+        {
+            result.Columns.Add(column.ColumnName, typeof(object));
+        }
+
+        foreach (var row in normalizedRows)
+        {
+            var values = row ?? Array.Empty<object?>();
+            for (var index = 0; index < values.Length; index++)
+            {
+                values[index] ??= DBNull.Value;
+            }
+            result.Rows.Add(values);
+        }
+
+        return result;
+    }
+
+    private static bool CellValuesEqual(object? left, object? right)
+    {
+        if (ReferenceEquals(left, right))
+        {
+            return true;
+        }
+
+        return left?.GetType() == right?.GetType() && Equals(left, right);
     }
 
     private static object? Unwrap(object? item)

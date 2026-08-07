@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Services.Table;
 
@@ -62,27 +63,7 @@ internal static class TableInputCollector
             and not IDictionary
             and not IDataReader
             and not DataSet
-            && !IsGenericDictionary(value)
+            && !PowerShellDictionaryAdapter.IsDictionaryLike(value)
             && (!preserveTabularInput || value is not DataTable && value is not DataView);
-    }
-
-    private static bool IsGenericDictionary(object value)
-    {
-        foreach (var interfaceType in value.GetType().GetInterfaces())
-        {
-            if (!interfaceType.IsGenericType)
-            {
-                continue;
-            }
-
-            var genericDefinition = interfaceType.GetGenericTypeDefinition();
-            if (genericDefinition == typeof(IDictionary<,>) ||
-                genericDefinition == typeof(IReadOnlyDictionary<,>))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

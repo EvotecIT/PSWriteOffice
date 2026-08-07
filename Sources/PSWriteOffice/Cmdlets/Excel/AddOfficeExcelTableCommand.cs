@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Excel;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
 using PSWriteOffice.Services.Table;
 
@@ -43,6 +44,21 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
     /// <summary>Projection to apply before writing the table.</summary>
     [Parameter]
     public OfficeTableView View { get; set; } = OfficeTableView.Normal;
+
+    /// <summary>Text used between items when a cell contains a collection.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string CollectionSeparator { get; set; } = ", ";
+
+    /// <summary>Text used between entries when a cell contains a dictionary.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryEntrySeparator { get; set; } = "; ";
+
+    /// <summary>Text used between a dictionary key and value.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
     /// <summary>Name to assign to the table.</summary>
     [Parameter]
@@ -94,7 +110,14 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
 
         var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         var projectedRows = TableViewProjection.Project(rows, View);
-        var table = ExcelTabularInputService.ToDataTable(projectedRows, TableName);
+        var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
+            CollectionSeparator,
+            DictionaryEntrySeparator,
+            DictionaryKeyValueSeparator);
+        var table = ExcelTabularInputService.ToDataTable(
+            projectedRows,
+            TableName,
+            normalizerOptions: normalizerOptions);
         if (table.Columns.Count == 0)
         {
             throw new InvalidOperationException("Unable to infer columns from the supplied data.");

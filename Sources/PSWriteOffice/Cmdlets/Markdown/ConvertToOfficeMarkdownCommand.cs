@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Markdown;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Markdown;
 
@@ -38,6 +37,21 @@ public sealed class ConvertToOfficeMarkdownCommand : PSCmdlet
     [Parameter(ValueFromPipeline = true)]
     public object? InputObject { get; set; }
 
+    /// <summary>Text used between items when a cell contains a collection.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string CollectionSeparator { get; set; } = ", ";
+
+    /// <summary>Text used between entries when a cell contains a dictionary.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryEntrySeparator { get; set; } = "; ";
+
+    /// <summary>Text used between a dictionary key and value.</summary>
+    [Parameter]
+    [AllowEmptyString]
+    public string DictionaryKeyValueSeparator { get; set; } = ": ";
+
     /// <summary>Disable automatic alignment heuristics for tables.</summary>
     [Parameter]
     public SwitchParameter DisableAutoAlign { get; set; }
@@ -49,7 +63,7 @@ public sealed class ConvertToOfficeMarkdownCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        _items.Add(NormalizeItem(InputObject));
+        _items.Add(InputObject);
     }
 
     /// <inheritdoc />
@@ -60,14 +74,19 @@ public sealed class ConvertToOfficeMarkdownCommand : PSCmdlet
             return;
         }
 
+        var options = PowerShellObjectNormalizerOptions.ForTable(
+            CollectionSeparator,
+            DictionaryEntrySeparator,
+            DictionaryKeyValueSeparator);
+        var normalizedItems = PowerShellObjectNormalizer.NormalizeItems(_items, options);
         var doc = MarkdownDoc.Create();
         if (DisableAutoAlign.IsPresent)
         {
-            doc.TableFrom(_items);
+            doc.TableFrom(normalizedItems);
         }
         else
         {
-            doc.TableFromAuto(_items);
+            doc.TableFromAuto(normalizedItems);
         }
 
         if (PassThru.IsPresent)
@@ -80,50 +99,4 @@ public sealed class ConvertToOfficeMarkdownCommand : PSCmdlet
         }
     }
 
-    private static object? NormalizeItem(object? item)
-    {
-        if (item == null)
-        {
-            return null;
-        }
-
-        if (IsScalar(item))
-        {
-            return item;
-        }
-
-        var ps = PSObject.AsPSObject(item);
-        if (ps.BaseObject is IDictionary dict)
-        {
-            return dict;
-        }
-
-        var properties = ps.Properties
-            .Where(p => p.MemberType == PSMemberTypes.NoteProperty || p.MemberType == PSMemberTypes.Property)
-            .Select(p => p.Name)
-            .Where(n => !string.IsNullOrWhiteSpace(n))
-            .ToList();
-        if (properties.Count > 0)
-        {
-            var result = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-            foreach (var name in properties)
-            {
-                result[name] = ps.Properties[name]?.Value;
-            }
-            return result;
-        }
-
-        return item;
-    }
-
-    private static bool IsScalar(object item)
-    {
-        var type = item.GetType();
-        return type.IsPrimitive
-            || item is string
-            || item is decimal
-            || item is DateTime
-            || item is DateTimeOffset
-            || item is Guid;
-    }
 }
