@@ -384,6 +384,32 @@ Describe 'Shared tabular input contracts' {
         $values.Add('Metadata', [ordered]@{ Region = 'EU'; Tier = 1 })
         $row = [PSWriteOffice.Tests.ReadOnlyTabularContractRow]::new($values)
 
+        $exportPath = Join-Path $TestDrive 'ReadOnlyDictionaryExport.xlsx'
+        Export-OfficeExcel -Path $exportPath -InputObject $row -CollectionSeparator ' | '
+        $exportRows = @(Import-OfficeExcel -Path $exportPath -WorksheetName 'Sheet1')
+        $exportRows[0].Name | Should -Be 'Alpha'
+        $exportRows[0].Tags | Should -Be 'One | Two'
+
+        $tablePath = Join-Path $TestDrive 'ReadOnlyDictionaryTable.xlsx'
+        New-OfficeExcel -Path $tablePath {
+            Add-OfficeExcelSheet -Name 'Data' -Content {
+                Add-OfficeExcelTable -InputObject $row -TableName 'ReadOnlyRows' -CollectionSeparator ' | '
+            }
+        }
+        $tableRows = @(Import-OfficeExcel -Path $tablePath -WorksheetName 'Data')
+        $tableRows[0].Name | Should -Be 'Alpha'
+        $tableRows[0].Tags | Should -Be 'One | Two'
+
+        $reportPath = Join-Path $TestDrive 'ReadOnlyDictionaryReport.xlsx'
+        New-OfficeExcel -Path $reportPath {
+            Add-OfficeExcelReportSheet -Name 'Report' {
+                Add-OfficeExcelReportTable -InputObject $row -CollectionSeparator ' | '
+            }
+        }
+        $reportRows = @(Import-OfficeExcel -Path $reportPath -WorksheetName 'Report')
+        $reportRows[0].Name | Should -Be 'Alpha'
+        $reportRows[0].Tags | Should -Be 'One | Two'
+
         $markdown = $row | ConvertTo-OfficeMarkdown -CollectionSeparator ' | '
         $markdown | Should -Match 'Name'
         $markdown | Should -Match 'Alpha'

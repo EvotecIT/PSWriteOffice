@@ -1178,7 +1178,9 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return;
         }
 
-        if (value is IEnumerable enumerable && value is not string && value is not IDictionary)
+        if (value is IEnumerable enumerable &&
+            value is not string &&
+            !PowerShellDictionaryAdapter.IsDictionaryLike(value))
         {
             foreach (var item in enumerable)
             {
