@@ -11,17 +11,17 @@ Sets prompt and error messages on existing Excel data validation rules.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelDataValidationMessage [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-PromptTitle <string>] [-Prompt <string>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-ShowInputMessage] [-ShowErrorMessage] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelDataValidationMessage [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-PromptTitle <string>] [-Prompt <string>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-ShowInputMessage] [-ShowErrorMessage] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelDataValidationMessage [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-PromptTitle <string>] [-Prompt <string>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-ShowInputMessage] [-ShowErrorMessage] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelDataValidationMessage [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-PromptTitle <string>] [-Prompt <string>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-ShowInputMessage] [-ShowErrorMessage] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelDataValidationMessage -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-PromptTitle <string>] [-Prompt <string>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-ShowInputMessage] [-ShowErrorMessage] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelDataValidationMessage -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-PromptTitle <string>] [-Prompt <string>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-ShowInputMessage] [-ShowErrorMessage] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,7 +53,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ErrorMessage
@@ -69,7 +69,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ErrorTitle
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderName
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeaderRow
@@ -117,7 +117,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludeHeader
@@ -133,7 +133,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -149,7 +149,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -165,7 +165,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Prompt
@@ -181,7 +181,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PromptTitle
@@ -197,7 +197,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Range
@@ -213,7 +213,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -229,14 +229,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) to update. Defaults to the current DSL sheet.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -245,7 +245,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShowErrorMessage
@@ -261,7 +261,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShowInputMessage
@@ -277,7 +277,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TableName
@@ -293,7 +293,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

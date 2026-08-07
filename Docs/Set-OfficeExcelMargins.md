@@ -11,12 +11,12 @@ Sets page margins on a worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelMargins [-Preset <ExcelMarginPreset>] [-Left <double>] [-Right <double>] [-Top <double>] [-Bottom <double>] [-Header <double>] [-Footer <double>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelMargins [-Preset <ExcelMarginPreset>] [-Left <Double>] [-Right <Double>] [-Top <Double>] [-Bottom <Double>] [-Header <Double>] [-Footer <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelMargins -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelMarginPreset>] [-Left <double>] [-Right <double>] [-Top <double>] [-Bottom <double>] [-Header <double>] [-Footer <double>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelMargins -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <ExcelMarginPreset>] [-Left <Double>] [-Right <Double>] [-Top <Double>] [-Bottom <Double>] [-Header <Double>] [-Footer <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,7 +44,7 @@ Sets custom margins in inches.
 Bottom margin in inches.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -53,7 +53,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -69,14 +69,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Footer
 Footer margin in inches.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -85,14 +85,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Header
 Header margin in inches.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -101,14 +101,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Left
 Left margin in inches.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -117,7 +117,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -133,30 +133,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Preset
 Margin preset to apply.
 
 ```yaml
-Type: Nullable`1
+Type: ExcelMarginPreset
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: Normal, Narrow, Moderate, Wide
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Right
 Right margin in inches.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -165,7 +165,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -181,14 +181,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -197,14 +197,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Top
 Top margin in inches.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -213,7 +213,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -225,7 +225,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

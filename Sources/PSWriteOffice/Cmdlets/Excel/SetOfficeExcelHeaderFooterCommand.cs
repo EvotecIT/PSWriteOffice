@@ -84,7 +84,7 @@ public sealed class SetOfficeExcelHeaderFooterCommand : AsyncPSCmdlet
 
     /// <summary>Header image position.</summary>
     [Parameter]
-    public HeaderFooterPosition HeaderImagePosition { get; set; } = HeaderFooterPosition.Right;
+    public ExcelHeaderFooterPosition HeaderImagePosition { get; set; } = ExcelHeaderFooterPosition.Right;
 
     /// <summary>Footer image file path.</summary>
     [Parameter]
@@ -96,7 +96,7 @@ public sealed class SetOfficeExcelHeaderFooterCommand : AsyncPSCmdlet
 
     /// <summary>Footer image position.</summary>
     [Parameter]
-    public HeaderFooterPosition FooterImagePosition { get; set; } = HeaderFooterPosition.Right;
+    public ExcelHeaderFooterPosition FooterImagePosition { get; set; } = ExcelHeaderFooterPosition.Right;
 
     /// <summary>Image width in points.</summary>
     [Parameter]

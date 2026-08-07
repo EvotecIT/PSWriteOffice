@@ -11,7 +11,7 @@ Adds a table of contents to a Word document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordTableOfContents [-Document <WordDocument>] [-Style <TableOfContentStyle>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTableOfContents [-Document <WordDocument>] [-Style <WordTableOfContentsStyle>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,7 +48,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -64,14 +64,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Style
 Table of contents template style.
 
 ```yaml
-Type: TableOfContentStyle
+Type: WordTableOfContentsStyle
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Template1, Template2
@@ -80,7 +80,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

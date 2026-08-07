@@ -8,8 +8,8 @@ namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelDocumentPropertyService
 {
-    private static readonly IReadOnlyDictionary<string, Func<BuiltinDocumentProperties, object?>> BuiltInReaders =
-        new Dictionary<string, Func<BuiltinDocumentProperties, object?>>(StringComparer.OrdinalIgnoreCase)
+    private static readonly IReadOnlyDictionary<string, Func<ExcelBuiltinDocumentProperties, object?>> BuiltInReaders =
+        new Dictionary<string, Func<ExcelBuiltinDocumentProperties, object?>>(StringComparer.OrdinalIgnoreCase)
         {
             ["Title"] = properties => properties.Title,
             ["Subject"] = properties => properties.Subject,
@@ -26,8 +26,8 @@ internal static class ExcelDocumentPropertyService
             ["LastPrinted"] = properties => properties.LastPrinted
         };
 
-    private static readonly IReadOnlyDictionary<string, Action<BuiltinDocumentProperties, object?>> BuiltInWriters =
-        new Dictionary<string, Action<BuiltinDocumentProperties, object?>>(StringComparer.OrdinalIgnoreCase)
+    private static readonly IReadOnlyDictionary<string, Action<ExcelBuiltinDocumentProperties, object?>> BuiltInWriters =
+        new Dictionary<string, Action<ExcelBuiltinDocumentProperties, object?>>(StringComparer.OrdinalIgnoreCase)
         {
             ["Title"] = (properties, value) => properties.Title = ConvertToString(value),
             ["Subject"] = (properties, value) => properties.Subject = ConvertToString(value),
@@ -44,8 +44,8 @@ internal static class ExcelDocumentPropertyService
             ["LastPrinted"] = (properties, value) => properties.LastPrinted = ConvertToDateTime(value)
         };
 
-    private static readonly IReadOnlyDictionary<string, Func<ApplicationProperties, object?>> ApplicationReaders =
-        new Dictionary<string, Func<ApplicationProperties, object?>>(StringComparer.OrdinalIgnoreCase)
+    private static readonly IReadOnlyDictionary<string, Func<ExcelApplicationProperties, object?>> ApplicationReaders =
+        new Dictionary<string, Func<ExcelApplicationProperties, object?>>(StringComparer.OrdinalIgnoreCase)
         {
             ["Company"] = properties => properties.Company,
             ["Manager"] = properties => properties.Manager,
@@ -53,8 +53,8 @@ internal static class ExcelDocumentPropertyService
             ["Application"] = properties => properties.ApplicationName
         };
 
-    private static readonly IReadOnlyDictionary<string, Action<ApplicationProperties, object?>> ApplicationWriters =
-        new Dictionary<string, Action<ApplicationProperties, object?>>(StringComparer.OrdinalIgnoreCase)
+    private static readonly IReadOnlyDictionary<string, Action<ExcelApplicationProperties, object?>> ApplicationWriters =
+        new Dictionary<string, Action<ExcelApplicationProperties, object?>>(StringComparer.OrdinalIgnoreCase)
         {
             ["Company"] = (properties, value) => properties.Company = ConvertToString(value) ?? string.Empty,
             ["Manager"] = (properties, value) => properties.Manager = ConvertToString(value) ?? string.Empty,

@@ -60,10 +60,10 @@ internal static class PdfRichTextRunBuilder
     internal static object[] ToRunArray(object? runs)
         => OfficeTextRunParser.ToRunArray(runs);
 
-    internal static TextRun[] ToTextRuns(object? runs)
+    internal static PdfTextRun[] ToTextRuns(object? runs)
         => OfficeTextRunParser.ParseMany(runs).Select(ToTextRun).ToArray();
 
-    internal static TextRun[] ToTextRuns(OfficeTextRunSpec[] runs)
+    internal static PdfTextRun[] ToTextRuns(OfficeTextRunSpec[] runs)
         => runs.Select(ToTextRun).ToArray();
 
     private static void ApplyRun(PdfParagraphBuilder builder, OfficeTextRunSpec run)
@@ -96,7 +96,7 @@ internal static class PdfRichTextRunBuilder
         AddText(builder, run.Text, run.LinkUri, run.LinkDestinationName, run.LinkContents, color, run.Underline || run.LinkUri != null || run.LinkDestinationName != null);
     }
 
-    private static TextRun ToTextRun(OfficeTextRunSpec run)
+    private static PdfTextRun ToTextRun(OfficeTextRunSpec run)
     {
         var text = run.IsLineBreak ? Environment.NewLine : run.IsTab ? "\t" : run.Text;
         var baseline = GetEnum(run.Baseline, PdfTextBaseline.Normal);
@@ -105,7 +105,7 @@ internal static class PdfRichTextRunBuilder
             throw new PSArgumentException("PDF table cell text runs do not support links yet. Use PdfText outside the table or remove LinkUri/LinkDestinationName from the table cell run.");
         }
 
-        return new TextRun(
+        return new PdfTextRun(
             text,
             bold: run.Bold,
             underline: run.Underline,

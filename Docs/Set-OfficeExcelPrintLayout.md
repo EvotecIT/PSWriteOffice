@@ -11,17 +11,17 @@ Applies a reusable worksheet print layout preset.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelPrintLayout [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelPrintLayout [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <OfficePageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <UInt32>] [-FitToHeight <UInt32>] [-Scale <UInt32>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <Int32>] [-RepeatLastRow <Int32>] [-RepeatFirstColumn <Int32>] [-RepeatLastColumn <Int32>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Set-OfficeExcelPrintLayout [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelPrintLayout [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <OfficePageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <UInt32>] [-FitToHeight <UInt32>] [-Scale <UInt32>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <Int32>] [-RepeatLastRow <Int32>] [-RepeatFirstColumn <Int32>] [-RepeatLastColumn <Int32>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelPrintLayout -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <ExcelPageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <uint>] [-FitToHeight <uint>] [-Scale <uint>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <int>] [-RepeatLastRow <int>] [-RepeatFirstColumn <int>] [-RepeatLastColumn <int>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelPrintLayout -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <OfficePageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <UInt32>] [-FitToHeight <UInt32>] [-Scale <UInt32>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <Int32>] [-RepeatLastRow <Int32>] [-RepeatFirstColumn <Int32>] [-RepeatLastColumn <Int32>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,14 +51,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FitToHeight
 Optional pages-tall fit override. Use 0 for unlimited height.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -67,14 +67,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FitToWidth
 Optional pages-wide fit override.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -83,7 +83,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -99,23 +99,23 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Margins
 Optional margin preset override.
 
 ```yaml
-Type: Nullable`1
+Type: ExcelMarginPreset
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values:
+Possible values: Normal, Narrow, Moderate, Wide
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoPresetPrintTitles
@@ -131,39 +131,39 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Orientation
 Optional orientation override.
 
 ```yaml
-Type: Nullable`1
+Type: OfficePageOrientation
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values:
+Possible values: Portrait, Landscape
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageOrder
 Optional multi-page print order override.
 
 ```yaml
-Type: Nullable`1
+Type: ExcelPageOrder
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values:
+Possible values: DownThenOver, OverThenDown
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -179,7 +179,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Preset
@@ -195,7 +195,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PrintArea
@@ -211,14 +211,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RepeatFirstColumn
 Optional first 1-based repeated print-title column.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -227,14 +227,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RepeatFirstRow
 Optional first 1-based repeated print-title row.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -243,14 +243,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RepeatLastColumn
 Optional last 1-based repeated print-title column.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -259,14 +259,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RepeatLastRow
 Optional last 1-based repeated print-title row.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -275,14 +275,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Scale
 Optional manual scale percentage override.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -291,7 +291,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -307,14 +307,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index when using a workbook object or path.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -323,7 +323,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -335,8 +335,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Excel.ExcelSheet
-System.Management.Automation.PSObject`
+- `OfficeIMO.Excel.ExcelSheet`
+- `System.Management.Automation.PSObject`
 
 ## RELATED LINKS
 

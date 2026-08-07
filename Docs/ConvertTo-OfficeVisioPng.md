@@ -11,12 +11,12 @@ Exports a Visio document page to native dependency-free PNG.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeVisioPng [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <int>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <int>] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeVisioPng [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <Int32>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <Int32>] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertTo-OfficeVisioPng -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <int>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <int>] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeVisioPng -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <Int32>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <Int32>] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -47,7 +47,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -63,14 +63,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontCollectionIndex
 Optional zero-based font collection index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:
@@ -79,7 +79,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontFaceName
@@ -95,7 +95,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontFilePath
@@ -111,7 +111,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoConnectorLabelOverlapResolution
@@ -127,7 +127,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoConnectorLabels
@@ -143,7 +143,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoStencilArtwork
@@ -159,7 +159,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoText
@@ -175,7 +175,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutputPath
@@ -191,7 +191,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageIndex
@@ -207,7 +207,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -223,14 +223,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PixelsPerInch
 PNG pixels per Visio inch.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:
@@ -239,7 +239,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Show
@@ -255,14 +255,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Supersampling
 Supersampling factor for smoother raster output.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:
@@ -271,7 +271,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Transparent
@@ -287,7 +287,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -295,13 +295,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `System.String
-OfficeIMO.Visio.VisioDocument`
+- `System.String`
+- `OfficeIMO.Visio.VisioDocument`
 
 ## OUTPUTS
 
-- `System.Byte[]
-System.IO.FileInfo`
+- `System.Byte[]`
+- `System.IO.FileInfo`
 
 ## RELATED LINKS
 

@@ -11,12 +11,12 @@ Adds a Markdown image.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeMarkdownImage [-Path] <string> [-Alt <string>] [-Title <string>] [-Width <double>] [-Height <double>] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownImage [-Path] <string> [-Alt <string>] [-Title <string>] [-Width <Double>] [-Height <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeMarkdownImage [-Path] <string> -Document <MarkdownDoc> [-Alt <string>] [-Title <string>] [-Width <double>] [-Height <double>] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownImage [-Path] <string> -Document <MarkdownDoc> [-Alt <string>] [-Title <string>] [-Width <Double>] [-Height <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -49,7 +49,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -65,14 +65,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Height
 Optional height in pixels.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -81,7 +81,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -97,7 +97,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -113,7 +113,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Title
@@ -129,14 +129,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Optional width in pixels.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -145,7 +145,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

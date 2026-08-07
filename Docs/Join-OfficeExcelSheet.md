@@ -11,17 +11,17 @@ Appends or merges rows from one worksheet into another.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Join-OfficeExcelSheet -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeExcelSheet -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <Int32>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <Int32>] [-TargetStartColumn <Int32>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <Int32>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Join-OfficeExcelSheet [-InputPath] <string> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeExcelSheet [-InputPath] <string> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <Int32>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <Int32>] [-TargetStartColumn <Int32>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <Int32>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Join-OfficeExcelSheet -Document <ExcelDocument> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <int>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <int>] [-TargetStartColumn <int>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <int>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeExcelSheet -Document <ExcelDocument> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <Int32>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <Int32>] [-TargetStartColumn <Int32>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <Int32>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,7 +53,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -69,7 +69,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludeSourceHeader
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -101,7 +101,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MatchColumnsByHeader
@@ -117,7 +117,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoSourceHeader
@@ -133,7 +133,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OverwriteExistingCells
@@ -149,7 +149,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourceDocument
@@ -165,7 +165,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourcePath
@@ -181,7 +181,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourceRange
@@ -197,7 +197,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourceSheet
@@ -213,14 +213,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetHeaderRow
 1-based target header row when matching columns by header.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -229,7 +229,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetSheet
@@ -245,14 +245,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetSheetIndex
 Target worksheet index when using a workbook object or path.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -261,14 +261,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetStartColumn
 1-based target start column. Defaults to the source range start column.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -277,14 +277,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetStartRow
 1-based target start row. Defaults to appending after the target used range.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -293,7 +293,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

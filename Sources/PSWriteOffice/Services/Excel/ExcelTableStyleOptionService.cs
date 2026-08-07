@@ -13,7 +13,7 @@ internal static class ExcelTableStyleOptionService
     public static void Apply(
         ExcelSheet sheet,
         string? tableOrRange,
-        TableStyle style,
+        ExcelTableStyle style,
         bool showFirstColumn,
         bool showLastColumn,
         bool noRowStripes,

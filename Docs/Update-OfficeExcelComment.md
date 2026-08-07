@@ -11,17 +11,17 @@ Updates legacy worksheet comments (notes) that match a filter.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Update-OfficeExcelComment [-Sheet <string>] [-SheetIndex <int>] [-Address <string>] [-Range <string>] [-MatchAuthor <string>] [-TextContains <string>] [-All] [-Text <string>] [-Run <Object[]>] [-Author <string>] [-Initials <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeExcelComment [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Range <string>] [-MatchAuthor <string>] [-TextContains <string>] [-All] [-Text <string>] [-Run <Object[]>] [-Author <string>] [-Initials <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Update-OfficeExcelComment [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Address <string>] [-Range <string>] [-MatchAuthor <string>] [-TextContains <string>] [-All] [-Text <string>] [-Run <Object[]>] [-Author <string>] [-Initials <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeExcelComment [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Range <string>] [-MatchAuthor <string>] [-TextContains <string>] [-All] [-Text <string>] [-Run <Object[]>] [-Author <string>] [-Initials <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Update-OfficeExcelComment -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Address <string>] [-Range <string>] [-MatchAuthor <string>] [-TextContains <string>] [-All] [-Text <string>] [-Run <Object[]>] [-Author <string>] [-Initials <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeExcelComment -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Range <string>] [-MatchAuthor <string>] [-TextContains <string>] [-All] [-Text <string>] [-Run <Object[]>] [-Author <string>] [-Initials <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,7 +53,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -All
@@ -69,7 +69,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Author
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -101,7 +101,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Initials
@@ -117,7 +117,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -133,7 +133,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MatchAuthor
@@ -149,7 +149,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -165,7 +165,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Range
@@ -181,7 +181,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Run
@@ -197,7 +197,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -213,14 +213,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) to update. Defaults to the current DSL sheet or all workbook sheets.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -229,7 +229,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -245,7 +245,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TextContains
@@ -261,7 +261,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

@@ -11,12 +11,12 @@ Adds or replaces an Excel chart series trendline.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesIndex <int> -Type <string> [-Order <int>] [-Period <int>] [-Forward <double>] [-Backward <double>] [-Intercept <double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <double>] [<CommonParameters>]
+Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesIndex <int> -Type <string> [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesName <string> -Type <string> [-IgnoreCase <bool>] [-Order <int>] [-Period <int>] [-Forward <double>] [-Backward <double>] [-Intercept <double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <double>] [<CommonParameters>]
+Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesName <string> -Type <string> [-IgnoreCase <bool>] [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,7 +37,7 @@ Adds a polynomial trendline to the first series.
 Backward forecast units.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -46,7 +46,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Chart
@@ -62,7 +62,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DisplayEquation
@@ -78,7 +78,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DisplayRSquared
@@ -94,14 +94,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Forward
 Forward forecast units.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IgnoreCase
@@ -126,14 +126,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Intercept
 Trendline intercept.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -142,7 +142,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineColor
@@ -158,14 +158,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineWidthPoints
 Trendline line width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -174,14 +174,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Order
 Polynomial order.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -190,14 +190,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Period
 Moving-average period.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -206,7 +206,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SeriesIndex
@@ -222,7 +222,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SeriesName
@@ -238,7 +238,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Type
@@ -254,7 +254,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

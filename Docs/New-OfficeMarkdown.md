@@ -11,7 +11,7 @@ Creates a Markdown document using a DSL scriptblock.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeMarkdown [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-PdfPath <string>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [-MarkdownPdfOptions <MarkdownPdfSaveOptions>] [-PdfOptions <PdfOptions>] [-PdfTheme <OfficeVisualThemeKind>] [-PdfFontFamily <string>] [-PdfTitle <string>] [-PdfAuthor <string>] [-PdfSubject <string>] [-PdfKeywords <string>] [-PdfBaseDirectory <string>] [-PdfApplyWordLikeTheme <bool>] [-PdfIncludeLocalImages <bool>] [-PdfIncludeDataUriImages <bool>] [-PdfRestrictLocalImagesToBaseDirectory <bool>] [-PdfMaximumDataUriImageBytes <int>] [-PdfDefaultImageWidth <double>] [-PdfDefaultImageHeight <double>] [-PdfFrontMatterRenderMode <MarkdownPdfFrontMatterRenderMode>] [-PdfUseFrontMatterVisualTheme <bool>] [-PdfUseFrontMatterMetadata <bool>] [-PdfUseFirstHeadingAsTitle <bool>] [-PdfCreateOutlineFromHeadings <bool>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeMarkdown [-OutputPath] <string> [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-PdfPath <string>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [-MarkdownPdfOptions <MarkdownPdfSaveOptions>] [-PdfOptions <PdfOptions>] [-PdfTheme <OfficeVisualThemeKind>] [-PdfFontFamily <string>] [-PdfTitle <string>] [-PdfAuthor <string>] [-PdfSubject <string>] [-PdfKeywords <string>] [-PdfBaseDirectory <string>] [-PdfApplyWordLikeTheme <Boolean>] [-PdfIncludeLocalImages <Boolean>] [-PdfIncludeDataUriImages <Boolean>] [-PdfRestrictLocalImagesToBaseDirectory <Boolean>] [-PdfMaximumDataUriImageBytes <Int32>] [-PdfDefaultImageWidth <Double>] [-PdfDefaultImageHeight <Double>] [-PdfFrontMatterRenderMode <MarkdownPdfFrontMatterRenderMode>] [-PdfUseFrontMatterVisualTheme <Boolean>] [-PdfUseFrontMatterMetadata <Boolean>] [-PdfUseFirstHeadingAsTitle <Boolean>] [-PdfCreateOutlineFromHeadings <Boolean>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,23 +53,23 @@ Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ImageRenderingMode
 Controls how Markdown images are serialized.
 
 ```yaml
-Type: Nullable`1
+Type: MarkdownImageRenderingMode
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: RichMarkdown, PortableMarkdown, Html
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineEnding
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MarkdownPdfOptions
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoSave
@@ -117,7 +117,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutputPath
@@ -133,7 +133,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -149,14 +149,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfApplyWordLikeTheme
 Apply the built-in Word-like Markdown PDF baseline theme.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -165,7 +165,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfAuthor
@@ -181,7 +181,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfBaseDirectory
@@ -197,7 +197,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfConversionReportVariable
@@ -213,14 +213,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfCreateOutlineFromHeadings
 Create PDF outlines from Markdown headings.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -229,14 +229,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfDefaultImageHeight
 Fallback PDF image height in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -245,14 +245,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfDefaultImageWidth
 Fallback PDF image width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -261,7 +261,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfFontFamily
@@ -277,30 +277,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfFrontMatterRenderMode
 Controls how YAML front matter appears in the PDF body.
 
 ```yaml
-Type: Nullable`1
+Type: MarkdownPdfFrontMatterRenderMode
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Hidden, DocumentHeader, Table
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfIncludeDataUriImages
 Embed supported data URI images in Markdown PDF output.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -309,14 +309,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfIncludeLocalImages
 Embed supported local image files in Markdown PDF output.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -325,7 +325,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfKeywords
@@ -341,14 +341,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfMaximumDataUriImageBytes
 Maximum decoded bytes for one data URI image in Markdown PDF output.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -357,7 +357,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfOptions
@@ -373,7 +373,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfPath
@@ -389,14 +389,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfRestrictLocalImagesToBaseDirectory
 Require local images to resolve under the base directory.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -405,7 +405,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfSubject
@@ -421,23 +421,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfTheme
 Built-in Markdown PDF visual theme.
 
 ```yaml
-Type: Nullable`1
+Type: OfficeVisualThemeKind
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Plain, WordLike, TechnicalDocument, GitHubLike, Compact, Report
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfTitle
@@ -453,14 +453,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfUseFirstHeadingAsTitle
 Use the first Markdown heading as the PDF title when no title is supplied.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -469,14 +469,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfUseFrontMatterMetadata
 Use front matter values as PDF metadata.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -485,14 +485,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfUseFrontMatterVisualTheme
 Use front matter values to select a visual theme.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -501,7 +501,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PdfWarningVariable
@@ -517,7 +517,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -UnorderedListMarker
@@ -533,7 +533,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WriteOptions
@@ -549,23 +549,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WriteProfile
 Friendly Markdown writer profile.
 
 ```yaml
-Type: Nullable`1
+Type: OfficeMarkdownWriteProfile
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: OfficeIMO, Portable, HtmlImage
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -577,8 +577,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.IO.FileInfo
-OfficeIMO.Markdown.MarkdownDoc`
+- `System.IO.FileInfo`
+- `OfficeIMO.Markdown.MarkdownDoc`
 
 ## RELATED LINKS
 

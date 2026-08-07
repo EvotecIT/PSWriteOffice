@@ -28,13 +28,17 @@ internal static class WordTextRunService
         string text,
         bool bold,
         bool italic,
-        UnderlineValues? underline,
+        WordUnderlineStyle? underline,
         bool strike,
         string? color,
         int? fontSize,
         string? fontName)
     {
-        var run = paragraph.AddFormattedText(text, bold, italic, underline);
+        var run = paragraph.AddFormattedText(text, bold, italic);
+        if (underline.HasValue)
+        {
+            run.SetUnderline(underline.Value);
+        }
         ApplyAdditionalStyle(run, strike, color, null, fontSize, fontName);
         return run;
     }
@@ -88,7 +92,7 @@ internal static class WordTextRunService
         paragraph.AddHyperLink(text, uri, true, spec.LinkContents ?? string.Empty, true);
     }
 
-    private static void ApplyHyperlinkStyle(WordHyperLink? hyperlink, OfficeTextRunSpec spec, UnderlineValues? underline)
+    private static void ApplyHyperlinkStyle(WordHyperLink? hyperlink, OfficeTextRunSpec spec, WordUnderlineStyle? underline)
     {
         var run = GetHyperlinkRun(hyperlink);
         if (run == null)
@@ -109,7 +113,11 @@ internal static class WordTextRunService
 
         if (underline.HasValue)
         {
-            properties.Underline = new Underline { Val = underline.Value };
+            if (!OpenXmlValueParser.TryParse<UnderlineValues>(underline.Value.ToString(), out var openXmlUnderline))
+            {
+                throw new InvalidOperationException($"Cannot map Word underline style '{underline.Value}' to OpenXML.");
+            }
+            properties.Underline = new Underline { Val = openXmlUnderline };
         }
 
         if (spec.Strike)
@@ -257,7 +265,7 @@ internal static class WordTextRunService
             return;
         }
 
-        if (OpenXmlValueParser.TryParse(backgroundColor, out HighlightColorValues highlight))
+        if (OpenXmlValueParser.TryParse(backgroundColor, out WordHighlightColor highlight))
         {
             run.Highlight = highlight;
             return;
@@ -267,7 +275,7 @@ internal static class WordTextRunService
         if (!string.IsNullOrWhiteSpace(rgb))
         {
             run.ShadingFillColorHex = rgb!;
-            run.ShadingPattern = ShadingPatternValues.Clear;
+            run.ShadingPattern = WordShadingPattern.Clear;
         }
     }
 
@@ -291,7 +299,7 @@ internal static class WordTextRunService
         }
     }
 
-    private static UnderlineValues? ResolveUnderline(bool underline, string? underlineStyle)
+    private static WordUnderlineStyle? ResolveUnderline(bool underline, string? underlineStyle)
     {
         if (!underline)
         {
@@ -300,10 +308,10 @@ internal static class WordTextRunService
 
         if (string.IsNullOrWhiteSpace(underlineStyle))
         {
-            return UnderlineValues.Single;
+            return WordUnderlineStyle.Single;
         }
 
-        return OpenXmlValueParser.TryParse<UnderlineValues>(underlineStyle, out var parsed)
+        return OpenXmlValueParser.TryParse<WordUnderlineStyle>(underlineStyle, out var parsed)
             ? parsed
             : throw new PSArgumentException($"Unsupported Word underline style '{underlineStyle}'.", nameof(underlineStyle));
     }

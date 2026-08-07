@@ -11,17 +11,17 @@ Sets page setup options on Word sections.
 ## SYNTAX
 ### Current (Default)
 ```powershell
-Set-OfficeWordPageSetup [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <int>] [-Right <int>] [-Top <int>] [-Bottom <int>] [-Header <int>] [-Footer <int>] [-Gutter <int>] [-Columns <int>] [-ColumnSpacing <int>] [-ColumnSeparator <bool>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordPageSetup [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Section
 ```powershell
-Set-OfficeWordPageSetup -Section <WordSection> [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <int>] [-Right <int>] [-Top <int>] [-Bottom <int>] [-Header <int>] [-Footer <int>] [-Gutter <int>] [-Columns <int>] [-ColumnSpacing <int>] [-ColumnSeparator <bool>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordPageSetup -Section <WordSection> [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeWordPageSetup -Document <WordDocument> [-Index <int[]>] [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <int>] [-Right <int>] [-Top <int>] [-Bottom <int>] [-Header <int>] [-Footer <int>] [-Gutter <int>] [-Columns <int>] [-ColumnSpacing <int>] [-ColumnSeparator <bool>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordPageSetup -Document <WordDocument> [-Index <int[]>] [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,7 +42,7 @@ Updates the current section page setup.
 Bottom margin in twips.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -51,14 +51,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Columns
 Number of section columns.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -67,14 +67,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ColumnSeparator
 Whether to show a separator between columns.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -83,14 +83,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ColumnSpacing
 Space between columns in twips.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -99,7 +99,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -115,14 +115,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Footer
 Footer distance in twips.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -131,14 +131,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Gutter
 Gutter size in twips.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -147,14 +147,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Header
 Header distance in twips.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -163,7 +163,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Index
@@ -179,14 +179,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Left
 Left margin in twips.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -195,23 +195,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Margin
 Built-in margin preset.
 
 ```yaml
-Type: Nullable`1
+Type: WordMargin
 Parameter Sets: Current, Section, Document
 Aliases: None
-Possible values:
+Possible values: Normal, Mirrored, Moderate, Narrow, Wide, Office2003Default, Unknown
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Orientation
@@ -227,23 +227,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageSize
 Built-in page size.
 
 ```yaml
-Type: Nullable`1
+Type: WordPageSize
 Parameter Sets: Current, Section, Document
 Aliases: None
-Possible values:
+Possible values: Unknown, Letter, Legal, Statement, Executive, A3, A4, A5, A6, B5
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -259,14 +259,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Right
 Right margin in twips.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -275,7 +275,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Section
@@ -291,14 +291,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Top
 Top margin in twips.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values:
@@ -307,7 +307,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -315,8 +315,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.Word.WordSection
-OfficeIMO.Word.WordDocument`
+- `OfficeIMO.Word.WordSection`
+- `OfficeIMO.Word.WordDocument`
 
 ## OUTPUTS
 

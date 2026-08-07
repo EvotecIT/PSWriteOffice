@@ -11,7 +11,7 @@ Configures data labels and optional styling for an Excel chart.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelChartDataLabels -Chart <ExcelChart> [-ShowValue <bool>] [-ShowCategoryName <bool>] [-ShowSeriesName <bool>] [-ShowLegendKey <bool>] [-ShowPercent <bool>] [-Position <string>] [-NumberFormat <string>] [-SourceLinked <bool>] [-FontSizePoints <double>] [-Bold <bool>] [-Italic <bool>] [-Color <string>] [-FontName <string>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <double>] [-NoFill] [-NoLine] [<CommonParameters>]
+Set-OfficeExcelChartDataLabels -Chart <ExcelChart> [-ShowValue <bool>] [-ShowCategoryName <bool>] [-ShowSeriesName <bool>] [-ShowLegendKey <bool>] [-ShowPercent <bool>] [-Position <string>] [-NumberFormat <string>] [-SourceLinked <bool>] [-FontSizePoints <Double>] [-Bold <Boolean>] [-Italic <Boolean>] [-Color <string>] [-FontName <string>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-NoFill] [-NoLine] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,7 +32,7 @@ Adds value labels to the chart and returns the chart for further formatting.
 Optional bold setting for label text.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -41,7 +41,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Chart
@@ -57,7 +57,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Color
@@ -73,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillColor
@@ -89,7 +89,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontName
@@ -105,14 +105,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSizePoints
 Optional label font size in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -121,14 +121,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Italic
 Optional italic setting for label text.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -137,7 +137,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineColor
@@ -153,14 +153,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineWidthPoints
 Optional label border width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -169,7 +169,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoFill
@@ -185,7 +185,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoLine
@@ -201,7 +201,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NumberFormat
@@ -217,7 +217,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Position
@@ -233,7 +233,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShowCategoryName
@@ -249,7 +249,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShowLegendKey
@@ -265,7 +265,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShowPercent
@@ -281,7 +281,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShowSeriesName
@@ -297,7 +297,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShowValue
@@ -313,7 +313,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourceLinked
@@ -329,7 +329,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

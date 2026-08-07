@@ -11,7 +11,7 @@ Creates a reusable PDF table cell definition for explicit table rows.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficePdfTableCell [[-Text] <string>] [-Run <Object[]>] [-ColumnSpan <int>] [-RowSpan <int>] [-TextColor <string>] [-FillColor <string>] [-FontSize <double>] [-Bold] [-Italic] [-Underline] [-UnderlineStyle <string>] [-Strike] [-Align <PdfColumnAlign>] [-VerticalAlign <PdfCellVerticalAlign>] [-CheckBox <PdfTableCellCheckBox[]>] [-Image <PdfTableCellImage[]>] [-FormField <PdfTableCellFormField[]>] [-LinkUri <string>] [-LinkDestinationName <string>] [-LinkContents <string>] [-NamedDestinationName <string>] [-NoWrap] [<CommonParameters>]
+New-OfficePdfTableCell [[-Text] <string>] [-Run <Object[]>] [-ColumnSpan <int>] [-RowSpan <int>] [-TextColor <string>] [-FillColor <string>] [-FontSize <Double>] [-Bold] [-Italic] [-Underline] [-UnderlineStyle <string>] [-Strike] [-Align <PdfColumnAlign>] [-VerticalAlign <PdfCellVerticalAlign>] [-CheckBox <PdfTableCellCheckBox[]>] [-Image <PdfTableCellImage[]>] [-FormField <PdfTableCellFormField[]>] [-LinkUri <string>] [-LinkDestinationName <string>] [-LinkContents <string>] [-NamedDestinationName <string>] [-NoWrap] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,16 +32,16 @@ The returned cell can be passed to PdfTable inside explicit row arrays.
 Horizontal cell alignment.
 
 ```yaml
-Type: Nullable`1
+Type: PdfColumnAlign
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Left, Center, Right
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Bold
@@ -57,7 +57,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CheckBox
@@ -73,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ColumnSpan
@@ -89,7 +89,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillColor
@@ -105,14 +105,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSize
 Cell font size in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -121,7 +121,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FormField
@@ -137,7 +137,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Image
@@ -153,7 +153,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Italic
@@ -169,7 +169,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LinkContents
@@ -185,7 +185,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LinkDestinationName
@@ -201,7 +201,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LinkUri
@@ -217,7 +217,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NamedDestinationName
@@ -233,7 +233,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoWrap
@@ -249,7 +249,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RowSpan
@@ -265,7 +265,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Run
@@ -281,7 +281,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Strike
@@ -297,7 +297,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -313,7 +313,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TextColor
@@ -329,7 +329,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Underline
@@ -345,7 +345,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -UnderlineStyle
@@ -361,23 +361,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -VerticalAlign
 Vertical cell alignment.
 
 ```yaml
-Type: Nullable`1
+Type: PdfCellVerticalAlign
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Top, Middle, Bottom
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -389,7 +389,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.Table.OfficeTableCellSpec` — Describes a logical table cell that can be rendered by multiple Office table surfaces.
+- `PSWriteOffice.Services.Table.OfficeTableCellSpec`: Describes a logical table cell that can be rendered by multiple Office table surfaces.
 
 ## RELATED LINKS
 

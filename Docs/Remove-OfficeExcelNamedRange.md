@@ -16,7 +16,7 @@ Remove-OfficeExcelNamedRange [-Name] <string> [-Global] [-PassThru] [-Save] [-Wh
 
 ### Document
 ```powershell
-Remove-OfficeExcelNamedRange [-Name] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-OfficeExcelNamedRange [-Name] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-PassThru] [-Save] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,7 +48,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Global
@@ -64,7 +64,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -80,7 +80,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -96,7 +96,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Save
@@ -112,7 +112,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -128,14 +128,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Zero-based worksheet index for a sheet-scoped operation.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -144,7 +144,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

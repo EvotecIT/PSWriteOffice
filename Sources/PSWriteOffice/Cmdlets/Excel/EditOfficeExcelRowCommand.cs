@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsData.Edit, "OfficeExcelRow", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Edit-ExcelRow", "ExcelRowEdit")]
-[OutputType(typeof(RowEdit))]
+[OutputType(typeof(ExcelPowerShellRowEdit))]
 public sealed class EditOfficeExcelRowCommand : PSCmdlet
 {
     private const string ParameterSetContext = "Context";
@@ -66,17 +66,38 @@ public sealed class EditOfficeExcelRowCommand : PSCmdlet
         var document = workbook.Document;
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
         var options = ExcelReadOutputService.CreateOptions(NumericAsDecimal.IsPresent);
-        var rows = string.IsNullOrWhiteSpace(Range)
-            ? sheet.RowsObjects(options)
-            : sheet.RowsObjects(Range!, options);
+        var range = string.IsNullOrWhiteSpace(Range) ? sheet.UsedRangeA1 : Range!;
+        var (firstRow, firstColumn, _, _) = A1.ParseRange(range);
+        options.SheetName = sheet.Name;
+        options.A1Range = range;
+        options.HasHeaderRow = true;
 
-        foreach (var row in rows)
+        using var reader = document.CreateDataReader(options);
+        var headers = new string[reader.FieldCount];
+        for (var columnIndex = 0; columnIndex < headers.Length; columnIndex++)
         {
+            headers[columnIndex] = reader.GetName(columnIndex);
+        }
+
+        var dataRowIndex = 0;
+        while (reader.Read())
+        {
+            var values = new object[reader.FieldCount];
+            reader.GetValues(values);
+            var row = new ExcelPowerShellRowEdit(
+                sheet,
+                firstRow + 1 + dataRowIndex,
+                firstColumn,
+                headers,
+                values,
+                options.Culture);
             ScriptBlock.Invoke(row);
             if (PassThru.IsPresent)
             {
                 WriteObject(row);
             }
+
+            dataRowIndex++;
         }
 
         workbook.SaveIfOwned();

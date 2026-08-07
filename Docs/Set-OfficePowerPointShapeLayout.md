@@ -11,17 +11,17 @@ Aligns, distributes, or arranges PowerPoint shapes using OfficeIMO layout helper
 ## SYNTAX
 ### Align (Default)
 ```powershell
-Set-OfficePowerPointShapeLayout [-InputObject] <Object> -Align <PowerPointShapeAlignment> [-Slide <PowerPointSlide>] [-ToSlide] [-MarginPoints <double>] [-PassThru] [<CommonParameters>]
+Set-OfficePowerPointShapeLayout [-InputObject] <Object> -Align <PowerPointShapeAlignment> [-Slide <PowerPointSlide>] [-ToSlide] [-MarginPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Distribute
 ```powershell
-Set-OfficePowerPointShapeLayout [-InputObject] <Object> -Distribute <PowerPointShapeDistribution> [-Slide <PowerPointSlide>] [-CrossAxisAlign <PowerPointShapeAlignment>] [-SpacingPoints <double>] [-ToSlide] [-MarginPoints <double>] [-Center] [-PassThru] [<CommonParameters>]
+Set-OfficePowerPointShapeLayout [-InputObject] <Object> -Distribute <PowerPointShapeDistribution> [-Slide <PowerPointSlide>] [-CrossAxisAlign <PowerPointShapeAlignment>] [-SpacingPoints <Double>] [-ToSlide] [-MarginPoints <Double>] [-Center] [-PassThru] [<CommonParameters>]
 ```
 
 ### Grid
 ```powershell
-Set-OfficePowerPointShapeLayout [-InputObject] <Object> -Grid [-Slide <PowerPointSlide>] [-Columns <int>] [-Rows <int>] [-AutoGrid] [-GutterXPoints <double>] [-GutterYPoints <double>] [-Flow <PowerPointShapeGridFlow>] [-NoResize] [-ToSlide] [-MarginPoints <double>] [-PassThru] [<CommonParameters>]
+Set-OfficePowerPointShapeLayout [-InputObject] <Object> -Grid [-Slide <PowerPointSlide>] [-Columns <Int32>] [-Rows <Int32>] [-AutoGrid] [-GutterXPoints <double>] [-GutterYPoints <double>] [-Flow <PowerPointShapeGridFlow>] [-NoResize] [-ToSlide] [-MarginPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -52,7 +52,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AutoGrid
@@ -68,7 +68,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Center
@@ -84,14 +84,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Columns
 Grid column count. Omit with AutoGrid.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Grid
 Aliases: None
 Possible values:
@@ -100,23 +100,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CrossAxisAlign
 Optional cross-axis alignment for even distribution.
 
 ```yaml
-Type: Nullable`1
+Type: PowerPointShapeAlignment
 Parameter Sets: Distribute
 Aliases: None
-Possible values:
+Possible values: Left, Center, Right, Top, Middle, Bottom
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Distribute
@@ -132,7 +132,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Flow
@@ -148,7 +148,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Grid
@@ -164,7 +164,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -GutterXPoints
@@ -180,7 +180,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -GutterYPoints
@@ -196,7 +196,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputObject
@@ -212,14 +212,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MarginPoints
 Use slide content bounds with the supplied margin in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Align, Distribute, Grid
 Aliases: None
 Possible values:
@@ -228,7 +228,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoResize
@@ -244,7 +244,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -260,14 +260,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Rows
 Grid row count. Omit with AutoGrid.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Grid
 Aliases: None
 Possible values:
@@ -276,7 +276,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Slide
@@ -292,14 +292,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SpacingPoints
 Fixed spacing between distributed shapes in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Distribute
 Aliases: None
 Possible values:
@@ -308,7 +308,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ToSlide
@@ -324,7 +324,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

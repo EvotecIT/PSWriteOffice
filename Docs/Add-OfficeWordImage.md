@@ -11,7 +11,7 @@ Inserts an image into the current paragraph.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordImage [-Path] <string> [-Width <double>] [-Height <double>] [-Wrap <WrapTextImage>] [-Description <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordImage [-Path] <string> [-Width <Double>] [-Height <Double>] [-Wrap <WordImageTextWrapping>] [-Description <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,14 +41,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Height
 Height in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -57,7 +57,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -73,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -89,14 +89,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -105,14 +105,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Wrap
 Wrap mode for the image.
 
 ```yaml
-Type: WrapTextImage
+Type: WordImageTextWrapping
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: InLineWithText, Square, Tight, Through, TopAndBottom, BehindText, InFrontOfText
@@ -121,7 +121,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -133,7 +133,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

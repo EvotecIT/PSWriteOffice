@@ -11,17 +11,17 @@ Gets mixed-format rich text runs from an Excel cell.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Get-OfficeExcelRichText [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [<CommonParameters>]
+Get-OfficeExcelRichText [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Get-OfficeExcelRichText [-InputPath] <string> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [<CommonParameters>]
+Get-OfficeExcelRichText [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Get-OfficeExcelRichText -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [<CommonParameters>]
+Get-OfficeExcelRichText -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,14 +53,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Column
 1-based column index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -69,7 +69,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -85,7 +85,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -101,14 +101,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Row
 1-based row index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -117,7 +117,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -133,14 +133,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index when using a workbook object or path.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -149,7 +149,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

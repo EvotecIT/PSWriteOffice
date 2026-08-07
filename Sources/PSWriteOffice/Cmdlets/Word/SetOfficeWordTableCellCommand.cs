@@ -105,7 +105,7 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
     public string? WidthType { get; set; }
 
     /// <summary>Cell text direction.</summary>
-    [Parameter] public TextDirectionValues? TextDirection { get; set; }
+    [Parameter] public WordTextDirection? TextDirection { get; set; }
 
     /// <summary>Whether text wraps in the cell.</summary>
     [Parameter] public bool? WrapText { get; set; }
@@ -141,9 +141,9 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
 
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Text))) Cell.AddParagraph(Text ?? string.Empty, removeExistingParagraphs: true);
         if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingFillColor))) Cell.ShadingFillColorHex = ShadingFillColor ?? string.Empty;
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingPattern))) Cell.ShadingPattern = new ShadingPatternValues(ToOpenXmlToken(ShadingPattern));
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingPattern))) Cell.ShadingPattern = ParseOfficeValue<WordShadingPattern>(ShadingPattern, nameof(ShadingPattern));
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Width))) Cell.Width = Width;
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(WidthType))) Cell.WidthType = new TableWidthUnitValues(ToOpenXmlToken(WidthType));
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(WidthType))) Cell.WidthType = ParseOfficeValue<WordTableWidthUnit>(WidthType, nameof(WidthType));
         if (MyInvocation.BoundParameters.ContainsKey(nameof(TextDirection))) Cell.TextDirection = TextDirection;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(WrapText))) Cell.WrapText = WrapText ?? false;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(FitText))) Cell.FitText = FitText ?? false;
@@ -158,47 +158,10 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
         }
     }
 
-    private static string ToOpenXmlToken(string? value)
+    private static T? ParseOfficeValue<T>(string? value, string parameterName) where T : struct
     {
-        return value switch
-        {
-            null => string.Empty,
-            "HorizontalStripe" => "horzStripe",
-            "VerticalStripe" => "vertStripe",
-            "ReverseDiagonalStripe" => "reverseDiagStripe",
-            "DiagonalStripe" => "diagStripe",
-            "HorizontalCross" => "horzCross",
-            "DiagonalCross" => "diagCross",
-            "ThinHorizontalStripe" => "thinHorzStripe",
-            "ThinVerticalStripe" => "thinVertStripe",
-            "ThinReverseDiagonalStripe" => "thinReverseDiagStripe",
-            "ThinDiagonalStripe" => "thinDiagStripe",
-            "ThinHorizontalCross" => "thinHorzCross",
-            "ThinDiagonalCross" => "thinDiagCross",
-            "Percent5" => "pct5",
-            "Percent10" => "pct10",
-            "Percent12" => "pct12",
-            "Percent15" => "pct15",
-            "Percent20" => "pct20",
-            "Percent25" => "pct25",
-            "Percent30" => "pct30",
-            "Percent35" => "pct35",
-            "Percent37" => "pct37",
-            "Percent40" => "pct40",
-            "Percent45" => "pct45",
-            "Percent50" => "pct50",
-            "Percent55" => "pct55",
-            "Percent60" => "pct60",
-            "Percent62" => "pct62",
-            "Percent65" => "pct65",
-            "Percent70" => "pct70",
-            "Percent75" => "pct75",
-            "Percent80" => "pct80",
-            "Percent85" => "pct85",
-            "Percent87" => "pct87",
-            "Percent90" => "pct90",
-            "Percent95" => "pct95",
-            _ => char.ToLowerInvariant(value[0]) + value.Substring(1)
-        };
+        if (string.IsNullOrWhiteSpace(value)) return null;
+        if (PSWriteOffice.Services.OpenXmlValueParser.TryParse<T>(value, out var parsed)) return parsed;
+        throw new PSArgumentException($"Unknown {parameterName} value '{value}'.", parameterName);
     }
 }

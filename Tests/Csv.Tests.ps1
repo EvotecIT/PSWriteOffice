@@ -26,6 +26,9 @@ Describe 'CSV cmdlets' {
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'NoHeader'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'AsDataTable'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'AsDataReader'
+        (Get-Command ConvertFrom-OfficeCsv).Parameters.Mode.ParameterType.FullName | Should -Be 'PSWriteOffice.Cmdlets.Csv.CsvReadMode'
+        (Get-Command Import-OfficeCsv).Parameters.Mode.ParameterType.FullName | Should -Be 'PSWriteOffice.Cmdlets.Csv.CsvReadMode'
+        (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Not -Contain 'Mode'
         (Get-Command Export-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
         (Get-Command Get-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
         (Get-Command Import-OfficeCsv).Parameters.Keys | Should -Contain 'CompressionType'
@@ -370,7 +373,7 @@ Describe 'CSV cmdlets' {
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1`nBroken,`"one`"two`nBeta,2" -Encoding UTF8
 
         $parseErrors = $null
-        $document = Get-OfficeCsv -Path $path -Mode Stream -QuoteParsingMode Strict -ParseErrorAction SkipRow -CollectParseErrors -ErrorAction SilentlyContinue -ErrorVariable parseErrors
+        $document = Get-OfficeCsv -Path $path -QuoteParsingMode Strict -ParseErrorAction SkipRow -CollectParseErrors -ErrorAction SilentlyContinue -ErrorVariable parseErrors
 
         @($document.AsEnumerable()).Count | Should -Be 2
         $parseErrors.Count | Should -BeGreaterThan 0
@@ -466,7 +469,7 @@ Describe 'CSV cmdlets' {
             $reader.Dispose()
         }
 
-        $document = Get-OfficeCsv -Path $path -Mode Stream -ProgressInterval 1
+        $document = Get-OfficeCsv -Path $path -ProgressInterval 1
         @($document.AsEnumerable()).Count | Should -Be 2
     }
 

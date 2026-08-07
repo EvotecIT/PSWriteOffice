@@ -66,7 +66,7 @@ public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
 
     /// <summary>Controls how invalid destination sheet names are handled.</summary>
     [Parameter]
-    public SheetNameValidationMode ValidationMode { get; set; } = SheetNameValidationMode.Sanitize;
+    public ExcelSheetNameValidationMode ValidationMode { get; set; } = ExcelSheetNameValidationMode.Sanitize;
 
     /// <summary>Controls whether cross-workbook copies use package-level copy or value materialization.</summary>
     [Parameter]

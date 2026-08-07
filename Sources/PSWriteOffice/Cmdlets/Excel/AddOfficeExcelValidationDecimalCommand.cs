@@ -84,7 +84,7 @@ public sealed class AddOfficeExcelValidationDecimalCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (!OpenXmlValueParser.TryParse<DataValidationOperatorValues>(Operator, out var op))
+        if (!OpenXmlValueParser.TryParse<ExcelDataValidationOperator>(Operator, out var op))
         {
             throw new PSArgumentException($"Unknown validation operator '{Operator}'.", nameof(Operator));
         }

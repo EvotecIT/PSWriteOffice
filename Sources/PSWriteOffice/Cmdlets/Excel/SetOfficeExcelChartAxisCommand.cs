@@ -1,5 +1,7 @@
 using System;
 using System.Management.Automation;
+using OfficeIMO;
+using OfficeIMO.Drawing;
 using OfficeIMO.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
@@ -29,7 +31,7 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
 
     /// <summary>Axis group to configure.</summary>
     [Parameter]
-    public ExcelChartAxisGroup AxisGroup { get; set; } = ExcelChartAxisGroup.Primary;
+    public OfficeChartAxisGroup AxisGroup { get; set; } = OfficeChartAxisGroup.Primary;
 
     /// <summary>Category axis title.</summary>
     [Parameter]

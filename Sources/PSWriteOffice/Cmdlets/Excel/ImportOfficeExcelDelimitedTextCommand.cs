@@ -1,10 +1,11 @@
 #pragma warning disable CS1591
+using System;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
+using OfficeIMO.CSV;
 using OfficeIMO.Excel;
-using OfficeIMO.Reader.Csv;
-using OfficeIMO.Reader.Excel;
+using OfficeIMO.Excel.Csv;
 using PSWriteOffice.Services.Excel;
 
 namespace PSWriteOffice.Cmdlets.Excel;
@@ -84,15 +85,29 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
         }
 
         using var workbook = ResolveWorkbook(target);
-        var result = workbook.Document.ImportDelimitedFile(source, new ExcelDelimitedImportOptions
+        var culture = string.IsNullOrWhiteSpace(CultureName) ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(CultureName!);
+        var loadOptions = new CsvLoadOptions
         {
-            Delimiter = Delimiter,
-            SheetName = SheetName,
-            HeadersInFirstRow = !NoHeader.IsPresent,
+            DetectDelimiter = !Delimiter.HasValue,
+            HasHeaderRow = !NoHeader.IsPresent,
             SkipInitialRecords = SkipRows,
+            Culture = culture
+        };
+        if (Delimiter.HasValue)
+        {
+            loadOptions.Delimiter = Delimiter.Value;
+        }
+
+        var result = workbook.Document.ImportCsvFile(source, new ExcelCsvImportOptions
+        {
+            SheetName = string.IsNullOrWhiteSpace(SheetName) ? "Import" : SheetName!,
+            IncludeHeaders = !NoHeader.IsPresent,
             CreateTable = !NoTable.IsPresent,
-            ConvertNumbersAndDates = !NoTypeConversion.IsPresent,
-            Culture = string.IsNullOrWhiteSpace(CultureName) ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(CultureName!)
+            LoadOptions = loadOptions,
+            ReaderOptions = new CsvDataReaderOptions
+            {
+                InferSchema = !NoTypeConversion.IsPresent
+            }
         });
 
         workbook.SaveIfOwned();
@@ -100,12 +115,20 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
         {
             var output = new PSObject();
             output.Properties.Add(new PSNoteProperty("SheetName", result.SheetName));
+            var rowCount = 0;
+            var columnCount = 0;
+            if (!string.IsNullOrWhiteSpace(result.Range))
+            {
+                var (firstRow, firstColumn, lastRow, lastColumn) = A1.ParseRange(result.Range);
+                rowCount = Math.Max(0, lastRow - firstRow + (NoHeader.IsPresent ? 1 : 0));
+                columnCount = lastColumn - firstColumn + 1;
+            }
             output.Properties.Add(new PSNoteProperty("TableName", result.TableName));
             output.Properties.Add(new PSNoteProperty("Range", result.Range));
-            output.Properties.Add(new PSNoteProperty("RowCount", result.RowCount));
-            output.Properties.Add(new PSNoteProperty("ColumnCount", result.ColumnCount));
+            output.Properties.Add(new PSNoteProperty("RowCount", rowCount));
+            output.Properties.Add(new PSNoteProperty("ColumnCount", columnCount));
             output.Properties.Add(new PSNoteProperty("Delimiter", result.Delimiter.ToString()));
-            output.Properties.Add(new PSNoteProperty("Warnings", result.Warnings));
+            output.Properties.Add(new PSNoteProperty("Warnings", Array.Empty<string>()));
             WriteObject(output);
         }
     }

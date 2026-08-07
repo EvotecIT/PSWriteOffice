@@ -11,12 +11,12 @@ Configures fill and line styling for a single Excel chart data point.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficeExcelChartPoint -Chart <ExcelChart> -SeriesIndex <int> -PointIndex <uint> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <double>] [<CommonParameters>]
+Set-OfficeExcelChartPoint -Chart <ExcelChart> -SeriesIndex <int> -PointIndex <uint> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficeExcelChartPoint -Chart <ExcelChart> -SeriesName <string> -PointIndex <uint> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <double>] [<CommonParameters>]
+Set-OfficeExcelChartPoint -Chart <ExcelChart> -SeriesName <string> -PointIndex <uint> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillColor
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IgnoreCase
@@ -78,7 +78,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineColor
@@ -94,14 +94,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineWidthPoints
 Point line width in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PointIndex
@@ -126,7 +126,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SeriesIndex
@@ -142,7 +142,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SeriesName
@@ -158,7 +158,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

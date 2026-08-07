@@ -11,12 +11,12 @@ Imports a slide from another PowerPoint presentation.
 ## SYNTAX
 ### SourcePresentation (Default)
 ```powershell
-Import-OfficePowerPointSlide -SourcePresentation <PowerPointPresentation> -SourceIndex <int> [-Presentation <PowerPointPresentation>] [-InsertAt <int>] [<CommonParameters>]
+Import-OfficePowerPointSlide -SourcePresentation <PowerPointPresentation> -SourceIndex <int> [-Presentation <PowerPointPresentation>] [-InsertAt <Int32>] [<CommonParameters>]
 ```
 
 ### SourcePath
 ```powershell
-Import-OfficePowerPointSlide -SourcePath <string> -SourceIndex <int> [-Presentation <PowerPointPresentation>] [-InsertAt <int>] [<CommonParameters>]
+Import-OfficePowerPointSlide -SourcePath <string> -SourceIndex <int> [-Presentation <PowerPointPresentation>] [-InsertAt <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -40,7 +40,7 @@ Imports the first slide from another deck into the target presentation.
 Optional target insertion index; omit to append.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: SourcePresentation, SourcePath
 Aliases: None
 Possible values:
@@ -49,7 +49,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Presentation
@@ -65,7 +65,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourceIndex
@@ -81,7 +81,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourcePath
@@ -97,7 +97,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourcePresentation
@@ -113,7 +113,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

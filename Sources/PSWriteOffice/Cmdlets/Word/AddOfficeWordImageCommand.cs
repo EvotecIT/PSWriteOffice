@@ -31,7 +31,7 @@ public sealed class AddOfficeWordImageCommand : PSCmdlet
 
     /// <summary>Wrap mode for the image.</summary>
     [Parameter]
-    public WrapTextImage Wrap { get; set; } = WrapTextImage.InLineWithText;
+    public WordImageTextWrapping Wrap { get; set; } = WordImageTextWrapping.InLineWithText;
 
     /// <summary>Optional description/alt text.</summary>
     [Parameter]

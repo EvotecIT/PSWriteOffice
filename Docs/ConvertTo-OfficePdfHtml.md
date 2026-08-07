@@ -11,7 +11,7 @@ Converts a PDF file to HTML through the first-party OfficeIMO HTML/PDF adapter.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfHtml [-Path] <string> [-PageRange <string>] [-Password <string>] [-IgnorePermissionRestrictions] [-OutputPath <string>] [-Profile <PdfHtmlProfile>] [-ImageExportMode <PdfHtmlImageExportMode>] [-MaxEmbeddedImageBytes <long>] [-NoMetadata] [-NoPageContainers] [-NoImagePlaceholders] [-IncludeLinkAnnotations] [-IncludeFormWidgets] [-Fragment] [-DocumentTitleFallback <string>] [-Options <PdfHtmlSaveOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfHtml [-Path] <string> [-PageRange <string>] [-Password <string>] [-IgnorePermissionRestrictions] [-OutputPath <string>] [-Profile <PdfHtmlProfile>] [-ImageExportMode <PdfHtmlImageExportMode>] [-MaxEmbeddedImageBytes <Int64>] [-NoMetadata] [-NoPageContainers] [-NoImagePlaceholders] [-IncludeLinkAnnotations] [-IncludeFormWidgets] [-Fragment] [-DocumentTitleFallback <string>] [-Options <PdfHtmlSaveOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,7 +42,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Fragment
@@ -58,7 +58,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IgnorePermissionRestrictions
@@ -74,7 +74,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ImageExportMode
@@ -90,7 +90,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludeFormWidgets
@@ -106,7 +106,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludeLinkAnnotations
@@ -122,14 +122,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxEmbeddedImageBytes
 Maximum extracted image byte length that may be embedded into generated HTML. Set to 0 to disable embedding.
 
 ```yaml
-Type: Nullable`1
+Type: Int64
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -138,7 +138,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoImagePlaceholders
@@ -154,7 +154,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoMetadata
@@ -170,7 +170,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoPageContainers
@@ -186,7 +186,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Options
@@ -202,7 +202,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutputPath
@@ -218,7 +218,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageRange
@@ -234,7 +234,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Password
@@ -250,7 +250,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -266,7 +266,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Profile
@@ -282,7 +282,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -294,8 +294,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.String
-System.IO.FileInfo`
+- `System.String`
+- `System.IO.FileInfo`
 
 ## RELATED LINKS
 

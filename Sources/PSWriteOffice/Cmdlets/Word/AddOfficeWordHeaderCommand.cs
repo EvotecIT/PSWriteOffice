@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -19,7 +18,7 @@ public sealed class AddOfficeWordHeaderCommand : PSCmdlet
 {
     /// <summary>The header type to modify.</summary>
     [Parameter]
-    public HeaderFooterValues Type { get; set; } = HeaderFooterValues.Default;
+    public WordHeaderFooterType Type { get; set; } = WordHeaderFooterType.Default;
 
     /// <summary>DSL scriptblock to execute inside the header.</summary>
     [Parameter(Position = 0)]

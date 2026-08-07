@@ -11,12 +11,12 @@ Applies common number, fill, font, and status styles to a worksheet column resol
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelColumnStyleByHeader [-Header] <string> [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <double>] [-AutoFit] [-IgnoreMissing] [<CommonParameters>]
+Set-OfficeExcelColumnStyleByHeader [-Header] <string> [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelColumnStyleByHeader [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <double>] [-AutoFit] [-IgnoreMissing] [<CommonParameters>]
+Set-OfficeExcelColumnStyleByHeader [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -49,7 +49,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AutoFit
@@ -65,7 +65,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BackgroundByText
@@ -81,7 +81,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BackgroundColor
@@ -97,7 +97,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Bold
@@ -113,7 +113,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BoldByText
@@ -129,7 +129,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CaseSensitive
@@ -145,7 +145,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CultureName
@@ -161,7 +161,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Decimals
@@ -177,7 +177,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -193,7 +193,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontColor
@@ -209,7 +209,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontColorByText
@@ -225,7 +225,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Header
@@ -241,7 +241,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IgnoreMissing
@@ -257,7 +257,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludeHeader
@@ -273,7 +273,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NumberFormat
@@ -289,7 +289,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Pattern
@@ -305,7 +305,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -321,14 +321,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -337,7 +337,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Style
@@ -353,14 +353,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Set the resolved column width.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -369,7 +369,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -381,7 +381,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

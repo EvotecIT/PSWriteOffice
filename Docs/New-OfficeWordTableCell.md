@@ -11,7 +11,7 @@ Creates a reusable Word table cell definition for explicit table rows.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeWordTableCell [[-Text] <string>] [-Run <Object[]>] [-ColumnSpan <int>] [-RowSpan <int>] [-TextColor <string>] [-FillColor <string>] [-FontSize <double>] [-Bold] [-Italic] [-Underline] [-UnderlineStyle <UnderlineValues>] [-Strike] [-Align <JustificationValues>] [-VerticalAlign <TableVerticalAlignmentValues>] [<CommonParameters>]
+New-OfficeWordTableCell [[-Text] <string>] [-Run <Object[]>] [-ColumnSpan <int>] [-RowSpan <int>] [-TextColor <string>] [-FillColor <string>] [-FontSize <Double>] [-Bold] [-Italic] [-Underline] [-UnderlineStyle <WordUnderlineStyle>] [-Strike] [-Align <WordParagraphAlignment>] [-VerticalAlign <WordTableVerticalAlignment>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,16 +32,16 @@ The returned cell can be passed to WordTable inside explicit row arrays.
 Horizontal cell alignment.
 
 ```yaml
-Type: Nullable`1
+Type: WordParagraphAlignment
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Left, Start, Center, Right, End, Both, MediumKashida, Distribute, NumTab, HighKashida, LowKashida, ThaiDistribute
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Bold
@@ -57,7 +57,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ColumnSpan
@@ -73,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillColor
@@ -89,14 +89,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSize
 Cell font size in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -105,7 +105,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Italic
@@ -121,7 +121,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RowSpan
@@ -137,7 +137,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Run
@@ -153,7 +153,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Strike
@@ -169,7 +169,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -185,7 +185,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TextColor
@@ -201,7 +201,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Underline
@@ -217,39 +217,39 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -UnderlineStyle
 Optional Word underline style.
 
 ```yaml
-Type: Nullable`1
+Type: WordUnderlineStyle
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Single, Words, Double, Thick, Dotted, DottedHeavy, Dash, DashedHeavy, DashLong, DashLongHeavy, DotDash, DashDotHeavy, DotDotDash, DashDotDotHeavy, Wave, WavyHeavy, WavyDouble, None
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -VerticalAlign
 Vertical cell alignment.
 
 ```yaml
-Type: Nullable`1
+Type: WordTableVerticalAlignment
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Top, Center, Bottom
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -261,7 +261,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.Table.OfficeTableCellSpec` — Describes a logical table cell that can be rendered by multiple Office table surfaces.
+- `PSWriteOffice.Services.Table.OfficeTableCellSpec`: Describes a logical table cell that can be rendered by multiple Office table surfaces.
 
 ## RELATED LINKS
 

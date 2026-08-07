@@ -11,12 +11,12 @@ Configures OfficeIMO Excel execution and validation behavior for a workbook.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelExecutionPolicy [-Mode <string>] [-ParallelThreshold <int>] [-MaxDegreeOfParallelism <int>] [-WorksheetValidation <string>] [-Diagnostics] [-DisableAutoFitImmediateSave] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelExecutionPolicy [-Mode <string>] [-ParallelThreshold <Int32>] [-MaxDegreeOfParallelism <Int32>] [-WorksheetValidation <string>] [-Diagnostics] [-DisableAutoFitImmediateSave] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelExecutionPolicy [-Document] <ExcelDocument> [-Mode <string>] [-ParallelThreshold <int>] [-MaxDegreeOfParallelism <int>] [-WorksheetValidation <string>] [-Diagnostics] [-DisableAutoFitImmediateSave] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelExecutionPolicy [-Document] <ExcelDocument> [-Mode <string>] [-ParallelThreshold <Int32>] [-MaxDegreeOfParallelism <Int32>] [-WorksheetValidation <string>] [-Diagnostics] [-DisableAutoFitImmediateSave] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DisableAutoFitImmediateSave
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -78,14 +78,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxDegreeOfParallelism
 Optional cap for parallel compute phases.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -94,7 +94,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Mode
@@ -110,14 +110,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ParallelThreshold
 Global item threshold above which Automatic mode switches to Parallel.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -126,7 +126,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -142,7 +142,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WorksheetValidation
@@ -158,7 +158,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

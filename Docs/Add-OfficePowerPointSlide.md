@@ -21,7 +21,7 @@ Add-OfficePowerPointSlide [[-Content] <scriptblock>] -LayoutName <string> [-Pres
 
 ### Type
 ```powershell
-Add-OfficePowerPointSlide [[-Content] <scriptblock>] -LayoutType <SlideLayoutValues> [-Presentation <PowerPointPresentation>] [-Master <int>] [<CommonParameters>]
+Add-OfficePowerPointSlide [[-Content] <scriptblock>] -LayoutType <PowerPointSlideLayoutType> [-Presentation <PowerPointPresentation>] [-Master <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -58,7 +58,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Content
@@ -74,7 +74,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Layout
@@ -90,7 +90,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LayoutName
@@ -106,23 +106,23 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LayoutType
 Layout type to use.
 
 ```yaml
-Type: SlideLayoutValues
+Type: PowerPointSlideLayoutType
 Parameter Sets: Type
 Aliases: None
-Possible values:
+Possible values: Title, Text, TwoColumnText, Table, TextAndChart, ChartAndText, Diagram, Chart, TextAndClipArt, ClipArtAndText, TitleOnly, Blank, TextAndObject, ObjectAndText, ObjectOnly, Object, TextAndMedia, MediaAndText, ObjectOverText, TextOverObject, TextAndTwoObjects, TwoObjectsAndText, TwoObjectsOverText, FourObjects, VerticalText, ClipArtAndVerticalText, VerticalTitleAndText, VerticalTitleAndTextOverChart, TwoObjects, ObjectAndTwoObjects, TwoObjectsAndObject, Custom, SectionHeader, TwoTextAndTwoObjects, ObjectText, PictureText
 
 Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Master
@@ -138,7 +138,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Presentation
@@ -154,7 +154,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -166,7 +166,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

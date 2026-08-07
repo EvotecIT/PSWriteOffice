@@ -11,12 +11,12 @@ Adds a horizontal rule divider to a generated PDF document.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficePdfHorizontalRule [-Thickness <double>] [-Color <string>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfHorizontalRule [-Thickness <Double>] [-Color <string>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficePdfHorizontalRule -Document <PdfDocument> [-Thickness <double>] [-Color <string>] [-SpacingBefore <double>] [-SpacingAfter <double>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfHorizontalRule -Document <PdfDocument> [-Thickness <Double>] [-Color <string>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,7 +51,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -67,7 +67,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -83,14 +83,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SpacingAfter
 Spacing after the rule in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -99,14 +99,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SpacingBefore
 Spacing before the rule in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -115,14 +115,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Thickness
 Rule thickness in PDF points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -131,7 +131,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

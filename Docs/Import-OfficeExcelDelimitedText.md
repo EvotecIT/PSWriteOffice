@@ -11,12 +11,12 @@ Imports normalized CSV/TSV text into an Excel workbook through OfficeIMO.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Import-OfficeExcelDelimitedText [-InputPath] <string> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-SkipRows <int>] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Import-OfficeExcelDelimitedText [-InputPath] <string> -SourcePath <string> [-Delimiter <Char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-SkipRows <int>] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Import-OfficeExcelDelimitedText -Document <ExcelDocument> -SourcePath <string> [-Delimiter <char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-SkipRows <int>] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Import-OfficeExcelDelimitedText -Document <ExcelDocument> -SourcePath <string> [-Delimiter <Char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-SkipRows <int>] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -52,14 +52,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Delimiter
 Delimiter character. When omitted, it is detected.
 
 ```yaml
-Type: Nullable`1
+Type: Char
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:
@@ -68,7 +68,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -84,7 +84,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -100,7 +100,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoHeader
@@ -116,7 +116,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoTable
@@ -132,7 +132,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoTypeConversion
@@ -148,7 +148,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -164,7 +164,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetName
@@ -180,7 +180,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SkipRows
@@ -196,7 +196,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SourcePath
@@ -212,7 +212,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

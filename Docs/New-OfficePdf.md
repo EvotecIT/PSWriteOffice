@@ -11,12 +11,12 @@ Creates a PDF document using the OfficeIMO.Pdf composition engine.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-New-OfficePdf [[-Path] <string>] [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [-FileVersion <PdfFileVersion>] [-CreateOutlineFromHeadings] [-OutlineExpansionLevel <int>] [-PageMode <PdfCatalogPageMode>] [-PageLayout <PdfCatalogPageLayout>] [-IncludePageLabels] [-PageLabelPrefix <string>] [-OpenActionPage <int>] [-OpenActionMode <PdfOpenActionDestinationMode>] [-OpenActionTop <double>] [-DisplayDocTitle] [-FitWindow] [-CenterWindow] [-HideToolbar] [-HideMenubar] [-HideWindowUI] [-FlattenVisualAnnotations] [-Password <string>] [-OwnerPassword <string>] [-Permission <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficePdf [[-Path] <string>] [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <Double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [-FileVersion <PdfFileVersion>] [-CreateOutlineFromHeadings] [-OutlineExpansionLevel <Int32>] [-PageMode <PdfCatalogPageMode>] [-PageLayout <PdfCatalogPageLayout>] [-IncludePageLabels] [-PageLabelPrefix <string>] [-OpenActionPage <Int32>] [-OpenActionMode <PdfOpenActionDestinationMode>] [-OpenActionTop <Double>] [-DisplayDocTitle] [-FitWindow] [-CenterWindow] [-HideToolbar] [-HideMenubar] [-HideWindowUI] [-FlattenVisualAnnotations] [-Password <string>] [-OwnerPassword <string>] [-Permission <Int32>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Content
 ```powershell
-New-OfficePdf [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [-FileVersion <PdfFileVersion>] [-CreateOutlineFromHeadings] [-OutlineExpansionLevel <int>] [-PageMode <PdfCatalogPageMode>] [-PageLayout <PdfCatalogPageLayout>] [-IncludePageLabels] [-PageLabelPrefix <string>] [-OpenActionPage <int>] [-OpenActionMode <PdfOpenActionDestinationMode>] [-OpenActionTop <double>] [-DisplayDocTitle] [-FitWindow] [-CenterWindow] [-HideToolbar] [-HideMenubar] [-HideWindowUI] [-FlattenVisualAnnotations] [-Password <string>] [-OwnerPassword <string>] [-Permission <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficePdf [[-Content] <scriptblock>] [-PassThru] [-NoSave] [-Show] [-DefaultFont <PdfStandardFont>] [-DefaultFontSize <Double>] [-Theme <OfficePdfThemePreset>] [-FontFamily <string>] [-RegularFontPath <string>] [-BoldFontPath <string>] [-ItalicFontPath <string>] [-BoldItalicFontPath <string>] [-FileVersion <PdfFileVersion>] [-CreateOutlineFromHeadings] [-OutlineExpansionLevel <Int32>] [-PageMode <PdfCatalogPageMode>] [-PageLayout <PdfCatalogPageLayout>] [-IncludePageLabels] [-PageLabelPrefix <string>] [-OpenActionPage <Int32>] [-OpenActionMode <PdfOpenActionDestinationMode>] [-OpenActionTop <Double>] [-DisplayDocTitle] [-FitWindow] [-CenterWindow] [-HideToolbar] [-HideMenubar] [-HideWindowUI] [-FlattenVisualAnnotations] [-Password <string>] [-OwnerPassword <string>] [-Permission <Int32>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -72,7 +72,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BoldItalicFontPath
@@ -88,7 +88,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CenterWindow
@@ -104,7 +104,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Content
@@ -120,7 +120,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CreateOutlineFromHeadings
@@ -136,30 +136,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DefaultFont
 Default standard PDF font for generated text.
 
 ```yaml
-Type: Nullable`1
+Type: PdfStandardFont
 Parameter Sets: Path, Content
 Aliases: None
-Possible values:
+Possible values: Helvetica, HelveticaOblique, HelveticaBold, HelveticaBoldOblique, TimesRoman, TimesItalic, TimesBold, TimesBoldItalic, Courier, CourierOblique, CourierBold, CourierBoldOblique
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DefaultFontSize
 Default generated text font size in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Path, Content
 Aliases: None
 Possible values:
@@ -168,7 +168,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DisplayDocTitle
@@ -184,23 +184,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FileVersion
 PDF file header version emitted by OfficeIMO.Pdf.
 
 ```yaml
-Type: Nullable`1
+Type: PdfFileVersion
 Parameter Sets: Path, Content
 Aliases: None
-Possible values:
+Possible values: Pdf14, Pdf15, Pdf16, Pdf17, Pdf20
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FitWindow
@@ -216,7 +216,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FlattenVisualAnnotations
@@ -232,7 +232,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontFamily
@@ -248,7 +248,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HideMenubar
@@ -264,7 +264,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HideToolbar
@@ -280,7 +280,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HideWindowUI
@@ -296,7 +296,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludePageLabels
@@ -312,7 +312,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ItalicFontPath
@@ -328,7 +328,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoSave
@@ -344,30 +344,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OpenActionMode
 Open-action destination mode.
 
 ```yaml
-Type: Nullable`1
+Type: PdfOpenActionDestinationMode
 Parameter Sets: Path, Content
 Aliases: None
-Possible values:
+Possible values: Xyz, Fit, FitHorizontal, FitVertical, FitRectangle, FitBoundingBox, FitBoundingBoxHorizontal, FitBoundingBoxVertical
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OpenActionPage
 Initial one-based page shown by PDF viewers that honor open actions.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Content
 Aliases: None
 Possible values:
@@ -376,14 +376,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OpenActionTop
 Optional open-action top coordinate.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Path, Content
 Aliases: None
 Possible values:
@@ -392,14 +392,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutlineExpansionLevel
 Initial outline expansion level when heading outlines are created.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Content
 Aliases: None
 Possible values:
@@ -408,7 +408,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OwnerPassword
@@ -424,7 +424,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageLabelPrefix
@@ -440,39 +440,39 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageLayout
 Catalog page layout hint emitted for generated PDFs.
 
 ```yaml
-Type: Nullable`1
+Type: PdfCatalogPageLayout
 Parameter Sets: Path, Content
 Aliases: None
-Possible values:
+Possible values: SinglePage, OneColumn, TwoColumnLeft, TwoColumnRight, TwoPageLeft, TwoPageRight
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageMode
 Catalog page mode hint emitted for generated PDFs.
 
 ```yaml
-Type: Nullable`1
+Type: PdfCatalogPageMode
 Parameter Sets: Path, Content
 Aliases: None
-Possible values:
+Possible values: UseNone, UseOutlines, UseThumbs, FullScreen, UseOC, UseAttachments
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -488,7 +488,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Password
@@ -504,7 +504,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -520,14 +520,14 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Permission
 Raw PDF Standard security permission bit mask. Defaults to allowing all standard operations.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Content
 Aliases: Permissions
 Possible values:
@@ -536,7 +536,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RegularFontPath
@@ -552,7 +552,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Show
@@ -568,23 +568,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Theme
 Built-in OfficeIMO.Pdf theme applied before the DSL content runs.
 
 ```yaml
-Type: Nullable`1
+Type: OfficePdfThemePreset
 Parameter Sets: Path, Content
 Aliases: None
-Possible values:
+Possible values: WordLike, TechnicalDocument, Compact, Report
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -596,8 +596,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Pdf.PdfDocument
-System.IO.FileInfo`
+- `OfficeIMO.Pdf.PdfDocument`
+- `System.IO.FileInfo`
 
 ## RELATED LINKS
 

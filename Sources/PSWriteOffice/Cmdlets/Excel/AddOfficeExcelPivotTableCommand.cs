@@ -383,7 +383,7 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
 
             var fn = functions.Count switch
             {
-                0 => DataConsolidateFunctionValues.Sum,
+                0 => ExcelPivotDataFunction.Sum,
                 1 => functions[0],
                 _ => functions[i]
             };
@@ -477,12 +477,12 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
             selectedItem: ResolveMapScalar(PageFieldSelection, field));
     }
 
-    private FieldSortValues? ResolveFieldSort(string field)
+    private ExcelPivotFieldSort? ResolveFieldSort(string field)
     {
         string? sort = ResolveMapScalar(FieldSort, field);
         if (string.IsNullOrWhiteSpace(sort)) return null;
 
-        if (!OpenXmlValueParser.TryParse(sort, out FieldSortValues parsed))
+        if (!OpenXmlValueParser.TryParse(sort, out ExcelPivotFieldSort parsed))
         {
             throw new PSArgumentException($"Unknown field sort value '{sort}'.");
         }
@@ -581,20 +581,20 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         return index < values.Length ? values[index] : null;
     }
 
-    private ExcelPivotDataField CreatePivotDataField(string fieldName, DataConsolidateFunctionValues function, string? displayName, string? numberFormat)
+    private ExcelPivotDataField CreatePivotDataField(string fieldName, ExcelPivotDataFunction function, string? displayName, string? numberFormat)
     {
         return new ExcelPivotDataField(fieldName, function, displayName, numberFormatId: null, numberFormat: numberFormat);
     }
 
-    private static List<DataConsolidateFunctionValues> ParseFunctions(string[]? functions)
+    private static List<ExcelPivotDataFunction> ParseFunctions(string[]? functions)
     {
-        var result = new List<DataConsolidateFunctionValues>();
+        var result = new List<ExcelPivotDataFunction>();
         if (functions == null || functions.Length == 0) return result;
 
         foreach (var raw in functions)
         {
             if (string.IsNullOrWhiteSpace(raw)) continue;
-            if (!OpenXmlValueParser.TryParse(raw, out DataConsolidateFunctionValues fn))
+            if (!OpenXmlValueParser.TryParse(raw, out ExcelPivotDataFunction fn))
             {
                 throw new PSArgumentException($"Unknown DataFunction '{raw}'.");
             }

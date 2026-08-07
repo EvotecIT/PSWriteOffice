@@ -74,7 +74,7 @@ internal sealed class CsvPowerShellObjectProjector
         return TryGetProjectableColumns(value, columns, out _);
     }
 
-    public void WriteObject(object? value, CsvObjectWriter writer)
+    public void WriteObject(object? value, CsvRowWriter writer)
     {
         if (_columns != null &&
             _values != null)
@@ -119,22 +119,22 @@ internal sealed class CsvPowerShellObjectProjector
         writer.WriteObject(PowerShellObjectNormalizer.NormalizeItem(value));
     }
 
-    private static void WriteProjectedTextRow(CsvObjectWriter writer, string[] columns, string?[] values)
+    private static void WriteProjectedTextRow(CsvRowWriter writer, string[] columns, string?[] values)
     {
         if (writer.HasRows)
         {
-            writer.WriteTrustedTextRow(values);
+            writer.WriteTextRow(values);
             return;
         }
 
         writer.WriteRow(columns, values);
     }
 
-    private static void WriteProjectedRow(CsvObjectWriter writer, string[] columns, object?[] values)
+    private static void WriteProjectedRow(CsvRowWriter writer, string[] columns, object?[] values)
     {
         if (writer.HasRows)
         {
-            writer.WriteTrustedRow(values);
+            writer.WriteRow(values);
             return;
         }
 

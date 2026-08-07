@@ -11,22 +11,22 @@ Adds a dashboard-ready chart using an OfficeIMO chart preset.
 ## SYNTAX
 ### ContextRange (Default)
 ```powershell
-Add-OfficeExcelDashboardChart [-Range] <string> -Row <int> -Column <int> [-Preset <ExcelDashboardChartPreset>] [-ChartType <ExcelChartType>] [-Title <string>] [-HasHeaders <bool>] [-IncludeCachedData <bool>] [-WidthPixels <int>] [-HeightPixels <int>] [-StyleId <int>] [-ColorStyleId <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelDashboardChart [-Range] <string> -Row <int> -Column <int> [-Preset <ExcelDashboardChartPreset>] [-ChartType <ExcelChartType>] [-Title <string>] [-HasHeaders <bool>] [-IncludeCachedData <bool>] [-WidthPixels <Int32>] [-HeightPixels <Int32>] [-StyleId <Int32>] [-ColorStyleId <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentRange
 ```powershell
-Add-OfficeExcelDashboardChart [-Range] <string> -Document <ExcelDocument> -Row <int> -Column <int> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelDashboardChartPreset>] [-ChartType <ExcelChartType>] [-Title <string>] [-HasHeaders <bool>] [-IncludeCachedData <bool>] [-WidthPixels <int>] [-HeightPixels <int>] [-StyleId <int>] [-ColorStyleId <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelDashboardChart [-Range] <string> -Document <ExcelDocument> -Row <int> -Column <int> [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <ExcelDashboardChartPreset>] [-ChartType <ExcelChartType>] [-Title <string>] [-HasHeaders <bool>] [-IncludeCachedData <bool>] [-WidthPixels <Int32>] [-HeightPixels <Int32>] [-StyleId <Int32>] [-ColorStyleId <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentTable
 ```powershell
-Add-OfficeExcelDashboardChart [-TableName] <string> -Document <ExcelDocument> -Row <int> -Column <int> [-Sheet <string>] [-SheetIndex <int>] [-Preset <ExcelDashboardChartPreset>] [-ChartType <ExcelChartType>] [-Title <string>] [-IncludeCachedData <bool>] [-WidthPixels <int>] [-HeightPixels <int>] [-StyleId <int>] [-ColorStyleId <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelDashboardChart [-TableName] <string> -Document <ExcelDocument> -Row <int> -Column <int> [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <ExcelDashboardChartPreset>] [-ChartType <ExcelChartType>] [-Title <string>] [-IncludeCachedData <bool>] [-WidthPixels <Int32>] [-HeightPixels <Int32>] [-StyleId <Int32>] [-ColorStyleId <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ### ContextTable
 ```powershell
-Add-OfficeExcelDashboardChart [-TableName] <string> -Row <int> -Column <int> [-Preset <ExcelDashboardChartPreset>] [-ChartType <ExcelChartType>] [-Title <string>] [-IncludeCachedData <bool>] [-WidthPixels <int>] [-HeightPixels <int>] [-StyleId <int>] [-ColorStyleId <int>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelDashboardChart [-TableName] <string> -Row <int> -Column <int> [-Preset <ExcelDashboardChartPreset>] [-ChartType <ExcelChartType>] [-Title <string>] [-IncludeCachedData <bool>] [-WidthPixels <Int32>] [-HeightPixels <Int32>] [-StyleId <Int32>] [-ColorStyleId <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -47,23 +47,23 @@ Creates a styled chart from the range using reusable OfficeIMO dashboard chart d
 Optional chart type override.
 
 ```yaml
-Type: Nullable`1
+Type: ExcelChartType
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
-Possible values:
+Possible values: ColumnClustered, ColumnStacked, ColumnStacked100, Column3DClustered, Column3DStacked, Column3DStacked100, BarClustered, BarStacked, BarStacked100, Bar3DClustered, Bar3DStacked, Bar3DStacked100, Line, LineStacked, LineStacked100, Line3D, Area, AreaStacked, AreaStacked100, Area3D, Area3DStacked, Area3DStacked100, Pie, Pie3D, PieOfPie, BarOfPie, Doughnut, Scatter, Bubble, Radar, Stock, Surface, SurfaceWireframe, SurfaceContour, SurfaceContourWireframe
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ColorStyleId
 Optional chart color style id override.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
 Possible values:
@@ -72,7 +72,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Column
@@ -88,7 +88,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -104,7 +104,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HasHeaders
@@ -120,14 +120,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HeightPixels
 Optional chart height in pixels.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
 Possible values:
@@ -136,7 +136,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludeCachedData
@@ -152,7 +152,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -168,7 +168,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Preset
@@ -184,7 +184,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Range
@@ -200,7 +200,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Row
@@ -216,7 +216,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -232,14 +232,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: DocumentRange, DocumentTable
 Aliases: None
 Possible values:
@@ -248,14 +248,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StyleId
 Optional chart style id override.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
 Possible values:
@@ -264,7 +264,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TableName
@@ -280,7 +280,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Title
@@ -296,14 +296,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WidthPixels
 Optional chart width in pixels.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: ContextRange, DocumentRange, DocumentTable, ContextTable
 Aliases: None
 Possible values:
@@ -312,7 +312,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -324,7 +324,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

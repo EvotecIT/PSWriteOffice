@@ -11,17 +11,17 @@ Adds a stencil shape to the current Visio page.
 ## SYNTAX
 ### CatalogName (Default)
 ```powershell
-Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] [-Page <VisioPage>] [-Catalog <string>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <double>] [-LinePattern <int>] [-FillPattern <int>] [-Angle <double>] [<CommonParameters>]
+Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] [-Page <VisioPage>] [-Catalog <string>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [<CommonParameters>]
 ```
 
 ### CatalogObject
 ```powershell
-Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] -CatalogObject <VisioStencilCatalog> [-Page <VisioPage>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <double>] [-LinePattern <int>] [-FillPattern <int>] [-Angle <double>] [<CommonParameters>]
+Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] -CatalogObject <VisioStencilCatalog> [-Page <VisioPage>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [<CommonParameters>]
 ```
 
 ### BuiltIn
 ```powershell
-Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] [-Page <VisioPage>] [-BuiltIn <OfficeVisioBuiltInStencilCatalog>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <double>] [-LinePattern <int>] [-FillPattern <int>] [-Angle <double>] [<CommonParameters>]
+Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] [-Page <VisioPage>] [-BuiltIn <OfficeVisioBuiltInStencilCatalog>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,7 +45,7 @@ Registers a built-in catalog and places a stencil shape on the active page.
 Shape angle in radians.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: CatalogName, CatalogObject, BuiltIn
 Aliases: None
 Possible values:
@@ -54,7 +54,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BuiltIn
@@ -70,7 +70,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Catalog
@@ -86,7 +86,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CatalogObject
@@ -102,7 +102,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillColor
@@ -118,14 +118,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillPattern
 Fill pattern.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: CatalogName, CatalogObject, BuiltIn
 Aliases: None
 Possible values:
@@ -134,14 +134,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Height
 Optional shape height. Omit to use the stencil default height.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: CatalogName, CatalogObject, BuiltIn
 Aliases: None
 Possible values:
@@ -150,7 +150,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Key
@@ -166,7 +166,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineColor
@@ -182,14 +182,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LinePattern
 Line pattern.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: CatalogName, CatalogObject, BuiltIn
 Aliases: None
 Possible values:
@@ -198,14 +198,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineWeight
 Line weight.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: CatalogName, CatalogObject, BuiltIn
 Aliases: None
 Possible values:
@@ -214,7 +214,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NameU
@@ -230,7 +230,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Page
@@ -246,7 +246,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShapeName
@@ -262,7 +262,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Stencil
@@ -278,7 +278,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -294,14 +294,14 @@ Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Optional shape width. Omit to use the stencil default width.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: CatalogName, CatalogObject, BuiltIn
 Aliases: None
 Possible values:
@@ -310,7 +310,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -X
@@ -326,7 +326,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Y
@@ -342,7 +342,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

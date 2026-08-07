@@ -16,7 +16,7 @@ Get-OfficePowerPointSlideSummary [-Slide <PowerPointSlide>] [<CommonParameters>]
 
 ### Presentation
 ```powershell
-Get-OfficePowerPointSlideSummary [-Presentation <PowerPointPresentation>] [-Index <int>] [<CommonParameters>]
+Get-OfficePowerPointSlideSummary [-Presentation <PowerPointPresentation>] [-Index <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,7 +44,7 @@ Returns the summary for the selected slide.
 Optional zero-based slide index when reading from a presentation.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Presentation
 Aliases: None
 Possible values:
@@ -53,7 +53,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Presentation
@@ -69,7 +69,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Slide
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -93,12 +93,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSlide
-OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.PowerPoint.PowerPointSlide`
+- `OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.PowerPoint.PowerPointSlideSummaryInfo` — PowerShell-friendly summary of a PowerPoint slide.
+- `PSWriteOffice.Services.PowerPoint.PowerPointSlideSummaryInfo`: PowerShell-friendly summary of a PowerPoint slide.
 
 ## RELATED LINKS
 

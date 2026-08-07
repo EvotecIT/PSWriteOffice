@@ -11,12 +11,12 @@ Sets an external hyperlink that displays only the URL host.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelHostHyperlink [-Url] <string> [-Row <int>] [-Column <int>] [-Address <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelHostHyperlink [-Url] <string> [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelHostHyperlink [-Url] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Row <int>] [-Column <int>] [-Address <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelHostHyperlink [-Url] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,14 +46,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Column
 1-based column index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -78,7 +78,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoStyle
@@ -94,7 +94,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -110,14 +110,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Row
 1-based row index.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -126,7 +126,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -142,14 +142,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -158,7 +158,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Url
@@ -174,7 +174,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -186,7 +186,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

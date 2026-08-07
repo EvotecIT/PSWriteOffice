@@ -11,12 +11,12 @@ Adds a decorative generated PDF page background shape or band.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficePdfBackgroundShape [-Shape] <OfficePdfBackgroundShapeType> [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-CornerRadius <double>] [-InsetX <double>] [-InsetY <double>] [-OffsetY <double>] [-OffsetX <double>] [-FillColor <string>] [-StrokeColor <string>] [-StrokeWidth <double>] [-FillOpacity <double>] [-StrokeOpacity <double>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfBackgroundShape [-Shape] <OfficePdfBackgroundShapeType> [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-CornerRadius <double>] [-InsetX <double>] [-InsetY <double>] [-OffsetY <double>] [-OffsetX <double>] [-FillColor <string>] [-StrokeColor <string>] [-StrokeWidth <double>] [-FillOpacity <Double>] [-StrokeOpacity <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficePdfBackgroundShape [-Shape] <OfficePdfBackgroundShapeType> -Document <PdfDocument> [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-CornerRadius <double>] [-InsetX <double>] [-InsetY <double>] [-OffsetY <double>] [-OffsetX <double>] [-FillColor <string>] [-StrokeColor <string>] [-StrokeWidth <double>] [-FillOpacity <double>] [-StrokeOpacity <double>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfBackgroundShape [-Shape] <OfficePdfBackgroundShapeType> -Document <PdfDocument> [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-CornerRadius <double>] [-InsetX <double>] [-InsetY <double>] [-OffsetY <double>] [-OffsetX <double>] [-FillColor <string>] [-StrokeColor <string>] [-StrokeWidth <double>] [-FillOpacity <Double>] [-StrokeOpacity <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,7 +51,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -67,7 +67,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillColor
@@ -83,14 +83,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FillOpacity
 Fill opacity from 0 to 1.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -99,14 +99,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Height
 Shape height in PDF points, or band height for top/bottom bands.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -115,7 +115,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InsetX
@@ -131,7 +131,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InsetY
@@ -147,7 +147,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OffsetX
@@ -163,7 +163,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OffsetY
@@ -179,7 +179,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -195,7 +195,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Shape
@@ -211,7 +211,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StrokeColor
@@ -227,14 +227,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StrokeOpacity
 Stroke opacity from 0 to 1.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -243,7 +243,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StrokeWidth
@@ -259,14 +259,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Shape width in PDF points, or band width for left/right bands.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -275,7 +275,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -X
@@ -291,7 +291,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Y
@@ -307,7 +307,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

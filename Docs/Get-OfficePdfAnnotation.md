@@ -11,7 +11,7 @@ Gets page annotations and action evidence from a PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfAnnotation [-Path] <string> [-Subtype <string>] [-PageNumber <int>] [-WithAction] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
+Get-OfficePdfAnnotation [-Path] <string> [-Subtype <string>] [-PageNumber <Int32>] [-WithAction] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -40,14 +40,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageNumber
 Optional one-based page number filter.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -56,7 +56,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Password
@@ -72,7 +72,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -88,7 +88,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Subtype
@@ -104,7 +104,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WithAction
@@ -120,7 +120,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

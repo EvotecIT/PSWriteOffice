@@ -11,12 +11,12 @@ Sets or clears a generated PDF page background image.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficePdfBackgroundImage [[-Path] <string>] [-Fit <OfficeImageFit>] [-Opacity <double>] [-Clear] [-PassThru] [<CommonParameters>]
+Set-OfficePdfBackgroundImage [[-Path] <string>] [-Fit <OfficeImageFit>] [-Opacity <Double>] [-Clear] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficePdfBackgroundImage [[-Path] <string>] -Document <PdfDocument> [-Fit <OfficeImageFit>] [-Opacity <double>] [-Clear] [-PassThru] [<CommonParameters>]
+Set-OfficePdfBackgroundImage [[-Path] <string>] -Document <PdfDocument> [-Fit <OfficeImageFit>] [-Opacity <Double>] [-Clear] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,7 +50,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -66,7 +66,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Fit
@@ -82,14 +82,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Opacity
 Image opacity from 0 to 1.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -98,7 +98,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -114,7 +114,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -130,7 +130,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

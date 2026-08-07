@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
 using OfficeIMO.Excel;
@@ -69,12 +70,10 @@ public sealed class FindOfficeExcelCommand : PSCmdlet
         var document = workbook.Document;
         foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
         {
-            var range = string.IsNullOrWhiteSpace(Range) ? sheet.GetUsedRangeA1() : Range!;
-            using var reader = document.CreateReader();
-            var sheetReader = reader.GetSheet(sheet.Name);
-            foreach (var cell in sheetReader.EnumerateRange(range))
+            var range = string.IsNullOrWhiteSpace(Range) ? sheet.UsedRangeA1 : Range!;
+            foreach (var cell in sheet.EnumerateRange(range))
             {
-                var cellText = Convert.ToString(cell.Value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+                var cellText = Convert.ToString(cell.Value, CultureInfo.InvariantCulture) ?? string.Empty;
                 if (IsMatch(cellText))
                 {
                     WriteObject(CreateRecord(sheet.Name, cell.Row, cell.Column, cell.Value));

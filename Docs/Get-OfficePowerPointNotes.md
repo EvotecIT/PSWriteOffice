@@ -16,7 +16,7 @@ Get-OfficePowerPointNotes [-Slide <PowerPointSlide>] [-IncludeEmpty] [<CommonPar
 
 ### Presentation
 ```powershell
-Get-OfficePowerPointNotes [-Presentation <PowerPointPresentation>] [-Index <int>] [-IncludeEmpty] [<CommonParameters>]
+Get-OfficePowerPointNotes [-Presentation <PowerPointPresentation>] [-Index <Int32>] [-IncludeEmpty] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,14 +53,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Index
 Optional zero-based slide index when reading from a presentation.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Presentation
 Aliases: None
 Possible values:
@@ -69,7 +69,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Presentation
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Slide
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -109,12 +109,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointSlide
-OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.PowerPoint.PowerPointSlide`
+- `OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.PowerPoint.PowerPointNotesInfo` — PowerShell-friendly description of slide speaker notes.
+- `PSWriteOffice.Services.PowerPoint.PowerPointNotesInfo`: PowerShell-friendly description of slide speaker notes.
 
 ## RELATED LINKS
 

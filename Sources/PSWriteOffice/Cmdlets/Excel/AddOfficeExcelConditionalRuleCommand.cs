@@ -153,7 +153,7 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
                 {
                     throw new PSArgumentException("Formula1 is required for CellIs conditional formatting rules.", nameof(Formula1));
                 }
-                if (!OpenXmlValueParser.TryParse<ConditionalFormattingOperatorValues>(Operator!, out var op))
+                if (!OpenXmlValueParser.TryParse<ExcelConditionalFormattingOperator>(Operator!, out var op))
                 {
                     throw new PSArgumentException($"Unknown conditional formatting operator '{Operator}'.", nameof(Operator));
                 }
@@ -188,16 +188,16 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
                 sheet.AddConditionalAboveAverageRule(targetRange, aboveAverage: false, equalAverage: EqualAverage.IsPresent, standardDeviation: StandardDeviation, stopIfTrue: StopIfTrue.IsPresent);
                 break;
             case "ContainsText":
-                sheet.AddConditionalTextRule(targetRange, ConditionalFormatValues.ContainsText, RequireText());
+                sheet.AddConditionalTextRule(targetRange, ExcelConditionalFormatType.ContainsText, RequireText());
                 break;
             case "NotContainsText":
-                sheet.AddConditionalTextRule(targetRange, ConditionalFormatValues.NotContainsText, RequireText());
+                sheet.AddConditionalTextRule(targetRange, ExcelConditionalFormatType.NotContainsText, RequireText());
                 break;
             case "BeginsWith":
-                sheet.AddConditionalTextRule(targetRange, ConditionalFormatValues.BeginsWith, RequireText());
+                sheet.AddConditionalTextRule(targetRange, ExcelConditionalFormatType.BeginsWith, RequireText());
                 break;
             case "EndsWith":
-                sheet.AddConditionalTextRule(targetRange, ConditionalFormatValues.EndsWith, RequireText());
+                sheet.AddConditionalTextRule(targetRange, ExcelConditionalFormatType.EndsWith, RequireText());
                 break;
             case "ContainsBlanks":
                 sheet.AddConditionalBlanksRule(targetRange, containsBlanks: true, stopIfTrue: StopIfTrue.IsPresent);
@@ -216,7 +216,7 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
                 {
                     throw new PSArgumentException("TimePeriod is required for time-period conditional formatting rules.", nameof(TimePeriod));
                 }
-                if (!OpenXmlValueParser.TryParse<TimePeriodValues>(TimePeriod!, out var period))
+                if (!OpenXmlValueParser.TryParse<ExcelConditionalTimePeriod>(TimePeriod!, out var period))
                 {
                     throw new PSArgumentException($"Unknown conditional formatting time period '{TimePeriod}'.", nameof(TimePeriod));
                 }

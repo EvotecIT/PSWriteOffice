@@ -129,7 +129,7 @@ Describe 'PowerPoint cmdlets' {
             Where-Object { $null -ne $_ } |
             Select-Object -First 1
         $modeType = [AppDomain]::CurrentDomain.GetAssemblies() |
-            ForEach-Object { $_.GetType('OfficeIMO.Drawing.DocumentPersistenceMode', $false) } |
+            ForEach-Object { $_.GetType('OfficeIMO.DocumentPersistenceMode', $false) } |
             Where-Object { $null -ne $_ } |
             Select-Object -First 1
         $options = [Activator]::CreateInstance($optionsType)
@@ -349,11 +349,11 @@ Describe 'PowerPoint cmdlets' {
 
         $layouts = Get-OfficePowerPointLayout -Presentation $presentation
         $layouts.Count | Should -BeGreaterThan 0
-        $layoutType = $layouts | Where-Object { $_.Type } | Select-Object -First 1
+        $layoutType = $layouts | Where-Object { $_.LayoutType } | Select-Object -First 1
         if ($layoutType) {
             $layoutMaster = $layoutType.MasterIndex
             $layoutIndex = $layoutType.LayoutIndex
-            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.Type -Master $layoutType.MasterIndex
+            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.LayoutType -Master $layoutType.MasterIndex
         } elseif ($layouts[0].Name) {
             $layoutMaster = $layouts[0].MasterIndex
             $layoutIndex = $layouts[0].LayoutIndex
@@ -908,11 +908,11 @@ Describe 'PowerPoint cmdlets' {
         $layouts = Get-OfficePowerPointLayout -Presentation $presentation
         $layouts.Count | Should -BeGreaterThan 0
 
-        $layoutType = $layouts | Where-Object { $_.Type } | Select-Object -First 1
+        $layoutType = $layouts | Where-Object { $_.LayoutType } | Select-Object -First 1
         if ($layoutType) {
             $layoutMaster = $layoutType.MasterIndex
             $layoutIndex = $layoutType.LayoutIndex
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.Type -Master $layoutType.MasterIndex
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.LayoutType -Master $layoutType.MasterIndex
         } elseif ($layouts[0].Name) {
             $layoutMaster = $layouts[0].MasterIndex
             $layoutIndex = $layouts[0].LayoutIndex
@@ -928,7 +928,7 @@ Describe 'PowerPoint cmdlets' {
 
         $layoutPlaceholder = $layoutPlaceholders | Where-Object { $_.PlaceholderType } | Select-Object -First 1
         if ($layoutPlaceholder) {
-            $layoutPlaceholderType = $layoutPlaceholder.PlaceholderType.Value
+            $layoutPlaceholderType = $layoutPlaceholder.PlaceholderType.ToString()
             $boundsBox = Set-OfficePowerPointLayoutPlaceholderBounds -Presentation $presentation -Master $layoutMaster -Layout $layoutIndex -PlaceholderType $layoutPlaceholderType -Index $layoutPlaceholder.PlaceholderIndex -Left 48 -Top 36 -Width 620 -Height 180 -PassThru
             $boundsBox.LeftPoints | Should -Be 48
             $boundsBox.TopPoints | Should -Be 36
@@ -1064,7 +1064,7 @@ Describe 'PowerPoint cmdlets' {
         Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Transition Demo' | Out-Null
 
         $updatedSlide = $slide | Set-OfficePowerPointSlideTransition -Transition Fade
-        $fadeTransition = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.PowerPoint' -TypeName 'OfficeIMO.PowerPoint.SlideTransition' -Name 'Fade' -CommandName 'New-OfficePowerPoint'
+        $fadeTransition = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.PowerPoint' -TypeName 'OfficeIMO.PowerPoint.PowerPointSlideTransition' -Name 'Fade' -CommandName 'New-OfficePowerPoint'
         $updatedSlide.Transition | Should -Be $fadeTransition
 
         $slideSize = Set-OfficePowerPointSlideSize -Presentation $presentation -WidthCm 25.4 -HeightCm 14.0
@@ -1139,11 +1139,12 @@ Describe 'PowerPoint cmdlets' {
                 $layoutPlaceholders.Count | Should -BeGreaterThan 0
                 $layoutPlaceholder = $layoutPlaceholders | Where-Object { $_.PlaceholderType } | Select-Object -First 1
                 if ($layoutPlaceholder) {
-                    $placeholder = Get-OfficePowerPointPlaceholder -PlaceholderType $layoutPlaceholder.PlaceholderType.Value -Index $layoutPlaceholder.PlaceholderIndex
+                    $placeholderType = $layoutPlaceholder.PlaceholderType.ToString()
+                    $placeholder = Get-OfficePowerPointPlaceholder -PlaceholderType $placeholderType -Index $layoutPlaceholder.PlaceholderIndex
                     if ($placeholder -and ((
-                            $layoutPlaceholder.PlaceholderType.Value -eq [DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title
+                            $placeholderType -eq 'Title'
                         ) -or (
-                            $layoutPlaceholder.PlaceholderType.Value -eq [DocumentFormat.OpenXml.Presentation.PlaceholderValues]::CenteredTitle
+                            $placeholderType -eq 'CenteredTitle'
                         ))) {
                         $placeholder | Should -Not -BeNullOrEmpty
                         $placeholder.Text | Should -Be 'DSL Slide'
@@ -1273,8 +1274,8 @@ Describe 'PowerPoint cmdlets' {
         Set-OfficePowerPointThemeFonts -Presentation $presentation -MajorLatin 'Aptos' -MinorLatin 'Calibri' -AllMasters
         Set-OfficePowerPointThemeName -Presentation $presentation -Name 'Contoso Theme' -AllMasters
 
-        if ($alternativeLayout.Type) {
-            $slide | Set-OfficePowerPointSlideLayout -LayoutType $alternativeLayout.Type -Master $alternativeLayout.MasterIndex | Out-Null
+        if ($alternativeLayout.LayoutType) {
+            $slide | Set-OfficePowerPointSlideLayout -LayoutType $alternativeLayout.LayoutType -Master $alternativeLayout.MasterIndex | Out-Null
         } elseif ($alternativeLayout.Name) {
             $slide | Set-OfficePowerPointSlideLayout -LayoutName $alternativeLayout.Name -Master $alternativeLayout.MasterIndex | Out-Null
         } else {

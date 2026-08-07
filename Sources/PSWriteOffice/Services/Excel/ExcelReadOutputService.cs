@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Management.Automation;
 using OfficeIMO.Excel;
@@ -19,21 +20,21 @@ internal static class ExcelReadOutputService
         };
     }
 
-    public static ExcelSheetReader ResolveSheetReader(ExcelDocumentReader reader, string? sheetName, int? sheetIndex)
+    public static void ConfigureSelection(
+        ExcelReadOptions options,
+        string? sheetName,
+        int? sheetIndex,
+        string? a1Range,
+        bool headersInFirstRow)
     {
-        if (reader == null)
+        if (options == null)
         {
-            throw new ArgumentNullException(nameof(reader));
+            throw new ArgumentNullException(nameof(options));
         }
 
         if (!string.IsNullOrWhiteSpace(sheetName) && sheetIndex.HasValue)
         {
             throw new PSArgumentException("Specify either -Sheet or -SheetIndex, but not both.");
-        }
-
-        if (!string.IsNullOrWhiteSpace(sheetName))
-        {
-            return reader.GetSheet(sheetName!);
         }
 
         if (sheetIndex.HasValue)
@@ -43,15 +44,45 @@ internal static class ExcelReadOutputService
                 throw new ArgumentOutOfRangeException(nameof(sheetIndex), "SheetIndex must be 0 or greater.");
             }
 
-            return reader.GetSheet(sheetIndex.Value + 1);
         }
 
-        if (reader.SheetCount == 0)
+        options.SheetName = string.IsNullOrWhiteSpace(sheetName) ? null : sheetName;
+        options.SheetIndex = sheetIndex;
+        options.A1Range = string.IsNullOrWhiteSpace(a1Range) ? null : a1Range;
+        options.HasHeaderRow = headersInFirstRow;
+    }
+
+    public static DataTable ReadCurrentResultAsDataTable(DbDataReader reader, string? tableName = null)
+    {
+        if (reader == null)
         {
-            throw new InvalidOperationException("Workbook contains no worksheets.");
+            throw new ArgumentNullException(nameof(reader));
         }
 
-        return reader.GetSheet(1);
+        var table = new DataTable(tableName ?? string.Empty)
+        {
+            Locale = CultureInfo.InvariantCulture
+        };
+
+        for (var columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
+        {
+            var columnType = reader.GetFieldType(columnIndex);
+            if (columnType == typeof(DBNull) || columnType == typeof(void))
+            {
+                columnType = typeof(object);
+            }
+
+            table.Columns.Add(reader.GetName(columnIndex), columnType);
+        }
+
+        while (reader.Read())
+        {
+            var values = new object[reader.FieldCount];
+            reader.GetValues(values);
+            table.Rows.Add(values);
+        }
+
+        return table;
     }
 
     public static void WriteOutput(

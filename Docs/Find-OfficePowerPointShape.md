@@ -11,12 +11,12 @@ Finds PowerPoint shapes by text, name, kind, or slide.
 ## SYNTAX
 ### PresentationText (Default)
 ```powershell
-Find-OfficePowerPointShape [[-Text] <string>] -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <int>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Find-OfficePowerPointShape [[-Text] <string>] -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <Int32>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
 ```
 
 ### PresentationRegex
 ```powershell
-Find-OfficePowerPointShape [-Pattern] <string> -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <int>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Find-OfficePowerPointShape [-Pattern] <string> -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <Int32>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
 ```
 
 ### SlideText
@@ -74,14 +74,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Index
 Optional zero-based slide index when reading from a presentation.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: PresentationText, PresentationRegex
 Aliases: None
 Possible values:
@@ -90,7 +90,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Kind
@@ -106,7 +106,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -122,7 +122,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Pattern
@@ -138,7 +138,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Presentation
@@ -154,7 +154,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShapeIndex
@@ -170,7 +170,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Slide
@@ -186,7 +186,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -202,7 +202,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -210,12 +210,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.PowerPoint.PowerPointPresentation
-OfficeIMO.PowerPoint.PowerPointSlide`
+- `OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.PowerPoint.PowerPointSlide`
 
 ## OUTPUTS
 
-- `PSWriteOffice.Services.PowerPoint.PowerPointShapeInfo` — PowerShell-friendly description of a PowerPoint shape.
+- `PSWriteOffice.Services.PowerPoint.PowerPointShapeInfo`: PowerShell-friendly description of a PowerPoint shape.
 
 ## RELATED LINKS
 

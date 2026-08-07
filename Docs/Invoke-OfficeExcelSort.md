@@ -16,12 +16,12 @@ Invoke-OfficeExcelSort [-Header] <string> [-Descending] [-PassThru] [<CommonPara
 
 ### DocumentSingle
 ```powershell
-Invoke-OfficeExcelSort [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-Descending] [-PassThru] [<CommonParameters>]
+Invoke-OfficeExcelSort [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Descending] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentOrder
 ```powershell
-Invoke-OfficeExcelSort -Document <ExcelDocument> -Order <hashtable> [-Sheet <string>] [-SheetIndex <int>] [-PassThru] [<CommonParameters>]
+Invoke-OfficeExcelSort -Document <ExcelDocument> -Order <hashtable> [-Sheet <string>] [-SheetIndex <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ### ContextOrder
@@ -63,7 +63,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -79,7 +79,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Header
@@ -95,7 +95,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Order
@@ -111,7 +111,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -127,7 +127,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -143,14 +143,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: DocumentSingle, DocumentOrder
 Aliases: None
 Possible values:
@@ -159,7 +159,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -171,7 +171,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

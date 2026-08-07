@@ -388,6 +388,7 @@ Describe 'Word DSL surface' {
         )
 
         New-OfficeWord -Path $path {
+            WordTableOfContents -Style Template1
             WordSection {
                 WordParagraph { WordText 'Alias smoke' }
                 WordList {
@@ -401,6 +402,39 @@ Describe 'Word DSL surface' {
         }
 
         Test-Path $path | Should -BeTrue
+        (Get-Command WordNew).ResolvedCommandName | Should -Be 'New-OfficeWord'
+        (Get-Command WordCheckBox).ResolvedCommandName | Should -Be 'Add-OfficeWordCheckBox'
+        (Get-Command WordDatePicker).ResolvedCommandName | Should -Be 'Add-OfficeWordDatePicker'
+        (Get-Command WordDropDownList).ResolvedCommandName | Should -Be 'Add-OfficeWordDropDownList'
+        (Get-Command WordTableCondition).ResolvedCommandName | Should -Be 'Add-OfficeWordTableCondition'
+        (Get-Command WordTableOfContents).ResolvedCommandName | Should -Be 'Add-OfficeWordTableOfContents'
+        (Get-Command WordSection).ResolvedCommandName | Should -Be 'Add-OfficeWordSection'
+    }
+
+    It 'creates multiple continuous sections from a PowerShell-friendly break type' {
+        $path = Join-Path $TestDrive 'DslContinuousSections.docx'
+
+        New-OfficeWord -Path $path {
+            1..8 | ForEach-Object {
+                Add-OfficeWordSection {
+                    Add-OfficeWordParagraph -Text "Section $_"
+                } -BreakType Continuous
+            }
+        }
+
+        $document = Get-OfficeWord -Path $path -ReadOnly
+        try {
+            $document.Sections.Count | Should -Be 8
+        } finally {
+            $document.Dispose()
+        }
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+        $continuousBreaks = $documentXml.SelectNodes("//w:sectPr/w:type[@w:val='continuous']", $namespaceManager)
+
+        @($continuousBreaks).Count | Should -Be 7
     }
 
     It 'supports paragraphs, lists, images, and nested tables inside table cells' {
@@ -536,9 +570,13 @@ Describe 'Word DSL surface' {
         $document = Get-OfficeWord -Path $path -ReadOnly
         try {
             $document.Tables.Count | Should -Be 3
-            $document.Tables[0].LayoutMode.ToString() | Should -Be 'AutoFitToContents'
-            $document.Tables[1].LayoutMode.ToString() | Should -Be 'AutoFitToWindow'
-            $document.Tables[2].LayoutType.Value | Should -Be 'fixed'
+            $document.Tables[0].LayoutMode.ToString() | Should -Be 'AutoFit'
+            $document.Tables[0].WidthType.ToString() | Should -Be 'Auto'
+            $document.Tables[0].Width | Should -Be 0
+            $document.Tables[1].LayoutMode.ToString() | Should -Be 'Fixed'
+            $document.Tables[1].WidthType.ToString() | Should -Be 'Pct'
+            $document.Tables[1].Width | Should -Be 5000
+            $document.Tables[2].LayoutMode.ToString() | Should -Be 'Fixed'
         } finally {
             $document.Dispose()
         }
@@ -1102,7 +1140,7 @@ Describe 'Word DSL surface' {
             $document.CoverPageProperties.Abstract | Should -Be 'Executive summary'
             $document.CoverPageProperties.CompanyEmail | Should -Be 'reports@example.test'
             $document.Sections[0].PageSettings.PageSize.ToString() | Should -Be 'A4'
-            $document.Sections[0].PageOrientation.Value | Should -Be 'landscape'
+            $document.Sections[0].PageOrientation.ToString() | Should -Be 'Landscape'
             $document.Sections[0].Margins.Type.ToString() | Should -Be 'Narrow'
             $document.Sections[0].ColumnCount | Should -Be 2
             $document.Sections[0].ColumnsSpace | Should -Be 720
@@ -1613,7 +1651,7 @@ Describe 'Word DSL surface' {
 
             $cell.ShadingFillColorHex | Should -Be 'DDEEFF'
             $cell.Width | Should -Be 2400
-            $cell.WidthType.Value | Should -Be 'dxa'
+            $cell.WidthType.ToString() | Should -Be 'Dxa'
         } finally {
             $document.Dispose()
         }
@@ -1762,7 +1800,7 @@ Describe 'Word DSL surface' {
         try {
             $styledParagraph = $document.Paragraphs | Where-Object Text -EQ 'Executive Summary' | Select-Object -First 1
             $styledParagraph.Style.ToString() | Should -Be 'Heading2'
-            $styledParagraph.ParagraphAlignment.Value | Should -Be 'center'
+            $styledParagraph.ParagraphAlignment.ToString() | Should -Be 'Center'
             $styledParagraph.LineSpacingBeforePoints | Should -Be 6
             $styledParagraph.LineSpacingAfterPoints | Should -Be 12
             $styledParagraph.IndentationBeforePoints | Should -Be 18
@@ -1776,11 +1814,11 @@ Describe 'Word DSL surface' {
             $styledText.Text | Should -Be 'Styled text'
             $styledText.Bold | Should -BeTrue
             $styledText.Italic | Should -BeTrue
-            $styledText.Underline.Value | Should -Be 'single'
+            $styledText.Underline.ToString() | Should -Be 'Single'
             $styledText.ColorHex | Should -Be 'c00000'
             $styledText.FontSize | Should -Be 14
             $styledText.FontFamily | Should -Be 'Aptos'
-            $styledText.Highlight.Value | Should -Be 'yellow'
+            $styledText.Highlight.ToString() | Should -Be 'Yellow'
             $styledText.CapsStyle.ToString() | Should -Be 'SmallCaps'
             $styledText.Strike | Should -BeTrue
             $styledText.CharacterStyle.ToString() | Should -Be 'Heading2Char'

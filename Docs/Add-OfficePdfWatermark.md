@@ -11,12 +11,12 @@ Adds a generated-document text watermark.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficePdfWatermark [-Text] <string> [-FontSize <double>] [-Opacity <double>] [-RotationAngle <double>] [-Color <string>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfWatermark [-Text] <string> [-FontSize <Double>] [-Opacity <Double>] [-RotationAngle <Double>] [-Color <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficePdfWatermark [-Text] <string> -Document <PdfDocument> [-FontSize <double>] [-Opacity <double>] [-RotationAngle <double>] [-Color <string>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfWatermark [-Text] <string> -Document <PdfDocument> [-FontSize <Double>] [-Opacity <Double>] [-RotationAngle <Double>] [-Color <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,7 +50,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -66,14 +66,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSize
 Watermark font size.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -82,14 +82,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Opacity
 Watermark opacity, 0 through 1.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -98,7 +98,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -114,14 +114,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RotationAngle
 Watermark rotation angle.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -130,7 +130,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -146,7 +146,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

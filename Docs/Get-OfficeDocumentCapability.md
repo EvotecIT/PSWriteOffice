@@ -42,7 +42,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExcludeCustom
@@ -58,7 +58,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Manifest
@@ -74,11 +74,11 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Reader
-{{ Fill Reader Description }}
+Optional immutable OfficeIMO reader with caller-configured handlers and processors.
 
 ```yaml
 Type: OfficeDocumentReader
@@ -90,7 +90,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -102,8 +102,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Reader.ReaderHandlerCapability
-OfficeIMO.Reader.ReaderCapabilityManifest`
+- `OfficeIMO.Reader.ReaderHandlerCapability`
+- `OfficeIMO.Reader.ReaderCapabilityManifest`
 
 ## RELATED LINKS
 

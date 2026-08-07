@@ -16,17 +16,17 @@ Set-OfficeExcelInternalLinksByHeader [-Header] <string> [-DestinationSheetScript
 
 ### DocumentUsedRange
 ```powershell
-Set-OfficeExcelInternalLinksByHeader [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-DestinationSheetScript <scriptblock>] [-DisplayScript <scriptblock>] [-TargetAddress <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelInternalLinksByHeader [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-DestinationSheetScript <scriptblock>] [-DisplayScript <scriptblock>] [-TargetAddress <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentTable
 ```powershell
-Set-OfficeExcelInternalLinksByHeader [-Header] <string> -Document <ExcelDocument> -TableName <string> [-Sheet <string>] [-SheetIndex <int>] [-DestinationSheetScript <scriptblock>] [-DisplayScript <scriptblock>] [-TargetAddress <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelInternalLinksByHeader [-Header] <string> -Document <ExcelDocument> -TableName <string> [-Sheet <string>] [-SheetIndex <Int32>] [-DestinationSheetScript <scriptblock>] [-DisplayScript <scriptblock>] [-TargetAddress <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ### DocumentRange
 ```powershell
-Set-OfficeExcelInternalLinksByHeader [-Header] <string> -Document <ExcelDocument> -Range <string> [-Sheet <string>] [-SheetIndex <int>] [-DestinationSheetScript <scriptblock>] [-DisplayScript <scriptblock>] [-TargetAddress <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelInternalLinksByHeader [-Header] <string> -Document <ExcelDocument> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-DestinationSheetScript <scriptblock>] [-DisplayScript <scriptblock>] [-TargetAddress <string>] [-NoStyle] [-PassThru] [<CommonParameters>]
 ```
 
 ### ContextTable
@@ -66,7 +66,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DisplayScript
@@ -82,7 +82,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -98,7 +98,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Header
@@ -114,7 +114,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoStyle
@@ -130,7 +130,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -146,7 +146,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Range
@@ -162,7 +162,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -178,14 +178,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: DocumentUsedRange, DocumentTable, DocumentRange
 Aliases: None
 Possible values:
@@ -194,7 +194,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TableName
@@ -210,7 +210,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TargetAddress
@@ -226,7 +226,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

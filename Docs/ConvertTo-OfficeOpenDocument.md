@@ -67,7 +67,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ExcelOptions
@@ -83,7 +83,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FailOnLoss
@@ -99,7 +99,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OutputPath
@@ -115,7 +115,7 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -131,7 +131,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PowerPointOptions
@@ -147,7 +147,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PowerPointPresentation
@@ -163,7 +163,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WordDocument
@@ -179,7 +179,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WordOptions
@@ -195,7 +195,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -203,15 +203,15 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.Word.WordDocument
-OfficeIMO.Excel.ExcelDocument
-OfficeIMO.PowerPoint.PowerPointPresentation`
+- `OfficeIMO.Word.WordDocument`
+- `OfficeIMO.Excel.ExcelDocument`
+- `OfficeIMO.PowerPoint.PowerPointPresentation`
 
 ## OUTPUTS
 
-- `OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdtDocument, OfficeIMO.OpenDocument, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null]]
-OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdsDocument, OfficeIMO.OpenDocument, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null]]
-OfficeIMO.OpenDocument.OdfConversionResult`1[[OfficeIMO.OpenDocument.OdpPresentation, OfficeIMO.OpenDocument, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null]]`
+- `OfficeIMO.OpenDocument.OdfConversionResult[OfficeIMO.OpenDocument.OdtDocument]`
+- `OfficeIMO.OpenDocument.OdfConversionResult[OfficeIMO.OpenDocument.OdsDocument]`
+- `OfficeIMO.OpenDocument.OdfConversionResult[OfficeIMO.OpenDocument.OdpPresentation]`
 
 ## RELATED LINKS
 

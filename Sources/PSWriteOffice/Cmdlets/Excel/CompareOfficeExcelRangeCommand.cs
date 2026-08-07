@@ -96,9 +96,9 @@ public sealed class CompareOfficeExcelRangeCommand : PSCmdlet
 
         var differences = leftDocument.CompareRanges(
             leftSheet,
-            string.IsNullOrWhiteSpace(LeftRange) ? leftSheet.GetUsedRangeA1() : LeftRange!,
+            string.IsNullOrWhiteSpace(LeftRange) ? leftSheet.UsedRangeA1 : LeftRange!,
             rightSheet,
-            string.IsNullOrWhiteSpace(RightRange) ? rightSheet.GetUsedRangeA1() : RightRange!,
+            string.IsNullOrWhiteSpace(RightRange) ? rightSheet.UsedRangeA1 : RightRange!,
             options);
 
         WriteObject(differences, enumerateCollection: true);

@@ -11,12 +11,12 @@ Adds inline text to the current paragraph.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficeWordText [-Text] <string[]> [-Bold] [-Italic] [-Underline <UnderlineValues>] [-Color <string>] [-Strike] [-FontSize <int>] [-FontName <string>] [<CommonParameters>]
+Add-OfficeWordText [-Text] <string[]> [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Int32>] [-FontName <string>] [<CommonParameters>]
 ```
 
 ### Run
 ```powershell
-Add-OfficeWordText -Run <Object[]> [-Bold] [-Italic] [-Underline <UnderlineValues>] [-Color <string>] [-Strike] [-FontSize <int>] [-FontName <string>] [<CommonParameters>]
+Add-OfficeWordText -Run <Object[]> [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Int32>] [-FontName <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Color
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontName
@@ -78,14 +78,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSize
 Font size in points.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Text, Run
 Aliases: None
 Possible values:
@@ -94,7 +94,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Italic
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Run
@@ -126,7 +126,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Strike
@@ -142,7 +142,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -158,23 +158,23 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Underline
 Optional underline style.
 
 ```yaml
-Type: Nullable`1
+Type: WordUnderlineStyle
 Parameter Sets: Text, Run
 Aliases: None
-Possible values:
+Possible values: Single, Words, Double, Thick, Dotted, DottedHeavy, Dash, DashedHeavy, DashLong, DashLongHeavy, DotDash, DashDotHeavy, DotDotDash, DashDotDotHeavy, Wave, WavyHeavy, WavyDouble, None
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -186,7 +186,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

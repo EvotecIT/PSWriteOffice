@@ -11,7 +11,7 @@ Enumerates slides or retrieves a specific slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePowerPointSlide [-Presentation <PowerPointPresentation>] [-Index <int>] [<CommonParameters>]
+Get-OfficePowerPointSlide [-Presentation <PowerPointPresentation>] [-Index <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,7 +21,7 @@ Supports pipeline-friendly iteration over Slides or direct index selection.
 
 ### EXAMPLE 1
 ```powershell
-PS> Get-OfficePowerPointSlide -Presentation $ppt | ForEach-Object { $_.GetPlaceholder([DocumentFormat.OpenXml.Presentation.PlaceholderValues]::Title).Text }
+PS> Get-OfficePowerPointSlide -Presentation $ppt | Get-OfficePowerPointPlaceholder -PlaceholderType Title | Select-Object -ExpandProperty Text
 ```
 
 Streams each slide so you can read the title placeholder text.
@@ -39,7 +39,7 @@ Uses the current DSL presentation context.
 Optional zero-based index; omit to enumerate all slides.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -48,7 +48,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Presentation
@@ -64,7 +64,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -76,7 +76,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

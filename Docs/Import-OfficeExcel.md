@@ -11,17 +11,17 @@ Imports rows from an Excel workbook as PowerShell objects.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Import-OfficeExcel [-Path] <string> [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
+Import-OfficeExcel [-Path] <string> [-WorksheetName <string>] [-SheetIndex <Int32>] [-AllSheets] [-Range <string>] [-StartRow <Int32>] [-EndRow <Int32>] [-StartColumn <Int32>] [-EndColumn <Int32>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
 ```
 
 ### Uri
 ```powershell
-Import-OfficeExcel [-Uri] <uri> [-AllowHttp] [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
+Import-OfficeExcel [-Uri] <uri> [-AllowHttp] [-WorksheetName <string>] [-SheetIndex <Int32>] [-AllSheets] [-Range <string>] [-StartRow <Int32>] [-EndRow <Int32>] [-StartColumn <Int32>] [-EndColumn <Int32>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Import-OfficeExcel -Document <ExcelDocument> [-WorksheetName <string>] [-SheetIndex <int>] [-AllSheets] [-Range <string>] [-StartRow <int>] [-EndRow <int>] [-StartColumn <int>] [-EndColumn <int>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
+Import-OfficeExcel -Document <ExcelDocument> [-WorksheetName <string>] [-SheetIndex <Int32>] [-AllSheets] [-Range <string>] [-StartRow <Int32>] [-EndRow <Int32>] [-StartColumn <Int32>] [-EndColumn <Int32>] [-NoHeader] [-NumericAsDecimal] [-FormulaMode <string>] [-CultureName <string>] [-AsHashtable] [-AsDataTable] [-AsDataReader] [-ByColumn] [-SchemaSampleSize <int>] [-ChunkRows <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -71,7 +71,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AllSheets
@@ -87,7 +87,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AsDataReader
@@ -103,7 +103,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AsDataTable
@@ -119,7 +119,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AsHashtable
@@ -135,7 +135,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ByColumn
@@ -151,7 +151,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ChunkRows
@@ -167,7 +167,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CultureName
@@ -183,7 +183,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -199,14 +199,14 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -EndColumn
 Ending column for an explicit rectangular range.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Uri, Document
 Aliases: None
 Possible values:
@@ -215,14 +215,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -EndRow
 Ending row for an explicit rectangular range.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Uri, Document
 Aliases: None
 Possible values:
@@ -231,7 +231,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FormulaMode
@@ -247,7 +247,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoHeader
@@ -263,7 +263,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NumericAsDecimal
@@ -279,7 +279,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -295,7 +295,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Range
@@ -311,7 +311,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SchemaSampleSize
@@ -327,14 +327,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Zero-based worksheet index to read.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Uri, Document
 Aliases: None
 Possible values:
@@ -343,14 +343,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StartColumn
 Starting column for an explicit rectangular range.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Uri, Document
 Aliases: None
 Possible values:
@@ -359,14 +359,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StartRow
 Starting row for an explicit rectangular range.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Uri, Document
 Aliases: None
 Possible values:
@@ -375,7 +375,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Uri
@@ -391,7 +391,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WorksheetName
@@ -407,7 +407,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -415,14 +415,14 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `System.String
-System.Uri
-OfficeIMO.Excel.ExcelDocument
-System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]`
+- `System.String`
+- `System.Uri`
+- `OfficeIMO.Excel.ExcelDocument`
+- `Int32`
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

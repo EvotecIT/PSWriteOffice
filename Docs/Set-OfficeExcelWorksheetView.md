@@ -11,12 +11,12 @@ Sets worksheet view options such as gridlines, direction, zoom, and view mode.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelWorksheetView [-ShowGridlines] [-HideGridlines] [-RightToLeft] [-LeftToRight] [-ZoomScale <uint>] [-ZoomScaleNormal <uint>] [-View <ExcelWorksheetViewKind>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelWorksheetView [-ShowGridlines] [-HideGridlines] [-RightToLeft] [-LeftToRight] [-ZoomScale <UInt32>] [-ZoomScaleNormal <UInt32>] [-View <ExcelWorksheetViewKind>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelWorksheetView -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <int>] [-ShowGridlines] [-HideGridlines] [-RightToLeft] [-LeftToRight] [-ZoomScale <uint>] [-ZoomScaleNormal <uint>] [-View <ExcelWorksheetViewKind>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelWorksheetView -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-ShowGridlines] [-HideGridlines] [-RightToLeft] [-LeftToRight] [-ZoomScale <UInt32>] [-ZoomScaleNormal <UInt32>] [-View <ExcelWorksheetViewKind>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -HideGridlines
@@ -62,7 +62,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LeftToRight
@@ -78,7 +78,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -94,7 +94,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RightToLeft
@@ -110,7 +110,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -126,14 +126,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using Document.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Document
 Aliases: None
 Possible values:
@@ -142,7 +142,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShowGridlines
@@ -158,30 +158,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -View
 Worksheet view mode.
 
 ```yaml
-Type: Nullable`1
+Type: ExcelWorksheetViewKind
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: Normal, PageBreakPreview, PageLayout
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ZoomScale
 Active worksheet zoom percentage. Excel supports values from 10 to 400.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -190,14 +190,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ZoomScaleNormal
 Normal-view worksheet zoom percentage. Excel supports values from 10 to 400.
 
 ```yaml
-Type: Nullable`1
+Type: UInt32
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:
@@ -206,7 +206,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -218,7 +218,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

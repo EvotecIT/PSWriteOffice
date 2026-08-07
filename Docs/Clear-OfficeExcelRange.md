@@ -11,17 +11,17 @@ Clears values, formulas, styles, and range metadata from an Excel worksheet rang
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Clear-OfficeExcelRange -Range <string> [-Sheet <string>] [-SheetIndex <int>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelRange -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Clear-OfficeExcelRange [-InputPath] <string> -Range <string> [-Sheet <string>] [-SheetIndex <int>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelRange [-InputPath] <string> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Clear-OfficeExcelRange -Document <ExcelDocument> -Range <string> [-Sheet <string>] [-SheetIndex <int>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelRange -Document <ExcelDocument> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,7 +53,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Comments
@@ -69,7 +69,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ConditionalFormatting
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Contents
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DataValidations
@@ -117,7 +117,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -133,7 +133,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Formulas
@@ -149,7 +149,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Hyperlinks
@@ -165,7 +165,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -181,7 +181,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Merges
@@ -197,7 +197,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Range
@@ -213,7 +213,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -229,14 +229,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) to update. Defaults to the current DSL sheet or the first workbook sheet.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -245,7 +245,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sparklines
@@ -261,7 +261,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Styles
@@ -277,7 +277,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Values
@@ -293,7 +293,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -305,7 +305,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Packaging;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -61,7 +60,7 @@ public sealed class AddOfficeExcelTimelineCommand : PSCmdlet
             return;
         }
 
-        ExtendedPart part = workbook.Document.AddWorkbookTimelineCache(new ExcelTimelineCacheOptions
+        ExcelPackagePartInfo part = workbook.Document.AddWorkbookTimelineCache(new ExcelTimelineCacheOptions
         {
             Name = Name,
             SourceName = SourceName,

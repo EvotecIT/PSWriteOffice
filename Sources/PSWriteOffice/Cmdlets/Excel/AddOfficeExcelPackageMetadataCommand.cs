@@ -1,6 +1,5 @@
 using System;
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Packaging;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
 
@@ -62,7 +61,7 @@ public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet
         var document = workbook.Document;
 
         string? sheetName = null;
-        OpenXmlPart part;
+        ExcelPackagePartInfo part;
         if (string.Equals(Kind, "QueryTable", StringComparison.OrdinalIgnoreCase))
         {
             sheetName = ExcelWorkbookCommandService.ResolveSheetNameOrCurrent(this, document, ParameterSetName, WorksheetName);

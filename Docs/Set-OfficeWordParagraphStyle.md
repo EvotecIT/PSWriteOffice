@@ -11,7 +11,7 @@ Updates paragraph style, spacing, indentation, and pagination hints.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordParagraphStyle [[-Paragraph] <WordParagraph>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-Alignment <string>] [-CharacterAlignment <string>] [-IndentationBeforePoints <double>] [-IndentationAfterPoints <double>] [-IndentationFirstLinePoints <double>] [-IndentationHangingPoints <double>] [-LineSpacingPoints <double>] [-SpacingBeforePoints <double>] [-SpacingAfterPoints <double>] [-LineSpacingRule <string>] [-PageBreakBefore <bool>] [-KeepWithNext <bool>] [-KeepLinesTogether <bool>] [-AvoidWidowAndOrphan <bool>] [-TextDirection <string>] [-BiDi <bool>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordParagraphStyle [[-Paragraph] <WordParagraph>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-Alignment <string>] [-CharacterAlignment <string>] [-IndentationBeforePoints <Double>] [-IndentationAfterPoints <Double>] [-IndentationFirstLinePoints <Double>] [-IndentationHangingPoints <Double>] [-LineSpacingPoints <Double>] [-SpacingBeforePoints <Double>] [-SpacingAfterPoints <Double>] [-LineSpacingRule <string>] [-PageBreakBefore <Boolean>] [-KeepWithNext <Boolean>] [-KeepLinesTogether <Boolean>] [-AvoidWidowAndOrphan <Boolean>] [-TextDirection <string>] [-BiDi <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,14 +41,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AvoidWidowAndOrphan
 Enable widow and orphan control.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -57,14 +57,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BiDi
 Set or clear right-to-left paragraph layout.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -73,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CharacterAlignment
@@ -89,14 +89,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IndentationAfterPoints
 Indentation after the paragraph in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -105,14 +105,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IndentationBeforePoints
 Indentation before the paragraph in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -121,14 +121,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IndentationFirstLinePoints
 First-line indentation in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -137,14 +137,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IndentationHangingPoints
 Hanging indentation in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -153,14 +153,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -KeepLinesTogether
 Keep all paragraph lines together.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -169,14 +169,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -KeepWithNext
 Keep this paragraph with the next paragraph.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -185,14 +185,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineSpacingPoints
 Line spacing in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -201,7 +201,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineSpacingRule
@@ -217,14 +217,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PageBreakBefore
 Start the paragraph on a new page.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -233,7 +233,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Paragraph
@@ -249,7 +249,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -265,14 +265,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SpacingAfterPoints
 Line spacing after the paragraph in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -281,14 +281,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SpacingBeforePoints
 Line spacing before the paragraph in points.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -297,23 +297,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Style
 Paragraph style to apply.
 
 ```yaml
-Type: Nullable`1
+Type: WordParagraphStyles
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Normal, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Heading7, Heading8, Heading9, ListParagraph, Custom
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StyleId
@@ -329,7 +329,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TextDirection
@@ -345,7 +345,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq.Expressions;
 using System.Management.Automation;
 using System.Reflection;
@@ -51,6 +52,47 @@ internal sealed class CsvPowerShellRowWriter
             }
 
             cmdlet.WriteObject(psObj);
+        }
+    }
+
+    public void WriteDataReaderRows(DbDataReader reader, bool asHashtable, PSCmdlet cmdlet)
+    {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        var header = new string[reader.FieldCount];
+        for (var index = 0; index < header.Length; index++)
+        {
+            header[index] = reader.GetName(index);
+        }
+
+        var outputHeader = GetOutputHeader(header);
+        var prevalidated = _prevalidatedOutputProperties;
+        while (reader.Read())
+        {
+            if (asHashtable)
+            {
+                var values = new Dictionary<string, object?>(outputHeader.Length, StringComparer.OrdinalIgnoreCase);
+                for (var index = 0; index < outputHeader.Length; index++)
+                {
+                    var value = reader.GetValue(index);
+                    values.Add(outputHeader[index], value is DBNull ? null : value);
+                }
+
+                cmdlet.WriteObject(values);
+                continue;
+            }
+
+            var row = PowerShellObjectFactory.Create(outputHeader.Length);
+            for (var index = 0; index < outputHeader.Length; index++)
+            {
+                var value = reader.GetValue(index);
+                row.Properties.Add(new PSNoteProperty(outputHeader[index], value is DBNull ? null : value), prevalidated);
+            }
+
+            cmdlet.WriteObject(row);
         }
     }
 

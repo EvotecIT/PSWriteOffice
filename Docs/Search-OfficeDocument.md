@@ -16,7 +16,7 @@ Search-OfficeDocument [-InputObject] <OfficeDocumentReadResult> [-Query] <string
 
 ### Path
 ```powershell
-Search-OfficeDocument [-Path] <string[]> [-Query] <string> [-MatchCase] [-WholeWord] [-MaximumResults <int>] [-AllResults] [-Recurse] [-Extension <string[]>] [-MaxDocuments <int>] [-NoDocumentLimit] [-MaxStoreItems <int>] [-AllStoreItems] [-MaxDegreeOfParallelism <int>] [-IncludePageLocations] [-StopOnError] [-Reader <OfficeDocumentReader>] [<CommonParameters>]
+Search-OfficeDocument [-Path] <string[]> [-Query] <string> [-MatchCase] [-WholeWord] [-MaximumResults <int>] [-AllResults] [-Recurse] [-Extension <string[]>] [-MaxDocuments <Int32>] [-NoDocumentLimit] [-MaxStoreItems <Int32>] [-AllStoreItems] [-MaxDegreeOfParallelism <Int32>] [-IncludePageLocations] [-StopOnError] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,7 +53,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AllStoreItems
@@ -69,7 +69,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Extension
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludePageLocations
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputObject
@@ -117,7 +117,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MatchCase
@@ -133,14 +133,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxDegreeOfParallelism
 Maximum document reads in flight.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path
 Aliases: None
 Possible values:
@@ -149,14 +149,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxDocuments
 Maximum documents accepted in one search. The default is 500.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path
 Aliases: None
 Possible values:
@@ -165,7 +165,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaximumResults
@@ -181,14 +181,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxStoreItems
 Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path
 Aliases: None
 Possible values:
@@ -197,7 +197,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoDocumentLimit
@@ -213,7 +213,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -229,7 +229,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue, ByPropertyName)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Query
@@ -245,23 +245,7 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Reader
-Advanced immutable Reader configured by a .NET host or New-OfficeDocumentReader.
-
-```yaml
-Type: OfficeDocumentReader
-Parameter Sets: Path
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Recurse
@@ -277,7 +261,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StopOnError
@@ -293,7 +277,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WholeWord
@@ -309,7 +293,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -317,13 +301,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.Reader.OfficeDocumentReadResult
-System.String[]`
+- `OfficeIMO.Reader.OfficeDocumentReadResult`
+- `System.String[]`
 
 ## OUTPUTS
 
-- `OfficeIMO.Reader.OfficeDocumentSearchResult
-PSWriteOffice.Models.Reader.OfficeDocumentSearchMatch` — PowerShell-friendly occurrence returned by a path-based document search.
+- `OfficeIMO.Reader.OfficeDocumentSearchResult`
+- `PSWriteOffice.Models.Reader.OfficeDocumentSearchMatch`: PowerShell-friendly occurrence returned by a path-based document search.
 
 ## RELATED LINKS
 

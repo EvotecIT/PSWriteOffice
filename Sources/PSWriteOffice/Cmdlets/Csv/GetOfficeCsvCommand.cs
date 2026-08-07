@@ -176,10 +176,6 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
     [ValidateRange(0, long.MaxValue)]
     public long? MaxDecompressedBytes { get; set; }
 
-    /// <summary>Load mode controlling materialization.</summary>
-    [Parameter]
-    public CsvLoadMode Mode { get; set; } = CsvLoadMode.InMemory;
-
     /// <summary>Culture used for type conversions.</summary>
     [Parameter]
     public CultureInfo? Culture { get; set; }
@@ -262,7 +258,6 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
             RecognizeW3CFieldsHeader = RecognizeW3CFieldsHeader,
             DuplicateHeaderBehavior = DuplicateHeaderBehavior,
             ColumnCountMismatchPolicy = ColumnCountMismatchPolicy,
-            Mode = Mode,
             CompressionType = CompressionType,
             MaxDecompressedBytes = MaxDecompressedBytes,
             CancellationToken = _cancellation.Token,
@@ -312,11 +307,6 @@ public sealed class GetOfficeCsvCommand : PSCmdlet
         if (Encoding != null)
         {
             options.Encoding = Encoding;
-        }
-
-        if ((CollectParseErrors.IsPresent || ProgressInterval.HasValue) && options.Mode == CsvLoadMode.Stream)
-        {
-            options.Mode = CsvLoadMode.InMemory;
         }
 
         if (IsPathParameterSet())

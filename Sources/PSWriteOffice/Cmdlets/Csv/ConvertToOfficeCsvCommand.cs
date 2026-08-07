@@ -42,7 +42,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     private const string ParameterSetDocumentCulture = "DocumentCulture";
     private readonly CsvPowerShellObjectProjector _objectProjector = new();
     private CsvPowerShellLineWriter? _lineWriter;
-    private CsvObjectWriter? _csvWriter;
+    private CsvRowWriter? _csvWriter;
 
     /// <summary>CSV document to serialize.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentDelimiter)]
@@ -194,7 +194,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         return columns;
     }
 
-    private static void WriteDataTableRows(DataTable table, CsvObjectWriter writer, IReadOnlyList<string> columns)
+    private static void WriteDataTableRows(DataTable table, CsvRowWriter writer, IReadOnlyList<string> columns)
     {
         foreach (DataRow row in table.Rows)
         {
@@ -274,7 +274,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         return false;
     }
 
-    private CsvObjectWriter EnsureObjectWriter()
+    private CsvRowWriter EnsureObjectWriter()
     {
         if (_csvWriter != null)
         {
@@ -284,7 +284,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         var options = CreateSaveOptions();
         _objectProjector.UseCsvOptions(options);
         _lineWriter = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
-        _csvWriter = new CsvObjectWriter(_lineWriter, options);
+        _csvWriter = new CsvRowWriter(_lineWriter, options);
         return _csvWriter;
     }
 

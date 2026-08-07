@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Wordprocessing;
+using OfficeIMO;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -222,10 +223,10 @@ public sealed class SetOfficeWordPageSetupCommand : PSCmdlet
         }
     }
 
-    private PageOrientationValues ResolveOrientation()
+    private OfficePageOrientation ResolveOrientation()
     {
         return string.Equals(Orientation, "Landscape", StringComparison.OrdinalIgnoreCase)
-            ? PageOrientationValues.Landscape
-            : PageOrientationValues.Portrait;
+            ? OfficePageOrientation.Landscape
+            : OfficePageOrientation.Portrait;
     }
 }

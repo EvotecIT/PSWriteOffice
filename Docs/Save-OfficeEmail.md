@@ -40,23 +40,23 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Format
 Optional explicit output format. By default it is inferred from the filename.
 
 ```yaml
-Type: Nullable`1
+Type: EmailFileFormat
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Unknown, Eml, OutlookMsg, Tnef, Mbox, OutlookTemplate
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Options
@@ -72,7 +72,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -88,7 +88,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

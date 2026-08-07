@@ -11,7 +11,7 @@ Creates an immutable fully configured OfficeIMO document reader.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeDocumentReader [-ReaderAllOptions <ReaderAllOptions>] [-Processor <IOfficeDocumentProcessor[]>] [-OcrEngine <IOfficeOcrEngine>] [-TesseractOptions <TesseractOcrEngineOptions>] [-ProcessOcrOptions <ProcessOfficeOcrEngineOptions>] [-OcrOptions <OfficeDocumentOcrExecutionOptions>] [-UseTesseract] [-TesseractExecutablePath <string>] [-TesseractLanguage <string>] [-TesseractDataPath <string>] [-TesseractDpi <int>] [-TesseractTimeoutSeconds <int>] [-MaxStoreItems <int>] [-AllStoreItems] [-MaxConcurrentReads <int>] [-ProcessorFailureBehavior <OfficeDocumentProcessorFailureBehavior>] [<CommonParameters>]
+New-OfficeDocumentReader [-UseTesseract] [-TesseractExecutablePath <string>] [-TesseractLanguage <string>] [-TesseractDataPath <string>] [-TesseractDpi <Int32>] [-TesseractTimeoutSeconds <Int32>] [-MaxStoreItems <Int32>] [-AllStoreItems] [-MaxConcurrentReads <Int32>] [-ProcessorFailureBehavior <OfficeDocumentProcessorFailureBehavior>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,14 +41,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxConcurrentReads
 Maximum asynchronous reads allowed in flight.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -57,14 +57,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxStoreItems
 Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -73,71 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -OcrEngine
-Caller-provided OCR engine.
-
-```yaml
-Type: IOfficeOcrEngine
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -OcrOptions
-Optional OCR execution limits and merge behavior.
-
-```yaml
-Type: OfficeDocumentOcrExecutionOptions
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -ProcessOcrOptions
-Configure the generic JSON file-protocol OCR process adapter.
-
-```yaml
-Type: ProcessOfficeOcrEngineOptions
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -Processor
-Additional ordered processors to run after document extraction.
-
-```yaml
-Type: IOfficeDocumentProcessor[]
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ProcessorFailureBehavior
@@ -153,23 +89,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -ReaderAllOptions
-Advanced format-specific settings supplied by a .NET host.
-
-```yaml
-Type: ReaderAllOptions
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TesseractDataPath
@@ -185,14 +105,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TesseractDpi
 Optional input DPI passed to Tesseract.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -201,7 +121,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TesseractExecutablePath
@@ -217,7 +137,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TesseractLanguage
@@ -233,30 +153,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -TesseractOptions
-Configure the built-in Tesseract command-line OCR adapter.
-
-```yaml
-Type: TesseractOcrEngineOptions
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TesseractTimeoutSeconds
 Maximum Tesseract process duration in seconds. The default is 120.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -265,7 +169,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -UseTesseract
@@ -281,7 +185,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

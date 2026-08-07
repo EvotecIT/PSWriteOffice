@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 
 namespace PSWriteOffice.Services.Word;
@@ -114,7 +113,7 @@ internal sealed class WordDslContext : IDisposable
     public WordTableCell? CurrentTableCell => _scopes.OfType<WordTableCell>().FirstOrDefault();
     public WordList? CurrentList => _scopes.OfType<WordList>().FirstOrDefault();
 
-    public WordSection AcquireSection(SectionMarkValues? breakType = null)
+    public WordSection AcquireSection(WordSectionBreakType? breakType = null)
     {
         if (!_initialSectionConsumed && Document.Sections.Count > 0)
         {
@@ -123,7 +122,9 @@ internal sealed class WordDslContext : IDisposable
         }
 
         _initialSectionConsumed = true;
-        return Document.AddSection(breakType);
+        return breakType.HasValue
+            ? Document.AddSection(breakType.Value)
+            : Document.AddSection();
     }
 
     public WordSection RequireSection()

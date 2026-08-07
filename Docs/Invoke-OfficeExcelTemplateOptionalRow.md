@@ -11,17 +11,17 @@ Includes or removes an optional Excel template row block.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Invoke-OfficeExcelTemplateOptionalRow -FirstRow <int> [-Sheet <string>] [-SheetIndex <int>] [-RowCount <int>] [-Value <hashtable>] [-Remove] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-OfficeExcelTemplateOptionalRow -FirstRow <int> [-Sheet <string>] [-SheetIndex <Int32>] [-RowCount <int>] [-Value <hashtable>] [-Remove] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Invoke-OfficeExcelTemplateOptionalRow [-InputPath] <string> -FirstRow <int> [-Sheet <string>] [-SheetIndex <int>] [-RowCount <int>] [-Value <hashtable>] [-Remove] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-OfficeExcelTemplateOptionalRow [-InputPath] <string> -FirstRow <int> [-Sheet <string>] [-SheetIndex <Int32>] [-RowCount <int>] [-Value <hashtable>] [-Remove] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Invoke-OfficeExcelTemplateOptionalRow -Document <ExcelDocument> -FirstRow <int> [-Sheet <string>] [-SheetIndex <int>] [-RowCount <int>] [-Value <hashtable>] [-Remove] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-OfficeExcelTemplateOptionalRow -Document <ExcelDocument> -FirstRow <int> [-Sheet <string>] [-SheetIndex <Int32>] [-RowCount <int>] [-Value <hashtable>] [-Remove] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,7 +51,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -67,7 +67,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FirstRow
@@ -83,7 +83,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -99,23 +99,23 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MissingValueBehavior
 Behavior used when a marker in the optional block is not supplied by -Value.
 
 ```yaml
-Type: Nullable`1
+Type: ExcelTemplateMissingValueBehavior
 Parameter Sets: Context, Path, Document
 Aliases: None
-Possible values:
+Possible values: PreserveMarker, EmptyString, Throw
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -131,7 +131,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Remove
@@ -147,7 +147,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RowCount
@@ -163,7 +163,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -179,14 +179,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index when using a workbook object or path.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -195,7 +195,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ThrowOnMissing
@@ -211,7 +211,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Value
@@ -227,7 +227,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

@@ -15,7 +15,7 @@ ConvertTo-OfficePdfTextRun [-Run] <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this adapter when an OfficeIMO PDF callback requires a native TextRun,
+Use this adapter when an OfficeIMO PDF callback requires a native PdfTextRun,
 such as a rich generated header or footer. Styling remains owned by New-OfficeTextRun.
 
 ## EXAMPLES
@@ -50,7 +50,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -62,7 +62,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Pdf.TextRun`
+- `OfficeIMO.Pdf.PdfTextRun`
 
 ## RELATED LINKS
 

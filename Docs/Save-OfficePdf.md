@@ -11,7 +11,7 @@ Saves an OfficeIMO.Pdf document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficePdf [-Document] <PdfDocument> [-Path] <string> [-Show] [-PassThru] [-Password <string>] [-OwnerPassword <string>] [-Permission <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficePdf [-Document] <PdfDocument> [-Path] <string> [-Show] [-PassThru] [-Password <string>] [-OwnerPassword <string>] [-Permission <Int32>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -43,7 +43,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -OwnerPassword
@@ -59,7 +59,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -75,7 +75,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Password
@@ -91,7 +91,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -107,14 +107,14 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Permission
 Raw PDF Standard security permission bit mask. Defaults to allowing all standard operations.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: Permissions
 Possible values:
@@ -123,7 +123,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Show
@@ -139,7 +139,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -151,8 +151,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Pdf.PdfDocument
-System.IO.FileInfo`
+- `OfficeIMO.Pdf.PdfDocument`
+- `System.IO.FileInfo`
 
 ## RELATED LINKS
 

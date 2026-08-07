@@ -11,7 +11,7 @@ Updates OfficeIMO Word table-cell content, layout, and merge settings.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordTableCell [-Cell] <WordTableCell> [-Text <string>] [-ShadingFillColor <string>] [-ShadingPattern <string>] [-Width <int>] [-WidthType <string>] [-TextDirection <TextDirectionValues>] [-WrapText <bool>] [-FitText <bool>] [-MergeRight <int>] [-MergeDown <int>] [-SplitHorizontal <int>] [-SplitVertical <int>] [-CopyParagraphs] [-PassThru] [<CommonParameters>]
+Set-OfficeWordTableCell [-Cell] <WordTableCell> [-Text <string>] [-ShadingFillColor <string>] [-ShadingPattern <string>] [-Width <Int32>] [-WidthType <string>] [-TextDirection <WordTextDirection>] [-WrapText <Boolean>] [-FitText <Boolean>] [-MergeRight <Int32>] [-MergeDown <Int32>] [-SplitHorizontal <Int32>] [-SplitVertical <Int32>] [-CopyParagraphs] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -70,7 +70,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CopyParagraphs
@@ -86,14 +86,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FitText
 Whether text should fit within the cell.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -102,14 +102,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MergeDown
 Number of cells to merge downward.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -118,14 +118,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MergeRight
 Number of cells to merge to the right.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -134,7 +134,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -150,7 +150,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShadingFillColor
@@ -166,7 +166,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ShadingPattern
@@ -182,14 +182,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SplitHorizontal
 Number of columns to split the cell into.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -198,14 +198,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SplitVertical
 Number of rows to split the cell into.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -214,7 +214,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -230,30 +230,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -TextDirection
 Cell text direction.
 
 ```yaml
-Type: Nullable`1
+Type: WordTextDirection
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: LeftToRightTopToBottom, LeftToRightTopToBottom2010, TopToBottomRightToLeft, TopToBottomRightToLeft2010, BottomToTopLeftToRight, BottomToTopLeftToRight2010, LeftToRightTopToBottomRotated, LeftToRightTopToBottomRotated2010, TopToBottomRightToLeftRotated, TopToBottomRightToLeftRotated2010, TopToBottomLeftToRightRotated, TopToBottomLeftToRightRotated2010
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Width
 Cell width value.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -262,7 +262,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WidthType
@@ -278,14 +278,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -WrapText
 Whether text wraps in the cell.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -294,7 +294,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

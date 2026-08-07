@@ -11,17 +11,17 @@ Adds a threaded comment or reply to an Excel worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelThreadedComment -Address <string> -Text <string> [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelThreadedComment -Address <string> -Text <string> [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <DateTime>] [-Done] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Add-OfficeExcelThreadedComment [-InputPath] <string> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <int>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelThreadedComment [-InputPath] <string> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <DateTime>] [-Done] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelThreadedComment -Document <ExcelDocument> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <int>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <datetime>] [-Done] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelThreadedComment -Document <ExcelDocument> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <DateTime>] [-Done] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -54,7 +54,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Author
@@ -70,14 +70,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Date
 Optional timestamp for the threaded comment.
 
 ```yaml
-Type: Nullable`1
+Type: DateTime
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values:
@@ -86,7 +86,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Document
@@ -102,7 +102,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Done
@@ -118,7 +118,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Id
@@ -134,7 +134,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -150,7 +150,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoSave
@@ -166,7 +166,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ParentId
@@ -182,7 +182,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -198,7 +198,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Sheet
@@ -214,14 +214,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -SheetIndex
 Worksheet index (0-based) when using path or document input.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:
@@ -230,7 +230,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -246,7 +246,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

@@ -11,12 +11,12 @@ Adds a paragraph to the current section/header/footer context.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficeWordParagraph [[-Text] <string>] [-Run <Object[]>] [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordParagraph [[-Text] <string>] [-Run <Object[]>] [-Alignment <WordParagraphAlignment>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Content
 ```powershell
-Add-OfficeWordParagraph [[-Content] <scriptblock>] [-Text <string>] [-Alignment <JustificationValues>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordParagraph [[-Content] <scriptblock>] [-Text <string>] [-Alignment <WordParagraphAlignment>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,16 +44,16 @@ Applies a paragraph style id, including custom styles already present in a templ
 Paragraph justification.
 
 ```yaml
-Type: Nullable`1
+Type: WordParagraphAlignment
 Parameter Sets: Text, Content
 Aliases: None
-Possible values:
+Possible values: Left, Start, Center, Right, End, Both, MediumKashida, Distribute, NumTab, HighKashida, LowKashida, ThaiDistribute
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Content
@@ -69,7 +69,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -85,7 +85,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Run
@@ -101,23 +101,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Style
 Paragraph style.
 
 ```yaml
-Type: Nullable`1
+Type: WordParagraphStyles
 Parameter Sets: Text, Content
 Aliases: None
-Possible values:
+Possible values: Normal, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Heading7, Heading8, Heading9, ListParagraph, Custom
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StyleId
@@ -133,7 +133,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -149,7 +149,7 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -161,7 +161,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

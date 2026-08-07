@@ -11,12 +11,12 @@ Adds a watermark to the current section or header.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficeWordWatermark [-Text] <string> [-HorizontalOffset <double>] [-VerticalOffset <double>] [-Scale <double>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordWatermark [-Text] <string> [-HorizontalOffset <Double>] [-VerticalOffset <Double>] [-Scale <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Image
 ```powershell
-Add-OfficeWordWatermark [-ImagePath] <string> [-HorizontalOffset <double>] [-VerticalOffset <double>] [-Scale <double>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordWatermark [-ImagePath] <string> [-HorizontalOffset <Double>] [-VerticalOffset <Double>] [-Scale <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,7 +51,7 @@ Uses the image watermark path and placement parameters exposed by OfficeIMO.Word
 Horizontal offset for the watermark.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Text, Image
 Aliases: None
 Possible values:
@@ -60,7 +60,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ImagePath
@@ -76,7 +76,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -92,7 +92,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Scale
@@ -108,7 +108,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -124,14 +124,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -VerticalOffset
 Vertical offset for the watermark.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: Text, Image
 Aliases: None
 Possible values:
@@ -140,7 +140,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters
@@ -152,7 +152,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `System.Object`
+- `None`
 
 ## RELATED LINKS
 

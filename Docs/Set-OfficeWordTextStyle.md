@@ -11,7 +11,7 @@ Updates styling on Word text.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordTextStyle [[-InputObject] <WordParagraph>] [-Text <string>] [-Style <WordCharacterStyles>] [-StyleId <string>] [-Bold <bool>] [-Italic <bool>] [-Underline <string>] [-Color <string>] [-FontSize <int>] [-FontFamily <string>] [-Highlight <string>] [-Strike <bool>] [-DoubleStrike <bool>] [-CapsStyle <CapsStyle>] [-Spacing <int>] [-Outline <bool>] [-Shadow <bool>] [-Emboss <bool>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordTextStyle [[-InputObject] <WordParagraph>] [-Text <string>] [-Style <WordCharacterStyles>] [-StyleId <string>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <string>] [-Color <string>] [-FontSize <Int32>] [-FontFamily <string>] [-Highlight <string>] [-Strike <Boolean>] [-DoubleStrike <Boolean>] [-CapsStyle <WordCapsStyle>] [-Spacing <Int32>] [-Outline <Boolean>] [-Shadow <Boolean>] [-Emboss <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,7 +32,7 @@ Applies bold red styling to matching text.
 Set or clear bold formatting.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -41,23 +41,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -CapsStyle
 Capitalization style.
 
 ```yaml
-Type: Nullable`1
+Type: WordCapsStyle
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: None, Caps, SmallCaps
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Color
@@ -73,14 +73,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DoubleStrike
 Set or clear double strikethrough.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -89,14 +89,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Emboss
 Set or clear emboss effect.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -105,7 +105,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontFamily
@@ -121,14 +121,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FontSize
 Font size in points.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -137,7 +137,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Highlight
@@ -153,7 +153,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputObject
@@ -169,14 +169,14 @@ Required: False
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Italic
 Set or clear italic formatting.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -185,14 +185,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Outline
 Set or clear outline effect.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -201,7 +201,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -PassThru
@@ -217,14 +217,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Shadow
 Set or clear shadow effect.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -233,14 +233,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Spacing
 Character spacing in twentieths of a point.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -249,14 +249,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Strike
 Set or clear strikethrough.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -265,23 +265,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Style
 Character style to apply.
 
 ```yaml
-Type: Nullable`1
+Type: WordCharacterStyles
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: DefaultParagraphFont, Heading1Char, Heading2Char, Heading3Char, Heading4Char, Heading5Char, Heading6Char, Heading7Char, Heading8Char, Heading9Char
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -StyleId
@@ -297,7 +297,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -313,7 +313,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Underline
@@ -329,7 +329,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

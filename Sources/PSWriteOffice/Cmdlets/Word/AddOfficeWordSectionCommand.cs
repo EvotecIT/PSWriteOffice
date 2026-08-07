@@ -1,5 +1,4 @@
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -23,7 +22,7 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
 
     /// <summary>Optional section break type.</summary>
     [Parameter]
-    public SectionMarkValues? BreakType { get; set; }
+    public WordSectionBreakType? BreakType { get; set; }
 
     /// <summary>Emit the created <see cref="WordSection"/>.</summary>
     [Parameter]

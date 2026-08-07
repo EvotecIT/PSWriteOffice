@@ -22,7 +22,7 @@ public sealed class AddOfficeExcelSheetCommand : PSCmdlet
 
     /// <summary>Controls how invalid sheet names are handled.</summary>
     [Parameter]
-    public SheetNameValidationMode ValidationMode { get; set; } = SheetNameValidationMode.Sanitize;
+    public ExcelSheetNameValidationMode ValidationMode { get; set; } = ExcelSheetNameValidationMode.Sanitize;
 
     /// <summary>Code to execute inside the worksheet context.</summary>
     [Parameter(Position = 1)]

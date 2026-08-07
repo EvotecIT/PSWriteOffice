@@ -111,11 +111,11 @@ public sealed class SetOfficeWordParagraphStyleCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(StyleId)) paragraph.SetStyleId(StyleId!);
         if (!string.IsNullOrWhiteSpace(Alignment))
         {
-            paragraph.ParagraphAlignment = ParseOpenXmlValue<JustificationValues>(Alignment!, nameof(Alignment));
+            paragraph.ParagraphAlignment = ParseOpenXmlValue<WordParagraphAlignment>(Alignment!, nameof(Alignment));
         }
         if (!string.IsNullOrWhiteSpace(CharacterAlignment))
         {
-            paragraph.VerticalCharacterAlignmentOnLine = ParseOpenXmlValue<VerticalTextAlignmentValues>(CharacterAlignment!, nameof(CharacterAlignment));
+            paragraph.VerticalCharacterAlignmentOnLine = ParseOpenXmlValue<WordVerticalCharacterAlignment>(CharacterAlignment!, nameof(CharacterAlignment));
         }
         if (IsBound(nameof(IndentationBeforePoints))) paragraph.IndentationBeforePoints = IndentationBeforePoints;
         if (IsBound(nameof(IndentationAfterPoints))) paragraph.IndentationAfterPoints = IndentationAfterPoints;
@@ -126,7 +126,7 @@ public sealed class SetOfficeWordParagraphStyleCommand : PSCmdlet
         if (IsBound(nameof(SpacingAfterPoints))) paragraph.LineSpacingAfterPoints = SpacingAfterPoints;
         if (!string.IsNullOrWhiteSpace(LineSpacingRule))
         {
-            paragraph.LineSpacingRule = ParseOpenXmlValue<LineSpacingRuleValues>(LineSpacingRule!, nameof(LineSpacingRule));
+            paragraph.LineSpacingRule = ParseOpenXmlValue<WordLineSpacingRule>(LineSpacingRule!, nameof(LineSpacingRule));
         }
         if (IsBound(nameof(PageBreakBefore))) paragraph.PageBreakBefore = PageBreakBefore ?? false;
         if (IsBound(nameof(KeepWithNext))) paragraph.KeepWithNext = KeepWithNext ?? false;
@@ -134,7 +134,7 @@ public sealed class SetOfficeWordParagraphStyleCommand : PSCmdlet
         if (IsBound(nameof(AvoidWidowAndOrphan))) paragraph.AvoidWidowAndOrphan = AvoidWidowAndOrphan ?? false;
         if (!string.IsNullOrWhiteSpace(TextDirection))
         {
-            paragraph.TextDirection = ParseOpenXmlValue<TextDirectionValues>(TextDirection!, nameof(TextDirection));
+            paragraph.TextDirection = ParseOpenXmlValue<WordTextDirection>(TextDirection!, nameof(TextDirection));
         }
         if (IsBound(nameof(BiDi))) paragraph.BiDi = BiDi ?? false;
 

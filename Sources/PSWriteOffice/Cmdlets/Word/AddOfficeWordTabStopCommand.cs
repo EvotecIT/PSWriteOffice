@@ -72,29 +72,29 @@ public sealed class AddOfficeWordTabStopCommand : PSCmdlet
         return document.AddParagraph();
     }
 
-    private TabStopValues ResolveAlignment()
+    private WordTabAlignment ResolveAlignment()
     {
         return Alignment switch
         {
-            "Center" => TabStopValues.Center,
-            "Right" => TabStopValues.Right,
-            "Decimal" => TabStopValues.Decimal,
-            "Bar" => TabStopValues.Bar,
-            "Clear" => TabStopValues.Clear,
-            _ => TabStopValues.Left
+            "Center" => WordTabAlignment.Center,
+            "Right" => WordTabAlignment.Right,
+            "Decimal" => WordTabAlignment.Decimal,
+            "Bar" => WordTabAlignment.Bar,
+            "Clear" => WordTabAlignment.Clear,
+            _ => WordTabAlignment.Left
         };
     }
 
-    private TabStopLeaderCharValues ResolveLeader()
+    private WordTabLeader ResolveLeader()
     {
         return Leader switch
         {
-            "Dot" => TabStopLeaderCharValues.Dot,
-            "Hyphen" => TabStopLeaderCharValues.Hyphen,
-            "Underscore" => TabStopLeaderCharValues.Underscore,
-            "Heavy" => TabStopLeaderCharValues.Heavy,
-            "MiddleDot" => TabStopLeaderCharValues.MiddleDot,
-            _ => TabStopLeaderCharValues.None
+            "Dot" => WordTabLeader.Dot,
+            "Hyphen" => WordTabLeader.Hyphen,
+            "Underscore" => WordTabLeader.Underscore,
+            "Heavy" => WordTabLeader.Heavy,
+            "MiddleDot" => WordTabLeader.MiddleDot,
+            _ => WordTabLeader.None
         };
     }
 }

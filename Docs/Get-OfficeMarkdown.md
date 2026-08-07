@@ -11,12 +11,12 @@ Parses Markdown text or files into a Markdown document model.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeMarkdown [-InputPath] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <int>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <bool>] [-AllowDataUrls <bool>] [-AllowMailtoUrls <bool>] [-AllowProtocolRelativeUrls <bool>] [-RestrictUrlSchemes <bool>] [-AllowedUrlScheme <string[]>] [<CommonParameters>]
+Get-OfficeMarkdown [-InputPath] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <Int32>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <Boolean>] [-AllowDataUrls <Boolean>] [-AllowMailtoUrls <Boolean>] [-AllowProtocolRelativeUrls <Boolean>] [-RestrictUrlSchemes <Boolean>] [-AllowedUrlScheme <string[]>] [<CommonParameters>]
 ```
 
 ### Text
 ```powershell
-Get-OfficeMarkdown -Text <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownReaderOptions+MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <int>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <bool>] [-AllowDataUrls <bool>] [-AllowMailtoUrls <bool>] [-AllowProtocolRelativeUrls <bool>] [-RestrictUrlSchemes <bool>] [-AllowedUrlScheme <string[]>] [<CommonParameters>]
+Get-OfficeMarkdown -Text <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <Int32>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <Boolean>] [-AllowDataUrls <Boolean>] [-AllowMailtoUrls <Boolean>] [-AllowProtocolRelativeUrls <Boolean>] [-RestrictUrlSchemes <Boolean>] [-AllowedUrlScheme <string[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,7 +44,7 @@ Parses Markdown text directly into a document model.
 Allow data URLs while parsing Markdown links and images.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: Path, Text
 Aliases: None
 Possible values:
@@ -53,7 +53,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AllowedUrlScheme
@@ -69,14 +69,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AllowMailtoUrls
 Allow mailto URLs while parsing Markdown links.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: Path, Text
 Aliases: None
 Possible values:
@@ -85,14 +85,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -AllowProtocolRelativeUrls
 Allow protocol-relative URLs while parsing Markdown links and images.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: Path, Text
 Aliases: None
 Possible values:
@@ -101,7 +101,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -BaseUri
@@ -117,14 +117,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -DisallowFileUrls
 Block file URLs while parsing Markdown links and images.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: Path, Text
 Aliases: None
 Possible values:
@@ -133,7 +133,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -InputPath
@@ -149,14 +149,14 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxInputCharacters
 Maximum Markdown input length accepted by the reader.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: Path, Text
 Aliases: None
 Possible values:
@@ -165,23 +165,23 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NormalizeInput
 Applies a built-in Markdown input normalization preset before parsing.
 
 ```yaml
-Type: Nullable`1
+Type: MarkdownInputNormalizationPreset
 Parameter Sets: Path, Text
 Aliases: None
-Possible values:
+Possible values: None, IntelligenceXTranscript, IntelligenceXTranscriptStrict, DocsLoose
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Options
@@ -197,30 +197,30 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Profile
 Named reader profile used when Options is not supplied.
 
 ```yaml
-Type: Nullable`1
+Type: MarkdownDialectProfile
 Parameter Sets: Path, Text
 Aliases: None
-Possible values:
+Possible values: OfficeIMO, CommonMark, GitHubFlavoredMarkdown, Portable
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -RestrictUrlSchemes
 Restrict parsed URL schemes to the allow-list.
 
 ```yaml
-Type: Nullable`1
+Type: Boolean
 Parameter Sets: Path, Text
 Aliases: None
 Possible values:
@@ -229,7 +229,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Text
@@ -245,7 +245,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

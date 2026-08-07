@@ -70,6 +70,21 @@ Describe 'CSV and Excel mutation contracts' {
         Test-Path -LiteralPath $target | Should -BeTrue
     }
 
+    It 'returns a live NoSave Excel workbook for emitted method calls' {
+        $target = Join-Path $TestDrive 'nosave-live-workbook.xlsx'
+
+        $workbook = New-OfficeExcel -Path $target -NoSave
+        try {
+            $sheet = $workbook.AddWorksheet('Data')
+            $sheet.Cell(1, 1, 'Ready')
+            Save-OfficeExcel -Document $workbook -Path $target
+        } finally {
+            $workbook.Dispose()
+        }
+
+        Test-Path -LiteralPath $target | Should -BeTrue
+    }
+
     It 'does not copy a Word template when New-OfficeWord is invoked with WhatIf' {
         $template = Join-Path $TestDrive 'template.docx'
         $target = Join-Path $TestDrive 'target.docx'
@@ -106,6 +121,68 @@ Describe 'CSV and Excel mutation contracts' {
         $rows = Import-OfficeExcel -Path $xlsx -WorksheetName Import
         $rows.Count | Should -Be 3
         $rows[0].Name | Should -Be 'Row1'
+    }
+
+    It 'reports the detected delimiter for a delimited-text import' {
+        $csv = Join-Path $TestDrive 'source-semicolon.csv'
+        $xlsx = Join-Path $TestDrive 'created-semicolon.xlsx'
+        Set-Content -LiteralPath $csv -Value "Name;Value`r`nAlpha;1" -Encoding UTF8
+
+        $result = Import-OfficeExcelDelimitedText -Path $xlsx -SourcePath $csv -PassThru
+
+        $result.Delimiter | Should -Be ';'
+        $result.RowCount | Should -Be 1
+    }
+
+    It 'reports the actual sanitized and unique table name for downstream commands' {
+        $csv = Join-Path $TestDrive 'source-table-name.csv'
+        $xlsx = Join-Path $TestDrive 'created-table-name.xlsx'
+        Set-Content -LiteralPath $csv -Value "Name,Value`r`nAlpha,1" -Encoding UTF8
+        [pscustomobject]@{ Name = 'Existing'; Value = 0 } |
+            Export-OfficeExcel -Path $xlsx -WorksheetName Seed -TableName Sales_Data
+
+        $result = Import-OfficeExcelDelimitedText -Path $xlsx -SourcePath $csv -SheetName 'Sales Data' -PassThru
+
+        $result.TableName | Should -Be 'Sales_Data2'
+        $table = Get-OfficeExcelTable -Path $xlsx | Where-Object Name -eq $result.TableName
+        $table.Name | Should -Be $result.TableName
+        [pscustomobject]@{ Name = 'Beta'; Value = 2 } |
+            Add-OfficeExcelTableRow -Path $xlsx -Sheet 'Sales Data' -TableName $result.TableName
+        @(Import-OfficeExcel -Path $xlsx -WorksheetName 'Sales Data').Count | Should -Be 2
+    }
+
+    It 'preserves the first data row when importing headerless CSV into Excel' {
+        $csv = Join-Path $TestDrive 'source-no-header.csv'
+        $xlsx = Join-Path $TestDrive 'created-no-header.xlsx'
+        Set-Content -LiteralPath $csv -Value "Alpha,1`r`nBeta,2" -Encoding UTF8
+
+        $result = Import-OfficeExcelDelimitedText -Path $xlsx -SourcePath $csv -NoHeader -PassThru
+
+        $result.RowCount | Should -Be 2
+        $rows = @(Import-OfficeExcel -Path $xlsx -WorksheetName Import -NoHeader)
+        $rows.Count | Should -Be 2
+        $rows[0].Column1 | Should -Be 'Alpha'
+        $rows[0].Column2 | Should -Be 1
+    }
+
+    It 'infers DataTable column types when importing Excel data' {
+        $xlsx = Join-Path $TestDrive 'datatable-schema.xlsx'
+        New-OfficeExcel -Path $xlsx {
+            ExcelSheet -Name Data {
+                ExcelCell -Address A1 -Value 'Name'
+                ExcelCell -Address B1 -Value 'Quantity'
+                ExcelCell -Address C1 -Value 'When'
+                ExcelCell -Address A2 -Value 'Alpha'
+                ExcelCell -Address B2 -Value 42
+                ExcelCell -Address C2 -Value ([datetime]'2026-08-05')
+            }
+        }
+
+        $table = Import-OfficeExcel -Path $xlsx -WorksheetName Data -AsDataTable
+
+        $table.Columns['Name'].DataType | Should -Be ([string])
+        $table.Columns['Quantity'].DataType | Should -Not -Be ([object])
+        $table.Columns['When'].DataType | Should -Be ([datetime])
     }
 
     It 'projects scalar Excel table rows into the existing Value column' {

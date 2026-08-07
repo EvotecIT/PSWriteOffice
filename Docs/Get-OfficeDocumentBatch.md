@@ -11,7 +11,7 @@ Reads supported files and folders with adjustable concurrency and limits.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeDocumentBatch [-Path] <string[]> [-Recurse] [-Extension <string[]>] [-MaxDocuments <int>] [-NoDocumentLimit] [-MaxDegreeOfParallelism <int>] [-MaxStoreItems <int>] [-AllStoreItems] [-IncludePageLocations] [-ContinueOnError] [-Reader <OfficeDocumentReader>] [-ReaderOptions <ReaderOptions>] [-BatchOptions <ReaderBatchOptions>] [<CommonParameters>]
+Get-OfficeDocumentBatch [-Path] <string[]> [-Recurse] [-Extension <string[]>] [-MaxDocuments <Int32>] [-NoDocumentLimit] [-MaxDegreeOfParallelism <Int32>] [-MaxStoreItems <Int32>] [-AllStoreItems] [-IncludePageLocations] [-ContinueOnError] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,23 +41,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -BatchOptions
-Advanced batch settings supplied by a .NET host.
-
-```yaml
-Type: ReaderBatchOptions
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ContinueOnError
@@ -73,7 +57,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Extension
@@ -89,7 +73,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -IncludePageLocations
@@ -105,14 +89,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxDegreeOfParallelism
 Maximum document reads in flight.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -121,14 +105,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxDocuments
 Maximum documents accepted in one batch. The default is 500.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -137,14 +121,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -MaxStoreItems
 Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -153,7 +137,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -NoDocumentLimit
@@ -169,7 +153,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Path
@@ -185,39 +169,7 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue, ByPropertyName)
-Accept wildcard characters: True
-```
-
-### -Reader
-Advanced immutable Reader configured by a .NET host.
-
-```yaml
-Type: OfficeDocumentReader
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
-```
-
-### -ReaderOptions
-Advanced source-reading settings supplied by a .NET host.
-
-```yaml
-Type: ReaderOptions
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Recurse
@@ -233,7 +185,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

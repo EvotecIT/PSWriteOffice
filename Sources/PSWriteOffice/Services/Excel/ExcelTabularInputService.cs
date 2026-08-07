@@ -106,7 +106,7 @@ internal static class ExcelTabularInputService
         }
 
         var normalized = PowerShellObjectNormalizer.NormalizeItems(items, normalizerOptions);
-        return ObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
+        return ExcelObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
     }
 
     private static bool TryProjectToDataTable(

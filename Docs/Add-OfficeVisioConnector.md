@@ -11,12 +11,12 @@ Adds a connector between two Visio shapes.
 ## SYNTAX
 ### ByKey (Default)
 ```powershell
-Add-OfficeVisioConnector -From <string> -To <string> [-Page <VisioPage>] [-Kind <ConnectorKind>] [-FromSide <VisioSide>] [-ToSide <VisioSide>] [-Label <string>] [-LineColor <string>] [-LineWeight <double>] [-LinePattern <int>] [-BeginArrow <EndArrow>] [-EndArrow <EndArrow>] [<CommonParameters>]
+Add-OfficeVisioConnector -From <string> -To <string> [-Page <VisioPage>] [-Kind <ConnectorKind>] [-FromSide <VisioSide>] [-ToSide <VisioSide>] [-Label <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-BeginArrow <EndArrow>] [-EndArrow <EndArrow>] [<CommonParameters>]
 ```
 
 ### ByShape
 ```powershell
-Add-OfficeVisioConnector -FromShape <VisioShape> -ToShape <VisioShape> [-Page <VisioPage>] [-Kind <ConnectorKind>] [-FromSide <VisioSide>] [-ToSide <VisioSide>] [-Label <string>] [-LineColor <string>] [-LineWeight <double>] [-LinePattern <int>] [-BeginArrow <EndArrow>] [-EndArrow <EndArrow>] [<CommonParameters>]
+Add-OfficeVisioConnector -FromShape <VisioShape> -ToShape <VisioShape> [-Page <VisioPage>] [-Kind <ConnectorKind>] [-FromSide <VisioSide>] [-ToSide <VisioSide>] [-Label <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-BeginArrow <EndArrow>] [-EndArrow <EndArrow>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,32 +41,32 @@ Adds a routed connector between shapes registered in the current DSL scope.
 Begin arrow style.
 
 ```yaml
-Type: Nullable`1
+Type: EndArrow
 Parameter Sets: ByKey, ByShape
 Aliases: None
-Possible values:
+Possible values: None, Arrow, Triangle
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -EndArrow
 End arrow style.
 
 ```yaml
-Type: Nullable`1
+Type: EndArrow
 Parameter Sets: ByKey, ByShape
 Aliases: None
-Possible values:
+Possible values: None, Arrow, Triangle
 
 Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -From
@@ -82,7 +82,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FromShape
@@ -98,7 +98,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -FromSide
@@ -114,7 +114,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Kind
@@ -130,7 +130,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Label
@@ -146,7 +146,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineColor
@@ -162,14 +162,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LinePattern
 Line pattern.
 
 ```yaml
-Type: Nullable`1
+Type: Int32
 Parameter Sets: ByKey, ByShape
 Aliases: None
 Possible values:
@@ -178,14 +178,14 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -LineWeight
 Line weight.
 
 ```yaml
-Type: Nullable`1
+Type: Double
 Parameter Sets: ByKey, ByShape
 Aliases: None
 Possible values:
@@ -194,7 +194,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Page
@@ -210,7 +210,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -To
@@ -226,7 +226,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ToShape
@@ -242,7 +242,7 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -ToSide
@@ -258,7 +258,7 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

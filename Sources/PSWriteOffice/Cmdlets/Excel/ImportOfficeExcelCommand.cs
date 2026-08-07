@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
+using System.Threading;
 using System.Threading.Tasks;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -158,14 +159,11 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
             NumericAsDecimal.IsPresent,
             useCachedFormulaResult: !string.Equals(FormulaMode, "FormulaText", StringComparison.OrdinalIgnoreCase),
             culture: ResolveCulture());
+        options.CancellationToken = AsDataReader.IsPresent ? CancellationToken.None : CancelToken;
+        options.InferSchema = AsDataReader.IsPresent || AsDataTable.IsPresent;
+        options.SchemaSampleRows = SchemaSampleSize;
+        options.MaxDataReaderChunkRows = ChunkRows;
 
-        if (AsDataReader.IsPresent)
-        {
-            await WriteDataReaderAsync(options).ConfigureAwait(false);
-            return;
-        }
-
-        using var reader = await CreateReaderAsync(options).ConfigureAwait(false);
         if (AllSheets.IsPresent)
         {
             if (!string.IsNullOrWhiteSpace(WorksheetName) || SheetIndex.HasValue)
@@ -173,43 +171,50 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
                 throw new PSArgumentException("Specify either -AllSheets or a specific worksheet, not both.");
             }
 
-            for (var index = 1; index <= reader.SheetCount; index++)
+            ExcelReadOutputService.ConfigureSelection(options, null, null, ResolveRange(), !NoHeader.IsPresent);
+        }
+        else
+        {
+            var selectedIndex = SheetIndex ?? (string.IsNullOrWhiteSpace(WorksheetName) ? 0 : null);
+            ExcelReadOutputService.ConfigureSelection(options, WorksheetName, selectedIndex, ResolveRange(), !NoHeader.IsPresent);
+        }
+
+        if (AsDataReader.IsPresent)
+        {
+            await WriteDataReaderAsync(options).ConfigureAwait(false);
+            return;
+        }
+
+        using var reader = await CreateDataReaderAsync(options).ConfigureAwait(false);
+        if (AllSheets.IsPresent)
+        {
+            do
             {
-                var currentSheet = reader.GetSheet(index);
-                var currentRange = ResolveRange(currentSheet);
-                var currentTable = currentSheet.ReadRangeAsDataTable(currentRange, headersInFirstRow: !NoHeader.IsPresent);
+                var currentTable = ExcelReadOutputService.ReadCurrentResultAsDataTable(reader, reader.CurrentSheetName);
                 ExcelReadOutputService.WriteOutput(
                     this,
                     currentTable,
                     AsDataTable.IsPresent,
                     AsHashtable.IsPresent,
                     ByColumn.IsPresent,
-                    currentSheet.Name);
+                    reader.CurrentSheetName);
             }
+            while (reader.NextResult());
 
             return;
         }
 
-        var sheet = ExcelReadOutputService.ResolveSheetReader(reader, WorksheetName, SheetIndex);
-        var range = ResolveRange(sheet);
-        var table = sheet.ReadRangeAsDataTable(range, headersInFirstRow: !NoHeader.IsPresent);
+        var table = ExcelReadOutputService.ReadCurrentResultAsDataTable(reader);
 
         ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent, ByColumn.IsPresent, null);
     }
 
     private async Task WriteDataReaderAsync(ExcelReadOptions options)
     {
-        var reader = await CreateReaderAsync(options).ConfigureAwait(false);
+        var reader = await CreateDataReaderAsync(options).ConfigureAwait(false);
         try
         {
-            var sheet = ExcelReadOutputService.ResolveSheetReader(reader, WorksheetName, SheetIndex);
-            var range = ResolveRange(sheet);
-            var dataReader = sheet.ReadRangeAsDataReader(
-                range,
-                headersInFirstRow: !NoHeader.IsPresent,
-                chunkRows: ChunkRows,
-                schemaSampleRows: SchemaSampleSize);
-            WriteObject(PSObject.AsPSObject(new OwnedDataReader(dataReader, reader)), enumerateCollection: false);
+            WriteObject(PSObject.AsPSObject(new OwnedDataReader(reader)), enumerateCollection: false);
         }
         catch
         {
@@ -218,7 +223,7 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
         }
     }
 
-    private async Task<ExcelDocumentReader> CreateReaderAsync(ExcelReadOptions options)
+    private async Task<ExcelWorkbookDataReader> CreateDataReaderAsync(ExcelReadOptions options)
     {
         if (ParameterSetName == ParameterSetDocument)
         {
@@ -227,7 +232,7 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
                 throw new PSArgumentException("Excel document was not provided.", nameof(Document));
             }
 
-            return Document.CreateReader(options);
+            return Document.CreateDataReader(options);
         }
 
         if (ParameterSetName == ParameterSetUri)
@@ -237,7 +242,7 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
                 throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
             }
 
-            return await ExcelDocumentReader.OpenAsync(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp), CancelToken)
+            return await ExcelDocument.OpenDataReaderAsync(Uri, options, ExcelHttpLoadService.CreateOptions(AllowHttp), CancelToken)
                 .ConfigureAwait(false);
         }
 
@@ -252,10 +257,10 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
             throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
-        return ExcelDocumentReader.Open(resolvedPath, options);
+        return ExcelDocument.OpenDataReader(resolvedPath, options);
     }
 
-    private string ResolveRange(ExcelSheetReader sheet)
+    private string? ResolveRange()
     {
         if (!string.IsNullOrWhiteSpace(Range))
         {
@@ -287,7 +292,7 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
             return $"{A1.CellReference(StartRow.Value, StartColumn.Value)}:{A1.CellReference(EndRow.Value, EndColumn.Value)}";
         }
 
-        return sheet.GetUsedRangeA1();
+        return null;
     }
 
     private bool HasCoordinateRange()

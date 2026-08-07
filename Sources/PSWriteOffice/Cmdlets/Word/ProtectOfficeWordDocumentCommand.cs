@@ -1,6 +1,5 @@
 using System;
 using System.Management.Automation;
-using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeIMO.Word;
 using PSWriteOffice.Services.Word;
 
@@ -30,7 +29,7 @@ public sealed class ProtectOfficeWordDocumentCommand : PSCmdlet
 
     /// <summary>Protection type (defaults to ReadOnly).</summary>
     [Parameter]
-    public DocumentProtectionValues ProtectionType { get; set; } = DocumentProtectionValues.ReadOnly;
+    public WordDocumentProtectionType ProtectionType { get; set; } = WordDocumentProtectionType.ReadOnly;
 
     /// <summary>Emit the protected document.</summary>
     [Parameter]
@@ -46,7 +45,7 @@ public sealed class ProtectOfficeWordDocumentCommand : PSCmdlet
         }
 
         document.Settings.ProtectionPassword = Password;
-        document.Settings.ProtectionType = ProtectionType;
+        document.Settings.SetProtectionType(ProtectionType);
 
         if (PassThru.IsPresent)
         {

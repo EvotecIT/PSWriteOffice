@@ -64,7 +64,7 @@ public sealed class SetOfficeExcelExecutionPolicyCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(Mode))
         {
-            policy.Mode = ParseEnum<ExecutionMode>(Mode!, nameof(Mode));
+            policy.Mode = ParseEnum<ExcelExecutionMode>(Mode!, nameof(Mode));
         }
 
         if (ParallelThreshold.HasValue)
@@ -79,7 +79,7 @@ public sealed class SetOfficeExcelExecutionPolicyCommand : PSCmdlet
 
         if (!string.IsNullOrWhiteSpace(WorksheetValidation))
         {
-            policy.WorksheetValidation = ParseEnum<WorksheetValidationMode>(WorksheetValidation!, nameof(WorksheetValidation));
+            policy.WorksheetValidation = ParseEnum<ExcelWorksheetValidationMode>(WorksheetValidation!, nameof(WorksheetValidation));
         }
 
         if (Diagnostics.IsPresent)
