@@ -129,6 +129,29 @@ Describe 'Shared tabular input contracts' {
         }
     }
 
+    It 'unions columns found only in later heterogeneous PowerShell rows' {
+        $path = Join-Path $TestDrive 'Report-HeterogeneousRows.xlsx'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha' }
+            [pscustomobject]@{ Name = 'Beta'; Department = 'Operations' }
+            [ordered]@{ Name = 'Gamma'; Score = 7 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelReportSheet -Name 'Report' {
+                Add-OfficeExcelReportTable -InputObject $rows
+            }
+        }
+
+        $result = @(Import-OfficeExcel -Path $path -WorksheetName 'Report')
+        $result | Should -HaveCount 3
+        $result[0].PSObject.Properties.Name | Should -Contain 'Department'
+        $result[0].PSObject.Properties.Name | Should -Contain 'Score'
+        $result[0].Department | Should -BeNullOrEmpty
+        $result[1].Department | Should -Be 'Operations'
+        $result[2].Score | Should -Be 7
+    }
+
     It 'renders ADO.NET tabular input families without DataRow metadata' {
         $createTable = {
             $table = [System.Data.DataTable]::new('Rows')
