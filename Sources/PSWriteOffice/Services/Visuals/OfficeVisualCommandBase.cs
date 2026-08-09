@@ -44,7 +44,13 @@ public abstract class OfficeVisualCommandBase : PSCmdlet
     /// <summary>Converts an artifact or reuses an existing conversion result.</summary>
     protected OfficeVisualConversionResult ResolveVisual(object inputObject)
     {
-        object value = inputObject is PSObject psObject ? psObject.BaseObject : inputObject;
+        if (inputObject is PathInfo directPathInfo)
+        {
+            return ConvertSvgFile(directPathInfo.Path);
+        }
+
+        PSObject input = PSObject.AsPSObject(inputObject);
+        object value = input.BaseObject;
         if (value is OfficeVisualConversionResult converted)
         {
             RejectConversionOverrides();
@@ -60,19 +66,58 @@ public abstract class OfficeVisualCommandBase : PSCmdlet
         {
             return ConvertSvgFile(fileInfo.FullName);
         }
+        if (value is PathInfo pathInfo)
+        {
+            return ConvertSvgFile(pathInfo.Path);
+        }
         if (value is string path)
         {
             return ConvertSvgFile(SessionState.Path.GetUnresolvedProviderPathFromPSPath(path));
         }
 
+        if (input.TypeNames.Contains("ImagePlayground.VisualArtifact"))
+        {
+            return ConvertPortableVisual(input);
+        }
+
         if (value is not VisualArtifact artifact)
         {
             throw new PSArgumentException(
-                "InputObject must be a ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or SVG file path.",
+                "InputObject must be a ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or SVG file path. Received " +
+                inputObject.GetType().FullName + ".",
                 nameof(inputObject));
         }
 
         return artifact.ToOfficeVisual(CreateOptions());
+    }
+
+    private OfficeVisualConversionResult ConvertPortableVisual(PSObject input)
+    {
+        object? payload = input.Properties["OfficeVisualSvg"]?.Value;
+        if (payload is not byte[] svgBytes || svgBytes.Length == 0)
+        {
+            throw new PSArgumentException(
+                "ImagePlayground.VisualArtifact input must provide non-empty OfficeVisualSvg bytes.",
+                nameof(input));
+        }
+
+        var source = new OfficeVisualSource(svgBytes)
+        {
+            Id = ResolvePortableText(input, "OfficeVisualId", Id),
+            Title = ResolvePortableText(input, "OfficeVisualTitle", Title),
+            AlternativeText = ResolvePortableText(input, "OfficeVisualAlternativeText", AlternativeText)
+        };
+        return source.ToOfficeVisual(CreateOptions());
+    }
+
+    private static string ResolvePortableText(PSObject input, string propertyName, string? overrideValue)
+    {
+        if (!string.IsNullOrWhiteSpace(overrideValue))
+        {
+            return overrideValue!;
+        }
+
+        return input.Properties[propertyName]?.Value as string ?? string.Empty;
     }
 
     private void RejectConversionOverrides()

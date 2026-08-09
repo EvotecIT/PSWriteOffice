@@ -10,7 +10,7 @@ BeforeAll {
 Describe 'ChartForgeX visual artifacts' {
     BeforeAll {
         $script:SvgPath = Join-Path $TestDrive 'service-health.svg'
-        @'
+        $svg = @'
 <svg xmlns="http://www.w3.org/2000/svg" width="400" height="220" viewBox="0 0 400 220">
   <rect width="400" height="220" rx="16" fill="#f8fafc"/>
   <text x="24" y="42" font-size="24" fill="#0f172a">Service Health</text>
@@ -19,7 +19,11 @@ Describe 'ChartForgeX visual artifacts' {
   <rect x="24" y="138" width="352" height="54" rx="8" fill="#fef3c7"/>
   <text x="42" y="171" font-size="18" fill="#92400e">Worker  Warning</text>
 </svg>
-'@ | Set-Content -LiteralPath $script:SvgPath -Encoding utf8NoBOM
+'@
+        [IO.File]::WriteAllText(
+            $script:SvgPath,
+            $svg,
+            [Text.UTF8Encoding]::new($false))
     }
 
     It 'converts once and reports the selected placement payload' {
@@ -44,6 +48,26 @@ Describe 'ChartForgeX visual artifacts' {
         $visual.Title | Should -Be 'Portable Health'
         $visual.WidthPoints | Should -Be 280
         { $source | ConvertTo-OfficeVisual -Id changed -ErrorAction Stop } | Should -Throw '*cannot be used with an existing OfficeVisualSource*'
+    }
+
+    It 'accepts PathInfo and the ImagePlayground portable visual envelope' {
+        $pathInfo = Resolve-Path -LiteralPath $SvgPath
+        $fromPathInfo = $pathInfo | ConvertTo-OfficeVisual
+        $fromPathInfo.GetSvgBytes().Count | Should -BeGreaterThan 100
+
+        $portable = [pscustomobject] @{
+            OfficeVisualSvg             = [IO.File]::ReadAllBytes($SvgPath)
+            OfficeVisualId              = 'portable-pipeline'
+            OfficeVisualTitle           = 'Portable pipeline'
+            OfficeVisualAlternativeText = 'Portable visual across module load contexts.'
+        }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+        $visual = $portable | ConvertTo-OfficeVisual -Width 260
+
+        $visual.Id | Should -Be 'portable-pipeline'
+        $visual.Title | Should -Be 'Portable pipeline'
+        $visual.AlternativeText | Should -Be 'Portable visual across module load contexts.'
+        $visual.WidthPoints | Should -Be 260
     }
 
     It 'places one converted visual in Word, Excel, and PowerPoint' {
