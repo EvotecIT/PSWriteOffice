@@ -50,6 +50,13 @@ public sealed class ExportOfficeExcelRangeImageCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        string? output = null;
+        if (!string.IsNullOrWhiteSpace(OutputPath))
+        {
+            output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+            if (!ShouldProcess(output, $"Save Excel range {WorksheetName}!{Range} as {Format}")) return;
+        }
+
         ExcelDocument? owned = null;
         try
         {
@@ -65,11 +72,15 @@ public sealed class ExportOfficeExcelRangeImageCommand : PSCmdlet
                 .Range(Range)
                 .ExportImage(Format, Options);
 
-            if (!string.IsNullOrWhiteSpace(OutputPath))
+            if (output != null)
             {
-                string output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-                if (!ShouldProcess(output, $"Save Excel range {WorksheetName}!{Range} as {Format}")) return;
-                result.Save(output, Force.IsPresent
+                string? directory = System.IO.Path.GetDirectoryName(output);
+                if (!string.IsNullOrWhiteSpace(directory))
+                {
+                    System.IO.Directory.CreateDirectory(directory);
+                }
+
+                result = result.Save(output, Force.IsPresent
                     ? OfficeImageExportFileConflictPolicy.Replace
                     : OfficeImageExportFileConflictPolicy.FailIfExists);
             }
