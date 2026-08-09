@@ -11,7 +11,7 @@ Writes tabular data to the current worksheet and formats it as an Excel table.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelTable [-InputObject] <Object> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-View <OfficeTableView>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTable [-InputObject] <Object> [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-NoAutoFilter] [-AutoFit] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,6 +34,54 @@ Auto-fit the table columns after insertion.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CollectionSeparator
+Text used between items when a cell contains a collection.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryEntrySeparator
+Text used between entries when a cell contains a dictionary.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryKeyValueSeparator
+Text used between a dictionary key and value.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

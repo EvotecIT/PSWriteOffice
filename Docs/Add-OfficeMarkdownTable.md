@@ -11,17 +11,17 @@ Adds a Markdown table from objects.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeMarkdownTable [-InputObject] <Object> [-View <OfficeTableView>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownTable [-InputObject] <Object> [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeMarkdownTable [-InputObject] <Object> -Document <MarkdownDoc> [-View <OfficeTableView>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownTable [-InputObject] <Object> -Document <MarkdownDoc> [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
 ```
 
 ### PipelineDocument
 ```powershell
-Add-OfficeMarkdownTable [-InputObject] <Object> -Document <MarkdownDoc> [-View <OfficeTableView>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
+Add-OfficeMarkdownTable [-InputObject] <Object> -Document <MarkdownDoc> [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,6 +45,54 @@ $doc | MarkdownTable -InputObject $summary -PassThru | MarkdownTable -InputObjec
 Creates two tables in sequence within the same Markdown document.
 
 ## PARAMETERS
+
+### -CollectionSeparator
+Text used between items when a cell contains a collection.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document, PipelineDocument
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryEntrySeparator
+Text used between entries when a cell contains a dictionary.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document, PipelineDocument
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryKeyValueSeparator
+Text used between a dictionary key and value.
+
+```yaml
+Type: String
+Parameter Sets: Context, Document, PipelineDocument
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -DisableAutoAlign
 Disable automatic alignment heuristics for tables.
