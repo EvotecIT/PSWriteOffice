@@ -61,11 +61,12 @@ public sealed class SetOfficePdfPageBorderCommand : PSCmdlet
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         if (Clear.IsPresent)
         {
-            document.PageBorder(null);
+            PdfCommandUtilities.ConfigureDefaults(document, defaults => defaults.PageBorder(null));
         }
         else
         {
-            document.PageBorder(PdfCommandUtilities.ParseColor(Color), Width, Inset, Opacity, DashStyle);
+            PdfCommandUtilities.ConfigureDefaults(document, defaults =>
+                defaults.PageBorder(PdfCommandUtilities.ParseColor(Color), Width, Inset, Opacity, DashStyle));
         }
 
         if (PassThru.IsPresent)

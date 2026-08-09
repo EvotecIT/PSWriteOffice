@@ -43,7 +43,8 @@ public sealed class SetOfficePdfBackgroundCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Background(Clear.IsPresent ? null : PdfCommandUtilities.ParseColor(Color));
+        PdfCommandUtilities.ConfigureDefaults(document, defaults =>
+            defaults.Background(Clear.IsPresent ? null : PdfCommandUtilities.ParseColor(Color)));
         if (PassThru.IsPresent)
         {
             WriteObject(document);

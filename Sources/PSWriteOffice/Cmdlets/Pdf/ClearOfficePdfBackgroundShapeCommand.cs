@@ -34,7 +34,7 @@ public sealed class ClearOfficePdfBackgroundShapeCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.ClearBackgroundShapes();
+        PdfCommandUtilities.ConfigureDefaults(document, defaults => defaults.ClearBackgroundShapes());
         if (PassThru.IsPresent)
         {
             WriteObject(document);

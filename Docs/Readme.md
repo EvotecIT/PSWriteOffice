@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 3.0.2
+Help Version: 3.0.3
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -130,6 +130,9 @@ Adds a time data validation rule to a worksheet range.
 ### [Add-OfficeExcelValidationWholeNumber](Add-OfficeExcelValidationWholeNumber.md)
 Adds a whole-number data validation rule to a worksheet range.
 
+### [Add-OfficeExcelVisual](Add-OfficeExcelVisual.md)
+Adds a ChartForgeX artifact, portable SVG, or converted Office visual to an Excel worksheet.
+
 ### [Add-OfficeMarkdownCallout](Add-OfficeMarkdownCallout.md)
 Adds a Markdown callout block.
 
@@ -226,6 +229,9 @@ Adds a table to a PDF document.
 ### [Add-OfficePdfText](Add-OfficePdfText.md)
 Adds a rich inline-text paragraph to a generated PDF document.
 
+### [Add-OfficePdfVisual](Add-OfficePdfVisual.md)
+Adds a ChartForgeX artifact, portable SVG, or converted Office visual to PDF flow content.
+
 ### [Add-OfficePdfWatermark](Add-OfficePdfWatermark.md)
 Adds a generated-document text watermark.
 
@@ -279,6 +285,9 @@ Appends or inserts a row in an existing PowerPoint table.
 
 ### [Add-OfficePowerPointTextBox](Add-OfficePowerPointTextBox.md)
 Adds a text box to a slide.
+
+### [Add-OfficePowerPointVisual](Add-OfficePowerPointVisual.md)
+Adds a ChartForgeX artifact, portable SVG, or converted Office visual to a PowerPoint slide.
 
 ### [Add-OfficeVisioConnector](Add-OfficeVisioConnector.md)
 Adds a connector between two Visio shapes.
@@ -402,6 +411,9 @@ Adds inline text to the current paragraph.
 
 ### [Add-OfficeWordTextBox](Add-OfficeWordTextBox.md)
 Adds an OfficeIMO Word text box to the current Word DSL location.
+
+### [Add-OfficeWordVisual](Add-OfficeWordVisual.md)
+Adds a ChartForgeX artifact, portable SVG, or converted Office visual to Word.
 
 ### [Add-OfficeWordWatermark](Add-OfficeWordWatermark.md)
 Adds a watermark to the current section or header.
@@ -537,6 +549,9 @@ Exports a Visio document page to native dependency-free PNG.
 
 ### [ConvertTo-OfficeVisioSvg](ConvertTo-OfficeVisioSvg.md)
 Exports a Visio document page to dependency-free SVG.
+
+### [ConvertTo-OfficeVisual](ConvertTo-OfficeVisual.md)
+Converts a ChartForgeX visual artifact into a reusable OfficeIMO representation.
 
 ### [ConvertTo-OfficeWordDocument](ConvertTo-OfficeWordDocument.md)
 Converts Word documents between supported .doc and .docx formats.

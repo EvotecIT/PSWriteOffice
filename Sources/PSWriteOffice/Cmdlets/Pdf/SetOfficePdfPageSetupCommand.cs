@@ -76,16 +76,18 @@ public sealed class SetOfficePdfPageSetupCommand : PSCmdlet
             MyInvocation.BoundParameters.ContainsKey(nameof(Height)) ||
             MyInvocation.BoundParameters.ContainsKey(nameof(Landscape)))
         {
-            document.Size(PdfCommandUtilities.ResolvePageSize(PageSize, Width, Height, Landscape.IsPresent));
+            PdfCommandUtilities.ConfigureDefaults(document, defaults =>
+                defaults.Size(PdfCommandUtilities.ResolvePageSize(PageSize, Width, Height, Landscape.IsPresent)));
         }
 
         if (Margin.HasValue)
         {
-            document.Margin(Margin.Value);
+            PdfCommandUtilities.ConfigureDefaults(document, defaults => defaults.Margin(Margin.Value));
         }
         else if (Left.HasValue || Top.HasValue || Right.HasValue || Bottom.HasValue)
         {
-            document.Margin(Left ?? 72, Top ?? 72, Right ?? 72, Bottom ?? 72);
+            PdfCommandUtilities.ConfigureDefaults(document, defaults =>
+                defaults.Margin(Left ?? 72, Top ?? 72, Right ?? 72, Bottom ?? 72));
         }
 
         if (PassThru.IsPresent)

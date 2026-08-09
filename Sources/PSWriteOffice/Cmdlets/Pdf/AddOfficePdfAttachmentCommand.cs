@@ -63,7 +63,8 @@ public sealed class AddOfficePdfAttachmentCommand : PSCmdlet
             ? System.IO.Path.GetFileName(inputPath)
             : Name!;
 
-        document.AttachFile(fileName, File.ReadAllBytes(inputPath), MimeType, Relationship, Description);
+        PdfCommandUtilities.ConfigureSettings(document, options =>
+            options.AddEmbeddedFile(fileName, File.ReadAllBytes(inputPath), MimeType, Relationship, Description));
         if (PassThru.IsPresent)
         {
             WriteObject(document);

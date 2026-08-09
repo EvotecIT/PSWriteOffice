@@ -36,7 +36,7 @@ public sealed class AddOfficePdfPageBreakCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.PageBreak();
+        PdfCommandUtilities.AddContent(document, content => content.PageBreak());
         if (PassThru.IsPresent)
         {
             WriteObject(document);

@@ -52,11 +52,11 @@ public sealed class AddOfficePdfListCommand : PSCmdlet
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         if (Numbered.IsPresent)
         {
-            document.Numbered(Items, Align, startNumber: StartNumber);
+            PdfCommandUtilities.AddContent(document, content => content.Numbered(Items, Align, startNumber: StartNumber));
         }
         else
         {
-            document.Bullets(Items, Align);
+            PdfCommandUtilities.AddContent(document, content => content.Bullets(Items, Align));
         }
 
         if (PassThru.IsPresent)

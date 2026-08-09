@@ -104,32 +104,35 @@ public sealed class AddOfficePdfBackgroundShapeCommand : PSCmdlet
         var fill = PdfCommandUtilities.ParseColor(FillColor);
         var stroke = PdfCommandUtilities.ParseColor(StrokeColor);
 
-        switch (Shape)
+        PdfCommandUtilities.ConfigureDefaults(document, defaults =>
         {
-            case OfficePdfBackgroundShapeType.Rectangle:
-                document.BackgroundRectangle(X, Y, RequireWidth(), RequireHeight(), fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.RoundedRectangle:
-                document.BackgroundRoundedRectangle(X, Y, RequireWidth(), RequireHeight(), CornerRadius, fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.Ellipse:
-                document.BackgroundEllipse(X, Y, RequireWidth(), RequireHeight(), fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.TopBand:
-                document.BackgroundTopBand(RequireHeight(), fill, InsetX, OffsetY, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.BottomBand:
-                document.BackgroundBottomBand(RequireHeight(), fill, InsetX, OffsetY, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.LeftBand:
-                document.BackgroundLeftBand(RequireWidth(), fill, InsetY, OffsetX, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.RightBand:
-                document.BackgroundRightBand(RequireWidth(), fill, InsetY, OffsetX, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            default:
-                throw new PSArgumentOutOfRangeException(nameof(Shape), Shape, "Unsupported PDF background shape type.");
-        }
+            switch (Shape)
+            {
+                case OfficePdfBackgroundShapeType.Rectangle:
+                    defaults.BackgroundRectangle(X, Y, RequireWidth(), RequireHeight(), fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.RoundedRectangle:
+                    defaults.BackgroundRoundedRectangle(X, Y, RequireWidth(), RequireHeight(), CornerRadius, fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.Ellipse:
+                    defaults.BackgroundEllipse(X, Y, RequireWidth(), RequireHeight(), fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.TopBand:
+                    defaults.BackgroundTopBand(RequireHeight(), fill, InsetX, OffsetY, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.BottomBand:
+                    defaults.BackgroundBottomBand(RequireHeight(), fill, InsetX, OffsetY, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.LeftBand:
+                    defaults.BackgroundLeftBand(RequireWidth(), fill, InsetY, OffsetX, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.RightBand:
+                    defaults.BackgroundRightBand(RequireWidth(), fill, InsetY, OffsetX, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                default:
+                    throw new PSArgumentOutOfRangeException(nameof(Shape), Shape, "Unsupported PDF background shape type.");
+            }
+        });
 
         if (PassThru.IsPresent)
         {

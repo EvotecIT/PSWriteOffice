@@ -53,7 +53,7 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
         }
         else
         {
-            document.Compliance(Profile);
+            PdfCommandUtilities.ConfigureSettings(document, options => options.RequireCompliance(Profile));
         }
         if (PassThru.IsPresent)
         {
@@ -67,7 +67,7 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
         {
             case PdfComplianceProfile.PdfUa1:
             case PdfComplianceProfile.PdfUa2:
-                document.ConfigurePdfUaGroundwork(Profile, Language);
+                PdfCommandUtilities.ConfigureSettings(document, options => options.ConfigurePdfUaGroundwork(Profile, Language));
                 break;
             case PdfComplianceProfile.PdfA2B:
             case PdfComplianceProfile.PdfA2U:
@@ -78,7 +78,7 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
             case PdfComplianceProfile.PdfA4:
             case PdfComplianceProfile.PdfA4E:
             case PdfComplianceProfile.PdfA4F:
-                document.ConfigurePdfAGroundwork(Profile, Language);
+                PdfCommandUtilities.ConfigureSettings(document, options => options.ConfigurePdfAGroundwork(Profile, Language));
                 break;
             default:
                 WriteWarning("Groundwork is currently available for PDF/A and PDF/UA profiles.");

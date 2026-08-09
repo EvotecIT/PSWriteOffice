@@ -100,7 +100,7 @@ public sealed class AddOfficePdfRowCommand : PSCmdlet
 
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var defaultWidth = 100D / Column.Length;
-        document.Row(row =>
+        PdfCommandUtilities.AddContent(document, content => content.Row(row =>
         {
             if (Gap.HasValue)
             {
@@ -118,7 +118,7 @@ public sealed class AddOfficePdfRowCommand : PSCmdlet
                 var width = PdfRowColumnBuilder.GetWidth(column, defaultWidth);
                 row.Column(width, compose => PdfRowColumnBuilder.AddContent(compose, column));
             }
-        });
+        }));
 
         if (PassThru.IsPresent)
         {

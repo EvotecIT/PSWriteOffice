@@ -58,7 +58,8 @@ public sealed class AddOfficePdfImageCommand : PSCmdlet
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var imagePath = PdfCommandUtilities.ResolvePath(this, Path);
-        document.Image(File.ReadAllBytes(imagePath), Width, Height, Align, null, null, null, null, null, null, null, AlternativeText);
+        PdfCommandUtilities.AddContent(document, content =>
+            content.Image(File.ReadAllBytes(imagePath), Width, Height, Align, null, null, null, null, null, null, null, AlternativeText));
         if (PassThru.IsPresent)
         {
             WriteObject(document);

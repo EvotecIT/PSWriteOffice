@@ -13,6 +13,15 @@ namespace PSWriteOffice.Services.Pdf;
 
 internal static class PdfCommandUtilities
 {
+    internal static void AddContent(PdfDocument document, Action<PdfItemCompose> compose)
+        => document.Compose(root => root.Content(compose));
+
+    internal static void ConfigureDefaults(PdfDocument document, Action<PdfPageCompose> configure)
+        => document.Compose(root => root.Defaults(configure));
+
+    internal static void ConfigureSettings(PdfDocument document, Action<PdfOptions> configure)
+        => document.Compose(root => root.Settings(configure));
+
     internal static string ResolvePath(PSCmdlet cmdlet, string path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -216,7 +225,8 @@ internal static class PdfCommandUtilities
             return;
         }
 
-        document.Encryption(password!, ownerPassword, permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions);
+        ConfigureSettings(document, options =>
+            options.SetEncryption(password!, ownerPassword, permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions));
     }
 
     internal static PdfColor? ParseColor(string? color)

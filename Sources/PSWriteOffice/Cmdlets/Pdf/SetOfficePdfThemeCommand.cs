@@ -43,7 +43,7 @@ public sealed class SetOfficePdfThemeCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Theme(ResolveTheme());
+        PdfCommandUtilities.ConfigureDefaults(document, defaults => defaults.Theme(ResolveTheme()));
         if (PassThru.IsPresent)
         {
             WriteObject(document);

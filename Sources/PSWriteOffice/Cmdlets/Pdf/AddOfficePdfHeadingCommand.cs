@@ -56,13 +56,13 @@ public sealed class AddOfficePdfHeadingCommand : PSCmdlet
         switch (Level)
         {
             case 1:
-                document.H1(Text, Align, color);
+                PdfCommandUtilities.AddContent(document, content => content.H1(Text, Align, color));
                 break;
             case 2:
-                document.H2(Text, Align, color);
+                PdfCommandUtilities.AddContent(document, content => content.H2(Text, Align, color));
                 break;
             default:
-                document.H3(Text, Align, color);
+                PdfCommandUtilities.AddContent(document, content => content.H3(Text, Align, color));
                 break;
         }
 

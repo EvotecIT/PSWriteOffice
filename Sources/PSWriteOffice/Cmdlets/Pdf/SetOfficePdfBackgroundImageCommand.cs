@@ -60,7 +60,7 @@ public sealed class SetOfficePdfBackgroundImageCommand : PSCmdlet
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         if (Clear.IsPresent)
         {
-            document.BackgroundImage(null);
+            PdfCommandUtilities.ConfigureDefaults(document, defaults => defaults.BackgroundImage(null));
         }
         else
         {
@@ -70,7 +70,7 @@ public sealed class SetOfficePdfBackgroundImageCommand : PSCmdlet
             }
 
             var imagePath = PdfCommandUtilities.ResolvePath(this, Path!);
-            document.BackgroundImage(File.ReadAllBytes(imagePath), Fit, Opacity);
+            PdfCommandUtilities.ConfigureDefaults(document, defaults => defaults.BackgroundImage(File.ReadAllBytes(imagePath), Fit, Opacity));
         }
 
         if (PassThru.IsPresent)

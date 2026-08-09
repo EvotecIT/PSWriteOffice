@@ -123,34 +123,35 @@ public sealed class AddOfficePdfTextCommand : PSCmdlet
 
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var defaultColor = PdfCommandUtilities.ParseColor(Color);
-        document.Paragraph(
-            builder =>
-            {
-                if (Run is { Length: > 0 })
+        PdfCommandUtilities.AddContent(document, content =>
+            content.Paragraph(
+                builder =>
                 {
-                    PdfRichTextRunBuilder.ApplyRuns(builder, Run);
-                }
-                else
-                {
-                    PdfRichTextRunBuilder.ApplyText(
-                        builder,
-                        Text!,
-                        Bold.IsPresent,
-                        Italic.IsPresent,
-                        Underline.IsPresent,
-                        Strike.IsPresent,
-                        Baseline,
-                        defaultColor,
-                        PdfCommandUtilities.ParseColor(BackgroundColor),
-                        FontSize,
-                        Font,
-                        LinkUri,
-                        LinkDestinationName,
-                        LinkContents);
-                }
-            },
-            Align,
-            defaultColor);
+                    if (Run is { Length: > 0 })
+                    {
+                        PdfRichTextRunBuilder.ApplyRuns(builder, Run);
+                    }
+                    else
+                    {
+                        PdfRichTextRunBuilder.ApplyText(
+                            builder,
+                            Text!,
+                            Bold.IsPresent,
+                            Italic.IsPresent,
+                            Underline.IsPresent,
+                            Strike.IsPresent,
+                            Baseline,
+                            defaultColor,
+                            PdfCommandUtilities.ParseColor(BackgroundColor),
+                            FontSize,
+                            Font,
+                            LinkUri,
+                            LinkDestinationName,
+                            LinkContents);
+                    }
+                },
+                Align,
+                defaultColor));
 
         if (PassThru.IsPresent)
         {

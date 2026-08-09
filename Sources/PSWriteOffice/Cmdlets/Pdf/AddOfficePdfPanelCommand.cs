@@ -42,7 +42,7 @@ public sealed class AddOfficePdfPanelCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.PanelParagraph(p => p.Text(Text), align: Align);
+        PdfCommandUtilities.AddContent(document, content => content.PanelParagraph(p => p.Text(Text), align: Align));
         if (PassThru.IsPresent)
         {
             WriteObject(document);

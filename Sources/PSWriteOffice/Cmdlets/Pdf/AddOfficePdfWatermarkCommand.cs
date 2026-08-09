@@ -55,7 +55,8 @@ public sealed class AddOfficePdfWatermarkCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Watermark(Text, FontSize, PdfCommandUtilities.ParseColor(Color), Opacity, RotationAngle);
+        PdfCommandUtilities.ConfigureDefaults(document, defaults =>
+            defaults.Watermark(Text, FontSize, PdfCommandUtilities.ParseColor(Color), Opacity, RotationAngle));
         if (PassThru.IsPresent)
         {
             WriteObject(document);

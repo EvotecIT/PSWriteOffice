@@ -66,7 +66,8 @@ public sealed class SetOfficePdfElectronicInvoiceCommand : PSCmdlet
 
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var invoicePath = PdfCommandUtilities.ResolvePath(this, Path);
-        document.ConfigureElectronicInvoiceGroundwork(Profile, File.ReadAllBytes(invoicePath), ConformanceLevel, Version, Relationship, Description);
+        PdfCommandUtilities.ConfigureSettings(document, options =>
+            options.ConfigureElectronicInvoiceGroundwork(Profile, File.ReadAllBytes(invoicePath), ConformanceLevel, Version, Relationship, Description));
 
         if (PassThru.IsPresent)
         {

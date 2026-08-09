@@ -77,7 +77,7 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
         }
 
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Footer(footer =>
+        PdfCommandUtilities.ConfigureDefaults(document, defaults => defaults.Footer(footer =>
         {
             ApplyAlignment(footer);
             if (FontSize.HasValue)
@@ -92,7 +92,7 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
             {
                 footer.Text(Text);
             }
-        });
+        }));
 
         if (PassThru.IsPresent)
         {

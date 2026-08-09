@@ -84,7 +84,7 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
         }
 
         var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Header(header =>
+        PdfCommandUtilities.ConfigureDefaults(document, defaults => defaults.Header(header =>
         {
             ApplyAlignment(header);
             if (FontSize.HasValue)
@@ -99,7 +99,7 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
             {
                 header.Text(Text!);
             }
-        });
+        }));
 
         if (PassThru.IsPresent)
         {

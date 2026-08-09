@@ -197,7 +197,7 @@ public sealed class NewOfficePdfCommand : PSCmdlet
             return;
         }
 
-        var document = PdfDocument.Create(CreateOptions());
+        var document = PdfDocument.Create(_ => { }, CreateOptions());
         if (Content != null)
         {
             using (PdfDslContext.Enter(document))

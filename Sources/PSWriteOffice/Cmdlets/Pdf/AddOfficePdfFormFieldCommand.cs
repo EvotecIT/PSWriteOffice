@@ -77,22 +77,22 @@ public sealed class AddOfficePdfFormFieldCommand : PSCmdlet
         switch (Type)
         {
             case OfficePdfFormFieldType.CheckBox:
-                document.CheckBox(Name, Checked.IsPresent, align: Align);
+                PdfCommandUtilities.AddContent(document, content => content.CheckBox(Name, Checked.IsPresent, align: Align));
                 break;
             case OfficePdfFormFieldType.Choice:
                 EnsureOptions();
-                document.ChoiceField(Name, Options, Value, Width, Height, Align);
+                PdfCommandUtilities.AddContent(document, content => content.ChoiceField(Name, Options, Value, Width, Height, Align));
                 break;
             case OfficePdfFormFieldType.MultiSelectChoice:
                 EnsureOptions();
-                document.MultiSelectChoiceField(Name, Options, Values.Length > 0 ? Values : Value == null ? null : new[] { Value }, Width, Height, Align);
+                PdfCommandUtilities.AddContent(document, content => content.MultiSelectChoiceField(Name, Options, Values.Length > 0 ? Values : Value == null ? null : new[] { Value }, Width, Height, Align));
                 break;
             case OfficePdfFormFieldType.RadioButton:
                 EnsureOptions();
-                document.RadioButtonGroup(Name, Options, Value, align: Align);
+                PdfCommandUtilities.AddContent(document, content => content.RadioButtonGroup(Name, Options, Value, align: Align));
                 break;
             default:
-                document.TextField(Name, Width, Height, Value ?? string.Empty, Align);
+                PdfCommandUtilities.AddContent(document, content => content.TextField(Name, Width, Height, Value ?? string.Empty, Align));
                 break;
         }
 
