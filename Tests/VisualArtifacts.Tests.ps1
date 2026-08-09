@@ -1,0 +1,82 @@
+BeforeAll {
+    $ModuleManifest = if ($env:PSWRITEOFFICE_MODULE_MANIFEST) {
+        $env:PSWRITEOFFICE_MODULE_MANIFEST
+    } else {
+        Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
+    }
+    Import-Module $ModuleManifest -Global -ErrorAction Stop
+}
+
+Describe 'ChartForgeX visual artifacts' {
+    BeforeAll {
+        $script:SvgPath = Join-Path $TestDrive 'service-health.svg'
+        @'
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="220" viewBox="0 0 400 220">
+  <rect width="400" height="220" rx="16" fill="#f8fafc"/>
+  <text x="24" y="42" font-size="24" fill="#0f172a">Service Health</text>
+  <rect x="24" y="70" width="352" height="54" rx="8" fill="#dcfce7"/>
+  <text x="42" y="103" font-size="18" fill="#166534">API  Healthy</text>
+  <rect x="24" y="138" width="352" height="54" rx="8" fill="#fef3c7"/>
+  <text x="42" y="171" font-size="18" fill="#92400e">Worker  Warning</text>
+</svg>
+'@ | Set-Content -LiteralPath $script:SvgPath -Encoding utf8NoBOM
+    }
+
+    It 'converts once and reports the selected placement payload' {
+        $visual = $SvgPath | ConvertTo-OfficeVisual -Width 300 -SvgPolicy RasterizeWhenNeeded -Id service-health -Title 'Service Health' -AlternativeText 'Health of API and worker services.'
+
+        $visual.GetType().FullName | Should -Be 'OfficeIMO.ChartForgeX.OfficeVisualConversionResult'
+        $visual.WidthPoints | Should -Be 300
+        $visual.GetPlacementBytes().Count | Should -BeGreaterThan 100
+        $visual.PlacementMediaType | Should -BeIn 'image/svg+xml', 'image/png'
+        $visual.AlternativeText | Should -Be 'Health of API and worker services.'
+    }
+
+    It 'accepts a reusable Office visual source without treating it as a path' {
+        $probe = $SvgPath | ConvertTo-OfficeVisual
+        $sourceType = $probe.GetType().Assembly.GetType('OfficeIMO.ChartForgeX.OfficeVisualSource', $true)
+        $source = [Activator]::CreateInstance($sourceType, (, [IO.File]::ReadAllBytes($SvgPath)))
+        $source.Id = 'portable-health'
+        $source.Title = 'Portable Health'
+        $visual = $source | ConvertTo-OfficeVisual -Width 280
+
+        $visual.Id | Should -Be 'portable-health'
+        $visual.Title | Should -Be 'Portable Health'
+        $visual.WidthPoints | Should -Be 280
+        { $source | ConvertTo-OfficeVisual -Id changed -ErrorAction Stop } | Should -Throw '*cannot be used with an existing OfficeVisualSource*'
+    }
+
+    It 'places one converted visual in Word, Excel, and PowerPoint' {
+        $visual = $SvgPath | ConvertTo-OfficeVisual -Width 300 -AlternativeText 'Health of API and worker services.'
+        $wordPath = Join-Path $TestDrive 'visual.docx'
+        $excelPath = Join-Path $TestDrive 'visual.xlsx'
+        $powerPointPath = Join-Path $TestDrive 'visual.pptx'
+
+        New-OfficeWord -Path $wordPath {
+            WordSection { WordParagraph { $visual | Add-OfficeWordVisual | Out-Null } }
+        } | Out-Null
+        New-OfficeExcel -Path $excelPath {
+            Add-OfficeExcelSheet -Name Dashboard -Content {
+                $visual | Add-OfficeExcelVisual -Address B2 | Out-Null
+            }
+        } | Out-Null
+        New-OfficePowerPoint -Path $powerPointPath {
+            PptSlide { $visual | Add-OfficePowerPointVisual -X 36 -Y 54 | Out-Null }
+        } | Out-Null
+        Test-Path $wordPath | Should -BeTrue
+        Test-Path $excelPath | Should -BeTrue
+        Test-Path $powerPointPath | Should -BeTrue
+    }
+
+    It 'rejects conversion overrides when a prepared visual is reused' {
+        $visual = $SvgPath | ConvertTo-OfficeVisual -Width 300
+        $wordPath = Join-Path $TestDrive 'override.docx'
+        $document = New-OfficeWord -Path $wordPath -NoSave
+        try {
+            $paragraph = $document.AddParagraph()
+            { $visual | Add-OfficeWordVisual -Paragraph $paragraph -Width 240 -ErrorAction Stop } | Should -Throw '*cannot be used with an existing*'
+        } finally {
+            Close-OfficeWord -Document $document -ErrorAction SilentlyContinue
+        }
+    }
+}
