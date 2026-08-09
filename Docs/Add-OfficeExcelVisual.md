@@ -11,7 +11,7 @@ Adds a ChartForgeX artifact, portable SVG, or converted Office visual to an Exce
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelVisual [-InputObject] <Object> [-Worksheet <ExcelSheet>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-OffsetX <int>] [-OffsetY <int>] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
+Add-OfficeExcelVisual [-InputObject] <Object> [-Worksheet <ExcelSheet>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-OffsetX <int>] [-OffsetY <int>] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -128,6 +128,38 @@ Optional OfficeIMO SVG import element limit.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaximumSvgViewportDimension
+Optional maximum SVG viewport width or height. Increase the safe default only for trusted input.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaximumSvgViewportPixels
+Optional maximum SVG viewport area in pixels. Increase the safe default only for trusted input.
+
+```yaml
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

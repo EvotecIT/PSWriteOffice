@@ -42,9 +42,14 @@ public sealed class AddOfficePdfVisualCommand : OfficeVisualCommandBase
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        PdfDocument document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.AddVisualArtifact(ResolveVisual(InputObject), Align, SpacingBefore, SpacingAfter);
-        if (PassThru.IsPresent)
+        var visual = ResolveVisual(InputObject);
+        var document = PdfCommandUtilities.ComposeContent(
+            this,
+            Document,
+            ParameterSetName,
+            ParameterSetDocument,
+            content => content.AddVisualArtifact(visual, Align, SpacingBefore, SpacingAfter));
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

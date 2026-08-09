@@ -14,11 +14,11 @@ $chart = New-ImageTopology -Node @(
 ) -LayoutPreset Presentation -FilePath (Join-Path $documents 'service-map.svg') -PassThru
 
 $artifact = $chart |
-    ConvertTo-ImageVisualArtifact -Id service-map -AccessibleDescription 'API service connects to the database.'
+    ConvertTo-ImageVisualArtifact -Id service-map -Title 'Service Map' `
+        -AccessibleDescription 'API service connects to the database.'
 $svgPath = Join-Path $documents 'service-map-office.svg'
 $artifact | Export-ImageVisualArtifact -FilePath $svgPath
-$officeVisual = $svgPath | ConvertTo-OfficeVisual -Width 420 -SvgPolicy RasterizeWhenNeeded `
-    -Id service-map -Title 'Service Map' -AlternativeText 'API service connects to the database.'
+$officeVisual = $artifact | ConvertTo-OfficeVisual -Width 420 -SvgPolicy RasterizeWhenNeeded
 
 New-OfficeWord -Path (Join-Path $documents 'service-map.docx') {
     WordSection { WordParagraph { $officeVisual | Add-OfficeWordVisual | Out-Null } }

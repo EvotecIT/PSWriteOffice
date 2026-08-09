@@ -29,6 +29,14 @@ public abstract class OfficeVisualCommandBase : PSCmdlet
     [Parameter]
     public int? MaximumSvgElements { get; set; }
 
+    /// <summary>Optional maximum SVG viewport width or height. Increase the safe default only for trusted input.</summary>
+    [Parameter]
+    public double? MaximumSvgViewportDimension { get; set; }
+
+    /// <summary>Optional maximum SVG viewport area in pixels. Increase the safe default only for trusted input.</summary>
+    [Parameter]
+    public double? MaximumSvgViewportPixels { get; set; }
+
     /// <summary>Optional stable identifier for an SVG file input.</summary>
     [Parameter]
     public string? Id { get; set; }
@@ -44,7 +52,13 @@ public abstract class OfficeVisualCommandBase : PSCmdlet
     /// <summary>Converts an artifact or reuses an existing conversion result.</summary>
     protected OfficeVisualConversionResult ResolveVisual(object inputObject)
     {
-        object value = inputObject is PSObject psObject ? psObject.BaseObject : inputObject;
+        if (inputObject is PathInfo directPathInfo)
+        {
+            return ConvertSvgFile(directPathInfo.Path);
+        }
+
+        PSObject input = PSObject.AsPSObject(inputObject);
+        object value = input.BaseObject;
         if (value is OfficeVisualConversionResult converted)
         {
             RejectConversionOverrides();
@@ -60,24 +74,63 @@ public abstract class OfficeVisualCommandBase : PSCmdlet
         {
             return ConvertSvgFile(fileInfo.FullName);
         }
+        if (value is PathInfo pathInfo)
+        {
+            return ConvertSvgFile(pathInfo.Path);
+        }
         if (value is string path)
         {
             return ConvertSvgFile(SessionState.Path.GetUnresolvedProviderPathFromPSPath(path));
         }
 
+        if (input.TypeNames.Contains("ImagePlayground.VisualArtifact"))
+        {
+            return ConvertPortableVisual(input);
+        }
+
         if (value is not VisualArtifact artifact)
         {
             throw new PSArgumentException(
-                "InputObject must be a ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or SVG file path.",
+                "InputObject must be a ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or SVG file path. Received " +
+                inputObject.GetType().FullName + ".",
                 nameof(inputObject));
         }
 
         return artifact.ToOfficeVisual(CreateOptions());
     }
 
+    private OfficeVisualConversionResult ConvertPortableVisual(PSObject input)
+    {
+        object? payload = input.Properties["OfficeVisualSvg"]?.Value;
+        if (payload is not byte[] svgBytes || svgBytes.Length == 0)
+        {
+            throw new PSArgumentException(
+                "ImagePlayground.VisualArtifact input must provide non-empty OfficeVisualSvg bytes.",
+                nameof(input));
+        }
+
+        var source = new OfficeVisualSource(svgBytes)
+        {
+            Id = ResolvePortableText(input, "OfficeVisualId", Id),
+            Title = ResolvePortableText(input, "OfficeVisualTitle", Title),
+            AlternativeText = ResolvePortableText(input, "OfficeVisualAlternativeText", AlternativeText)
+        };
+        return source.ToOfficeVisual(CreateOptions());
+    }
+
+    private static string ResolvePortableText(PSObject input, string propertyName, string? overrideValue)
+    {
+        if (!string.IsNullOrWhiteSpace(overrideValue))
+        {
+            return overrideValue!;
+        }
+
+        return input.Properties[propertyName]?.Value as string ?? string.Empty;
+    }
+
     private void RejectConversionOverrides()
     {
-        string[] names = { nameof(SvgPolicy), nameof(Width), nameof(Height), nameof(PointsPerPixel), nameof(MaximumSvgElements), nameof(Id), nameof(Title), nameof(AlternativeText) };
+        string[] names = { nameof(SvgPolicy), nameof(Width), nameof(Height), nameof(PointsPerPixel), nameof(MaximumSvgElements), nameof(MaximumSvgViewportDimension), nameof(MaximumSvgViewportPixels), nameof(Id), nameof(Title), nameof(AlternativeText) };
         foreach (string name in names)
         {
             if (MyInvocation.BoundParameters.ContainsKey(name))
@@ -130,6 +183,14 @@ public abstract class OfficeVisualCommandBase : PSCmdlet
         if (MaximumSvgElements.HasValue)
         {
             options.MaximumSvgElements = MaximumSvgElements.Value;
+        }
+        if (MaximumSvgViewportDimension.HasValue)
+        {
+            options.MaximumSvgViewportDimension = MaximumSvgViewportDimension.Value;
+        }
+        if (MaximumSvgViewportPixels.HasValue)
+        {
+            options.MaximumSvgViewportPixels = MaximumSvgViewportPixels.Value;
         }
         return options;
     }
