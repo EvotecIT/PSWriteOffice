@@ -93,6 +93,53 @@ Describe 'ChartForgeX visual artifacts' {
         $visual.WidthPoints | Should -Be 260
     }
 
+    It 'converts portable semantic bytes into native editable Visio objects' {
+        $portable = [pscustomobject] @{
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes(@'
+{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"portable-topology","title":"Portable topology","subtitle":"","layout":"Layered","direction":"LeftToRight","width":900,"height":520,"isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"api","kind":"External","label":"API","metadata":{"Owner":"Platform"},"ports":[],"details":[]},{"id":"database","kind":"Database","label":"Database","metadata":{},"ports":[],"details":[]}],"edges":[{"id":"api-db","kind":"Data","sourceId":"api","targetId":"database","label":"queries","order":0,"metadata":{}}],"annotations":[]}
+'@)
+            OfficeVisualSvg             = [IO.File]::ReadAllBytes($SvgPath)
+        }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+
+        $converted = $portable | ConvertTo-OfficeVisioVisual -PageName 'Portable topology'
+        $converted.GetType().FullName | Should -Be 'OfficeIMO.ChartForgeX.OfficeVisioVisualConversionResult'
+        $converted.Report.IsNativeEditable | Should -BeTrue
+        $converted.Report.NodeCount | Should -Be 2
+        $converted.Page.Shapes.Id | Should -Contain 'api'
+        $converted.Page.Shapes.Id | Should -Contain 'database'
+        $converted.Page.Connectors.Id | Should -Contain 'api-db'
+        ($converted.Page.Shapes | Where-Object Id -EQ 'api').GetShapeDataValue('Metadata.Owner') | Should -Be 'Platform'
+
+        $natural = $portable | ConvertTo-OfficeVisioVisual -UseNaturalPageSize -PixelsPerInch 100
+        $natural.Page.Width | Should -BeGreaterThan $converted.Page.Width
+    }
+
+    It 'exports portable semantic bytes as a valid editable VSDX package' {
+        $portable = [pscustomobject] @{
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes(@'
+{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"export-topology","title":"","subtitle":"","layout":"Layered","direction":"LeftToRight","isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"service","kind":"Process","label":"Service","metadata":{},"ports":[],"details":[]}],"edges":[],"annotations":[]}
+'@)
+        }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+        $path = Join-Path $TestDrive 'portable-topology.vsdx'
+
+        $file = $portable | Export-OfficeVisioVisual -Path $path
+
+        $file.FullName | Should -Be $path
+        Test-Path $path | Should -BeTrue
+        $loaded = Get-OfficeVisio -Path $path
+        $loaded.Pages[0].Shapes.Id | Should -Contain 'service'
+    }
+
+    It 'rejects an SVG-only ImagePlayground envelope for editable Visio conversion' {
+        $portable = [pscustomobject] @{ OfficeVisualSvg = [IO.File]::ReadAllBytes($SvgPath) }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+
+        { $portable | ConvertTo-OfficeVisioVisual -ErrorAction Stop } |
+            Should -Throw '*OfficeVisualInterchangeJson*'
+    }
+
     It 'places one converted visual in Word, Excel, and PowerPoint' {
         $visual = $SvgPath | ConvertTo-OfficeVisual -Width 300 -AlternativeText 'Health of API and worker services.'
         $wordPath = Join-Path $TestDrive 'visual.docx'

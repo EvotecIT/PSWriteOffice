@@ -550,6 +550,9 @@ Exports a Visio document page to native dependency-free PNG.
 ### [ConvertTo-OfficeVisioSvg](ConvertTo-OfficeVisioSvg.md)
 Exports a Visio document page to dependency-free SVG.
 
+### [ConvertTo-OfficeVisioVisual](ConvertTo-OfficeVisioVisual.md)
+Converts CFX semantic visual-artifact input into a native editable OfficeIMO.Visio document.
+
 ### [ConvertTo-OfficeVisual](ConvertTo-OfficeVisual.md)
 Converts a ChartForgeX visual artifact into a reusable OfficeIMO representation.
 
@@ -615,6 +618,9 @@ Exports selected Visio pages through the format-neutral OfficeIMO image pipeline
 
 ### [Export-OfficeVisioStencilPreviewGallery](Export-OfficeVisioStencilPreviewGallery.md)
 Exports preview artwork from a Visio stencil package into a browsable HTML gallery.
+
+### [Export-OfficeVisioVisual](Export-OfficeVisioVisual.md)
+Exports CFX semantic visual-artifact input as a native editable VSDX diagram.
 
 ### [Export-OfficeWordGoogleDocument](Export-OfficeWordGoogleDocument.md)
 Plans, compiles, or exports a Word document to Google Docs.
