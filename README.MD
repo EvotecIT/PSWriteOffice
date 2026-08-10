@@ -331,6 +331,22 @@ ConvertTo-OfficeVisioSvg -Path .\Diagram.vsdx -OutputPath .\Diagram.svg
 ConvertTo-OfficeVisioPng -Path .\Diagram.vsdx -OutputPath .\Diagram.png
 ```
 
+ImagePlayground visual artifacts carry both static SVG and CFX semantic JSON. Use the semantic payload to create native editable Visio shapes, containers, connectors, Shape Data, and hyperlinks without sharing CLR types between the two modules:
+
+```powershell
+$artifact = New-ImageTopology -TopologyDefinition {
+    New-ImageTopologyGroup -Id platform -Label Platform
+    New-ImageTopologyNode -Id api -Label API -Kind Service -GroupId platform
+    New-ImageTopologyNode -Id database -Label Database -Kind Database -GroupId platform
+    New-ImageTopologyEdge -Id api-db -SourceNodeId api -TargetNodeId database -Label queries
+} -FilePath .\topology.svg -PassThru |
+    ConvertTo-ImageVisualArtifact -Id service-topology -Title 'Service topology'
+
+$artifact | Export-OfficeVisioVisual -Path .\topology.vsdx
+```
+
+`ConvertTo-OfficeVisioVisual` returns the editable document, page, validated CFX envelope, and fidelity report when a script needs to inspect or modify the projection before saving. Topology, flow, and sequence artifacts have native mappings; other visual families keep their SVG fallback and fail closed when an editable Visio projection is requested.
+
 ```powershell
 $flow = Get-OfficeVisioStencilCatalog -BuiltIn Flowchart
 Find-OfficeVisioStencil -Catalog $flow -Query process -First 5
