@@ -18,6 +18,8 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [OutputType(typeof(OfficeVisioVisualConversionResult), typeof(FileInfo))]
 public sealed class ExportOfficeVisioVisualCommand : OfficeVisioVisualCommandBase
 {
+    private bool _inputSeen;
+
     /// <summary>Typed CFX artifact, semantic envelope/JSON, ImagePlayground portable artifact, or prior conversion result.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public object InputObject { get; set; } = null!;
@@ -38,6 +40,13 @@ public sealed class ExportOfficeVisioVisualCommand : OfficeVisioVisualCommandBas
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (_inputSeen)
+        {
+            throw new PSInvalidOperationException(
+                "Export-OfficeVisioVisual accepts one input artifact for one output path. Invoke the cmdlet separately for each destination.");
+        }
+        _inputSeen = true;
+
         string fullPath = VisioCommandUtilities.ResolvePath(this, Path);
         if (!string.Equals(System.IO.Path.GetExtension(fullPath), ".vsdx", System.StringComparison.OrdinalIgnoreCase))
         {

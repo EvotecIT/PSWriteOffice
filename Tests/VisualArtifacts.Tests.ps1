@@ -109,6 +109,43 @@ Describe 'ChartForgeX visual artifacts' {
         $loaded.Pages[0].Shapes.Id | Should -Contain 'service'
     }
 
+    It 'accepts raw semantic JSON text without interpreting it as a file path' {
+        $json = @'
+{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"raw-json","title":"Raw JSON","subtitle":"","layout":"Layered","direction":"LeftToRight","isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"service","kind":"Process","label":"Service","metadata":{},"ports":[],"details":[]}],"edges":[],"annotations":[]}
+'@
+
+        $converted = $json | ConvertTo-OfficeVisioVisual
+
+        $converted.Envelope.Id | Should -Be 'raw-json'
+        $converted.Page.Shapes.Id | Should -Contain 'service'
+    }
+
+    It 'rejects multiple pipeline artifacts for one VSDX destination' {
+        $portable = [pscustomobject] @{
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes(@'
+{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"single-output","title":"","subtitle":"","layout":"Layered","direction":"LeftToRight","isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"service","kind":"Process","label":"Service","metadata":{},"ports":[],"details":[]}],"edges":[],"annotations":[]}
+'@)
+        }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+        $path = Join-Path $TestDrive 'single-output.vsdx'
+
+        { @($portable, $portable) | Export-OfficeVisioVisual -Path $path -ErrorAction Stop } |
+            Should -Throw '*accepts one input artifact*'
+    }
+
+    It 'rejects oversized semantic JSON files before reading their payload' {
+        $path = Join-Path $TestDrive 'oversized.json'
+        $stream = [IO.File]::Open($path, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+        try {
+            $stream.SetLength((8MB) + 1)
+        } finally {
+            $stream.Dispose()
+        }
+
+        { ConvertTo-OfficeVisioVisual -InputObject $path -ErrorAction Stop } |
+            Should -Throw '*must not exceed*bytes*'
+    }
+
     It 'rejects an SVG-only ImagePlayground envelope for editable Visio conversion' {
         $portable = [pscustomobject] @{ OfficeVisualSvg = [IO.File]::ReadAllBytes($SvgPath) }
         $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
