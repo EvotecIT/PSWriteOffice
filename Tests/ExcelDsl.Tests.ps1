@@ -9,7 +9,7 @@ BeforeAll {
     . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 
     if (-not ('PSWriteOfficeTestSupport.LateDestinationDataReader' -as [type])) {
-        Add-Type -TypeDefinition @'
+        $readerTypeDefinition = @'
 using System;
 using System.Data;
 using System.IO;
@@ -71,6 +71,11 @@ namespace PSWriteOfficeTestSupport {
     }
 }
 '@
+        if ($PSVersionTable.PSEdition -eq 'Desktop') {
+            Add-Type -TypeDefinition $readerTypeDefinition -ReferencedAssemblies 'System.Data.dll'
+        } else {
+            Add-Type -TypeDefinition $readerTypeDefinition
+        }
     }
 
     function Get-TestLoadedType {
