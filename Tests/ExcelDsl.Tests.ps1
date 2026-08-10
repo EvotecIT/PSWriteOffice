@@ -72,7 +72,10 @@ namespace PSWriteOfficeTestSupport {
 }
 '@
         if ($PSVersionTable.PSEdition -eq 'Desktop') {
-            Add-Type -TypeDefinition $readerTypeDefinition -ReferencedAssemblies 'System.Data.dll'
+            Add-Type -TypeDefinition $readerTypeDefinition -ReferencedAssemblies @(
+                'System.Data.dll'
+                'System.Xml.dll'
+            )
         } else {
             Add-Type -TypeDefinition $readerTypeDefinition
         }
