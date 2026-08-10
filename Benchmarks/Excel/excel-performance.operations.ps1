@@ -317,6 +317,7 @@ function Invoke-ExcelBenchmarkWriteWorkbook {
         objects-title-freeze { Invoke-ExcelBenchmarkObjectsTitleFreeze -Engine $Engine -Run $Run }
         wide-objects-default { Invoke-ExcelBenchmarkObjectsDefault -Engine $Engine -Run $Run }
         datatable-default { Invoke-ExcelBenchmarkDataTableDefault -Engine $Engine -Run $Run }
+        datareader-table { Invoke-ExcelBenchmarkDataReaderTable -Engine $Engine -Run $Run }
         multi-sheet-regions { Invoke-ExcelBenchmarkMultiSheetRegions -Engine $Engine -Run $Run }
         summary-formulas { Invoke-ExcelBenchmarkSummaryFormulas -Engine $Engine -Run $Run }
         append-existing-table { Invoke-ExcelBenchmarkAppendExistingTable -Engine $Engine -Run $Run }
@@ -392,6 +393,20 @@ function Invoke-ExcelBenchmarkDataTableDefault {
     switch ($Engine) {
         PSWriteOffice { Export-OfficeExcel -Path $Run.Path -InputObject $Run.Payload -WorksheetName $Run.WorksheetName -TableName Data }
         ImportExcel { $Run.Payload | Export-Excel -Path $Run.Path -WorksheetName $Run.WorksheetName }
+    }
+}
+
+function Invoke-ExcelBenchmarkDataReaderTable {
+    param([string] $Engine, [object] $Run)
+    if ($Engine -ne 'PSWriteOffice') {
+        throw "Engine '$Engine' does not expose an equivalent IDataReader workbook export."
+    }
+
+    $reader = $Run.Payload.CreateDataReader()
+    try {
+        Export-OfficeExcel -Path $Run.Path -InputObject $reader -WorksheetName $Run.WorksheetName -TableName Data
+    } finally {
+        $reader.Dispose()
     }
 }
 

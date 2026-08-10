@@ -60,6 +60,31 @@ pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-Excel
     -UpdateReadme
 ```
 
+### Streaming `IDataReader` tables
+
+The `datareader-table` scenario measures the SQL-facing path: a forward-only
+`IDataReader` is written as a real XLSX table and then validated for typed values
+and Open XML package correctness. It is a PSWriteOffice capability lane, not a
+cross-library ranking, because the compared PowerShell modules do not expose an
+equivalent `IDataReader` workbook export.
+
+```powershell
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Benchmarks\Compare-ExcelPerformance.ps1 `
+    -Suite Standard `
+    -RowCount 25000 `
+    -RepeatCount 31 `
+    -Scenario datareader-table `
+    -Engine PSWriteOffice
+```
+
+A focused 2026-08-10 before/after run used 25,000 rows, twelve warmups, 31
+measurements, High process priority, and affinities `0x1` and `0x10000` on an
+AMD Ryzen 9 9950X3D2. The package-native path reduced observed mean export time
+from 127.74 to 82.21 ms on `0x1` and from 84.95 to 47.31 ms on `0x10000`.
+Managed allocation fell from about 12.37 MB to 3.00 MB in both processor
+domains. These are workstation observations; the paired processor runs are kept
+visible because the faster CPU domain can change by sub-operation.
+
 <!-- BENCHMARK:ExcelComparison:START -->
 | Scenario | Rows | PSWriteOffice | ExcelFast | ImportExcel | Result |
 | --- | ---: | ---: | ---: | ---: | --- |

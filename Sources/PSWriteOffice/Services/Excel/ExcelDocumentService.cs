@@ -9,7 +9,7 @@ using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Services.Excel;
 
-internal static class ExcelDocumentService
+internal static partial class ExcelDocumentService
 {
     private static readonly ConcurrentDictionary<ExcelDocument, string> AssociatedPaths = new();
     private static readonly ConcurrentDictionary<ExcelDocument, string> EncryptedSourcePaths = new();
