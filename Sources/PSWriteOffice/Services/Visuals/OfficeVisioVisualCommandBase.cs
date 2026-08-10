@@ -74,9 +74,14 @@ public abstract class OfficeVisioVisualCommandBase : PSCmdlet
         {
             return ConvertJsonFile(pathInfo.Path, options);
         }
-        if (value is string path)
+        if (value is string text)
         {
-            return ConvertJsonFile(SessionState.Path.GetUnresolvedProviderPathFromPSPath(path), options);
+            string trimmed = text.TrimStart();
+            if (trimmed.StartsWith("{", StringComparison.Ordinal))
+            {
+                return VisualArtifactInterchangeEnvelope.FromJson(text).ToOfficeVisio(options);
+            }
+            return ConvertJsonFile(SessionState.Path.GetUnresolvedProviderPathFromPSPath(text), options);
         }
         if (input.TypeNames.Contains("ImagePlayground.VisualArtifact"))
         {
@@ -107,6 +112,14 @@ public abstract class OfficeVisioVisualCommandBase : PSCmdlet
         if (!string.Equals(Path.GetExtension(fullPath), ".json", StringComparison.OrdinalIgnoreCase))
         {
             throw new PSArgumentException("Native Visio visual file input must be CFX interchange JSON with a .json extension.", nameof(path));
+        }
+        long length = new FileInfo(fullPath).Length;
+        if (length > VisualArtifactInterchangeEnvelope.MaximumJsonUtf8Bytes)
+        {
+            throw new PSArgumentOutOfRangeException(
+                nameof(path),
+                length,
+                $"CFX interchange UTF-8 JSON must not exceed {VisualArtifactInterchangeEnvelope.MaximumJsonUtf8Bytes} bytes.");
         }
         return File.ReadAllBytes(fullPath).ToOfficeVisio(options);
     }
