@@ -55,6 +55,15 @@ public abstract class OfficeVisioVisualCommandBase : PSCmdlet
                 throw MixedPipelineInput();
             }
 
+            int bufferedCount = _pipelineBytes?.Count ?? 0;
+            if (bufferedCount >= VisualArtifactInterchangeEnvelope.MaximumJsonUtf8Bytes)
+            {
+                throw new PSArgumentOutOfRangeException(
+                    "InputObject",
+                    bufferedCount + 1,
+                    $"CFX interchange UTF-8 JSON must not exceed {VisualArtifactInterchangeEnvelope.MaximumJsonUtf8Bytes} bytes.");
+            }
+
             (_pipelineBytes ??= new List<byte>()).Add(item);
             return true;
         }
