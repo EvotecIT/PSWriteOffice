@@ -143,6 +143,17 @@ Describe 'ChartForgeX visual artifacts' {
         $converted.Page.Shapes.Id | Should -Contain 'service'
     }
 
+    It 'accepts raw semantic JSON text with a leading Unicode BOM' {
+        $json = [char] 0xFEFF + @'
+{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"bom-json","title":"BOM JSON","subtitle":"","layout":"Layered","direction":"LeftToRight","isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"service","kind":"Process","label":"Service","metadata":{},"ports":[],"details":[]}],"edges":[],"annotations":[]}
+'@
+
+        $converted = $json | ConvertTo-OfficeVisioVisual
+
+        $converted.Envelope.Id | Should -Be 'bom-json'
+        $converted.Page.Shapes.Id | Should -Contain 'service'
+    }
+
     It 'rejects multiple pipeline artifacts for one VSDX destination' {
         $portable = [pscustomobject] @{
             OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes(@'
@@ -154,6 +165,7 @@ Describe 'ChartForgeX visual artifacts' {
 
         { @($portable, $portable) | Export-OfficeVisioVisual -Path $path -ErrorAction Stop } |
             Should -Throw '*accepts one input artifact*'
+        Test-Path $path | Should -BeFalse
     }
 
     It 'rejects oversized semantic JSON files before reading their payload' {
