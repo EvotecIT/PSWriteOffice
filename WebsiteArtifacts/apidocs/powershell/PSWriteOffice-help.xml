@@ -160936,13 +160936,14 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$pdf = New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {&#xD;
+        <dev:code>$path = '.\Examples\Documents\PdfCompliance.pdf'&#xD;
+            New-OfficePdf -Path $path {&#xD;
                 Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'&#xD;
                 Add-OfficePdfHeading -Text 'Compliance-ready report'&#xD;
             }&#xD;
-            $pdf | Get-OfficePdfCompliance -Profile PdfA3B</dev:code>
+            Get-OfficePdfCompliance -Path $path -Profile PdfA3B</dev:code>
         <dev:remarks>
-          <maml:para>Applies OfficeIMO.Pdf compliance groundwork during composition, then inspects the completed document.</maml:para>
+          <maml:para>Applies OfficeIMO.Pdf compliance groundwork during composition, saves the PDF, then inspects the saved file.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

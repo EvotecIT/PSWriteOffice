@@ -8,12 +8,13 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Configure PDF/A groundwork before saving.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$pdf = New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {
+///   <code>$path = '.\Examples\Documents\PdfCompliance.pdf'
+/// New-OfficePdf -Path $path {
 ///     Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'
 ///     Add-OfficePdfHeading -Text 'Compliance-ready report'
 /// }
-/// $pdf | Get-OfficePdfCompliance -Profile PdfA3B</code>
-///   <para>Applies OfficeIMO.Pdf compliance groundwork during composition, then inspects the completed document.</para>
+/// Get-OfficePdfCompliance -Path $path -Profile PdfA3B</code>
+///   <para>Applies OfficeIMO.Pdf compliance groundwork during composition, saves the PDF, then inspects the saved file.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfCompliance", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfCompliance")]
