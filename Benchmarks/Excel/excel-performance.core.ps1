@@ -93,7 +93,7 @@ function New-ExcelBenchmarkCase {
 
     $supportedEngines = @('PSWriteOffice')
     if ($OperationKey -notin @('WriteCsv', 'ReadCsvSource', 'ReadUsedRangeDataTable', 'ReadTableMetadata', 'ReadNamedRangeMetadata') -and
-        $Name -ne 'dataset-worksheets') {
+        $Name -notin @('dataset-worksheets', 'datareader-table')) {
         $supportedEngines += 'ImportExcel'
     }
     if ($Name -in @('text-objects-default', 'import-default-full', 'import-default-range', 'read-no-header-range')) {
@@ -133,6 +133,7 @@ function Get-ExcelBenchmarkCase {
         New-ExcelBenchmarkCase -Name objects-title-freeze -Label 'Export objects with title and frozen header' -Suites $workflow -OperationKey WriteWorkbook -Profile MixedObjects
         New-ExcelBenchmarkCase -Name wide-objects-default -Label 'Export wide objects default' -Suites $scale -OperationKey WriteWorkbook -Profile WideObjects
         New-ExcelBenchmarkCase -Name datatable-default -Label 'Export DataTable default' -Suites $scale -OperationKey WriteWorkbook -Profile DataTable
+        New-ExcelBenchmarkCase -Name datareader-table -Label 'Stream IDataReader as table' -Suites $scale -OperationKey WriteWorkbook -Profile DataTable
         New-ExcelBenchmarkCase -Name import-default-full -Label 'Read full sheet from default export' -Suites $basic -OperationKey ReadFullSheet -Profile MixedObjects -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name import-default-range -Label 'Read A1 range from default export' -Suites $scale -OperationKey ReadRange -Profile MixedObjects -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name read-no-header-range -Label 'Read selected range without headers' -Suites $standard -OperationKey ReadNoHeaderRange -Profile MixedObjects -ValidateWorkbook:$false

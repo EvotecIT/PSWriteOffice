@@ -8,6 +8,79 @@ BeforeAll {
 
     . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 
+    if (-not ('PSWriteOfficeTestSupport.LateDestinationDataReader' -as [type])) {
+        $readerTypeDefinition = @'
+using System;
+using System.Data;
+using System.IO;
+
+namespace PSWriteOfficeTestSupport {
+    public sealed class LateDestinationDataReader : IDataReader {
+        private readonly IDataReader _inner;
+        private readonly string _path;
+        private readonly string _content;
+        private bool _created;
+
+        public LateDestinationDataReader(IDataReader inner, string path, string content) {
+            _inner = inner;
+            _path = path;
+            _content = content;
+        }
+
+        public object this[int i] { get { return _inner[i]; } }
+        public object this[string name] { get { return _inner[name]; } }
+        public int Depth { get { return _inner.Depth; } }
+        public bool IsClosed { get { return _inner.IsClosed; } }
+        public int RecordsAffected { get { return _inner.RecordsAffected; } }
+        public int FieldCount { get { return _inner.FieldCount; } }
+        public void Close() { _inner.Close(); }
+        public void Dispose() { _inner.Dispose(); }
+        public bool GetBoolean(int i) { return _inner.GetBoolean(i); }
+        public byte GetByte(int i) { return _inner.GetByte(i); }
+        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferOffset, int length) { return _inner.GetBytes(i, fieldOffset, buffer, bufferOffset, length); }
+        public char GetChar(int i) { return _inner.GetChar(i); }
+        public long GetChars(int i, long fieldOffset, char[] buffer, int bufferOffset, int length) { return _inner.GetChars(i, fieldOffset, buffer, bufferOffset, length); }
+        public IDataReader GetData(int i) { return _inner.GetData(i); }
+        public string GetDataTypeName(int i) { return _inner.GetDataTypeName(i); }
+        public DateTime GetDateTime(int i) { return _inner.GetDateTime(i); }
+        public decimal GetDecimal(int i) { return _inner.GetDecimal(i); }
+        public double GetDouble(int i) { return _inner.GetDouble(i); }
+        public Type GetFieldType(int i) { return _inner.GetFieldType(i); }
+        public float GetFloat(int i) { return _inner.GetFloat(i); }
+        public Guid GetGuid(int i) { return _inner.GetGuid(i); }
+        public short GetInt16(int i) { return _inner.GetInt16(i); }
+        public int GetInt32(int i) { return _inner.GetInt32(i); }
+        public long GetInt64(int i) { return _inner.GetInt64(i); }
+        public string GetName(int i) { return _inner.GetName(i); }
+        public int GetOrdinal(string name) { return _inner.GetOrdinal(name); }
+        public DataTable GetSchemaTable() { return _inner.GetSchemaTable(); }
+        public string GetString(int i) { return _inner.GetString(i); }
+        public object GetValue(int i) { return _inner.GetValue(i); }
+        public int GetValues(object[] values) { return _inner.GetValues(values); }
+        public bool IsDBNull(int i) { return _inner.IsDBNull(i); }
+        public bool NextResult() { return _inner.NextResult(); }
+
+        public bool Read() {
+            if (!_created) {
+                File.WriteAllText(_path, _content);
+                _created = true;
+            }
+
+            return _inner.Read();
+        }
+    }
+}
+'@
+        if ($PSVersionTable.PSEdition -eq 'Desktop') {
+            Add-Type -TypeDefinition $readerTypeDefinition -ReferencedAssemblies @(
+                'System.Data.dll'
+                'System.Xml.dll'
+            )
+        } else {
+            Add-Type -TypeDefinition $readerTypeDefinition
+        }
+    }
+
     function Get-TestLoadedType {
         param(
             [Parameter(Mandatory)]
@@ -1408,6 +1481,110 @@ Describe 'Excel DSL surface' {
         $rows.Count | Should -Be 2
         $rows[0].Name | Should -Be 'A'
         $rows[1].Value | Should -Be 2
+    }
+
+    It 'uses the compact package writer for an unmodified IDataReader export' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataReaderCompact.xlsx'
+        $table = [System.Data.DataTable]::new('SqlRows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('A', 1)
+        [void] $table.Rows.Add('B', 2)
+        $reader = $table.CreateDataReader()
+
+        Export-OfficeExcel -Path $path -InputObject $reader -WorksheetName 'Data' -TableName 'SqlRows'
+
+        $reader.IsClosed | Should -BeFalse
+        $archive = [System.IO.Compression.ZipFile]::OpenRead($path)
+        try {
+            $archive.GetEntry('xl/sharedStrings.xml') | Should -BeNullOrEmpty
+
+            $sheetReader = [System.IO.StreamReader]::new($archive.GetEntry('xl/worksheets/sheet1.xml').Open())
+            try {
+                $sheetXml = $sheetReader.ReadToEnd()
+            } finally {
+                $sheetReader.Dispose()
+            }
+
+            $tableReader = [System.IO.StreamReader]::new($archive.GetEntry('xl/tables/table1.xml').Open())
+            try {
+                $tableXml = $tableReader.ReadToEnd()
+            } finally {
+                $tableReader.Dispose()
+            }
+        } finally {
+            $archive.Dispose()
+        }
+
+        $sheetXml | Should -Match '<tableParts count="1">'
+        $sheetXml | Should -Not -Match '<c r="A2"'
+        $tableXml | Should -Match 'name="SqlRows"'
+        $tableXml | Should -Match 'ref="A1:B3"'
+        $tableXml | Should -Match '<autoFilter ref="A1:B3"'
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $rows.Count | Should -Be 2
+        $rows[0].Name | Should -Be 'A'
+        $rows[1].Value | Should -Be 2
+    }
+
+    It 'preserves an existing workbook when the compact IDataReader export fails' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataReaderFailure.xlsx'
+        [PSCustomObject]@{ Name = 'Original'; Value = 42 } |
+            Export-OfficeExcel -Path $path -WorksheetName 'Data' -TableName 'OriginalRows'
+        $beforeHash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+
+        $table = [System.Data.DataTable]::new('SqlRows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Value', [int])
+        [void] $table.Rows.Add('Replacement', 7)
+        $reader = $table.CreateDataReader()
+        $reader.Close()
+
+        { Export-OfficeExcel -Path $path -InputObject $reader -WorksheetName 'Data' -TableName 'SqlRows' -ErrorAction Stop } |
+            Should -Throw
+
+        (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash | Should -Be $beforeHash
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter '.ExportOfficeExcelDataReaderFailure.xlsx.*.tmp').Count |
+            Should -Be 0
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
+        $rows.Count | Should -Be 1
+        $rows[0].Name | Should -Be 'Original'
+        $rows[0].Value | Should -Be 42
+    }
+
+    It 'honors NoClobber when the destination appears during compact IDataReader export' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataReaderNoClobberRace.xlsx'
+        $table = [System.Data.DataTable]::new('SqlRows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Rows.Add('A')
+        $innerReader = $table.CreateDataReader()
+        $reader = [PSWriteOfficeTestSupport.LateDestinationDataReader]::new(
+            $innerReader,
+            $path,
+            'late destination')
+
+        { Export-OfficeExcel -Path $path -InputObject $reader -WorksheetName 'Data' -NoClobber -ErrorAction Stop } |
+            Should -Throw
+
+        [System.IO.File]::ReadAllText($path) | Should -Be 'late destination'
+        $reader.IsClosed | Should -BeFalse
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter '.ExportOfficeExcelDataReaderNoClobberRace.xlsx.*.tmp').Count |
+            Should -Be 0
+    }
+
+    It 'rejects AppendToTable IDataReader export when the destination is missing' {
+        $path = Join-Path $TestDrive 'ExportOfficeExcelDataReaderAppendMissing.xlsx'
+        $table = [System.Data.DataTable]::new('SqlRows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Rows.Add('A')
+        $reader = $table.CreateDataReader()
+
+        { Export-OfficeExcel -Path $path -InputObject $reader -WorksheetName 'Data' -Append -AppendToTable -ErrorAction Stop } |
+            Should -Throw
+
+        $path | Should -Not -Exist
+        $reader.IsClosed | Should -BeFalse
     }
 
     It 'exports HTML-parser DataTable output with companion link URL columns' {
