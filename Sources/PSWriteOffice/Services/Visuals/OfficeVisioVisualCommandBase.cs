@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using ChartForgeX.VisualArtifacts;
@@ -9,6 +10,9 @@ namespace PSWriteOffice.Services.Visuals;
 /// <summary>Provides shared parameters and ALC-safe input handling for native editable Visio projection.</summary>
 public abstract class OfficeVisioVisualCommandBase : PSCmdlet
 {
+    private List<byte>? _pipelineBytes;
+    private bool _nonBytePipelineInputSeen;
+
     /// <summary>Name of the generated Visio page.</summary>
     [Parameter]
     public string PageName { get; set; } = "Visual Artifact";
@@ -36,6 +40,36 @@ public abstract class OfficeVisioVisualCommandBase : PSCmdlet
     /// <summary>Do not copy safe CFX links onto native Visio shapes and connectors.</summary>
     [Parameter]
     public SwitchParameter NoHyperlinks { get; set; }
+
+    /// <summary>
+    /// Buffers scalar bytes emitted when PowerShell enumerates a piped <see cref="byte"/> array.
+    /// Non-byte inputs remain available to the derived cmdlet's normal per-record behavior.
+    /// </summary>
+    protected bool BufferPipelineByte(object inputObject)
+    {
+        object value = PSObject.AsPSObject(inputObject).BaseObject;
+        if (value is byte item)
+        {
+            if (_nonBytePipelineInputSeen)
+            {
+                throw MixedPipelineInput();
+            }
+
+            (_pipelineBytes ??= new List<byte>()).Add(item);
+            return true;
+        }
+
+        if (_pipelineBytes != null)
+        {
+            throw MixedPipelineInput();
+        }
+
+        _nonBytePipelineInputSeen = true;
+        return false;
+    }
+
+    /// <summary>Returns the reassembled JSON payload, or <see langword="null"/> when no scalar bytes were piped.</summary>
+    protected byte[]? CompletePipelineBytes() => _pipelineBytes?.ToArray();
 
     /// <summary>Resolves typed, JSON, file, or ImagePlayground portable input into native editable Visio.</summary>
     protected OfficeVisioVisualConversionResult ResolveVisioVisual(object inputObject)
@@ -145,4 +179,8 @@ public abstract class OfficeVisioVisualCommandBase : PSCmdlet
             }
         }
     }
+
+    private static PSArgumentException MixedPipelineInput() => new PSArgumentException(
+        "A byte-stream pipeline cannot be mixed with typed artifacts, files, or JSON text in the same invocation.",
+        "InputObject");
 }

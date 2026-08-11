@@ -1763,6 +1763,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visio/ConvertToOfficeVisioSvgCommand.cs#L22"
     },
     {
+      "name": "ConvertTo-OfficeVisioVisual",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visio/ConvertToOfficeVisioVisualCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visio/ConvertToOfficeVisioVisualCommand.cs#L17"
+    },
+    {
       "name": "ConvertTo-OfficeVisual",
       "kind": "Cmdlet",
       "aliases": [
@@ -1955,6 +1963,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visio/ExportOfficeVisioStencilPreviewGalleryCommand.cs",
       "sourceLine": 18,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visio/ExportOfficeVisioStencilPreviewGalleryCommand.cs#L18"
+    },
+    {
+      "name": "Export-OfficeVisioVisual",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visio/ExportOfficeVisioVisualCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visio/ExportOfficeVisioVisualCommand.cs#L19"
     },
     {
       "name": "Export-OfficeWordGoogleDocument",

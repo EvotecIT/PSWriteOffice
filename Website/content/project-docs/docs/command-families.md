@@ -15,7 +15,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | PDF | 81 | [PDF automation](/docs/pswriteoffice/pdf/) |
 | PowerPoint | 58 | [PowerPoint automation](/docs/pswriteoffice/powerpoint/) |
 | Markdown | 25 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
-| Visio | 21 | [Visio diagrams](/docs/pswriteoffice/visio/) |
+| Visio | 23 | [Visio diagrams](/docs/pswriteoffice/visio/) |
 | Reader and extraction | 13 | [Reader and extraction](/docs/pswriteoffice/reader/) |
 | Confluence Cloud | 7 | [Confluence Cloud publishing](/docs/pswriteoffice/confluence/) |
 | RTF | 5 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |

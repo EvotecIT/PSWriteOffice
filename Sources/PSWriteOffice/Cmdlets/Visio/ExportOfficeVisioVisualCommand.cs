@@ -41,6 +41,11 @@ public sealed class ExportOfficeVisioVisualCommand : OfficeVisioVisualCommandBas
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (BufferPipelineByte(InputObject))
+        {
+            return;
+        }
+
         if (_inputSeen)
         {
             throw new PSInvalidOperationException(
@@ -53,6 +58,13 @@ public sealed class ExportOfficeVisioVisualCommand : OfficeVisioVisualCommandBas
     /// <inheritdoc />
     protected override void EndProcessing()
     {
+        byte[]? jsonBytes = CompletePipelineBytes();
+        if (jsonBytes != null)
+        {
+            _bufferedInput = jsonBytes;
+            _inputSeen = true;
+        }
+
         if (!_inputSeen)
         {
             return;
