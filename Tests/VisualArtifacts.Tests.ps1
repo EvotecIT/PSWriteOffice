@@ -24,6 +24,98 @@ Describe 'ChartForgeX visual artifacts' {
             $script:SvgPath,
             $svg,
             [Text.UTF8Encoding]::new($false))
+
+        function New-TestTopologyInterchangeJson {
+            param(
+                [Parameter(Mandatory)]
+                [string] $Id,
+                [switch] $IncludeDatabase,
+                [switch] $IncludeOwner
+            )
+
+            $apiExtensions = if ($IncludeOwner) { [ordered] @{ Owner = 'Platform' } } else { [ordered] @{} }
+            $nodes = @(
+                [ordered] @{
+                    id         = if ($IncludeDatabase) { 'api' } else { 'service' }
+                    role       = 'TopologyNode'
+                    kind       = if ($IncludeDatabase) { 'Service' } else { 'Process' }
+                    label      = if ($IncludeDatabase) { 'API' } else { 'Service' }
+                    topology   = [ordered] @{
+                        kind        = if ($IncludeDatabase) { 'Service' } else { 'Process' }
+                        status      = 'Unknown'
+                        displayMode = 'Card'
+                    }
+                    extensions = $apiExtensions
+                    metrics    = @()
+                    ports      = @()
+                    details    = @()
+                }
+            )
+            $edges = @()
+            if ($IncludeDatabase) {
+                $nodes += [ordered] @{
+                    id         = 'database'
+                    role       = 'TopologyNode'
+                    kind       = 'Database'
+                    label      = 'Database'
+                    topology   = [ordered] @{
+                        kind        = 'Database'
+                        status      = 'Unknown'
+                        displayMode = 'Card'
+                    }
+                    extensions = [ordered] @{}
+                    metrics    = @()
+                    ports      = @()
+                    details    = @()
+                }
+                $edges = @(
+                    [ordered] @{
+                        id         = 'api-db'
+                        role       = 'TopologyEdge'
+                        kind       = 'DataFlow'
+                        sourceId   = 'api'
+                        targetId   = 'database'
+                        label      = 'queries'
+                        order      = 0
+                        topology   = [ordered] @{
+                            kind             = 'DataFlow'
+                            status           = 'Unknown'
+                            direction        = 'Forward'
+                            sourcePort       = 'Auto'
+                            targetPort       = 'Auto'
+                            lineStyle        = 'Solid'
+                            routing          = 'Orthogonal'
+                            emphasis         = 'Normal'
+                            layoutInference  = 'None'
+                        }
+                        extensions = [ordered] @{}
+                        metrics    = @()
+                    }
+                )
+            }
+
+            [ordered] @{
+                schema         = 'chartforgex.visual-artifact'
+                version        = 1
+                kind           = 'Topology'
+                family         = 'Topology'
+                sourceLanguage = 'Native'
+                id             = $Id
+                title          = if ($IncludeDatabase) { 'Portable topology' } else { '' }
+                subtitle       = ''
+                decorative     = $false
+                topology       = [ordered] @{
+                    layoutMode      = 'Layered'
+                    layoutDirection = 'LeftToRight'
+                }
+                extensions     = [ordered] @{}
+                groups         = @()
+                nodes          = $nodes
+                edges          = $edges
+                scenarios      = @()
+                annotations    = @()
+            } | ConvertTo-Json -Depth 12 -Compress
+        }
     }
 
     It 'converts once and reports the selected placement payload' {
@@ -72,21 +164,19 @@ Describe 'ChartForgeX visual artifacts' {
 
     It 'converts portable semantic bytes into native editable Visio objects' {
         $portable = [pscustomobject] @{
-            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes(@'
-{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"portable-topology","title":"Portable topology","subtitle":"","layout":"Layered","direction":"LeftToRight","width":900,"height":520,"isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"api","kind":"External","label":"API","metadata":{"Owner":"Platform"},"ports":[],"details":[]},{"id":"database","kind":"Database","label":"Database","metadata":{},"ports":[],"details":[]}],"edges":[{"id":"api-db","kind":"Data","sourceId":"api","targetId":"database","label":"queries","order":0,"metadata":{}}],"annotations":[]}
-'@)
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id portable-topology -IncludeDatabase -IncludeOwner))
             OfficeVisualSvg             = [IO.File]::ReadAllBytes($SvgPath)
         }
         $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
 
         $converted = $portable | ConvertTo-OfficeVisioVisual -PageName 'Portable topology'
         $converted.GetType().FullName | Should -Be 'OfficeIMO.ChartForgeX.OfficeVisioVisualConversionResult'
-        $converted.Report.IsNativeEditable | Should -BeTrue
+        $converted.Report.AllProjectedObjectsEditable | Should -BeTrue
         $converted.Report.NodeCount | Should -Be 2
         $converted.Page.Shapes.Id | Should -Contain 'api'
         $converted.Page.Shapes.Id | Should -Contain 'database'
         $converted.Page.Connectors.Id | Should -Contain 'api-db'
-        ($converted.Page.Shapes | Where-Object Id -EQ 'api').GetShapeDataValue('Metadata.Owner') | Should -Be 'Platform'
+        ($converted.Page.Shapes | Where-Object Id -EQ 'api').GetShapeDataValue('Extension.Owner') | Should -Be 'Platform'
 
         $natural = $portable | ConvertTo-OfficeVisioVisual -UseNaturalPageSize -PixelsPerInch 100
         $natural.Page.Width | Should -BeGreaterThan $converted.Page.Width
@@ -94,9 +184,7 @@ Describe 'ChartForgeX visual artifacts' {
 
     It 'exports portable semantic bytes as a valid editable VSDX package' {
         $portable = [pscustomobject] @{
-            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes(@'
-{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"export-topology","title":"","subtitle":"","layout":"Layered","direction":"LeftToRight","isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"service","kind":"Process","label":"Service","metadata":{},"ports":[],"details":[]}],"edges":[],"annotations":[]}
-'@)
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id export-topology))
         }
         $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
         $path = Join-Path $TestDrive 'portable-topology.vsdx'
@@ -110,9 +198,7 @@ Describe 'ChartForgeX visual artifacts' {
     }
 
     It 'accepts raw semantic JSON text without interpreting it as a file path' {
-        $json = @'
-{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"raw-json","title":"Raw JSON","subtitle":"","layout":"Layered","direction":"LeftToRight","isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"service","kind":"Process","label":"Service","metadata":{},"ports":[],"details":[]}],"edges":[],"annotations":[]}
-'@
+        $json = New-TestTopologyInterchangeJson -Id raw-json
 
         $converted = $json | ConvertTo-OfficeVisioVisual
 
@@ -121,9 +207,7 @@ Describe 'ChartForgeX visual artifacts' {
     }
 
     It 'accepts raw semantic JSON text with a leading Unicode BOM' {
-        $json = [char] 0xFEFF + @'
-{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"bom-json","title":"BOM JSON","subtitle":"","layout":"Layered","direction":"LeftToRight","isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"service","kind":"Process","label":"Service","metadata":{},"ports":[],"details":[]}],"edges":[],"annotations":[]}
-'@
+        $json = [char] 0xFEFF + (New-TestTopologyInterchangeJson -Id bom-json)
 
         $converted = $json | ConvertTo-OfficeVisioVisual
 
@@ -133,9 +217,7 @@ Describe 'ChartForgeX visual artifacts' {
 
     It 'rejects multiple pipeline artifacts for one VSDX destination' {
         $portable = [pscustomobject] @{
-            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes(@'
-{"schema":"chartforgex.visual-artifact","version":1,"kind":"Topology","sourceLanguage":"Native","id":"single-output","title":"","subtitle":"","layout":"Layered","direction":"LeftToRight","isDecorative":false,"metadata":{},"groups":[],"nodes":[{"id":"service","kind":"Process","label":"Service","metadata":{},"ports":[],"details":[]}],"edges":[],"annotations":[]}
-'@)
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id single-output))
         }
         $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
         $path = Join-Path $TestDrive 'single-output.vsdx'
