@@ -76,10 +76,10 @@ public abstract class OfficeVisioVisualCommandBase : PSCmdlet
         }
         if (value is string text)
         {
-            string trimmed = text.TrimStart();
+            string trimmed = text.TrimStart('\uFEFF', ' ', '\t', '\r', '\n');
             if (trimmed.StartsWith("{", StringComparison.Ordinal))
             {
-                return VisualArtifactInterchangeEnvelope.FromJson(text).ToOfficeVisio(options);
+                return VisualArtifactInterchangeEnvelope.FromJson(trimmed).ToOfficeVisio(options);
             }
             return ConvertJsonFile(SessionState.Path.GetUnresolvedProviderPathFromPSPath(text), options);
         }
