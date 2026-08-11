@@ -117,10 +117,10 @@ $familyDefinitions = @(
         match = { param($name) $name -eq 'Export-OfficeHtmlImage' }
     }
     [ordered]@{
-        id = 'shared'; title = 'Shared authoring primitives'; description = 'Create reusable text runs shared by document DSLs.'
+        id = 'shared'; title = 'Shared authoring primitives'; description = 'Create reusable text and visual primitives shared by document DSLs and Office hosts.'
         docs = 'automation-patterns'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples'
-        samples = @('New-OfficeTextRun')
-        match = { param($name) $name -eq 'New-OfficeTextRun' }
+        samples = @('New-OfficeTextRun', 'ConvertTo-OfficeVisual')
+        match = { param($name) $name -in 'New-OfficeTextRun', 'ConvertTo-OfficeVisual' }
     }
 )
 

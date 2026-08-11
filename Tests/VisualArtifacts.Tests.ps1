@@ -215,6 +215,27 @@ Describe 'ChartForgeX visual artifacts' {
         $converted.Page.Shapes.Id | Should -Contain 'service'
     }
 
+    It 'reassembles normally piped semantic JSON bytes for conversion and export' {
+        [byte[]] $bytes = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id piped-bytes))
+
+        $converted = $bytes | ConvertTo-OfficeVisioVisual
+        $converted.Envelope.Id | Should -Be 'piped-bytes'
+        $converted.Page.Shapes.Id | Should -Contain 'service'
+
+        $path = Join-Path $TestDrive 'piped-bytes.vsdx'
+        $file = $bytes | Export-OfficeVisioVisual -Path $path
+        $file.FullName | Should -Be $path
+        (Get-OfficeVisio -Path $path).Pages[0].Shapes.Id | Should -Contain 'service'
+    }
+
+    It 'rejects mixed byte-stream and typed pipeline input' {
+        [byte[]] $bytes = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id mixed-input))
+
+        { @($bytes[0], (New-TestTopologyInterchangeJson -Id second-input)) |
+                ConvertTo-OfficeVisioVisual -ErrorAction Stop } |
+            Should -Throw '*cannot be mixed*'
+    }
+
     It 'rejects multiple pipeline artifacts for one VSDX destination' {
         $portable = [pscustomobject] @{
             OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id single-output))

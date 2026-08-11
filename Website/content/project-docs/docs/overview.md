@@ -16,14 +16,15 @@ The module manifest is the source of truth for exported cmdlets and aliases. The
 | Update an existing file | `Get-*`, `Set-*`, `Update-*`, and `Save-*` commands | The object remains in the OfficeIMO model while the script performs targeted changes. |
 | Review or diagnose files | inspection, preflight, comparison, and HTML export commands | Read-only diagnostics can run before a job decides whether to change or reject an artifact. |
 | Normalize many formats | Reader commands | One result model exposes documents, chunks, hierarchy, tables, visuals, assets, warnings, and provenance. |
+| Reuse one visual across Office hosts | `ConvertTo-OfficeVisual` and the host-specific `Add-*Visual` commands | One typed visual source can be placed in Word, Excel, PowerPoint, or PDF without duplicating conversion policy. |
 | Convert between formats | focused `ConvertFrom-*` and `ConvertTo-*` commands | Conversion behavior stays in the matching OfficeIMO adapter instead of shelling out to Office. |
 
 ## Major families
 
-- **Excel — 155 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, and HTML review.
-- **Word — 91 commands:** sections, paragraphs, lists, tables, fields, content controls, review, mail merge, protection, merging, and conversion.
-- **PDF — 80 commands:** composition, text and image extraction, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, and diagnostics.
-- **PowerPoint — 57 commands:** slides, sections, shapes, charts, tables, notes, themes, layouts, transitions, import, inspection, and HTML review.
+- **Excel — 156 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, visual placement, and HTML review.
+- **Word — 92 commands:** sections, paragraphs, lists, tables, fields, content controls, review, mail merge, protection, merging, visual placement, and conversion.
+- **PDF — 81 commands:** composition, visual placement, text and image extraction, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, and diagnostics.
+- **PowerPoint — 58 commands:** slides, sections, shapes, charts, tables, notes, themes, layouts, transitions, import, visual placement, inspection, and HTML review.
 - **Confluence Cloud — 7 commands:** plan, create, update, and remove pages; preserve managed sections; and list, upload, or download attachments.
 - **Markdown, Visio, Reader, and open formats:** typed Markdown, VSDX diagrams and stencils, normalized extraction, RTF, CSV, ODT/ODS/ODP, email, AsciiDoc, and LaTeX workflows.
 

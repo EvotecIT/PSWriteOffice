@@ -10,12 +10,12 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 
 | Family | Exported commands | Guide |
 | --- | ---: | --- |
-| Excel | 155 | [Excel automation](/docs/pswriteoffice/excel/) |
-| Word | 91 | [Word automation](/docs/pswriteoffice/word/) |
-| PDF | 80 | [PDF automation](/docs/pswriteoffice/pdf/) |
-| PowerPoint | 57 | [PowerPoint automation](/docs/pswriteoffice/powerpoint/) |
+| Excel | 156 | [Excel automation](/docs/pswriteoffice/excel/) |
+| Word | 92 | [Word automation](/docs/pswriteoffice/word/) |
+| PDF | 81 | [PDF automation](/docs/pswriteoffice/pdf/) |
+| PowerPoint | 58 | [PowerPoint automation](/docs/pswriteoffice/powerpoint/) |
 | Markdown | 25 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
-| Visio | 21 | [Visio diagrams](/docs/pswriteoffice/visio/) |
+| Visio | 23 | [Visio diagrams](/docs/pswriteoffice/visio/) |
 | Reader and extraction | 13 | [Reader and extraction](/docs/pswriteoffice/reader/) |
 | Confluence Cloud | 7 | [Confluence Cloud publishing](/docs/pswriteoffice/confluence/) |
 | RTF | 5 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
@@ -25,7 +25,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | AsciiDoc | 4 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | LaTeX | 4 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | HTML assets | 1 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
-| Shared authoring primitives | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
+| Shared authoring primitives | 2 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
 
 The total is generated from the module manifest. Aliases are intentionally counted separately because they provide a shorter DSL without replacing the canonical command names in help and automation.
 

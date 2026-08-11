@@ -23,6 +23,21 @@ public sealed class ConvertToOfficeVisioVisualCommand : OfficeVisioVisualCommand
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (BufferPipelineByte(InputObject))
+        {
+            return;
+        }
+
         WriteObject(ResolveVisioVisual(InputObject));
+    }
+
+    /// <inheritdoc />
+    protected override void EndProcessing()
+    {
+        byte[]? jsonBytes = CompletePipelineBytes();
+        if (jsonBytes != null)
+        {
+            WriteObject(ResolveVisioVisual(jsonBytes));
+        }
     }
 }
