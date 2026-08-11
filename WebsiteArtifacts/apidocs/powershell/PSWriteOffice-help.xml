@@ -12826,7 +12826,7 @@
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -12901,7 +12901,7 @@
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -12976,7 +12976,7 @@
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -13063,7 +13063,7 @@
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Xml</maml:name>
         <maml:description>
-          <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+          <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -16713,7 +16713,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -16788,7 +16788,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -16863,7 +16863,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -16950,7 +16950,7 @@ so they do not emit a live table wrapper.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Xml</maml:name>
         <maml:description>
-          <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+          <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -23896,7 +23896,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Emit the updated document.</maml:para>
+            <maml:para>Accepted for compatibility. The replacement document is always emitted when -Document is used.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -23990,7 +23990,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Emit the updated document.</maml:para>
+            <maml:para>Accepted for compatibility. The replacement document is always emitted when -Document is used.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -24084,7 +24084,7 @@ so they do not emit a live table wrapper.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
-          <maml:para>Emit the updated document.</maml:para>
+          <maml:para>Accepted for compatibility. The replacement document is always emitted when -Document is used.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -24398,7 +24398,7 @@ They are rendered behind generated content and should usually use restrained opa
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -24614,7 +24614,7 @@ They are rendered behind generated content and should usually use restrained opa
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -32244,7 +32244,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -32331,7 +32331,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -51930,7 +51930,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -51957,7 +51957,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -52000,17 +52000,17 @@ cells. This keeps existing-document editing simple without forcing callers back 
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Remove background shapes before saving a variant.</maml:title>
+        <maml:title>Remove queued background shapes during composition.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$pdf = New-OfficePdf {&#xD;
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf {&#xD;
                 Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120&#xD;
+                Clear-OfficePdfBackgroundShape&#xD;
                 Add-OfficePdfHeading -Text 'Clean variant'&#xD;
-            } -NoSave&#xD;
-            $pdf | Clear-OfficePdfBackgroundShape -PassThru | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf</dev:code>
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Clears generated page background shapes on an in-memory PDF.</maml:para>
+          <maml:para>Clears generated page background shapes while the PDF page is being composed.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -160285,7 +160285,7 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -160336,7 +160336,7 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -160494,7 +160494,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -160574,7 +160574,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -160758,7 +160758,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -160837,7 +160837,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -160936,13 +160936,13 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {&#xD;
+        <dev:code>$pdf = New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {&#xD;
                 Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'&#xD;
                 Add-OfficePdfHeading -Text 'Compliance-ready report'&#xD;
-                Get-OfficePdfCompliance -Profile PdfA3B&#xD;
-            }</dev:code>
+            }&#xD;
+            $pdf | Get-OfficePdfCompliance -Profile PdfA3B</dev:code>
         <dev:remarks>
-          <maml:para>Applies OfficeIMO.Pdf compliance groundwork and emits a readiness report inside the DSL.</maml:para>
+          <maml:para>Applies OfficeIMO.Pdf compliance groundwork during composition, then inspects the completed document.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -161100,7 +161100,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -161222,7 +161222,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -161470,7 +161470,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -161552,7 +161552,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -162073,7 +162073,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -162155,7 +162155,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -163377,7 +163377,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -163483,7 +163483,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -163730,7 +163730,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -163865,7 +163865,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -164274,7 +164274,7 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -164319,7 +164319,7 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
