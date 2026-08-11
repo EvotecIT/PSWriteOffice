@@ -129,6 +129,29 @@ Describe 'Shared tabular input contracts' {
         }
     }
 
+    It 'unions columns found only in later heterogeneous PowerShell rows' {
+        $path = Join-Path $TestDrive 'Report-HeterogeneousRows.xlsx'
+        $rows = @(
+            [pscustomobject]@{ Name = 'Alpha' }
+            [pscustomobject]@{ Name = 'Beta'; Department = 'Operations' }
+            [ordered]@{ Name = 'Gamma'; Score = 7 }
+        )
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelReportSheet -Name 'Report' {
+                Add-OfficeExcelReportTable -InputObject $rows
+            }
+        }
+
+        $result = @(Import-OfficeExcel -Path $path -WorksheetName 'Report')
+        $result | Should -HaveCount 3
+        $result[0].PSObject.Properties.Name | Should -Contain 'Department'
+        $result[0].PSObject.Properties.Name | Should -Contain 'Score'
+        $result[0].Department | Should -BeNullOrEmpty
+        $result[1].Department | Should -Be 'Operations'
+        $result[2].Score | Should -Be 7
+    }
+
     It 'renders ADO.NET tabular input families without DataRow metadata' {
         $createTable = {
             $table = [System.Data.DataTable]::new('Rows')
@@ -238,6 +261,24 @@ Describe 'Shared tabular input contracts' {
         $rows[0].PSObject.Properties.Name | Should -Be @('Value', 'Name')
         $rows[0].Value | Should -Be 1
         $rows[0].Name | Should -Be 'Alpha'
+    }
+
+    It 'preserves incoming column order on Excel report tables by default' {
+        $path = Join-Path $TestDrive 'Report-SourceOrder.xlsx'
+        $inputRow = [pscustomobject] [ordered] @{
+            Zulu   = 'First'
+            Alpha  = 'Second'
+            Middle = 'Third'
+        }
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelReportSheet -Name 'Report' {
+                Add-OfficeExcelReportTable -InputObject $inputRow
+            }
+        }
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Report')
+        $rows[0].PSObject.Properties.Name | Should -Be @('Zulu', 'Alpha', 'Middle')
     }
 
     It 'streams IDataReader rows with shared nested formatting into direct Excel exports' {

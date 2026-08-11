@@ -27,7 +27,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficeExcel", DefaultParameterSetName = ParameterSetCreate, SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium)]
 [Alias("ExcelExport")]
-public sealed class ExportOfficeExcelCommand : PSCmdlet
+public sealed partial class ExportOfficeExcelCommand : PSCmdlet
 {
     private const string ParameterSetCreate = "Create";
     private const string ParameterSetAppend = "Append";
@@ -352,10 +352,31 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
             return;
         }
 
+        var saveOptions = ExcelDocumentService.CreateSaveOptions(
+            SafePreflight.IsPresent,
+            SafeRepairDefinedNames.IsPresent,
+            ValidateOpenXml.IsPresent,
+            DisableFastPackageWriter.IsPresent,
+            EvaluateFormulas.IsPresent,
+            ClearCachedFormulaResults.IsPresent,
+            MarkFormulasDirty.IsPresent,
+            ForceFullCalculationOnOpen.IsPresent);
+
         var directory = System.IO.Path.GetDirectoryName(resolvedPath);
         if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
+        }
+
+        var directReader = ExcelTabularInputService.TryGetSingleDataReader(_input);
+        if (directReader != null && TryWriteDataReaderPackageDirectly(
+                directReader,
+                resolvedPath,
+                preserveWorkbook,
+                style,
+                columnFormatPlan))
+        {
+            return;
         }
 
         if (File.Exists(resolvedPath) && !preserveWorkbook)
@@ -366,15 +387,6 @@ public sealed class ExportOfficeExcelCommand : PSCmdlet
         var document = preserveWorkbook
             ? ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false)
             : ExcelDocumentService.CreateDocument(resolvedPath, autoSave: false);
-        var saveOptions = ExcelDocumentService.CreateSaveOptions(
-            SafePreflight.IsPresent,
-            SafeRepairDefinedNames.IsPresent,
-            ValidateOpenXml.IsPresent,
-            DisableFastPackageWriter.IsPresent,
-            EvaluateFormulas.IsPresent,
-            ClearCachedFormulaResults.IsPresent,
-            MarkFormulasDirty.IsPresent,
-            ForceFullCalculationOnOpen.IsPresent);
 
         try
         {

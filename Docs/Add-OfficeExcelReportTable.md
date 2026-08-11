@@ -11,7 +11,7 @@ Adds an object table to the current Excel report sheet using the OfficeIMO sheet
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportTable [-InputObject] <Object[]> [[-Title] <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-NoAutoFilter] [-NoFreezeHeaderRow] [-NoAutoFormatDynamicCollections] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelReportTable [-InputObject] <Object> [[-Title] <string>] [-TableStyle <string>] [-Property <string[]>] [-ExcludeProperty <string[]>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-NoAutoFilter] [-NoFreezeHeaderRow] [-NoAutoFormatDynamicCollections] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,11 +36,75 @@ Renders object rows as a formatted Excel table through the sheet composer.
 
 ## PARAMETERS
 
+### -CollectionSeparator
+Text used between items when a cell contains a collection.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryEntrySeparator
+Text used between entries when a cell contains a dictionary.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryKeyValueSeparator
+Text used between a dictionary key and value.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ExcludeProperty
+Properties to exclude from the rendered table.
+
+```yaml
+Type: String[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -InputObject
 Objects to flatten and render as a table.
 
 ```yaml
-Type: Object[]
+Type: Object
 Parameter Sets: __AllParameterSets
 Aliases: Data
 Possible values:
@@ -48,7 +112,7 @@ Possible values:
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -121,6 +185,22 @@ Emit the A1 range used by the generated table.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Property
+Properties to include, in the requested column order.
+
+```yaml
+Type: String[]
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -217,7 +297,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.Object`
 
 ## OUTPUTS
 

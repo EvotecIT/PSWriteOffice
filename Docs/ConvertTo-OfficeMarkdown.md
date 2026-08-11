@@ -11,7 +11,7 @@ Converts objects into a Markdown table.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficeMarkdown [-InputObject <Object>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeMarkdown [-InputObject <Object>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,6 +42,54 @@ PS> $markdown = $data | ConvertTo-OfficeMarkdown -DisableAutoAlign
 Forces left-aligned columns instead of auto-aligned output.
 
 ## PARAMETERS
+
+### -CollectionSeparator
+Text used between items when a cell contains a collection.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryEntrySeparator
+Text used between entries when a cell contains a dictionary.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryKeyValueSeparator
+Text used between a dictionary key and value.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -DisableAutoAlign
 Disable automatic alignment heuristics for tables.

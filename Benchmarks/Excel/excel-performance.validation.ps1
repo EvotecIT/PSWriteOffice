@@ -104,7 +104,7 @@ function Test-ExcelBenchmarkOutput {
     }
     Test-ExcelBenchmarkOpenXml -Path $Run.Path
 
-    if ([string]$Case.Scenario -in @('objects-default', 'text-objects-default', 'wide-objects-default')) {
+    if ([string]$Case.Scenario -in @('objects-default', 'text-objects-default', 'wide-objects-default', 'datatable-default', 'datareader-table')) {
         Test-ExcelBenchmarkTabularValues -Case $Case -Run $Run
     }
 }
@@ -113,7 +113,8 @@ function Test-ExcelBenchmarkTabularValues {
     param([object] $Case, [object] $Run)
 
     $actualRows = @(Import-OfficeExcel -Path $Run.Path -WorksheetName $Run.WorksheetName)
-    $expectedRows = @($Run.Payload)
+    $isDataTable = $Run.Payload -is [Data.DataTable]
+    $expectedRows = if ($isDataTable) { @($Run.Payload.Rows) } else { @($Run.Payload) }
     assertValue $actualRows.Count $expectedRows.Count -Message "Expected '$($Case.Scenario)' to preserve every data row."
     if ($expectedRows.Count -eq 0) {
         return
@@ -125,7 +126,14 @@ function Test-ExcelBenchmarkTabularValues {
     foreach ($index in $indexes) {
         $expected = $expectedRows[$index]
         $actual = $actualRows[$index]
-        foreach ($property in $expected.PSObject.Properties) {
+        $expectedValues = if ($isDataTable) {
+            foreach ($column in $Run.Payload.Columns) {
+                [pscustomobject]@{ Name = $column.ColumnName; Value = $expected[$column] }
+            }
+        } else {
+            $expected.PSObject.Properties
+        }
+        foreach ($property in $expectedValues) {
             $expectedValue = ConvertTo-ExcelBenchmarkComparableValue -Value $property.Value
             $actualProperty = $actual.PSObject.Properties[$property.Name]
             if ($null -eq $actualProperty) {
@@ -150,8 +158,8 @@ function ConvertTo-ExcelBenchmarkComparableValue {
     if ($Value -is [bool]) {
         return $Value.ToString().ToLowerInvariant()
     }
-    if ($Value -is [double] -or $Value -is [single]) {
-        return ([Math]::Round([double] $Value, 10)).ToString('G17', [Globalization.CultureInfo]::InvariantCulture)
+    if ($Value -is [decimal] -or $Value -is [double] -or $Value -is [single]) {
+        return ([decimal]::Round([Convert]::ToDecimal($Value, [Globalization.CultureInfo]::InvariantCulture), 10)).ToString('G29', [Globalization.CultureInfo]::InvariantCulture)
     }
     if ($Value -is [IFormattable]) {
         return $Value.ToString($null, [Globalization.CultureInfo]::InvariantCulture)

@@ -217,7 +217,7 @@ Describe 'CSV and Excel mutation contracts' {
         $rows[0].Name | Should -Be 'Row1'
     }
 
-    It 'exports PowerShell objects using the first row schema and blanks missing later values' {
+    It 'exports the union of PowerShell object columns and blanks missing values' {
         $xlsx = Join-Path $TestDrive 'projected.xlsx'
 
         @(
@@ -231,7 +231,7 @@ Describe 'CSV and Excel mutation contracts' {
         $rows[0].Value | Should -Be 1
         $rows[1].Name | Should -Be 'Row2'
         $rows[1].Value | Should -Be ''
-        $rows[1].PSObject.Properties.Name | Should -Not -Contain 'Extra'
+        $rows[1].Extra | Should -Be 'Ignored'
     }
 
     It 'reads Excel data rows as real custom objects' {

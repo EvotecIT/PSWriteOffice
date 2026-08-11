@@ -146,39 +146,53 @@ internal static class ExcelTabularInputService
             ? new DataTable()
             : new DataTable(tableName);
 
-        string[]? columns = null;
+        var columns = new List<string>();
+        var columnIndexes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var projectedRowColumns = new List<string[]>(items.Count);
+        var projectedRowValues = new List<object?[]>(items.Count);
+
+        foreach (var item in items)
+        {
+            if (!PowerShellObjectNormalizer.TryProjectItem(item, null, out var rowColumns, out var rowValues, normalizerOptions) ||
+                rowColumns.Length == 0 || rowColumns.Length != rowValues.Length)
+            {
+                table = null!;
+                return false;
+            }
+
+            projectedRowColumns.Add(rowColumns);
+            projectedRowValues.Add(rowValues);
+            foreach (var column in rowColumns)
+            {
+                if (!columnIndexes.ContainsKey(column))
+                {
+                    columnIndexes[column] = columns.Count;
+                    columns.Add(column);
+                }
+            }
+        }
+
+        foreach (var column in columns)
+        {
+            table.Columns.Add(column, typeof(object));
+        }
+
         table.MinimumCapacity = Math.Max(table.MinimumCapacity, items.Count);
         table.BeginLoadData();
         try
         {
-            foreach (var item in items)
+            for (var rowIndex = 0; rowIndex < projectedRowValues.Count; rowIndex++)
             {
-                if (!PowerShellObjectNormalizer.TryProjectItem(item, columns, out var projectedColumns, out var values, normalizerOptions))
+                var values = new object?[columns.Count];
+                for (var columnIndex = 0; columnIndex < values.Length; columnIndex++)
                 {
-                    table.EndLoadData();
-                    table = null!;
-                    return false;
+                    values[columnIndex] = DBNull.Value;
                 }
-
-                if (columns == null)
+                var rowColumns = projectedRowColumns[rowIndex];
+                var rowValues = projectedRowValues[rowIndex];
+                for (var columnIndex = 0; columnIndex < rowColumns.Length; columnIndex++)
                 {
-                    columns = projectedColumns;
-                    if (columns.Length == 0)
-                    {
-                        table.EndLoadData();
-                        table = null!;
-                        return false;
-                    }
-
-                    foreach (var column in columns)
-                    {
-                        table.Columns.Add(column, typeof(object));
-                    }
-                }
-
-                for (var i = 0; i < values.Length; i++)
-                {
-                    values[i] ??= DBNull.Value;
+                    values[columnIndexes[rowColumns[columnIndex]]] = rowValues[columnIndex] ?? DBNull.Value;
                 }
 
                 table.Rows.Add(values);
@@ -189,7 +203,7 @@ internal static class ExcelTabularInputService
             table?.EndLoadData();
         }
 
-        return columns != null;
+        return columns.Count > 0;
     }
 
     public static DataSet? TryGetSingleDataSet(IEnumerable<object?> input)

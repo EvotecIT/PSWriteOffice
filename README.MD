@@ -178,6 +178,12 @@ New-OfficeExcel -Path .\Report.xlsx {
 }
 ```
 
+Excel table commands resolve columns across the complete row set. Properties
+introduced by later `PSCustomObject`, dictionary, or CLR rows are retained and
+left blank for rows that do not provide them; use `-Property` or
+`-ExcludeProperty` on commands that expose those parameters when you need an
+explicit schema.
+
 ### PowerPoint
 
 ```powershell

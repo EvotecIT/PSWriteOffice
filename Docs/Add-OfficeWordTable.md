@@ -11,7 +11,7 @@ Creates a table from PowerShell objects.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-NoHeader] [-View <OfficeTableView>] [-Transpose] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-Transpose] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,6 +28,22 @@ Writes a grid table and highlights rows exceeding $1,000.
 
 ## PARAMETERS
 
+### -CollectionSeparator
+Text used between items when a cell contains a collection.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Content
 DSL content executed inside the table.
 
@@ -39,6 +55,38 @@ Possible values:
 
 Required: False
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryEntrySeparator
+Text used between entries when a cell contains a dictionary.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DictionaryKeyValueSeparator
+Text used between a dictionary key and value.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
