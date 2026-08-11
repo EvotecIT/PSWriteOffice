@@ -363,6 +363,12 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
             copyExistingTables: true,
             normalizerOptions: normalizerOptions);
         var reportRows = ExcelTabularInputService.ToDictionaryRows(table);
+        var sourceColumns = table.Columns
+            .Cast<System.Data.DataColumn>()
+            .Select(static column => column.ColumnName)
+            .ToArray();
+        var requestedColumns = NormalizePropertyList(Property) ?? sourceColumns;
+        var excludedProperties = NormalizePropertyList(ExcludeProperty) ?? Array.Empty<string>();
 
         if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
         {
@@ -375,8 +381,8 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
             Title,
             configure: options =>
             {
-                options.Columns = NormalizePropertyList(Property);
-                options.ExcludeProperties = NormalizePropertyList(ExcludeProperty) ?? Array.Empty<string>();
+                options.Columns = requestedColumns;
+                options.ExcludeProperties = excludedProperties;
             },
             style: style,
             autoFilter: !NoAutoFilter.IsPresent,
