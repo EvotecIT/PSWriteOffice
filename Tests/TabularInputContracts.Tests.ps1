@@ -263,6 +263,24 @@ Describe 'Shared tabular input contracts' {
         $rows[0].Name | Should -Be 'Alpha'
     }
 
+    It 'preserves incoming column order on Excel report tables by default' {
+        $path = Join-Path $TestDrive 'Report-SourceOrder.xlsx'
+        $inputRow = [pscustomobject] [ordered] @{
+            Zulu   = 'First'
+            Alpha  = 'Second'
+            Middle = 'Third'
+        }
+
+        New-OfficeExcel -Path $path {
+            Add-OfficeExcelReportSheet -Name 'Report' {
+                Add-OfficeExcelReportTable -InputObject $inputRow
+            }
+        }
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Report')
+        $rows[0].PSObject.Properties.Name | Should -Be @('Zulu', 'Alpha', 'Middle')
+    }
+
     It 'streams IDataReader rows with shared nested formatting into direct Excel exports' {
         $path = Join-Path $TestDrive 'DirectReader.xlsx'
         $reader = New-TestTabularContractReader
