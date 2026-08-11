@@ -103,7 +103,7 @@ Accept wildcard characters: False
 ```
 
 ### -PassThru
-Emit the updated document.
+Accepted for compatibility. The replacement document is always emitted when -Document is used.
 
 ```yaml
 Type: SwitchParameter

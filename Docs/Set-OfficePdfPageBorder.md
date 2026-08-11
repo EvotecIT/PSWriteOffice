@@ -85,7 +85,7 @@ Accept wildcard characters: False
 ```
 
 ### -Document
-PDF document to update outside the DSL context.
+Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.
 
 ```yaml
 Type: PdfDocument

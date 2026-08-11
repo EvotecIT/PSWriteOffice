@@ -218,7 +218,8 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     {
         if (ParameterSetName == ParameterSetPipelineDocument)
         {
-            RenderTable(Document, BuildRows(InputObject));
+            var rows = BuildRows(InputObject);
+            Document.Compose(compose => compose.Content(content => RenderTable(content, rows)));
             if (PassThru.IsPresent)
             {
                 WriteObject(Document);
@@ -238,15 +239,16 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
             return;
         }
 
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        RenderTable(document, TableInputCollector.RequireRows(_items, nameof(InputObject)));
-        if (PassThru.IsPresent)
+        var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
+        var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument,
+            content => RenderTable(content, rows));
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }
     }
 
-    private void RenderTable(PdfDocument document, object[] inputRows)
+    private void RenderTable(PdfItemCompose content, object[] inputRows)
     {
         var projectedRows = TableViewProjection.Project(inputRows, View);
         var normalizationOptions = PdfCommandUtilities.CreateTableNormalizationOptions(
@@ -256,7 +258,7 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
         if (OfficeTableSpecParser.TryCreate(projectedRows, Property, Header, out var tableSpec, normalizationOptions))
         {
             var style = ApplyPdfCellStyles(CreateStyle(), tableSpec.Placements);
-            document.Table(ToPdfRows(tableSpec), Align, style);
+            content.Table(ToPdfRows(tableSpec), Align, style);
             return;
         }
 
@@ -267,7 +269,7 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
             ? PdfCommandUtilities.ConvertDataRows(enumerable, Header, normalizationOptions)
             : PdfCommandUtilities.ConvertToTableRows(projectedRows, Property, Header, normalizationOptions);
 
-        document.Table(rows, Align, CreateStyle());
+        content.Table(rows, Align, CreateStyle());
     }
 
     private static bool IsRowEnumerable(object item)

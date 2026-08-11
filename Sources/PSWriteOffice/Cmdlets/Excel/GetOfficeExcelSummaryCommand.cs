@@ -124,8 +124,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         summary.Properties.Add(new PSNoteProperty("ChartCount", sheetSummaries.Sum(GetIntProperty("ChartCount"))));
         summary.Properties.Add(new PSNoteProperty("PivotTableCount", sheetSummaries.Sum(GetIntProperty("PivotTableCount"))));
         summary.Properties.Add(new PSNoteProperty("SparklineGroupCount", sheetSummaries.Sum(GetIntProperty("SparklineGroupCount"))));
-        summary.Properties.Add(new PSNoteProperty("SlicerPartCount", CountPackagePartsByContentType(workbookPart, "slicer")));
-        summary.Properties.Add(new PSNoteProperty("TimelinePartCount", CountPackagePartsByContentType(workbookPart, "timeline")));
+        summary.Properties.Add(new PSNoteProperty("SlicerPartCount", CountPivotInteractionParts(workbookPart, document, ExcelPivotInteractionCacheKind.Slicer)));
+        summary.Properties.Add(new PSNoteProperty("TimelinePartCount", CountPivotInteractionParts(workbookPart, document, ExcelPivotInteractionCacheKind.Timeline)));
         summary.Properties.Add(new PSNoteProperty("ConnectionPartCount", CountPackagePartsByContentType(workbookPart, "connections")));
         summary.Properties.Add(new PSNoteProperty("QueryTablePartCount", CountPackagePartsByContentType(workbookPart, "queryTable")));
         summary.Properties.Add(new PSNoteProperty("HyperlinkCount", sheetSummaries.Sum(GetIntProperty("HyperlinkCount"))));
@@ -367,6 +367,33 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
             var count = openXmlPart.ContentType.IndexOf(marker, StringComparison.OrdinalIgnoreCase) >= 0 ? 1 : 0;
             return count + CountPackagePartsByContentType(openXmlPart, marker);
         });
+    }
+
+    private static int CountPivotInteractionParts(
+        WorkbookPart workbookPart,
+        ExcelDocument? document,
+        ExcelPivotInteractionCacheKind kind)
+    {
+        string marker = kind == ExcelPivotInteractionCacheKind.Slicer ? "slicer" : "timeline";
+        int nativeOrLegacyCount = CountPackagePartsByContentType(workbookPart, marker);
+        if (document == null)
+        {
+            return nativeOrLegacyCount;
+        }
+
+        IReadOnlyList<ExcelPivotInteractionCacheInfo> caches = kind == ExcelPivotInteractionCacheKind.Slicer
+            ? document.GetWorkbookSlicerCaches()
+            : document.GetWorkbookTimelineCaches();
+        int combinedMetadataPartCount = caches
+            .Select(cache => cache.RelationshipId)
+            .Distinct(StringComparer.Ordinal)
+            .Count(relationshipId =>
+            {
+                OpenXmlPart part = workbookPart.GetPartById(relationshipId);
+                return part.ContentType.IndexOf(marker, StringComparison.OrdinalIgnoreCase) < 0;
+            });
+
+        return nativeOrLegacyCount + combinedMetadataPartCount;
     }
 
     private static int CountComments(WorksheetPart worksheetPart)

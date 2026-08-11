@@ -45,9 +45,9 @@ public sealed class AddOfficePdfParagraphCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Paragraph(p => p.Text(Text), Align, PdfCommandUtilities.ParseColor(Color));
-        if (PassThru.IsPresent)
+        var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument,
+            content => content.Paragraph(p => p.Text(Text), Align, PdfCommandUtilities.ParseColor(Color)));
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

@@ -76,11 +76,79 @@ internal static class PdfCommandUtilities
         }
     }
 
-    internal static PdfDocument ResolveDocument(PSCmdlet cmdlet, PdfDocument? document, string parameterSetName, string documentParameterSet)
+    internal static PdfDocument? ComposeContent(
+        PSCmdlet cmdlet,
+        PdfDocument? document,
+        string parameterSetName,
+        string documentParameterSet,
+        Action<PdfItemCompose> action)
     {
-        return parameterSetName == documentParameterSet
-            ? document ?? throw new PSArgumentNullException(nameof(document))
-            : PdfDslContext.Require(cmdlet).Document;
+        if (parameterSetName == documentParameterSet)
+        {
+            var target = document ?? throw new PSArgumentNullException(nameof(document));
+            target.Compose(compose => compose.Content(action));
+            return target;
+        }
+
+        RejectDeferredPassThru(cmdlet);
+        PdfDslContext.Require(cmdlet).AddContent(action);
+        return null;
+    }
+
+    internal static PdfDocument? ComposePage(
+        PSCmdlet cmdlet,
+        PdfDocument? document,
+        string parameterSetName,
+        string documentParameterSet,
+        Action<PdfPageCompose> action)
+    {
+        if (parameterSetName == documentParameterSet)
+        {
+            throw new PSNotSupportedException(
+                $"{cmdlet.MyInvocation.InvocationName} defines page composition and cannot update an already-built PdfDocument with OfficeIMO 3.2. Use it inside New-OfficePdf {{ ... }}.");
+        }
+
+        RejectDeferredPassThru(cmdlet);
+        PdfDslContext.Require(cmdlet).ConfigurePage(action);
+        return null;
+    }
+
+    internal static PdfDocument? ConfigureDocument(
+        PSCmdlet cmdlet,
+        PdfDocument? document,
+        string parameterSetName,
+        string documentParameterSet,
+        Action<PdfDocument> action)
+    {
+        if (parameterSetName == documentParameterSet)
+        {
+            var target = document ?? throw new PSArgumentNullException(nameof(document));
+            action(target);
+            return target;
+        }
+
+        RejectDeferredPassThru(cmdlet);
+        PdfDslContext.Require(cmdlet).ConfigureDocument(action);
+        return null;
+    }
+
+    internal static void ConfigureOptions(PSCmdlet cmdlet, Action<PdfOptions> action)
+    {
+        RejectDeferredPassThru(cmdlet);
+        var context = PdfDslContext.Require(cmdlet);
+        action(context.Options);
+    }
+
+    private static void RejectDeferredPassThru(PSCmdlet cmdlet)
+    {
+        if (!cmdlet.MyInvocation.BoundParameters.TryGetValue("PassThru", out object? value) ||
+            !LanguagePrimitives.IsTrue(value))
+        {
+            return;
+        }
+
+        throw new PSNotSupportedException(
+            $"{cmdlet.MyInvocation.InvocationName} cannot emit a PdfDocument before New-OfficePdf finishes composition. Remove -PassThru inside the PDF DSL and use the document returned by New-OfficePdf.");
     }
 
     internal static PdfReadOptions? CreateReadOptions(string? password, bool ignorePermissionRestrictions = false)
@@ -204,7 +272,7 @@ internal static class PdfCommandUtilities
         options.SetEncryption(password!, ownerPassword, permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions);
     }
 
-    internal static void ApplyEncryption(PdfDocument document, string? password, string? ownerPassword, int? permissions)
+    internal static PdfDocument ApplyEncryption(PdfDocument document, string? password, string? ownerPassword, int? permissions)
     {
         if (string.IsNullOrEmpty(password))
         {
@@ -213,10 +281,15 @@ internal static class PdfCommandUtilities
                 throw new PSArgumentException("-OwnerPassword and -Permission require -Password.");
             }
 
-            return;
+            return document;
         }
 
-        document.Encryption(password!, ownerPassword, permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions);
+        var options = new PdfStandardEncryptionOptions(password!)
+        {
+            OwnerPassword = ownerPassword,
+            Permissions = permissions ?? PdfStandardEncryptionOptions.AllowAllPermissions
+        };
+        return document.Security.Encrypt(options).ToDocument();
     }
 
     internal static PdfColor? ParseColor(string? color)

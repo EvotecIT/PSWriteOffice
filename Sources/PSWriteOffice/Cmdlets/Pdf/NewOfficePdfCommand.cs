@@ -197,13 +197,19 @@ public sealed class NewOfficePdfCommand : PSCmdlet
             return;
         }
 
-        var document = PdfDocument.Create(CreateOptions());
+        var options = CreateOptions();
+        PdfDocument document;
         if (Content != null)
         {
-            using (PdfDslContext.Enter(document))
+            using (var context = PdfDslContext.Enter(options))
             {
                 Content.InvokeReturnAsIs();
+                document = context.Build();
             }
+        }
+        else
+        {
+            document = PdfDocument.Create(_ => { }, options);
         }
 
         if (string.IsNullOrWhiteSpace(Path) || NoSave.IsPresent)

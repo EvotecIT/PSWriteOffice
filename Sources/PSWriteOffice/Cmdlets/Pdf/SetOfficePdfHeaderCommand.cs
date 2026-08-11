@@ -42,7 +42,7 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>PDF document to update outside the DSL context.</summary>
+    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -83,8 +83,7 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
             throw new PSArgumentException("Provide -Text or -Compose.");
         }
 
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Header(header =>
+        var document = PdfCommandUtilities.ComposePage(this, Document, ParameterSetName, ParameterSetDocument, page => page.Header(header =>
         {
             ApplyAlignment(header);
             if (FontSize.HasValue)
@@ -99,9 +98,9 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
             {
                 header.Text(Text!);
             }
-        });
+        }));
 
-        if (PassThru.IsPresent)
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

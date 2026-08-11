@@ -64,6 +64,38 @@ Describe 'PDF readback and compliance cmdlets' {
         Get-Content -Raw -Path $files[0].FullName | Should -Be 'Attachment payload'
     }
 
+    It 'keeps context attachments, metadata, and encryption in one generated document' {
+        $pdfPath = Join-Path $TestDrive 'encrypted-attachment.pdf'
+        $attachmentPath = Join-Path $TestDrive 'encrypted-payload.txt'
+        Set-Content -Path $attachmentPath -Value 'Encrypted attachment payload' -NoNewline
+
+        New-OfficePdf -Path $pdfPath -Password 'open' {
+            PdfAttachment -Path $attachmentPath -Name 'encrypted-payload.txt' -MimeType 'text/plain'
+            PdfMetadata -Title 'Encrypted attachment report'
+            PdfParagraph 'Encrypted document content'
+        } | Out-Null
+
+        { Get-OfficePdfAttachment -Path $pdfPath } | Should -Throw
+        (Get-OfficePdfPreflight -Path $pdfPath -Password 'open').CanRead | Should -BeTrue
+        (Get-OfficePdfAttachment -Path $pdfPath -Password 'open').FileName | Should -Be 'encrypted-payload.txt'
+        (Get-OfficePdfInfo -Path $pdfPath -Password 'open').Metadata.Title | Should -Be 'Encrypted attachment report'
+    }
+
+    It 'always returns the replacement document for explicit attachment rewrites' {
+        $pdfPath = Join-Path $TestDrive 'explicit-attachment.pdf'
+        $attachmentPath = Join-Path $TestDrive 'explicit-payload.txt'
+        Set-Content -Path $attachmentPath -Value 'Explicit attachment payload' -NoNewline
+        $document = New-OfficePdf {
+            PdfParagraph 'Explicit attachment document'
+        }
+
+        $updated = $document | PdfAttachment -Path $attachmentPath -Name 'explicit-payload.txt'
+        $updated | Save-OfficePdf -Path $pdfPath | Out-Null
+
+        $updated | Should -BeOfType OfficeIMO.Pdf.PdfDocument
+        (Get-OfficePdfAttachment -Path $pdfPath).FileName | Should -Be 'explicit-payload.txt'
+    }
+
     It 'reports generated PDF compliance readiness' {
         $document = New-OfficePdf {
             PdfMetadata -Title 'Compliance Draft'

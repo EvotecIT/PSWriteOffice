@@ -63,14 +63,14 @@ public sealed class SaveOfficePdfCommand : PSCmdlet
         }
 
         PdfCommandUtilities.EnsureDirectory(fullPath);
-        PdfCommandUtilities.ApplyEncryption(Document, Password, OwnerPassword, Permission);
-        Document.Save(fullPath).RequireSuccess();
+        var document = PdfCommandUtilities.ApplyEncryption(Document, Password, OwnerPassword, Permission);
+        document.Save(fullPath).RequireSuccess();
 
         if (Show.IsPresent)
         {
             FileOpenService.Open(fullPath);
         }
 
-        WriteObject(PassThru.IsPresent ? Document : new FileInfo(fullPath));
+        WriteObject(PassThru.IsPresent ? document : new FileInfo(fullPath));
     }
 }

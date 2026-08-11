@@ -67,7 +67,7 @@ public sealed class TestOfficePdfRewriteCommand : PSCmdlet
         {
             options.OriginalReadOptions = originalReadOptions;
             options.RewrittenReadOptions = rewrittenReadOptions;
-            report = original.AssessRewritePreservation(rewritten, options);
+            report = original.Proof.AssessRewritePreservation(rewritten, options);
         }
         finally
         {

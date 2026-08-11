@@ -43,7 +43,7 @@ public sealed class AddOfficeExcelTimelineCommand : PSCmdlet
     [Parameter]
     public string? PivotTableName { get; set; }
 
-    /// <summary>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</summary>
+    /// <summary>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</summary>
     [Parameter]
     public string? Xml { get; set; }
 

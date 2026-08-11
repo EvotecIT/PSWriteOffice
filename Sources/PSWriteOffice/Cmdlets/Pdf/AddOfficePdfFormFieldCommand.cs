@@ -73,30 +73,34 @@ public sealed class AddOfficePdfFormFieldCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        switch (Type)
+        if (Type is OfficePdfFormFieldType.Choice or OfficePdfFormFieldType.MultiSelectChoice or OfficePdfFormFieldType.RadioButton)
         {
-            case OfficePdfFormFieldType.CheckBox:
-                document.CheckBox(Name, Checked.IsPresent, align: Align);
-                break;
-            case OfficePdfFormFieldType.Choice:
-                EnsureOptions();
-                document.ChoiceField(Name, Options, Value, Width, Height, Align);
-                break;
-            case OfficePdfFormFieldType.MultiSelectChoice:
-                EnsureOptions();
-                document.MultiSelectChoiceField(Name, Options, Values.Length > 0 ? Values : Value == null ? null : new[] { Value }, Width, Height, Align);
-                break;
-            case OfficePdfFormFieldType.RadioButton:
-                EnsureOptions();
-                document.RadioButtonGroup(Name, Options, Value, align: Align);
-                break;
-            default:
-                document.TextField(Name, Width, Height, Value ?? string.Empty, Align);
-                break;
+            EnsureOptions();
         }
 
-        if (PassThru.IsPresent)
+        var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument, content =>
+        {
+            switch (Type)
+            {
+                case OfficePdfFormFieldType.CheckBox:
+                    content.CheckBox(Name, Checked.IsPresent, align: Align);
+                    break;
+                case OfficePdfFormFieldType.Choice:
+                    content.ChoiceField(Name, Options, Value, Width, Height, Align);
+                    break;
+                case OfficePdfFormFieldType.MultiSelectChoice:
+                    content.MultiSelectChoiceField(Name, Options, Values.Length > 0 ? Values : Value == null ? null : new[] { Value }, Width, Height, Align);
+                    break;
+                case OfficePdfFormFieldType.RadioButton:
+                    content.RadioButtonGroup(Name, Options, Value, align: Align);
+                    break;
+                default:
+                    content.TextField(Name, Width, Height, Value ?? string.Empty, Align);
+                    break;
+            }
+        });
+
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

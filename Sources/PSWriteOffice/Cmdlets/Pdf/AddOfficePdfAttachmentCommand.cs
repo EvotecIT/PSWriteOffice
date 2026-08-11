@@ -50,23 +50,26 @@ public sealed class AddOfficePdfAttachmentCommand : PSCmdlet
     [Parameter]
     public string? Description { get; set; }
 
-    /// <summary>Emit the updated document.</summary>
+    /// <summary>Accepted for compatibility. The replacement document is always emitted when -Document is used.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         var fileName = string.IsNullOrWhiteSpace(Name)
             ? System.IO.Path.GetFileName(inputPath)
             : Name!;
+        var attachment = new PdfEmbeddedFile(fileName, File.ReadAllBytes(inputPath), MimeType, Relationship, Description);
 
-        document.AttachFile(fileName, File.ReadAllBytes(inputPath), MimeType, Relationship, Description);
-        if (PassThru.IsPresent)
+        if (ParameterSetName == ParameterSetDocument)
         {
-            WriteObject(document);
+            var document = Document ?? throw new PSArgumentNullException(nameof(Document));
+            WriteObject(document.Attachments.Add(attachment).ToDocument());
+            return;
         }
+
+        PdfCommandUtilities.ConfigureOptions(this, options => options.AddEmbeddedFile(attachment));
     }
 }

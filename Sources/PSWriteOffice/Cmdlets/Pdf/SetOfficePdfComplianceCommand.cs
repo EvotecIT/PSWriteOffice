@@ -8,12 +8,12 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Configure PDF/A groundwork before saving.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {
+///   <code>$pdf = New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {
 ///     Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'
 ///     Add-OfficePdfHeading -Text 'Compliance-ready report'
-///     Get-OfficePdfCompliance -Profile PdfA3B
-/// }</code>
-///   <para>Applies OfficeIMO.Pdf compliance groundwork and emits a readiness report inside the DSL.</para>
+/// }
+/// $pdf | Get-OfficePdfCompliance -Profile PdfA3B</code>
+///   <para>Applies OfficeIMO.Pdf compliance groundwork during composition, then inspects the completed document.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfCompliance", DefaultParameterSetName = ParameterSetContext)]
 [Alias("PdfCompliance")]
@@ -23,7 +23,7 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>PDF document to update outside the DSL context.</summary>
+    /// <summary>Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -46,28 +46,25 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        if (Groundwork.IsPresent)
+        if (ParameterSetName == ParameterSetDocument)
         {
-            ApplyGroundwork(document);
+            throw new PSNotSupportedException("OfficeIMO 3.2 requires document-wide compliance options before PDF creation. Use PdfCompliance inside New-OfficePdf.");
         }
-        else
+
+        PdfCommandUtilities.ConfigureOptions(this, options =>
         {
-            document.Compliance(Profile);
-        }
-        if (PassThru.IsPresent)
-        {
-            WriteObject(document);
-        }
+            if (Groundwork.IsPresent) ApplyGroundwork(options);
+            else options.RequireCompliance(Profile);
+        });
     }
 
-    private void ApplyGroundwork(PdfDocument document)
+    private void ApplyGroundwork(PdfOptions options)
     {
         switch (Profile)
         {
             case PdfComplianceProfile.PdfUa1:
             case PdfComplianceProfile.PdfUa2:
-                document.ConfigurePdfUaGroundwork(Profile, Language);
+                options.ConfigurePdfUaGroundwork(Profile, Language);
                 break;
             case PdfComplianceProfile.PdfA2B:
             case PdfComplianceProfile.PdfA2U:
@@ -78,7 +75,7 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
             case PdfComplianceProfile.PdfA4:
             case PdfComplianceProfile.PdfA4E:
             case PdfComplianceProfile.PdfA4F:
-                document.ConfigurePdfAGroundwork(Profile, Language);
+                options.ConfigurePdfAGroundwork(Profile, Language);
                 break;
             default:
                 WriteWarning("Groundwork is currently available for PDF/A and PDF/UA profiles.");

@@ -26,19 +26,19 @@ Sets generated PDF compliance profile and readiness groundwork.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {
+PS> $pdf = New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {
     Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'
     Add-OfficePdfHeading -Text 'Compliance-ready report'
-    Get-OfficePdfCompliance -Profile PdfA3B
 }
+$pdf | Get-OfficePdfCompliance -Profile PdfA3B
 ```
 
-Applies OfficeIMO.Pdf compliance groundwork and emits a readiness report inside the DSL.
+Applies OfficeIMO.Pdf compliance groundwork during composition, then inspects the completed document.
 
 ## PARAMETERS
 
 ### -Document
-PDF document to update outside the DSL context.
+Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.
 
 ```yaml
 Type: PdfDocument

@@ -101,7 +101,7 @@ public sealed class NewOfficePdfSignatureCommand : PSCmdlet
         var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
         PdfExternalSignaturePreparation preparation = PdfDocument
             .Open(inputPath, readOptions)
-            .PrepareExternalSignature(options);
+            .Security.PrepareExternalSignature(options);
         PdfDocument.Open(preparation.PreparedPdf, readOptions).Save(outputPath).RequireSuccess();
         WriteObject(PassThruReport.IsPresent ? preparation : new FileInfo(outputPath));
     }

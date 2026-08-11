@@ -37,6 +37,6 @@ public sealed class GetOfficePdfOptimizationCommand : PSCmdlet
             .Open(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
-            .AnalyzeOptimization());
+            .Optimization.Analyze());
     }
 }

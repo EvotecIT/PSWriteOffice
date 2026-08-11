@@ -6,14 +6,14 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Clears generated PDF page background shapes.</summary>
 /// <example>
-///   <summary>Remove background shapes before saving a variant.</summary>
+///   <summary>Remove queued background shapes during composition.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$pdf = New-OfficePdf {
+///   <code>New-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf {
 ///     Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120
+///     Clear-OfficePdfBackgroundShape
 ///     Add-OfficePdfHeading -Text 'Clean variant'
-/// } -NoSave
-/// $pdf | Clear-OfficePdfBackgroundShape -PassThru | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf</code>
-///   <para>Clears generated page background shapes on an in-memory PDF.</para>
+/// }</code>
+///   <para>Clears generated page background shapes while the PDF page is being composed.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Clear, "OfficePdfBackgroundShape", DefaultParameterSetName = ParameterSetContext)]
 [OutputType(typeof(PdfDocument))]
@@ -22,7 +22,7 @@ public sealed class ClearOfficePdfBackgroundShapeCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>PDF document to update outside the DSL context.</summary>
+    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -33,9 +33,9 @@ public sealed class ClearOfficePdfBackgroundShapeCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.ClearBackgroundShapes();
-        if (PassThru.IsPresent)
+        var document = PdfCommandUtilities.ComposePage(this, Document, ParameterSetName, ParameterSetDocument,
+            page => page.ClearBackgroundShapes());
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

@@ -23,7 +23,7 @@ public sealed class SetOfficePdfPageSetupCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>PDF document to update outside the DSL context.</summary>
+    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -70,25 +70,23 @@ public sealed class SetOfficePdfPageSetupCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(PageSize)) ||
-            MyInvocation.BoundParameters.ContainsKey(nameof(Width)) ||
-            MyInvocation.BoundParameters.ContainsKey(nameof(Height)) ||
-            MyInvocation.BoundParameters.ContainsKey(nameof(Landscape)))
+        var configureSize = MyInvocation.BoundParameters.ContainsKey(nameof(PageSize)) ||
+                            MyInvocation.BoundParameters.ContainsKey(nameof(Width)) ||
+                            MyInvocation.BoundParameters.ContainsKey(nameof(Height)) ||
+                            MyInvocation.BoundParameters.ContainsKey(nameof(Landscape));
+        var document = PdfCommandUtilities.ComposePage(this, Document, ParameterSetName, ParameterSetDocument, page =>
         {
-            document.Size(PdfCommandUtilities.ResolvePageSize(PageSize, Width, Height, Landscape.IsPresent));
-        }
+            if (configureSize)
+            {
+                page.Size(PdfCommandUtilities.ResolvePageSize(PageSize, Width, Height, Landscape.IsPresent));
+            }
 
-        if (Margin.HasValue)
-        {
-            document.Margin(Margin.Value);
-        }
-        else if (Left.HasValue || Top.HasValue || Right.HasValue || Bottom.HasValue)
-        {
-            document.Margin(Left ?? 72, Top ?? 72, Right ?? 72, Bottom ?? 72);
-        }
+            if (Margin.HasValue) page.Margin(Margin.Value);
+            else if (Left.HasValue || Top.HasValue || Right.HasValue || Bottom.HasValue)
+                page.Margin(Left ?? 72, Top ?? 72, Right ?? 72, Bottom ?? 72);
+        });
 
-        if (PassThru.IsPresent)
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

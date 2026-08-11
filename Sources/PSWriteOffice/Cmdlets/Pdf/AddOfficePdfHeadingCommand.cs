@@ -51,22 +51,24 @@ public sealed class AddOfficePdfHeadingCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var color = PdfCommandUtilities.ParseColor(Color);
-        switch (Level)
+        var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument, content =>
         {
-            case 1:
-                document.H1(Text, Align, color);
-                break;
-            case 2:
-                document.H2(Text, Align, color);
-                break;
-            default:
-                document.H3(Text, Align, color);
-                break;
-        }
+            switch (Level)
+            {
+                case 1:
+                    content.H1(Text, Align, color);
+                    break;
+                case 2:
+                    content.H2(Text, Align, color);
+                    break;
+                default:
+                    content.H3(Text, Align, color);
+                    break;
+            }
+        });
 
-        if (PassThru.IsPresent)
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

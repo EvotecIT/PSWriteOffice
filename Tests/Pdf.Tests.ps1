@@ -64,6 +64,17 @@ Describe 'PDF cmdlets' {
         Test-Path -LiteralPath $path | Should -BeFalse
     }
 
+    It 'rejects document page composition and deferred context pass-through clearly' {
+        $document = New-OfficePdf {
+            PdfParagraph 'Existing document content'
+        }
+
+        { $document | PdfPageSetup -Margin 36 } |
+            Should -Throw '*cannot update an already-built PdfDocument*'
+        { New-OfficePdf { PdfParagraph 'First' -PassThru | PdfParagraph 'Second' } } |
+            Should -Throw '*cannot emit a PdfDocument before New-OfficePdf finishes composition*'
+    }
+
     It 'builds a composed PDF and extracts text' {
         $path = Join-Path $TestDrive 'report.pdf'
         $rows = @(

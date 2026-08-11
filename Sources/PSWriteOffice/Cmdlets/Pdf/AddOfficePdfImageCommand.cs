@@ -56,10 +56,11 @@ public sealed class AddOfficePdfImageCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var imagePath = PdfCommandUtilities.ResolvePath(this, Path);
-        document.Image(File.ReadAllBytes(imagePath), Width, Height, Align, null, null, null, null, null, null, null, AlternativeText);
-        if (PassThru.IsPresent)
+        var imageBytes = File.ReadAllBytes(imagePath);
+        var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument,
+            content => content.Image(imageBytes, Width, Height, Align, null, null, null, null, null, null, null, AlternativeText));
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }
