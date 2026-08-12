@@ -360,9 +360,8 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
             DictionaryKeyValueSeparator);
         var table = ExcelTabularInputService.ToDataTable(
             inputRows,
-            copyExistingTables: true,
+            copyExistingTables: false,
             normalizerOptions: normalizerOptions);
-        var reportRows = ExcelTabularInputService.ToDictionaryRows(table);
         var sourceColumns = table.Columns
             .Cast<System.Data.DataColumn>()
             .Select(static column => column.ColumnName)
@@ -377,7 +376,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
 
         var composer = ExcelDslContext.Require(this).RequireComposer();
         var range = composer.TableFrom(
-            reportRows,
+            table,
             Title,
             configure: options =>
             {
