@@ -41,6 +41,6 @@ public sealed class GetOfficePdfSignatureCommand : PSCmdlet
             .Open(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
-            .ValidateSignatures());
+            .Security.ValidateSignatures());
     }
 }

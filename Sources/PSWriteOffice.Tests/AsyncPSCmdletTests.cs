@@ -6,6 +6,7 @@ using PSWriteOffice;
 
 namespace PSWriteOffice.Tests;
 
+[Collection(PowerShellRunspaceCollection.Name)]
 public sealed class AsyncPSCmdletTests
 {
     [Fact]

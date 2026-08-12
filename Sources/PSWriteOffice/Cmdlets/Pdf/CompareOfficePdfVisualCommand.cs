@@ -71,6 +71,6 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
                 DifferencePassword,
                 IgnoreDifferencePermissionRestrictions.IsPresent));
         var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
-        WriteObject(expected.CompareVisual(actual, selection, Options));
+        WriteObject(expected.Proof.CompareVisual(actual, selection, Options));
     }
 }

@@ -73,6 +73,6 @@ public sealed class GetOfficePdfRedactionPlanCommand : PSCmdlet
             .Open(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
-            .PlanRedactions(areas));
+            .Redactions.Plan(areas));
     }
 }

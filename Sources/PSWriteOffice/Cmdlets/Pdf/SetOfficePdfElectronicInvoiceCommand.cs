@@ -23,7 +23,7 @@ public sealed class SetOfficePdfElectronicInvoiceCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>PDF document to update outside the DSL context.</summary>
+    /// <summary>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -64,13 +64,14 @@ public sealed class SetOfficePdfElectronicInvoiceCommand : PSCmdlet
             throw new PSArgumentException("Use -Profile FacturX or -Profile Zugferd for e-invoice groundwork.", nameof(Profile));
         }
 
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        var invoicePath = PdfCommandUtilities.ResolvePath(this, Path);
-        document.ConfigureElectronicInvoiceGroundwork(Profile, File.ReadAllBytes(invoicePath), ConformanceLevel, Version, Relationship, Description);
-
-        if (PassThru.IsPresent)
+        if (ParameterSetName == ParameterSetDocument)
         {
-            WriteObject(document);
+            throw new PSNotSupportedException("OfficeIMO 3.2 requires electronic-invoice options before PDF creation. Use PdfElectronicInvoice inside New-OfficePdf.");
         }
+
+        var invoicePath = PdfCommandUtilities.ResolvePath(this, Path);
+        var invoiceBytes = File.ReadAllBytes(invoicePath);
+        PdfCommandUtilities.ConfigureOptions(this, options =>
+            options.ConfigureElectronicInvoiceGroundwork(Profile, invoiceBytes, ConformanceLevel, Version, Relationship, Description));
     }
 }

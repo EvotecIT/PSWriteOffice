@@ -26,19 +26,19 @@ Clears generated PDF page background shapes.
 
 ### EXAMPLE 1
 ```powershell
-PS> $pdf = New-OfficePdf {
+PS> New-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf {
     Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120
+    Clear-OfficePdfBackgroundShape
     Add-OfficePdfHeading -Text 'Clean variant'
-} -NoSave
-$pdf | Clear-OfficePdfBackgroundShape -PassThru | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf
+}
 ```
 
-Clears generated page background shapes on an in-memory PDF.
+Clears generated page background shapes while the PDF page is being composed.
 
 ## PARAMETERS
 
 ### -Document
-PDF document to update outside the DSL context.
+Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.
 
 ```yaml
 Type: PdfDocument

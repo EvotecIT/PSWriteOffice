@@ -121,9 +121,8 @@ public sealed class AddOfficePdfTextCommand : PSCmdlet
             throw new PSArgumentException("Use either -Text or -Run, not both.");
         }
 
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var defaultColor = PdfCommandUtilities.ParseColor(Color);
-        document.Paragraph(
+        var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument, content => content.Paragraph(
             builder =>
             {
                 if (Run is { Length: > 0 })
@@ -150,9 +149,9 @@ public sealed class AddOfficePdfTextCommand : PSCmdlet
                 }
             },
             Align,
-            defaultColor);
+            defaultColor));
 
-        if (PassThru.IsPresent)
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

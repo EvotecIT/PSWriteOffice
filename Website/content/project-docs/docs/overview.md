@@ -20,7 +20,7 @@ The module manifest is the source of truth for exported cmdlets and aliases. The
 
 ## Major families
 
-- **Excel — 155 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, and HTML review.
+- **Excel — 157 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, and image export.
 - **Word — 91 commands:** sections, paragraphs, lists, tables, fields, content controls, review, mail merge, protection, merging, and conversion.
 - **PDF — 80 commands:** composition, text and image extraction, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, and diagnostics.
 - **PowerPoint — 57 commands:** slides, sections, shapes, charts, tables, notes, themes, layouts, transitions, import, inspection, and HTML review.

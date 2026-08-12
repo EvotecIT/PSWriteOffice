@@ -341,6 +341,27 @@ Describe 'PDF table value and typed-cell contracts' {
 }
 
 Describe 'Composed generated-PDF headers and footers' {
+    It 'captures caller-local values for deferred header and footer composers' {
+        $path = Join-Path $TestDrive 'header-footer-closures.pdf'
+        New-OfficePdf -Path $path {
+            $headerLabel = 'Scoped header'
+            $footerLabel = 'Scoped footer'
+            PdfHeader -Compose {
+                param($header)
+                $null = $header.Text($headerLabel)
+            }
+            PdfFooter -Compose {
+                param($footer)
+                $null = $footer.Text($footerLabel)
+            }
+            PdfParagraph 'Scoped body'
+        } | Out-Null
+
+        $text = Get-OfficePdfText -Path $path
+        $text | Should -Match 'Scoped header'
+        $text | Should -Match 'Scoped footer'
+    }
+
     It 'supports default, first-page, and even-page variants through the native composers' {
         $path = Join-Path $TestDrive 'header-footer-variants.pdf'
         New-OfficePdf -Path $path {

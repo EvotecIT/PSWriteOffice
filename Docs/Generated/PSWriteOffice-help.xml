@@ -12086,14 +12086,62 @@
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeExcelReportTable</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="Data">
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ExcludeProperty</maml:name>
+          <maml:description>
+            <maml:para>Properties to exclude from the rendered table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="Data">
           <maml:name>InputObject</maml:name>
           <maml:description>
             <maml:para>Objects to flatten and render as a table.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
-            <maml:name>Object[]</maml:name>
+            <maml:name>Object</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -12154,6 +12202,18 @@
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Property</maml:name>
+          <maml:description>
+            <maml:para>Properties to include, in the requested column order.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -12221,14 +12281,62 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="Data">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CollectionSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between items when a cell contains a collection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryEntrySeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryKeyValueSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between a dictionary key and value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ExcludeProperty</maml:name>
+        <maml:description>
+          <maml:para>Properties to exclude from the rendered table.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="Data">
         <maml:name>InputObject</maml:name>
         <maml:description>
           <maml:para>Objects to flatten and render as a table.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
         <dev:type>
-          <maml:name>Object[]</maml:name>
+          <maml:name>Object</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -12289,6 +12397,18 @@
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Property</maml:name>
+        <maml:description>
+          <maml:para>Properties to include, in the requested column order.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -12357,7 +12477,7 @@
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>None</maml:name>
+          <maml:name>System.Object</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
@@ -12706,7 +12826,7 @@
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -12781,7 +12901,7 @@
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -12856,7 +12976,7 @@
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -12943,7 +13063,7 @@
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Xml</maml:name>
         <maml:description>
-          <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+          <maml:para>Caller-supplied slicer cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -14439,6 +14559,42 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="Data,DataTable">
           <maml:name>InputObject</maml:name>
           <maml:description>
@@ -14610,6 +14766,42 @@
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CollectionSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between items when a cell contains a collection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryEntrySeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryKeyValueSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between a dictionary key and value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -16521,7 +16713,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -16596,7 +16788,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -16671,7 +16863,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Xml</maml:name>
           <maml:description>
-            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+            <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -16758,7 +16950,7 @@ so they do not emit a live table wrapper.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Xml</maml:name>
         <maml:description>
-          <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.</maml:para>
+          <maml:para>Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -22568,6 +22760,42 @@ so they do not emit a live table wrapper.</maml:para>
       <command:syntaxItem parameterSetName="Context">
         <maml:name>Add-OfficeMarkdownTable</maml:name>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>DisableAutoAlign</maml:name>
           <maml:description>
             <maml:para>Disable automatic alignment heuristics for tables.</maml:para>
@@ -22622,6 +22850,42 @@ so they do not emit a live table wrapper.</maml:para>
       </command:syntaxItem>
       <command:syntaxItem parameterSetName="Document">
         <maml:name>Add-OfficeMarkdownTable</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>DisableAutoAlign</maml:name>
           <maml:description>
@@ -22690,6 +22954,42 @@ so they do not emit a live table wrapper.</maml:para>
       <command:syntaxItem parameterSetName="PipelineDocument">
         <maml:name>Add-OfficeMarkdownTable</maml:name>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>DisableAutoAlign</maml:name>
           <maml:description>
             <maml:para>Disable automatic alignment heuristics for tables.</maml:para>
@@ -22756,6 +23056,42 @@ so they do not emit a live table wrapper.</maml:para>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CollectionSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between items when a cell contains a collection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryEntrySeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryKeyValueSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between a dictionary key and value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>DisableAutoAlign</maml:name>
         <maml:description>
@@ -23560,7 +23896,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Emit the updated document.</maml:para>
+            <maml:para>Accepted for compatibility. The replacement document is always emitted when -Document is used.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -23654,7 +23990,7 @@ so they do not emit a live table wrapper.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>PassThru</maml:name>
           <maml:description>
-            <maml:para>Emit the updated document.</maml:para>
+            <maml:para>Accepted for compatibility. The replacement document is always emitted when -Document is used.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -23748,7 +24084,7 @@ so they do not emit a live table wrapper.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>PassThru</maml:name>
         <maml:description>
-          <maml:para>Emit the updated document.</maml:para>
+          <maml:para>Accepted for compatibility. The replacement document is always emitted when -Document is used.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -24062,7 +24398,7 @@ They are rendered behind generated content and should usually use restrained opa
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -24278,7 +24614,7 @@ They are rendered behind generated content and should usually use restrained opa
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -29047,6 +29383,30 @@ This does not discover, bypass, or crack a missing password.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>FontSize</maml:name>
           <maml:description>
             <maml:para>Body cell font size in PDF points.</maml:para>
@@ -29546,6 +29906,30 @@ This does not discover, bypass, or crack a missing password.</maml:para>
           <command:parameterValue required="false" variableLength="false">Double[]</command:parameterValue>
           <dev:type>
             <maml:name>Double[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -30066,6 +30450,30 @@ This does not discover, bypass, or crack a missing password.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
@@ -30578,6 +30986,30 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameterValue required="false" variableLength="false">Double[]</command:parameterValue>
         <dev:type>
           <maml:name>Double[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryEntrySeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryKeyValueSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between a dictionary key and value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -31812,7 +32244,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -31899,7 +32331,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -35664,6 +36096,42 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
     <command:syntax>
       <command:syntaxItem parameterSetName="InputObject">
         <maml:name>Add-OfficePowerPointTable</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Headers">
           <maml:name>Header</maml:name>
           <maml:description>
@@ -35890,6 +36358,18 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CollectionSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between items when a cell contains a collection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Columns</maml:name>
         <maml:description>
@@ -35898,6 +36378,30 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
         <dev:type>
           <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryEntrySeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryKeyValueSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between a dictionary key and value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -45904,6 +46408,18 @@ table formatting, borders, and style choices are preserved.</maml:para>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Add-OfficeWordTable</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
           <maml:name>Content</maml:name>
           <maml:description>
@@ -45912,6 +46428,30 @@ table formatting, borders, and style choices are preserved.</maml:para>
           <command:parameterValue required="false" variableLength="false">ScriptBlock</command:parameterValue>
           <dev:type>
             <maml:name>ScriptBlock</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -46120,6 +46660,18 @@ table formatting, borders, and style choices are preserved.</maml:para>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CollectionSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between items when a cell contains a collection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
         <maml:name>Content</maml:name>
         <maml:description>
@@ -46128,6 +46680,30 @@ table formatting, borders, and style choices are preserved.</maml:para>
         <command:parameterValue required="false" variableLength="false">ScriptBlock</command:parameterValue>
         <dev:type>
           <maml:name>ScriptBlock</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryEntrySeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryKeyValueSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between a dictionary key and value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -51354,7 +51930,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -51381,7 +51957,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -51424,17 +52000,17 @@ cells. This keeps existing-document editing simple without forcing callers back 
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Remove background shapes before saving a variant.</maml:title>
+        <maml:title>Remove queued background shapes during composition.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$pdf = New-OfficePdf {&#xD;
+        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf {&#xD;
                 Add-OfficePdfBackgroundShape -Shape Rectangle -FillColor '#EEF2FF' -X 0 -Y 0 -Width 595 -Height 120&#xD;
+                Clear-OfficePdfBackgroundShape&#xD;
                 Add-OfficePdfHeading -Text 'Clean variant'&#xD;
-            } -NoSave&#xD;
-            $pdf | Clear-OfficePdfBackgroundShape -PassThru | Save-OfficePdf -Path .\Examples\Documents\PdfNoBackgroundShape.pdf</dev:code>
+            }</dev:code>
         <dev:remarks>
-          <maml:para>Clears generated page background shapes on an in-memory PDF.</maml:para>
+          <maml:para>Clears generated page background shapes while the PDF page is being composed.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -61715,6 +62291,42 @@ cells. This keeps existing-document editing simple without forcing callers back 
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>ConvertTo-OfficeMarkdown</maml:name>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>DisableAutoAlign</maml:name>
           <maml:description>
             <maml:para>Disable automatic alignment heuristics for tables.</maml:para>
@@ -61753,6 +62365,42 @@ cells. This keeps existing-document editing simple without forcing callers back 
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CollectionSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between items when a cell contains a collection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryEntrySeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryKeyValueSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between a dictionary key and value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>DisableAutoAlign</maml:name>
         <maml:description>
@@ -73490,6 +74138,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ColumnFormat</maml:name>
           <maml:description>
             <maml:para>Header-to-format map. Values may be preset names such as Text, Currency, Percent, Date, or custom Excel number formats.</maml:para>
@@ -73571,6 +74231,30 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:name>Description</maml:name>
           <maml:description>
             <maml:para>Workbook description metadata.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -74216,6 +74900,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ColumnFormat</maml:name>
           <maml:description>
             <maml:para>Header-to-format map. Values may be preset names such as Text, Currency, Percent, Date, or custom Excel number formats.</maml:para>
@@ -74297,6 +74993,30 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:name>Description</maml:name>
           <maml:description>
             <maml:para>Workbook description metadata.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -74930,6 +75650,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CollectionSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between items when a cell contains a collection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ColumnFormat</maml:name>
           <maml:description>
             <maml:para>Header-to-format map. Values may be preset names such as Text, Currency, Percent, Date, or custom Excel number formats.</maml:para>
@@ -75011,6 +75743,30 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:name>Description</maml:name>
           <maml:description>
             <maml:para>Workbook description metadata.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryEntrySeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>DictionaryKeyValueSeparator</maml:name>
+          <maml:description>
+            <maml:para>Text used between a dictionary key and value.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -75668,6 +76424,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CollectionSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between items when a cell contains a collection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ColumnFormat</maml:name>
         <maml:description>
           <maml:para>Header-to-format map. Values may be preset names such as Text, Currency, Percent, Date, or custom Excel number formats.</maml:para>
@@ -75749,6 +76517,30 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:name>Description</maml:name>
         <maml:description>
           <maml:para>Workbook description metadata.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryEntrySeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between entries when a cell contains a dictionary.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>DictionaryKeyValueSeparator</maml:name>
+        <maml:description>
+          <maml:para>Text used between a dictionary key and value.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -76322,6 +77114,346 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>Export-OfficeExcelChartImage</command:name>
+      <command:verb>Export</command:verb>
+      <command:noun>OfficeExcelChartImage</command:noun>
+      <maml:description>
+        <maml:para>Exports one named worksheet chart as an image file.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Exports one named worksheet chart as an image file.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="Path">
+        <maml:name>Export-OfficeExcelChartImage</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ChartName</maml:name>
+          <maml:description>
+            <maml:para>Chart name as stored in the worksheet drawing layer.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Replace an existing destination file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>Output image format.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeImageExportFormat</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Optional rendering, size, font, and diagnostic policy settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ExcelImageExportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>ExcelImageExportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Optional destination image file. When omitted, returns the in-memory image result only.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Path to the workbook.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>WorksheetName</maml:name>
+          <maml:description>
+            <maml:para>Name of the worksheet containing the chart.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Document">
+        <maml:name>Export-OfficeExcelChartImage</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ChartName</maml:name>
+          <maml:description>
+            <maml:para>Chart name as stored in the worksheet drawing layer.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>Document</maml:name>
+          <maml:description>
+            <maml:para>Open workbook instance.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ExcelDocument</command:parameterValue>
+          <dev:type>
+            <maml:name>ExcelDocument</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Replace an existing destination file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>Output image format.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeImageExportFormat</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Optional rendering, size, font, and diagnostic policy settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ExcelImageExportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>ExcelImageExportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Optional destination image file. When omitted, returns the in-memory image result only.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>WorksheetName</maml:name>
+          <maml:description>
+            <maml:para>Name of the worksheet containing the chart.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ChartName</maml:name>
+        <maml:description>
+          <maml:para>Chart name as stored in the worksheet drawing layer.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <maml:name>Document</maml:name>
+        <maml:description>
+          <maml:para>Open workbook instance.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ExcelDocument</command:parameterValue>
+        <dev:type>
+          <maml:name>ExcelDocument</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Replace an existing destination file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Format</maml:name>
+        <maml:description>
+          <maml:para>Output image format.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeImageExportFormat</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Optional rendering, size, font, and diagnostic policy settings.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">ExcelImageExportOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>ExcelImageExportOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Optional destination image file. When omitted, returns the in-memory image result only.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Path to the workbook.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>WorksheetName</maml:name>
+        <maml:description>
+          <maml:para>Name of the worksheet containing the chart.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>OfficeIMO.Excel.ExcelDocument</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Drawing.OfficeImageExportResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Export a chart for inline use in an email.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Export-OfficeExcelChartImage -Path .\Report.xlsx -WorksheetName Summary -ChartName TicketStatus -OutputPath .\ticket-status.png</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>Export-OfficeExcelGoogleSpreadsheet</command:name>
       <command:verb>Export</command:verb>
       <command:noun>OfficeExcelGoogleSpreadsheet</command:noun>
@@ -76844,6 +77976,346 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <dev:code>Export-OfficeExcelImage -Path .\Report.xlsx -OutputPath .\Images</dev:code>
         <dev:remarks>
           <maml:para>Writes one image per selected sheet and returns OfficeImageExportResult objects.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Export-OfficeExcelRangeImage</command:name>
+      <command:verb>Export</command:verb>
+      <command:noun>OfficeExcelRangeImage</command:noun>
+      <maml:description>
+        <maml:para>Exports one worksheet range as an image file.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Exports one worksheet range as an image file.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="Path">
+        <maml:name>Export-OfficeExcelRangeImage</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Replace an existing destination file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>Output image format.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeImageExportFormat</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Optional rendering, size, font, and diagnostic policy settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ExcelImageExportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>ExcelImageExportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Optional destination image file. When omitted, returns the in-memory image result only.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Path to the workbook.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Range</maml:name>
+          <maml:description>
+            <maml:para>A1 range address to export.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>WorksheetName</maml:name>
+          <maml:description>
+            <maml:para>Name of the worksheet containing the range.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Document">
+        <maml:name>Export-OfficeExcelRangeImage</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>Document</maml:name>
+          <maml:description>
+            <maml:para>Open workbook instance.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ExcelDocument</command:parameterValue>
+          <dev:type>
+            <maml:name>ExcelDocument</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Replace an existing destination file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>Output image format.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeImageExportFormat</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Optional rendering, size, font, and diagnostic policy settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ExcelImageExportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>ExcelImageExportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Optional destination image file. When omitted, returns the in-memory image result only.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Range</maml:name>
+          <maml:description>
+            <maml:para>A1 range address to export.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>WorksheetName</maml:name>
+          <maml:description>
+            <maml:para>Name of the worksheet containing the range.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <maml:name>Document</maml:name>
+        <maml:description>
+          <maml:para>Open workbook instance.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ExcelDocument</command:parameterValue>
+        <dev:type>
+          <maml:name>ExcelDocument</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Replace an existing destination file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Format</maml:name>
+        <maml:description>
+          <maml:para>Output image format.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeImageExportFormat</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Png</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Svg</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Jpeg</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Tiff</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Webp</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeImageExportFormat</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Optional rendering, size, font, and diagnostic policy settings.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">ExcelImageExportOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>ExcelImageExportOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Optional destination image file. When omitted, returns the in-memory image result only.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Path to the workbook.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Range</maml:name>
+        <maml:description>
+          <maml:para>A1 range address to export.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>WorksheetName</maml:name>
+        <maml:description>
+          <maml:para>Name of the worksheet containing the range.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>OfficeIMO.Excel.ExcelDocument</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Drawing.OfficeImageExportResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Export a report range for use in an email.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Export-OfficeExcelRangeImage -Path .\Report.xlsx -WorksheetName Summary -Range A1:H20 -OutputPath .\summary.png</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -158813,7 +160285,7 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -158864,7 +160336,7 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -159022,7 +160494,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -159102,7 +160574,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -159286,7 +160758,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -159365,7 +160837,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -159464,13 +160936,14 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>New-OfficePdf -Path .\Examples\Documents\PdfCompliance.pdf {&#xD;
+        <dev:code>$path = '.\Examples\Documents\PdfCompliance.pdf'&#xD;
+            New-OfficePdf -Path $path {&#xD;
                 Set-OfficePdfCompliance -Profile PdfA3B -Groundwork -Language 'en-US'&#xD;
                 Add-OfficePdfHeading -Text 'Compliance-ready report'&#xD;
-                Get-OfficePdfCompliance -Profile PdfA3B&#xD;
-            }</dev:code>
+            }&#xD;
+            Get-OfficePdfCompliance -Path $path -Profile PdfA3B</dev:code>
         <dev:remarks>
-          <maml:para>Applies OfficeIMO.Pdf compliance groundwork and emits a readiness report inside the DSL.</maml:para>
+          <maml:para>Applies OfficeIMO.Pdf compliance groundwork during composition, saves the PDF, then inspects the saved file.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -159628,7 +161101,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -159750,7 +161223,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -159998,7 +161471,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -160080,7 +161553,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -160601,7 +162074,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -160683,7 +162156,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -161905,7 +163378,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -162011,7 +163484,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -162258,7 +163731,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -162393,7 +163866,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -162802,7 +164275,7 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>PDF document to update outside the DSL context.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -162847,7 +164320,7 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>PDF document to update outside the DSL context.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>

@@ -27,7 +27,7 @@ public sealed class AddOfficePdfBackgroundShapeCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>PDF document to update outside the DSL context.</summary>
+    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -100,38 +100,39 @@ public sealed class AddOfficePdfBackgroundShapeCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
         var fill = PdfCommandUtilities.ParseColor(FillColor);
         var stroke = PdfCommandUtilities.ParseColor(StrokeColor);
-
-        switch (Shape)
+        var document = PdfCommandUtilities.ComposePage(this, Document, ParameterSetName, ParameterSetDocument, page =>
         {
-            case OfficePdfBackgroundShapeType.Rectangle:
-                document.BackgroundRectangle(X, Y, RequireWidth(), RequireHeight(), fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.RoundedRectangle:
-                document.BackgroundRoundedRectangle(X, Y, RequireWidth(), RequireHeight(), CornerRadius, fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.Ellipse:
-                document.BackgroundEllipse(X, Y, RequireWidth(), RequireHeight(), fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.TopBand:
-                document.BackgroundTopBand(RequireHeight(), fill, InsetX, OffsetY, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.BottomBand:
-                document.BackgroundBottomBand(RequireHeight(), fill, InsetX, OffsetY, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.LeftBand:
-                document.BackgroundLeftBand(RequireWidth(), fill, InsetY, OffsetX, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            case OfficePdfBackgroundShapeType.RightBand:
-                document.BackgroundRightBand(RequireWidth(), fill, InsetY, OffsetX, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
-                break;
-            default:
-                throw new PSArgumentOutOfRangeException(nameof(Shape), Shape, "Unsupported PDF background shape type.");
-        }
+            switch (Shape)
+            {
+                case OfficePdfBackgroundShapeType.Rectangle:
+                    page.BackgroundRectangle(X, Y, RequireWidth(), RequireHeight(), fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.RoundedRectangle:
+                    page.BackgroundRoundedRectangle(X, Y, RequireWidth(), RequireHeight(), CornerRadius, fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.Ellipse:
+                    page.BackgroundEllipse(X, Y, RequireWidth(), RequireHeight(), fill, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.TopBand:
+                    page.BackgroundTopBand(RequireHeight(), fill, InsetX, OffsetY, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.BottomBand:
+                    page.BackgroundBottomBand(RequireHeight(), fill, InsetX, OffsetY, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.LeftBand:
+                    page.BackgroundLeftBand(RequireWidth(), fill, InsetY, OffsetX, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                case OfficePdfBackgroundShapeType.RightBand:
+                    page.BackgroundRightBand(RequireWidth(), fill, InsetY, OffsetX, CornerRadius, stroke, StrokeWidth, FillOpacity, StrokeOpacity);
+                    break;
+                default:
+                    throw new PSArgumentOutOfRangeException(nameof(Shape), Shape, "Unsupported PDF background shape type.");
+            }
+        });
 
-        if (PassThru.IsPresent)
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

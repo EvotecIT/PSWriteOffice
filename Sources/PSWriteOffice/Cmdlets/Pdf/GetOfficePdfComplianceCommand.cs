@@ -109,7 +109,9 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
             return;
         }
 
-        var document = Document ?? PdfDslContext.Require(this).Document;
+        var document = Document ?? throw new PSArgumentNullException(
+            nameof(Document),
+            "OfficeIMO 3.2 builds New-OfficePdf content as one composition. Run Get-OfficePdfCompliance on the document returned by New-OfficePdf.");
         var profile = Profile ?? document.AssessCompliance().Profile;
         WriteObject(Proof.IsPresent
             ? AssessProof(document, profile)

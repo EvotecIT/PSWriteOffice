@@ -433,9 +433,9 @@ Describe 'Excel DSL surface' {
         $timeline = Add-OfficeExcelTimeline -Path $path -Name OrderDateTimeline -SourceName OrderDate -PivotTableName SalesPivot -PassThru
 
         $slicer.Kind | Should -Be 'Slicer'
-        $slicer.ContentType | Should -Be 'application/vnd.officeimo.excel.slicerCache-metadata+xml'
+        $slicer.ContentType | Should -Be 'application/xml'
         $timeline.Kind | Should -Be 'Timeline'
-        $timeline.ContentType | Should -Be 'application/vnd.officeimo.excel.timelineCache-metadata+xml'
+        $timeline.ContentType | Should -Be 'application/xml'
 
         $summary = Get-OfficeExcelSummary -Path $path -IncludeSchema
         $summary.SlicerPartCount | Should -Be 1

@@ -10,7 +10,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 
 | Family | Exported commands | Guide |
 | --- | ---: | --- |
-| Excel | 155 | [Excel automation](/docs/pswriteoffice/excel/) |
+| Excel | 157 | [Excel automation](/docs/pswriteoffice/excel/) |
 | Word | 91 | [Word automation](/docs/pswriteoffice/word/) |
 | PDF | 80 | [PDF automation](/docs/pswriteoffice/pdf/) |
 | PowerPoint | 57 | [PowerPoint automation](/docs/pswriteoffice/powerpoint/) |

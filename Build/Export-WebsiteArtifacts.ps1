@@ -181,7 +181,11 @@ try {
 $apiRoot = Join-Path $ArtifactsRoot 'apidocs\powershell'
 New-Item -ItemType Directory -Path $apiRoot -Force | Out-Null
 
-Copy-Item -LiteralPath $builtModule.HelpPath -Destination (Join-Path $apiRoot "$moduleName-help.xml") -Force
+$apiHelpPath = Join-Path $apiRoot "$moduleName-help.xml"
+$docsHelpPath = Join-Path $RepositoryRoot "Docs\Generated\$moduleName-help.xml"
+New-Item -ItemType Directory -Path (Split-Path -Parent $docsHelpPath) -Force | Out-Null
+Copy-Item -LiteralPath $builtModule.HelpPath -Destination $apiHelpPath -Force
+Copy-Item -LiteralPath $builtModule.HelpPath -Destination $docsHelpPath -Force
 [System.IO.File]::WriteAllBytes((Join-Path $apiRoot "$moduleName.psd1"), $sourceManifestBytes)
 
 $metadata = [ordered]@{

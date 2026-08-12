@@ -49,17 +49,19 @@ public sealed class AddOfficePdfListCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        if (Numbered.IsPresent)
+        var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument, content =>
         {
-            document.Numbered(Items, Align, startNumber: StartNumber);
-        }
-        else
-        {
-            document.Bullets(Items, Align);
-        }
+            if (Numbered.IsPresent)
+            {
+                content.Numbered(Items, Align, startNumber: StartNumber);
+            }
+            else
+            {
+                content.Bullets(Items, Align);
+            }
+        });
 
-        if (PassThru.IsPresent)
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

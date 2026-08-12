@@ -41,9 +41,9 @@ public sealed class AddOfficePdfBookmarkCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Bookmark(Name);
-        if (PassThru.IsPresent)
+        var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument,
+            content => content.Bookmark(Name));
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }

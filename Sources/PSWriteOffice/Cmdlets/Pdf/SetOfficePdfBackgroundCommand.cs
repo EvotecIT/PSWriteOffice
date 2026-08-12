@@ -23,7 +23,7 @@ public sealed class SetOfficePdfBackgroundCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>PDF document to update outside the DSL context.</summary>
+    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -42,9 +42,10 @@ public sealed class SetOfficePdfBackgroundCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfCommandUtilities.ResolveDocument(this, Document, ParameterSetName, ParameterSetDocument);
-        document.Background(Clear.IsPresent ? null : PdfCommandUtilities.ParseColor(Color));
-        if (PassThru.IsPresent)
+        var background = Clear.IsPresent ? null : PdfCommandUtilities.ParseColor(Color);
+        var document = PdfCommandUtilities.ComposePage(this, Document, ParameterSetName, ParameterSetDocument,
+            page => page.Background(background));
+        if (PassThru.IsPresent && document != null)
         {
             WriteObject(document);
         }
