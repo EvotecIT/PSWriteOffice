@@ -14,6 +14,7 @@ using PSWriteOffice.Cmdlets.Confluence;
 
 namespace PSWriteOffice.Tests;
 
+[Collection(PowerShellRunspaceCollection.Name)]
 public sealed class ConfluenceCmdletTests
 {
     [Fact]
