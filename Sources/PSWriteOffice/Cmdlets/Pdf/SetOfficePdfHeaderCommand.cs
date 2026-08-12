@@ -83,6 +83,7 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
             throw new PSArgumentException("Provide -Text or -Compose.");
         }
 
+        var compose = Compose?.GetNewClosure();
         var document = PdfCommandUtilities.ComposePage(this, Document, ParameterSetName, ParameterSetDocument, page => page.Header(header =>
         {
             ApplyAlignment(header);
@@ -90,9 +91,9 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
             {
                 header.FontSize(FontSize.Value);
             }
-            if (Compose != null)
+            if (compose != null)
             {
-                Compose.Invoke(header);
+                compose.Invoke(header);
             }
             else
             {

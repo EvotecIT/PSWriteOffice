@@ -76,6 +76,7 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
             throw new PSArgumentException("Use either -Text or -Compose, not both.");
         }
 
+        var compose = Compose?.GetNewClosure();
         var document = PdfCommandUtilities.ComposePage(this, Document, ParameterSetName, ParameterSetDocument, page => page.Footer(footer =>
         {
             ApplyAlignment(footer);
@@ -83,9 +84,9 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
             {
                 footer.FontSize(FontSize.Value);
             }
-            if (Compose != null)
+            if (compose != null)
             {
-                Compose.Invoke(footer);
+                compose.Invoke(footer);
             }
             else
             {

@@ -5,6 +5,7 @@ BeforeAll {
     $script:projectManifestPath = Join-Path $script:repoRoot 'WebsiteArtifacts\project-manifest.json'
     $script:moduleManifestPath = Join-Path $script:repoRoot 'PSWriteOffice.psd1'
     $script:apiRoot = Join-Path $script:repoRoot 'WebsiteArtifacts\apidocs\powershell'
+    $script:generatedHelpPath = Join-Path $script:repoRoot 'Docs\Generated\PSWriteOffice-help.xml'
     $script:sourceSnapshotManifestPath = Join-Path $script:apiRoot 'PSWriteOffice.psd1'
     $script:commandFamiliesGuidePath = Join-Path $script:repoRoot 'Website\content\project-docs\docs\command-families.md'
     $script:overviewGuidePath = Join-Path $script:repoRoot 'Website\content\project-docs\docs\overview.md'
@@ -116,6 +117,14 @@ Describe 'PSWriteOffice website documentation catalog' {
         $exportCsv.sourcePath | Should -Be 'Sources/PSWriteOffice/Cmdlets/Csv/ExportOfficeCsvCommand.cs'
         (Get-Content -LiteralPath (Join-Path $script:repoRoot $exportCsv.sourcePath))[$exportCsv.sourceLine - 1] |
             Should -Match '\bclass\s+ExportOfficeCsvCommand\b'
+    }
+
+    It 'keeps the generated module help synchronized with the API bundle' {
+        $apiHelpPath = Join-Path $script:apiRoot 'PSWriteOffice-help.xml'
+
+        Test-Path -LiteralPath $script:generatedHelpPath | Should -BeTrue
+        (Get-FileHash -LiteralPath $script:generatedHelpPath -Algorithm SHA256).Hash |
+            Should -Be (Get-FileHash -LiteralPath $apiHelpPath -Algorithm SHA256).Hash
     }
 
     It 'publishes discoverable comparison and legacy migration guides against current commands' {
