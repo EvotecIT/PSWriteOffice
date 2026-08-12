@@ -84,6 +84,13 @@ internal static class PowerShellDictionaryAdapter
         return true;
     }
 
+    /// <summary>
+    /// Enumerates a dictionary used as the top-level row schema. Nested-cell limits do not apply here;
+    /// the consuming table or file format owns its schema and column boundaries.
+    /// </summary>
+    public static bool TryGetRowEntries(object? value, out IReadOnlyList<PowerShellDictionaryEntry> entries)
+        => TryGetEntries(value, int.MaxValue, out entries);
+
     public static object? GetValue(
         IReadOnlyList<PowerShellDictionaryEntry> entries,
         string column,

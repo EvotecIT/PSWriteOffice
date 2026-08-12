@@ -845,12 +845,12 @@ public sealed partial class ExportOfficeExcelCommand : PSCmdlet
 
     private DataTable PrepareDataTableForExport(DataTable sourceTable)
     {
-        if (ExcludeProperty is { Length: > 0 })
-        {
-            return ApplyExcludedColumns(sourceTable.Copy());
-        }
-
-        return sourceTable;
+        var table = ExcelTabularInputService.ToDataTable(
+            new object?[] { sourceTable },
+            sourceTable.TableName,
+            copyExistingTables: ExcludeProperty is { Length: > 0 },
+            normalizerOptions: CreateNormalizerOptions());
+        return ApplyExcludedColumns(table);
     }
 
     private string? ResolveDataSetTableName(DataTable table, ISet<string> usedTableNames)

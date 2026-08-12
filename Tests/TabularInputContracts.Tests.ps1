@@ -164,6 +164,38 @@ Describe 'Shared tabular input contracts' {
         $result[0].Tags | Should -Be 'One, Two, Three'
     }
 
+    It 'applies normalization limits to every DataSet table' {
+        $dataSet = [System.Data.DataSet]::new('Book')
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Tags', [object])
+        [void] $table.Rows.Add('Alpha', [object] @('One', 'Two', 'Three'))
+        [void] $dataSet.Tables.Add($table)
+        $path = Join-Path $TestDrive 'DataSet-CollectionLimit.xlsx'
+
+        {
+            $dataSet | Export-OfficeExcel -Path $path -MaxCollectionItems 2 -ErrorAction Stop
+        } | Should -Throw '*collection*at least 3 items*-MaxCollectionItems 2*Rerun with -MaxCollectionItems 3 or higher*'
+
+        $dataSet | Export-OfficeExcel -Path $path -MaxCollectionItems 3
+        $result = @(Import-OfficeExcel -Path $path -WorksheetName 'Rows')
+        $result[0].Tags | Should -Be 'One, Two, Three'
+    }
+
+    It 'does not apply nested-cell collection limits to top-level dictionary columns' {
+        $row = [ordered]@{ A = 1; B = 2; C = 3 }
+        $path = Join-Path $TestDrive 'TopLevelDictionary.xlsx'
+
+        { $row | Export-OfficeExcel -Path $path -MaxCollectionItems 2 -ErrorAction Stop } |
+            Should -Not -Throw
+
+        $result = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1')
+        $result.Count | Should -Be 1
+        $result[0].A | Should -Be 1
+        $result[0].B | Should -Be 2
+        $result[0].C | Should -Be 3
+    }
+
     It 'routes dictionary limits through streaming CSV exports' {
         $row = [pscustomobject]@{
             Name     = 'Alpha'
