@@ -54,7 +54,7 @@ public abstract class OfficeVisualCommandBase : PSCmdlet
     {
         if (inputObject is PathInfo directPathInfo)
         {
-            return ConvertSvgFile(directPathInfo.Path);
+            return ConvertSvgFile(directPathInfo.ProviderPath);
         }
 
         PSObject input = PSObject.AsPSObject(inputObject);
@@ -76,7 +76,7 @@ public abstract class OfficeVisualCommandBase : PSCmdlet
         }
         if (value is PathInfo pathInfo)
         {
-            return ConvertSvgFile(pathInfo.Path);
+            return ConvertSvgFile(pathInfo.ProviderPath);
         }
         if (value is string path)
         {

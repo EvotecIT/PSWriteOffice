@@ -68,6 +68,16 @@ Describe 'ChartForgeX visual artifacts' {
         $fromPathInfo = $pathInfo | ConvertTo-OfficeVisual
         $fromPathInfo.GetSvgBytes().Count | Should -BeGreaterThan 100
 
+        $driveName = 'VisualArtifacts' + [Guid]::NewGuid().ToString('N')
+        try {
+            New-PSDrive -Name $driveName -PSProvider FileSystem -Root $TestDrive | Out-Null
+            $drivePathInfo = Resolve-Path -LiteralPath "${driveName}:\service-health.svg"
+            $fromDrivePathInfo = $drivePathInfo | ConvertTo-OfficeVisual
+            $fromDrivePathInfo.GetSvgBytes().Count | Should -BeGreaterThan 100
+        } finally {
+            Remove-PSDrive -Name $driveName -ErrorAction SilentlyContinue
+        }
+
         $portable = [pscustomobject] @{
             OfficeVisualSvg             = [IO.File]::ReadAllBytes($SvgPath)
             OfficeVisualId              = 'portable-pipeline'
@@ -117,6 +127,8 @@ Describe 'ChartForgeX visual artifacts' {
         $document = New-OfficePdf -Content { PdfParagraph 'Existing document' }
         $updated = $visual | Add-OfficePdfVisual -Document $document -PassThru
         [object]::ReferenceEquals($updated, $document) | Should -BeTrue
+        $pipelineUpdated = $document | Add-OfficePdfVisual -InputObject $visual -PassThru
+        [object]::ReferenceEquals($pipelineUpdated, $document) | Should -BeTrue
         $document | Save-OfficePdf -Path $documentPath | Out-Null
 
         Test-Path $dslPath | Should -BeTrue

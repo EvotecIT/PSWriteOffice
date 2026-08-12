@@ -14,13 +14,17 @@ public sealed class AddOfficePdfVisualCommand : OfficeVisualCommandBase
 {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
+    private const string ParameterSetPipelineDocument = "PipelineDocument";
 
     /// <summary>ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or SVG file path.</summary>
-    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetContext)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPipelineDocument)]
     public object InputObject { get; set; } = null!;
 
     /// <summary>PDF document to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetPipelineDocument)]
     public PdfDocument Document { get; set; } = null!;
 
     /// <summary>Horizontal alignment in PDF flow.</summary>
@@ -43,11 +47,14 @@ public sealed class AddOfficePdfVisualCommand : OfficeVisualCommandBase
     protected override void ProcessRecord()
     {
         var visual = ResolveVisual(InputObject);
+        var documentParameterSet = ParameterSetName == ParameterSetPipelineDocument
+            ? ParameterSetPipelineDocument
+            : ParameterSetDocument;
         var document = PdfCommandUtilities.ComposeContent(
             this,
             Document,
             ParameterSetName,
-            ParameterSetDocument,
+            documentParameterSet,
             content => content.AddVisualArtifact(visual, Align, SpacingBefore, SpacingAfter));
         if (PassThru.IsPresent && document != null)
         {

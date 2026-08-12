@@ -19,6 +19,11 @@ Add-OfficePdfVisual [-InputObject] <Object> [-Align <PdfAlign>] [-SpacingBefore 
 Add-OfficePdfVisual [-InputObject] <Object> -Document <PdfDocument> [-Align <PdfAlign>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-PassThru] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
 ```
 
+### PipelineDocument
+```powershell
+Add-OfficePdfVisual [-InputObject] <Object> -Document <PdfDocument> [-Align <PdfAlign>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-PassThru] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
+```
+
 ## DESCRIPTION
 Adds a ChartForgeX artifact, portable SVG, or converted Office visual to PDF flow content.
 
@@ -43,7 +48,7 @@ Horizontal alignment in PDF flow.
 
 ```yaml
 Type: PdfAlign
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values: Left, Center, Right, Justify
 
@@ -59,7 +64,7 @@ Optional accessible description for an SVG file input.
 
 ```yaml
 Type: String
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -75,14 +80,14 @@ PDF document to update outside the DSL context.
 
 ```yaml
 Type: PdfDocument
-Parameter Sets: Document
+Parameter Sets: Document, PipelineDocument
 Aliases: None
 Possible values:
 
 Required: True
 Position: named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -91,7 +96,7 @@ Optional output height in Office points.
 
 ```yaml
 Type: Double
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -107,7 +112,7 @@ Optional stable identifier for an SVG file input.
 
 ```yaml
 Type: String
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -123,7 +128,7 @@ ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or
 
 ```yaml
 Type: Object
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -139,7 +144,7 @@ Optional OfficeIMO SVG import element limit.
 
 ```yaml
 Type: Int32
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -155,7 +160,7 @@ Optional maximum SVG viewport width or height. Increase the safe default only fo
 
 ```yaml
 Type: Double
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -171,7 +176,7 @@ Optional maximum SVG viewport area in pixels. Increase the safe default only for
 
 ```yaml
 Type: Double
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -187,7 +192,7 @@ Emit the updated PDF document.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -203,7 +208,7 @@ Conversion factor from ChartForgeX pixels to Office points.
 
 ```yaml
 Type: Double
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -219,7 +224,7 @@ Spacing after the visual in points.
 
 ```yaml
 Type: Double
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -235,7 +240,7 @@ Spacing before the visual in points.
 
 ```yaml
 Type: Double
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -251,7 +256,7 @@ SVG fidelity policy used by OfficeIMO.ChartForgeX.
 
 ```yaml
 Type: OfficeVisualSvgPolicy
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values: PreserveVector, RasterizeWhenNeeded, RequireVector
 
@@ -267,7 +272,7 @@ Optional title for an SVG file input.
 
 ```yaml
 Type: String
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -283,7 +288,7 @@ Optional output width in Office points.
 
 ```yaml
 Type: Double
-Parameter Sets: Context, Document
+Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:
 
@@ -300,6 +305,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 - `System.Object`
+- `OfficeIMO.Pdf.PdfDocument`
 
 ## OUTPUTS
 
