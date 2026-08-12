@@ -65,6 +65,16 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
     [AllowEmptyString]
     public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
+    /// <summary>Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxCollectionItems { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems;
+
+    /// <summary>Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxNestingDepth { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth;
+
     /// <summary>Disable automatic alignment heuristics for tables.</summary>
     [Parameter]
     public SwitchParameter DisableAutoAlign { get; set; }
@@ -121,7 +131,9 @@ public sealed class AddOfficeMarkdownTableCommand : PSCmdlet
         var options = PowerShellObjectNormalizerOptions.ForTable(
             CollectionSeparator,
             DictionaryEntrySeparator,
-            DictionaryKeyValueSeparator);
+            DictionaryKeyValueSeparator,
+            MaxCollectionItems,
+            MaxNestingDepth);
         var normalizedRows = PowerShellObjectNormalizer.NormalizeItems(projectedRows, options);
         if (DisableAutoAlign.IsPresent)
         {

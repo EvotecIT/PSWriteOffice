@@ -73,6 +73,16 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     [AllowEmptyString]
     public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
+    /// <summary>Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxCollectionItems { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems;
+
+    /// <summary>Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxNestingDepth { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth;
+
     /// <summary>Table alignment.</summary>
     [Parameter]
     public PdfAlign Align { get; set; } = PdfAlign.Left;
@@ -254,7 +264,9 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
         var normalizationOptions = PdfCommandUtilities.CreateTableNormalizationOptions(
             CollectionSeparator,
             DictionaryEntrySeparator,
-            DictionaryKeyValueSeparator);
+            DictionaryKeyValueSeparator,
+            MaxCollectionItems,
+            MaxNestingDepth);
         if (OfficeTableSpecParser.TryCreate(projectedRows, Property, Header, out var tableSpec, normalizationOptions))
         {
             var style = ApplyPdfCellStyles(CreateStyle(), tableSpec.Placements);

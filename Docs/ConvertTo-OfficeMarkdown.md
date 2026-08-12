@@ -11,7 +11,7 @@ Converts objects into a Markdown table.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficeMarkdown [-InputObject <Object>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
+ConvertTo-OfficeMarkdown [-InputObject <Object>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-DisableAutoAlign] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -120,6 +120,38 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -MaxCollectionItems
+Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxNestingDepth
+Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

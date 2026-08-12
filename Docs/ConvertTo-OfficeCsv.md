@@ -11,7 +11,7 @@ Converts objects or a CSV document into CSV text.
 ## SYNTAX
 ### InputObjectDelimiter (Default)
 ```powershell
-ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
+ConvertTo-OfficeCsv [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [<CommonParameters>]
 ```
 
 ### DocumentDelimiter
@@ -26,7 +26,7 @@ ConvertTo-OfficeCsv -Document <CsvDocument> -UseCulture [-NoHeader] [-NewLine <s
 
 ### InputObjectCulture
 ```powershell
-ConvertTo-OfficeCsv -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [<CommonParameters>]
+ConvertTo-OfficeCsv -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -170,6 +170,38 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -MaxCollectionItems
+Maximum number of items allowed in one nested collection or dictionary field. Defaults to 1,048,575; increase explicitly for trusted larger values.
+
+```yaml
+Type: Int32
+Parameter Sets: InputObjectDelimiter, InputObjectCulture
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxNestingDepth
+Maximum nesting depth allowed while normalizing one field value. Defaults to 64; increase explicitly for trusted deeper values.
+
+```yaml
+Type: Int32
+Parameter Sets: InputObjectDelimiter, InputObjectCulture
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

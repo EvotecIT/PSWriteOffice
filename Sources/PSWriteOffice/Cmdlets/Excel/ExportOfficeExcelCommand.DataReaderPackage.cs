@@ -35,7 +35,7 @@ public sealed partial class ExportOfficeExcelCommand
         };
         var result = ExcelDocumentService.WriteDataReaderPackage(
             resolvedPath,
-            new NormalizingDataReader(reader, CreateNormalizerOptions()),
+            new PowerShellNormalizingDataReader(reader, CreateNormalizerOptions()),
             options,
             overwrite: !NoClobber.IsPresent);
 

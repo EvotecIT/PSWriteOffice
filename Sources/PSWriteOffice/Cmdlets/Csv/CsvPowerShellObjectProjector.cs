@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using OfficeIMO.CSV;
 using PSWriteOffice.Services;
@@ -24,7 +25,10 @@ internal sealed class CsvPowerShellObjectProjector
         _allowTrustedTextRows = true;
     }
 
-    public void UseCsvOptions(CsvSaveOptions options)
+    public void UseCsvOptions(
+        CsvSaveOptions options,
+        int maxCollectionItems = PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems,
+        int maxNestingDepth = PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth)
     {
         if (options == null)
         {
@@ -35,7 +39,9 @@ internal sealed class CsvPowerShellObjectProjector
         _normalizerOptions = new PowerShellObjectNormalizerOptions
         {
             Culture = options.Culture,
-            FormatScalarValuesAsText = _allowTrustedTextRows
+            FormatScalarValuesAsText = _allowTrustedTextRows,
+            MaxCollectionItems = maxCollectionItems,
+            MaxNestingDepth = maxNestingDepth
         };
     }
 
@@ -53,6 +59,12 @@ internal sealed class CsvPowerShellObjectProjector
     }
 
     public IReadOnlyList<string>? CurrentColumns => _columns;
+
+    public IDataReader NormalizeDataReader(IDataReader reader) =>
+        new PowerShellNormalizingDataReader(reader, _normalizerOptions);
+
+    public object? NormalizeCellValue(object? value) =>
+        PowerShellObjectNormalizer.NormalizeCellValueForTable(value, _normalizerOptions);
 
     public void ValidateObjectColumns(object? value, IReadOnlyList<string> columns)
     {

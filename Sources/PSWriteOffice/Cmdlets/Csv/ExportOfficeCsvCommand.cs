@@ -146,6 +146,22 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
     [Parameter]
     public SwitchParameter UseUtc { get; set; }
 
+    /// <summary>Maximum number of items allowed in one nested collection or dictionary field. Defaults to 1,048,575; increase explicitly for trusted larger values.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObjectPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectLiteralPathCulture)]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxCollectionItems { get; set; } = PSWriteOffice.Services.PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems;
+
+    /// <summary>Maximum nesting depth allowed while normalizing one field value. Defaults to 64; increase explicitly for trusted deeper values.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObjectPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectPathCulture)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectLiteralPathDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectLiteralPathCulture)]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxNestingDepth { get; set; } = PSWriteOffice.Services.PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth;
+
     /// <summary>Emit a <see cref="FileInfo"/> for the exported file.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -321,11 +337,11 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
-        _objectProjector.UseCsvOptions(options);
+        _objectProjector.UseCsvOptions(options, MaxCollectionItems, MaxNestingDepth);
         if (Append.IsPresent)
         {
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
-            _objectProjector.UseCsvOptions(options);
+            _objectProjector.UseCsvOptions(options, MaxCollectionItems, MaxNestingDepth);
             var appendHeader = GetEffectiveAppendHeader(firstValue);
             if (appendHeader is { Length: > 0 })
             {
@@ -368,13 +384,13 @@ public sealed partial class ExportOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
-        _objectProjector.UseCsvOptions(options);
+        _objectProjector.UseCsvOptions(options, MaxCollectionItems, MaxNestingDepth);
         effectiveColumns = sourceColumns;
         var validateFollowingObjects = false;
         if (Append.IsPresent)
         {
             options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
-            _objectProjector.UseCsvOptions(options);
+            _objectProjector.UseCsvOptions(options, MaxCollectionItems, MaxNestingDepth);
             var appendHeader = activeAppendColumns is { Count: > 0 }
                 ? activeAppendColumns
                 : GetEffectiveAppendHeader(sourceColumns);

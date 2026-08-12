@@ -25,7 +25,7 @@ internal static class PowerShellCellValueFormatter
             return false;
         }
 
-        if (!PowerShellDictionaryAdapter.TryGetEntries(value, options.MaxCollectionItems, out _) && value is not IEnumerable)
+        if (!PowerShellDictionaryAdapter.IsDictionaryLike(value) && value is not IEnumerable)
         {
             text = string.Empty;
             return false;
@@ -52,13 +52,14 @@ internal static class PowerShellCellValueFormatter
             return text;
         }
 
-        if (depth >= options.MaxNestingDepth)
+        if (PowerShellDictionaryAdapter.IsDictionaryLike(value))
         {
-            throw new InvalidDataException($"The cell value exceeds the {options.MaxNestingDepth}-level normalization limit.");
-        }
+            EnsureContainerDepth(options, depth);
+            if (!PowerShellDictionaryAdapter.TryGetEntries(value, options.MaxCollectionItems, out var entries))
+            {
+                return FormatScalar(value, options);
+            }
 
-        if (PowerShellDictionaryAdapter.TryGetEntries(value, options.MaxCollectionItems, out var entries))
-        {
             return TrackReference(value, activeObjects, () =>
             {
                 var values = new List<string>(entries.Count);
@@ -76,6 +77,7 @@ internal static class PowerShellCellValueFormatter
 
         if (value is IEnumerable enumerable)
         {
+            EnsureContainerDepth(options, depth);
             return TrackReference(value, activeObjects, () =>
             {
                 var values = new List<string>();
@@ -86,7 +88,11 @@ internal static class PowerShellCellValueFormatter
                     {
                         if (values.Count >= options.MaxCollectionItems)
                         {
-                            throw new InvalidDataException($"The collection exceeds the {options.MaxCollectionItems}-item normalization limit.");
+                            throw new PowerShellNormalizationLimitException(
+                                PowerShellNormalizationLimitMessages.Collection(
+                                    "collection",
+                                    options.MaxCollectionItems,
+                                    values.Count + 1));
                         }
 
                         values.Add(FormatValue(enumerator.Current, options, depth + 1, activeObjects));
@@ -102,6 +108,15 @@ internal static class PowerShellCellValueFormatter
         }
 
         return FormatScalar(value, options);
+    }
+
+    private static void EnsureContainerDepth(PowerShellObjectNormalizerOptions options, int depth)
+    {
+        if (depth >= options.MaxNestingDepth)
+        {
+            throw new PowerShellNormalizationLimitException(
+                PowerShellNormalizationLimitMessages.Nesting(options.MaxNestingDepth, depth + 1));
+        }
     }
 
     private static string TrackReference(object value, ISet<object> activeObjects, Func<string> formatter)

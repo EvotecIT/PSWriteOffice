@@ -236,7 +236,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[i] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -307,7 +309,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[i] = NormalizeCellValueToText(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -350,7 +354,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[index] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -501,7 +507,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 result[name] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -549,7 +557,9 @@ internal static partial class PowerShellObjectNormalizer
                     names.Add(property.Name);
                     rowValues.Add(value);
                 }
-                catch (Exception exception) when (exception is not PipelineStoppedException)
+                catch (Exception exception) when (
+                    exception is not PipelineStoppedException &&
+                    exception is not PowerShellNormalizationLimitException)
                 {
                     if (options.PropertyErrorAction == ActionPreference.Stop)
                     {
@@ -585,7 +595,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[i] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -624,7 +636,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[i] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -790,7 +804,9 @@ internal static partial class PowerShellObjectNormalizer
             value = NormalizeCellValue(property.GetValue(item), options);
             return true;
         }
-        catch (Exception exception) when (exception is not PipelineStoppedException)
+        catch (Exception exception) when (
+            exception is not PipelineStoppedException &&
+            exception is not PowerShellNormalizationLimitException)
         {
             exception = UnwrapClrPropertyException(exception);
             if (options.PropertyErrorAction == ActionPreference.Stop)

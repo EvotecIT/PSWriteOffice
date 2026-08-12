@@ -150,6 +150,16 @@ public sealed partial class ExportOfficeExcelCommand : PSCmdlet
     [AllowEmptyString]
     public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
+    /// <summary>Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxCollectionItems { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems;
+
+    /// <summary>Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxNestingDepth { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth;
+
     /// <summary>Header-to-format map. Values may be preset names such as Text, Currency, Percent, Date, or custom Excel number formats.</summary>
     [Parameter]
     public Hashtable? ColumnFormat { get; set; }
@@ -425,7 +435,7 @@ public sealed partial class ExportOfficeExcelCommand : PSCmdlet
                 var readerSheet = PrepareSheet(document);
                 var readerRange = ExportDataReader(
                     readerSheet,
-                    new NormalizingDataReader(reader, CreateNormalizerOptions()),
+                    new PowerShellNormalizingDataReader(reader, CreateNormalizerOptions()),
                     style,
                     columnFormatPlan);
                 if (!string.IsNullOrWhiteSpace(readerRange))
@@ -889,6 +899,8 @@ public sealed partial class ExportOfficeExcelCommand : PSCmdlet
             CollectionSeparator = CollectionSeparator,
             DictionaryEntrySeparator = DictionaryEntrySeparator,
             DictionaryKeyValueSeparator = DictionaryKeyValueSeparator,
+            MaxCollectionItems = MaxCollectionItems,
+            MaxNestingDepth = MaxNestingDepth,
             IncludeUnexportableProperties = IncludeUnexportableProperties.IsPresent,
             PropertyErrorAction = PropertyConversionErrorAction,
             PropertyErrorCallback = PropertyConversionErrorAction == ActionPreference.Continue

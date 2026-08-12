@@ -107,7 +107,11 @@ internal static class PowerShellDictionaryAdapter
     {
         if (entries.Count >= maximumItems)
         {
-            throw new InvalidDataException($"The dictionary exceeds the {maximumItems}-item normalization limit.");
+            throw new PowerShellNormalizationLimitException(
+                PowerShellNormalizationLimitMessages.Collection(
+                    "dictionary",
+                    maximumItems,
+                    entries.Count + 1));
         }
 
         entries.Add(entry);

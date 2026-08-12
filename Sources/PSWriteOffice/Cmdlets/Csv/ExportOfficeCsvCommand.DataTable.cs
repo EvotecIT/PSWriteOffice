@@ -37,7 +37,7 @@ public sealed partial class ExportOfficeCsvCommand
             if (!hadActiveWriter && ColumnsMatch(sourceColumns, effectiveColumns))
             {
                 using var reader = table.CreateDataReader();
-                writer.WriteDataReader(reader);
+                writer.WriteDataReader(_objectProjector.NormalizeDataReader(reader));
             }
             else
             {
@@ -90,6 +90,7 @@ public sealed partial class ExportOfficeCsvCommand
     private void AppendDataTable(DataTable table)
     {
         var options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
+        _objectProjector.UseCsvOptions(options, MaxCollectionItems, MaxNestingDepth);
         var appendHeader = GetEffectiveAppendHeader(table);
 
         if (appendHeader is { Length: > 0 })
@@ -105,7 +106,7 @@ public sealed partial class ExportOfficeCsvCommand
         }
 
         using var reader = table.CreateDataReader();
-        csvWriter.WriteDataReader(reader);
+        csvWriter.WriteDataReader(_objectProjector.NormalizeDataReader(reader));
     }
 
     private static string[] GetDataTableColumnNames(DataTable table)
@@ -155,15 +156,16 @@ public sealed partial class ExportOfficeCsvCommand
         }
     }
 
-    private static void WriteDataTableRows(DataTable table, CsvRowWriter writer, IReadOnlyList<string> columns)
+    private void WriteDataTableRows(DataTable table, CsvRowWriter writer, IReadOnlyList<string> columns)
     {
         foreach (DataRow row in table.Rows)
         {
             writer.WriteRow(
                 columns,
                 columns.Count,
-                (Row: row, Columns: columns),
-                static (state, index) => TryGetDataTableValue(state.Row, state.Columns[index]));
+                (Row: row, Columns: columns, Projector: _objectProjector),
+                static (state, index) => state.Projector.NormalizeCellValue(
+                    TryGetDataTableValue(state.Row, state.Columns[index])));
         }
     }
 

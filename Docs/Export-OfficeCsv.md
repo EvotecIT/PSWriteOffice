@@ -11,22 +11,22 @@ Exports objects or a CSV document to a CSV file.
 ## SYNTAX
 ### InputObjectPathDelimiter (Default)
 ```powershell
-Export-OfficeCsv [-Path] <string> [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputObjectPathCulture
 ```powershell
-Export-OfficeCsv [-Path] <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv [-Path] <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputObjectLiteralPathDelimiter
 ```powershell
-Export-OfficeCsv -LiteralPath <string> [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv -LiteralPath <string> [-InputObject <Object>] [-Delimiter <char>] [-DelimiterText <string>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputObjectLiteralPathCulture
 ```powershell
-Export-OfficeCsv -LiteralPath <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeCsv -LiteralPath <string> -UseCulture [-InputObject <Object>] [-NoHeader] [-NewLine <string>] [-Culture <cultureinfo>] [-Encoding <Encoding>] [-CompressionType <CsvCompressionType>] [-CompressionLevel <CompressionLevel>] [-FormulaInjectionPolicy <CsvFormulaInjectionPolicy>] [-UseQuotes <CsvQuoteMode>] [-QuoteFields <string[]>] [-NullValue <string>] [-DateTimeFormat <string>] [-UseUtc] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-PassThru] [-Append] [-NoClobber] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DocumentPathDelimiter
@@ -272,6 +272,38 @@ Aliases: PSPath, LP
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxCollectionItems
+Maximum number of items allowed in one nested collection or dictionary field. Defaults to 1,048,575; increase explicitly for trusted larger values.
+
+```yaml
+Type: Int32
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectLiteralPathDelimiter, InputObjectLiteralPathCulture
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxNestingDepth
+Maximum nesting depth allowed while normalizing one field value. Defaults to 64; increase explicitly for trusted deeper values.
+
+```yaml
+Type: Int32
+Parameter Sets: InputObjectPathDelimiter, InputObjectPathCulture, InputObjectLiteralPathDelimiter, InputObjectLiteralPathCulture
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

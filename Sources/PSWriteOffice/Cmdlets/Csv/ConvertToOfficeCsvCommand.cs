@@ -105,6 +105,18 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
     [Parameter]
     public SwitchParameter UseUtc { get; set; }
 
+    /// <summary>Maximum number of items allowed in one nested collection or dictionary field. Defaults to 1,048,575; increase explicitly for trusted larger values.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObjectDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectCulture)]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxCollectionItems { get; set; } = PSWriteOffice.Services.PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems;
+
+    /// <summary>Maximum nesting depth allowed while normalizing one field value. Defaults to 64; increase explicitly for trusted deeper values.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObjectDelimiter)]
+    [Parameter(ParameterSetName = ParameterSetInputObjectCulture)]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxNestingDepth { get; set; } = PSWriteOffice.Services.PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth;
+
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
@@ -180,7 +192,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         var tableColumns = GetDataTableColumnNames(table);
         _objectProjector.UseColumns(tableColumns, validateColumns: false);
         using var reader = table.CreateDataReader();
-        EnsureObjectWriter().WriteDataReader(reader);
+        EnsureObjectWriter().WriteDataReader(_objectProjector.NormalizeDataReader(reader));
     }
 
     private static string[] GetDataTableColumnNames(DataTable table)
@@ -194,15 +206,16 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         return columns;
     }
 
-    private static void WriteDataTableRows(DataTable table, CsvRowWriter writer, IReadOnlyList<string> columns)
+    private void WriteDataTableRows(DataTable table, CsvRowWriter writer, IReadOnlyList<string> columns)
     {
         foreach (DataRow row in table.Rows)
         {
             writer.WriteRow(
                 columns,
                 columns.Count,
-                (Row: row, Columns: columns),
-                static (state, index) => TryGetDataTableValue(state.Row, state.Columns[index]));
+                (Row: row, Columns: columns, Projector: _objectProjector),
+                static (state, index) => state.Projector.NormalizeCellValue(
+                    TryGetDataTableValue(state.Row, state.Columns[index])));
         }
     }
 
@@ -282,7 +295,7 @@ public sealed class ConvertToOfficeCsvCommand : PSCmdlet
         }
 
         var options = CreateSaveOptions();
-        _objectProjector.UseCsvOptions(options);
+        _objectProjector.UseCsvOptions(options, MaxCollectionItems, MaxNestingDepth);
         _lineWriter = new CsvPowerShellLineWriter(this, GetDelimiterText(options), options.QuoteMode);
         _csvWriter = new CsvRowWriter(_lineWriter, options);
         return _csvWriter;

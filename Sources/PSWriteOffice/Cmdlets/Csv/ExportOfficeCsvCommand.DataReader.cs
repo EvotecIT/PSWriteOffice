@@ -47,7 +47,7 @@ public sealed partial class ExportOfficeCsvCommand
 
             if (!hadActiveWriter && ColumnsMatch(sourceColumns, effectiveColumns))
             {
-                writer.WriteDataReader(reader);
+                writer.WriteDataReader(_objectProjector.NormalizeDataReader(reader));
             }
             else
             {
@@ -82,6 +82,7 @@ public sealed partial class ExportOfficeCsvCommand
     private void AppendDataReader(IDataReader reader)
     {
         var options = CreateSaveOptions(includeHeader: !NoHeader.IsPresent && !_appendToExistingFile);
+        _objectProjector.UseCsvOptions(options, MaxCollectionItems, MaxNestingDepth);
         var appendHeader = GetEffectiveAppendHeader(reader);
 
         if (appendHeader is { Length: > 0 })
@@ -96,7 +97,7 @@ public sealed partial class ExportOfficeCsvCommand
             return;
         }
 
-        csvWriter.WriteDataReader(reader);
+        csvWriter.WriteDataReader(_objectProjector.NormalizeDataReader(reader));
     }
 
     private static string[] GetDataReaderColumnNames(IDataReader reader)
@@ -146,7 +147,7 @@ public sealed partial class ExportOfficeCsvCommand
         }
     }
 
-    private static void WriteDataReaderRows(IDataReader reader, CsvRowWriter writer, IReadOnlyList<string> columns)
+    private void WriteDataReaderRows(IDataReader reader, CsvRowWriter writer, IReadOnlyList<string> columns)
     {
         var columnOrdinals = GetDataReaderColumnOrdinals(reader);
         while (reader.Read())
@@ -154,8 +155,9 @@ public sealed partial class ExportOfficeCsvCommand
             writer.WriteRow(
                 columns,
                 columns.Count,
-                (Reader: reader, Columns: columns, Ordinals: columnOrdinals),
-                static (state, index) => TryGetDataReaderValue(state.Reader, state.Columns[index], state.Ordinals));
+                (Reader: reader, Columns: columns, Ordinals: columnOrdinals, Projector: _objectProjector),
+                static (state, index) => state.Projector.NormalizeCellValue(
+                    TryGetDataReaderValue(state.Reader, state.Columns[index], state.Ordinals)));
         }
     }
 

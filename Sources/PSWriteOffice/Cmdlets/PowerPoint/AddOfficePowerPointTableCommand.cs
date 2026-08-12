@@ -64,6 +64,16 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
     [AllowEmptyString]
     public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
+    /// <summary>Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObject)]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxCollectionItems { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems;
+
+    /// <summary>Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.</summary>
+    [Parameter(ParameterSetName = ParameterSetInputObject)]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxNestingDepth { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth;
+
     /// <summary>Row count for an empty table.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetSize)]
     public int Rows { get; set; }
@@ -142,7 +152,9 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
             CollectionSeparator,
             DictionaryEntrySeparator,
-            DictionaryKeyValueSeparator);
+            DictionaryKeyValueSeparator,
+            MaxCollectionItems,
+            MaxNestingDepth);
         var explicitHeaders = ResolveExplicitHeaders();
         if (OfficeTableSpecParser.TryCreate(
                 projectedRows,

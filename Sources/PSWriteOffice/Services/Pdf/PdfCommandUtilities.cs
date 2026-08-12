@@ -437,7 +437,9 @@ internal static class PdfCommandUtilities
     internal static PowerShellObjectNormalizerOptions CreateTableNormalizationOptions(
         string collectionSeparator,
         string dictionaryEntrySeparator = "; ",
-        string dictionaryKeyValueSeparator = ": ")
+        string dictionaryKeyValueSeparator = ": ",
+        int maxCollectionItems = PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems,
+        int maxNestingDepth = PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth)
     {
         if (collectionSeparator == null)
         {
@@ -447,7 +449,9 @@ internal static class PdfCommandUtilities
         var options = PowerShellObjectNormalizerOptions.ForTable(
             collectionSeparator,
             dictionaryEntrySeparator,
-            dictionaryKeyValueSeparator);
+            dictionaryKeyValueSeparator,
+            maxCollectionItems,
+            maxNestingDepth);
         options.Culture = CultureInfo.InvariantCulture;
         options.FormatScalarValuesAsText = true;
         return options;

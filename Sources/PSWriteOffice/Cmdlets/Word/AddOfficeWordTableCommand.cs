@@ -65,6 +65,16 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     [AllowEmptyString]
     public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
+    /// <summary>Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxCollectionItems { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems;
+
+    /// <summary>Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxNestingDepth { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth;
+
     /// <summary>Legacy switch that maps to <see cref="OfficeTableView.Transpose"/>.</summary>
     [Parameter]
     public SwitchParameter Transpose { get; set; }
@@ -103,7 +113,9 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
             CollectionSeparator,
             DictionaryEntrySeparator,
-            DictionaryKeyValueSeparator);
+            DictionaryKeyValueSeparator,
+            MaxCollectionItems,
+            MaxNestingDepth);
         var legacyLayout = ResolveLegacyLayout(Layout);
         int? conditionHeaderRowIndex = NoHeader.IsPresent ? null : 0;
         WordTable table;

@@ -11,7 +11,7 @@ Adds a table to a PowerPoint slide.
 ## SYNTAX
 ### InputObject (Default)
 ```powershell
-Add-OfficePowerPointTable [[-Slide] <PowerPointSlide>] [-InputObject] <Object> [-Header <string[]>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-StyleId <string>] [<CommonParameters>]
+Add-OfficePowerPointTable [[-Slide] <PowerPointSlide>] [-InputObject] <Object> [-Header <string[]>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-StyleId <string>] [<CommonParameters>]
 ```
 
 ### Size
@@ -141,6 +141,38 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxCollectionItems
+Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.
+
+```yaml
+Type: Int32
+Parameter Sets: InputObject
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxNestingDepth
+Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.
+
+```yaml
+Type: Int32
+Parameter Sets: InputObject
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
