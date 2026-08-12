@@ -210,6 +210,25 @@ Describe 'Shared tabular input contracts' {
         ($csv -join "`n") | Should -Match 'First: 1; Second: 2; Third: 3'
     }
 
+    It 'reuses raised nesting limits while validating CSV append columns' {
+        $path = Join-Path $TestDrive 'Append-RaisedNestingLimit.csv'
+        [System.IO.File]::WriteAllText($path, "Name,Payload`r`nAlpha,Initial`r`n")
+
+        $payload = 'Deep'
+        foreach ($level in 1..70) {
+            $payload = [ordered]@{ Child = $payload }
+        }
+        $row = [pscustomobject]@{ Name = 'Beta'; Payload = $payload }
+
+        { $row | Export-OfficeCsv -Path $path -Append -MaxNestingDepth 128 -ErrorAction Stop } |
+            Should -Not -Throw
+
+        $result = @(Import-OfficeCsv -Path $path)
+        $result.Count | Should -Be 2
+        $result[1].Name | Should -Be 'Beta'
+        $result[1].Payload | Should -Match 'Deep'
+    }
+
     It 'routes collection limits through CSV DataTable and DataView fast paths' {
         $table = [System.Data.DataTable]::new('Rows')
         [void] $table.Columns.Add('Name', [string])

@@ -163,7 +163,7 @@ internal sealed class CsvPowerShellObjectProjector
         return PowerShellObjectNormalizer.TryProjectItemInto(value, columns, values, _normalizerOptions);
     }
 
-    private static void ValidateFirstRowColumns(object? value, IReadOnlyList<string> columns)
+    private void ValidateFirstRowColumns(object? value, IReadOnlyList<string> columns)
     {
         if (TryGetProjectableColumns(value, columns, out var missingColumn))
         {
@@ -176,10 +176,10 @@ internal sealed class CsvPowerShellObjectProjector
         }
     }
 
-    private static bool TryGetProjectableColumns(object? value, IReadOnlyList<string> columns, out string? missingColumn)
+    private bool TryGetProjectableColumns(object? value, IReadOnlyList<string> columns, out string? missingColumn)
     {
         missingColumn = null;
-        if (!PowerShellObjectNormalizer.TryProjectItem(value, null, out var sourceColumns, out _, PowerShellObjectNormalizerOptions.Default))
+        if (!PowerShellObjectNormalizer.TryProjectItem(value, null, out var sourceColumns, out _, _normalizerOptions))
         {
             return false;
         }
