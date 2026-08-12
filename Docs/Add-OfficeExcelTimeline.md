@@ -137,7 +137,7 @@ Accept wildcard characters: False
 ```
 
 ### -Xml
-Caller-supplied timeline cache XML. When provided, OfficeIMO writes it as-is.
+Caller-supplied timeline cache XML. When provided, OfficeIMO preserves it within its pivot-interaction metadata envelope.
 
 ```yaml
 Type: String

@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 3.0.2
+Help Version: 3.0.3
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -568,11 +568,17 @@ Exports objects or a CSV document to a CSV file.
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
 Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
 
+### [Export-OfficeExcelChartImage](Export-OfficeExcelChartImage.md)
+Exports one named worksheet chart as an image file.
+
 ### [Export-OfficeExcelGoogleSpreadsheet](Export-OfficeExcelGoogleSpreadsheet.md)
 Plans, compiles, or exports an Excel workbook to Google Sheets.
 
 ### [Export-OfficeExcelImage](Export-OfficeExcelImage.md)
 Exports workbook sheets as PNG or SVG images with one result per sheet.
+
+### [Export-OfficeExcelRangeImage](Export-OfficeExcelRangeImage.md)
+Exports one worksheet range as an image file.
 
 ### [Export-OfficeHtmlImage](Export-OfficeHtmlImage.md)
 Exports an HTML render surface as PNG or SVG with structured diagnostics.
