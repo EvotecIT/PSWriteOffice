@@ -87,6 +87,7 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Latex.Markdown\OfficeIMO.Latex.Markdown.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.GoogleWorkspace\OfficeIMO.GoogleWorkspace.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.GoogleDocs\OfficeIMO.Word.GoogleDocs.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.ChartForgeX\OfficeIMO.ChartForgeX.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel.GoogleSheets\OfficeIMO.Excel.GoogleSheets.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
@@ -130,6 +131,7 @@
         <PackageReference Include="OfficeIMO.Latex.Markdown" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.GoogleWorkspace" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Word.GoogleDocs" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.ChartForgeX" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Excel.GoogleSheets" Version="$(OfficeIMOVersion)" />
     </ItemGroup>
 </Project>
