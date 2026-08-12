@@ -82,7 +82,7 @@ Build-Module -ModuleName 'PSWriteOffice' -RunMode $RunMode {
     $newConfigurationBuildSplat = @{
         Enable                            = $true
         # lets sign module only on my machine for now
-        SignModule                        = if ($Env:COMPUTERNAME -eq 'EVOMONSTER') { $true } else { $false }
+        SignModule                        = $true
         MergeModuleOnBuild                = $true
         MergeFunctionsFromApprovedModules = $true
         CertificateThumbprint             = '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
