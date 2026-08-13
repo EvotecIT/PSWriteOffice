@@ -1,6 +1,8 @@
 param(
     [ValidateSet('Manifest', 'Build', 'Publish')]
-    [string] $RunMode = 'Build'
+    [string] $RunMode = 'Build',
+
+    [bool] $SignModule = $true
 )
 
 Import-Module PSPublishModule -Force -ErrorAction Stop
@@ -81,8 +83,8 @@ Build-Module -ModuleName 'PSWriteOffice' -RunMode $RunMode {
 
     $newConfigurationBuildSplat = @{
         Enable                            = $true
-        # lets sign module only on my machine for now
-        SignModule                        = $true
+        # Release and local builds sign by default; CI smoke builds opt out explicitly.
+        SignModule                        = $SignModule
         MergeModuleOnBuild                = $true
         MergeFunctionsFromApprovedModules = $true
         CertificateThumbprint             = '92e95fb58effa6a4a75e77a33cdd6bfe6dd30f1a'
