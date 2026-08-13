@@ -24,6 +24,98 @@ Describe 'ChartForgeX visual artifacts' {
             $script:SvgPath,
             $svg,
             [Text.UTF8Encoding]::new($false))
+
+        function New-TestTopologyInterchangeJson {
+            param(
+                [Parameter(Mandatory)]
+                [string] $Id,
+                [switch] $IncludeDatabase,
+                [switch] $IncludeOwner
+            )
+
+            $apiExtensions = if ($IncludeOwner) { [ordered] @{ Owner = 'Platform' } } else { [ordered] @{} }
+            $nodes = @(
+                [ordered] @{
+                    id         = if ($IncludeDatabase) { 'api' } else { 'service' }
+                    role       = 'TopologyNode'
+                    kind       = if ($IncludeDatabase) { 'Service' } else { 'Process' }
+                    label      = if ($IncludeDatabase) { 'API' } else { 'Service' }
+                    topology   = [ordered] @{
+                        kind        = if ($IncludeDatabase) { 'Service' } else { 'Process' }
+                        status      = 'Unknown'
+                        displayMode = 'Card'
+                    }
+                    extensions = $apiExtensions
+                    metrics    = @()
+                    ports      = @()
+                    details    = @()
+                }
+            )
+            $edges = @()
+            if ($IncludeDatabase) {
+                $nodes += [ordered] @{
+                    id         = 'database'
+                    role       = 'TopologyNode'
+                    kind       = 'Database'
+                    label      = 'Database'
+                    topology   = [ordered] @{
+                        kind        = 'Database'
+                        status      = 'Unknown'
+                        displayMode = 'Card'
+                    }
+                    extensions = [ordered] @{}
+                    metrics    = @()
+                    ports      = @()
+                    details    = @()
+                }
+                $edges = @(
+                    [ordered] @{
+                        id         = 'api-db'
+                        role       = 'TopologyEdge'
+                        kind       = 'DataFlow'
+                        sourceId   = 'api'
+                        targetId   = 'database'
+                        label      = 'queries'
+                        order      = 0
+                        topology   = [ordered] @{
+                            kind             = 'DataFlow'
+                            status           = 'Unknown'
+                            direction        = 'Forward'
+                            sourcePort       = 'Auto'
+                            targetPort       = 'Auto'
+                            lineStyle        = 'Solid'
+                            routing          = 'Orthogonal'
+                            emphasis         = 'Normal'
+                            layoutInference  = 'None'
+                        }
+                        extensions = [ordered] @{}
+                        metrics    = @()
+                    }
+                )
+            }
+
+            [ordered] @{
+                schema         = 'chartforgex.visual-artifact'
+                version        = 1
+                kind           = 'Topology'
+                family         = 'Topology'
+                sourceLanguage = 'Native'
+                id             = $Id
+                title          = if ($IncludeDatabase) { 'Portable topology' } else { '' }
+                subtitle       = ''
+                decorative     = $false
+                topology       = [ordered] @{
+                    layoutMode      = 'Layered'
+                    layoutDirection = 'LeftToRight'
+                }
+                extensions     = [ordered] @{}
+                groups         = @()
+                nodes          = $nodes
+                edges          = $edges
+                scenarios      = @()
+                annotations    = @()
+            } | ConvertTo-Json -Depth 12 -Compress
+        }
     }
 
     It 'converts once and reports the selected placement payload' {
@@ -91,6 +183,134 @@ Describe 'ChartForgeX visual artifacts' {
         $visual.Title | Should -Be 'Portable pipeline'
         $visual.AlternativeText | Should -Be 'Portable visual across module load contexts.'
         $visual.WidthPoints | Should -Be 260
+    }
+
+    It 'converts portable semantic bytes into native editable Visio objects' {
+        $portable = [pscustomobject] @{
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id portable-topology -IncludeDatabase -IncludeOwner))
+            OfficeVisualSvg             = [IO.File]::ReadAllBytes($SvgPath)
+        }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+
+        $converted = $portable | ConvertTo-OfficeVisioVisual -PageName 'Portable topology'
+        $converted.GetType().FullName | Should -Be 'OfficeIMO.ChartForgeX.OfficeVisioVisualConversionResult'
+        $converted.Report.AllProjectedObjectsEditable | Should -BeTrue
+        $converted.Report.NodeCount | Should -Be 2
+        $converted.Page.Shapes.Id | Should -Contain 'api'
+        $converted.Page.Shapes.Id | Should -Contain 'database'
+        $converted.Page.Connectors.Id | Should -Contain 'api-db'
+        ($converted.Page.Shapes | Where-Object Id -EQ 'api').GetShapeDataValue('Extension.Owner') | Should -Be 'Platform'
+
+        $natural = $portable | ConvertTo-OfficeVisioVisual -UseNaturalPageSize -PixelsPerInch 100
+        $natural.Page.Width | Should -BeGreaterThan $converted.Page.Width
+    }
+
+    It 'exports portable semantic bytes as a valid editable VSDX package' {
+        $portable = [pscustomobject] @{
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id export-topology))
+        }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+        $path = Join-Path $TestDrive 'portable-topology.vsdx'
+
+        $file = $portable | Export-OfficeVisioVisual -Path $path
+
+        $file.FullName | Should -Be $path
+        Test-Path $path | Should -BeTrue
+        $loaded = Get-OfficeVisio -Path $path
+        $loaded.Pages[0].Shapes.Id | Should -Contain 'service'
+    }
+
+    It 'accepts raw semantic JSON text without interpreting it as a file path' {
+        $json = New-TestTopologyInterchangeJson -Id raw-json
+
+        $converted = $json | ConvertTo-OfficeVisioVisual
+
+        $converted.Envelope.Id | Should -Be 'raw-json'
+        $converted.Page.Shapes.Id | Should -Contain 'service'
+    }
+
+    It 'accepts raw semantic JSON text with a leading Unicode BOM' {
+        $json = [char] 0xFEFF + (New-TestTopologyInterchangeJson -Id bom-json)
+
+        $converted = $json | ConvertTo-OfficeVisioVisual
+
+        $converted.Envelope.Id | Should -Be 'bom-json'
+        $converted.Page.Shapes.Id | Should -Contain 'service'
+    }
+
+    It 'accepts semantic JSON PathInfo from a custom filesystem PSDrive' {
+        $jsonPath = Join-Path $TestDrive 'custom-drive.json'
+        [IO.File]::WriteAllText(
+            $jsonPath,
+            (New-TestTopologyInterchangeJson -Id custom-drive),
+            [Text.UTF8Encoding]::new($false))
+        $driveName = 'VisualInterchange' + [Guid]::NewGuid().ToString('N')
+
+        try {
+            New-PSDrive -Name $driveName -PSProvider FileSystem -Root $TestDrive | Out-Null
+            $pathInfo = Resolve-Path -LiteralPath "${driveName}:\custom-drive.json"
+
+            $converted = $pathInfo | ConvertTo-OfficeVisioVisual
+
+            $converted.Envelope.Id | Should -Be 'custom-drive'
+            $converted.Page.Shapes.Id | Should -Contain 'service'
+        } finally {
+            Remove-PSDrive -Name $driveName -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'reassembles normally piped semantic JSON bytes for conversion and export' {
+        [byte[]] $bytes = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id piped-bytes))
+
+        $converted = $bytes | ConvertTo-OfficeVisioVisual
+        $converted.Envelope.Id | Should -Be 'piped-bytes'
+        $converted.Page.Shapes.Id | Should -Contain 'service'
+
+        $path = Join-Path $TestDrive 'piped-bytes.vsdx'
+        $file = $bytes | Export-OfficeVisioVisual -Path $path
+        $file.FullName | Should -Be $path
+        (Get-OfficeVisio -Path $path).Pages[0].Shapes.Id | Should -Contain 'service'
+    }
+
+    It 'rejects mixed byte-stream and typed pipeline input' {
+        [byte[]] $bytes = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id mixed-input))
+
+        { @($bytes[0], (New-TestTopologyInterchangeJson -Id second-input)) |
+                ConvertTo-OfficeVisioVisual -ErrorAction Stop } |
+            Should -Throw '*cannot be mixed*'
+    }
+
+    It 'rejects multiple pipeline artifacts for one VSDX destination' {
+        $portable = [pscustomobject] @{
+            OfficeVisualInterchangeJson = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id single-output))
+        }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+        $path = Join-Path $TestDrive 'single-output.vsdx'
+
+        { @($portable, $portable) | Export-OfficeVisioVisual -Path $path -ErrorAction Stop } |
+            Should -Throw '*accepts one input artifact*'
+        Test-Path $path | Should -BeFalse
+    }
+
+    It 'rejects oversized semantic JSON files before reading their payload' {
+        $path = Join-Path $TestDrive 'oversized.json'
+        $stream = [IO.File]::Open($path, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+        try {
+            $stream.SetLength((8MB) + 1)
+        } finally {
+            $stream.Dispose()
+        }
+
+        { ConvertTo-OfficeVisioVisual -InputObject $path -ErrorAction Stop } |
+            Should -Throw '*must not exceed*bytes*'
+    }
+
+    It 'rejects an SVG-only ImagePlayground envelope for editable Visio conversion' {
+        $portable = [pscustomobject] @{ OfficeVisualSvg = [IO.File]::ReadAllBytes($SvgPath) }
+        $portable.PSObject.TypeNames.Insert(0, 'ImagePlayground.VisualArtifact')
+
+        { $portable | ConvertTo-OfficeVisioVisual -ErrorAction Stop } |
+            Should -Throw '*OfficeVisualInterchangeJson*'
     }
 
     It 'places one converted visual in Word, Excel, and PowerPoint' {
