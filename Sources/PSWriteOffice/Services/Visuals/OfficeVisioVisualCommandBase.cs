@@ -115,7 +115,7 @@ public abstract class OfficeVisioVisualCommandBase : PSCmdlet
         }
         if (value is PathInfo pathInfo)
         {
-            return ConvertJsonFile(pathInfo.Path, options);
+            return ConvertJsonFile(pathInfo.ProviderPath, options);
         }
         if (value is string text)
         {

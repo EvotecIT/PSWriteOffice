@@ -238,6 +238,27 @@ Describe 'ChartForgeX visual artifacts' {
         $converted.Page.Shapes.Id | Should -Contain 'service'
     }
 
+    It 'accepts semantic JSON PathInfo from a custom filesystem PSDrive' {
+        $jsonPath = Join-Path $TestDrive 'custom-drive.json'
+        [IO.File]::WriteAllText(
+            $jsonPath,
+            (New-TestTopologyInterchangeJson -Id custom-drive),
+            [Text.UTF8Encoding]::new($false))
+        $driveName = 'VisualInterchange' + [Guid]::NewGuid().ToString('N')
+
+        try {
+            New-PSDrive -Name $driveName -PSProvider FileSystem -Root $TestDrive | Out-Null
+            $pathInfo = Resolve-Path -LiteralPath "${driveName}:\custom-drive.json"
+
+            $converted = $pathInfo | ConvertTo-OfficeVisioVisual
+
+            $converted.Envelope.Id | Should -Be 'custom-drive'
+            $converted.Page.Shapes.Id | Should -Contain 'service'
+        } finally {
+            Remove-PSDrive -Name $driveName -ErrorAction SilentlyContinue
+        }
+    }
+
     It 'reassembles normally piped semantic JSON bytes for conversion and export' {
         [byte[]] $bytes = [Text.Encoding]::UTF8.GetBytes((New-TestTopologyInterchangeJson -Id piped-bytes))
 
