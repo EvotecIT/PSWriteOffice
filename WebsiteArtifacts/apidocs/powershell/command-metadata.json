@@ -404,6 +404,16 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelValidationWholeNumberCommand.cs#L18"
     },
     {
+      "name": "Add-OfficeExcelVisual",
+      "kind": "Cmdlet",
+      "aliases": [
+        "ExcelVisual"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelVisualCommand.cs",
+      "sourceLine": 13,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelVisualCommand.cs#L13"
+    },
+    {
       "name": "Add-OfficeMarkdownCallout",
       "kind": "Cmdlet",
       "aliases": [
@@ -728,6 +738,16 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfTextCommand.cs#L37"
     },
     {
+      "name": "Add-OfficePdfVisual",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PdfVisual"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfVisualCommand.cs",
+      "sourceLine": 13,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfVisualCommand.cs#L13"
+    },
+    {
       "name": "Add-OfficePdfWatermark",
       "kind": "Cmdlet",
       "aliases": [
@@ -902,6 +922,16 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTextBoxCommand.cs",
       "sourceLine": 22,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointTextBoxCommand.cs#L22"
+    },
+    {
+      "name": "Add-OfficePowerPointVisual",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PptVisual"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointVisualCommand.cs",
+      "sourceLine": 13,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/AddOfficePowerPointVisualCommand.cs#L13"
     },
     {
       "name": "Add-OfficeVisioConnector",
@@ -1316,6 +1346,16 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordTextBoxCommand.cs#L19"
     },
     {
+      "name": "Add-OfficeWordVisual",
+      "kind": "Cmdlet",
+      "aliases": [
+        "WordVisual"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordVisualCommand.cs",
+      "sourceLine": 19,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/AddOfficeWordVisualCommand.cs#L19"
+    },
+    {
       "name": "Add-OfficeWordWatermark",
       "kind": "Cmdlet",
       "aliases": [
@@ -1721,6 +1761,16 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visio/ConvertToOfficeVisioSvgCommand.cs",
       "sourceLine": 22,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visio/ConvertToOfficeVisioSvgCommand.cs#L22"
+    },
+    {
+      "name": "ConvertTo-OfficeVisual",
+      "kind": "Cmdlet",
+      "aliases": [
+        "OfficeVisual"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visuals/ConvertToOfficeVisualCommand.cs",
+      "sourceLine": 17,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Visuals/ConvertToOfficeVisualCommand.cs#L17"
     },
     {
       "name": "ConvertTo-OfficeWordDocument",

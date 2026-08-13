@@ -11,17 +11,17 @@ Exports PowerShell objects to an Excel workbook using an operator-friendly surfa
 ## SYNTAX
 ### Create (Default)
 ```powershell
-Export-OfficeExcel [-Path] <string> [-InputObject <Object>] [-WorksheetName <string>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-NoTable] [-NoAutoFilter] [-AutoFit] [-FreezeTopRow] [-FreezeFirstColumn] [-BoldTopRow] [-Title <string>] [-NoClobber] [-ExcludeProperty <string[]>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-ColumnFormat <hashtable>] [-TextColumn <string[]>] [-NumberColumn <string[]>] [-IntegerColumn <string[]>] [-PercentColumn <string[]>] [-CurrencyColumn <string[]>] [-DateColumn <string[]>] [-DateTimeColumn <string[]>] [-FormatDecimals <int>] [-FormatCultureName <string>] [-IncludeHeaderInColumnFormat] [-AutoFitFormattedColumn] [-IgnoreMissingColumnFormat] [-IncludeUnexportableProperties] [-PropertyConversionErrorAction <ActionPreference>] [-Open] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeExcel [-Path] <string> [-InputObject <Object>] [-WorksheetName <string>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-NoTable] [-NoAutoFilter] [-AutoFit] [-FreezeTopRow] [-FreezeFirstColumn] [-BoldTopRow] [-Title <string>] [-NoClobber] [-ExcludeProperty <string[]>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-ColumnFormat <hashtable>] [-TextColumn <string[]>] [-NumberColumn <string[]>] [-IntegerColumn <string[]>] [-PercentColumn <string[]>] [-CurrencyColumn <string[]>] [-DateColumn <string[]>] [-DateTimeColumn <string[]>] [-FormatDecimals <int>] [-FormatCultureName <string>] [-IncludeHeaderInColumnFormat] [-AutoFitFormattedColumn] [-IgnoreMissingColumnFormat] [-IncludeUnexportableProperties] [-PropertyConversionErrorAction <ActionPreference>] [-Open] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Append
 ```powershell
-Export-OfficeExcel [-Path] <string> -Append [-InputObject <Object>] [-WorksheetName <string>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-NoTable] [-NoAutoFilter] [-AutoFit] [-FreezeTopRow] [-FreezeFirstColumn] [-BoldTopRow] [-Title <string>] [-AppendToTable] [-NoClobber] [-ExcludeProperty <string[]>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-ColumnFormat <hashtable>] [-TextColumn <string[]>] [-NumberColumn <string[]>] [-IntegerColumn <string[]>] [-PercentColumn <string[]>] [-CurrencyColumn <string[]>] [-DateColumn <string[]>] [-DateTimeColumn <string[]>] [-FormatDecimals <int>] [-FormatCultureName <string>] [-IncludeHeaderInColumnFormat] [-AutoFitFormattedColumn] [-IgnoreMissingColumnFormat] [-IncludeUnexportableProperties] [-PropertyConversionErrorAction <ActionPreference>] [-Open] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeExcel [-Path] <string> -Append [-InputObject <Object>] [-WorksheetName <string>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-NoTable] [-NoAutoFilter] [-AutoFit] [-FreezeTopRow] [-FreezeFirstColumn] [-BoldTopRow] [-Title <string>] [-AppendToTable] [-NoClobber] [-ExcludeProperty <string[]>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-ColumnFormat <hashtable>] [-TextColumn <string[]>] [-NumberColumn <string[]>] [-IntegerColumn <string[]>] [-PercentColumn <string[]>] [-CurrencyColumn <string[]>] [-DateColumn <string[]>] [-DateTimeColumn <string[]>] [-FormatDecimals <int>] [-FormatCultureName <string>] [-IncludeHeaderInColumnFormat] [-AutoFitFormattedColumn] [-IgnoreMissingColumnFormat] [-IncludeUnexportableProperties] [-PropertyConversionErrorAction <ActionPreference>] [-Open] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### ClearSheet
 ```powershell
-Export-OfficeExcel [-Path] <string> -ClearSheet [-InputObject <Object>] [-WorksheetName <string>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-NoTable] [-NoAutoFilter] [-AutoFit] [-FreezeTopRow] [-FreezeFirstColumn] [-BoldTopRow] [-Title <string>] [-NoClobber] [-ExcludeProperty <string[]>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-ColumnFormat <hashtable>] [-TextColumn <string[]>] [-NumberColumn <string[]>] [-IntegerColumn <string[]>] [-PercentColumn <string[]>] [-CurrencyColumn <string[]>] [-DateColumn <string[]>] [-DateTimeColumn <string[]>] [-FormatDecimals <int>] [-FormatCultureName <string>] [-IncludeHeaderInColumnFormat] [-AutoFitFormattedColumn] [-IgnoreMissingColumnFormat] [-IncludeUnexportableProperties] [-PropertyConversionErrorAction <ActionPreference>] [-Open] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeExcel [-Path] <string> -ClearSheet [-InputObject <Object>] [-WorksheetName <string>] [-TableName <string>] [-TableStyle <string>] [-ShowFirstColumn] [-ShowLastColumn] [-NoRowStripes] [-ShowColumnStripes] [-StartRow <int>] [-StartColumn <int>] [-NoHeader] [-NoTable] [-NoAutoFilter] [-AutoFit] [-FreezeTopRow] [-FreezeFirstColumn] [-BoldTopRow] [-Title <string>] [-NoClobber] [-ExcludeProperty <string[]>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-ColumnFormat <hashtable>] [-TextColumn <string[]>] [-NumberColumn <string[]>] [-IntegerColumn <string[]>] [-PercentColumn <string[]>] [-CurrencyColumn <string[]>] [-DateColumn <string[]>] [-DateTimeColumn <string[]>] [-FormatDecimals <int>] [-FormatCultureName <string>] [-IncludeHeaderInColumnFormat] [-AutoFitFormattedColumn] [-IgnoreMissingColumnFormat] [-IncludeUnexportableProperties] [-PropertyConversionErrorAction <ActionPreference>] [-Open] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -642,6 +642,38 @@ Mark formula cells dirty before saving.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: Create, Append, ClearSheet
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxCollectionItems
+Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.
+
+```yaml
+Type: Int32
+Parameter Sets: Create, Append, ClearSheet
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxNestingDepth
+Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.
+
+```yaml
+Type: Int32
 Parameter Sets: Create, Append, ClearSheet
 Aliases: None
 Possible values:

@@ -190,7 +190,7 @@ jobs:
         shell: pwsh
         run: |
           $env:OfficeIMORoot = Join-Path (Get-Location) '.missing-officeimo'
-          ./Build/Build-Module.ps1 -RunMode Build
+          ./Build/Build-Module.ps1 -RunMode Build -SignModule:$false
 
       - name: Run packaged ALC conflict test
         env:

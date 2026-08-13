@@ -117,6 +117,12 @@ $familyDefinitions = @(
         match = { param($name) $name -eq 'Export-OfficeHtmlImage' }
     }
     [ordered]@{
+        id = 'visuals'; title = 'Cross-format visuals'; description = 'Convert reusable visual artifacts for Word, Excel, PowerPoint, and PDF placement.'
+        docs = 'automation-patterns'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples'
+        samples = @('ConvertTo-OfficeVisual')
+        match = { param($name) $name -eq 'ConvertTo-OfficeVisual' }
+    }
+    [ordered]@{
         id = 'shared'; title = 'Shared authoring primitives'; description = 'Create reusable text runs shared by document DSLs.'
         docs = 'automation-patterns'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples'
         samples = @('New-OfficeTextRun')

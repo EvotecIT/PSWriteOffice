@@ -312,6 +312,16 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
     [AllowEmptyString]
     public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
+    /// <summary>Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxCollectionItems { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxCollectionItems;
+
+    /// <summary>Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.</summary>
+    [Parameter]
+    [ValidateRange(1, int.MaxValue)]
+    public int MaxNestingDepth { get; set; } = PowerShellObjectNormalizerOptions.DefaultMaxNestingDepth;
+
     /// <summary>Emphasize the first table column when the selected style supports it.</summary>
     [Parameter]
     public SwitchParameter ShowFirstColumn { get; set; }
@@ -357,12 +367,13 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
         var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
             CollectionSeparator,
             DictionaryEntrySeparator,
-            DictionaryKeyValueSeparator);
+            DictionaryKeyValueSeparator,
+            MaxCollectionItems,
+            MaxNestingDepth);
         var table = ExcelTabularInputService.ToDataTable(
             inputRows,
-            copyExistingTables: true,
+            copyExistingTables: false,
             normalizerOptions: normalizerOptions);
-        var reportRows = ExcelTabularInputService.ToDictionaryRows(table);
         var sourceColumns = table.Columns
             .Cast<System.Data.DataColumn>()
             .Select(static column => column.ColumnName)
@@ -377,7 +388,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
 
         var composer = ExcelDslContext.Require(this).RequireComposer();
         var range = composer.TableFrom(
-            reportRows,
+            table,
             Title,
             configure: options =>
             {

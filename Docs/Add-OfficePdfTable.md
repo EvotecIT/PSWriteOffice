@@ -11,17 +11,17 @@ Adds a table to a PDF document.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficePdfTable [-InputObject] <Object> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <Double>] [-FontSize <Double>] [-HeaderFontSize <Double>] [-LineHeight <Double>] [-CellPaddingX <Double>] [-CellPaddingY <Double>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <Double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <Double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <Int32>] [-RepeatHeaderRowCount <Int32>] [-FooterRowCount <Int32>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfTable [-InputObject] <Object> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <Double>] [-FontSize <Double>] [-HeaderFontSize <Double>] [-LineHeight <Double>] [-CellPaddingX <Double>] [-CellPaddingY <Double>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <Double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <Double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <Int32>] [-RepeatHeaderRowCount <Int32>] [-FooterRowCount <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <Double>] [-FontSize <Double>] [-HeaderFontSize <Double>] [-LineHeight <Double>] [-CellPaddingX <Double>] [-CellPaddingY <Double>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <Double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <Double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <Int32>] [-RepeatHeaderRowCount <Int32>] [-FooterRowCount <Int32>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <Double>] [-FontSize <Double>] [-HeaderFontSize <Double>] [-LineHeight <Double>] [-CellPaddingX <Double>] [-CellPaddingY <Double>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <Double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <Double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <Int32>] [-RepeatHeaderRowCount <Int32>] [-FooterRowCount <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ### PipelineDocument
 ```powershell
-Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <Double>] [-FontSize <Double>] [-HeaderFontSize <Double>] [-LineHeight <Double>] [-CellPaddingX <Double>] [-CellPaddingY <Double>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <Double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <Double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <Int32>] [-RepeatHeaderRowCount <Int32>] [-FooterRowCount <Int32>] [-PassThru] [<CommonParameters>]
+Add-OfficePdfTable [-InputObject] <Object> -Document <PdfDocument> [-Property <string[]>] [-Header <string[]>] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-Align <PdfAlign>] [-TableStyle <string>] [-HeaderFill <string>] [-HeaderTextColor <string>] [-TextColor <string>] [-RowStripeFill <string>] [-BorderColor <string>] [-BorderWidth <Double>] [-FontSize <Double>] [-HeaderFontSize <Double>] [-LineHeight <Double>] [-CellPaddingX <Double>] [-CellPaddingY <Double>] [-SpacingBefore <Double>] [-SpacingAfter <Double>] [-Caption <string>] [-CaptionAlign <PdfAlign>] [-CaptionColor <string>] [-CaptionFontSize <Double>] [-ColumnWidthPoints <double[]>] [-ColumnWidthWeights <double[]>] [-ColumnAlign <PdfColumnAlign[]>] [-AutoFitColumns] [-RightAlignNumeric] [-ShrinkTextToFit] [-MinimumShrinkFontSize <Double>] [-KeepTogether] [-KeepWithNext] [-NoBorder] [-NoHeaderFill] [-NoRowStripeFill] [-HeaderRowCount <Int32>] [-RepeatHeaderRowCount <Int32>] [-FooterRowCount <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -482,6 +482,38 @@ Wrapped line height multiplier for table cells.
 
 ```yaml
 Type: Double
+Parameter Sets: Context, Document, PipelineDocument
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxCollectionItems
+Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.
+
+```yaml
+Type: Int32
+Parameter Sets: Context, Document, PipelineDocument
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxNestingDepth
+Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.
+
+```yaml
+Type: Int32
 Parameter Sets: Context, Document, PipelineDocument
 Aliases: None
 Possible values:

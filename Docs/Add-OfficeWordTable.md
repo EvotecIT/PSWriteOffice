@@ -11,7 +11,7 @@ Creates a table from PowerShell objects.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-Transpose] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-Transpose] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -116,6 +116,38 @@ Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Autofit, Fixed, AutoFitToContents, AutoFitToWindow
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxCollectionItems
+Maximum number of items allowed in one nested collection or dictionary cell. Defaults to 1,048,575; increase explicitly for trusted larger values.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxNestingDepth
+Maximum nesting depth allowed while normalizing one cell value. Defaults to 64; increase explicitly for trusted deeper values.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
 
 Required: False
 Position: named

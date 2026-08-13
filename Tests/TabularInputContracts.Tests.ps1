@@ -82,6 +82,200 @@ Describe 'Shared tabular input contracts' {
         }
     }
 
+    It 'exposes caller-controlled normalization limits across every object table output' {
+        $commands = @(
+            'Add-OfficeExcelTable'
+            'Export-OfficeExcel'
+            'Add-OfficeExcelReportTable'
+            'Add-OfficeWordTable'
+            'Add-OfficePowerPointTable'
+            'Add-OfficePdfTable'
+            'Add-OfficeMarkdownTable'
+            'ConvertTo-OfficeMarkdown'
+            'ConvertTo-OfficeCsv'
+            'Export-OfficeCsv'
+        )
+
+        foreach ($commandName in $commands) {
+            $parameters = (Get-Command $commandName -ErrorAction Stop).Parameters.Keys
+            $parameters | Should -Contain 'MaxCollectionItems'
+            $parameters | Should -Contain 'MaxNestingDepth'
+        }
+
+        foreach ($commandName in 'ConvertTo-OfficeCsv', 'Export-OfficeCsv') {
+            $documentSets = (Get-Command $commandName -ErrorAction Stop).ParameterSets |
+                Where-Object Name -Like 'Document*'
+            foreach ($parameterSet in $documentSets) {
+                $parameterSet.Parameters.Name | Should -Not -Contain 'MaxCollectionItems'
+                $parameterSet.Parameters.Name | Should -Not -Contain 'MaxNestingDepth'
+            }
+        }
+    }
+
+    It 'reports and honors the required collection limit on Excel report tables' {
+        $row = [pscustomobject]@{ Name = 'Alpha'; Tags = @('One', 'Two', 'Three') }
+        $limitedPath = Join-Path $TestDrive 'Report-CollectionLimit.xlsx'
+
+        {
+            New-OfficeExcel -Path $limitedPath {
+                Add-OfficeExcelReportSheet -Name 'Report' {
+                    Add-OfficeExcelReportTable -InputObject $row -MaxCollectionItems 2
+                }
+            }
+        } | Should -Throw '*collection*at least 3 items*-MaxCollectionItems 2*Rerun with -MaxCollectionItems 3 or higher*'
+
+        New-OfficeExcel -Path $limitedPath {
+            Add-OfficeExcelReportSheet -Name 'Report' {
+                Add-OfficeExcelReportTable -InputObject $row -MaxCollectionItems 3
+            }
+        }
+
+        $result = @(Import-OfficeExcel -Path $limitedPath -WorksheetName 'Report')
+        $result[0].Tags | Should -Be 'One, Two, Three'
+    }
+
+    It 'counts container nesting consistently regardless of the scalar leaf type' {
+        $leafValues = @('Deep', 42, $true, [datetime]'2026-08-12T00:00:00Z')
+        foreach ($leafValue in $leafValues) {
+            $row = [pscustomobject]@{
+                Name   = 'Alpha'
+                Nested = [ordered]@{ Child = [ordered]@{ Value = $leafValue } }
+            }
+
+            {
+                $row | ConvertTo-OfficeMarkdown -MaxNestingDepth 1 -ErrorAction Stop
+            } | Should -Throw '*requires at least 2 normalization levels*-MaxNestingDepth 1*Rerun with -MaxNestingDepth 2 or higher*'
+
+            { $row | ConvertTo-OfficeMarkdown -MaxNestingDepth 2 -ErrorAction Stop } |
+                Should -Not -Throw
+        }
+    }
+
+    It 'routes collection limits through direct Excel exports' {
+        $row = [pscustomobject]@{ Name = 'Alpha'; Tags = @('One', 'Two', 'Three') }
+        $path = Join-Path $TestDrive 'Export-CollectionLimit.xlsx'
+
+        {
+            $row | Export-OfficeExcel -Path $path -MaxCollectionItems 2 -ErrorAction Stop
+        } | Should -Throw '*collection*at least 3 items*-MaxCollectionItems 2*Rerun with -MaxCollectionItems 3 or higher*'
+
+        $row | Export-OfficeExcel -Path $path -MaxCollectionItems 3
+        $result = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1')
+        $result[0].Tags | Should -Be 'One, Two, Three'
+    }
+
+    It 'applies normalization limits to every DataSet table' {
+        $dataSet = [System.Data.DataSet]::new('Book')
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Tags', [object])
+        [void] $table.Rows.Add('Alpha', [object] @('One', 'Two', 'Three'))
+        [void] $dataSet.Tables.Add($table)
+        $path = Join-Path $TestDrive 'DataSet-CollectionLimit.xlsx'
+
+        {
+            $dataSet | Export-OfficeExcel -Path $path -MaxCollectionItems 2 -ErrorAction Stop
+        } | Should -Throw '*collection*at least 3 items*-MaxCollectionItems 2*Rerun with -MaxCollectionItems 3 or higher*'
+
+        $dataSet | Export-OfficeExcel -Path $path -MaxCollectionItems 3
+        $result = @(Import-OfficeExcel -Path $path -WorksheetName 'Rows')
+        $result[0].Tags | Should -Be 'One, Two, Three'
+    }
+
+    It 'does not apply nested-cell collection limits to top-level dictionary columns' {
+        $row = [ordered]@{ A = 1; B = 2; C = 3 }
+        $path = Join-Path $TestDrive 'TopLevelDictionary.xlsx'
+
+        { $row | Export-OfficeExcel -Path $path -MaxCollectionItems 2 -ErrorAction Stop } |
+            Should -Not -Throw
+
+        $result = @(Import-OfficeExcel -Path $path -WorksheetName 'Sheet1')
+        $result.Count | Should -Be 1
+        $result[0].A | Should -Be 1
+        $result[0].B | Should -Be 2
+        $result[0].C | Should -Be 3
+    }
+
+    It 'routes dictionary limits through streaming CSV exports' {
+        $row = [pscustomobject]@{
+            Name     = 'Alpha'
+            Metadata = [ordered]@{ First = 1; Second = 2; Third = 3 }
+        }
+
+        {
+            $row | ConvertTo-OfficeCsv -MaxCollectionItems 2 -ErrorAction Stop
+        } | Should -Throw '*dictionary*at least 3 items*-MaxCollectionItems 2*Rerun with -MaxCollectionItems 3 or higher*'
+
+        $csv = @($row | ConvertTo-OfficeCsv -MaxCollectionItems 3)
+        ($csv -join "`n") | Should -Match 'First: 1; Second: 2; Third: 3'
+    }
+
+    It 'reuses raised nesting limits while validating CSV append columns' {
+        $path = Join-Path $TestDrive 'Append-RaisedNestingLimit.csv'
+        [System.IO.File]::WriteAllText($path, "Name,Payload`r`nAlpha,Initial`r`n")
+
+        $payload = 'Deep'
+        foreach ($level in 1..70) {
+            $payload = [ordered]@{ Child = $payload }
+        }
+        $row = [pscustomobject]@{ Name = 'Beta'; Payload = $payload }
+
+        { $row | Export-OfficeCsv -Path $path -Append -MaxNestingDepth 128 -ErrorAction Stop } |
+            Should -Not -Throw
+
+        $result = @(Import-OfficeCsv -Path $path)
+        $result.Count | Should -Be 2
+        $result[1].Name | Should -Be 'Beta'
+        $result[1].Payload | Should -Match 'Deep'
+    }
+
+    It 'routes collection limits through CSV DataTable and DataView fast paths' {
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Tags', [object])
+        [void] $table.Rows.Add('Alpha', [object] @('One', 'Two', 'Three'))
+
+        {
+            ConvertTo-OfficeCsv -InputObject $table -MaxCollectionItems 2 -ErrorAction Stop
+        } | Should -Throw '*collection*at least 3 items*-MaxCollectionItems 2*Rerun with -MaxCollectionItems 3 or higher*'
+
+        $csv = @(ConvertTo-OfficeCsv -InputObject $table -MaxCollectionItems 3)
+        ($csv -join "`n") | Should -Match 'One, Two, Three'
+
+        $path = Join-Path $TestDrive 'DataView-CollectionLimit.csv'
+        {
+            Export-OfficeCsv -InputObject $table.DefaultView -Path $path -MaxCollectionItems 2 -ErrorAction Stop
+        } | Should -Throw '*collection*at least 3 items*-MaxCollectionItems 2*Rerun with -MaxCollectionItems 3 or higher*'
+
+        Export-OfficeCsv -InputObject $table.DefaultView -Path $path -MaxCollectionItems 3
+        (Get-Content -LiteralPath $path -Raw) | Should -Match 'One, Two, Three'
+    }
+
+    It 'routes dictionary limits through the CSV IDataReader fast path' {
+        $table = [System.Data.DataTable]::new('Rows')
+        [void] $table.Columns.Add('Name', [string])
+        [void] $table.Columns.Add('Metadata', [object])
+        [void] $table.Rows.Add('Alpha', [object] ([ordered]@{ First = 1; Second = 2; Third = 3 }))
+        $path = Join-Path $TestDrive 'DataReader-CollectionLimit.csv'
+
+        $limitedReader = $table.CreateDataReader()
+        try {
+            {
+                Export-OfficeCsv -InputObject $limitedReader -Path $path -MaxCollectionItems 2 -ErrorAction Stop
+            } | Should -Throw '*dictionary*at least 3 items*-MaxCollectionItems 2*Rerun with -MaxCollectionItems 3 or higher*'
+        } finally {
+            $limitedReader.Dispose()
+        }
+
+        $allowedReader = $table.CreateDataReader()
+        try {
+            Export-OfficeCsv -InputObject $allowedReader -Path $path -MaxCollectionItems 3
+        } finally {
+            $allowedReader.Dispose()
+        }
+        (Get-Content -LiteralPath $path -Raw) | Should -Match 'First: 1; Second: 2; Third: 3'
+    }
+
     It 'renders object and dictionary row families through Excel report tables' {
         $genericDictionary = [System.Collections.Generic.Dictionary[string, object]]::new()
         $genericDictionary.Add('Name', 'GenericDictionary')

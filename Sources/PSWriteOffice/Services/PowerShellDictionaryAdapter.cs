@@ -84,6 +84,13 @@ internal static class PowerShellDictionaryAdapter
         return true;
     }
 
+    /// <summary>
+    /// Enumerates a dictionary used as the top-level row schema. Nested-cell limits do not apply here;
+    /// the consuming table or file format owns its schema and column boundaries.
+    /// </summary>
+    public static bool TryGetRowEntries(object? value, out IReadOnlyList<PowerShellDictionaryEntry> entries)
+        => TryGetEntries(value, int.MaxValue, out entries);
+
     public static object? GetValue(
         IReadOnlyList<PowerShellDictionaryEntry> entries,
         string column,
@@ -107,7 +114,11 @@ internal static class PowerShellDictionaryAdapter
     {
         if (entries.Count >= maximumItems)
         {
-            throw new InvalidDataException($"The dictionary exceeds the {maximumItems}-item normalization limit.");
+            throw new PowerShellNormalizationLimitException(
+                PowerShellNormalizationLimitMessages.Collection(
+                    "dictionary",
+                    maximumItems,
+                    entries.Count + 1));
         }
 
         entries.Add(entry);

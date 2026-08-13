@@ -2,15 +2,15 @@ using System;
 using System.Data;
 using PSWriteOffice.Services;
 
-namespace PSWriteOffice.Services.Excel;
+namespace PSWriteOffice.Services;
 
 /// <summary>Preserves streaming IDataReader behavior while normalizing complex Office table cell values.</summary>
-internal sealed class NormalizingDataReader : IDataReader
+internal sealed class PowerShellNormalizingDataReader : IDataReader
 {
     private readonly IDataReader _reader;
     private readonly PowerShellObjectNormalizerOptions _options;
 
-    internal NormalizingDataReader(IDataReader reader, PowerShellObjectNormalizerOptions options)
+    internal PowerShellNormalizingDataReader(IDataReader reader, PowerShellObjectNormalizerOptions options)
     {
         _reader = reader ?? throw new ArgumentNullException(nameof(reader));
         _options = options ?? throw new ArgumentNullException(nameof(options));

@@ -7,6 +7,9 @@ namespace PSWriteOffice.Services;
 /// <summary>Controls how PowerShell and CLR values are projected into Office table cells.</summary>
 internal sealed class PowerShellObjectNormalizerOptions
 {
+    internal const int DefaultMaxCollectionItems = 1_048_575;
+    internal const int DefaultMaxNestingDepth = 64;
+
     internal static readonly PowerShellObjectNormalizerOptions Default = new();
 
     public bool IncludeUnexportableProperties { get; set; }
@@ -25,9 +28,9 @@ internal sealed class PowerShellObjectNormalizerOptions
 
     public string DictionaryKeyValueSeparator { get; set; } = ": ";
 
-    public int MaxCollectionItems { get; set; } = 1_048_575;
+    public int MaxCollectionItems { get; set; } = DefaultMaxCollectionItems;
 
-    public int MaxNestingDepth { get; set; } = 64;
+    public int MaxNestingDepth { get; set; } = DefaultMaxNestingDepth;
 
     public CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
 
@@ -36,13 +39,17 @@ internal sealed class PowerShellObjectNormalizerOptions
     public static PowerShellObjectNormalizerOptions ForTable(
         string collectionSeparator,
         string dictionaryEntrySeparator,
-        string dictionaryKeyValueSeparator)
+        string dictionaryKeyValueSeparator,
+        int maxCollectionItems = DefaultMaxCollectionItems,
+        int maxNestingDepth = DefaultMaxNestingDepth)
     {
         return new PowerShellObjectNormalizerOptions
         {
             CollectionSeparator = collectionSeparator,
             DictionaryEntrySeparator = dictionaryEntrySeparator,
-            DictionaryKeyValueSeparator = dictionaryKeyValueSeparator
+            DictionaryKeyValueSeparator = dictionaryKeyValueSeparator,
+            MaxCollectionItems = maxCollectionItems,
+            MaxNestingDepth = maxNestingDepth
         };
     }
 }

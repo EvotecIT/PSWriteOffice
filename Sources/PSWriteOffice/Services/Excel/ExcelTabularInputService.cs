@@ -111,31 +111,6 @@ internal static class ExcelTabularInputService
         return ExcelObjectDataTableBuilder.FromObjects(normalized, tableName ?? string.Empty);
     }
 
-    /// <summary>Projects a normalized DataTable into dictionary rows accepted by generic report composers.</summary>
-    public static object[] ToDictionaryRows(DataTable table)
-    {
-        if (table == null)
-        {
-            throw new ArgumentNullException(nameof(table));
-        }
-
-        var rows = new object[table.Rows.Count];
-        for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
-        {
-            var sourceRow = table.Rows[rowIndex];
-            var row = new Dictionary<string, object?>(table.Columns.Count, StringComparer.OrdinalIgnoreCase);
-            foreach (DataColumn column in table.Columns)
-            {
-                var value = sourceRow[column];
-                row[column.ColumnName] = value == DBNull.Value ? null : value;
-            }
-
-            rows[rowIndex] = row;
-        }
-
-        return rows;
-    }
-
     private static bool TryProjectToDataTable(
         IReadOnlyList<object?> items,
         string? tableName,

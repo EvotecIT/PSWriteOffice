@@ -50,7 +50,7 @@ internal static partial class PowerShellObjectNormalizer
             return NormalizePSObject(psObject, options);
         }
 
-        if (PowerShellDictionaryAdapter.TryGetEntries(item, options.MaxCollectionItems, out var dictionaryEntries))
+        if (PowerShellDictionaryAdapter.TryGetRowEntries(item, out var dictionaryEntries))
         {
             return ProjectDictionaryMap(dictionaryEntries, options);
         }
@@ -114,7 +114,7 @@ internal static partial class PowerShellObjectNormalizer
             return TryProjectPSObject(psObject, columns, out projectedColumns, out values, options);
         }
 
-        if (PowerShellDictionaryAdapter.TryGetEntries(item, options.MaxCollectionItems, out var dictionaryEntries))
+        if (PowerShellDictionaryAdapter.TryGetRowEntries(item, out var dictionaryEntries))
         {
             ProjectDictionary(dictionaryEntries, columns, out projectedColumns, out values, options);
             return true;
@@ -162,7 +162,7 @@ internal static partial class PowerShellObjectNormalizer
             return true;
         }
 
-        if (PowerShellDictionaryAdapter.TryGetEntries(item, options.MaxCollectionItems, out var dictionaryEntries))
+        if (PowerShellDictionaryAdapter.TryGetRowEntries(item, out var dictionaryEntries))
         {
             ProjectDictionaryInto(dictionaryEntries, columns, values, options);
             return true;
@@ -236,7 +236,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[i] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -307,7 +309,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[i] = NormalizeCellValueToText(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -350,7 +354,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[index] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -477,7 +483,7 @@ internal static partial class PowerShellObjectNormalizer
 
     private static object? NormalizePSObject(PSObject ps, PowerShellObjectNormalizerOptions options)
     {
-        if (PowerShellDictionaryAdapter.TryGetEntries(ps.BaseObject, options.MaxCollectionItems, out var dictionaryEntries))
+        if (PowerShellDictionaryAdapter.TryGetRowEntries(ps.BaseObject, out var dictionaryEntries))
         {
             return ProjectDictionaryMap(dictionaryEntries, options);
         }
@@ -501,7 +507,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 result[name] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -526,7 +534,7 @@ internal static partial class PowerShellObjectNormalizer
 
     private static bool TryProjectPSObject(PSObject ps, string[]? columns, out string[] projectedColumns, out object?[] values, PowerShellObjectNormalizerOptions options)
     {
-        if (PowerShellDictionaryAdapter.TryGetEntries(ps.BaseObject, options.MaxCollectionItems, out var dictionaryEntries))
+        if (PowerShellDictionaryAdapter.TryGetRowEntries(ps.BaseObject, out var dictionaryEntries))
         {
             ProjectDictionary(dictionaryEntries, columns, out projectedColumns, out values, options);
             return true;
@@ -549,7 +557,9 @@ internal static partial class PowerShellObjectNormalizer
                     names.Add(property.Name);
                     rowValues.Add(value);
                 }
-                catch (Exception exception) when (exception is not PipelineStoppedException)
+                catch (Exception exception) when (
+                    exception is not PipelineStoppedException &&
+                    exception is not PowerShellNormalizationLimitException)
                 {
                     if (options.PropertyErrorAction == ActionPreference.Stop)
                     {
@@ -585,7 +595,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[i] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -605,7 +617,7 @@ internal static partial class PowerShellObjectNormalizer
 
     private static void ProjectPSObjectInto(PSObject ps, string[] columns, object?[] values, PowerShellObjectNormalizerOptions options)
     {
-        if (PowerShellDictionaryAdapter.TryGetEntries(ps.BaseObject, options.MaxCollectionItems, out var dictionaryEntries))
+        if (PowerShellDictionaryAdapter.TryGetRowEntries(ps.BaseObject, out var dictionaryEntries))
         {
             ProjectDictionaryInto(dictionaryEntries, columns, values, options);
             return;
@@ -624,7 +636,9 @@ internal static partial class PowerShellObjectNormalizer
             {
                 values[i] = NormalizeCellValue(property.Value, options);
             }
-            catch (Exception exception) when (exception is not PipelineStoppedException)
+            catch (Exception exception) when (
+                exception is not PipelineStoppedException &&
+                exception is not PowerShellNormalizationLimitException)
             {
                 if (options.PropertyErrorAction == ActionPreference.Stop)
                 {
@@ -790,7 +804,9 @@ internal static partial class PowerShellObjectNormalizer
             value = NormalizeCellValue(property.GetValue(item), options);
             return true;
         }
-        catch (Exception exception) when (exception is not PipelineStoppedException)
+        catch (Exception exception) when (
+            exception is not PipelineStoppedException &&
+            exception is not PowerShellNormalizationLimitException)
         {
             exception = UnwrapClrPropertyException(exception);
             if (options.PropertyErrorAction == ActionPreference.Stop)
