@@ -63,7 +63,7 @@ function Test-ExcelBenchmarkOutput {
     param([object] $Case, [object] $Run)
 
     if ($Case.OperationKey -in @('WriteCsv', 'WriteCsvGZip', 'CsvToExcel', 'WriteWorkbook')) {
-        assertPath $Run.Path
+        Assert-BenchmarkPath $Run.Path
     }
 
     if ($Case.OperationKey -in @('ReadFullSheet', 'ReadRange', 'ReadNoHeaderRange')) {
@@ -72,22 +72,22 @@ function Test-ExcelBenchmarkOutput {
         } else {
             [int]$Run.ExpectedRows
         }
-        assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+        Assert-BenchmarkValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
     }
 
     if ($Case.OperationKey -eq 'ReadUsedRangeDataTable') {
         $expectedRows = [int]$Run.ExpectedRows
-        assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+        Assert-BenchmarkValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
     }
 
     if ($Case.OperationKey -eq 'ReadTableMetadata') {
-        assertValue ([int]$Run.ActualTableCount) 1 -Message 'Expected one workbook table metadata result.'
-        assertValue (@($Run.ActualTableNames) -contains 'Data') $true -Message "Expected table metadata to include 'Data'."
+        Assert-BenchmarkValue ([int]$Run.ActualTableCount) 1 -Message 'Expected one workbook table metadata result.'
+        Assert-BenchmarkValue (@($Run.ActualTableNames) -contains 'Data') $true -Message "Expected table metadata to include 'Data'."
     }
 
     if ($Case.OperationKey -eq 'ReadNamedRangeMetadata') {
-        assertValue ([int]$Run.ActualNamedRangeCount) 1 -Message 'Expected one workbook named range metadata result.'
-        assertValue (@($Run.ActualNamedRangeNames) -contains 'SalesData') $true -Message "Expected named range metadata to include 'SalesData'."
+        Assert-BenchmarkValue ([int]$Run.ActualNamedRangeCount) 1 -Message 'Expected one workbook named range metadata result.'
+        Assert-BenchmarkValue (@($Run.ActualNamedRangeNames) -contains 'SalesData') $true -Message "Expected named range metadata to include 'SalesData'."
     }
 
     if ([bool]$Run.SkipWorkbookValidation) {
@@ -115,7 +115,7 @@ function Test-ExcelBenchmarkTabularValues {
     $actualRows = @(Import-OfficeExcel -Path $Run.Path -WorksheetName $Run.WorksheetName)
     $isDataTable = $Run.Payload -is [Data.DataTable]
     $expectedRows = if ($isDataTable) { @($Run.Payload.Rows) } else { @($Run.Payload) }
-    assertValue $actualRows.Count $expectedRows.Count -Message "Expected '$($Case.Scenario)' to preserve every data row."
+    Assert-BenchmarkValue $actualRows.Count $expectedRows.Count -Message "Expected '$($Case.Scenario)' to preserve every data row."
     if ($expectedRows.Count -eq 0) {
         return
     }
@@ -141,7 +141,7 @@ function Test-ExcelBenchmarkTabularValues {
             }
 
             $actualValue = ConvertTo-ExcelBenchmarkComparableValue -Value $actualProperty.Value
-            assertValue $actualValue $expectedValue -Message "Expected '$($Case.Scenario)' row $index column '$($property.Name)' to preserve its value."
+            Assert-BenchmarkValue $actualValue $expectedValue -Message "Expected '$($Case.Scenario)' row $index column '$($property.Name)' to preserve its value."
         }
     }
 }
@@ -173,29 +173,29 @@ function Test-CsvBenchmarkOutput {
 
     $expectedRows = [int]$Run.ExpectedRows
     if ($Case.OperationKey -in @('ReadCsvSource', 'ReadCsvDataTable', 'ReadCsvGZipDataTable', 'ReadCsvQuickSingleColumn', 'ReadCsvQuickAllColumns')) {
-        assertValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+        Assert-BenchmarkValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
         if ($Case.OperationKey -eq 'ReadCsvQuickSingleColumn') {
-            assertValue ([int]$Run.AccessedFields) $expectedRows -Message "Expected $expectedRows first-column values accessed by '$($Case.OperationKey)'."
-            assertValue ([string]$Run.LastValue) ([string]($expectedRows - 1)) -Message "Expected '$($Case.OperationKey)' to access the last Column0 value."
+            Assert-BenchmarkValue ([int]$Run.AccessedFields) $expectedRows -Message "Expected $expectedRows first-column values accessed by '$($Case.OperationKey)'."
+            Assert-BenchmarkValue ([string]$Run.LastValue) ([string]($expectedRows - 1)) -Message "Expected '$($Case.OperationKey)' to access the last Column0 value."
         }
         if ($Case.OperationKey -eq 'ReadCsvQuickAllColumns') {
             $expectedFields = $expectedRows * [int]$Run.ColumnCount
-            assertValue ([int]$Run.AccessedFields) $expectedFields -Message "Expected $expectedFields values accessed by '$($Case.OperationKey)'."
-            assertValue ([string]$Run.LastValue) ('Value{0}_{1}' -f ($expectedRows - 1), ([int]$Run.ColumnCount - 1)) -Message "Expected '$($Case.OperationKey)' to access the last field value."
+            Assert-BenchmarkValue ([int]$Run.AccessedFields) $expectedFields -Message "Expected $expectedFields values accessed by '$($Case.OperationKey)'."
+            Assert-BenchmarkValue ([string]$Run.LastValue) ('Value{0}_{1}' -f ($expectedRows - 1), ([int]$Run.ColumnCount - 1)) -Message "Expected '$($Case.OperationKey)' to access the last field value."
         }
         $Run.RowsProcessed = [int]$Run.ActualRows
         return
     }
 
     $path = $Run.Path
-    assertPath $path
+    Assert-BenchmarkPath $path
     $actualRows = if ($Case.OperationKey -eq 'WriteCsvGZip') {
         $table = ConvertFrom-NativeGZipCsvToDataTable -Path $path
         if ($table -and $table.Rows) { @($table.Select()) } else { @() }
     } else {
         @(Import-Csv -Path $path)
     }
-    assertValue $actualRows.Count $expectedRows -Message "Expected $expectedRows rows in '$path'."
+    Assert-BenchmarkValue $actualRows.Count $expectedRows -Message "Expected $expectedRows rows in '$path'."
     Test-CsvBenchmarkTabularValues -Case $Case -Run $Run -ActualRows $actualRows
     $Run.RowsProcessed = [int]$actualRows.Count
 }
@@ -209,14 +209,14 @@ function Test-CsvBenchmarkTabularValues {
         @($Run.Payload)
     }
 
-    assertValue $ActualRows.Count $expectedRows.Count -Message "Expected '$($Case.Scenario)' to preserve every CSV data row."
+    Assert-BenchmarkValue $ActualRows.Count $expectedRows.Count -Message "Expected '$($Case.Scenario)' to preserve every CSV data row."
     if ($expectedRows.Count -eq 0) {
         return
     }
 
     $expectedColumns = @(Get-CsvBenchmarkColumnNames -Row $expectedRows[0])
     $actualColumns = @(Get-CsvBenchmarkColumnNames -Row $ActualRows[0])
-    assertValue ($actualColumns -join [char]31) ($expectedColumns -join [char]31) -Message "Expected '$($Case.Scenario)' to preserve the CSV header and column order."
+    Assert-BenchmarkValue ($actualColumns -join [char]31) ($expectedColumns -join [char]31) -Message "Expected '$($Case.Scenario)' to preserve the CSV header and column order."
 
     for ($rowIndex = 0; $rowIndex -lt $expectedRows.Count; $rowIndex++) {
         $expectedRow = $expectedRows[$rowIndex]
