@@ -1,19 +1,19 @@
 . (Join-Path $PSScriptRoot 'excel-performance.helpers.ps1')
 
 $repositoryRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\..')).Path
-$suiteName = input Suite Standard
-$rowCounts = Assert-ExcelBenchmarkRowCount -RowCount (inputInt RowCount (Get-ExcelBenchmarkDefaultRowCount -Suite $suiteName))
-$skipWorkbookValidation = inputBool SkipWorkbookValidation false
-$skipImportExcelInstall = inputBool SkipImportExcelInstall false
-$skipExcelFastInstall = inputBool SkipExcelFastInstall false
+$suiteName = Get-BenchmarkInput Suite Standard
+$rowCounts = Assert-ExcelBenchmarkRowCount -RowCount (Get-BenchmarkInput RowCount (Get-ExcelBenchmarkDefaultRowCount -Suite $suiteName) -Int)
+$skipWorkbookValidation = Get-BenchmarkInput SkipWorkbookValidation false -Bool
+$skipImportExcelInstall = Get-BenchmarkInput SkipImportExcelInstall false -Bool
+$skipExcelFastInstall = Get-BenchmarkInput SkipExcelFastInstall false -Bool
 
-benchmark 'excel-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks\ExcelPerformance') {
-    policy -Warmup (Get-ExcelBenchmarkWarmupCount -Suite $suiteName) -Iterations (Get-ExcelBenchmarkIterationCount -Suite $suiteName) -Order GroupedRotated -MemoryCleanup BeforeIteration -OutlierMode None
-    profile Current -Cleanup KeepOnFailure
-    caseSource (Get-ExcelBenchmarkCase -Suite $suiteName)
-    axis RowCount $rowCounts
+New-BenchmarkSuite 'excel-performance' -OutputRoot (Join-Path $repositoryRoot 'Ignore\Benchmarks\ExcelPerformance') {
+    Set-BenchmarkPolicy -Warmup (Get-ExcelBenchmarkWarmupCount -Suite $suiteName) -Iterations (Get-ExcelBenchmarkIterationCount -Suite $suiteName) -Order GroupedRotated -MemoryCleanup BeforeIteration -OutlierMode None
+    Set-BenchmarkProfile Current -Cleanup KeepOnFailure
+    Add-BenchmarkCaseSource (Get-ExcelBenchmarkCase -Suite $suiteName)
+    Add-BenchmarkAxis RowCount $rowCounts
 
-    setup {
+    Set-BenchmarkSetup {
         param($case, $run)
 
         $run.RepositoryRoot = $repositoryRoot
@@ -41,39 +41,39 @@ benchmark 'excel-performance' -out (Join-Path $repositoryRoot 'Ignore\Benchmarks
         Initialize-ExcelBenchmarkInput -Case $case -Run $run
     }
 
-    skip {
+    Add-BenchmarkSkipRule {
         param($case)
 
         return ([string] $case.SupportedEngines -split ',') -notcontains [string] $case.Engine
     }
 
-    engine PSWriteOffice {
-        operation Run {
+    Add-BenchmarkEngine PSWriteOffice {
+        Add-BenchmarkOperation Run {
             param($case, $run)
             Invoke-ExcelBenchmarkOperation -Engine PSWriteOffice -Case $case -Run $run
         }
     }
 
-    engine ImportExcel {
-        operation Run {
+    Add-BenchmarkEngine ImportExcel {
+        Add-BenchmarkOperation Run {
             param($case, $run)
             Invoke-ExcelBenchmarkOperation -Engine ImportExcel -Case $case -Run $run
         }
     }
 
-    engine ExcelFast {
-        operation Run {
+    Add-BenchmarkEngine ExcelFast {
+        Add-BenchmarkOperation Run {
             param($case, $run)
             Invoke-ExcelBenchmarkOperation -Engine ExcelFast -Case $case -Run $run
         }
     }
 
-    validate {
+    Add-BenchmarkValidation {
         param($case, $run)
 
         Test-ExcelBenchmarkOutput -Case $case -Run $run
     }
 
-    comparison Engine -Baseline PSWriteOffice -Metric MedianMs -TieTolerance 0.05 -RequireBaselineFastest
-    artifacts Json, Csv, Markdown
+    Add-BenchmarkComparison Engine -Baseline PSWriteOffice -Metric MedianMs -TieTolerance 0.05 -RequireBaselineFastest
+    Set-BenchmarkArtifacts Json, Csv, Markdown
 }
