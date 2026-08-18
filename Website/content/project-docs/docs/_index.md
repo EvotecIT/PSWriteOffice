@@ -11,6 +11,7 @@ PSWriteOffice is the PowerShell surface for OfficeIMO. Use these guides to choos
 - [What PSWriteOffice covers](/docs/pswriteoffice/overview/)
 - [Install and verify](/docs/pswriteoffice/install/)
 - [Choose a workflow](/docs/pswriteoffice/choosing-a-workflow/)
+- [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/)
 - [Command families](/docs/pswriteoffice/command-families/)
 - [PSWriteOffice vs ImportExcel vs ExcelFast](/docs/pswriteoffice/compare-importexcel-excelfast/)
 - [PSWriteOffice vs Office Interop, Graph, and LibreOffice](/docs/pswriteoffice/compare-office-automation-options/)
@@ -36,5 +37,5 @@ PSWriteOffice is the PowerShell surface for OfficeIMO. Use these guides to choos
 ## Notes
 
 - The [command reference](/api/powershell/) is generated from the module manifest and external help.
-- The [curated example gallery](https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples) uses runnable patterns from the repository.
+- The [scenario-driven example library](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/README.md) maps practical recipes and larger showcases to each format.
 - The family totals shown on the site come from `PSWriteOffice.psd1`; documentation validation fails if an exported command is left uncategorized.

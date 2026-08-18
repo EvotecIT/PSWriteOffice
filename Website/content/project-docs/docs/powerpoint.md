@@ -12,6 +12,14 @@ Direct authoring with `New-OfficePowerPoint` and `Add-OfficePowerPointSlide` is 
 
 Use `New-OfficePowerPointDeckPlan` and the `Add-OfficePowerPointPlan*` commands when the content is semantic and the designer should choose layout. Plan sections, processes, capabilities, case studies, coverage views, card grids, and logo walls can be described before a design alternative is selected.
 
+## Copy complete DSL recipes
+
+- [Quarterly business review](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/PowerPoint/Recipe-PowerPoint-QuarterlyReview.ps1): title slide, performance chart, priorities table, bullets, and speaker notes.
+- [Training workshop](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/PowerPoint/Recipe-PowerPoint-TrainingWorkshop.ps1): learning objectives, agenda, call-to-action layout, and presenter notes.
+- [Service brief](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Showcase/Showcase-PowerPoint-ServiceBrief.ps1): semantic designer slides combined with direct chart and table slides, sections, transitions, and inspection.
+
+The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) explains when to use direct placement and when to use a semantic deck plan.
+
 ## Inspect and update an existing deck
 
 Inspection commands expose slides, sections, shapes, placeholders, layouts, notes, themes, and slide summaries. Bounded setters update titles, shape text, table cells, slide size and layout, placeholder bounds and text styles, notes, transitions, backgrounds, and theme identity.

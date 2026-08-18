@@ -1,0 +1,62 @@
+param(
+    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Word')
+)
+
+$ErrorActionPreference = 'Stop'
+Import-Module PSWriteOffice -ErrorAction Stop
+New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
+
+$path = Join-Path $OutputDirectory 'Project-Status.docx'
+$milestones = @(
+    [pscustomobject]@{ Milestone = 'Discovery'; Owner = 'Product'; Progress = 100; Status = 'Done' }
+    [pscustomobject]@{ Milestone = 'Implementation'; Owner = 'Engineering'; Progress = 72; Status = 'On track' }
+    [pscustomobject]@{ Milestone = 'Pilot'; Owner = 'Operations'; Progress = 35; Status = 'At risk' }
+)
+$trend = @(
+    [pscustomobject]@{ Week = 'W1'; Complete = 18 }
+    [pscustomobject]@{ Week = 'W2'; Complete = 37 }
+    [pscustomobject]@{ Week = 'W3'; Complete = 55 }
+    [pscustomobject]@{ Week = 'W4'; Complete = 72 }
+)
+
+New-OfficeWord -Path $path {
+    WordSection {
+        WordHeader { WordParagraph -Text 'Northwind migration | Weekly status' -Style Heading2 }
+        WordFooter {
+            WordText 'Internal | Page '
+            WordPageNumber -IncludeTotalPages
+        }
+
+        WordParagraph -Text 'Northwind Migration' -Style Heading1
+        WordParagraph -Text 'Weekly project status' -Style Heading2
+        WordParagraph -Text 'The implementation remains on track. The pilot needs an owner decision on the final rollout window.'
+
+        WordParagraph -Text 'Executive summary' -Style Heading1
+        WordList -Style Bulleted {
+            WordListItem -Text 'Core implementation is 72% complete.'
+            WordListItem -Text 'No critical defects are open.'
+            WordListItem -Text 'The pilot date is the only decision needed this week.'
+        }
+
+        WordParagraph -Text 'Milestones' -Style Heading1
+        WordTable -InputObject $milestones -Style GridTable4Accent1 -Layout AutoFitToWindow {
+            WordTableCondition -FilterScript { $_.Status -eq 'At risk' } -BackgroundColor '#FEE2E2'
+            WordTableCondition -FilterScript { $_.Status -eq 'Done' } -BackgroundColor '#DCFCE7'
+        }
+
+        WordParagraph -Text 'Delivery trend' -Style Heading1
+        WordChart -Type Line -Data $trend -CategoryProperty Week -SeriesProperty Complete -Title 'Completion by week' -Legend -FitToPageWidth
+
+        WordParagraph -Text 'Decision' -Style Heading1
+        WordParagraph {
+            WordBold 'Approve the pilot window: '
+            WordCheckBox -Alias 'PilotApproved' -Tag 'pilot-approved'
+        }
+        WordParagraph {
+            WordText 'Target review date: '
+            WordDatePicker -Date '2026-09-01' -Alias 'PilotReviewDate' -Tag 'pilot-review-date'
+        }
+    }
+} | Out-Null
+
+Write-Host "Word project status saved to $path"

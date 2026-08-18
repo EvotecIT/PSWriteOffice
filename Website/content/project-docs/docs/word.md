@@ -31,6 +31,14 @@ Use `Get-OfficeWord` to load a file and the targeted `Get-OfficeWord*` and `Find
 
 Update commands are intentionally specific: change text, styles, images, shapes, page setup, document properties, fields, or table-of-contents state without rebuilding the whole document.
 
+## Copy complete DSL recipes
+
+- [Project status report](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Word/Recipe-Word-ProjectStatus.ps1): header and footer, executive summary, conditional milestone table, progress chart, check box, and date picker.
+- [Change approval checklist](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Word/Recipe-Word-ApprovalChecklist.ps1): table of contents, risk selector, required-evidence table, approval controls, and watermark.
+- [Executive service report](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Showcase/Showcase-Word-ExecutiveReport.ps1): the larger composition example with metadata, rich text, bookmarks, notes, tables, charts, and content controls.
+
+The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) explains how the scoped commands fit together and how to reuse the same input objects across formats.
+
 ## Workflow capabilities
 
 - **Templates and data:** mail merge, table conditions, calculated columns, document properties, fields, and reusable content blocks.

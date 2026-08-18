@@ -24,6 +24,14 @@ New-OfficeExcel -Path '.\Output\Revenue.xlsx' {
 }
 ```
 
+## Copy complete DSL recipes
+
+- [Project tracker](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Excel/Recipe-Excel-ProjectTracker.ps1): table, validation list, conditional rules, chart, frozen header, print layout, and workbook index.
+- [Budget dashboard](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Excel/Recipe-Excel-BudgetDashboard.ps1): summary formulas and chart over a separate styled detail sheet.
+- [Operational dashboard](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Showcase/Showcase-Excel-OperationalDashboard.ps1): the larger example with KPIs, pivots, sparklines, charts, links, comments, queries, and validation.
+
+The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) shows how Excel composition differs from the Word, PowerPoint, PDF, and Markdown blocks that consume the same objects.
+
 ## Work with existing workbooks
 
 The read surface can return used ranges, tables, named ranges, formulas, comments, validation, rich text, worksheet views, page breaks, pivots, summaries, preflight data, and streaming capabilities. Targeted commands update cells, rows, columns, styles, formulas, links, page setup, print settings, themes, worksheet visibility, active sheet, filters, and write reservations.

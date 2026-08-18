@@ -10,6 +10,14 @@ The PDF family exports 80 commands over the first-party OfficeIMO.Pdf engine. It
 
 Use `New-OfficePdf` with the `Add-OfficePdf*` commands when the script owns the PDF. Apply page setup and a theme once, then add semantic headings, paragraphs, lists, tables, images, panels, stamps, and page breaks. Canvas and page-overlay commands cover fixed-position drawing, while typed text-run, image, form-field, and check-box table cells keep richer layouts inside the same PDF DSL.
 
+## Copy complete DSL recipes
+
+- [Service invoice](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Recipe-Pdf-ServiceInvoice.ps1): metadata, invoice lines, totals, payment terms, headers, footers, and contact link.
+- [Access audit report](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Recipe-Pdf-AuditReport.ps1): findings, bookmarks, page breaks, remediation sections, and form fields.
+- [Composed service report](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Example-PdfReportDsl.ps1): themes, backgrounds, borders, rich text, columns, links, bookmarks, tables, and attachments.
+
+The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) compares fixed-layout PDF composition with the editable Office and Markdown outputs.
+
 ## Inspect before transforming
 
 Read-only commands expose document information, text, images, fonts, attachments, form fields, annotations, signatures, compliance, interactions, optimization data, preflight results, append-only mutation state, redaction plans, and text/layout diagnostics.
