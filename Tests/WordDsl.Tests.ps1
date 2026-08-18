@@ -622,10 +622,16 @@ Describe 'Word DSL surface' {
         $path = Join-Path $TestDrive 'DslRichTextRunsWord.docx'
 
         WordNew -Path $path {
-            WordParagraph -Run @(
-                WordTextRun 'Status: '
-                WordTextRun 'Ready' -Color SeaGreen -Bold -UnderlineStyle Dotted
-            )
+            WordParagraph -Run @{
+                Text      = 'Status: ', 'Ready'
+                Color     = $null, 'SeaGreen'
+                Bold      = $false, $true
+                Underline = 'None', 'Dotted'
+                FontSize  = 12
+            }
+            WordParagraph {
+                WordText -Text 'Same ', 'formatting' -Color Navy -FontFamily Arial -FontSize 10
+            }
             WordParagraph -Run @(
                 WordTextRun 'Highlight ' -BackgroundColor Yellow
                 WordTextRun 'Shaded' -BackgroundColor LightPink
@@ -669,6 +675,7 @@ Describe 'Word DSL surface' {
         $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
         $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
         $text | Should -Match 'Status: Ready'
+        $text | Should -Match 'Same formatting'
         $text | Should -Match 'Highlight Shaded'
         $text | Should -Match 'x2 H2O'
         $text | Should -Match 'Styled link'
@@ -689,6 +696,28 @@ Describe 'Word DSL surface' {
         $documentXml.SelectSingleNode('//w:shd[translate(@w:fill, "abcdef", "ABCDEF")="FFB6C1"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:highlight[translate(@w:val, "abcdef", "ABCDEF")="F0F8FF"] | //w:shd[translate(@w:fill, "abcdef", "ABCDEF")="F0F8FF"]', $namespaceManager) | Should -Not -BeNullOrEmpty
         $documentXml.SelectSingleNode('//w:u[@w:val="dotted"]', $namespaceManager) | Should -Not -BeNullOrEmpty
+    }
+
+    It 'rejects mismatched columnar Word rich text formatting arrays' {
+        $path = Join-Path $TestDrive 'DslRichTextRunsWordMismatch.docx'
+
+        {
+            WordNew -Path $path {
+                WordParagraph -Run @{
+                    Text  = 'Red ', 'Green '
+                    Color = 'Red', 'Green', 'Blue'
+                }
+            }
+        } | Should -Throw "*property 'Color'*match the Text count (2)*received 3 values*"
+
+        {
+            WordNew -Path $path {
+                WordParagraph -Run @{
+                    Text  = 'Red ', 'Green '
+                    Color = @()
+                }
+            }
+        } | Should -Throw "*property 'Color'*match the Text count (2)*received 0 values*"
     }
 
     It 'treats rich and styled Word table cells as structured without spans' {

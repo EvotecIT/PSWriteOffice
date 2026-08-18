@@ -6,7 +6,11 @@ layout: docs
 
 The PSWriteOffice DSL is a set of scoped PowerShell commands for composing documents. The outer `New-Office*` command creates and saves the file. Nested blocks establish the active section, sheet, slide, page, or Markdown document so content commands do not need the document object repeated on every line.
 
-## The common shape
+## Choose one command style
+
+The scenario recipes use short DSL aliases from the outer constructor through the nested content commands. This keeps composition blocks compact and avoids switching naming styles halfway through a document.
+
+### DSL aliases
 
 ```powershell
 $rows = @(
@@ -14,17 +18,97 @@ $rows = @(
     [pscustomobject]@{ Name = 'Beta'; Status = 'Review' }
 )
 
-New-OfficeWord -Path '.\Output\Status.docx' {
+PdfNew -Path '.\Output\Status.pdf' {
+    PdfTheme Report
+    PdfHeading -Text 'Status' -Level 1
+    PdfTable -InputObject $rows
+}
+```
+
+### Canonical cmdlets
+
+```powershell
+New-OfficePdf -Path '.\Output\Status.pdf' {
+    Set-OfficePdfTheme -Theme Report
+    Add-OfficePdfHeading -Text 'Status' -Level 1
+    Add-OfficePdfTable -InputObject $rows
+}
+```
+
+These blocks call the same cmdlets and produce the same document. `PdfTheme` maps to `Set-OfficePdfTheme`: applying a theme changes the active PDF composition context, so the canonical verb is `Set`, not `New` or `Add`.
+
+- Word: `WordNew` maps to `New-OfficeWord`; `WordSection` maps to `Add-OfficeWordSection`.
+- Excel: `ExcelNew` maps to `New-OfficeExcel`.
+- PowerPoint: `PptNew` maps to `New-OfficePowerPoint`.
+- PDF: `PdfNew` maps to `New-OfficePdf`; `PdfTheme` maps to `Set-OfficePdfTheme`.
+- Markdown: `MarkdownNew` maps to `New-OfficeMarkdown`.
+
+Canonical command names are easier to discover in generated help. Aliases make dense composition blocks easier to scan. Pick one form for a script rather than mixing `New-OfficePdf` with `PdfTheme` and other aliases.
+
+The same plain PowerShell objects can feed an Excel table, PowerPoint chart, PDF table, Word report, or Markdown document. Keep source collection and business calculations outside the DSL. Let the composition block describe the artifact.
+
+## Write a formatted line with one command
+
+Pass several strings to `WordText -Text` when every segment uses the same formatting. The strings are appended to one paragraph:
+
+```powershell
+WordNew -Path '.\Output\Formatting.docx' {
     WordSection {
-        WordParagraph -Text 'Status' -Style Heading1
-        WordTable -InputObject $rows
+        WordText -Text @(
+            'This is a text'
+            ' that will show '
+            'how WordText joins segments '
+            'with the same formatting.'
+        ) -FontFamily Tahoma -FontSize 10 -Color Blue
     }
 }
 ```
 
-The same plain PowerShell objects can feed an Excel table, PowerPoint chart, PDF table, or Markdown report. Keep source collection and business calculations outside the DSL. Let the composition block describe the artifact.
+Use `-Run` when formatting changes within the line. The compact columnar form keeps the text and its formatting arrays together:
 
-Canonical commands such as `Add-OfficeWordParagraph` are easiest to search in generated help and are a good default in shared scripts. Aliases such as `WordParagraph`, `ExcelTable`, `PptChart`, `PdfPanel`, and `MarkdownCallout` keep dense composition blocks readable. Both call the same cmdlets.
+```powershell
+WordParagraph -Run @{
+    Text      = @(
+        'Owner: ', $finding.Owner
+        '    Due: ', $finding.Due
+        '    Severity: ', $finding.Severity
+    )
+    Bold      = $true, $false, $true, $false, $true, $false
+    Underline = 'Single', 'None', $null, $null, $null, $null
+    Color     = $null, $null, $null, $null, $null, 'Crimson'
+}
+```
+
+The equivalent PDF line uses the same run shape:
+
+```powershell
+PdfText -Run @{
+    Text = @(
+        'Owner: ', $finding.Owner
+        '    Due: ', $finding.Due
+    )
+    Bold = $true, $false, $true, $false
+}
+```
+
+A scalar formatting value applies to every text segment. An array must contain either one value or the same number of values as `Text`, otherwise the command stops with a count error. There is no implicit `-ContinueFormatting`: use a scalar to broadcast intentionally, or put an explicit value or `$null` at each position.
+
+For longer or generated content, `-Run` also accepts one hashtable per segment or objects created with `WordTextRun`, `PdfTextRun`, or the shared `TextRun` helper. Runs support bold, italic, underline and underline style, strike, foreground and background colors, font name and size, superscript or subscript baseline, and links.
+
+## Control pipeline output
+
+Saved DSL constructors are silent by default, so they do not need `Out-Null` or a suppression switch. Add `-PassThru` only when the next command needs the saved file:
+
+```powershell
+$file = PdfNew -Path '.\Output\Status.pdf' -PassThru {
+    PdfHeading 'Status'
+    PdfText 'Ready for review.'
+}
+
+$file | Select-Object Name, Length, LastWriteTime
+```
+
+When `New-OfficePdf` is used without a path, or with `-NoSave`, it returns the in-memory PDF document because no saved file exists.
 
 ## Word recipes
 

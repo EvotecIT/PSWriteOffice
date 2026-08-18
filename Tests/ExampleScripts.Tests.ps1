@@ -4,9 +4,15 @@ BeforeDiscovery {
     $exampleCases = Get-ChildItem -LiteralPath $examplesRoot -Recurse -File -Filter '*.ps1' |
         Sort-Object FullName |
         ForEach-Object {
+            $relativePath = $_.FullName.Substring($repoRoot.Length)
+            $relativePath = $relativePath.TrimStart([char[]] @(
+                [System.IO.Path]::DirectorySeparatorChar,
+                [System.IO.Path]::AltDirectorySeparatorChar
+            ))
+
             @{
                 Path = $_.FullName
-                RelativePath = [System.IO.Path]::GetRelativePath($repoRoot, $_.FullName)
+                RelativePath = $relativePath
             }
         }
 }

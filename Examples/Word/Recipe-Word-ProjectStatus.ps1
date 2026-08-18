@@ -19,7 +19,7 @@ $trend = @(
     [pscustomobject]@{ Week = 'W4'; Complete = 72 }
 )
 
-New-OfficeWord -Path $path {
+WordNew -Path $path {
     WordSection {
         WordHeader { WordParagraph -Text 'Northwind migration | Weekly status' -Style Heading2 }
         WordFooter {
@@ -29,7 +29,11 @@ New-OfficeWord -Path $path {
 
         WordParagraph -Text 'Northwind Migration' -Style Heading1
         WordParagraph -Text 'Weekly project status' -Style Heading2
-        WordParagraph -Text 'The implementation remains on track. The pilot needs an owner decision on the final rollout window.'
+        WordParagraph -Run @{
+            Text  = 'Overall status: ', 'On track', '. The pilot needs an owner decision on the final rollout window.'
+            Bold  = $true, $true, $false
+            Color = $null, 'SeaGreen', $null
+        }
 
         WordParagraph -Text 'Executive summary' -Style Heading1
         WordList -Style Bulleted {
@@ -57,6 +61,6 @@ New-OfficeWord -Path $path {
             WordDatePicker -Date '2026-09-01' -Alias 'PilotReviewDate' -Tag 'pilot-review-date'
         }
     }
-} | Out-Null
+}
 
 Write-Host "Word project status saved to $path"

@@ -13,7 +13,7 @@ $lines = @(
     [pscustomobject]@{ Description = 'Handover workshop'; Quantity = 1; UnitPrice = '$600.00'; Amount = '$600.00' }
 )
 
-New-OfficePdf -Path $path {
+PdfNew -Path $path {
     PdfTheme Report
     PdfMetadata -Title 'Service invoice INV-2026-0818' -Author 'Northwind Automation'
     PdfPageSetup -PageSize A4 -Margin 42
@@ -46,6 +46,6 @@ New-OfficePdf -Path $path {
         @{ Text = 'billing@example.com'; LinkUri = 'mailto:billing@example.com'; Color = '#2563EB' }
         @{ Text = ' before the due date if any line needs correction.' }
     )
-} | Out-Null
+}
 
 Write-Host "PDF service invoice saved to $path"

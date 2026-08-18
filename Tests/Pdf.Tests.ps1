@@ -232,10 +232,11 @@ Describe 'PDF cmdlets' {
         $path = Join-Path $TestDrive 'rich-run-table.pdf'
 
         PdfNew -Path $path {
-            PdfText -Run @(
-                PdfTextRun 'Status: '
-                PdfTextRun 'Ready' -Color SeaGreen -Bold
-            )
+            PdfText -Run @{
+                Text  = 'Status: ', 'Ready'
+                Color = $null, 'SeaGreen'
+                Bold  = $false, $true
+            }
             PdfTable -InputObject @(
                 , @(
                     PdfTableCell -Run @(

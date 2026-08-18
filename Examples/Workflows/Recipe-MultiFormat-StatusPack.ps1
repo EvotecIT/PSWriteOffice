@@ -20,15 +20,15 @@ $paths = [ordered]@{
     Pdf        = Join-Path $OutputDirectory 'Service-Status.pdf'
 }
 
-New-OfficeMarkdown -Path $paths.Markdown {
+MarkdownNew -Path $paths.Markdown {
     MarkdownHeading -Level 1 -Text 'Service Status'
     MarkdownParagraph -Text 'The same PowerShell objects also feed the Word, Excel, PowerPoint, and PDF outputs in this recipe.'
     MarkdownTable -InputObject $services
     MarkdownHeading -Level 2 -Text 'Next steps'
     MarkdownTaskList -Items 'Review Remote access', 'Assign the incident action', 'Publish the approved status pack'
-} | Out-Null
+}
 
-New-OfficeWord -Path $paths.Word {
+WordNew -Path $paths.Word {
     WordSection {
         WordHeader { WordParagraph -Text 'Weekly service status' -Style Heading2 }
         WordFooter { WordPageNumber -IncludeTotalPages }
@@ -40,9 +40,9 @@ New-OfficeWord -Path $paths.Word {
         }
         WordChart -Type Bar -Data $services -CategoryProperty Service -SeriesProperty Incidents -Title 'Incidents by service' -FitToPageWidth
     }
-} | Out-Null
+}
 
-New-OfficeExcel -Path $paths.Excel {
+ExcelNew -Path $paths.Excel {
     ExcelSheet 'Services' {
         ExcelTable -Data $services -TableName 'ServiceStatus' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium9' -AutoFit
         ExcelFreeze -TopRows 1
@@ -51,9 +51,9 @@ New-OfficeExcel -Path $paths.Excel {
         ExcelChart -Range 'A1:D4' -Row 7 -Column 1 -Type ColumnClustered -Title 'Availability and incidents' -WidthPixels 700 -HeightPixels 320
     }
     ExcelTableOfContents -SheetName 'Index' -AddBackLinks -BackLinkText 'Back to Index'
-} | Out-Null
+}
 
-New-OfficePowerPoint -Path $paths.PowerPoint {
+PptNew -Path $paths.PowerPoint {
     PptSlideSize -Preset Screen16x9
     PptSlide {
         PptTitle -Title 'Weekly Service Status'
@@ -66,9 +66,9 @@ New-OfficePowerPoint -Path $paths.PowerPoint {
         PptChart -Data $services -CategoryProperty Service -SeriesProperty Incidents -Type ClusteredColumn -Title 'Incidents' -X 120 -Y 370 -Width 600 -Height 230
         PptNotes -Text 'Use the table for exact values and the chart for the discussion.'
     }
-} | Out-Null
+}
 
-New-OfficePdf -Path $paths.Pdf {
+PdfNew -Path $paths.Pdf {
     PdfTheme Report
     PdfMetadata -Title 'Weekly service status' -Author 'Operations'
     PdfPageSetup -PageSize A4 -Margin 42
@@ -79,6 +79,6 @@ New-OfficePdf -Path $paths.Pdf {
     PdfTable -InputObject $services -Property Service,Owner,Availability,Incidents,Status -HeaderFill '#334155' -HeaderTextColor '#FFFFFF' -AutoFitColumns -RightAlignNumeric
     PdfHeading 'Next steps' -Level 2
     PdfList -Items 'Review Remote access', 'Assign the incident action', 'Publish the approved status pack' -Numbered
-} | Out-Null
+}
 
 [pscustomobject] $paths | Format-List

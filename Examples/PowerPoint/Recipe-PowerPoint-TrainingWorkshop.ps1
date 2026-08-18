@@ -13,7 +13,7 @@ $agenda = @(
     [pscustomobject]@{ Module = 'Apply'; Duration = '20 min'; Outcome = 'Plan the first production use' }
 )
 
-New-OfficePowerPoint -Path $path {
+PptNew -Path $path {
     PptSlideSize -Preset Screen16x9
 
     PptSlide {
@@ -40,6 +40,6 @@ New-OfficePowerPoint -Path $path {
         PptTextBox -Text 'Pick one real report, replace the sample data, and review the generated file with its owner.' -X 135 -Y 215 -Width 570 -Height 90
         PptNotes -Text 'End with a concrete commitment from each participant.'
     }
-} | Out-Null
+}
 
 Write-Host "PowerPoint training workshop saved to $path"

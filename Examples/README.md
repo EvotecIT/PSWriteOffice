@@ -9,6 +9,10 @@ Import-Module PSWriteOffice
 
 Most new recipes write to `Artefacts/Examples/<format>` so running them does not add generated documents to the source folders. Pass `-OutputDirectory` when you want the files somewhere else.
 
+The `Recipe-*` scripts use the short DSL aliases consistently, including `WordNew`, `ExcelNew`, `PptNew`, `PdfNew`, and `MarkdownNew`. The [DSL cookbook](https://officeimo.com/docs/pswriteoffice/dsl-cookbook/) shows the same composition in alias and canonical cmdlet forms so you can choose one style for your own script.
+
+Saved DSL constructors do not emit pipeline output unless you add `-PassThru`. Use `-PassThru` when you want the saved `FileInfo` for another command; the recipes need neither `-PassThru` nor `Out-Null`.
+
 ## Create documents with the DSL
 
 | Format | Practical recipes | Larger examples |

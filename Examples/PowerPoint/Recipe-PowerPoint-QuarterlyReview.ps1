@@ -19,7 +19,7 @@ $priorities = @(
     [pscustomobject]@{ Priority = 'Delivery capacity'; Owner = 'Operations'; Target = 'Add two automation lanes' }
 )
 
-New-OfficePowerPoint -Path $path {
+PptNew -Path $path {
     PptSlideSize -Preset Screen16x9
 
     PptSlide {
@@ -41,6 +41,6 @@ New-OfficePowerPoint -Path $path {
         PptBullets -Bullets 'Approve owners', 'Confirm targets', 'Review progress monthly' -X 80 -Y 390 -Width 650 -Height 120
         PptNotes -Text 'Close by assigning each decision to a named owner.'
     }
-} | Out-Null
+}
 
 Write-Host "PowerPoint quarterly review saved to $path"

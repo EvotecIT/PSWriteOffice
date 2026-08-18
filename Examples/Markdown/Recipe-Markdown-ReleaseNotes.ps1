@@ -13,7 +13,7 @@ $changes = @(
     [pscustomobject]@{ Area = 'PowerPoint'; Change = 'Added speaker-note templates'; Audience = 'Presenters' }
 )
 
-New-OfficeMarkdown -Path $path {
+MarkdownNew -Path $path {
     MarkdownFrontMatter -Data @{ title = 'Release 4.2.0'; date = '2026-08-18'; tags = @('release', 'automation') }
     MarkdownHeading -Level 1 -Text 'Release 4.2.0'
     MarkdownParagraph -Text 'This release adds report delivery options and tighter validation for generated files.'
@@ -30,6 +30,6 @@ New-OfficeMarkdown -Path $path {
 
     MarkdownHeading -Level 2 -Text 'Known limits'
     MarkdownList -Items 'Existing templates are not modified automatically.', 'PDF signatures must be applied after content generation.'
-} | Out-Null
+}
 
 Write-Host "Markdown release notes saved to $path"

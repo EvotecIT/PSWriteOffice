@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
@@ -8,6 +9,26 @@ namespace PSWriteOffice.Services.Text;
 
 internal static class OfficeTextRunParser
 {
+    private static readonly string[][] SequenceProperties =
+    {
+        new[] { "Kind", "Type", "Run" },
+        new[] { "Bold" },
+        new[] { "Italic" },
+        new[] { "Underline", "Underlined" },
+        new[] { "UnderlineStyle", "UnderlineKind" },
+        new[] { "Strike", "Strikethrough" },
+        new[] { "Color", "TextColor", "FontColor" },
+        new[] { "BackgroundColor", "HighlightColor", "FillColor" },
+        new[] { "FontSize", "Size" },
+        new[] { "FontName", "Font", "Typeface", "FontFamily" },
+        new[] { "Baseline" },
+        new[] { "LinkUri", "Uri", "Url", "Href" },
+        new[] { "LinkDestinationName", "DestinationName", "Bookmark", "BookmarkName" },
+        new[] { "LinkContents", "Contents", "Tooltip" },
+        new[] { "TabLeader", "Leader" },
+        new[] { "TabAlignment", "Alignment" }
+    };
+
     internal static OfficeTextRunSpec[] ParseMany(object[]? runs)
     {
         var normalized = ToRunArray(runs);
@@ -16,7 +37,7 @@ internal static class OfficeTextRunParser
             throw new PSArgumentException("Provide at least one text run.");
         }
 
-        return normalized.Select(Parse).ToArray();
+        return normalized.SelectMany(ExpandAndParse).ToArray();
     }
 
     internal static OfficeTextRunSpec[] ParseMany(object? runs)
@@ -27,7 +48,7 @@ internal static class OfficeTextRunParser
             throw new PSArgumentException("Provide at least one text run.");
         }
 
-        return normalized.Select(Parse).ToArray();
+        return normalized.SelectMany(ExpandAndParse).ToArray();
     }
 
     internal static object[] ToRunArray(object? runs)
@@ -50,6 +71,74 @@ internal static class OfficeTextRunParser
         return runs is IEnumerable enumerable
             ? enumerable.Cast<object>().ToArray()
             : new[] { runs };
+    }
+
+    private static IEnumerable<OfficeTextRunSpec> ExpandAndParse(object value)
+    {
+        var textValue = UnwrapPSObject(GetValue(value, "Text", "Value", "Content"));
+        if (textValue is string || textValue is IDictionary || !(textValue is IEnumerable textValues))
+        {
+            yield return Parse(value);
+            yield break;
+        }
+
+        var textItems = textValues.Cast<object?>().Select(UnwrapPSObject).ToArray();
+        if (textItems.Length == 0)
+        {
+            throw new PSArgumentException("Provide at least one Text value in a columnar rich text run.");
+        }
+
+        var columns = new Dictionary<string, object?[]>();
+        foreach (var propertyNames in SequenceProperties)
+        {
+            var rawValue = GetValue(value, propertyNames);
+            if (rawValue != null)
+            {
+                columns[propertyNames[0]] = ExpandSequenceValues(rawValue, textItems.Length, propertyNames[0]);
+            }
+        }
+
+        for (var index = 0; index < textItems.Length; index++)
+        {
+            var run = new Dictionary<string, object?>
+            {
+                ["Text"] = textItems[index]
+            };
+
+            foreach (var column in columns)
+            {
+                run[column.Key] = column.Value[index];
+            }
+
+            yield return Parse(run);
+        }
+    }
+
+    private static object?[] ExpandSequenceValues(object value, int textCount, string propertyName)
+    {
+        value = UnwrapPSObject(value)!;
+        if (value is string || value is IDictionary || !(value is IEnumerable values))
+        {
+            return Enumerable.Repeat<object?>(value, textCount).ToArray();
+        }
+
+        var items = values.Cast<object?>().Select(UnwrapPSObject).ToArray();
+        if (items.Length == 0)
+        {
+            throw new PSArgumentException($"Rich text run property '{propertyName}' must contain one value or match the Text count ({textCount}); received 0 values.");
+        }
+
+        if (items.Length == 1)
+        {
+            return Enumerable.Repeat(items[0], textCount).ToArray();
+        }
+
+        if (items.Length != textCount)
+        {
+            throw new PSArgumentException($"Rich text run property '{propertyName}' must contain one value or match the Text count ({textCount}); received {items.Length} values.");
+        }
+
+        return items;
     }
 
     internal static OfficeTextRunSpec Parse(object value)

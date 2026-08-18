@@ -13,7 +13,7 @@ $checks = @(
     [pscustomobject]@{ Check = 'Error rate'; Expected = 'Below 1%'; Owner = 'Monitoring' }
 )
 
-New-OfficeMarkdown -Path $path {
+MarkdownNew -Path $path {
     MarkdownFrontMatter -Data @{ title = 'Service restart runbook'; owner = 'Operations'; reviewed = '2026-08-18' }
     MarkdownTableOfContents -Title 'On this page' -PlaceAtTop -MinLevel 2 -MaxLevel 3
     MarkdownHeading -Level 1 -Text 'Service Restart Runbook'
@@ -33,6 +33,6 @@ New-OfficeMarkdown -Path $path {
     MarkdownDetails -Summary 'Show rollback steps' {
         MarkdownList -Items 'Stop the new service version', 'Restore the previous configuration', 'Start the previous version', 'Repeat validation checks'
     }
-} | Out-Null
+}
 
 Write-Host "Markdown operations runbook saved to $path"

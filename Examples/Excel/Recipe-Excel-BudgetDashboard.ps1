@@ -14,7 +14,7 @@ $budget = @(
     [pscustomobject]@{ Department = 'Support'; Budget = 110000; Actual = 104300; Forecast = 109000 }
 )
 
-New-OfficeExcel -Path $path {
+ExcelNew -Path $path {
     ExcelSheet 'Dashboard' {
         ExcelGridlines -Hide
         ExcelCell -Address A1 -Value 'Department Budget Dashboard'
@@ -34,12 +34,12 @@ New-OfficeExcel -Path $path {
         ExcelConditionalDataBar -Range 'C2:C5' -Color '#5B9BD5'
         ExcelConditionalIconSet -Range 'D2:D5' -IconSet ThreeTrafficLights1
         foreach ($header in 'Budget', 'Actual', 'Forecast') {
-            Set-OfficeExcelColumnStyleByHeader -Header $header -NumberFormat '$#,##0' -AutoFit
+            ExcelColumnStyleByHeader -Header $header -NumberFormat '$#,##0' -AutoFit
         }
         ExcelChart -Range 'A1:D5' -Row 7 -Column 1 -Type ColumnClustered -Title 'Budget, actual, and forecast' -WidthPixels 780 -HeightPixels 340
     }
 
     ExcelTableOfContents -SheetName 'Index' -AddBackLinks -BackLinkText 'Back to Index'
-} | Out-Null
+}
 
 Write-Host "Excel budget dashboard saved to $path"

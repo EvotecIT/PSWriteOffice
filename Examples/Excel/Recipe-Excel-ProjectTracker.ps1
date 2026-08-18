@@ -14,7 +14,7 @@ $tasks = @(
     [pscustomobject]@{ Task = 'Publish runbook'; Owner = 'Support'; Status = 'Not started'; Progress = 0; Due = '2026-09-08' }
 )
 
-New-OfficeExcel -Path $path {
+ExcelNew -Path $path {
     ExcelSheet 'Tracker' {
         ExcelTable -Data $tasks -TableName 'ProjectTasks' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium9' -AutoFit
         ExcelFreeze -TopRows 1
@@ -35,6 +35,6 @@ New-OfficeExcel -Path $path {
     }
 
     ExcelTableOfContents -SheetName 'Index' -AddBackLinks -BackLinkText 'Back to Index'
-} | Out-Null
+}
 
 Write-Host "Excel project tracker saved to $path"

@@ -13,7 +13,7 @@ $checks = @(
     [pscustomobject]@{ Check = 'Customer notice reviewed'; Owner = 'Support'; Required = 'No' }
 )
 
-New-OfficeWord -Path $path {
+WordNew -Path $path {
     WordSection {
         WordHeader { WordParagraph -Text 'Production change control' -Style Heading2 }
         WordFooter { WordPageNumber -IncludeTotalPages }
@@ -49,6 +49,6 @@ New-OfficeWord -Path $path {
         WordParagraph -Text 'Record the actual start time, validation result, and rollback decision here.'
         WordWatermark -Text 'CHANGE CONTROL'
     }
-} | Out-Null
+}
 
 Write-Host "Word approval checklist saved to $path"
