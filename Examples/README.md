@@ -9,7 +9,7 @@ Import-Module PSWriteOffice
 
 Most new recipes write to `Artefacts/Examples/<format>` so running them does not add generated documents to the source folders. Pass `-OutputDirectory` when you want the files somewhere else.
 
-The `Recipe-*` scripts use the short DSL aliases consistently, including `WordNew`, `ExcelNew`, `PptNew`, `PdfNew`, and `MarkdownNew`. The [DSL cookbook](https://officeimo.com/docs/pswriteoffice/dsl-cookbook/) shows the same composition in alias and canonical cmdlet forms so you can choose one style for your own script.
+Creation blocks in the `Recipe-*` scripts use the short DSL aliases consistently, including `WordNew`, `ExcelNew`, `PptNew`, `PdfNew`, and `MarkdownNew`. Recipes that read, update, merge, split, or convert existing files use canonical cmdlet names so those operations are easy to discover in command help. The [DSL cookbook](https://officeimo.com/docs/pswriteoffice/dsl-cookbook/) shows composition in alias and canonical forms so you can choose one style for your own script.
 
 Saved DSL constructors do not emit pipeline output unless you add `-PassThru`. Use `-PassThru` when you want the saved `FileInfo` for another command; the recipes need neither `-PassThru` nor `Out-Null`.
 
@@ -23,6 +23,17 @@ Saved DSL constructors do not emit pipeline output unless you add `-PassThru`. U
 | PDF | [Service invoice](Pdf/Recipe-Pdf-ServiceInvoice.ps1), [audit report](Pdf/Recipe-Pdf-AuditReport.ps1) | [Composed PDF report](Pdf/Example-PdfReportDsl.ps1), [PDF operations](Pdf/Example-PdfOperations.ps1) |
 | Markdown | [Operations runbook](Markdown/Recipe-Markdown-OperationsRunbook.ps1), [release notes](Markdown/Recipe-Markdown-ReleaseNotes.ps1) | [Advanced Markdown](Markdown/Example-MarkdownAdvanced.ps1), [Markdown DSL](Markdown/Example-MarkdownDsl.ps1) |
 | Several formats | [One status pack from shared data](Workflows/Recipe-MultiFormat-StatusPack.ps1) | [Shared rich-text runs](Showcase/Showcase-RichTextRuns.ps1) |
+
+## Read, modify, combine, and convert
+
+| Format | Read and inspect | Modify or combine | Convert or deliver |
+| --- | --- | --- | --- |
+| Word | [Inspect an existing document](Word/Recipe-Word-InspectExisting.ps1) | [Update existing content](Word/Recipe-Word-UpdateExisting.ps1), [merge documents](Word/Recipe-Word-MergeDocuments.ps1), [mail-merge letters](Word/Recipe-Word-MailMergeLetters.ps1) | [Word and Markdown conversion](Word/Example-WordMarkdownConvert.ps1), [HTML review](Word/Example-WordHtmlConvert.ps1) |
+| Excel | [Read and filter rows](Excel/Recipe-Excel-ReadAndFilter.ps1) | [Update an existing workbook](Excel/Recipe-Excel-UpdateExisting.ps1), [merge workbooks](Excel/Recipe-Excel-MergeWorkbooks.ps1), [compare workbooks](Excel/Recipe-Excel-CompareWorkbooks.ps1) | [Import delimited data](Excel/Recipe-Excel-ImportDelimited.ps1), [HTML review](Excel/Example-ExcelHtmlReview.ps1) |
+| PowerPoint | [Inspect a deck](PowerPoint/Recipe-PowerPoint-InspectDeck.ps1) | [Update existing content](PowerPoint/Recipe-PowerPoint-UpdateExisting.ps1), [reuse and combine slides](PowerPoint/Recipe-PowerPoint-ReuseSlides.ps1) | [HTML review](PowerPoint/Example-PowerPointHtmlReview.ps1) |
+| PDF | [Inspect and preflight](Pdf/Recipe-Pdf-InspectAndPreflight.ps1) | [Merge and split](Pdf/Recipe-Pdf-MergeAndSplit.ps1), [position content](Pdf/Recipe-Pdf-PositionedCanvas.ps1), [redact detected text](Pdf/Recipe-Pdf-RedactDetectedText.ps1) | [Forms](Pdf/Recipe-Pdf-Forms.ps1), [sanitize and optimize](Pdf/Recipe-Pdf-SanitizeAndOptimize.ps1) |
+| Markdown | [Inspect structured content](Markdown/Recipe-Markdown-InspectContent.ps1) | [Convert to and from Word](Markdown/Recipe-Markdown-WordRoundTrip.ps1) | [Publish HTML](Markdown/Recipe-Markdown-PublishHtml.ps1) |
+| Reader | [Search a mixed folder](Reader/Recipe-Reader-SearchFolder.ps1) | [Extract chunks and tables](Reader/Recipe-Reader-ExtractTables.ps1) | [Ingest a bounded folder](Reader/Recipe-Reader-IngestFolder.ps1) |
 
 ## Inspect, convert, and integrate
 

@@ -32,6 +32,14 @@ New-OfficeExcel -Path '.\Output\Revenue.xlsx' {
 
 The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) shows how Excel composition differs from the Word, PowerPoint, PDF, and Markdown blocks that consume the same objects.
 
+## Task guides
+
+- [Read and import data](/docs/pswriteoffice/excel-read-import/)
+- [Update existing workbooks](/docs/pswriteoffice/excel-update-existing/)
+- [Merge and compare workbooks](/docs/pswriteoffice/excel-merge-compare/)
+- [Validate and repair workbooks](/docs/pswriteoffice/excel-validation-repair/)
+- [Import, export, and publish](/docs/pswriteoffice/excel-export-publish/)
+
 ## Work with existing workbooks
 
 The read surface can return used ranges, tables, named ranges, formulas, comments, validation, rich text, worksheet views, page breaks, pivots, summaries, preflight data, and streaming capabilities. Targeted commands update cells, rows, columns, styles, formulas, links, page setup, print settings, themes, worksheet visibility, active sheet, filters, and write reservations.

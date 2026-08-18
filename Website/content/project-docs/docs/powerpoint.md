@@ -20,6 +20,13 @@ Use `New-OfficePowerPointDeckPlan` and the `Add-OfficePowerPointPlan*` commands 
 
 The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) explains when to use direct placement and when to use a semantic deck plan.
 
+## Task guides
+
+- [Read and inspect decks](/docs/pswriteoffice/powerpoint-read-inspect/)
+- [Update existing presentations](/docs/pswriteoffice/powerpoint-update-existing/)
+- [Reuse and combine slides](/docs/pswriteoffice/powerpoint-reuse-slides/)
+- [Export and review presentations](/docs/pswriteoffice/powerpoint-export-review/)
+
 ## Inspect and update an existing deck
 
 Inspection commands expose slides, sections, shapes, placeholders, layouts, notes, themes, and slide summaries. Bounded setters update titles, shape text, table cells, slide size and layout, placeholder bounds and text styles, notes, transitions, backgrounds, and theme identity.

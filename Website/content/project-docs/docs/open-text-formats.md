@@ -14,6 +14,12 @@ Twenty-five commands build and inspect typed Markdown. Add headings, paragraphs,
 
 Start with the [operations runbook](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Markdown/Recipe-Markdown-OperationsRunbook.ps1) for operational content or the [release notes recipe](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Markdown/Recipe-Markdown-ReleaseNotes.ps1) for publishable change documentation. The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) includes both and shows how the same data can also produce Word, Excel, PowerPoint, and PDF output.
 
+Use the focused Markdown guides for complete workflows:
+
+- [Read and parse Markdown](/docs/pswriteoffice/markdown-read-parse/)
+- [Convert and publish Markdown](/docs/pswriteoffice/markdown-convert-publish/)
+- [Convert between Markdown and Word](/docs/pswriteoffice/markdown-word-roundtrip/)
+
 ## RTF
 
 Five canonical commands create, load, update, convert, and inspect Rich Text Format documents. Use RTF when a lightweight rich-text interchange file is the required source or destination, and keep loss-aware conversion diagnostics for complex content.

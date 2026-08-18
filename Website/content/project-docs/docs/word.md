@@ -39,6 +39,13 @@ Update commands are intentionally specific: change text, styles, images, shapes,
 
 The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) explains how the scoped commands fit together and how to reuse the same input objects across formats.
 
+## Task guides
+
+- [Read and inspect existing documents](/docs/pswriteoffice/word-read-inspect/)
+- [Update existing documents](/docs/pswriteoffice/word-update-existing/)
+- [Merge documents and generate letters](/docs/pswriteoffice/word-merge-mailmerge/)
+- [Review, protect, and deliver](/docs/pswriteoffice/word-review-delivery/)
+
 ## Workflow capabilities
 
 - **Templates and data:** mail merge, table conditions, calculated columns, document properties, fields, and reusable content blocks.

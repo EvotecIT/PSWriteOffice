@@ -18,6 +18,15 @@ Use `New-OfficePdf` with the `Add-OfficePdf*` commands when the script owns the 
 
 The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) compares fixed-layout PDF composition with the editable Office and Markdown outputs.
 
+## Task guides
+
+- [Read, extract, and preflight](/docs/pswriteoffice/pdf-read-preflight/)
+- [Merge, split, and reorder pages](/docs/pswriteoffice/pdf-merge-split-pages/)
+- [Position text and graphics](/docs/pswriteoffice/pdf-positioned-content/)
+- [Redact, sanitize, and optimize](/docs/pswriteoffice/pdf-redact-sanitize/)
+- [Create and process forms and annotations](/docs/pswriteoffice/pdf-forms-annotations/)
+- [Inspect signatures and compliance](/docs/pswriteoffice/pdf-signatures-compliance/)
+
 ## Inspect before transforming
 
 Read-only commands expose document information, text, images, fonts, attachments, form fields, annotations, signatures, compliance, interactions, optimization data, preflight results, append-only mutation state, redaction plans, and text/layout diagnostics.
