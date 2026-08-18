@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Excel')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Project-Tracker.xlsx'
+$path = '.\Project-Tracker.xlsx'
 $tasks = @(
     [pscustomobject]@{ Task = 'Confirm scope'; Owner = 'Product'; Status = 'Done'; Progress = 100; Due = '2026-08-21' }
     [pscustomobject]@{ Task = 'Build API'; Owner = 'Engineering'; Status = 'In progress'; Progress = 70; Due = '2026-08-28' }
@@ -18,7 +10,8 @@ ExcelNew -Path $path {
     ExcelSheet 'Tracker' {
         ExcelTable -Data $tasks -TableName 'ProjectTasks' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium9' -AutoFit
         ExcelFreeze -TopRows 1
-        ExcelValidationList -TableName 'ProjectTasks' -HeaderName 'Status' -Values 'Not started','In progress','Blocked','Done'
+        ExcelValidationList -TableName 'ProjectTasks' -HeaderName 'Status' `
+            -Values 'Not started', 'In progress', 'Blocked', 'Done'
         ExcelConditionalColorScale -Range 'D2:D20' -StartColor '#FEE2E2' -EndColor '#DCFCE7'
         ExcelConditionalRule -TableName 'ProjectTasks' -HeaderName 'Status' -RuleType ContainsText -Text 'Blocked'
         ExcelChart -Range 'A1:D5' -Row 7 -Column 1 -Type BarClustered -Title 'Task progress' -WidthPixels 720 -HeightPixels 320
@@ -36,5 +29,3 @@ ExcelNew -Path $path {
 
     ExcelTableOfContents -SheetName 'Index' -AddBackLinks -BackLinkText 'Back to Index'
 }
-
-Write-Host "Excel project tracker saved to $path"

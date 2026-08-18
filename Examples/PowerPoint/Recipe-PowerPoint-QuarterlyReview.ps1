@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\PowerPoint')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Quarterly-Business-Review.pptx'
+$path = '.\Quarterly-Business-Review.pptx'
 $trend = @(
     [pscustomobject]@{ Quarter = 'Q1'; Revenue = 4.2; Margin = 31 }
     [pscustomobject]@{ Quarter = 'Q2'; Revenue = 4.8; Margin = 33 }
@@ -42,5 +34,3 @@ PptNew -Path $path {
         PptNotes -Text 'Close by assigning each decision to a named owner.'
     }
 }
-
-Write-Host "PowerPoint quarterly review saved to $path"

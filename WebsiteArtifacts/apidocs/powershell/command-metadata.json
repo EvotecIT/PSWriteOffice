@@ -596,6 +596,16 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfCanvasCommand.cs#L26"
     },
     {
+      "name": "Add-OfficePdfCanvasText",
+      "kind": "Cmdlet",
+      "aliases": [
+        "PdfCanvasText"
+      ],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfCanvasTextCommand.cs",
+      "sourceLine": 30,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/AddOfficePdfCanvasTextCommand.cs#L30"
+    },
+    {
       "name": "Add-OfficePdfFormField",
       "kind": "Cmdlet",
       "aliases": [
@@ -1701,8 +1711,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfRedactedCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfRedactedCommand.cs#L17"
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfRedactedCommand.cs#L23"
     },
     {
       "name": "ConvertTo-OfficePdfSanitized",
@@ -2599,8 +2609,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfRedactionPlanCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfRedactionPlanCommand.cs#L19"
+      "sourceLine": 25,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePdfRedactionPlanCommand.cs#L25"
     },
     {
       "name": "Get-OfficePdfSignature",

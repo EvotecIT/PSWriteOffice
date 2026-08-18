@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Markdown')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Markdown-Inspection.md'
+$path = '.\Markdown-Inspection.md'
 MarkdownNew -Path $path {
     MarkdownFrontMatter -Data @{ title = 'Service review'; owner = 'Operations' }
     MarkdownHeading -Level 1 -Text 'Service review'
@@ -15,12 +7,6 @@ MarkdownNew -Path $path {
     MarkdownTable -InputObject @([pscustomobject]@{ Control = 'Backups'; Status = 'Ready' })
 }
 
-$headings = @(Get-OfficeMarkdownHeading -InputPath $path)
-$frontMatter = @(Get-OfficeMarkdownFrontMatter -InputPath $path)
-$tables = @(Get-OfficeMarkdownTable -InputPath $path -AsObject)
-[pscustomobject]@{
-    Path        = $path
-    Headings    = $headings.Count
-    FrontMatter = $frontMatter.Count
-    TableRows   = $tables.Count
-} | Format-List
+Get-OfficeMarkdownFrontMatter -InputPath $path
+Get-OfficeMarkdownHeading -InputPath $path
+Get-OfficeMarkdownTable -InputPath $path -AsObject

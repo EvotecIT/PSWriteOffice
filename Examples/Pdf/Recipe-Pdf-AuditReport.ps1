@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Pdf')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Access-Audit-Report.pdf'
+$path = '.\Access-Audit-Report.pdf'
 $findings = @(
     [pscustomobject]@{ Id = 'A-01'; Severity = 'High'; Finding = 'Dormant privileged accounts'; Owner = 'Identity'; Due = '2026-08-28' }
     [pscustomobject]@{ Id = 'A-02'; Severity = 'Medium'; Finding = 'Missing quarterly owner review'; Owner = 'Governance'; Due = '2026-09-04' }
@@ -45,7 +37,5 @@ PdfNew -Path $path {
 
     PdfHeading 'Approval' -Level 2
     PdfFormField -Name 'audit-owner' -Type Text -Value 'Audit owner' -Width 230
-    PdfFormField -Name 'review-status' -Type Choice -Options 'Draft','Ready for review','Approved' -Value 'Draft' -Width 230
+    PdfFormField -Name 'review-status' -Type Choice -Options 'Draft', 'Ready for review', 'Approved' -Value 'Draft' -Width 230
 }
-
-Write-Host "PDF audit report saved to $path"

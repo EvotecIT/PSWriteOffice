@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\PowerPoint')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Training-Workshop.pptx'
+$path = '.\Training-Workshop.pptx'
 $agenda = @(
     [pscustomobject]@{ Module = 'Understand'; Duration = '15 min'; Outcome = 'Explain the operating model' }
     [pscustomobject]@{ Module = 'Practice'; Duration = '30 min'; Outcome = 'Complete the guided exercise' }
@@ -41,5 +33,3 @@ PptNew -Path $path {
         PptNotes -Text 'End with a concrete commitment from each participant.'
     }
 }
-
-Write-Host "PowerPoint training workshop saved to $path"

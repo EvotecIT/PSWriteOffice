@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Word')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Project-Status.docx'
+$path = '.\Project-Status.docx'
 $milestones = @(
     [pscustomobject]@{ Milestone = 'Discovery'; Owner = 'Product'; Progress = 100; Status = 'Done' }
     [pscustomobject]@{ Milestone = 'Implementation'; Owner = 'Engineering'; Progress = 72; Status = 'On track' }
@@ -62,5 +54,3 @@ WordNew -Path $path {
         }
     }
 }
-
-Write-Host "Word project status saved to $path"

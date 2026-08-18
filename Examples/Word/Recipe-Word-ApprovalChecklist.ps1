@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Word')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Change-Approval-Checklist.docx'
+$path = '.\Change-Approval-Checklist.docx'
 $checks = @(
     [pscustomobject]@{ Check = 'Rollback plan attached'; Owner = 'Engineering'; Required = 'Yes' }
     [pscustomobject]@{ Check = 'Monitoring updated'; Owner = 'Operations'; Required = 'Yes' }
@@ -25,7 +17,7 @@ WordNew -Path $path {
         WordParagraph -Text 'Change details' -Style Heading1
         WordParagraph {
             WordText 'Risk level: '
-            WordDropDownList -Items 'Low','Medium','High' -Alias 'RiskLevel' -Tag 'risk-level'
+            WordDropDownList -Items 'Low', 'Medium', 'High' -Alias 'RiskLevel' -Tag 'risk-level'
         }
         WordParagraph {
             WordText 'Planned date: '
@@ -50,5 +42,3 @@ WordNew -Path $path {
         WordWatermark -Text 'CHANGE CONTROL'
     }
 }
-
-Write-Host "Word approval checklist saved to $path"

@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Markdown')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Release-Notes-4.2.0.md'
+$path = '.\Release-Notes-4.2.0.md'
 $changes = @(
     [pscustomobject]@{ Area = 'Reports'; Change = 'Added weekly PDF summary'; Audience = 'Operators' }
     [pscustomobject]@{ Area = 'Excel'; Change = 'Improved workbook validation'; Audience = 'Automation owners' }
@@ -31,5 +23,3 @@ MarkdownNew -Path $path {
     MarkdownHeading -Level 2 -Text 'Known limits'
     MarkdownList -Items 'Existing templates are not modified automatically.', 'PDF signatures must be applied after content generation.'
 }
-
-Write-Host "Markdown release notes saved to $path"

@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Pdf')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Service-Invoice.pdf'
+$path = '.\Service-Invoice.pdf'
 $lines = @(
     [pscustomobject]@{ Description = 'Automation assessment'; Quantity = 1; UnitPrice = '$1,200.00'; Amount = '$1,200.00' }
     [pscustomobject]@{ Description = 'Report implementation'; Quantity = 3; UnitPrice = '$850.00'; Amount = '$2,550.00' }
@@ -33,7 +25,10 @@ PdfNew -Path $path {
     )
     PdfHr -Color '#0F766E' -SpacingBefore 12 -SpacingAfter 14
 
-    PdfTable -InputObject $lines -Property Description,Quantity,UnitPrice,Amount -Header 'Description','Qty','Unit price','Amount' -HeaderFill '#0F766E' -HeaderTextColor '#FFFFFF' -RightAlignNumeric -AutoFitColumns
+    PdfTable -InputObject $lines -Property Description, Quantity, UnitPrice, Amount `
+        -Header 'Description', 'Qty', 'Unit price', 'Amount' `
+        -HeaderFill '#0F766E' -HeaderTextColor '#FFFFFF' `
+        -RightAlignNumeric -AutoFitColumns
 
     PdfText -Text 'Subtotal: $4,350.00' -Align Right -Bold
     PdfText -Text 'Tax (20%): $870.00' -Align Right
@@ -47,5 +42,3 @@ PdfNew -Path $path {
         @{ Text = ' before the due date if any line needs correction.' }
     )
 }
-
-Write-Host "PDF service invoice saved to $path"

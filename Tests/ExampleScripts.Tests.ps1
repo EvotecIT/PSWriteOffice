@@ -15,6 +15,8 @@ BeforeDiscovery {
                 RelativePath = $relativePath
             }
         }
+
+    $recipeCases = $exampleCases | Where-Object { [System.IO.Path]::GetFileName($_.Path) -like 'Recipe-*' }
 }
 
 Describe 'Repository example scripts' {
@@ -28,5 +30,14 @@ Describe 'Repository example scripts' {
         ) | Out-Null
 
         @($parseErrors | ForEach-Object Message) | Should -BeNullOrEmpty
+    }
+
+    It 'keeps recipe <RelativePath> focused on the document workflow' -ForEach $recipeCases {
+        $content = Get-Content -LiteralPath $Path -Raw
+
+        $content | Should -Not -Match '\A\s*param\s*\('
+        $content | Should -Not -Match '(?m)^\s*(\$ErrorActionPreference\s*=|Import-Module\b|New-Item\b)'
+        $content | Should -Not -Match '\b(Out-Null|Write-Host|Format-List)\b'
+        $content | Should -Not -Match '\[Array\]::CreateInstance|\.Dispose\(\)'
     }
 }

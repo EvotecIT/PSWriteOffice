@@ -18,7 +18,7 @@ $rows = @(
     [pscustomobject]@{ Name = 'Beta'; Status = 'Review' }
 )
 
-PdfNew -Path '.\Output\Status.pdf' {
+PdfNew -Path '.\Status.pdf' {
     PdfTheme Report
     PdfHeading -Text 'Status' -Level 1
     PdfTable -InputObject $rows
@@ -28,7 +28,7 @@ PdfNew -Path '.\Output\Status.pdf' {
 ### Canonical cmdlets
 
 ```powershell
-New-OfficePdf -Path '.\Output\Status.pdf' {
+New-OfficePdf -Path '.\Status.pdf' {
     Set-OfficePdfTheme -Theme Report
     Add-OfficePdfHeading -Text 'Status' -Level 1
     Add-OfficePdfTable -InputObject $rows
@@ -52,7 +52,7 @@ The same plain PowerShell objects can feed an Excel table, PowerPoint chart, PDF
 Pass several strings to `WordText -Text` when every segment uses the same formatting. The strings are appended to one paragraph:
 
 ```powershell
-WordNew -Path '.\Output\Formatting.docx' {
+WordNew -Path '.\Formatting.docx' {
     WordSection {
         WordText -Text @(
             'This is a text'
@@ -100,18 +100,11 @@ For longer or generated content, `-Run` also accepts one hashtable per segment o
 A `PdfText` run is inline content in the normal document flow. It does not have its own starting coordinate. Use the page-level positioning surface when text must begin at a fixed `X/Y` location:
 
 ```powershell
-$runs = @(
-    TextRun 'Owner: ' -Bold | ConvertTo-OfficePdfTextRun
-    TextRun 'Platform' -Color '#0F766E' | ConvertTo-OfficePdfTextRun
-)
-$nativeRuns = [Array]::CreateInstance($runs[0].GetType(), $runs.Count)
-for ($index = 0; $index -lt $runs.Count; $index++) {
-    $nativeRuns.SetValue($runs[$index], $index)
-}
-
 Add-OfficePdfCanvas -Path '.\Report.pdf' -OutputPath '.\Positioned.pdf' -Content {
-    param($canvas, $page)
-    $null = $canvas.Text($nativeRuns, 36, 24, $page.Width - 72, 24, $null, 'Left', 10, 12)
+    PdfCanvasText -Run @(
+        TextRun 'Owner: ' -Bold
+        TextRun 'Platform' -Color '#0F766E'
+    ) -X 36 -Y 24
 }
 ```
 
@@ -122,7 +115,7 @@ Canvas coordinates use PDF points from the visual top-left. `Add-OfficePdfStamp 
 Saved DSL constructors are silent by default, so they do not need `Out-Null` or a suppression switch. Add `-PassThru` only when the next command needs the saved file:
 
 ```powershell
-$file = PdfNew -Path '.\Output\Status.pdf' -PassThru {
+$file = PdfNew -Path '.\Status.pdf' -PassThru {
     PdfHeading 'Status'
     PdfText 'Ready for review.'
 }
@@ -195,9 +188,7 @@ This is useful when audiences need different artifacts but the numbers and statu
 ## Run and adapt a recipe
 
 ```powershell
-git clone https://github.com/EvotecIT/PSWriteOffice.git
-Set-Location .\PSWriteOffice
-pwsh .\Examples\Word\Recipe-Word-ProjectStatus.ps1 -OutputDirectory .\Output
+.\Examples\Word\Recipe-Word-ProjectStatus.ps1
 ```
 
 Replace the sample objects first. Then adjust visual choices such as styles, colors, layout, and labels. Search the [PowerShell command reference](/api/powershell/) for exact parameters and accepted values.

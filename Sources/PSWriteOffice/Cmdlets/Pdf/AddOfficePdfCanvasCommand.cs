@@ -97,7 +97,13 @@ public sealed class AddOfficePdfCanvasCommand : PSCmdlet
         }
 
         var result = document.Stamp.Content(
-            (canvas, page) => Content.Invoke(canvas, page),
+            (canvas, page) =>
+            {
+                using (PdfCanvasDslContext.Enter(canvas, page))
+                {
+                    _ = Content.Invoke(canvas, page);
+                }
+            },
             options,
             readOptions);
         PdfCommandUtilities.EnsureDirectory(outputPath);

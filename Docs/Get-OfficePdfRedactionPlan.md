@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Get-OfficePdfRedactionPlan
 ## SYNOPSIS
-Previews text and annotations intersecting rectangle-based redaction areas.
+Previews explicit or text-matched PDF redaction areas before content is removed.
 
 ## SYNTAX
 ### Rectangle (Default)
@@ -17,6 +17,11 @@ Get-OfficePdfRedactionPlan [-Path] <string> -PageNumber <int> -X <double> -Y <do
 ### Area
 ```powershell
 Get-OfficePdfRedactionPlan [-Path] <string> -Area <PdfRedactionArea[]> [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
+```
+
+### Text
+```powershell
+Get-OfficePdfRedactionPlan [-Path] <string> -Text <string[]> [-MatchCase] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +35,13 @@ PS> Get-OfficePdfRedactionPlan -Path .\Report.pdf -PageNumber 1 -X 72 -Y 650 -Wi
 ```
 
 Returns line-level text blocks and annotations that intersect the rectangle.
+
+### EXAMPLE 2
+```powershell
+PS> Get-OfficePdfRedactionPlan -Path .\Report.pdf -Text 'Account number'
+```
+
+Derives reviewable redaction areas from logical text blocks containing the supplied text.
 
 ## PARAMETERS
 
@@ -70,7 +82,7 @@ After successful password authentication, explicitly ignore owner-imposed extrac
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: None
 Possible values:
 
@@ -87,6 +99,22 @@ Optional redaction area label.
 ```yaml
 Type: String
 Parameter Sets: Rectangle
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MatchCase
+Use case-sensitive literal text matching.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Text
 Aliases: None
 Possible values:
 
@@ -118,7 +146,7 @@ Password used to read a Standard password-encrypted PDF.
 
 ```yaml
 Type: String
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: None
 Possible values:
 
@@ -134,7 +162,7 @@ PDF file path.
 
 ```yaml
 Type: String
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: FilePath
 Possible values:
 
@@ -142,6 +170,22 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -Text
+Literal text used to derive redaction areas from matching logical text blocks.
+
+```yaml
+Type: String[]
+Parameter Sets: Text
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

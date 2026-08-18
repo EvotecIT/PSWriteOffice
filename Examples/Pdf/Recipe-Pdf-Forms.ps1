@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Pdf')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Pdf-Approval-Form.pdf'
+$path = '.\Pdf-Approval-Form.pdf'
 PdfNew -Path $path {
     PdfHeading 'Change approval'
     PdfParagraph 'Complete the fields before submitting the document.'
@@ -17,10 +9,3 @@ PdfNew -Path $path {
     PdfText 'Evidence attached'
     PdfFormField -Name EvidenceAttached -Type CheckBox -Checked -Width 18 -Height 18
 }
-
-$fields = @(Get-OfficePdfFormField -Path $path)
-[pscustomobject]@{
-    Path       = $path
-    Fields     = $fields.Count
-    FieldNames = ($fields.Name -join ', ')
-} | Format-List

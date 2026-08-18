@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Excel')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Budget-Dashboard.xlsx'
+$path = '.\Budget-Dashboard.xlsx'
 $budget = @(
     [pscustomobject]@{ Department = 'Engineering'; Budget = 240000; Actual = 218500; Forecast = 236000 }
     [pscustomobject]@{ Department = 'Operations'; Budget = 160000; Actual = 151200; Forecast = 164000 }
@@ -41,5 +33,3 @@ ExcelNew -Path $path {
 
     ExcelTableOfContents -SheetName 'Index' -AddBackLinks -BackLinkText 'Back to Index'
 }
-
-Write-Host "Excel budget dashboard saved to $path"

@@ -1,26 +1,10 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Workflows')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
 $services = @(
     [pscustomobject]@{ Service = 'Identity'; Owner = 'Platform'; Availability = 99.98; Incidents = 1; Status = 'Healthy' }
     [pscustomobject]@{ Service = 'Messaging'; Owner = 'Collaboration'; Availability = 99.72; Incidents = 4; Status = 'Watch' }
     [pscustomobject]@{ Service = 'Remote access'; Owner = 'Security'; Availability = 98.84; Incidents = 7; Status = 'Action' }
 )
 
-$paths = [ordered]@{
-    Markdown   = Join-Path $OutputDirectory 'Service-Status.md'
-    Word       = Join-Path $OutputDirectory 'Service-Status.docx'
-    Excel      = Join-Path $OutputDirectory 'Service-Status.xlsx'
-    PowerPoint = Join-Path $OutputDirectory 'Service-Status.pptx'
-    Pdf        = Join-Path $OutputDirectory 'Service-Status.pdf'
-}
-
-MarkdownNew -Path $paths.Markdown {
+MarkdownNew -Path '.\Service-Status.md' {
     MarkdownHeading -Level 1 -Text 'Service Status'
     MarkdownParagraph -Text 'The same PowerShell objects also feed the Word, Excel, PowerPoint, and PDF outputs in this recipe.'
     MarkdownTable -InputObject $services
@@ -28,7 +12,7 @@ MarkdownNew -Path $paths.Markdown {
     MarkdownTaskList -Items 'Review Remote access', 'Assign the incident action', 'Publish the approved status pack'
 }
 
-WordNew -Path $paths.Word {
+WordNew -Path '.\Service-Status.docx' {
     WordSection {
         WordHeader { WordParagraph -Text 'Weekly service status' -Style Heading2 }
         WordFooter { WordPageNumber -IncludeTotalPages }
@@ -42,7 +26,7 @@ WordNew -Path $paths.Word {
     }
 }
 
-ExcelNew -Path $paths.Excel {
+ExcelNew -Path '.\Service-Status.xlsx' {
     ExcelSheet 'Services' {
         ExcelTable -Data $services -TableName 'ServiceStatus' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium9' -AutoFit
         ExcelFreeze -TopRows 1
@@ -53,7 +37,7 @@ ExcelNew -Path $paths.Excel {
     ExcelTableOfContents -SheetName 'Index' -AddBackLinks -BackLinkText 'Back to Index'
 }
 
-PptNew -Path $paths.PowerPoint {
+PptNew -Path '.\Service-Status.pptx' {
     PptSlideSize -Preset Screen16x9
     PptSlide {
         PptTitle -Title 'Weekly Service Status'
@@ -68,7 +52,7 @@ PptNew -Path $paths.PowerPoint {
     }
 }
 
-PdfNew -Path $paths.Pdf {
+PdfNew -Path '.\Service-Status.pdf' {
     PdfTheme Report
     PdfMetadata -Title 'Weekly service status' -Author 'Operations'
     PdfPageSetup -PageSize A4 -Margin 42
@@ -80,5 +64,3 @@ PdfNew -Path $paths.Pdf {
     PdfHeading 'Next steps' -Level 2
     PdfList -Items 'Review Remote access', 'Assign the incident action', 'Publish the approved status pack' -Numbered
 }
-
-[pscustomobject] $paths | Format-List

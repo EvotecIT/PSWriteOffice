@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Markdown')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Service-Restart-Runbook.md'
+$path = '.\Service-Restart-Runbook.md'
 $checks = @(
     [pscustomobject]@{ Check = 'Health endpoint'; Expected = 'HTTP 200'; Owner = 'Operations' }
     [pscustomobject]@{ Check = 'Queue depth'; Expected = 'Below 100'; Owner = 'Application' }
@@ -34,5 +26,3 @@ MarkdownNew -Path $path {
         MarkdownList -Items 'Stop the new service version', 'Restore the previous configuration', 'Start the previous version', 'Repeat validation checks'
     }
 }
-
-Write-Host "Markdown operations runbook saved to $path"

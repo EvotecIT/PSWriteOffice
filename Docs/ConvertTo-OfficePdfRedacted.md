@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # ConvertTo-OfficePdfRedacted
 ## SYNOPSIS
-Applies rectangle-based PDF redactions and writes a new PDF.
+Applies explicit or text-matched PDF redactions and writes a new PDF.
 
 ## SYNTAX
 ### Rectangle (Default)
@@ -19,8 +19,13 @@ ConvertTo-OfficePdfRedacted [-Path] <string> [-OutputPath] <string> -PageNumber 
 ConvertTo-OfficePdfRedacted [-Path] <string> [-OutputPath] <string> -Area <PdfRedactionArea[]> [-FillColor <string>] [-OnlyPaintMatches] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
+### Text
+```powershell
+ConvertTo-OfficePdfRedacted [-Path] <string> [-OutputPath] <string> -Text <string[]> [-MatchCase] [-FillColor <string>] [-OnlyPaintMatches] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
 ## DESCRIPTION
-Applies rectangle-based PDF redactions and writes a new PDF.
+Applies explicit or text-matched PDF redactions and writes a new PDF.
 
 ## EXAMPLES
 
@@ -30,6 +35,13 @@ PS> ConvertTo-OfficePdfRedacted -Path .\Report.pdf -OutputPath .\Report-Redacted
 ```
 
 Removes matching text objects and annotations in the rectangle, then paints a redaction mark.
+
+### EXAMPLE 2
+```powershell
+PS> ConvertTo-OfficePdfRedacted -Path .\Report.pdf -OutputPath .\Report-Redacted.pdf -Text 'Account number'
+```
+
+Finds matching logical text blocks, removes their content, and paints the derived areas.
 
 ## PARAMETERS
 
@@ -54,7 +66,7 @@ Redaction fill color in #RRGGBB format. Defaults to black.
 
 ```yaml
 Type: String
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: None
 Possible values:
 
@@ -86,7 +98,7 @@ After successful password authentication, explicitly ignore owner-imposed modifi
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: None
 Possible values:
 
@@ -113,12 +125,28 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -MatchCase
+Use case-sensitive literal text matching.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Text
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -OnlyPaintMatches
 Paint only areas that match text or annotations in the redaction plan.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: None
 Possible values:
 
@@ -134,7 +162,7 @@ Output PDF path.
 
 ```yaml
 Type: String
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: None
 Possible values:
 
@@ -166,7 +194,7 @@ Password used to read a Standard password-encrypted PDF.
 
 ```yaml
 Type: String
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: None
 Possible values:
 
@@ -182,7 +210,7 @@ Input PDF path.
 
 ```yaml
 Type: String
-Parameter Sets: Rectangle, Area
+Parameter Sets: Rectangle, Area, Text
 Aliases: FilePath
 Possible values:
 
@@ -190,6 +218,22 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -Text
+Literal text used to derive redaction areas from matching logical text blocks.
+
+```yaml
+Type: String[]
+Parameter Sets: Text
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

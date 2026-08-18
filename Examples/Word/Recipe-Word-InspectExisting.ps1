@@ -1,12 +1,4 @@
-param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\..\Artefacts\Examples\Word')
-)
-
-$ErrorActionPreference = 'Stop'
-Import-Module PSWriteOffice -ErrorAction Stop
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
-$path = Join-Path $OutputDirectory 'Word-Inspection-Source.docx'
+$path = '.\Word-Inspection-Source.docx'
 $services = @(
     [pscustomobject]@{ Service = 'Identity'; Owner = 'IAM'; Status = 'Ready' }
     [pscustomobject]@{ Service = 'Messaging'; Owner = 'Collaboration'; Status = 'Review' }
@@ -21,20 +13,8 @@ WordNew -Path $path {
 }
 
 $document = Get-OfficeWord -Path $path -ReadOnly
-try {
-    $paragraphs = @($document | Get-OfficeWordParagraph)
-    $tables = @($document | Get-OfficeWordTable)
-    $statistics = Get-OfficeWordStatistics -Document $document
-    $matches = @(Find-OfficeWord -Document $document -Text 'Messaging')
-
-    [pscustomobject]@{
-        Path       = $path
-        Sections   = @($document | Get-OfficeWordSection).Count
-        Paragraphs = $paragraphs.Count
-        Tables     = $tables.Count
-        Words      = $statistics.Words
-        Matches    = $matches.Count
-    } | Format-List
-} finally {
-    Close-OfficeWord -Document $document
-}
+Get-OfficeWordStatistics -Document $document
+$document | Get-OfficeWordParagraph | Select-Object Index, Text
+$document | Get-OfficeWordTable | Select-Object Index, RowCount, ColumnCount
+Find-OfficeWord -Document $document -Text 'Messaging'
+Close-OfficeWord -Document $document

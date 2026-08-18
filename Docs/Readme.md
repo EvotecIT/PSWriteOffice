@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 3.0.5
+Help Version: 3.0.6
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -186,6 +186,9 @@ Adds a named bookmark at the current generated PDF flow position.
 
 ### [Add-OfficePdfCanvas](Add-OfficePdfCanvas.md)
 Draws arbitrary visual canvas content on existing PDF pages.
+
+### [Add-OfficePdfCanvasText](Add-OfficePdfCanvasText.md)
+Adds PowerShell-friendly text or rich text runs to the active fixed-position PDF canvas.
 
 ### [Add-OfficePdfFormField](Add-OfficePdfFormField.md)
 Adds a simple AcroForm field to a generated PDF document.
@@ -530,7 +533,7 @@ Converts PDF logical text readback to Markdown.
 Applies lossless PDF optimization actions and writes a new PDF.
 
 ### [ConvertTo-OfficePdfRedacted](ConvertTo-OfficePdfRedacted.md)
-Applies rectangle-based PDF redactions and writes a new PDF.
+Applies explicit or text-matched PDF redactions and writes a new PDF.
 
 ### [ConvertTo-OfficePdfSanitized](ConvertTo-OfficePdfSanitized.md)
 Removes or quarantines active PDF content and embedded payloads with post-save proof.
@@ -836,7 +839,7 @@ Gets lossless PDF optimization opportunities without modifying the file.
 Reports whether OfficeIMO.Pdf can read or rewrite a PDF safely.
 
 ### [Get-OfficePdfRedactionPlan](Get-OfficePdfRedactionPlan.md)
-Previews text and annotations intersecting rectangle-based redaction areas.
+Previews explicit or text-matched PDF redaction areas before content is removed.
 
 ### [Get-OfficePdfSignature](Get-OfficePdfSignature.md)
 Gets lightweight PDF signature structure and preservation validation.

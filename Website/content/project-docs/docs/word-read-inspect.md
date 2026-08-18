@@ -8,18 +8,15 @@ Use the Word read surface when the document already exists and the job is to und
 
 ## Open read-only
 
-`Get-OfficeWord -ReadOnly` returns the OfficeIMO document model. Dispose it when finished. The targeted `Get-OfficeWord*` commands accept that object, so the file is opened once even when several structures are inspected.
+`Get-OfficeWord -ReadOnly` returns a document that can be passed to the targeted `Get-OfficeWord*` commands, so the file is opened once even when several structures are inspected. Close it when finished.
 
 ```powershell
-$document = Get-OfficeWord -Path '.\Input\Policy.docx' -ReadOnly
-try {
-    $paragraphs = @($document | Get-OfficeWordParagraph)
-    $tables = @($document | Get-OfficeWordTable)
-    $links = @($document | Get-OfficeWordHyperlink)
-    $statistics = Get-OfficeWordStatistics -Document $document
-} finally {
-    Close-OfficeWord -Document $document
-}
+$document = Get-OfficeWord -Path '.\Policy.docx' -ReadOnly
+$document | Get-OfficeWordParagraph
+$document | Get-OfficeWordTable
+$document | Get-OfficeWordHyperlink
+Get-OfficeWordStatistics -Document $document
+Close-OfficeWord -Document $document
 ```
 
 ## Find content deliberately

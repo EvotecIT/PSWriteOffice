@@ -4,14 +4,13 @@ These examples are complete PowerShell scripts that create or transform real fil
 
 ```powershell
 Install-Module PSWriteOffice -Scope CurrentUser
-Import-Module PSWriteOffice
 ```
 
-Most new recipes write to `Artefacts/Examples/<format>` so running them does not add generated documents to the source folders. Pass `-OutputDirectory` when you want the files somewhere else.
+Each `Recipe-*` script uses simple paths such as `.\Project-Status.docx`. Run a recipe from the folder where you want its documents, or copy the composition block into your own script and change only the file names.
 
 Creation blocks in the `Recipe-*` scripts use the short DSL aliases consistently, including `WordNew`, `ExcelNew`, `PptNew`, `PdfNew`, and `MarkdownNew`. Recipes that read, update, merge, split, or convert existing files use canonical cmdlet names so those operations are easy to discover in command help. The [DSL cookbook](https://officeimo.com/docs/pswriteoffice/dsl-cookbook/) shows composition in alias and canonical forms so you can choose one style for your own script.
 
-Saved DSL constructors do not emit pipeline output unless you add `-PassThru`. Use `-PassThru` when you want the saved `FileInfo` for another command; the recipes need neither `-PassThru` nor `Out-Null`.
+Saved DSL constructors are quiet by default. Add `-PassThru` only when the next command needs the saved file.
 
 ## Create documents with the DSL
 

@@ -253,6 +253,44 @@ Describe 'General existing-page visual stamping' {
         $pages[1].Text | Should -Not -Match 'Canvas overlay'
     }
 
+    It 'accepts PowerShell rich text runs in the canvas DSL without native array conversion' {
+        $source = Join-Path $TestDrive 'canvas-dsl-source.pdf'
+        $output = Join-Path $TestDrive 'canvas-dsl-output.pdf'
+        New-OfficePdf -Path $source {
+            PdfParagraph 'Original page content'
+        } | Out-Null
+
+        Add-OfficePdfCanvas -Path $source -OutputPath $output -Content {
+            PdfCanvasText -Run @(
+                TextRun 'Owner: ' -Bold
+                @{ Text = 'Platform'; Color = '#0F766E' }
+            ) -X 36 -Y 24 -FontSize 10
+
+            PdfCanvasText 'Review copy' -X 36 -Y 60 -Italic
+        } | Should -BeOfType System.IO.FileInfo
+
+        $text = Get-OfficePdfText -Path $output
+        $text | Should -Match 'Owner: Platform'
+        $text | Should -Match 'Review copy'
+        $text | Should -Match 'Original page content'
+    }
+
+    It 'reports the fixed-position link limitation in canvas terms' {
+        $source = Join-Path $TestDrive 'canvas-link-source.pdf'
+        $output = Join-Path $TestDrive 'canvas-link-output.pdf'
+        New-OfficePdf -Path $source {
+            PdfParagraph 'Original page content'
+        } | Out-Null
+
+        {
+            Add-OfficePdfCanvas -Path $source -OutputPath $output -Content {
+                PdfCanvasText -Run @(
+                    TextRun 'Open portal' -LinkUri 'https://example.com'
+                ) -X 36 -Y 24
+            } -ErrorAction Stop
+        } | Should -Throw '*PDF canvas text runs do not support links*'
+    }
+
     It 'imports a selected source PDF page as an overlay and an underlay' {
         $target = Join-Path $TestDrive 'overlay-target.pdf'
         $source = Join-Path $TestDrive 'overlay-source.pdf'

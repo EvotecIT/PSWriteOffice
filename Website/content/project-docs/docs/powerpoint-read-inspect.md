@@ -10,16 +10,13 @@ Use the PowerPoint read surface to inventory a deck before modification, build a
 
 ```powershell
 $presentation = Get-OfficePowerPoint -FilePath '.\Briefing.pptx'
-try {
-    for ($index = 0; $index -lt $presentation.Slides.Count; $index++) {
-        $slide = Get-OfficePowerPointSlide -Presentation $presentation -Index $index
-        Get-OfficePowerPointSlideSummary -Slide $slide
-        Get-OfficePowerPointShape -Slide $slide
-        Get-OfficePowerPointNotes -Slide $slide
-    }
-} finally {
-    $presentation.Dispose()
+for ($index = 0; $index -lt $presentation.Slides.Count; $index++) {
+    $slide = Get-OfficePowerPointSlide -Presentation $presentation -Index $index
+    Get-OfficePowerPointSlideSummary -Slide $slide
+    Get-OfficePowerPointShape -Slide $slide
+    Get-OfficePowerPointNotes -Slide $slide
 }
+Close-OfficePowerPoint -Presentation $presentation
 ```
 
 The inspection family covers slides, shapes, placeholders, notes, themes, layouts, sections, transitions, charts, tables, and presentation metadata. Start with a summary, then query the structures relevant to the job.
