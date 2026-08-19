@@ -119,9 +119,7 @@ internal static partial class ExcelDocumentService
             {
                 SaveDocumentToPath(document, Path.GetFullPath(target), false, password, saveOptions);
                 var savedAsPath = Path.GetFullPath(target);
-                document.Dispose();
-                AssociatedPaths.TryRemove(document, out _);
-                EncryptedSourcePaths.TryRemove(document, out _);
+                CloseDocument(document);
                 if (show)
                 {
                     FileOpenService.Open(savedAsPath);
@@ -162,9 +160,7 @@ internal static partial class ExcelDocumentService
         }
 
         var savedPath = document.FilePath ?? filePath ?? throw new InvalidOperationException("No saved file path was available.");
-        document.Dispose();
-        AssociatedPaths.TryRemove(document, out _);
-        EncryptedSourcePaths.TryRemove(document, out _);
+        CloseDocument(document);
         if (show)
         {
             FileOpenService.Open(savedPath);
