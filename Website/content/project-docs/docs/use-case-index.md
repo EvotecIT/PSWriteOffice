@@ -6,6 +6,8 @@ layout: docs
 
 Use this index when you know the job but not the command family. Every linked task page explains the workflow boundary and points to a self-contained script where one is useful.
 
+Before choosing a format, see [pipeline, object, and DSL workflows](/docs/pswriteoffice/object-workflows/) for the four supported script shapes.
+
 ## Word
 
 - [Create reports](/docs/pswriteoffice/word/)

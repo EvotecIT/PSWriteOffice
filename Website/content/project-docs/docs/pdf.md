@@ -16,6 +16,13 @@ Use `New-OfficePdf` with the `Add-OfficePdf*` commands when the script owns the 
 - [Access audit report](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Recipe-Pdf-AuditReport.ps1): findings, bookmarks, page breaks, remediation sections, and form fields.
 - [Composed service report](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Example-PdfReportDsl.ps1): themes, backgrounds, borders, rich text, columns, links, bookmarks, tables, and attachments.
 
+## Other PDF workflows
+
+- [Attach supporting evidence](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Recipe-Pdf-AttachEvidence.ps1): embed a source file in the delivered report.
+- [Exchange form data](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Recipe-Pdf-FormDataExchange.ps1): export and import interactive form values.
+- [Extract text](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Recipe-Pdf-ExtractText.ps1): feed PDF content into search or review workflows.
+- [Reorder pages](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Pdf/Recipe-Pdf-ReorderPages.ps1): fix the delivery order without recomposing the report.
+
 The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) compares fixed-layout PDF composition with the editable Office and Markdown outputs.
 
 ## Task guides

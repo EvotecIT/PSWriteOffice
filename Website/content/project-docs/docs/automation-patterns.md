@@ -6,6 +6,10 @@ layout: docs
 
 Document automation becomes easier to operate when scripts separate source data, document composition, validation, and delivery.
 
+## Start with the smallest public surface
+
+Use a pipeline for a direct export, a live document object for loop-driven composition, the DSL for a complete authored artifact, and targeted commands for an existing file. Escalating only when the job needs more structure keeps common scripts short without hiding advanced capabilities. See [pipeline, object, and DSL workflows](/docs/pswriteoffice/object-workflows/).
+
 ## Keep paths and data explicit
 
 Resolve input and output roots once. Pass plain objects into document builders instead of reading global state from nested DSL blocks. Write validation output beside the artifact or into a CI report folder.
@@ -25,6 +29,8 @@ Keep the source, destination, diagnostics, warnings, and any fidelity policy tog
 ## Make jobs idempotent
 
 Create a fresh output folder or use stable file names with deliberate overwrite behavior. Avoid appending the same section, sheet, or slide on every rerun unless the script first detects whether it already exists.
+
+For object workflows, create with `-NoSave`, apply the complete change set, then use the matching `Save-*` and `Close-*` commands once. Saved DSL constructors are quiet by default; use `-PassThru` only when another command needs the saved file.
 
 ## Bound batch work
 

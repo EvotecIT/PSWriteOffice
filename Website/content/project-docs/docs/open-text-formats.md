@@ -14,6 +14,8 @@ Twenty-five commands build and inspect typed Markdown. Add headings, paragraphs,
 
 Start with the [operations runbook](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Markdown/Recipe-Markdown-OperationsRunbook.ps1) for operational content or the [release notes recipe](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Markdown/Recipe-Markdown-ReleaseNotes.ps1) for publishable change documentation. The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) includes both and shows how the same data can also produce Word, Excel, PowerPoint, and PDF output.
 
+The [object composition recipe](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Markdown/Recipe-Markdown-ObjectComposition.ps1) shows explicit document targets, while the [definition guide](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Markdown/Recipe-Markdown-DefinitionGuide.ps1) demonstrates definition lists and reusable reference content.
+
 Use the focused Markdown guides for complete workflows:
 
 - [Read and parse Markdown](/docs/pswriteoffice/markdown-read-parse/)
@@ -24,9 +26,13 @@ Use the focused Markdown guides for complete workflows:
 
 Five canonical commands create, load, update, convert, and inspect Rich Text Format documents. Use RTF when a lightweight rich-text interchange file is the required source or destination, and keep loss-aware conversion diagnostics for complex content.
 
+See [update and convert RTF](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Rtf/Recipe-Rtf-UpdateAndConvert.ps1) for an end-to-end example.
+
 ## CSV
 
 Five commands convert, import, export, and inspect CSV through OfficeIMO.CSV. Use the CSV family for delimited-data contracts; use Excel when worksheet formatting, formulas, charts, or workbook structure are part of the outcome.
+
+See [safe CSV export](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Csv/Recipe-Csv-SafeExport.ps1) for delimiter, quoting, and round-trip validation choices.
 
 ## OpenDocument
 
