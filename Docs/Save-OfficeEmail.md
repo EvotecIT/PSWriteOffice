@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Save-OfficeEmail
 ## SYNOPSIS
-Saves an email document as EML, MSG, or TNEF with fidelity diagnostics.
+Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,7 +15,7 @@ Save-OfficeEmail [-Path] <string> -Document <EmailDocument> [-Format <EmailFileF
 ```
 
 ## DESCRIPTION
-Saves an email document as EML, MSG, or TNEF with fidelity diagnostics.
+Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.
 
 ## EXAMPLES
 
@@ -50,7 +50,7 @@ Optional explicit output format. By default it is inferred from the filename.
 Type: EmailFileFormat
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Unknown, Eml, OutlookMsg, Tnef, Mbox, OutlookTemplate
+Possible values: Unknown, Eml, OutlookMsg, Tnef, Mbox, OutlookTemplate, Emlx
 
 Required: False
 Position: named

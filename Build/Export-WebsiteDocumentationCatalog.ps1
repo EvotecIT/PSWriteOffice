@@ -123,6 +123,12 @@ $familyDefinitions = @(
         match = { param($name) $name -eq 'ConvertTo-OfficeVisual' }
     }
     [ordered]@{
+        id = 'protection'; title = 'Protection capabilities'; description = 'Discover the machine-readable protected-content support contract shared across OfficeIMO formats.'
+        docs = 'automation-patterns'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples'
+        samples = @('Get-OfficeProtectionCapability')
+        match = { param($name) $name -eq 'Get-OfficeProtectionCapability' }
+    }
+    [ordered]@{
         id = 'shared'; title = 'Shared authoring primitives'; description = 'Create reusable text runs shared by document DSLs.'
         docs = 'automation-patterns'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples'
         samples = @('New-OfficeTextRun')

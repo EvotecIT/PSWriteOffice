@@ -26,6 +26,37 @@ internal static class PdfCommandUtilities
             : Path.Combine(cmdlet.SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 
+    internal static string ResolveExistingFilePath(PSCmdlet cmdlet, string path)
+    {
+        var resolvedPath = ResolvePath(cmdlet, path);
+        if (!File.Exists(resolvedPath))
+        {
+            throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
+        }
+
+        return resolvedPath;
+    }
+
+    internal static string ResolveOutputFilePath(
+        PSCmdlet cmdlet,
+        string path,
+        string requiredExtension,
+        bool overwrite)
+    {
+        var resolvedPath = ResolvePath(cmdlet, path);
+        if (!string.Equals(Path.GetExtension(resolvedPath), requiredExtension, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new PSArgumentException($"OutputPath must use the {requiredExtension} extension.", nameof(path));
+        }
+
+        if (File.Exists(resolvedPath) && !overwrite)
+        {
+            throw new PdfOutputFileExistsException($"File '{resolvedPath}' already exists. Use -Force to overwrite it.");
+        }
+
+        return resolvedPath;
+    }
+
     internal static void EnsureDirectory(string path)
     {
         var directory = Path.GetDirectoryName(path);
@@ -181,31 +212,32 @@ internal static class PdfCommandUtilities
         };
     }
 
-    /// <summary>Loads a fluent PDF after enforcing the configured input-byte budget before payload allocation.</summary>
+    /// <summary>Loads a fluent PDF through OfficeIMO's bounded, single-snapshot path API.</summary>
     internal static PdfDocument LoadDocument(string path, PdfReadOptions? readOptions = null)
     {
-        using var stream = OpenBoundedReadStream(path, readOptions);
-        var length = stream.Length;
+        return PdfDocument.Open(path, readOptions);
+    }
 
-        var bytes = new byte[(int)length];
-        var offset = 0;
-        while (offset < bytes.Length)
+    internal static ErrorRecord CreateConversionErrorRecord(
+        Exception exception,
+        string errorId,
+        object targetObject,
+        bool outputOperation)
+    {
+        var category = exception switch
         {
-            var read = stream.Read(bytes, offset, bytes.Length - offset);
-            if (read == 0)
-            {
-                Array.Resize(ref bytes, offset);
-                break;
-            }
-            offset += read;
-        }
-
-        if (stream.ReadByte() >= 0)
-        {
-            throw new InvalidDataException("PDF input changed while it was being read.");
-        }
-
-        return PdfDocument.Open(bytes, readOptions);
+            FileNotFoundException => ErrorCategory.ObjectNotFound,
+            PdfOutputFileExistsException => ErrorCategory.ResourceExists,
+            PSArgumentException => ErrorCategory.InvalidArgument,
+            PdfPasswordRequiredException => ErrorCategory.SecurityError,
+            PdfInvalidPasswordException => ErrorCategory.SecurityError,
+            PdfPermissionDeniedException => ErrorCategory.PermissionDenied,
+            UnauthorizedAccessException => ErrorCategory.PermissionDenied,
+            PdfReadLimitException => ErrorCategory.LimitsExceeded,
+            IOException => outputOperation ? ErrorCategory.WriteError : ErrorCategory.ReadError,
+            _ => ErrorCategory.InvalidOperation
+        };
+        return new ErrorRecord(exception, errorId, category, targetObject);
     }
 
     /// <summary>Opens a PDF stream only after enforcing the configured input-byte budget.</summary>
@@ -529,5 +561,12 @@ internal static class PdfCommandUtilities
 
         value = null;
         return false;
+    }
+}
+
+internal sealed class PdfOutputFileExistsException : IOException
+{
+    internal PdfOutputFileExistsException(string message) : base(message)
+    {
     }
 }

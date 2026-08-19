@@ -517,6 +517,9 @@ Converts Markdown content to HTML.
 ### [ConvertTo-OfficeOpenDocument](ConvertTo-OfficeOpenDocument.md)
 Converts Word, Excel, or PowerPoint content to native OpenDocument with fidelity evidence.
 
+### [ConvertTo-OfficePdfExcel](ConvertTo-OfficePdfExcel.md)
+Extracts detected PDF tables into an editable Excel workbook.
+
 ### [ConvertTo-OfficePdfFlatAnnotation](ConvertTo-OfficePdfFlatAnnotation.md)
 Flattens supported visual PDF annotations into static page content.
 
@@ -532,6 +535,9 @@ Converts PDF logical text readback to Markdown.
 ### [ConvertTo-OfficePdfOptimized](ConvertTo-OfficePdfOptimized.md)
 Applies lossless PDF optimization actions and writes a new PDF.
 
+### [ConvertTo-OfficePdfPowerPoint](ConvertTo-OfficePdfPowerPoint.md)
+Reconstructs a PowerPoint presentation from a PDF.
+
 ### [ConvertTo-OfficePdfRedacted](ConvertTo-OfficePdfRedacted.md)
 Applies explicit or text-matched PDF redactions and writes a new PDF.
 
@@ -540,6 +546,9 @@ Removes or quarantines active PDF content and embedded payloads with post-save p
 
 ### [ConvertTo-OfficePdfTextRun](ConvertTo-OfficePdfTextRun.md)
 Converts reusable Office text run specifications to native PDF text runs.
+
+### [ConvertTo-OfficePdfWord](ConvertTo-OfficePdfWord.md)
+Reconstructs editable Word content from a PDF.
 
 ### [ConvertTo-OfficePowerPointHtml](ConvertTo-OfficePowerPointHtml.md)
 Converts a PowerPoint deck to an HTML review document.
@@ -698,7 +707,7 @@ Reads structured tables discovered by OfficeIMO.Reader from a supported document
 Reads visual payloads discovered by OfficeIMO.Reader from a supported document.
 
 ### [Get-OfficeEmail](Get-OfficeEmail.md)
-Reads a native EML, MSG, or TNEF artifact with bounded diagnostics.
+Reads a native EML, EMLX, MSG, or TNEF artifact with bounded diagnostics.
 
 ### [Get-OfficeEmailMailbox](Get-OfficeEmailMailbox.md)
 Reads a native mbox mailbox with bounded per-message diagnostics.
@@ -885,6 +894,9 @@ Reads high-level slide summaries from a presentation.
 
 ### [Get-OfficePowerPointTheme](Get-OfficePowerPointTheme.md)
 Gets theme information for a PowerPoint presentation master.
+
+### [Get-OfficeProtectionCapability](Get-OfficeProtectionCapability.md)
+Returns OfficeIMO's machine-readable protected-content support contract.
 
 ### [Get-OfficeRtf](Get-OfficeRtf.md)
 Reads RTF into OfficeIMO's semantic and lossless syntax models.
@@ -1142,7 +1154,7 @@ Accepts or rejects filtered Word revisions and returns an operation report.
 Saves an OfficeIMO AsciiDoc document.
 
 ### [Save-OfficeEmail](Save-OfficeEmail.md)
-Saves an email document as EML, MSG, or TNEF with fidelity diagnostics.
+Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.
 
 ### [Save-OfficeEmailMailbox](Save-OfficeEmailMailbox.md)
 Saves a native mbox mailbox with output diagnostics.

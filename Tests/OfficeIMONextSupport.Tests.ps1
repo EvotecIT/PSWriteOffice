@@ -18,6 +18,7 @@ Describe 'Expanded OfficeIMO support' {
             'Export-OfficeHtmlImage', 'Export-OfficePdfImage',
             'Compare-OfficeWordDocument', 'Get-OfficeWordReview', 'Resolve-OfficeWordRevision',
             'Get-OfficePowerPointInspection', 'ConvertTo-OfficePdfSanitized',
+            'ConvertTo-OfficePdfWord', 'ConvertTo-OfficePdfExcel', 'ConvertTo-OfficePdfPowerPoint',
             'Export-OfficePdfXfdf', 'Import-OfficePdfXfdf', 'Compare-OfficePdfVisual',
             'Get-OfficePdfInteractionMap', 'Export-OfficePdfLayoutOverlay', 'Invoke-OfficePdfOcrMerge',
             'Test-OfficePdfRewrite', 'New-OfficeOpenDocument', 'Get-OfficeOpenDocument',
@@ -26,7 +27,8 @@ Describe 'Expanded OfficeIMO support' {
             'Get-OfficeAsciiDoc', 'Save-OfficeAsciiDoc', 'ConvertTo-OfficeAsciiDocMarkdown',
             'ConvertFrom-OfficeAsciiDocMarkdown', 'Get-OfficeLatex', 'Save-OfficeLatex',
             'ConvertTo-OfficeLatexMarkdown', 'ConvertFrom-OfficeLatexMarkdown',
-            'Export-OfficeWordGoogleDocument', 'Export-OfficeExcelGoogleSpreadsheet'
+            'Export-OfficeWordGoogleDocument', 'Export-OfficeExcelGoogleSpreadsheet',
+            'Get-OfficeProtectionCapability'
         )
 
         foreach ($command in $commands) {
@@ -178,7 +180,7 @@ Describe 'Expanded OfficeIMO support' {
         Test-Path -LiteralPath $wrongSavePath | Should -BeFalse
     }
 
-    It 'round-trips EML, MSG, TNEF, and mbox artifacts' {
+    It 'round-trips EML, EMLX, MSG, TNEF, and mbox artifacts' {
         $emailDocumentType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Email' -TypeName 'OfficeIMO.Email.EmailDocument' -CommandName 'Save-OfficeEmail'
         $emailAddressType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Email' -TypeName 'OfficeIMO.Email.EmailAddress' -CommandName 'Save-OfficeEmail'
         $emailMailboxType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Email' -TypeName 'OfficeIMO.Email.EmailMailbox' -CommandName 'Save-OfficeEmailMailbox'
@@ -187,8 +189,9 @@ Describe 'Expanded OfficeIMO support' {
         $message.Subject = 'Native email contract'
         $message.From = [Activator]::CreateInstance($emailAddressType, @('sender@example.test', 'Sender', $null))
         $message.Body.Text = 'OfficeIMO email body'
+        $message.Properties['Emlx:Flag:Flagged'] = $true
 
-        foreach ($extension in 'eml', 'msg', 'dat') {
+        foreach ($extension in 'eml', 'emlx', 'msg', 'dat') {
             $path = Join-Path $TestDrive "message.$extension"
             $format = if ($extension -eq 'dat') { 'Tnef' } else { $null }
             $result = if ($format) {
@@ -198,8 +201,24 @@ Describe 'Expanded OfficeIMO support' {
             }
             $result.GetType().FullName | Should -Be 'OfficeIMO.Email.EmailWriteResult'
             Test-Path -LiteralPath $path | Should -BeTrue
-            (Get-OfficeEmail -Path $path).Subject | Should -Be 'Native email contract'
+            $reopened = Get-OfficeEmail -Path $path
+            $reopened.Subject | Should -Be 'Native email contract'
+            if ($extension -eq 'emlx') {
+                $reopened.Body.Text | Should -Be 'OfficeIMO email body'
+                $reopened.Properties['Emlx:Flag:Flagged'] | Should -BeTrue
+                $emlxResult = Get-OfficeEmail -Path $path -AsResult
+                $emlxResult.GetType().FullName | Should -Be 'OfficeIMO.Email.Store.EmailStoreReadResult'
+                $emlxResult.Store.ItemCount | Should -Be 1
+            }
         }
+
+        $blocked = [Activator]::CreateInstance($emailDocumentType)
+        $blocked.Subject = 'Blocked EMLX journal'
+        $blocked.OutlookItemKind = 'Journal'
+        $blockedPath = Join-Path $TestDrive 'blocked.emlx'
+        { $blocked | Save-OfficeEmail -Path $blockedPath -ErrorAction Stop } |
+            Should -Throw '*not produced without semantic loss*'
+        Test-Path -LiteralPath $blockedPath | Should -BeFalse
 
         $mailbox = [Activator]::CreateInstance($emailMailboxType)
         $mailbox.Messages.Add([Activator]::CreateInstance($emailMailboxEntryType, @($message)))

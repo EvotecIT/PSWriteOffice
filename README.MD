@@ -31,9 +31,9 @@ Use the [scenario-driven example library](Examples/README.md) for complete Word,
 | Word | Mature | Creation and editing, comparison and redlines, comments and revision reports, HTML/Markdown/OpenDocument conversion, Google Docs planning/export, and PNG/SVG rendering |
 | Excel | Advanced | Sheets, tables, formulas, validation, charts, pivots, comments, navigation, explicit readers, OpenDocument conversion, Google Sheets planning/export, and PNG/SVG rendering |
 | PowerPoint | Advanced | Slides, layouts, themes, notes, sections, transitions, import/copy, accessibility and preflight inspection, OpenDocument conversion, and PNG/SVG rendering |
-| PDF | Advanced | Composition, forms, sanitization, XFDF, visual comparison, interaction maps, layout overlays, OCR merge, rewrite proof, extraction, compliance inspection, and PNG/SVG rendering |
+| PDF | Advanced | Composition, forms, sanitization, XFDF, visual comparison, interaction maps, layout overlays, OCR merge, rewrite proof, extraction, editable Word/Excel/PowerPoint reconstruction, compliance inspection, and PNG/SVG rendering |
 | OpenDocument | Native | Create, load, save, and convert ODT, ODS, and ODP with conversion diagnostics and fail-on-loss controls |
-| Email | Native | Read and write EML, MSG, and TNEF; read and write mbox mailboxes with bounded diagnostics |
+| Email | Native | Read and write EML, Apple Mail EMLX, MSG, and TNEF; read and write mbox mailboxes with bounded diagnostics |
 | RTF | Solid | Create/read/update `.rtf`, replace text, append paragraphs, edit document properties, convert RTF to Word/HTML/PDF, convert Word/HTML to RTF, and read semantic chunks through Reader |
 | Markdown and text formats | Solid | Native Markdown, AsciiDoc, and LaTeX parsing plus loss-aware conversions between Markdown and AsciiDoc/LaTeX |
 | CSV | Solid | Read CSV, emit CSV, object-focused data workflows |
@@ -236,6 +236,35 @@ New-OfficePdf -Path .\Status.pdf {
     Add-OfficePdfBookmark -Name 'Status table'
     Set-OfficePdfMetadata -Title 'Documentation Status' -Author 'PSWriteOffice'
 }
+```
+
+Reconstruct editable Office files from an existing PDF. Each command returns a typed conversion report when `-PassThruReport` is used, so automation can inspect what was recovered:
+
+```powershell
+$wordReport = ConvertTo-OfficePdfWord `
+    -Path .\Status.pdf `
+    -OutputPath .\Status.docx `
+    -PassThruReport
+
+$excelReport = ConvertTo-OfficePdfExcel `
+    -Path .\Status.pdf `
+    -OutputPath .\Status.xlsx `
+    -PassThruReport
+
+$powerPointReport = ConvertTo-OfficePdfPowerPoint `
+    -Path .\Status.pdf `
+    -OutputPath .\Status.pptx `
+    -PassThruReport
+
+$wordReport.Warnings
+```
+
+Check protected-content support before choosing an operation or format:
+
+```powershell
+Get-OfficeProtectionCapability -Format PDF
+Get-OfficeProtectionCapability -IncompleteOnly
+Get-OfficeProtectionCapability -AsJson
 ```
 
 ```powershell
@@ -481,7 +510,7 @@ Get-OfficePowerPointShape -Presentation $ppt -Index 0
 ## Recent Highlights 🆕
 
 - Word to Markdown and Markdown to Word are now surfaced directly through `OfficeIMO.Word.Markdown`.
-- PDF now has first-class creation, composition, merge/split, page movement, metadata, forms, stamping, attachment, extraction, HTML conversion, and compliance inspection cmdlets. Deeper PDF engine features still belong in `OfficeIMO.Pdf` first.
+- PDF now has first-class creation, composition, merge/split, page movement, metadata, forms, stamping, attachment, extraction, editable Word/Excel/PowerPoint reconstruction, HTML conversion, and compliance inspection cmdlets. Deeper PDF engine features still belong in `OfficeIMO.Pdf` first.
 - RTF now has create/read/update/replace cmdlets, Word/HTML/PDF bridges, and semantic Reader chunks through the `OfficeIMO.Reader.Rtf` adapter.
 - `OfficeIMO.Reader` is surfaced through chunk, document-envelope, table, visual, asset, ingest, JSON, and capability-discovery cmdlets across the currently registered adapters.
 - `OfficeIMO.Visio` is surfaced through a first diagram DSL plus built-in and external stencil catalogs, create/load/save, deterministic inspection, reference gallery generation, stencil preview gallery export, and SVG/PNG export cmdlets.
