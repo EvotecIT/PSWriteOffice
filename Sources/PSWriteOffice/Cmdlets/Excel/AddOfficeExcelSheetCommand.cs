@@ -69,16 +69,16 @@ public sealed class AddOfficeExcelSheetCommand : PSCmdlet
             return;
         }
 
+        var currentContext = Content != null ? ExcelDslContext.Current : null;
+        if (currentContext != null && !ReferenceEquals(currentContext.Document, Document))
+        {
+            throw new InvalidOperationException(
+                "The explicit workbook target does not match the active Excel composition scope.");
+        }
+
         var createdSheet = Document.GetOrCreateSheet(Name, ValidationMode);
         if (Content != null)
         {
-            var currentContext = ExcelDslContext.Current;
-            if (currentContext != null && !ReferenceEquals(currentContext.Document, Document))
-            {
-                throw new InvalidOperationException(
-                    "The explicit workbook target does not match the active Excel composition scope.");
-            }
-
             if (currentContext != null)
             {
                 using (currentContext.Push(createdSheet))

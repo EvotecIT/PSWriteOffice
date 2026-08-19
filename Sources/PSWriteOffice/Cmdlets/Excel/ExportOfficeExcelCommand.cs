@@ -519,7 +519,7 @@ public sealed partial class ExportOfficeExcelCommand : PSCmdlet
         }
         catch
         {
-            document.Dispose();
+            ExcelDocumentService.CloseDocument(document);
             throw;
         }
 

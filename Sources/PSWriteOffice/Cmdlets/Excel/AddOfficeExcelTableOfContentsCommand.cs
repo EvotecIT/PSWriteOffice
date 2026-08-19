@@ -132,7 +132,7 @@ public sealed class AddOfficeExcelTableOfContentsCommand : PSCmdlet
         }
         catch
         {
-            document.Dispose();
+            ExcelDocumentService.CloseDocument(document);
             throw;
         }
 

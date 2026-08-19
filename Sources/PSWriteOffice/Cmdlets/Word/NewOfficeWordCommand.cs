@@ -109,31 +109,39 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         }
 
         var document = CreateOrLoadDocument(fullPath);
-        if (NoSave.IsPresent)
+        try
         {
-            WordDocumentService.UpdateSaveAssociation(document, fullPath, encrypted: false);
+            if (NoSave.IsPresent)
+            {
+                WordDocumentService.UpdateSaveAssociation(document, fullPath, encrypted: false);
+            }
+
+            if (Content == null)
+            {
+                WriteObject(document);
+                return;
+            }
+
+            WordDocumentService.InvokeDsl(document, Content);
+
+            if (NoSave.IsPresent)
+            {
+                WriteObject(document);
+                return;
+            }
+
+            SavePdfIfRequested(document);
+            WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
+
+            if (PassThru.IsPresent)
+            {
+                WriteObject(new FileInfo(fullPath));
+            }
         }
-
-        if (Content == null)
+        catch
         {
-            WriteObject(document);
-            return;
-        }
-
-        WordDocumentService.InvokeDsl(document, Content);
-
-        if (NoSave.IsPresent)
-        {
-            WriteObject(document);
-            return;
-        }
-
-        SavePdfIfRequested(document);
-        WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
-
-        if (PassThru.IsPresent)
-        {
-            WriteObject(new FileInfo(fullPath));
+            WordDocumentService.CloseDocument(document);
+            throw;
         }
     }
 

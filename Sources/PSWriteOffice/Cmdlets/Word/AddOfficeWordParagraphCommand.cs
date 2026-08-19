@@ -79,14 +79,46 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
         WordDslContext? context = null;
         WordParagraph paragraph;
         WordDocument? document = null;
+        var activeContext = Content != null ? WordDslContext.Current : null;
         var target = Target is PSObject psObject ? psObject.BaseObject : Target;
         if (target is WordDocument targetDocument)
         {
+            if (activeContext != null && !ReferenceEquals(activeContext.Document, targetDocument))
+            {
+                throw new PSInvalidOperationException("The active Word DSL context belongs to a different document.");
+            }
+
             document = targetDocument;
+            context = activeContext;
             paragraph = targetDocument.AddParagraph(Run is { Length: > 0 } ? string.Empty : Text ?? string.Empty);
         }
         else if (target is WordSection targetSection)
         {
+            if (Content != null)
+            {
+                if (activeContext == null)
+                {
+                    throw new PSInvalidOperationException("Nested paragraph content targeting a WordSection requires the section's active Word DSL context. Use -PassThru and target the returned paragraph for object-style composition.");
+                }
+
+                var sectionBelongsToActiveDocument = false;
+                foreach (var section in activeContext.Document.Sections)
+                {
+                    if (ReferenceEquals(section, targetSection))
+                    {
+                        sectionBelongsToActiveDocument = true;
+                        break;
+                    }
+                }
+
+                if (!sectionBelongsToActiveDocument)
+                {
+                    throw new PSInvalidOperationException("The active Word DSL context belongs to a different document.");
+                }
+
+                context = activeContext;
+            }
+
             paragraph = targetSection.AddParagraph(Run is { Length: > 0 } ? string.Empty : Text ?? string.Empty);
         }
         else if (target != null)

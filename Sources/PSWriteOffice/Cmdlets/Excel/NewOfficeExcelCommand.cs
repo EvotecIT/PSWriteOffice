@@ -233,7 +233,7 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
         }
         catch
         {
-            document.Dispose();
+            ExcelDocumentService.CloseDocument(document);
             throw;
         }
 

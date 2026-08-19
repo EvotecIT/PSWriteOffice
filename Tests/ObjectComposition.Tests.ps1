@@ -110,4 +110,84 @@ Describe 'Object-style document composition' {
         $rows.Count | Should -Be 1
         $rows[0].Message | Should -Be 'Nested object target'
     }
+
+    It 'rejects mismatched nested Excel targets before creating a worksheet' {
+        $target = New-OfficeExcel -Path (Join-Path $TestDrive 'Target.xlsx') -NoSave
+        $active = $null
+        try {
+            $sheetCount = $target.Sheets.Count
+            $active = New-OfficeExcel -Path (Join-Path $TestDrive 'Active.xlsx') -NoSave {
+                {
+                    Add-OfficeExcelSheet -Document $target -Name 'Rejected' -Content {
+                        Set-OfficeExcelCell -Address A1 -Value 'Must not be written'
+                    }
+                } | Should -Throw '*does not match the active Excel composition scope*'
+            }
+
+            $target.Sheets.Count | Should -Be $sheetCount
+        } finally {
+            if ($active) { $active | Close-OfficeExcel }
+            $target | Close-OfficeExcel
+        }
+    }
+
+    It 'rejects mismatched nested Word targets before changing the document' {
+        $target = New-OfficeWord -Path (Join-Path $TestDrive 'Target.docx') -NoSave
+        $active = $null
+        try {
+            $sectionCount = $target.Sections.Count
+            $paragraphCount = $target.Paragraphs.Count
+            $targetSection = $target.Sections[0]
+
+            $active = New-OfficeWord -Path (Join-Path $TestDrive 'Active.docx') -NoSave {
+                {
+                    Add-OfficeWordSection -Document $target -Content {
+                        Add-OfficeWordParagraph -Text 'Must not be written'
+                    }
+                } | Should -Throw '*different document*'
+
+                {
+                    Add-OfficeWordParagraph -Target $target -Text 'Must not be written' -Content {
+                        Add-OfficeWordText -Text 'Nested text'
+                    }
+                } | Should -Throw '*different document*'
+
+                {
+                    Add-OfficeWordParagraph -Target $targetSection -Content {
+                        Add-OfficeWordText -Text 'Must not be written'
+                    }
+                } | Should -Throw '*different document*'
+            }
+
+            $target.Sections.Count | Should -Be $sectionCount
+            $target.Paragraphs.Count | Should -Be $paragraphCount
+        } finally {
+            if ($active) { $active | Close-OfficeWord }
+            $target | Close-OfficeWord
+        }
+    }
+
+    It 'removes saved-path associations when a NoSave DSL block fails' {
+        $assembly = (Get-Command New-OfficeExcel).ImplementingType.Assembly
+        $flags = [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Static
+        $excelField = $assembly.GetType('PSWriteOffice.Services.Excel.ExcelDocumentService').GetField('AssociatedPaths', $flags)
+        $wordField = $assembly.GetType('PSWriteOffice.Services.Word.WordDocumentService').GetField('AssociatedPaths', $flags)
+        $excelCount = $excelField.GetValue($null).Count
+        $wordCount = $wordField.GetValue($null).Count
+
+        {
+            New-OfficeExcel -Path (Join-Path $TestDrive 'Failed.xlsx') -NoSave {
+                throw 'Expected Excel DSL failure'
+            }
+        } | Should -Throw '*Expected Excel DSL failure*'
+
+        {
+            New-OfficeWord -Path (Join-Path $TestDrive 'Failed.docx') -NoSave {
+                throw 'Expected Word DSL failure'
+            }
+        } | Should -Throw '*Expected Word DSL failure*'
+
+        $excelField.GetValue($null).Count | Should -Be $excelCount
+        $wordField.GetValue($null).Count | Should -Be $wordCount
+    }
 }

@@ -64,18 +64,17 @@ public sealed class AddOfficeWordSectionCommand : PSCmdlet
             return;
         }
 
+        var current = Content != null ? WordDslContext.Current : null;
+        if (current != null && !ReferenceEquals(current.Document, Document))
+        {
+            throw new PSInvalidOperationException("The active Word DSL context belongs to a different document.");
+        }
+
         var createdSection = BreakType.HasValue
             ? Document.AddSection(BreakType.Value)
             : Document.AddSection();
-
         if (Content != null)
         {
-            var current = WordDslContext.Current;
-            if (current != null && !ReferenceEquals(current.Document, Document))
-            {
-                throw new PSInvalidOperationException("The active Word DSL context belongs to a different document.");
-            }
-
             if (current != null)
             {
                 using (current.Push(createdSection))
