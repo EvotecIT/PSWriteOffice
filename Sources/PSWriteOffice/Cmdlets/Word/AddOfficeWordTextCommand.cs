@@ -15,6 +15,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordText", DefaultParameterSetName = "Text")]
 [Alias("WordText", "WordBold", "WordItalic")]
+[OutputType(typeof(WordParagraph))]
 public sealed class AddOfficeWordTextCommand : PSCmdlet
 {
     private const string ParameterSetText = "Text";
@@ -28,6 +29,10 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetRun)]
     [Alias("Runs")]
     public object[]? Run { get; set; }
+
+    /// <summary>Paragraph that will receive the text outside a DSL context.</summary>
+    [Parameter(ValueFromPipeline = true)]
+    public WordParagraph? Paragraph { get; set; }
 
     /// <summary>Apply bold formatting.</summary>
     [Parameter]
@@ -58,6 +63,10 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
     [Alias("Font", "FontFamily", "Typeface")]
     public string? FontName { get; set; }
 
+    /// <summary>Emit the target paragraph for further composition.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void BeginProcessing()
     {
@@ -75,27 +84,37 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var context = WordDslContext.Require(this);
-        var paragraph = context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
+        var paragraph = Paragraph;
+        if (paragraph == null)
+        {
+            var context = WordDslContext.Require(this);
+            paragraph = context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
+        }
 
         if (ParameterSetName == ParameterSetRun)
         {
             WordTextRunService.ApplyRuns(paragraph, Run!);
-            return;
+        }
+        else
+        {
+            foreach (var entry in Text)
+            {
+                WordTextRunService.AddText(
+                    paragraph,
+                    entry,
+                    Bold.IsPresent,
+                    Italic.IsPresent,
+                    Underline,
+                    Strike.IsPresent,
+                    Color,
+                    FontSize,
+                    FontName);
+            }
         }
 
-        foreach (var entry in Text)
+        if (PassThru.IsPresent)
         {
-            WordTextRunService.AddText(
-                paragraph,
-                entry,
-                Bold.IsPresent,
-                Italic.IsPresent,
-                Underline,
-                Strike.IsPresent,
-                Color,
-                FontSize,
-                FontName);
+            WriteObject(paragraph);
         }
     }
 }

@@ -20,10 +20,16 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordParagraph", DefaultParameterSetName = ParameterSetText)]
 [Alias("WordParagraph")]
+[OutputType(typeof(WordParagraph))]
 public sealed class AddOfficeWordParagraphCommand : PSCmdlet
 {
     private const string ParameterSetText = "Text";
     private const string ParameterSetContent = "Content";
+
+    /// <summary>Document or section that will receive the paragraph.</summary>
+    [Parameter(ValueFromPipeline = true)]
+    [Alias("Document", "Section")]
+    public object? Target { get; set; }
 
     /// <summary>Optional initial paragraph text.</summary>
     [Parameter(Position = 0, ParameterSetName = ParameterSetText)]
@@ -58,14 +64,33 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var context = WordDslContext.Require(this);
-        var host = context.RequireParagraphHost();
         if (!string.IsNullOrEmpty(Text) && Run is { Length: > 0 })
         {
             throw new PSArgumentException("Use either -Text or -Run, not both.");
         }
 
-        var paragraph = host.AddParagraph(Run is { Length: > 0 } ? null : Text);
+        WordDslContext? context = null;
+        WordParagraph paragraph;
+        WordDocument? document = null;
+        var target = Target is PSObject psObject ? psObject.BaseObject : Target;
+        if (target is WordDocument targetDocument)
+        {
+            document = targetDocument;
+            paragraph = targetDocument.AddParagraph(Run is { Length: > 0 } ? string.Empty : Text ?? string.Empty);
+        }
+        else if (target is WordSection targetSection)
+        {
+            paragraph = targetSection.AddParagraph(Run is { Length: > 0 } ? string.Empty : Text ?? string.Empty);
+        }
+        else if (target != null)
+        {
+            throw new PSArgumentException("-Target accepts a WordDocument or WordSection.", nameof(Target));
+        }
+        else
+        {
+            context = WordDslContext.Require(this);
+            paragraph = context.RequireParagraphHost().AddParagraph(Run is { Length: > 0 } ? null : Text);
+        }
 
         if (Alignment.HasValue)
         {
@@ -82,19 +107,57 @@ public sealed class AddOfficeWordParagraphCommand : PSCmdlet
             paragraph.SetStyleId(StyleId!);
         }
 
-        using (context.Push(paragraph))
+        if (Run is { Length: > 0 })
         {
-            if (Run is { Length: > 0 })
-            {
-                WordTextRunService.ApplyRuns(paragraph, Run);
-            }
+            WordTextRunService.ApplyRuns(paragraph, Run);
+        }
 
-            Content?.InvokeReturnAsIs();
+        if (Content != null)
+        {
+            InvokeContent(document, context, paragraph);
         }
 
         if (PassThru.IsPresent)
         {
             WriteObject(paragraph);
+        }
+    }
+
+    private void InvokeContent(WordDocument? document, WordDslContext? context, WordParagraph paragraph)
+    {
+        if (context != null)
+        {
+            using (context.Push(paragraph))
+            {
+                Content!.InvokeReturnAsIs();
+            }
+            return;
+        }
+
+        if (document == null)
+        {
+            throw new PSInvalidOperationException("Nested paragraph content requires -Document or an active Word DSL context. Use -PassThru and target the returned paragraph for object-style composition.");
+        }
+
+        var current = WordDslContext.Current;
+        if (current != null && !ReferenceEquals(current.Document, document))
+        {
+            throw new PSInvalidOperationException("The active Word DSL context belongs to a different document.");
+        }
+
+        if (current != null)
+        {
+            using (current.Push(paragraph))
+            {
+                Content!.InvokeReturnAsIs();
+            }
+            return;
+        }
+
+        using var ownedContext = WordDslContext.Enter(document);
+        using (ownedContext.Push(paragraph))
+        {
+            Content!.InvokeReturnAsIs();
         }
     }
 }

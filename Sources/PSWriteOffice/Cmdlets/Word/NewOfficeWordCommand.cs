@@ -100,6 +100,10 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         }
 
         var document = CreateOrLoadDocument(fullPath);
+        if (NoSave.IsPresent)
+        {
+            WordDocumentService.UpdateSaveAssociation(document, fullPath, encrypted: false);
+        }
 
         if (Content == null)
         {

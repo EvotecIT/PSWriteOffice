@@ -21,6 +21,8 @@ internal sealed class ExcelDslContext : IDisposable
 
     public ExcelDocument Document { get; }
 
+    public static ExcelDslContext? Current => CurrentScope.Value;
+
     public static ExcelDslContext Enter(ExcelDocument document)
     {
         if (CurrentScope.Value != null)

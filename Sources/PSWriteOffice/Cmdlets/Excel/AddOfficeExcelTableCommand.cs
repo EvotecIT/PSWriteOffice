@@ -24,6 +24,23 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
 {
     private readonly List<object?> _items = new();
 
+    /// <summary>Worksheet that will receive the table outside a DSL context.</summary>
+    [Parameter]
+    [Alias("SheetObject")]
+    public ExcelSheet? Worksheet { get; set; }
+
+    /// <summary>Workbook that will receive the table outside a DSL context.</summary>
+    [Parameter]
+    public ExcelDocument? Document { get; set; }
+
+    /// <summary>Worksheet name when using <see cref="Document"/>.</summary>
+    [Parameter]
+    public string? Sheet { get; set; }
+
+    /// <summary>Worksheet index (0-based) when using <see cref="Document"/>.</summary>
+    [Parameter]
+    public int? SheetIndex { get; set; }
+
     /// <summary>Source objects, dictionaries, DataTable/DataView/IDataReader inputs, or DataRow sequences to convert into table rows.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [Alias("Data", "DataTable")]
@@ -115,8 +132,7 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void EndProcessing()
     {
-        var context = ExcelDslContext.Require(this);
-        var sheet = context.RequireSheet();
+        var sheet = ResolveSheet();
 
         var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         var projectedRows = TableViewProjection.Project(rows, View);
@@ -162,7 +178,8 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowLastColumn), ShowLastColumn),
             ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(NoRowStripes), NoRowStripes),
             ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowColumnStripes), ShowColumnStripes));
-        context.RegisterTableRange(sheet, resolvedTableName, range);
+        var context = ExcelDslContext.Current;
+        context?.RegisterTableRange(sheet, resolvedTableName, range);
 
         if (AutoFit.IsPresent)
         {
@@ -184,5 +201,25 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
         }
 
         return string.IsNullOrWhiteSpace(table.TableName) ? null : table.TableName;
+    }
+
+    private ExcelSheet ResolveSheet()
+    {
+        if (Worksheet != null && Document != null)
+        {
+            throw new PSArgumentException("Use either -Worksheet or -Document, not both.");
+        }
+
+        if (Worksheet != null)
+        {
+            return Worksheet;
+        }
+
+        if (Document != null)
+        {
+            return ExcelSheetResolver.Resolve(Document, Sheet, SheetIndex);
+        }
+
+        return ExcelDslContext.Require(this).RequireSheet();
     }
 }

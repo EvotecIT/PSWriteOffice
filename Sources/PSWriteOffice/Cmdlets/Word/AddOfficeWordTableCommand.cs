@@ -21,14 +21,22 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Add-OfficeWordTable -InputObject $Data -Style 'GridTable1LightAccent1' { WordTableCondition -FilterScript { $_.Total -gt 1000 } }</code>
 ///   <para>Writes a grid table and highlights rows exceeding $1,000.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Add, "OfficeWordTable")]
+[Cmdlet(VerbsCommon.Add, "OfficeWordTable", DefaultParameterSetName = ParameterSetContext)]
 [Alias("WordTable")]
+[OutputType(typeof(WordTable))]
 public sealed class AddOfficeWordTableCommand : PSCmdlet
 {
+    private const string ParameterSetContext = "Context";
+    private const string ParameterSetDocument = "Document";
     private readonly List<object?> _items = new();
 
+    /// <summary>Document that will receive the table outside a DSL context.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
+    public WordDocument? Document { get; set; }
+
     /// <summary>Input data (array, list, DataTable, etc.).</summary>
-    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetContext)]
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     [Alias("Data")]
     public object? InputObject { get; set; }
 
@@ -80,7 +88,8 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     public SwitchParameter Transpose { get; set; }
 
     /// <summary>DSL content executed inside the table.</summary>
-    [Parameter(Position = 1)]
+    [Parameter(Position = 1, ParameterSetName = ParameterSetContext)]
+    [Parameter(Position = 1, ParameterSetName = ParameterSetDocument)]
     public ScriptBlock? Content { get; set; }
 
     /// <summary>Emit the created <see cref="WordTable"/>.</summary>
@@ -96,6 +105,28 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
     /// <inheritdoc />
     protected override void EndProcessing()
     {
+        WordDslContext? ownedContext = null;
+        var context = WordDslContext.Current;
+        if (Document != null)
+        {
+            if (context != null && !ReferenceEquals(context.Document, Document))
+            {
+                throw new PSInvalidOperationException("The active Word DSL context belongs to a different document.");
+            }
+
+            if (context == null)
+            {
+                ownedContext = WordDslContext.Enter(Document);
+                context = ownedContext;
+            }
+        }
+        else
+        {
+            context = WordDslContext.Require(this);
+        }
+
+        try
+        {
         var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         if (rows.Length == 0)
         {
@@ -107,7 +138,6 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
             return;
         }
 
-        var context = WordDslContext.Require(this);
         var effectiveView = Transpose.IsPresent ? OfficeTableView.Transpose : View;
         var tableRows = TableViewProjection.Project(rows, effectiveView);
         var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
@@ -158,6 +188,11 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         if (PassThru.IsPresent)
         {
             WriteObject(table);
+        }
+        }
+        finally
+        {
+            ownedContext?.Dispose();
         }
     }
 

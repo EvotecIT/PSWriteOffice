@@ -173,6 +173,11 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
                 AutoSave.IsPresent);
         try
         {
+            if (NoSave.IsPresent)
+            {
+                ExcelDocumentService.UpdateSaveAssociation(document, resolvedPath, encrypted: false);
+            }
+
             ExcelDateSystemService.ApplyIfSpecified(document, DateSystem, nameof(DateSystem));
             ExcelDocumentPropertyService.ApplyCommonProperties(
                 document,
