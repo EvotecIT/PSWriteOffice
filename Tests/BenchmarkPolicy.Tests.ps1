@@ -42,4 +42,23 @@ Describe 'Benchmark measurement policy' {
         Test-ExcelBenchmarkEngineCaseSupport -Engine ExcelFast -Case $textCase | Should -BeTrue
         Test-ExcelBenchmarkEngineCaseSupport -Engine ExcelFast -Case $tableCase | Should -BeFalse
     }
+
+    It 'separates Excel reader, DataTable, and PowerShell object projection lanes' {
+        $cases = @(Get-ExcelBenchmarkCase -Suite Standard)
+        $projectionCases = @(
+            $cases | Where-Object Name -In @(
+                'import-datatable-full',
+                'import-datatable-range',
+                'import-datareader-full',
+                'import-datareader-range'
+            )
+        )
+
+        $projectionCases.Count | Should -Be 4
+        foreach ($case in $projectionCases) {
+            Test-ExcelBenchmarkEngineCaseSupport -Engine PSWriteOffice -Case $case | Should -BeTrue
+            Test-ExcelBenchmarkEngineCaseSupport -Engine ImportExcel -Case $case | Should -BeFalse
+            Test-ExcelBenchmarkEngineCaseSupport -Engine ExcelFast -Case $case | Should -BeFalse
+        }
+    }
 }

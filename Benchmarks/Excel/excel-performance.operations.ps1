@@ -18,6 +18,10 @@ function Invoke-ExcelBenchmarkOperation {
         WriteWorkbook { Invoke-ExcelBenchmarkWriteWorkbook -Engine $Engine -Case $Case -Run $Run }
         ReadFullSheet { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode Full }
         ReadRange { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode Range }
+        ReadFullSheetDataTable { Invoke-ExcelBenchmarkReadDataTable -Run $Run -Mode Full }
+        ReadRangeDataTable { Invoke-ExcelBenchmarkReadDataTable -Run $Run -Mode Range }
+        ReadFullSheetDataReader { Invoke-ExcelBenchmarkReadDataReader -Run $Run -Mode Full }
+        ReadRangeDataReader { Invoke-ExcelBenchmarkReadDataReader -Run $Run -Mode Range }
         ReadNoHeaderRange { Invoke-ExcelBenchmarkReadWorkbook -Engine $Engine -Case $Case -Run $Run -Mode NoHeader }
         ReadUsedRangeDataTable {
             $dataTable = Get-OfficeExcelUsedRange -Path $Run.Path -Sheet $Run.WorksheetName -AsDataTable
@@ -304,6 +308,11 @@ function Invoke-ExcelBenchmarkReadWorkbook {
         }
     }
     $Run.ActualRows = @($rows).Count
+    if ($Mode -ne 'NoHeader' -and $Run.ActualRows -gt 0) {
+        $Run.ActualFields = @($rows[0].PSObject.Properties).Count
+        $Run.FirstId = $rows[0].Id
+        $Run.LastId = $rows[$Run.ActualRows - 1].Id
+    }
 }
 function Invoke-ExcelBenchmarkWriteWorkbook {
     param([string] $Engine, [object] $Case, [object] $Run)

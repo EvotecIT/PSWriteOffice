@@ -340,6 +340,10 @@ function Initialize-ExcelBenchmarkInput {
         }
         ReadFullSheet { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
         ReadRange { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
+        ReadFullSheetDataTable { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
+        ReadRangeDataTable { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
+        ReadFullSheetDataReader { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
+        ReadRangeDataReader { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
         ReadNoHeaderRange { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
         ReadUsedRangeDataTable { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run }
         ReadTableMetadata { New-ExcelBenchmarkDefaultWorkbook -Engine PSWriteOffice -Run $Run -TableName Data }

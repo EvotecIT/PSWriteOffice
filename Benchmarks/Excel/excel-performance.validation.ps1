@@ -66,13 +66,27 @@ function Test-ExcelBenchmarkOutput {
         Assert-BenchmarkPath $Run.Path
     }
 
-    if ($Case.OperationKey -in @('ReadFullSheet', 'ReadRange', 'ReadNoHeaderRange')) {
+    $tabularReadOperations = @(
+        'ReadFullSheet',
+        'ReadRange',
+        'ReadFullSheetDataTable',
+        'ReadRangeDataTable',
+        'ReadFullSheetDataReader',
+        'ReadRangeDataReader',
+        'ReadNoHeaderRange'
+    )
+    if ($Case.OperationKey -in $tabularReadOperations) {
         $expectedRows = if ($Case.OperationKey -eq 'ReadNoHeaderRange') {
             [int]$Run.ExpectedRows + 1
         } else {
             [int]$Run.ExpectedRows
         }
         Assert-BenchmarkValue ([int]$Run.ActualRows) $expectedRows -Message "Expected $expectedRows rows returned by '$($Case.OperationKey)'."
+        if ($Case.OperationKey -ne 'ReadNoHeaderRange') {
+            Assert-BenchmarkValue ([int]$Run.ActualFields) ([int]$Run.ColumnCount) -Message "Expected every field returned by '$($Case.OperationKey)'."
+            Assert-BenchmarkValue ([int]$Run.FirstId) 1 -Message "Expected '$($Case.OperationKey)' to preserve the first row identifier."
+            Assert-BenchmarkValue ([int]$Run.LastId) ([int]$Run.ExpectedRows) -Message "Expected '$($Case.OperationKey)' to preserve the last row identifier."
+        }
     }
 
     if ($Case.OperationKey -eq 'ReadUsedRangeDataTable') {
