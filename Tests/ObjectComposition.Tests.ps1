@@ -86,4 +86,24 @@ Describe 'Object-style document composition' {
         $data.Count | Should -Be 2
         $data[0].Project | Should -Be 'Atlas'
     }
+
+    It 'reuses the active Excel scope for an explicit matching workbook target' {
+        $path = Join-Path $TestDrive 'NestedObjectFlow.xlsx'
+        $workbook = New-OfficeExcel -Path $path -NoSave
+        try {
+            $workbook | Add-OfficeExcelSheet -Name 'Outer' -Content {
+                Add-OfficeExcelSheet -Document $workbook -Name 'Inner' -Content {
+                    Set-OfficeExcelCell -Address A1 -Value 'Message'
+                    Set-OfficeExcelCell -Address A2 -Value 'Nested object target'
+                }
+            }
+            $workbook | Save-OfficeExcel
+        } finally {
+            $workbook | Close-OfficeExcel
+        }
+
+        $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Inner' -Range A1:A2)
+        $rows.Count | Should -Be 1
+        $rows[0].Message | Should -Be 'Nested object target'
+    }
 }

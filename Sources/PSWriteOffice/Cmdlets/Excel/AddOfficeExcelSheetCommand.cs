@@ -1,3 +1,4 @@
+using System;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
@@ -64,10 +65,27 @@ public sealed class AddOfficeExcelSheetCommand : PSCmdlet
         var createdSheet = Document.GetOrCreateSheet(Name, ValidationMode);
         if (Content != null)
         {
-            using var context = ExcelDslContext.Enter(Document);
-            using (context.Push(createdSheet))
+            var currentContext = ExcelDslContext.Current;
+            if (currentContext != null && !ReferenceEquals(currentContext.Document, Document))
             {
-                Content.InvokeReturnAsIs();
+                throw new InvalidOperationException(
+                    "The explicit workbook target does not match the active Excel composition scope.");
+            }
+
+            if (currentContext != null)
+            {
+                using (currentContext.Push(createdSheet))
+                {
+                    Content.InvokeReturnAsIs();
+                }
+            }
+            else
+            {
+                using var context = ExcelDslContext.Enter(Document);
+                using (context.Push(createdSheet))
+                {
+                    Content.InvokeReturnAsIs();
+                }
             }
         }
 
