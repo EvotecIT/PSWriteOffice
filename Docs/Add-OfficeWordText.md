@@ -11,12 +11,12 @@ Adds inline text to the current paragraph.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficeWordText [-Text] <string[]> [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Int32>] [-FontName <string>] [<CommonParameters>]
+Add-OfficeWordText [-Text] <string[]> [-Paragraph <WordParagraph>] [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Int32>] [-FontName <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Run
 ```powershell
-Add-OfficeWordText -Run <Object[]> [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Int32>] [-FontName <string>] [<CommonParameters>]
+Add-OfficeWordText -Run <Object[]> [-Paragraph <WordParagraph>] [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Int32>] [-FontName <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,13 @@ PS> Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Important: ' -Bold }
 ```
 
 Writes “Important:” with bold formatting.
+
+### EXAMPLE 2
+```powershell
+PS> $paragraph | Add-OfficeWordText -Run @{ Text = 'Status: ', 'Ready'; Bold = $true, $false; Color = $null, 'SeaGreen' }
+```
+
+Appends one line with independent formatting for its label and value.
 
 ## PARAMETERS
 
@@ -113,6 +120,38 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Paragraph
+Paragraph that will receive the text outside a DSL context.
+
+```yaml
+Type: WordParagraph
+Parameter Sets: Text, Run
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the target paragraph for further composition.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Text, Run
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Run
 Rich text runs. Each run can be created with TextRun/WordTextRun or provided as a hashtable/object.
 
@@ -182,11 +221,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `OfficeIMO.Word.WordParagraph`
 
 ## OUTPUTS
 
-- `None`
+- `OfficeIMO.Word.WordParagraph`
 
 ## RELATED LINKS
 

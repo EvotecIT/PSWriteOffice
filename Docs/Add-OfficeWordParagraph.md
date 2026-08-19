@@ -11,12 +11,12 @@ Adds a paragraph to the current section/header/footer context.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficeWordParagraph [[-Text] <string>] [-Run <Object[]>] [-Alignment <WordParagraphAlignment>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordParagraph [[-Text] <string>] [-Target <Object>] [-Run <Object[]>] [-Alignment <WordParagraphAlignment>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Content
 ```powershell
-Add-OfficeWordParagraph [[-Content] <scriptblock>] [-Text <string>] [-Alignment <WordParagraphAlignment>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordParagraph [[-Content] <scriptblock>] [-Target <Object>] [-Text <string>] [-Alignment <WordParagraphAlignment>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,6 +37,14 @@ PS> WordParagraph -Text 'Executive summary' -StyleId 'ReportHeading'
 ```
 
 Applies a paragraph style id, including custom styles already present in a template document.
+
+### EXAMPLE 3
+```powershell
+PS> $paragraph = $document | Add-OfficeWordParagraph -PassThru
+$paragraph | Add-OfficeWordText -Run @{ Text = 'Owner: ', 'Platform'; Bold = $true, $false }
+```
+
+Creates a paragraph on a live document and appends two differently formatted runs.
 
 ## PARAMETERS
 
@@ -136,6 +144,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Target
+Document or section that will receive the paragraph.
+
+```yaml
+Type: Object
+Parameter Sets: Text, Content
+Aliases: Document, Section
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
 ### -Text
 Optional initial paragraph text.
 
@@ -157,11 +181,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.Object`
 
 ## OUTPUTS
 
-- `None`
+- `OfficeIMO.Word.WordParagraph`
 
 ## RELATED LINKS
 

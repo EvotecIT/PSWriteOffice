@@ -93,4 +93,4 @@ $presentation = Get-OfficePowerPoint -FilePath $path
 $summary = Get-OfficePowerPointSlideSummary -Presentation $presentation
 $presentation | Close-OfficePowerPoint
 
-$summary | Select-Object Index, Title, ShapeCount, TextBoxCount, ChartCount, TableCount, HasNotes
+$summary | Select-Object SlideIndex, Title, ShapeCount, TextBoxCount, ChartCount, TableCount, HasNotes

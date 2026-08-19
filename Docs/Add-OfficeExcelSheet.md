@@ -9,9 +9,14 @@ schema: 2.0.0
 Adds or reuses a worksheet within the current Excel DSL scope.
 
 ## SYNTAX
-### __AllParameterSets
+### Context (Default)
 ```powershell
 Add-OfficeExcelSheet [[-Name] <string>] [[-Content] <scriptblock>] [-ValidationMode <ExcelSheetNameValidationMode>] [-PassThru] [<CommonParameters>]
+```
+
+### Document
+```powershell
+Add-OfficeExcelSheet [[-Name] <string>] [[-Content] <scriptblock>] -Document <ExcelDocument> [-ValidationMode <ExcelSheetNameValidationMode>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -26,6 +31,14 @@ PS> New-OfficeExcel -Path .\report.xlsx { Add-OfficeExcelSheet -Name 'Data' { Ex
 
 Creates a workbook with a worksheet named Data and writes the header “Region”.
 
+### EXAMPLE 2
+```powershell
+PS> $sheet = $workbook | Add-OfficeExcelSheet -Name 'Data' -PassThru
+$sheet | Set-OfficeExcelCell -Address A1 -Value 'Region'
+```
+
+Returns the worksheet so subsequent commands can target it directly.
+
 ## PARAMETERS
 
 ### -Content
@@ -33,7 +46,7 @@ Code to execute inside the worksheet context.
 
 ```yaml
 Type: ScriptBlock
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
@@ -44,12 +57,28 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Document
+Workbook that will receive the worksheet.
+
+```yaml
+Type: ExcelDocument
+Parameter Sets: Document
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
 ### -Name
 Name of the worksheet to create or reuse. When omitted the last sheet is reused or a default sheet is created.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
@@ -65,7 +94,7 @@ Emit the ExcelSheet object after execution.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
@@ -81,7 +110,7 @@ Controls how invalid sheet names are handled.
 
 ```yaml
 Type: ExcelSheetNameValidationMode
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: None, Sanitize, Strict
 
@@ -97,11 +126,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `OfficeIMO.Excel.ExcelDocument`
 
 ## OUTPUTS
 
-- `None`
+- `OfficeIMO.Excel.ExcelSheet`
 
 ## RELATED LINKS
 
