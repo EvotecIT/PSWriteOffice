@@ -232,10 +232,11 @@ Describe 'PDF cmdlets' {
         $path = Join-Path $TestDrive 'rich-run-table.pdf'
 
         PdfNew -Path $path {
-            PdfText -Run @(
-                PdfTextRun 'Status: '
-                PdfTextRun 'Ready' -Color SeaGreen -Bold
-            )
+            PdfText -Run @{
+                Text  = 'Status: ', 'Ready'
+                Color = $null, 'SeaGreen'
+                Bold  = $false, $true
+            }
             PdfTable -InputObject @(
                 , @(
                     PdfTableCell -Run @(
@@ -1170,6 +1171,44 @@ startxref
         $text | Should -Match 'Visible after'
         $text | Should -Not -Match 'Secret account'
         $text | Should -Not -Match '123-45'
+    }
+
+    It 'plans and applies PDF redactions from literal text' {
+        $path = Join-Path $TestDrive 'redaction-text-source.pdf'
+        $redactedPath = Join-Path $TestDrive 'redaction-text-output.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'Visible before'
+            PdfParagraph 'Secret account 123-45'
+            PdfParagraph 'Visible after'
+        } | Out-Null
+
+        $plan = Get-OfficePdfRedactionPlan -Path $path -Text 'Secret account'
+        $plan.HasMatches | Should -BeTrue
+        $plan.Areas | Should -HaveCount 1
+
+        ConvertTo-OfficePdfRedacted -Path $path -OutputPath $redactedPath -Text 'Secret account' |
+            Should -BeOfType System.IO.FileInfo
+
+        $text = Get-OfficePdfText -Path $redactedPath
+        $text | Should -Match 'Visible before'
+        $text | Should -Match 'Visible after'
+        $text | Should -Not -Match 'Secret account'
+        $text | Should -Not -Match '123-45'
+    }
+
+    It 'does not write a PDF when literal redaction text is absent' {
+        $path = Join-Path $TestDrive 'redaction-missing-source.pdf'
+        $redactedPath = Join-Path $TestDrive 'redaction-missing-output.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'Visible content only'
+        } | Out-Null
+
+        {
+            ConvertTo-OfficePdfRedacted -Path $path -OutputPath $redactedPath `
+                -Text 'Absent secret' -ErrorAction Stop
+        } | Should -Throw '*No PDF text blocks matched*'
+
+        Test-Path -LiteralPath $redactedPath | Should -BeFalse
     }
 
     It 'creates PDFs with document-level font options' {

@@ -98,7 +98,7 @@ public sealed class ConvertToOfficeExcelHtmlCommand : PSCmdlet
         {
             if (dispose)
             {
-                document?.Dispose();
+                ExcelDocumentService.CloseDocument(document!);
             }
         }
     }

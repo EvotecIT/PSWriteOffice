@@ -11,12 +11,12 @@ Sets a cell value, formula, or number format within the current worksheet.
 ## SYNTAX
 ### Coordinates
 ```powershell
-Set-OfficeExcelCell [-Row <Int32>] [-Column <Int32>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
+Set-OfficeExcelCell [-Worksheet <ExcelSheet>] [-Document <ExcelDocument>] [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
 ```
 
 ### Address
 ```powershell
-Set-OfficeExcelCell [-Address <string>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
+Set-OfficeExcelCell [-Worksheet <ExcelSheet>] [-Document <ExcelDocument>] [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,13 @@ PS> ExcelSheet 'Data' { Set-OfficeExcelCell -Address 'A1' -Value 'Region'; Set-O
 ```
 
 Writes two headers in the first row.
+
+### EXAMPLE 2
+```powershell
+PS> $sheet | Set-OfficeExcelCell -Address B2 -Value 42 -NumberFormat '#,##0'
+```
+
+Uses the worksheet pipeline target without an active DSL scope.
 
 ## PARAMETERS
 
@@ -71,6 +78,22 @@ Accept wildcard characters: False
 ```yaml
 Type: Int32
 Parameter Sets: Coordinates
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Document
+Workbook to modify outside a DSL context.
+
+```yaml
+Type: ExcelDocument
+Parameter Sets: Coordinates, Address
 Aliases: None
 Possible values:
 
@@ -177,6 +200,38 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Sheet
+Worksheet name when using Document.
+
+```yaml
+Type: String
+Parameter Sets: Coordinates, Address
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SheetIndex
+Worksheet index (0-based) when using Document.
+
+```yaml
+Type: Int32
+Parameter Sets: Coordinates, Address
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Value
 Cell value to assign.
 
@@ -193,12 +248,28 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Worksheet
+Worksheet to modify outside a DSL context.
+
+```yaml
+Type: ExcelSheet
+Parameter Sets: Coordinates, Address
+Aliases: SheetObject
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-- `None`
+- `OfficeIMO.Excel.ExcelSheet`
 
 ## OUTPUTS
 

@@ -22,6 +22,8 @@ The goal is simple: make Office document automation feel native in PowerShell wi
 
 Start here when you want to create polished documents from PowerShell: workbooks with tables, charts, links, images, pivots, and navigation; Word reports with sections, headers, footers, tables, charts, and conversions; PowerPoint decks with reusable slides, notes, sections, themes, and transitions; PDFs with composition, extraction, forms, stamps, and metadata; RTF documents and bridges; Markdown and CSV workflows; Visio diagrams; and unified readback for existing files.
 
+Use the [scenario-driven example library](Examples/README.md) for complete Word, Excel, PowerPoint, PDF, Markdown, Visio, RTF, CSV, Reader, and multi-format scripts.
+
 ## Platform Areas 🧭
 
 | Area | Status | What it covers now |

@@ -35,7 +35,7 @@ internal sealed class ExcelWorkbookCommandScope : IDisposable
         _disposed = true;
         if (OwnsDocument)
         {
-            Document.Dispose();
+            ExcelDocumentService.CloseDocument(Document);
         }
     }
 }

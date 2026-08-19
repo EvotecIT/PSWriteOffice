@@ -5,12 +5,18 @@ using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
-/// <summary>Applies rectangle-based PDF redactions and writes a new PDF.</summary>
+/// <summary>Applies explicit or text-matched PDF redactions and writes a new PDF.</summary>
 /// <example>
 ///   <summary>Apply a redaction rectangle.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>ConvertTo-OfficePdfRedacted -Path .\Report.pdf -OutputPath .\Report-Redacted.pdf -PageNumber 1 -X 72 -Y 650 -Width 240 -Height 32</code>
 ///   <para>Removes matching text objects and annotations in the rectangle, then paints a redaction mark.</para>
+/// </example>
+/// <example>
+///   <summary>Redact logical text blocks containing a value.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>ConvertTo-OfficePdfRedacted -Path .\Report.pdf -OutputPath .\Report-Redacted.pdf -Text 'Account number'</code>
+///   <para>Finds matching logical text blocks, removes their content, and paints the derived areas.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficePdfRedacted", DefaultParameterSetName = ParameterSetRectangle, SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
@@ -18,6 +24,7 @@ public sealed class ConvertToOfficePdfRedactedCommand : PSCmdlet
 {
     private const string ParameterSetRectangle = "Rectangle";
     private const string ParameterSetArea = "Area";
+    private const string ParameterSetText = "Text";
 
     /// <summary>Input PDF path.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
@@ -56,6 +63,14 @@ public sealed class ConvertToOfficePdfRedactedCommand : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetArea)]
     public PdfRedactionArea[] Area { get; set; } = System.Array.Empty<PdfRedactionArea>();
 
+    /// <summary>Literal text used to derive redaction areas from matching logical text blocks.</summary>
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
+    public string[] Text { get; set; } = System.Array.Empty<string>();
+
+    /// <summary>Use case-sensitive literal text matching.</summary>
+    [Parameter(ParameterSetName = ParameterSetText)]
+    public SwitchParameter MatchCase { get; set; }
+
     /// <summary>Redaction fill color in #RRGGBB format. Defaults to black.</summary>
     [Parameter]
     public string? FillColor { get; set; }
@@ -82,22 +97,40 @@ public sealed class ConvertToOfficePdfRedactedCommand : PSCmdlet
             return;
         }
 
-        PdfRedactionArea[] areas = ParameterSetName == ParameterSetArea
-            ? Area
-            : new[] { new PdfRedactionArea(PageNumber, X, Y, Width, Height, Label) };
-
         var options = new PdfRedactionApplyOptions
         {
             FillColor = PdfCommandUtilities.ParseColor(FillColor) ?? PdfColor.Black,
             PaintUnmatchedAreas = !OnlyPaintMatches.IsPresent
         };
 
+        var document = PdfDocument.Open(
+            inputPath,
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
+
+        PdfDocument redacted;
+        if (ParameterSetName == ParameterSetText)
+        {
+            var search = new PdfRedactionSearchOptions { MatchCase = MatchCase.IsPresent };
+            search.AddLiteral(Text);
+            var plan = document.Redactions.Search(search);
+            if (!plan.HasMatches)
+            {
+                throw new PSInvalidOperationException(
+                    "No PDF text blocks matched -Text. The output PDF was not written.");
+            }
+
+            redacted = document.Redactions.Apply(plan, options);
+        }
+        else
+        {
+            PdfRedactionArea[] areas = ParameterSetName == ParameterSetArea
+                ? Area
+                : new[] { new PdfRedactionArea(PageNumber, X, Y, Width, Height, Label) };
+            redacted = document.Redactions.Apply(areas, options);
+        }
+
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfDocument
-            .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
-            .Redactions.Apply(areas, options)
-            .Save(outputPath)
-            .RequireSuccess();
+        redacted.Save(outputPath).RequireSuccess();
         WriteObject(new FileInfo(outputPath));
     }
 }

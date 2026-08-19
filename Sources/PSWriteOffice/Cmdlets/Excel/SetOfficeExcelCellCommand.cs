@@ -12,10 +12,33 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>ExcelSheet 'Data' { Set-OfficeExcelCell -Address 'A1' -Value 'Region'; Set-OfficeExcelCell -Row 1 -Column 2 -Value 'Revenue' }</code>
 ///   <para>Writes two headers in the first row.</para>
 /// </example>
+/// <example>
+///   <summary>Write to an explicit worksheet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$sheet | Set-OfficeExcelCell -Address B2 -Value 42 -NumberFormat '#,##0'</code>
+///   <para>Uses the worksheet pipeline target without an active DSL scope.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelCell")]
 [Alias("ExcelCell")]
 public sealed class SetOfficeExcelCellCommand : PSCmdlet
 {
+    /// <summary>Worksheet to modify outside a DSL context.</summary>
+    [Parameter(ValueFromPipeline = true)]
+    [Alias("SheetObject")]
+    public ExcelSheet? Worksheet { get; set; }
+
+    /// <summary>Workbook to modify outside a DSL context.</summary>
+    [Parameter]
+    public ExcelDocument? Document { get; set; }
+
+    /// <summary>Worksheet name when using <see cref="Document"/>.</summary>
+    [Parameter]
+    public string? Sheet { get; set; }
+
+    /// <summary>Worksheet index (0-based) when using <see cref="Document"/>.</summary>
+    [Parameter]
+    public int? SheetIndex { get; set; }
+
     /// <summary>1-based row index.</summary>
     [Parameter(ParameterSetName = "Coordinates")]
     public int? Row { get; set; }
@@ -59,8 +82,7 @@ public sealed class SetOfficeExcelCellCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var context = ExcelDslContext.Require(this);
-        var sheet = context.RequireSheet();
+        var sheet = ResolveSheet();
         var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
         var hasValueChange = Value != null || Formula != null || NumberFormat != null;
         var hasStyleChange = !string.IsNullOrWhiteSpace(BackgroundColor)
@@ -91,5 +113,25 @@ public sealed class SetOfficeExcelCellCommand : PSCmdlet
         {
             sheet.CellGradientBackground(row, column, GradientFrom!, GradientTo!, GradientDegree);
         }
+    }
+
+    private ExcelSheet ResolveSheet()
+    {
+        if (Worksheet != null && Document != null)
+        {
+            throw new PSArgumentException("Use either -Worksheet or -Document, not both.");
+        }
+
+        if (Worksheet != null)
+        {
+            return Worksheet;
+        }
+
+        if (Document != null)
+        {
+            return ExcelSheetResolver.Resolve(Document, Sheet, SheetIndex);
+        }
+
+        return ExcelDslContext.Require(this).RequireSheet();
     }
 }

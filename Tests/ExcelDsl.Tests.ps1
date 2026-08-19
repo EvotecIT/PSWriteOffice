@@ -931,6 +931,35 @@ Describe 'Excel DSL surface' {
             Should -Throw '*require explicit Save-OfficeExcel*'
     }
 
+    It 'clears encrypted workbook associations after HTML conversion' {
+        if (-not (Test-OfficeLoadedMethod -TypeName 'OfficeIMO.Excel.ExcelDocument' -MethodName 'LoadEncrypted')) {
+            (Get-Command ConvertTo-OfficeExcelHtml).Parameters.Keys | Should -Contain 'Password'
+            return
+        }
+
+        $path = Join-Path $TestDrive 'EncryptedExcelHtml.xlsx'
+        $htmlPath = Join-Path $TestDrive 'EncryptedExcelHtml.html'
+        New-OfficeExcel -Path $path -Password 'secret' {
+            Add-OfficeExcelSheet -Name 'Secure' -Content {
+                Set-OfficeExcelCell -Address 'A1' -Value 'Encrypted HTML value'
+            }
+        }
+
+        $assembly = (Get-Command Get-OfficeExcel).ImplementingType.Assembly
+        $flags = [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Static
+        $serviceType = $assembly.GetType('PSWriteOffice.Services.Excel.ExcelDocumentService')
+        $associatedPaths = $serviceType.GetField('AssociatedPaths', $flags)
+        $encryptedPaths = $serviceType.GetField('EncryptedSourcePaths', $flags)
+        $associatedCount = $associatedPaths.GetValue($null).Count
+        $encryptedCount = $encryptedPaths.GetValue($null).Count
+
+        ConvertTo-OfficeExcelHtml -Path $path -Password 'secret' -OutputPath $htmlPath
+
+        Test-Path -LiteralPath $htmlPath | Should -BeTrue
+        $associatedPaths.GetValue($null).Count | Should -Be $associatedCount
+        $encryptedPaths.GetValue($null).Count | Should -Be $encryptedCount
+    }
+
     It 'configures Excel execution policy from PowerShell' {
         $path = Join-Path $TestDrive 'ExcelExecutionPolicy.xlsx'
 

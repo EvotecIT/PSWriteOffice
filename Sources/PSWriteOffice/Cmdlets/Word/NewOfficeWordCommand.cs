@@ -21,6 +21,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>New-OfficeWord -TemplatePath .\Template.docx -Path .\Report.docx { WordParagraph -Text 'Generated content' -StyleId 'ReportBody' }</code>
 ///   <para>Copies the template to the output path, runs the DSL against the copied document, and saves it.</para>
 /// </example>
+/// <example>
+///   <summary>Keep a document for incremental composition.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$document = New-OfficeWord -Path .\Report.docx -NoSave
+/// $document | Add-OfficeWordParagraph -Text 'Status report' -Style Heading1
+/// $document | Save-OfficeWord
+/// $document | Close-OfficeWord</code>
+///   <para>Associates the output path with a live document, adds content through the pipeline, then saves and closes it once.</para>
+/// </example>
 [Cmdlet(VerbsCommon.New, "OfficeWord", SupportsShouldProcess = true)]
 [Alias("WordNew")]
 public sealed class NewOfficeWordCommand : PSCmdlet
@@ -100,27 +109,39 @@ public sealed class NewOfficeWordCommand : PSCmdlet
         }
 
         var document = CreateOrLoadDocument(fullPath);
-
-        if (Content == null)
+        try
         {
-            WriteObject(document);
-            return;
+            if (NoSave.IsPresent)
+            {
+                WordDocumentService.UpdateSaveAssociation(document, fullPath, encrypted: false);
+            }
+
+            if (Content == null)
+            {
+                WriteObject(document);
+                return;
+            }
+
+            WordDocumentService.InvokeDsl(document, Content);
+
+            if (NoSave.IsPresent)
+            {
+                WriteObject(document);
+                return;
+            }
+
+            SavePdfIfRequested(document);
+            WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
+
+            if (PassThru.IsPresent)
+            {
+                WriteObject(new FileInfo(fullPath));
+            }
         }
-
-        WordDocumentService.InvokeDsl(document, Content);
-
-        if (NoSave.IsPresent)
+        catch
         {
-            WriteObject(document);
-            return;
-        }
-
-        SavePdfIfRequested(document);
-        WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
-
-        if (PassThru.IsPresent)
-        {
-            WriteObject(new FileInfo(fullPath));
+            WordDocumentService.CloseDocument(document);
+            throw;
         }
     }
 

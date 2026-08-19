@@ -33,6 +33,16 @@ PS> New-OfficeWord -TemplatePath .\Template.docx -Path .\Report.docx { WordParag
 
 Copies the template to the output path, runs the DSL against the copied document, and saves it.
 
+### EXAMPLE 3
+```powershell
+PS> $document = New-OfficeWord -Path .\Report.docx -NoSave
+$document | Add-OfficeWordParagraph -Text 'Status report' -Style Heading1
+$document | Save-OfficeWord
+$document | Close-OfficeWord
+```
+
+Associates the output path with a live document, adds content through the pipeline, then saves and closes it once.
+
 ## PARAMETERS
 
 ### -AutoSave

@@ -9,9 +9,14 @@ schema: 2.0.0
 Adds or reuses a section inside the current Word document.
 
 ## SYNTAX
-### __AllParameterSets
+### Context (Default)
 ```powershell
 Add-OfficeWordSection [[-Content] <scriptblock>] [-BreakType <WordSectionBreakType>] [-PassThru] [<CommonParameters>]
+```
+
+### Document
+```powershell
+Add-OfficeWordSection [[-Content] <scriptblock>] -Document <WordDocument> [-BreakType <WordSectionBreakType>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -26,6 +31,14 @@ PS> New-OfficeWord -Path .\doc.docx { Add-OfficeWordSection { Add-OfficeWordPara
 
 Creates a document and inserts a section that contains a single paragraph.
 
+### EXAMPLE 2
+```powershell
+PS> $section = $document | Add-OfficeWordSection -BreakType NextPage -PassThru
+$section | Add-OfficeWordParagraph -Text 'Appendix' -Style Heading1
+```
+
+Adds a section through the document pipeline and uses the returned section as the next explicit target.
+
 ## PARAMETERS
 
 ### -BreakType
@@ -33,7 +46,7 @@ Optional section break type.
 
 ```yaml
 Type: WordSectionBreakType
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values: NextPage, NextColumn, Continuous, EvenPage, OddPage
 
@@ -49,7 +62,7 @@ DSL scriptblock executed within the section scope.
 
 ```yaml
 Type: ScriptBlock
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
@@ -60,12 +73,28 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Document
+Document that will receive a new section.
+
+```yaml
+Type: WordDocument
+Parameter Sets: Document
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
 ### -PassThru
 Emit the created WordSection.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
+Parameter Sets: Context, Document
 Aliases: None
 Possible values:
 
@@ -81,11 +110,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `OfficeIMO.Word.WordDocument`
 
 ## OUTPUTS
 
-- `None`
+- `OfficeIMO.Word.WordSection`
 
 ## RELATED LINKS
 

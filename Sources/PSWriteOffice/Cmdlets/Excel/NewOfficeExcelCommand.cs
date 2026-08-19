@@ -16,6 +16,16 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>New-OfficeExcel -Path .\report.xlsx { ExcelSheet 'Data' { ExcelCell -Address 'A1' -Value 'Region' } }</code>
 ///   <para>Creates <c>report.xlsx</c> and writes “Region” into cell A1 on the Data worksheet.</para>
 /// </example>
+/// <example>
+///   <summary>Keep a workbook for incremental composition.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$workbook = New-OfficeExcel -Path .\report.xlsx -NoSave
+/// $sheet = $workbook | Add-OfficeExcelSheet -Name 'Data' -PassThru
+/// $sheet | Set-OfficeExcelCell -Address A1 -Value 'Region'
+/// $workbook | Save-OfficeExcel
+/// $workbook | Close-OfficeExcel</code>
+///   <para>Associates the output path with a live workbook, changes a worksheet, then saves and closes it once.</para>
+/// </example>
 [Cmdlet(VerbsCommon.New, "OfficeExcel", SupportsShouldProcess = true)]
 [Alias("ExcelNew")]
 public sealed class NewOfficeExcelCommand : PSCmdlet
@@ -173,6 +183,11 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
                 AutoSave.IsPresent);
         try
         {
+            if (NoSave.IsPresent)
+            {
+                ExcelDocumentService.UpdateSaveAssociation(document, resolvedPath, encrypted: false);
+            }
+
             ExcelDateSystemService.ApplyIfSpecified(document, DateSystem, nameof(DateSystem));
             ExcelDocumentPropertyService.ApplyCommonProperties(
                 document,
@@ -218,7 +233,7 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
         }
         catch
         {
-            document.Dispose();
+            ExcelDocumentService.CloseDocument(document);
             throw;
         }
 

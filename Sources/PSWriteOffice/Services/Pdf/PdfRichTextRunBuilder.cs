@@ -61,10 +61,22 @@ internal static class PdfRichTextRunBuilder
         => OfficeTextRunParser.ToRunArray(runs);
 
     internal static PdfTextRun[] ToTextRuns(object? runs)
-        => OfficeTextRunParser.ParseMany(runs).Select(ToTextRun).ToArray();
+        => OfficeTextRunParser.ParseMany(runs).Select(run => ToTextRun(run, TableLinkError)).ToArray();
 
     internal static PdfTextRun[] ToTextRuns(OfficeTextRunSpec[] runs)
-        => runs.Select(ToTextRun).ToArray();
+        => runs.Select(run => ToTextRun(run, TableLinkError)).ToArray();
+
+    internal static PdfTextRun[] ToCanvasTextRuns(object? runs)
+        => OfficeTextRunParser.ParseMany(runs).Select(run => ToTextRun(run, CanvasLinkError)).ToArray();
+
+    internal static PdfTextRun[] ToCanvasTextRuns(OfficeTextRunSpec[] runs)
+        => runs.Select(run => ToTextRun(run, CanvasLinkError)).ToArray();
+
+    private const string TableLinkError =
+        "PDF table cell text runs do not support links yet. Use PdfText outside the table or remove LinkUri/LinkDestinationName from the table cell run.";
+
+    private const string CanvasLinkError =
+        "PDF canvas text runs do not support links. Use flowing PdfText for clickable text or remove LinkUri/LinkDestinationName from the canvas run.";
 
     private static void ApplyRun(PdfParagraphBuilder builder, OfficeTextRunSpec run)
     {
@@ -96,13 +108,13 @@ internal static class PdfRichTextRunBuilder
         AddText(builder, run.Text, run.LinkUri, run.LinkDestinationName, run.LinkContents, color, run.Underline || run.LinkUri != null || run.LinkDestinationName != null);
     }
 
-    private static PdfTextRun ToTextRun(OfficeTextRunSpec run)
+    private static PdfTextRun ToTextRun(OfficeTextRunSpec run, string linkError)
     {
         var text = run.IsLineBreak ? Environment.NewLine : run.IsTab ? "\t" : run.Text;
         var baseline = GetEnum(run.Baseline, PdfTextBaseline.Normal);
         if (!string.IsNullOrWhiteSpace(run.LinkUri) || !string.IsNullOrWhiteSpace(run.LinkDestinationName))
         {
-            throw new PSArgumentException("PDF table cell text runs do not support links yet. Use PdfText outside the table or remove LinkUri/LinkDestinationName from the table cell run.");
+            throw new PSArgumentException(linkError);
         }
 
         return new PdfTextRun(

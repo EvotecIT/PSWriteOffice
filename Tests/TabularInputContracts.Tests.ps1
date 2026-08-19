@@ -11,7 +11,7 @@ BeforeAll {
     } else {
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
-    Import-Module $ModuleManifest -Global -Force -ErrorAction Stop
+    Import-Module $ModuleManifest -Global -ErrorAction Stop
 
     if (-not ('PSWriteOffice.Tests.TabularContractRow' -as [type])) {
         Add-Type -TypeDefinition @'
