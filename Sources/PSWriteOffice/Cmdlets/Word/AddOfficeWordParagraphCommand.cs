@@ -18,6 +18,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>WordParagraph -Text 'Executive summary' -StyleId 'ReportHeading'</code>
 ///   <para>Applies a paragraph style id, including custom styles already present in a template document.</para>
 /// </example>
+/// <example>
+///   <summary>Add mixed-format text through explicit objects.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$paragraph = $document | Add-OfficeWordParagraph -PassThru
+/// $paragraph | Add-OfficeWordText -Run @{ Text = 'Owner: ', 'Platform'; Bold = $true, $false }</code>
+///   <para>Creates a paragraph on a live document and appends two differently formatted runs.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordParagraph", DefaultParameterSetName = ParameterSetText)]
 [Alias("WordParagraph")]
 [OutputType(typeof(WordParagraph))]

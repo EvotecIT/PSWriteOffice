@@ -21,6 +21,12 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Add-OfficeWordTable -InputObject $Data -Style 'GridTable1LightAccent1' { WordTableCondition -FilterScript { $_.Total -gt 1000 } }</code>
 ///   <para>Writes a grid table and highlights rows exceeding $1,000.</para>
 /// </example>
+/// <example>
+///   <summary>Add a table to a live document.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Add-OfficeWordTable -Document $document -InputObject $rows -Style GridTable4Accent1 -Layout AutoFitToWindow</code>
+///   <para>Writes PowerShell objects as a table without requiring an active DSL scope.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordTable", DefaultParameterSetName = ParameterSetContext)]
 [Alias("WordTable")]
 [OutputType(typeof(WordTable))]

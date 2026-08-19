@@ -13,6 +13,12 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Add-OfficeWordParagraph { Add-OfficeWordText -Text 'Important: ' -Bold }</code>
 ///   <para>Writes “Important:” with bold formatting.</para>
 /// </example>
+/// <example>
+///   <summary>Append several styled segments to a paragraph.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$paragraph | Add-OfficeWordText -Run @{ Text = 'Status: ', 'Ready'; Bold = $true, $false; Color = $null, 'SeaGreen' }</code>
+///   <para>Appends one line with independent formatting for its label and value.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordText", DefaultParameterSetName = "Text")]
 [Alias("WordText", "WordBold", "WordItalic")]
 [OutputType(typeof(WordParagraph))]

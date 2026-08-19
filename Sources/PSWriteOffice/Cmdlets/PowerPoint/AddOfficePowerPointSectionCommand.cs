@@ -19,6 +19,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <para>Creates a section named Results starting at the second slide.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointSection")]
+[Alias("PptSection")]
 [OutputType(typeof(PowerPointSectionInfo))]
 public sealed class AddOfficePowerPointSectionCommand : PSCmdlet
 {

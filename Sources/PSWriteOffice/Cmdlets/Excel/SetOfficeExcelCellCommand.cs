@@ -12,6 +12,12 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <code>ExcelSheet 'Data' { Set-OfficeExcelCell -Address 'A1' -Value 'Region'; Set-OfficeExcelCell -Row 1 -Column 2 -Value 'Revenue' }</code>
 ///   <para>Writes two headers in the first row.</para>
 /// </example>
+/// <example>
+///   <summary>Write to an explicit worksheet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$sheet | Set-OfficeExcelCell -Address B2 -Value 42 -NumberFormat '#,##0'</code>
+///   <para>Uses the worksheet pipeline target without an active DSL scope.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelCell")]
 [Alias("ExcelCell")]
 public sealed class SetOfficeExcelCellCommand : PSCmdlet

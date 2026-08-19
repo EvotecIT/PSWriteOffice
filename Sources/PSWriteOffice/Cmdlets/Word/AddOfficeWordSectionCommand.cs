@@ -12,6 +12,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>New-OfficeWord -Path .\doc.docx { Add-OfficeWordSection { Add-OfficeWordParagraph -Text 'Hello' } }</code>
 ///   <para>Creates a document and inserts a section that contains a single paragraph.</para>
 /// </example>
+/// <example>
+///   <summary>Add a section to a live document.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$section = $document | Add-OfficeWordSection -BreakType NextPage -PassThru
+/// $section | Add-OfficeWordParagraph -Text 'Appendix' -Style Heading1</code>
+///   <para>Adds a section through the document pipeline and uses the returned section as the next explicit target.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordSection", DefaultParameterSetName = ParameterSetContext)]
 [Alias("WordSection")]
 [OutputType(typeof(WordSection))]

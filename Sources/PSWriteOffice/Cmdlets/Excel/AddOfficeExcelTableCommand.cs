@@ -18,6 +18,12 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   ExcelSheet 'Data' { Add-OfficeExcelTable -InputObject $data -TableName 'Sales' }</code>
 ///   <para>Writes two rows and formats them as a styled Excel table.</para>
 /// </example>
+/// <example>
+///   <summary>Add a table to an explicit worksheet.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Add-OfficeExcelTable -Worksheet $sheet -InputObject $rows -TableName 'Sales' -AutoFit</code>
+///   <para>Writes the rows into a live workbook without requiring an active DSL scope.</para>
+/// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelTable")]
 [Alias("ExcelTable")]
 public sealed class AddOfficeExcelTableCommand : PSCmdlet
