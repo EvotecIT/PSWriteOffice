@@ -190,23 +190,36 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
         {
             do
             {
-                var currentTable = ExcelReadOutputService.ReadCurrentResultAsDataTable(reader, reader.CurrentSheetName);
-                ExcelReadOutputService.WriteOutput(
-                    this,
-                    currentTable,
-                    AsDataTable.IsPresent,
-                    AsHashtable.IsPresent,
-                    ByColumn.IsPresent,
-                    reader.CurrentSheetName);
+                if (AsDataTable.IsPresent || ByColumn.IsPresent)
+                {
+                    var currentTable = ExcelReadOutputService.ReadCurrentResultAsDataTable(reader, reader.CurrentSheetName);
+                    ExcelReadOutputService.WriteOutput(
+                        this,
+                        currentTable,
+                        AsDataTable.IsPresent,
+                        AsHashtable.IsPresent,
+                        ByColumn.IsPresent,
+                        reader.CurrentSheetName);
+                }
+                else
+                {
+                    ExcelReadOutputService.WriteRows(this, reader, AsHashtable.IsPresent, reader.CurrentSheetName);
+                }
             }
             while (reader.NextResult());
 
             return;
         }
 
-        var table = ExcelReadOutputService.ReadCurrentResultAsDataTable(reader);
-
-        ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent, ByColumn.IsPresent, null);
+        if (AsDataTable.IsPresent || ByColumn.IsPresent)
+        {
+            var table = ExcelReadOutputService.ReadCurrentResultAsDataTable(reader);
+            ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent, ByColumn.IsPresent, null);
+        }
+        else
+        {
+            ExcelReadOutputService.WriteRows(this, reader, AsHashtable.IsPresent, null);
+        }
     }
 
     private async Task WriteDataReaderAsync(ExcelReadOptions options)

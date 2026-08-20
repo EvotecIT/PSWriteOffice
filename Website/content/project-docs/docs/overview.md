@@ -16,15 +16,17 @@ The module manifest is the source of truth for exported cmdlets and aliases. The
 | Update an existing file | `Get-*`, `Set-*`, `Update-*`, and `Save-*` commands | The object remains in the OfficeIMO model while the script performs targeted changes. |
 | Review or diagnose files | inspection, preflight, comparison, and HTML export commands | Read-only diagnostics can run before a job decides whether to change or reject an artifact. |
 | Normalize many formats | Reader commands | One result model exposes documents, chunks, hierarchy, tables, visuals, assets, warnings, and provenance. |
-| Convert between formats or place reusable visuals | focused `ConvertFrom-*`, `ConvertTo-*`, and visual commands | Conversion behavior stays in the matching OfficeIMO adapter instead of shelling out to Office. |
+| Convert between formats or place reusable visuals | focused `ConvertFrom-*`, `ConvertTo-*`, and visual commands | Conversion behavior stays in the matching OfficeIMO adapter instead of shelling out to Office. PDF input can also be reconstructed as editable Word, Excel, or PowerPoint content. |
+| Check protected-content support before automation | `Get-OfficeProtectionCapability` | Filterable, typed capability rows show supported operations, limits, and incomplete format coverage before a workflow handles a protected file. |
 
 ## Major families
 
 - **Excel — 158 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, visual placement, and image export.
 - **Word — 92 commands:** sections, paragraphs, lists, tables, fields, content controls, review, mail merge, protection, merging, visual placement, and conversion.
-- **PDF — 82 commands:** composition, text and image extraction, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, visual placement, and diagnostics.
+- **PDF — 85 commands:** composition, editable Word/Excel/PowerPoint reconstruction, text and image extraction, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, visual placement, and diagnostics.
 - **PowerPoint — 58 commands:** slides, sections, shapes, charts, tables, notes, themes, layouts, transitions, visual placement, import, inspection, and HTML review.
 - **Confluence Cloud — 7 commands:** plan, create, update, and remove pages; preserve managed sections; and list, upload, or download attachments.
+- **Protection capabilities — 1 commands:** inspect OfficeIMO's shared protected-content support contract as typed rows, JSON, or Markdown.
 - **Markdown, Visio, Reader, visuals, and open formats:** typed Markdown, VSDX diagrams and stencils, cross-format visual placement, normalized extraction, RTF, CSV, ODT/ODS/ODP, email, AsciiDoc, and LaTeX workflows.
 
 ## How the documentation fits together

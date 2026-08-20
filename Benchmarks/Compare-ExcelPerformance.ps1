@@ -7,6 +7,12 @@ param(
 
     [int] $RepeatCount = 0,
 
+    [ValidateRange(-1, [int]::MaxValue)]
+    [int] $WarmupCount = -1,
+
+    [ValidateRange(-1, [int]::MaxValue)]
+    [int] $CooldownMilliseconds = -1,
+
     [string[]] $Scenario,
 
     [string[]] $Engine = @('PSWriteOffice', 'ImportExcel', 'ExcelFast'),
@@ -186,6 +192,12 @@ $invokeSplat = @{
 }
 if ($RepeatCount -gt 0) {
     $invokeSplat.IterationCount = $RepeatCount
+}
+if ($WarmupCount -ge 0) {
+    $invokeSplat.WarmupCount = $WarmupCount
+}
+if ($CooldownMilliseconds -ge 0) {
+    $invokeSplat.CooldownMilliseconds = $CooldownMilliseconds
 }
 if ($Scenario -and $Scenario.Count -gt 0) {
     $invokeSplat.Case = $Scenario

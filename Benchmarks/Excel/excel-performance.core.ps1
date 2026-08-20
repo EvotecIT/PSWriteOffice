@@ -92,7 +92,17 @@ function New-ExcelBenchmarkCase {
     )
 
     $supportedEngines = @('PSWriteOffice')
-    if ($OperationKey -notin @('WriteCsv', 'ReadCsvSource', 'ReadUsedRangeDataTable', 'ReadTableMetadata', 'ReadNamedRangeMetadata') -and
+    if ($OperationKey -notin @(
+            'WriteCsv',
+            'ReadCsvSource',
+            'ReadUsedRangeDataTable',
+            'ReadFullSheetDataTable',
+            'ReadRangeDataTable',
+            'ReadFullSheetDataReader',
+            'ReadRangeDataReader',
+            'ReadTableMetadata',
+            'ReadNamedRangeMetadata'
+        ) -and
         $Name -notin @('dataset-worksheets', 'datareader-table')) {
         $supportedEngines += 'ImportExcel'
     }
@@ -136,6 +146,10 @@ function Get-ExcelBenchmarkCase {
         New-ExcelBenchmarkCase -Name datareader-table -Label 'Stream IDataReader as table' -Suites $scale -OperationKey WriteWorkbook -Profile DataTable
         New-ExcelBenchmarkCase -Name import-default-full -Label 'Read full sheet from default export' -Suites $basic -OperationKey ReadFullSheet -Profile MixedObjects -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name import-default-range -Label 'Read A1 range from default export' -Suites $scale -OperationKey ReadRange -Profile MixedObjects -ValidateWorkbook:$false
+        New-ExcelBenchmarkCase -Name import-datatable-full -Label 'Read full sheet as DataTable' -Suites $scale -OperationKey ReadFullSheetDataTable -Profile MixedObjects -ValidateWorkbook:$false
+        New-ExcelBenchmarkCase -Name import-datatable-range -Label 'Read A1 range as DataTable' -Suites $scale -OperationKey ReadRangeDataTable -Profile MixedObjects -ValidateWorkbook:$false
+        New-ExcelBenchmarkCase -Name import-datareader-full -Label 'Consume full sheet as IDataReader' -Suites $scale -OperationKey ReadFullSheetDataReader -Profile MixedObjects -ValidateWorkbook:$false
+        New-ExcelBenchmarkCase -Name import-datareader-range -Label 'Consume A1 range as IDataReader' -Suites $scale -OperationKey ReadRangeDataReader -Profile MixedObjects -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name read-no-header-range -Label 'Read selected range without headers' -Suites $standard -OperationKey ReadNoHeaderRange -Profile MixedObjects -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name read-used-range-datatable -Label 'Read used range as DataTable' -Suites $standard -OperationKey ReadUsedRangeDataTable -Profile MixedObjects -ValidateWorkbook:$false
         New-ExcelBenchmarkCase -Name read-table-metadata -Label 'Read workbook table metadata' -Suites $standard -OperationKey ReadTableMetadata -Profile MixedObjects -ValidateWorkbook:$false

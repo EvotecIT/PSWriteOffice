@@ -141,7 +141,7 @@ Associated-file relationship between the PDF and the embedded file.
 Type: PdfAssociatedFileRelationship
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: Unspecified, Source, Data, Alternative, Supplement
+Possible values: Unspecified, Source, Data, Alternative, Supplement, C2paManifest
 
 Required: False
 Position: named

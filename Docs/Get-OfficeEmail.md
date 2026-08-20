@@ -6,16 +6,16 @@ schema: 2.0.0
 ---
 # Get-OfficeEmail
 ## SYNOPSIS
-Reads a native EML, MSG, or TNEF artifact with bounded diagnostics.
+Reads a native EML, EMLX, MSG, or TNEF artifact with bounded diagnostics.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeEmail [-Path] <string> [-Options <EmailReaderOptions>] [-AsResult] [<CommonParameters>]
+Get-OfficeEmail [-Path] <string> [-Options <EmailReaderOptions>] [-StoreOptions <EmailStoreReaderOptions>] [-AsResult] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Reads a native EML, MSG, or TNEF artifact with bounded diagnostics.
+Reads a native EML, EMLX, MSG, or TNEF artifact with bounded diagnostics.
 
 ## EXAMPLES
 
@@ -60,7 +60,7 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-Path to an EML, MSG, TNEF, or winmail.dat file.
+Path to an EML, EMLX, MSG, TNEF, or winmail.dat file.
 
 ```yaml
 Type: String
@@ -75,6 +75,22 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -StoreOptions
+Optional Apple Mail EMLX envelope, metadata, attachment, and size limits.
+
+```yaml
+Type: EmailStoreReaderOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
@@ -86,6 +102,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 - `OfficeIMO.Email.EmailDocument`
 - `OfficeIMO.Email.EmailReadResult`
+- `OfficeIMO.Email.Store.EmailStoreReadResult`
 
 ## RELATED LINKS
 

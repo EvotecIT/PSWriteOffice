@@ -176,6 +176,73 @@ internal static class ExcelReadOutputService
         }
     }
 
+    /// <summary>
+    /// Streams reader rows directly to PowerShell objects or hashtables without retaining an
+    /// intermediate <see cref="DataTable"/>. Column naming and worksheet metadata follow the
+    /// same rules as <see cref="WriteOutput"/>.
+    /// </summary>
+    internal static void WriteRows(
+        IAsyncCmdletPipeline cmdlet,
+        DbDataReader reader,
+        bool asHashtable,
+        string? worksheetName)
+    {
+        if (cmdlet == null)
+        {
+            throw new ArgumentNullException(nameof(cmdlet));
+        }
+
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        var columnCount = reader.FieldCount;
+        var columnNames = new string[columnCount];
+        for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+        {
+            columnNames[columnIndex] = reader.GetName(columnIndex);
+        }
+
+        var rowOutputColumnNames = CreateRowOutputColumnNames(columnNames, !string.IsNullOrWhiteSpace(worksheetName));
+        var values = new object[columnCount];
+        while (reader.Read())
+        {
+            reader.GetValues(values);
+            if (asHashtable)
+            {
+                var hashtable = new Hashtable(columnCount + (worksheetName == null ? 0 : 1), StringComparer.OrdinalIgnoreCase);
+                if (!string.IsNullOrWhiteSpace(worksheetName))
+                {
+                    hashtable["WorksheetName"] = worksheetName!;
+                }
+
+                for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+                {
+                    var value = values[columnIndex];
+                    hashtable[rowOutputColumnNames[columnIndex]] = value is DBNull ? null : value;
+                }
+
+                cmdlet.WriteObject(hashtable);
+                continue;
+            }
+
+            var psObject = new PSObject();
+            if (!string.IsNullOrWhiteSpace(worksheetName))
+            {
+                psObject.Properties.Add(new PSNoteProperty("WorksheetName", worksheetName!));
+            }
+
+            for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+            {
+                var value = values[columnIndex];
+                psObject.Properties.Add(new PSNoteProperty(rowOutputColumnNames[columnIndex], value is DBNull ? null : value));
+            }
+
+            cmdlet.WriteObject(psObject);
+        }
+    }
+
     private static string[] CreateRowOutputColumnNames(string[] columnNames, bool hasWorksheetMetadata)
     {
         if (!hasWorksheetMetadata)

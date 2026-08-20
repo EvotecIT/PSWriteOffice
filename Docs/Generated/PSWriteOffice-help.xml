@@ -24791,6 +24791,7 @@ so they do not emit a live table wrapper.</maml:para>
             <command:parameterValue required="false" variableLength="false">Data</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Alternative</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Supplement</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">C2paManifest</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfAssociatedFileRelationship</maml:name>
@@ -24885,6 +24886,7 @@ so they do not emit a live table wrapper.</maml:para>
             <command:parameterValue required="false" variableLength="false">Data</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Alternative</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Supplement</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">C2paManifest</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfAssociatedFileRelationship</maml:name>
@@ -24979,6 +24981,7 @@ so they do not emit a live table wrapper.</maml:para>
           <command:parameterValue required="false" variableLength="false">Data</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Alternative</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Supplement</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">C2paManifest</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>PdfAssociatedFileRelationship</maml:name>
@@ -68942,6 +68945,255 @@ cells. This keeps existing-document editing simple without forcing callers back 
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>ConvertTo-OfficePdfExcel</command:name>
+      <command:verb>ConvertTo</command:verb>
+      <command:noun>OfficePdfExcel</command:noun>
+      <maml:description>
+        <maml:para>Extracts detected PDF tables into an editable Excel workbook.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Uses OfficeIMO's logical table reconstruction, including typed numeric, Boolean, date, and percentage columns plus multi-page table continuation handling.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>ConvertTo-OfficePdfExcel</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Overwrite an existing output file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IgnorePermissionRestrictions</maml:name>
+          <maml:description>
+            <maml:para>After successful authentication, explicitly ignore owner-imposed extraction restrictions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Open</maml:name>
+          <maml:description>
+            <maml:para>Open the converted workbook after saving.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Advanced OfficeIMO PDF-table-to-Excel options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfExcelTableImportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfExcelTableImportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Output XLSX path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThruReport</maml:name>
+          <maml:description>
+            <maml:para>Return the detailed table import report instead of file information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password used to authenticate an encrypted PDF.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Input PDF path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Overwrite an existing output file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IgnorePermissionRestrictions</maml:name>
+        <maml:description>
+          <maml:para>After successful authentication, explicitly ignore owner-imposed extraction restrictions.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Open</maml:name>
+        <maml:description>
+          <maml:para>Open the converted workbook after saving.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Advanced OfficeIMO PDF-table-to-Excel options.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfExcelTableImportOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfExcelTableImportOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Output XLSX path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThruReport</maml:name>
+        <maml:description>
+          <maml:para>Return the detailed table import report instead of file information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Password</maml:name>
+        <maml:description>
+          <maml:para>Password used to authenticate an encrypted PDF.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Input PDF path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.IO.FileInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Excel.Pdf.PdfExcelTableImportReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Convert detected PDF tables to Excel.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertTo-OfficePdfExcel -Path .\Statement.pdf -OutputPath .\Statement.xlsx</dev:code>
+        <dev:remarks>
+          <maml:para>Writes an XLSX workbook with one table per detected logical table.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>ConvertTo-OfficePdfFlatAnnotation</command:name>
       <command:verb>ConvertTo</command:verb>
       <command:noun>OfficePdfFlatAnnotation</command:noun>
@@ -70224,6 +70476,255 @@ cells. This keeps existing-document editing simple without forcing callers back 
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>ConvertTo-OfficePdfPowerPoint</command:name>
+      <command:verb>ConvertTo</command:verb>
+      <command:noun>OfficePdfPowerPoint</command:noun>
+      <maml:description>
+        <maml:para>Reconstructs a PowerPoint presentation from a PDF.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Defaults to editable content and also supports visual-page, editable-table, and hybrid reconstruction through OfficeIMO options.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>ConvertTo-OfficePdfPowerPoint</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Overwrite an existing output file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IgnorePermissionRestrictions</maml:name>
+          <maml:description>
+            <maml:para>After successful authentication, explicitly ignore owner-imposed extraction restrictions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Open</maml:name>
+          <maml:description>
+            <maml:para>Open the converted presentation after saving.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Advanced OfficeIMO PDF-to-PowerPoint reconstruction options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfPowerPointImportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfPowerPointImportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Output PPTX path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThruReport</maml:name>
+          <maml:description>
+            <maml:para>Return the detailed conversion report instead of file information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password used to authenticate an encrypted PDF.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Input PDF path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Overwrite an existing output file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IgnorePermissionRestrictions</maml:name>
+        <maml:description>
+          <maml:para>After successful authentication, explicitly ignore owner-imposed extraction restrictions.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Open</maml:name>
+        <maml:description>
+          <maml:para>Open the converted presentation after saving.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Advanced OfficeIMO PDF-to-PowerPoint reconstruction options.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfPowerPointImportOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfPowerPointImportOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Output PPTX path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThruReport</maml:name>
+        <maml:description>
+          <maml:para>Return the detailed conversion report instead of file information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Password</maml:name>
+        <maml:description>
+          <maml:para>Password used to authenticate an encrypted PDF.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Input PDF path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.IO.FileInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.PowerPoint.Pdf.PdfPowerPointConversionReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Convert a PDF to an editable PowerPoint presentation.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertTo-OfficePdfPowerPoint -Path .\Briefing.pdf -OutputPath .\Briefing.pptx</dev:code>
+        <dev:remarks>
+          <maml:para>Writes a PPTX deck using OfficeIMO's richest safe editable projection.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>ConvertTo-OfficePdfRedacted</command:name>
       <command:verb>ConvertTo</command:verb>
       <command:noun>OfficePdfRedacted</command:noun>
@@ -71070,6 +71571,255 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
             }</dev:code>
         <dev:remarks>
           <maml:para>The cross-format run specification stays PowerShell-friendly while the callback receives the native PDF run it requires.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>ConvertTo-OfficePdfWord</command:name>
+      <command:verb>ConvertTo</command:verb>
+      <command:noun>OfficePdfWord</command:noun>
+      <maml:description>
+        <maml:para>Reconstructs editable Word content from a PDF.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Uses OfficeIMO's semantic PDF reader to recover supported headings, paragraphs, lists, tables, links, images, metadata, and page breaks.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>ConvertTo-OfficePdfWord</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Overwrite an existing output file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IgnorePermissionRestrictions</maml:name>
+          <maml:description>
+            <maml:para>After successful authentication, explicitly ignore owner-imposed extraction restrictions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Open</maml:name>
+          <maml:description>
+            <maml:para>Open the converted document after saving.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Advanced OfficeIMO PDF-to-Word reconstruction options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfWordImportOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfWordImportOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Output DOCX path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThruReport</maml:name>
+          <maml:description>
+            <maml:para>Return the detailed conversion report instead of file information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password used to authenticate an encrypted PDF.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Input PDF path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Overwrite an existing output file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IgnorePermissionRestrictions</maml:name>
+        <maml:description>
+          <maml:para>After successful authentication, explicitly ignore owner-imposed extraction restrictions.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Open</maml:name>
+        <maml:description>
+          <maml:para>Open the converted document after saving.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Advanced OfficeIMO PDF-to-Word reconstruction options.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfWordImportOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfWordImportOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Output DOCX path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThruReport</maml:name>
+        <maml:description>
+          <maml:para>Return the detailed conversion report instead of file information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Password</maml:name>
+        <maml:description>
+          <maml:para>Password used to authenticate an encrypted PDF.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Input PDF path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.IO.FileInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Word.Pdf.PdfWordConversionReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Convert a PDF to an editable Word document.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertTo-OfficePdfWord -Path .\Report.pdf -OutputPath .\Report.docx</dev:code>
+        <dev:remarks>
+          <maml:para>Writes a DOCX document and returns its file information.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -97623,11 +98373,11 @@ extraction, hashing, and chunk shaping.</maml:para>
       <command:verb>Get</command:verb>
       <command:noun>OfficeEmail</command:noun>
       <maml:description>
-        <maml:para>Reads a native EML, MSG, or TNEF artifact with bounded diagnostics.</maml:para>
+        <maml:para>Reads a native EML, EMLX, MSG, or TNEF artifact with bounded diagnostics.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Reads a native EML, MSG, or TNEF artifact with bounded diagnostics.</maml:para>
+      <maml:para>Reads a native EML, EMLX, MSG, or TNEF artifact with bounded diagnostics.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -97659,11 +98409,23 @@ extraction, hashing, and chunk shaping.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>Path</maml:name>
           <maml:description>
-            <maml:para>Path to an EML, MSG, TNEF, or winmail.dat file.</maml:para>
+            <maml:para>Path to an EML, EMLX, MSG, TNEF, or winmail.dat file.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>StoreOptions</maml:name>
+          <maml:description>
+            <maml:para>Optional Apple Mail EMLX envelope, metadata, attachment, and size limits.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">EmailStoreReaderOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>EmailStoreReaderOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -97698,11 +98460,23 @@ extraction, hashing, and chunk shaping.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>Path</maml:name>
         <maml:description>
-          <maml:para>Path to an EML, MSG, TNEF, or winmail.dat file.</maml:para>
+          <maml:para>Path to an EML, EMLX, MSG, TNEF, or winmail.dat file.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>StoreOptions</maml:name>
+        <maml:description>
+          <maml:para>Optional Apple Mail EMLX envelope, metadata, attachment, and size limits.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">EmailStoreReaderOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>EmailStoreReaderOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -97724,6 +98498,11 @@ extraction, hashing, and chunk shaping.</maml:para>
       <command:returnValue>
         <dev:type>
           <maml:name>OfficeIMO.Email.EmailReadResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Email.Store.EmailStoreReadResult</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -113715,6 +114494,223 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
             Get-OfficePowerPointTheme -Presentation $ppt | Select-Object Name, Master</dev:code>
         <dev:remarks>
           <maml:para>Returns theme information after updating the deck theme metadata.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Get-OfficeProtectionCapability</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>OfficeProtectionCapability</command:noun>
+      <maml:description>
+        <maml:para>Returns OfficeIMO's machine-readable protected-content support contract.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Returns OfficeIMO's machine-readable protected-content support contract.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-OfficeProtectionCapability</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AsJson</maml:name>
+          <maml:description>
+            <maml:para>Return the complete catalog as deterministic JSON. Filtering parameters cannot be combined with this switch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AsMarkdown</maml:name>
+          <maml:description>
+            <maml:para>Return the complete catalog as a Markdown table. Filtering parameters cannot be combined with this switch.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>Filter by format identifier or family, such as PDF, DOCX, or EML.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>Id</maml:name>
+          <maml:description>
+            <maml:para>Exact stable capability identifier.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IncompleteOnly</maml:name>
+          <maml:description>
+            <maml:para>Return only rows with at least one unsupported operation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Kind</maml:name>
+          <maml:description>
+            <maml:para>Filter by protected-content mechanism.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeProtectionKind</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">PasswordEncryption</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">RecipientEncryption</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">DigitalSignature</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">FontObfuscation</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">EditingRestriction</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">AccessDeterrence</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeProtectionKind</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>AsJson</maml:name>
+        <maml:description>
+          <maml:para>Return the complete catalog as deterministic JSON. Filtering parameters cannot be combined with this switch.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>AsMarkdown</maml:name>
+        <maml:description>
+          <maml:para>Return the complete catalog as a Markdown table. Filtering parameters cannot be combined with this switch.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Format</maml:name>
+        <maml:description>
+          <maml:para>Filter by format identifier or family, such as PDF, DOCX, or EML.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <maml:name>Id</maml:name>
+        <maml:description>
+          <maml:para>Exact stable capability identifier.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IncompleteOnly</maml:name>
+        <maml:description>
+          <maml:para>Return only rows with at least one unsupported operation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Kind</maml:name>
+        <maml:description>
+          <maml:para>Filter by protected-content mechanism.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeProtectionKind</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">PasswordEncryption</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RecipientEncryption</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">DigitalSignature</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">FontObfuscation</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">EditingRestriction</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">AccessDeterrence</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeProtectionKind</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Security.OfficeProtectionCapability</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>List incomplete protection capabilities.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeProtectionCapability -IncompleteOnly | Format-Table FormatId, Kind, Open, Create, Validate</dev:code>
+        <dev:remarks>
+          <maml:para>Shows formats whose encrypted, signed, restricted, or obfuscated workflows still have unsupported operations.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -143752,11 +144748,11 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:verb>Save</command:verb>
       <command:noun>OfficeEmail</command:noun>
       <maml:description>
-        <maml:para>Saves an email document as EML, MSG, or TNEF with fidelity diagnostics.</maml:para>
+        <maml:para>Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Saves an email document as EML, MSG, or TNEF with fidelity diagnostics.</maml:para>
+      <maml:para>Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -143786,6 +144782,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
             <command:parameterValue required="false" variableLength="false">Tnef</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Mbox</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">OutlookTemplate</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Emlx</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>EmailFileFormat</maml:name>
@@ -143845,6 +144842,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
           <command:parameterValue required="false" variableLength="false">Tnef</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Mbox</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">OutlookTemplate</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Emlx</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>EmailFileFormat</maml:name>
@@ -166561,6 +167559,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
             <command:parameterValue required="false" variableLength="false">Data</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Alternative</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Supplement</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">C2paManifest</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfAssociatedFileRelationship</maml:name>
@@ -166683,6 +167682,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
             <command:parameterValue required="false" variableLength="false">Data</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Alternative</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Supplement</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">C2paManifest</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfAssociatedFileRelationship</maml:name>
@@ -166805,6 +167805,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
           <command:parameterValue required="false" variableLength="false">Data</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Alternative</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Supplement</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">C2paManifest</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>PdfAssociatedFileRelationship</maml:name>

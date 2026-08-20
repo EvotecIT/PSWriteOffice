@@ -1,10 +1,11 @@
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Email;
+using OfficeIMO.Email.Store;
 
 namespace PSWriteOffice.Cmdlets.Email;
 
-/// <summary>Saves an email document as EML, MSG, or TNEF with fidelity diagnostics.</summary>
+/// <summary>Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.</summary>
 [Cmdlet(VerbsData.Save, "OfficeEmail", SupportsShouldProcess = true)]
 [OutputType(typeof(EmailWriteResult))]
 public sealed class SaveOfficeEmailCommand : PSCmdlet
@@ -31,6 +32,20 @@ public sealed class SaveOfficeEmailCommand : PSCmdlet
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         if (!ShouldProcess(output, "Save email artifact")) return;
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
+        if (Format == EmailFileFormat.Emlx ||
+            (!Format.HasValue && string.Equals(System.IO.Path.GetExtension(output), ".emlx", System.StringComparison.OrdinalIgnoreCase)))
+        {
+            var writer = new EmailStoreEmlxWriter(new EmailStoreEmlxWriterOptions(Options));
+            var result = writer.Write(Document, output);
+            if (result.HasErrors)
+            {
+                result.RequireNoLoss();
+            }
+
+            WriteObject(result);
+            return;
+        }
+
         WriteObject(Format.HasValue
             ? Document.Save(output, Format.Value, Options)
             : Document.Save(output, Options));

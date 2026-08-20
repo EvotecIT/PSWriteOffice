@@ -12,7 +12,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | --- | ---: | --- |
 | Excel | 158 | [Excel automation](/docs/pswriteoffice/excel/) |
 | Word | 92 | [Word automation](/docs/pswriteoffice/word/) |
-| PDF | 82 | [PDF automation](/docs/pswriteoffice/pdf/) |
+| PDF | 85 | [PDF automation](/docs/pswriteoffice/pdf/) |
 | PowerPoint | 58 | [PowerPoint automation](/docs/pswriteoffice/powerpoint/) |
 | Markdown | 25 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Visio | 23 | [Visio diagrams](/docs/pswriteoffice/visio/) |
@@ -26,6 +26,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | LaTeX | 4 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | HTML assets | 1 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Cross-format visuals | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
+| Protection capabilities | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
 | Shared authoring primitives | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
 
 The total is generated from the module manifest. Aliases are intentionally counted separately because they provide a shorter DSL without replacing the canonical command names in help and automation.
