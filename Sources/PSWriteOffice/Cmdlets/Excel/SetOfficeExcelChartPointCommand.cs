@@ -38,12 +38,16 @@ public sealed class SetOfficeExcelChartPointCommand : PSWriteOffice.Cmdlets.Offi
     [Parameter(Mandatory = true)]
     public uint PointIndex { get; set; }
 
-    /// <summary>Point fill color in hex format.</summary>
+    /// <summary>Point fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
-    /// <summary>Point line color in hex format.</summary>
+    /// <summary>Point line color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Point line width in points.</summary>

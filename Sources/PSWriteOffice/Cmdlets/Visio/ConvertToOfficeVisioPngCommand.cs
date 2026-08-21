@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Export a diagram preview to PNG.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
+///   <code>OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
 /// ConvertTo-OfficeVisioPng -Path .\ServiceMap.vsdx -OutputPath .\ServiceMap.png -PixelsPerInch 144</code>
 ///   <para>Creates a diagram and exports the first page to a PNG preview.</para>
 /// </example>
@@ -46,6 +46,8 @@ public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet {
 
     /// <summary>Background color name or hex value. Use -Transparent for transparent output.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>Use transparent PNG background.</summary>

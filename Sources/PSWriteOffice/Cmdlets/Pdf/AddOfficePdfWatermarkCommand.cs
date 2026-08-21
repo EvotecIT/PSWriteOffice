@@ -43,8 +43,10 @@ public sealed class AddOfficePdfWatermarkCommand : PSCmdlet
     [Parameter]
     public double? RotationAngle { get; set; }
 
-    /// <summary>Optional watermark color in #RRGGBB format.</summary>
+    /// <summary>Optional watermark color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Emit the updated document.</summary>

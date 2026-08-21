@@ -85,10 +85,12 @@ public sealed class AddOfficeExcelDashboardChartCommand : PSCmdlet
 
     /// <summary>Optional chart style id override.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int? StyleId { get; set; }
 
     /// <summary>Optional chart color style id override.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int? ColorStyleId { get; set; }
 
     /// <summary>Emit the created chart.</summary>

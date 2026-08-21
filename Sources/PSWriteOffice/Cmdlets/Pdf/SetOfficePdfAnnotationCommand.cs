@@ -47,8 +47,10 @@ public sealed class SetOfficePdfAnnotationCommand : PSWriteOffice.Cmdlets.Office
     [Parameter]
     public int? Flags { get; set; }
 
-    /// <summary>Replacement annotation color as #RRGGBB.</summary>
+    /// <summary>Replacement annotation color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Remove /A and /AA action dictionaries from the annotation.</summary>

@@ -43,10 +43,12 @@ public sealed class SetOfficeWordTextStyleCommand : PSCmdlet
 
     /// <summary>Underline style to apply.</summary>
     [Parameter]
-    public string? Underline { get; set; }
+    public WordUnderlineStyle? Underline { get; set; }
 
-    /// <summary>Text color as #RRGGBB.</summary>
+    /// <summary>Text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Font size in points.</summary>
@@ -59,7 +61,7 @@ public sealed class SetOfficeWordTextStyleCommand : PSCmdlet
 
     /// <summary>Highlight color.</summary>
     [Parameter]
-    public string? Highlight { get; set; }
+    public WordHighlightColor? Highlight { get; set; }
 
     /// <summary>Set or clear strikethrough.</summary>
     [Parameter]
@@ -107,17 +109,11 @@ public sealed class SetOfficeWordTextStyleCommand : PSCmdlet
         if (!string.IsNullOrWhiteSpace(StyleId)) text.SetCharacterStyleId(StyleId!);
         if (IsBound(nameof(Bold))) text.Bold = Bold ?? false;
         if (IsBound(nameof(Italic))) text.Italic = Italic ?? false;
-        if (!string.IsNullOrWhiteSpace(Underline))
-        {
-            text.Underline = ParseOpenXmlValue<WordUnderlineStyle>(Underline!, nameof(Underline));
-        }
+        if (Underline.HasValue) text.Underline = Underline.Value;
         if (IsBound(nameof(Color))) text.ColorHex = Color ?? string.Empty;
         if (IsBound(nameof(FontSize))) text.FontSize = FontSize;
         if (IsBound(nameof(FontFamily))) text.FontFamily = FontFamily;
-        if (!string.IsNullOrWhiteSpace(Highlight))
-        {
-            text.Highlight = ParseOpenXmlValue<WordHighlightColor>(Highlight!, nameof(Highlight));
-        }
+        if (Highlight.HasValue) text.Highlight = Highlight.Value;
         if (IsBound(nameof(Strike))) text.Strike = Strike ?? false;
         if (IsBound(nameof(DoubleStrike))) text.DoubleStrike = DoubleStrike ?? false;
         if (CapsStyle.HasValue) text.CapsStyle = CapsStyle.Value;
@@ -130,16 +126,6 @@ public sealed class SetOfficeWordTextStyleCommand : PSCmdlet
         {
             WriteObject(text);
         }
-    }
-
-    private static T ParseOpenXmlValue<T>(string value, string parameterName)
-    {
-        if (OpenXmlValueParser.TryParse(value, out T parsed))
-        {
-            return parsed;
-        }
-
-        throw new PSArgumentException($"Unknown {parameterName} value '{value}'.", parameterName);
     }
 
     private bool IsBound(string parameterName) => MyInvocation.BoundParameters.ContainsKey(parameterName);

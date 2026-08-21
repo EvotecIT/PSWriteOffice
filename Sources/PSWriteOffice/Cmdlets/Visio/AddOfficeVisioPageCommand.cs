@@ -8,7 +8,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Add a second diagram page.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\Workbook.vsdx {
+///   <code>OfficeVisio -Path .\Workbook.vsdx {
 ///     VisioPage -Name 'Architecture' {
 ///         VisioRectangle -Key api -Text 'API' -X 2 -Y 4
 ///     }
@@ -19,7 +19,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Alias("VisioPage")]
 [OutputType(typeof(VisioPage))]
 public sealed class AddOfficeVisioPageCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
-    /// <summary>Target Visio document. Optional inside <c>New-OfficeVisio</c>.</summary>
+    /// <summary>Target Visio document. Optional inside <c>OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioDocument? Document { get; set; }
 

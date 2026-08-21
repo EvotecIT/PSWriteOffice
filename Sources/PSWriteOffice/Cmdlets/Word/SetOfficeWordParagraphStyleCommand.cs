@@ -32,11 +32,11 @@ public sealed class SetOfficeWordParagraphStyleCommand : PSCmdlet
 
     /// <summary>Paragraph alignment.</summary>
     [Parameter]
-    public string? Alignment { get; set; }
+    public WordParagraphAlignment? Alignment { get; set; }
 
     /// <summary>Vertical character alignment on each line.</summary>
     [Parameter]
-    public string? CharacterAlignment { get; set; }
+    public WordVerticalCharacterAlignment? CharacterAlignment { get; set; }
 
     /// <summary>Indentation before the paragraph in points.</summary>
     [Parameter]
@@ -68,7 +68,7 @@ public sealed class SetOfficeWordParagraphStyleCommand : PSCmdlet
 
     /// <summary>Line spacing calculation rule.</summary>
     [Parameter]
-    public string? LineSpacingRule { get; set; }
+    public WordLineSpacingRule? LineSpacingRule { get; set; }
 
     /// <summary>Start the paragraph on a new page.</summary>
     [Parameter]
@@ -88,7 +88,7 @@ public sealed class SetOfficeWordParagraphStyleCommand : PSCmdlet
 
     /// <summary>Paragraph text direction.</summary>
     [Parameter]
-    public string? TextDirection { get; set; }
+    public WordTextDirection? TextDirection { get; set; }
 
     /// <summary>Set or clear right-to-left paragraph layout.</summary>
     [Parameter]
@@ -109,14 +109,8 @@ public sealed class SetOfficeWordParagraphStyleCommand : PSCmdlet
 
         if (Style.HasValue) paragraph.Style = Style.Value;
         if (!string.IsNullOrWhiteSpace(StyleId)) paragraph.SetStyleId(StyleId!);
-        if (!string.IsNullOrWhiteSpace(Alignment))
-        {
-            paragraph.ParagraphAlignment = ParseOpenXmlValue<WordParagraphAlignment>(Alignment!, nameof(Alignment));
-        }
-        if (!string.IsNullOrWhiteSpace(CharacterAlignment))
-        {
-            paragraph.VerticalCharacterAlignmentOnLine = ParseOpenXmlValue<WordVerticalCharacterAlignment>(CharacterAlignment!, nameof(CharacterAlignment));
-        }
+        if (Alignment.HasValue) paragraph.ParagraphAlignment = Alignment.Value;
+        if (CharacterAlignment.HasValue) paragraph.VerticalCharacterAlignmentOnLine = CharacterAlignment.Value;
         if (IsBound(nameof(IndentationBeforePoints))) paragraph.IndentationBeforePoints = IndentationBeforePoints;
         if (IsBound(nameof(IndentationAfterPoints))) paragraph.IndentationAfterPoints = IndentationAfterPoints;
         if (IsBound(nameof(IndentationFirstLinePoints))) paragraph.IndentationFirstLinePoints = IndentationFirstLinePoints;
@@ -124,34 +118,18 @@ public sealed class SetOfficeWordParagraphStyleCommand : PSCmdlet
         if (IsBound(nameof(LineSpacingPoints))) paragraph.LineSpacingPoints = LineSpacingPoints;
         if (IsBound(nameof(SpacingBeforePoints))) paragraph.LineSpacingBeforePoints = SpacingBeforePoints;
         if (IsBound(nameof(SpacingAfterPoints))) paragraph.LineSpacingAfterPoints = SpacingAfterPoints;
-        if (!string.IsNullOrWhiteSpace(LineSpacingRule))
-        {
-            paragraph.LineSpacingRule = ParseOpenXmlValue<WordLineSpacingRule>(LineSpacingRule!, nameof(LineSpacingRule));
-        }
+        if (LineSpacingRule.HasValue) paragraph.LineSpacingRule = LineSpacingRule.Value;
         if (IsBound(nameof(PageBreakBefore))) paragraph.PageBreakBefore = PageBreakBefore ?? false;
         if (IsBound(nameof(KeepWithNext))) paragraph.KeepWithNext = KeepWithNext ?? false;
         if (IsBound(nameof(KeepLinesTogether))) paragraph.KeepLinesTogether = KeepLinesTogether ?? false;
         if (IsBound(nameof(AvoidWidowAndOrphan))) paragraph.AvoidWidowAndOrphan = AvoidWidowAndOrphan ?? false;
-        if (!string.IsNullOrWhiteSpace(TextDirection))
-        {
-            paragraph.TextDirection = ParseOpenXmlValue<WordTextDirection>(TextDirection!, nameof(TextDirection));
-        }
+        if (TextDirection.HasValue) paragraph.TextDirection = TextDirection.Value;
         if (IsBound(nameof(BiDi))) paragraph.BiDi = BiDi ?? false;
 
         if (PassThru.IsPresent)
         {
             WriteObject(paragraph);
         }
-    }
-
-    private static T ParseOpenXmlValue<T>(string value, string parameterName)
-    {
-        if (OpenXmlValueParser.TryParse(value, out T parsed))
-        {
-            return parsed;
-        }
-
-        throw new PSArgumentException($"Unknown {parameterName} value '{value}'.", parameterName);
     }
 
     private bool IsBound(string parameterName) => MyInvocation.BoundParameters.ContainsKey(parameterName);

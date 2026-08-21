@@ -50,6 +50,7 @@ public sealed class SetOfficePowerPointThemeFontsCommand : PSCmdlet
 
     /// <summary>Slide master index to update when not using <see cref="AllMasters"/>.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int Master { get; set; }
 
     /// <summary>Apply the changes across all slide masters.</summary>

@@ -29,6 +29,7 @@ public sealed class SetOfficePdfPageSetupCommand : PSCmdlet
 
     /// <summary>Page size name: A4, A5, Letter, Legal, or Custom.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficePdfPageSizeArgumentCompleter))]
     public string? PageSize { get; set; }
 
     /// <summary>Custom page width in PDF points when -PageSize Custom is used.</summary>

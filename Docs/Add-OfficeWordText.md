@@ -57,7 +57,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Run color (#RRGGBB).
+Run color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

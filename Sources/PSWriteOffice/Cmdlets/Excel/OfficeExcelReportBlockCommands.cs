@@ -140,8 +140,7 @@ public sealed class AddOfficeExcelReportSpacerCommand : PSWriteOffice.Cmdlets.Of
 public sealed class AddOfficeExcelReportCalloutCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Callout kind. Supported values include info, success, warning, error, and critical.</summary>
     [Parameter(Position = 0)]
-    [ValidateSet("Info", "Success", "Warning", "Error", "Critical")]
-    public string Kind { get; set; } = "Info";
+    public OfficeExcelReportCalloutKind Kind { get; set; } = OfficeExcelReportCalloutKind.Info;
 
     /// <summary>Callout title.</summary>
     [Parameter(Mandatory = true, Position = 1)]
@@ -158,7 +157,7 @@ public sealed class AddOfficeExcelReportCalloutCommand : PSWriteOffice.Cmdlets.O
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var context = ExcelDslContext.Require(this);
-        context.RequireComposer().Callout(Kind, Title, Body, WidthColumns);
+        context.RequireComposer().Callout(Kind.ToString(), Title, Body, WidthColumns);
         WritePassThru(context.RequireSheet());
     }
 }
@@ -188,6 +187,8 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSWriteOffice.Cmdlets.Of
 
     /// <summary>Optional fill color for KPI labels.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LabelFillColor { get; set; }
 
     /// <inheritdoc />
@@ -236,6 +237,8 @@ public sealed class AddOfficeExcelReportLegendCommand : PSWriteOffice.Cmdlets.Of
 
     /// <summary>Optional header fill color.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? HeaderFillColor { get; set; }
 
     /// <summary>Use case-sensitive matching for first-column fill values.</summary>
@@ -286,7 +289,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet {
 
     /// <summary>Built-in table style to apply.</summary>
     [Parameter]
-    public string TableStyle { get; set; } = "TableStyleMedium9";
+    public ExcelTableStyle TableStyle { get; set; } = ExcelTableStyle.TableStyleMedium9;
 
     /// <summary>Properties to include, in the requested column order.</summary>
     [Parameter]
@@ -378,9 +381,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet {
         var requestedColumns = NormalizePropertyList(Property) ?? sourceColumns;
         var excludedProperties = NormalizePropertyList(ExcludeProperty) ?? Array.Empty<string>();
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style)) {
-            throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
-        }
+        var style = TableStyle;
 
         var composer = ExcelDslContext.Require(this).RequireComposer();
         var range = composer.TableFrom(

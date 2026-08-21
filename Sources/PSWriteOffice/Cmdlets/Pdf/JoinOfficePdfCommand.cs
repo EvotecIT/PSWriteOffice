@@ -67,6 +67,7 @@ public sealed class JoinOfficePdfCommand : PSCmdlet
 
     /// <summary>Resize each merged page to a known OfficeIMO page size such as A4, Letter, or Custom.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficePdfPageSizeArgumentCompleter))]
     public string? PageSize { get; set; }
 
     /// <summary>Custom output page width in points when -PageSize Custom is used.</summary>

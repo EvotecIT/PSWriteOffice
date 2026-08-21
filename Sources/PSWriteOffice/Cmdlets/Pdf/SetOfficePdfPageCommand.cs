@@ -37,8 +37,7 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
 
     /// <summary>Page boundary box to set. Supported values are MediaBox, CropBox, BleedBox, TrimBox, and ArtBox.</summary>
     [Parameter]
-    [ValidateSet("MediaBox", "CropBox", "BleedBox", "TrimBox", "ArtBox")]
-    public string? BoxName { get; set; }
+    public PdfPageBoundaryBox? BoxName { get; set; }
 
     /// <summary>Left coordinate for the page boundary box.</summary>
     [Parameter]
@@ -58,6 +57,7 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
 
     /// <summary>Resize selected pages to a known OfficeIMO page size such as A4, Letter, or Custom.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficePdfPageSizeArgumentCompleter))]
     public string? PageSize { get; set; }
 
     /// <summary>Custom page width in points when -PageSize Custom is used.</summary>
@@ -120,7 +120,7 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
             ResizeMargin.HasValue);
 
         if (resizeOptions != null) {
-            if (!string.IsNullOrWhiteSpace(BoxName) || MyInvocation.BoundParameters.ContainsKey(nameof(Rotation))) {
+            if (BoxName.HasValue || MyInvocation.BoundParameters.ContainsKey(nameof(Rotation))) {
                 throw new PSArgumentException("Use page resize, rotation, or box editing as separate Set-OfficePdfPage operations.");
             }
 
@@ -129,7 +129,7 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(BoxName)) {
+        if (BoxName.HasValue) {
             if (!Left.HasValue || !Bottom.HasValue || !Right.HasValue || !Top.HasValue) {
                 throw new PSArgumentException("-BoxName requires -Left, -Bottom, -Right, and -Top.");
             }
@@ -137,7 +137,7 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
             PdfDocument
                 .Open(inputPath, readOptions)
                 .Pages.SetPageBox(
-                    (PdfPageBoundaryBox)Enum.Parse(typeof(PdfPageBoundaryBox), BoxName!, ignoreCase: true),
+                    BoxName.Value,
                     Left.Value,
                     Bottom.Value,
                     Right.Value,

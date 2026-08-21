@@ -11,12 +11,12 @@ Adds a decimal-number data validation rule to a worksheet range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelValidationDecimal [[-Range] <string>] [-Operator] <string> [-Formula1] <double> [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <Double>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelValidationDecimal [[-Range] <string>] [-Operator] <ExcelDataValidationOperator> [-Formula1] <double> [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <Double>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelValidationDecimal [[-Range] <string>] [-Operator] <string> [-Formula1] <double> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <Double>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelValidationDecimal [[-Range] <string>] [-Operator] <ExcelDataValidationOperator> [-Formula1] <double> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <Double>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -181,10 +181,10 @@ Accept wildcard characters: False
 Validation operator.
 
 ```yaml
-Type: String
+Type: ExcelDataValidationOperator
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: Between, NotBetween, Equal, NotEqual, LessThan, LessThanOrEqual, GreaterThan, GreaterThanOrEqual
 
 Required: True
 Position: 1

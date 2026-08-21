@@ -43,8 +43,7 @@ public sealed class SetOfficeWordPageSetupCommand : PSCmdlet
 
     /// <summary>Page orientation.</summary>
     [Parameter]
-    [ValidateSet("Portrait", "Landscape")]
-    public string? Orientation { get; set; }
+    public OfficePageOrientation? Orientation { get; set; }
 
     /// <summary>Built-in margin preset.</summary>
     [Parameter]
@@ -173,10 +172,7 @@ public sealed class SetOfficeWordPageSetupCommand : PSCmdlet
         {
             section.PageSettings.PageSize = PageSize.Value;
         }
-        if (!string.IsNullOrWhiteSpace(Orientation))
-        {
-            section.PageOrientation = ResolveOrientation();
-        }
+        if (Orientation.HasValue) section.PageOrientation = Orientation.Value;
         if (Margin.HasValue)
         {
             section.SetMargins(Margin.Value);
@@ -223,10 +219,4 @@ public sealed class SetOfficeWordPageSetupCommand : PSCmdlet
         }
     }
 
-    private OfficePageOrientation ResolveOrientation()
-    {
-        return string.Equals(Orientation, "Landscape", StringComparison.OrdinalIgnoreCase)
-            ? OfficePageOrientation.Landscape
-            : OfficePageOrientation.Portrait;
-    }
 }

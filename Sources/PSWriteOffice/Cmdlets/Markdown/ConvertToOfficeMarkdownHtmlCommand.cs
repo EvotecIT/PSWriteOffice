@@ -142,6 +142,7 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
 
     /// <summary>referrerpolicy value for external HTTP(S) links.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeReferrerPolicyArgumentCompleter))]
     public string? ExternalLinksReferrerPolicy { get; set; }
 
     /// <summary>Restrict absolute HTTP(S) links to the base origin.</summary>
@@ -166,6 +167,7 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
 
     /// <summary>referrerpolicy value for rendered images.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeReferrerPolicyArgumentCompleter))]
     public string? ImagesReferrerPolicy { get; set; }
 
     /// <summary>Allowed HTTP(S) link hosts.</summary>

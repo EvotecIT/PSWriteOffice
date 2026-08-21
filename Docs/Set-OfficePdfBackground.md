@@ -54,7 +54,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Background color in #RRGGBB format.
+Background color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

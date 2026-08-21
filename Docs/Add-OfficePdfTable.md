@@ -78,7 +78,7 @@ Accept wildcard characters: False
 ```
 
 ### -BorderColor
-Border color in #RRGGBB format.
+Border color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -142,7 +142,7 @@ Accept wildcard characters: False
 ```
 
 ### -CaptionColor
-Caption color in #RRGGBB format.
+Caption color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -366,7 +366,7 @@ Accept wildcard characters: False
 ```
 
 ### -HeaderFill
-Header fill color in #RRGGBB format.
+Header fill color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -414,7 +414,7 @@ Accept wildcard characters: False
 ```
 
 ### -HeaderTextColor
-Header text color in #RRGGBB format.
+Header text color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -654,7 +654,7 @@ Accept wildcard characters: False
 ```
 
 ### -RowStripeFill
-Alternating body row fill color in #RRGGBB format.
+Alternating body row fill color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -734,7 +734,7 @@ Accept wildcard characters: False
 ```
 
 ### -TextColor
-Body text color in #RRGGBB format.
+Body text color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

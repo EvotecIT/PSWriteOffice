@@ -29,7 +29,7 @@ public sealed class AddOfficePowerPointShapeCommand : PSWriteOffice.Cmdlets.Offi
 
     /// <summary>Shape geometry preset name (e.g., Rectangle, Ellipse, Line).</summary>
     [Parameter]
-    public string ShapeType { get; set; } = "Rectangle";
+    public OfficePresetShapeType ShapeType { get; set; } = OfficePresetShapeType.Rectangle;
 
     /// <summary>Left offset (in points) from the slide origin.</summary>
     [Parameter]
@@ -53,10 +53,14 @@ public sealed class AddOfficePowerPointShapeCommand : PSWriteOffice.Cmdlets.Offi
 
     /// <summary>Fill color (hex or named color).</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Outline color (hex or named color).</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? OutlineColor { get; set; }
 
     /// <summary>Outline width in points.</summary>
@@ -79,8 +83,7 @@ public sealed class AddOfficePowerPointShapeCommand : PSWriteOffice.Cmdlets.Offi
             }
 
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
-            var shapeType = ResolveShapeType(ShapeType);
-            var shape = slide.AddShapePoints(shapeType, X, Y, Width, Height, Name);
+            var shape = slide.AddShapePoints(ShapeType, X, Y, Width, Height, Name);
 
             var fill = NormalizeColor(FillColor);
             if (fill != null) {
@@ -110,15 +113,4 @@ public sealed class AddOfficePowerPointShapeCommand : PSWriteOffice.Cmdlets.Offi
         return OfficeColor.Parse(color!).ToRgbHex().ToLowerInvariant();
     }
 
-    private static OfficePresetShapeType ResolveShapeType(string? shapeType) {
-        if (string.IsNullOrWhiteSpace(shapeType)) {
-            return OfficePresetShapeType.Rectangle;
-        }
-
-        if (!OpenXmlValueParser.TryParse<OfficePresetShapeType>(shapeType, out var parsed)) {
-            throw new PSArgumentException($"Unknown shape type '{shapeType}'.", nameof(ShapeType));
-        }
-
-        return parsed;
-    }
 }

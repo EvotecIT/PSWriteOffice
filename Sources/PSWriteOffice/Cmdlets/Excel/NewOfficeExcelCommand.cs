@@ -26,7 +26,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <para>Associates the output path with a live workbook, changes a worksheet, then saves and closes it once.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeExcel", SupportsShouldProcess = true)]
-[Alias("ExcelNew")]
+[Alias("OfficeExcel", "ExcelNew")]
 public sealed class NewOfficeExcelCommand : PSCmdlet {
     /// <summary>Destination path for the workbook.</summary>
     [Parameter(Mandatory = true, Position = 0)]

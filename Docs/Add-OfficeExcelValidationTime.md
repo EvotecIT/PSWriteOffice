@@ -11,12 +11,12 @@ Adds a time data validation rule to a worksheet range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelValidationTime [[-Range] <string>] [-Operator] <string> [-Formula1] <timespan> [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <TimeSpan>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelValidationTime [[-Range] <string>] [-Operator] <ExcelDataValidationOperator> [-Formula1] <timespan> [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <TimeSpan>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelValidationTime [[-Range] <string>] [-Operator] <string> [-Formula1] <timespan> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <TimeSpan>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelValidationTime [[-Range] <string>] [-Operator] <ExcelDataValidationOperator> [-Formula1] <timespan> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <TimeSpan>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -181,10 +181,10 @@ Accept wildcard characters: False
 Validation operator.
 
 ```yaml
-Type: String
+Type: ExcelDataValidationOperator
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: Between, NotBetween, Equal, NotEqual, LessThan, LessThanOrEqual, GreaterThan, GreaterThanOrEqual
 
 Required: True
 Position: 1

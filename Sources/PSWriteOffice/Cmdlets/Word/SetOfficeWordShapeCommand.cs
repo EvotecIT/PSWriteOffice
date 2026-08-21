@@ -38,11 +38,17 @@ public sealed class SetOfficeWordShapeCommand : PSCmdlet
     /// <summary>Shape rotation in degrees.</summary>
     [Parameter] public double? Rotation { get; set; }
 
-    /// <summary>Fill color as #RRGGBB.</summary>
-    [Parameter] public string? FillColor { get; set; }
+    /// <summary>Fill color. Named colors and hexadecimal values are accepted.</summary>
+    [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
+    public string? FillColor { get; set; }
 
-    /// <summary>Stroke color as #RRGGBB.</summary>
-    [Parameter] public string? StrokeColor { get; set; }
+    /// <summary>Stroke color. Named colors and hexadecimal values are accepted.</summary>
+    [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
+    public string? StrokeColor { get; set; }
 
     /// <summary>Stroke width in points.</summary>
     [Parameter] public double? StrokeWidth { get; set; }

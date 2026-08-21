@@ -52,8 +52,7 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
 
     /// <summary>Table layout behavior.</summary>
     [Parameter]
-    [ValidateSet("Autofit", "Fixed", "AutoFitToContents", "AutoFitToWindow")]
-    public string? Layout { get; set; }
+    public OfficeWordTableLayout? Layout { get; set; }
 
     /// <summary>Skip writing header row.</summary>
     [Parameter]
@@ -257,42 +256,42 @@ public sealed class AddOfficeWordTableCommand : PSCmdlet
         return LanguagePrimitives.IsTrue(result[result.Count - 1]);
     }
 
-    private static WordTableLayoutMode? ResolveLegacyLayout(string? layout)
+    private static WordTableLayoutMode? ResolveLegacyLayout(OfficeWordTableLayout? layout)
     {
-        if (string.IsNullOrWhiteSpace(layout))
+        if (!layout.HasValue)
         {
             return null;
         }
 
-        if (string.Equals(layout, "AutoFitToContents", StringComparison.OrdinalIgnoreCase))
+        if (layout == OfficeWordTableLayout.AutoFitToContents)
         {
             return null;
         }
 
-        if (string.Equals(layout, "AutoFitToWindow", StringComparison.OrdinalIgnoreCase))
+        if (layout == OfficeWordTableLayout.AutoFitToWindow)
         {
             return null;
         }
 
-        return string.Equals(layout, "Autofit", StringComparison.OrdinalIgnoreCase)
+        return layout == OfficeWordTableLayout.AutoFit
             ? WordTableLayoutMode.AutoFit
             : WordTableLayoutMode.Fixed;
     }
 
-    private static void ApplyLayout(WordTable table, string? layout)
+    private static void ApplyLayout(WordTable table, OfficeWordTableLayout? layout)
     {
-        if (string.IsNullOrWhiteSpace(layout))
+        if (!layout.HasValue)
         {
             return;
         }
 
-        if (string.Equals(layout, "AutoFitToContents", StringComparison.OrdinalIgnoreCase))
+        if (layout == OfficeWordTableLayout.AutoFitToContents)
         {
             table.AutoFitToContents();
             return;
         }
 
-        if (string.Equals(layout, "AutoFitToWindow", StringComparison.OrdinalIgnoreCase))
+        if (layout == OfficeWordTableLayout.AutoFitToWindow)
         {
             table.AutoFitToWindow();
         }

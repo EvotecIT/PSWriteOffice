@@ -28,7 +28,7 @@ Set-OfficePdfAnnotation -ObjectNumber 1
 ## PARAMETERS
 
 ### -Color
-Replacement annotation color as #RRGGBB.
+Replacement annotation color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

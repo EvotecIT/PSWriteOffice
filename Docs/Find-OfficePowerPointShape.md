@@ -11,22 +11,22 @@ Finds PowerPoint shapes by text, name, kind, or slide.
 ## SYNTAX
 ### PresentationText (Default)
 ```powershell
-Find-OfficePowerPointShape [[-Text] <string>] -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <Int32>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Find-OfficePowerPointShape [[-Text] <string>] -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <Int32>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <OfficePowerPointShapeKind[]>] [<CommonParameters>]
 ```
 
 ### PresentationRegex
 ```powershell
-Find-OfficePowerPointShape [-Pattern] <string> -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <Int32>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Find-OfficePowerPointShape [-Pattern] <string> -Presentation <PowerPointPresentation> [-CaseSensitive] [-Index <Int32>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <OfficePowerPointShapeKind[]>] [<CommonParameters>]
 ```
 
 ### SlideText
 ```powershell
-Find-OfficePowerPointShape [[-Text] <string>] -Slide <PowerPointSlide> [-CaseSensitive] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Find-OfficePowerPointShape [[-Text] <string>] -Slide <PowerPointSlide> [-CaseSensitive] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <OfficePowerPointShapeKind[]>] [<CommonParameters>]
 ```
 
 ### SlideRegex
 ```powershell
-Find-OfficePowerPointShape [-Pattern] <string> -Slide <PowerPointSlide> [-CaseSensitive] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Find-OfficePowerPointShape [-Pattern] <string> -Slide <PowerPointSlide> [-CaseSensitive] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <OfficePowerPointShapeKind[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -97,7 +97,7 @@ Accept wildcard characters: False
 Optional shape kind filter such as TextBox or Table.
 
 ```yaml
-Type: String[]
+Type: OfficePowerPointShapeKind[]
 Parameter Sets: PresentationText, PresentationRegex, SlideText, SlideRegex
 Aliases: None
 Possible values: TextBox, Picture, Table, Chart, AutoShape, GroupShape

@@ -46,7 +46,7 @@ Uses OfficeIMO.Word background image support and saves the updated document thro
 ## PARAMETERS
 
 ### -Color
-Background color in hex format (#RRGGBB or RRGGBB).
+Background color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

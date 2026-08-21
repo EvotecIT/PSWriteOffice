@@ -104,8 +104,7 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
 
     /// <summary>Formula read mode. CachedValue returns workbook cached results; FormulaText returns formula expressions when present.</summary>
     [Parameter]
-    [ValidateSet("CachedValue", "FormulaText")]
-    public string FormulaMode { get; set; } = "CachedValue";
+    public OfficeExcelFormulaMode FormulaMode { get; set; } = OfficeExcelFormulaMode.CachedValue;
 
     /// <summary>Culture used when parsing numbers and dates stored as text.</summary>
     [Parameter]
@@ -157,7 +156,7 @@ public sealed class ImportOfficeExcelCommand : AsyncPSCmdlet
 
         var options = ExcelReadOutputService.CreateOptions(
             NumericAsDecimal.IsPresent,
-            useCachedFormulaResult: !string.Equals(FormulaMode, "FormulaText", StringComparison.OrdinalIgnoreCase),
+            useCachedFormulaResult: FormulaMode == OfficeExcelFormulaMode.CachedValue,
             culture: ResolveCulture());
         options.CancellationToken = AsDataReader.IsPresent ? CancellationToken.None : CancelToken;
         options.InferSchema = AsDataReader.IsPresent || AsDataTable.IsPresent;

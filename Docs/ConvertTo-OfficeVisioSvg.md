@@ -26,7 +26,7 @@ Exports a Visio document page to dependency-free SVG.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
+PS> OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
             ConvertTo-OfficeVisioSvg -Path .\ServiceMap.vsdx -OutputPath .\ServiceMap.svg -Transparent
 ```
 

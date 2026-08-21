@@ -57,7 +57,7 @@ Accept wildcard characters: False
 ```
 
 ### -BackgroundColor
-Solid background color as #RRGGBB or #AARRGGBB.
+Solid background color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -137,7 +137,7 @@ Accept wildcard characters: False
 ```
 
 ### -GradientFrom
-Gradient start color as #RRGGBB or #AARRGGBB.
+Gradient start color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -153,7 +153,7 @@ Accept wildcard characters: False
 ```
 
 ### -GradientTo
-Gradient end color as #RRGGBB or #AARRGGBB.
+Gradient end color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

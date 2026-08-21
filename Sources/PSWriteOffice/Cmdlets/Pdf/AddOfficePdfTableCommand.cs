@@ -89,26 +89,37 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
 
     /// <summary>OfficeIMO table style preset or supported Word table style name.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficePdfTableStyleArgumentCompleter))]
     public string? TableStyle { get; set; }
 
-    /// <summary>Header fill color in #RRGGBB format.</summary>
+    /// <summary>Header fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? HeaderFill { get; set; }
 
-    /// <summary>Header text color in #RRGGBB format.</summary>
+    /// <summary>Header text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? HeaderTextColor { get; set; }
 
-    /// <summary>Body text color in #RRGGBB format.</summary>
+    /// <summary>Body text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? TextColor { get; set; }
 
-    /// <summary>Alternating body row fill color in #RRGGBB format.</summary>
+    /// <summary>Alternating body row fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? RowStripeFill { get; set; }
 
-    /// <summary>Border color in #RRGGBB format.</summary>
+    /// <summary>Border color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BorderColor { get; set; }
 
     /// <summary>Border width in PDF points.</summary>
@@ -151,8 +162,10 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
     [Parameter]
     public PdfAlign? CaptionAlign { get; set; }
 
-    /// <summary>Caption color in #RRGGBB format.</summary>
+    /// <summary>Caption color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? CaptionColor { get; set; }
 
     /// <summary>Caption font size in PDF points.</summary>

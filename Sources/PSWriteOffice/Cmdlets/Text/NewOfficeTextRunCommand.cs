@@ -15,6 +15,7 @@ public sealed class NewOfficeTextRunCommand : PSCmdlet
 
     /// <summary>Run kind such as Text, LineBreak, Tab, Superscript, or Subscript.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeTextRunKindArgumentCompleter))]
     public string? Kind { get; set; }
 
     /// <summary>Render the run in bold.</summary>
@@ -31,6 +32,7 @@ public sealed class NewOfficeTextRunCommand : PSCmdlet
 
     /// <summary>Optional underline style name when the target format supports it.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeUnderlineStyleArgumentCompleter))]
     public string? UnderlineStyle { get; set; }
 
     /// <summary>Render the run with strikethrough.</summary>
@@ -40,11 +42,15 @@ public sealed class NewOfficeTextRunCommand : PSCmdlet
     /// <summary>Text color. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
     [Alias("TextColor", "FontColor")]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
-    /// <summary>Run background or highlight color. Named colors and hexadecimal colors are accepted.</summary>
+    /// <summary>Run background or highlight color. Named colors, hexadecimal colors, and the Word highlight sentinel None are accepted.</summary>
     [Parameter]
     [Alias("HighlightColor", "FillColor")]
+    [OfficeColorArgumentTransformation(AllowNone = true)]
+    [ArgumentCompleter(typeof(OfficeHighlightColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>Font size in points.</summary>
@@ -58,6 +64,7 @@ public sealed class NewOfficeTextRunCommand : PSCmdlet
 
     /// <summary>Target-specific baseline name, such as Superscript or Subscript.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeTextBaselineArgumentCompleter))]
     public string? Baseline { get; set; }
 
     /// <summary>URI link target when supported by the target format.</summary>
@@ -78,11 +85,13 @@ public sealed class NewOfficeTextRunCommand : PSCmdlet
     /// <summary>PDF tab leader style name.</summary>
     [Parameter]
     [Alias("Leader")]
+    [ArgumentCompleter(typeof(OfficeTabLeaderArgumentCompleter))]
     public string? TabLeader { get; set; }
 
     /// <summary>Tab alignment name.</summary>
     [Parameter]
     [Alias("Alignment")]
+    [ArgumentCompleter(typeof(OfficeTabAlignmentArgumentCompleter))]
     public string? TabAlignment { get; set; }
 
     /// <inheritdoc />

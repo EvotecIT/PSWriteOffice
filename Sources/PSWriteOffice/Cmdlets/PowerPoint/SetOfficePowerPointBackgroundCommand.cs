@@ -32,6 +32,8 @@ public sealed class SetOfficePowerPointBackgroundCommand : PSWriteOffice.Cmdlets
 
     /// <summary>Background color (hex or named color).</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetColor, Position = 0)]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string Color { get; set; } = string.Empty;
 
     /// <summary>Path to a background image file.</summary>

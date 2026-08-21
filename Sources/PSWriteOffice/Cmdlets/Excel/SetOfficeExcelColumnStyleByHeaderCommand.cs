@@ -47,8 +47,7 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSWriteOffice.Cmd
 
     /// <summary>Preset number style to apply.</summary>
     [Parameter]
-    [ValidateSet("Number", "Integer", "Percent", "Currency", "Date", "DateTime", "Time", "DurationHours", "Text", "NumberFormat")]
-    public string? Style { get; set; }
+    public OfficeExcelColumnStylePreset? Style { get; set; }
 
     /// <summary>Decimal places for number, percent, and currency styles.</summary>
     [Parameter]
@@ -72,16 +71,19 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSWriteOffice.Cmd
 
     /// <summary>Apply a solid background color to the whole resolved column.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>Apply a font color to the whole resolved column.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FontColor { get; set; }
 
     /// <summary>Align cell content in the resolved column.</summary>
     [Parameter]
-    [ValidateSet("Left", "Center", "Right")]
-    public string? Alignment { get; set; }
+    public OfficeExcelColumnAlignment? Alignment { get; set; }
 
     /// <summary>Background colors keyed by matching cell text.</summary>
     [Parameter]
@@ -125,7 +127,7 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSWriteOffice.Cmd
         bool requiresCellMaterialization = Bold.IsPresent ||
             !string.IsNullOrWhiteSpace(BackgroundColor) ||
             !string.IsNullOrWhiteSpace(FontColor) ||
-            !string.IsNullOrWhiteSpace(Alignment) ||
+            Alignment.HasValue ||
             BackgroundByText is { Count: > 0 } ||
             FontColorByText is { Count: > 0 } ||
             BoldByText is { Length: > 0 };
@@ -145,8 +147,8 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSWriteOffice.Cmd
 
         var hasAction = false;
 
-        if (!string.IsNullOrWhiteSpace(Style)) {
-            ApplyPreset(builder, Style!);
+        if (Style.HasValue) {
+            ApplyPreset(builder, Style.Value);
             hasAction = true;
         } else if (!string.IsNullOrWhiteSpace(NumberFormat)) {
             builder.NumberFormat(NumberFormat!);
@@ -168,15 +170,15 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSWriteOffice.Cmd
             hasAction = true;
         }
 
-        if (!string.IsNullOrWhiteSpace(Alignment)) {
-            switch (Alignment) {
-                case "Left":
+        if (Alignment.HasValue) {
+            switch (Alignment.Value) {
+                case OfficeExcelColumnAlignment.Left:
                     builder.AlignLeft();
                     break;
-                case "Center":
+                case OfficeExcelColumnAlignment.Center:
                     builder.AlignCenter();
                     break;
-                case "Right":
+                case OfficeExcelColumnAlignment.Right:
                     builder.AlignRight();
                     break;
             }
@@ -227,36 +229,36 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSWriteOffice.Cmd
         return ExcelDslContext.Require(this).RequireSheet();
     }
 
-    private void ApplyPreset(ExcelColumnStyleByHeaderBuilder builder, string style) {
+    private void ApplyPreset(ExcelColumnStyleByHeaderBuilder builder, OfficeExcelColumnStylePreset style) {
         switch (style) {
-            case "Number":
+            case OfficeExcelColumnStylePreset.Number:
                 builder.Number(Decimals);
                 break;
-            case "Integer":
+            case OfficeExcelColumnStylePreset.Integer:
                 builder.Integer();
                 break;
-            case "Percent":
+            case OfficeExcelColumnStylePreset.Percent:
                 builder.Percent(Decimals);
                 break;
-            case "Currency":
+            case OfficeExcelColumnStylePreset.Currency:
                 builder.Currency(Decimals, ResolveCulture());
                 break;
-            case "Date":
+            case OfficeExcelColumnStylePreset.Date:
                 builder.Date(string.IsNullOrWhiteSpace(Pattern) ? "yyyy-mm-dd" : Pattern!);
                 break;
-            case "DateTime":
+            case OfficeExcelColumnStylePreset.DateTime:
                 builder.DateTime(string.IsNullOrWhiteSpace(Pattern) ? "yyyy-mm-dd hh:mm:ss" : Pattern!);
                 break;
-            case "Time":
+            case OfficeExcelColumnStylePreset.Time:
                 builder.Time();
                 break;
-            case "DurationHours":
+            case OfficeExcelColumnStylePreset.DurationHours:
                 builder.DurationHours();
                 break;
-            case "Text":
+            case OfficeExcelColumnStylePreset.Text:
                 builder.Text();
                 break;
-            case "NumberFormat":
+            case OfficeExcelColumnStylePreset.NumberFormat:
                 if (string.IsNullOrWhiteSpace(NumberFormat)) {
                     throw new PSArgumentException("Provide -NumberFormat when -Style NumberFormat is used.", nameof(NumberFormat));
                 }

@@ -8,7 +8,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Inspect a generated diagram.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
+///   <code>OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
 /// Get-OfficeVisioInfo -Path .\ServiceMap.vsdx -AsText</code>
 ///   <para>Returns stable line-oriented text that is useful for tests and release notes.</para>
 /// </example>

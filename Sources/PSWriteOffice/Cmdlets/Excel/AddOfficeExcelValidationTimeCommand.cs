@@ -56,7 +56,7 @@ public sealed class AddOfficeExcelValidationTimeCommand : PSCmdlet
 
     /// <summary>Validation operator.</summary>
     [Parameter(Mandatory = true, Position = 1)]
-    public string Operator { get; set; } = string.Empty;
+    public ExcelDataValidationOperator Operator { get; set; }
 
     /// <summary>Primary time bound.</summary>
     [Parameter(Mandatory = true, Position = 2)]
@@ -85,14 +85,9 @@ public sealed class AddOfficeExcelValidationTimeCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        if (!OpenXmlValueParser.TryParse<ExcelDataValidationOperator>(Operator, out var op))
-        {
-            throw new PSArgumentException($"Unknown validation operator '{Operator}'.", nameof(Operator));
-        }
-
         var sheet = ResolveSheet();
         string targetRange = ExcelTargetRangeResolver.Resolve(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent);
-        sheet.ValidationTime(targetRange, op, Formula1, Formula2, AllowBlank, ErrorTitle, ErrorMessage);
+        sheet.ValidationTime(targetRange, Operator, Formula1, Formula2, AllowBlank, ErrorTitle, ErrorMessage);
 
         if (PassThru.IsPresent)
         {

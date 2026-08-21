@@ -11,7 +11,7 @@ Updates paragraph style, spacing, indentation, and pagination hints.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordParagraphStyle [[-Paragraph] <WordParagraph>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-Alignment <string>] [-CharacterAlignment <string>] [-IndentationBeforePoints <Double>] [-IndentationAfterPoints <Double>] [-IndentationFirstLinePoints <Double>] [-IndentationHangingPoints <Double>] [-LineSpacingPoints <Double>] [-SpacingBeforePoints <Double>] [-SpacingAfterPoints <Double>] [-LineSpacingRule <string>] [-PageBreakBefore <Boolean>] [-KeepWithNext <Boolean>] [-KeepLinesTogether <Boolean>] [-AvoidWidowAndOrphan <Boolean>] [-TextDirection <string>] [-BiDi <Boolean>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordParagraphStyle [[-Paragraph] <WordParagraph>] [-Style <WordParagraphStyles>] [-StyleId <string>] [-Alignment <WordParagraphAlignment>] [-CharacterAlignment <WordVerticalCharacterAlignment>] [-IndentationBeforePoints <Double>] [-IndentationAfterPoints <Double>] [-IndentationFirstLinePoints <Double>] [-IndentationHangingPoints <Double>] [-LineSpacingPoints <Double>] [-SpacingBeforePoints <Double>] [-SpacingAfterPoints <Double>] [-LineSpacingRule <WordLineSpacingRule>] [-PageBreakBefore <Boolean>] [-KeepWithNext <Boolean>] [-KeepLinesTogether <Boolean>] [-AvoidWidowAndOrphan <Boolean>] [-TextDirection <WordTextDirection>] [-BiDi <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,10 +32,10 @@ Applies a heading style and keeps it with the next paragraph.
 Paragraph alignment.
 
 ```yaml
-Type: String
+Type: WordParagraphAlignment
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Left, Start, Center, Right, End, Both, MediumKashida, Distribute, NumTab, HighKashida, LowKashida, ThaiDistribute
 
 Required: False
 Position: named
@@ -80,10 +80,10 @@ Accept wildcard characters: False
 Vertical character alignment on each line.
 
 ```yaml
-Type: String
+Type: WordVerticalCharacterAlignment
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Top, Center, Baseline, Bottom, Auto
 
 Required: False
 Position: named
@@ -208,10 +208,10 @@ Accept wildcard characters: False
 Line spacing calculation rule.
 
 ```yaml
-Type: String
+Type: WordLineSpacingRule
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Auto, Exact, AtLeast
 
 Required: False
 Position: named
@@ -336,10 +336,10 @@ Accept wildcard characters: False
 Paragraph text direction.
 
 ```yaml
-Type: String
+Type: WordTextDirection
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: LeftToRightTopToBottom, LeftToRightTopToBottom2010, TopToBottomRightToLeft, TopToBottomRightToLeft2010, BottomToTopLeftToRight, BottomToTopLeftToRight2010, LeftToRightTopToBottomRotated, LeftToRightTopToBottomRotated2010, TopToBottomRightToLeftRotated, TopToBottomRightToLeftRotated2010, TopToBottomLeftToRightRotated, TopToBottomLeftToRightRotated2010
 
 Required: False
 Position: named

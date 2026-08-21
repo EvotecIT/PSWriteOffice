@@ -39,11 +39,15 @@ public sealed class NewOfficeWordTableCellCommand : PSCmdlet
     /// <summary>Cell text color. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
     [Alias("Color", "FontColor")]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? TextColor { get; set; }
 
     /// <summary>Cell fill color. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
     [Alias("BackgroundColor", "CellFill")]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Cell font size in points.</summary>

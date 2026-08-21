@@ -265,7 +265,8 @@ internal static class WordTextRunService
             return;
         }
 
-        if (OpenXmlValueParser.TryParse(backgroundColor, out WordHighlightColor highlight))
+        var highlightName = ResolveHighlightName(backgroundColor);
+        if (highlightName != null && OpenXmlValueParser.TryParse(highlightName, out WordHighlightColor highlight))
         {
             run.Highlight = highlight;
             return;
@@ -286,7 +287,8 @@ internal static class WordTextRunService
             return;
         }
 
-        if (OpenXmlValueParser.TryParse(backgroundColor, out HighlightColorValues highlight))
+        var highlightName = ResolveHighlightName(backgroundColor);
+        if (highlightName != null && OpenXmlValueParser.TryParse(highlightName, out HighlightColorValues highlight))
         {
             properties.Highlight = new Highlight { Val = highlight };
             return;
@@ -297,6 +299,40 @@ internal static class WordTextRunService
         {
             properties.Shading = new Shading { Fill = rgb!, Val = ShadingPatternValues.Clear };
         }
+    }
+
+    private static string? ResolveHighlightName(string? backgroundColor)
+    {
+        if (string.IsNullOrWhiteSpace(backgroundColor))
+        {
+            return null;
+        }
+
+        if (OpenXmlValueParser.TryParse(backgroundColor, out WordHighlightColor direct))
+        {
+            return direct.ToString();
+        }
+
+        return OfficeColorUtilities.ToRgbHex(backgroundColor)?.ToUpperInvariant() switch
+        {
+            "000000" => nameof(WordHighlightColor.Black),
+            "0000FF" => nameof(WordHighlightColor.Blue),
+            "00FFFF" => nameof(WordHighlightColor.Cyan),
+            "008000" => nameof(WordHighlightColor.Green),
+            "FF00FF" => nameof(WordHighlightColor.Magenta),
+            "FF0000" => nameof(WordHighlightColor.Red),
+            "FFFF00" => nameof(WordHighlightColor.Yellow),
+            "FFFFFF" => nameof(WordHighlightColor.White),
+            "00008B" => nameof(WordHighlightColor.DarkBlue),
+            "008B8B" => nameof(WordHighlightColor.DarkCyan),
+            "006400" => nameof(WordHighlightColor.DarkGreen),
+            "8B008B" => nameof(WordHighlightColor.DarkMagenta),
+            "8B0000" => nameof(WordHighlightColor.DarkRed),
+            "808000" => nameof(WordHighlightColor.DarkYellow),
+            "A9A9A9" => nameof(WordHighlightColor.DarkGray),
+            "D3D3D3" => nameof(WordHighlightColor.LightGray),
+            _ => null,
+        };
     }
 
     private static WordUnderlineStyle? ResolveUnderline(bool underline, string? underlineStyle)

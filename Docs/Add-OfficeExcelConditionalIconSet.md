@@ -11,12 +11,12 @@ Adds an icon set conditional format to a range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelConditionalIconSet [[-Range] <string>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-IconSet <string>] [-ShowValue <bool>] [-Reverse <bool>] [-PercentThresholds <double[]>] [-NumberThresholds <double[]>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelConditionalIconSet [[-Range] <string>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-IconSet <ExcelIconSet>] [-ShowValue <bool>] [-Reverse <bool>] [-PercentThresholds <double[]>] [-NumberThresholds <double[]>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelConditionalIconSet [[-Range] <string>] -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-IconSet <string>] [-ShowValue <bool>] [-Reverse <bool>] [-PercentThresholds <double[]>] [-NumberThresholds <double[]>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelConditionalIconSet [[-Range] <string>] -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-IconSet <ExcelIconSet>] [-ShowValue <bool>] [-Reverse <bool>] [-PercentThresholds <double[]>] [-NumberThresholds <double[]>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -85,10 +85,10 @@ Accept wildcard characters: False
 Icon set to apply.
 
 ```yaml
-Type: String
+Type: ExcelIconSet
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: ThreeArrows, ThreeArrowsGray, ThreeFlags, ThreeTrafficLights1, ThreeTrafficLights2, ThreeSigns, ThreeSymbols, ThreeSymbols2, FourArrows, FourArrowsGray, FourRedToBlack, FourRating, FourTrafficLights, FiveArrows, FiveArrowsGray, FiveRating, FiveQuarters
 
 Required: False
 Position: named

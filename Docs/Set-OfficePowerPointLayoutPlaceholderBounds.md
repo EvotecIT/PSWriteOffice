@@ -11,7 +11,7 @@ Sets layout placeholder bounds for a slide layout.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePowerPointLayoutPlaceholderBounds -Layout <int> -PlaceholderType <string> -Left <double> -Top <double> -Width <double> -Height <double> [-Presentation <PowerPointPresentation>] [-Master <int>] [-Index <UInt32>] [-CreateIfMissing] [-PassThru] [<CommonParameters>]
+Set-OfficePowerPointLayoutPlaceholderBounds -Layout <int> -PlaceholderType <PowerPointPlaceholderType> -Left <double> -Top <double> -Width <double> -Height <double> [-Presentation <PowerPointPresentation>] [-Master <int>] [-Index <UInt32>] [-CreateIfMissing] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -154,10 +154,10 @@ Accept wildcard characters: False
 Placeholder type to target.
 
 ```yaml
-Type: String
+Type: PowerPointPlaceholderType
 Parameter Sets: __AllParameterSets
 Aliases: Type
-Possible values:
+Possible values: Title, Body, CenteredTitle, SubTitle, DateAndTime, SlideNumber, Footer, Header, Object, Chart, Table, ClipArt, Diagram, Media, SlideImage, Picture
 
 Required: True
 Position: named

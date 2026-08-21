@@ -33,8 +33,7 @@ public sealed class SaveOfficeLatexCommand : PSCmdlet
 
     /// <summary>Canonical line ending: LF, CRLF, or CR. Omit it to retain the source preference.</summary>
     [Parameter]
-    [ValidateSet("LF", "CRLF", "CR")]
-    public string? LineEnding { get; set; }
+    public OfficeLineEnding? LineEnding { get; set; }
 
     /// <summary>Return the saved document.</summary>
     [Parameter]
@@ -56,14 +55,7 @@ public sealed class SaveOfficeLatexCommand : PSCmdlet
             LineEnding = Options?.LineEnding
         };
         if (Mode.HasValue) options.Mode = Mode.Value;
-        if (LineEnding != null) options.LineEnding = ResolveLineEnding(LineEnding);
+        if (LineEnding.HasValue) options.LineEnding = OfficeLineEndingUtilities.ToText(LineEnding.Value);
         return options;
     }
-
-    private static string ResolveLineEnding(string value) => value switch {
-        "LF" => "\n",
-        "CRLF" => "\r\n",
-        "CR" => "\r",
-        _ => throw new PSArgumentException("LineEnding must be LF, CRLF, or CR.", nameof(LineEnding))
-    };
 }

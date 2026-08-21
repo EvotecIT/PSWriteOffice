@@ -21,7 +21,7 @@ Creates a new OfficeIMO.Visio document with an initial page and optional DSL con
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\ServiceMap.vsdx -Title 'Service map' -RequestRecalcOnOpen {
+PS> OfficeVisio -Path .\ServiceMap.vsdx -Title 'Service map' -RequestRecalcOnOpen {
     VisioRectangle -Key web -Text 'Web' -X 1 -Y 4 -FillColor LightBlue
     VisioRectangle -Key api -Text 'API' -X 4 -Y 4 -FillColor LightGreen
     VisioConnector -From web -To api -EndArrow Triangle -Label 'calls'

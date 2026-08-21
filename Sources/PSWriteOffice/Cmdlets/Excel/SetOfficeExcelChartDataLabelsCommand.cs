@@ -42,8 +42,7 @@ public sealed class SetOfficeExcelChartDataLabelsCommand : PSWriteOffice.Cmdlets
 
     /// <summary>Optional data label position.</summary>
     [Parameter]
-    [ValidateSet("BestFit", "Bottom", "Center", "InsideBase", "InsideEnd", "Left", "OutsideEnd", "Right", "Top")]
-    public string? Position { get; set; }
+    public OfficeChartDataLabelPosition? Position { get; set; }
 
     /// <summary>Optional number format code.</summary>
     [Parameter]
@@ -65,20 +64,26 @@ public sealed class SetOfficeExcelChartDataLabelsCommand : PSWriteOffice.Cmdlets
     [Parameter]
     public bool? Italic { get; set; }
 
-    /// <summary>Optional label text color in hex format.</summary>
+    /// <summary>Optional label text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Optional label font name.</summary>
     [Parameter]
     public string? FontName { get; set; }
 
-    /// <summary>Optional label fill color in hex format.</summary>
+    /// <summary>Optional label fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
-    /// <summary>Optional label line color in hex format.</summary>
+    /// <summary>Optional label line color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Optional label border width in points.</summary>
@@ -96,7 +101,7 @@ public sealed class SetOfficeExcelChartDataLabelsCommand : PSWriteOffice.Cmdlets
     /// <inheritdoc />
     protected override void ProcessRecord() {
         try {
-            Chart.SetDataLabels(ShowValue, ShowCategoryName, ShowSeriesName, ShowLegendKey, ShowPercent, ResolveDataLabelPosition(Position), NumberFormat, SourceLinked);
+            Chart.SetDataLabels(ShowValue, ShowCategoryName, ShowSeriesName, ShowLegendKey, ShowPercent, Position, NumberFormat, SourceLinked);
 
             if (FontSizePoints.HasValue || Bold.HasValue || Italic.HasValue ||
                 !string.IsNullOrWhiteSpace(Color) || !string.IsNullOrWhiteSpace(FontName)) {
@@ -114,19 +119,4 @@ public sealed class SetOfficeExcelChartDataLabelsCommand : PSWriteOffice.Cmdlets
         }
     }
 
-    private static OfficeChartDataLabelPosition? ResolveDataLabelPosition(string? value) {
-        return value switch {
-            null => null,
-            "BestFit" => OfficeChartDataLabelPosition.BestFit,
-            "Bottom" => OfficeChartDataLabelPosition.Bottom,
-            "Center" => OfficeChartDataLabelPosition.Center,
-            "InsideBase" => OfficeChartDataLabelPosition.InsideBase,
-            "InsideEnd" => OfficeChartDataLabelPosition.InsideEnd,
-            "Left" => OfficeChartDataLabelPosition.Left,
-            "OutsideEnd" => OfficeChartDataLabelPosition.OutsideEnd,
-            "Right" => OfficeChartDataLabelPosition.Right,
-            "Top" => OfficeChartDataLabelPosition.Top,
-            _ => throw new PSArgumentException($"Unsupported data label position '{value}'.")
-        };
-    }
 }

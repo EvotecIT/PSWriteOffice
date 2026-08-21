@@ -32,8 +32,7 @@ public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet {
 
     /// <summary>Metadata kind to add.</summary>
     [Parameter(Mandatory = true)]
-    [ValidateSet("Connection", "QueryTable")]
-    public string Kind { get; set; } = "Connection";
+    public OfficeExcelPackageMetadataKind Kind { get; set; } = OfficeExcelPackageMetadataKind.Connection;
 
     /// <summary>XML payload to add as package metadata.</summary>
     [Parameter(Mandatory = true)]
@@ -59,7 +58,7 @@ public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet {
 
         string? sheetName = null;
         ExcelPackagePartInfo part;
-        if (string.Equals(Kind, "QueryTable", StringComparison.OrdinalIgnoreCase)) {
+        if (Kind == OfficeExcelPackageMetadataKind.QueryTable) {
             sheetName = ExcelWorkbookCommandService.ResolveSheetNameOrCurrent(this, document, ParameterSetName, WorksheetName);
             part = document.AddWorksheetQueryTableMetadata(sheetName, Xml);
         } else {
@@ -71,7 +70,7 @@ public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet {
 
         if (PassThru.IsPresent) {
             var result = new PSObject();
-            result.Properties.Add(new PSNoteProperty("Kind", Kind));
+            result.Properties.Add(new PSNoteProperty("Kind", Kind.ToString()));
             result.Properties.Add(new PSNoteProperty("WorksheetName", sheetName));
             result.Properties.Add(new PSNoteProperty("ContentType", contentType));
             WriteObject(result);

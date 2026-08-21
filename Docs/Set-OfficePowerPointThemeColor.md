@@ -73,7 +73,7 @@ Accept wildcard characters: False
 ```
 
 ### -Colors
-Hashtable of theme color names to hex values.
+Hashtable of theme color names to named or hexadecimal color values.
 
 ```yaml
 Type: Hashtable
@@ -137,7 +137,7 @@ Accept wildcard characters: False
 ```
 
 ### -Value
-Hex color value (for example C00000 or #C00000).
+Named or hexadecimal color value.
 
 ```yaml
 Type: String

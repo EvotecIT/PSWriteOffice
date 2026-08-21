@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Arrange keyed shapes in a horizontal stack.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\Layout.vsdx {
+///   <code>OfficeVisio -Path .\Layout.vsdx {
 ///     VisioRectangle -Key one -Text 'One'
 ///     VisioRectangle -Key two -Text 'Two'
 ///     VisioLayout -ShapeId one,two -HorizontalStack -HorizontalSpacing 0.4
@@ -29,7 +29,7 @@ public sealed class SetOfficeVisioShapeLayoutCommand : PSCmdlet
     [Parameter(Position = 0, ValueFromPipeline = true)]
     public object? InputObject { get; set; }
 
-    /// <summary>Page that owns the shapes. Optional inside New-OfficeVisio/VisioPage DSL scopes.</summary>
+    /// <summary>Page that owns the shapes. Optional inside OfficeVisio/VisioPage DSL scopes.</summary>
     [Parameter]
     public VisioPage? Page { get; set; }
 

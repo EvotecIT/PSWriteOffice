@@ -30,7 +30,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <para>Associates the output path with a live document, adds content through the pipeline, then saves and closes it once.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeWord", SupportsShouldProcess = true)]
-[Alias("WordNew")]
+[Alias("OfficeWord", "WordNew")]
 public sealed class NewOfficeWordCommand : PSCmdlet {
     /// <summary>Destination path for the document.</summary>
     [Parameter(Mandatory = true, Position = 0)]

@@ -11,7 +11,7 @@ Saves an OfficeIMO AsciiDoc document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeAsciiDoc [-Document] <AsciiDocDocument> [-Path] <string> [-Options <AsciiDocWriterOptions>] [-Mode <AsciiDocWriterMode>] [-LineEnding <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficeAsciiDoc [-Document] <AsciiDocDocument> [-Path] <string> [-Options <AsciiDocWriterOptions>] [-Mode <AsciiDocWriterMode>] [-LineEnding <OfficeLineEnding>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,7 +48,7 @@ Accept wildcard characters: False
 Canonical line ending: LF, CRLF, or CR. Omit it to retain the source preference.
 
 ```yaml
-Type: String
+Type: OfficeLineEnding
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: LF, CRLF, CR

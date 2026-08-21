@@ -31,8 +31,8 @@ Adds a stencil shape to the current Visio page.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\StencilFlow.vsdx -UseMastersByDefault {
-    Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
+PS> OfficeVisio -Path .\StencilFlow.vsdx -UseMastersByDefault {
+    VisioStencilImport -BuiltIn Flowchart -Name Flow -Default
     VisioStencil -Catalog Flow -Stencil process -Key intake -Text 'Intake' -X 1.5 -Y 4
 }
 ```
@@ -122,7 +122,7 @@ Accept wildcard characters: False
 ```
 
 ### -FillPattern
-Fill pattern.
+Native Visio fill-pattern index: 0 has no fill, 1 is solid, and 2 through 40 select built-in patterns.
 
 ```yaml
 Type: Int32
@@ -186,7 +186,7 @@ Accept wildcard characters: False
 ```
 
 ### -LinePattern
-Line pattern.
+Native Visio line-pattern index: 0 hides the line, 1 is solid, and 2 through 23 select built-in patterns.
 
 ```yaml
 Type: Int32
@@ -234,7 +234,7 @@ Accept wildcard characters: False
 ```
 
 ### -Page
-Target page. Optional inside VisioPage or New-OfficeVisio.
+Target page. Optional inside VisioPage or OfficeVisio.
 
 ```yaml
 Type: VisioPage

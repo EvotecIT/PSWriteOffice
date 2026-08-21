@@ -490,4 +490,136 @@ Describe 'PSWriteOffice public API consistency' {
 
         $offenders | Should -BeNullOrEmpty
     }
+
+    It 'offers matching Office-prefixed DSL roots without replacing canonical New commands' {
+        $roots = [ordered]@{
+            OfficeWord         = 'New-OfficeWord'
+            OfficeExcel        = 'New-OfficeExcel'
+            OfficePowerPoint   = 'New-OfficePowerPoint'
+            OfficePdf          = 'New-OfficePdf'
+            OfficeMarkdown     = 'New-OfficeMarkdown'
+            OfficeRtf          = 'New-OfficeRtf'
+            OfficeVisio        = 'New-OfficeVisio'
+            OfficeOpenDocument = 'New-OfficeOpenDocument'
+        }
+
+        foreach ($entry in $roots.GetEnumerator()) {
+            $alias = Get-Command $entry.Key
+            $alias | Should -BeOfType System.Management.Automation.AliasInfo
+            $alias.ResolvedCommandName | Should -Be $entry.Value
+        }
+
+        (Get-Command VisioStencilImport).ResolvedCommandName | Should -Be 'Import-OfficeVisioStencil'
+    }
+
+    It 'uses enum parameter types for closed value domains' {
+        $contracts = @(
+            @{ Command = 'Add-OfficeExcelTable'; Parameter = 'TableStyle'; Type = 'ExcelTableStyle' }
+            @{ Command = 'Add-OfficeExcelConditionalRule'; Parameter = 'RuleType'; Type = 'OfficeExcelConditionalRuleType' }
+            @{ Command = 'Add-OfficeExcelConditionalRule'; Parameter = 'Operator'; Type = 'ExcelConditionalFormattingOperator' }
+            @{ Command = 'Add-OfficeExcelPivotTable'; Parameter = 'DataFunction'; Type = 'ExcelPivotDataFunction[]' }
+            @{ Command = 'Add-OfficeExcelPivotTable'; Parameter = 'Layout'; Type = 'ExcelPivotLayout' }
+            @{ Command = 'Import-OfficeExcel'; Parameter = 'FormulaMode'; Type = 'OfficeExcelFormulaMode' }
+            @{ Command = 'Add-OfficeWordTable'; Parameter = 'Layout'; Type = 'OfficeWordTableLayout' }
+            @{ Command = 'Set-OfficeWordParagraphStyle'; Parameter = 'Alignment'; Type = 'WordParagraphAlignment' }
+            @{ Command = 'Set-OfficeWordTextStyle'; Parameter = 'Underline'; Type = 'WordUnderlineStyle' }
+            @{ Command = 'Add-OfficePowerPointShape'; Parameter = 'ShapeType'; Type = 'OfficePresetShapeType' }
+            @{ Command = 'Find-OfficePowerPointShape'; Parameter = 'Kind'; Type = 'OfficePowerPointShapeKind[]' }
+            @{ Command = 'Set-OfficePdfPage'; Parameter = 'BoxName'; Type = 'PdfPageBoundaryBox' }
+            @{ Command = 'Save-OfficeAsciiDoc'; Parameter = 'LineEnding'; Type = 'OfficeLineEnding' }
+        )
+
+        foreach ($contract in $contracts) {
+            $type = (Get-Command $contract.Command).Parameters[$contract.Parameter].ParameterType
+            $nullableType = [Nullable]::GetUnderlyingType($type)
+            $actual = if ($nullableType) { $nullableType.Name } else { $type.Name }
+            $actual | Should -Be $contract.Type -Because "$($contract.Command) -$($contract.Parameter) is a closed value domain"
+        }
+    }
+
+    It 'normalizes and completes open color values consistently' {
+        $colorParameters = @(
+            foreach ($command in $script:OfficeCommands) {
+                foreach ($parameter in $command.Parameters.Values) {
+                    if ($parameter.ParameterType -in [string], [string[]] -and $parameter.Name -match 'Color') {
+                        [pscustomobject]@{ Command = $command.Name; Parameter = $parameter }
+                    }
+                }
+            }
+            foreach ($contract in @(
+                    @{ Command = 'Add-OfficePdfTable'; Parameter = 'HeaderFill' }
+                    @{ Command = 'Add-OfficePdfTable'; Parameter = 'RowStripeFill' }
+                    @{ Command = 'Set-OfficeExcelCell'; Parameter = 'GradientFrom' }
+                    @{ Command = 'Set-OfficeExcelCell'; Parameter = 'GradientTo' }
+                    @{ Command = 'Set-OfficePowerPointThemeColor'; Parameter = 'Value' }
+                )) {
+                [pscustomobject]@{
+                    Command = $contract.Command
+                    Parameter = (Get-Command $contract.Command).Parameters[$contract.Parameter]
+                }
+            }
+        )
+
+        $colorParameters | Should -Not -BeNullOrEmpty
+        foreach ($entry in $colorParameters) {
+            @($entry.Parameter.Attributes | Where-Object { $_.TypeId.Name -eq 'OfficeColorArgumentTransformationAttribute' }) |
+                Should -HaveCount 1 -Because "$($entry.Command) -$($entry.Parameter.Name) should accept the same named and hexadecimal color language"
+            @($entry.Parameter.Attributes | Where-Object { $_.TypeId.Name -eq 'ArgumentCompleterAttribute' }) |
+                Should -HaveCount 1 -Because "$($entry.Command) -$($entry.Parameter.Name) should offer named color completion"
+        }
+
+        (New-OfficeTextRun -Text 'status' -Color Red).Color | Should -Be '#FF0000'
+        (New-OfficeTextRun -Text 'status' -BackgroundColor None).BackgroundColor | Should -Be 'None'
+        { New-OfficeTextRun -Text 'status' -Color 'not-a-color' -ErrorAction Stop } | Should -Throw '*known Office color name*'
+
+        $input = 'New-OfficeTextRun -Color Re'
+        $completion = [System.Management.Automation.CommandCompletion]::CompleteInput($input, $input.Length, $null)
+        $completion.CompletionMatches.CompletionText | Should -Contain 'RebeccaPurple'
+        $completion.CompletionMatches.CompletionText | Should -Contain 'Red'
+
+        $input = 'New-OfficeTextRun -BackgroundColor N'
+        $completion = [System.Management.Automation.CommandCompletion]::CompleteInput($input, $input.Length, $null)
+        $completion.CompletionMatches.CompletionText | Should -Contain 'None'
+    }
+
+    It 'guides open string domains with completion instead of false enums' {
+        $cases = @(
+            @{ Input = 'Set-OfficePdfPageSetup -PageSize A'; Expected = 'A4' }
+            @{ Input = 'Add-OfficePdfTable -TableStyle Tech'; Expected = 'TechnicalDocument' }
+            @{ Input = 'Add-OfficeMarkdownCallout -Kind W'; Expected = 'Warning' }
+            @{ Input = 'New-OfficeTextRun -UnderlineStyle D'; Expected = 'Double' }
+            @{ Input = 'New-OfficeTextRun -Baseline N'; Expected = 'Normal' }
+            @{ Input = 'New-OfficeTextRun -TabLeader H'; Expected = 'Hyphens' }
+            @{ Input = 'New-OfficeTextRun -TabLeader U'; Expected = 'Underscores' }
+            @{ Input = 'New-OfficeTextRun -TabAlignment D'; Expected = 'DecimalSeparator' }
+            @{ Input = 'Add-OfficeExcelPivotTable -PivotStyle PivotStyleMedium9'; Expected = 'PivotStyleMedium9' }
+            @{ Input = 'Get-OfficeDocumentAsset -Kind Im'; Expected = 'Image' }
+        )
+
+        foreach ($case in $cases) {
+            $completion = [System.Management.Automation.CommandCompletion]::CompleteInput($case.Input, $case.Input.Length, $null)
+            $completion.CompletionMatches.CompletionText | Should -Contain $case.Expected
+        }
+    }
+
+    It 'bounds native Visio index domains without representing galleries as enums' {
+        $contracts = @(
+            @{ Command = 'Add-OfficeVisioConnector'; Parameter = 'LinePattern'; Min = 0; Max = 23 }
+            @{ Command = 'Add-OfficeVisioRectangle'; Parameter = 'LinePattern'; Min = 0; Max = 23 }
+            @{ Command = 'Add-OfficeVisioRectangle'; Parameter = 'FillPattern'; Min = 0; Max = 40 }
+            @{ Command = 'Add-OfficeVisioStencilShape'; Parameter = 'LinePattern'; Min = 0; Max = 23 }
+            @{ Command = 'Add-OfficeVisioStencilShape'; Parameter = 'FillPattern'; Min = 0; Max = 40 }
+        )
+
+        foreach ($contract in $contracts) {
+            $parameter = (Get-Command $contract.Command).Parameters[$contract.Parameter]
+            $parameter.ParameterType | Should -Be ([Nullable[int]])
+            $range = $parameter.Attributes | Where-Object { $_ -is [System.Management.Automation.ValidateRangeAttribute] }
+            $range.MinRange | Should -Be $contract.Min
+            $range.MaxRange | Should -Be $contract.Max
+        }
+
+        (Get-Command Add-OfficeVisioContainer).Parameters['ContainerStyle'].ParameterType | Should -Be ([Nullable[int]])
+        (Get-Command Add-OfficeVisioContainer).Parameters['HeadingStyle'].ParameterType | Should -Be ([Nullable[int]])
+    }
 }

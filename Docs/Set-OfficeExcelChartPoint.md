@@ -50,7 +50,7 @@ Accept wildcard characters: False
 ```
 
 ### -FillColor
-Point fill color in hex format.
+Point fill color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -82,7 +82,7 @@ Accept wildcard characters: False
 ```
 
 ### -LineColor
-Point line color in hex format.
+Point line color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

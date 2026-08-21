@@ -25,8 +25,10 @@ public sealed class AddOfficeWordTableConditionCommand : PSWriteOffice.Cmdlets.O
     [Parameter]
     public WordTableStyle? TableStyle { get; set; }
 
-    /// <summary>Row highlight color applied when the predicate matches (ARGB hex).</summary>
+    /// <summary>Row highlight color applied when the predicate matches.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <inheritdoc />

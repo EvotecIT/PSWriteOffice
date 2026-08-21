@@ -11,12 +11,12 @@ Adds grouped subtotal summary rows for a worksheet data range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelSubtotalSummary -GroupColumn <string> -ValueColumn <string[]> [-HeaderRow <Int32>] [-DataStartRow <Int32>] [-DataEndRow <Int32>] [-SummaryStartRow <Int32>] [-Function <string>] [-NoHeader] [-NoGrandTotal] [-NoOutline] [-HideDetailRows] [-OutlineLevel <int>] [-LabelSuffix <string>] [-GrandTotalLabel <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSubtotalSummary -GroupColumn <string> -ValueColumn <string[]> [-HeaderRow <Int32>] [-DataStartRow <Int32>] [-DataEndRow <Int32>] [-SummaryStartRow <Int32>] [-Function <ExcelSubtotalFunction>] [-NoHeader] [-NoGrandTotal] [-NoOutline] [-HideDetailRows] [-OutlineLevel <int>] [-LabelSuffix <string>] [-GrandTotalLabel <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelSubtotalSummary -Document <ExcelDocument> -GroupColumn <string> -ValueColumn <string[]> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderRow <Int32>] [-DataStartRow <Int32>] [-DataEndRow <Int32>] [-SummaryStartRow <Int32>] [-Function <string>] [-NoHeader] [-NoGrandTotal] [-NoOutline] [-HideDetailRows] [-OutlineLevel <int>] [-LabelSuffix <string>] [-GrandTotalLabel <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSubtotalSummary -Document <ExcelDocument> -GroupColumn <string> -ValueColumn <string[]> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderRow <Int32>] [-DataStartRow <Int32>] [-DataEndRow <Int32>] [-SummaryStartRow <Int32>] [-Function <ExcelSubtotalFunction>] [-NoHeader] [-NoGrandTotal] [-NoOutline] [-HideDetailRows] [-OutlineLevel <int>] [-LabelSuffix <string>] [-GrandTotalLabel <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -85,10 +85,10 @@ Accept wildcard characters: False
 Subtotal function.
 
 ```yaml
-Type: String
+Type: ExcelSubtotalFunction
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: Sum, Average, Count, CountNonBlank, Max, Min
+Possible values: Average, Count, CountNonBlank, Max, Min, Sum
 
 Required: False
 Position: named

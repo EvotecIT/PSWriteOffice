@@ -60,12 +60,16 @@ public sealed class AddOfficeExcelConditionalColorScaleCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IncludeHeader { get; set; }
 
-    /// <summary>Start color in hex (#RRGGBB or FFRRGGBB).</summary>
+    /// <summary>Start color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, Position = 1)]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string StartColor { get; set; } = string.Empty;
 
-    /// <summary>End color in hex (#RRGGBB or FFRRGGBB).</summary>
+    /// <summary>End color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, Position = 2)]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string EndColor { get; set; } = string.Empty;
 
     /// <summary>Emit the range after applying the format.</summary>

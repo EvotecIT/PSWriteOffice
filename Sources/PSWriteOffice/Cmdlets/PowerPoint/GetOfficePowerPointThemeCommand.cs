@@ -26,6 +26,7 @@ public sealed class GetOfficePowerPointThemeCommand : PSCmdlet {
 
     /// <summary>Slide master index to inspect.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int Master { get; set; }
 
     /// <inheritdoc />

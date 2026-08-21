@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 ///   <para>Creates an RTF document with two paragraphs and returns the file.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeRtf", SupportsShouldProcess = true)]
-[Alias("RtfNew")]
+[Alias("OfficeRtf", "RtfNew")]
 [OutputType(typeof(FileInfo), typeof(RtfDocument))]
 public sealed class NewOfficeRtfCommand : PSCmdlet {
     /// <summary>Destination path for the RTF file.</summary>

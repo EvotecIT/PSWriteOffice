@@ -11,12 +11,12 @@ Creates a table from PowerShell objects.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <string>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-Transpose] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] [-Style <WordTableStyle>] [-Layout <OfficeWordTableLayout>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-Transpose] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] -Document <WordDocument> [-Style <WordTableStyle>] [-Layout <string>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-Transpose] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTable [-InputObject] <Object> [[-Content] <scriptblock>] -Document <WordDocument> [-Style <WordTableStyle>] [-Layout <OfficeWordTableLayout>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-Transpose] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -140,10 +140,10 @@ Accept wildcard characters: False
 Table layout behavior.
 
 ```yaml
-Type: String
+Type: OfficeWordTableLayout
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: Autofit, Fixed, AutoFitToContents, AutoFitToWindow
+Possible values: AutoFit, Fixed, AutoFitToContents, AutoFitToWindow
 
 Required: False
 Position: named

@@ -60,8 +60,10 @@ public sealed class AddOfficeExcelConditionalDataBarCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IncludeHeader { get; set; }
 
-    /// <summary>Bar color in hex (#RRGGBB or FFRRGGBB).</summary>
+    /// <summary>Bar color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, Position = 1)]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string Color { get; set; } = string.Empty;
 
     /// <summary>Emit the range after applying the format.</summary>

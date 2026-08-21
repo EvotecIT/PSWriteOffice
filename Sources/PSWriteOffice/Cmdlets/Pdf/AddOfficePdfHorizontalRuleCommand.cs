@@ -32,8 +32,10 @@ public sealed class AddOfficePdfHorizontalRuleCommand : PSCmdlet
     [Parameter]
     public double? Thickness { get; set; }
 
-    /// <summary>Rule color in #RRGGBB format.</summary>
+    /// <summary>Rule color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Spacing before the rule in PDF points.</summary>

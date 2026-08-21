@@ -28,7 +28,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 ///   <para>Creates a report with two tables separated by headings.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeMarkdown", SupportsShouldProcess = true)]
-[Alias("MarkdownNew")]
+[Alias("OfficeMarkdown", "MarkdownNew")]
 [OutputType(typeof(FileInfo), typeof(MarkdownDoc))]
 public sealed class NewOfficeMarkdownCommand : PSCmdlet
     , IMarkdownWriteOptionSource {
@@ -63,6 +63,7 @@ public sealed class NewOfficeMarkdownCommand : PSCmdlet
 
     /// <summary>Markdown line ending: CRLF, LF, CR, or a literal line ending string.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeLineEndingArgumentCompleter))]
     public string? LineEnding { get; set; }
 
     /// <summary>Unordered list marker: '-', '*', or '+'.</summary>

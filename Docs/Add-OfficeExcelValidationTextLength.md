@@ -11,12 +11,12 @@ Adds a text-length data validation rule to a worksheet range.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelValidationTextLength [[-Range] <string>] [-Operator] <string> [-Formula1] <int> [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <Int32>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelValidationTextLength [[-Range] <string>] [-Operator] <ExcelDataValidationOperator> [-Formula1] <int> [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <Int32>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelValidationTextLength [[-Range] <string>] [-Operator] <string> [-Formula1] <int> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <Int32>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelValidationTextLength [[-Range] <string>] [-Operator] <ExcelDataValidationOperator> [-Formula1] <int> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [-Formula2 <Int32>] [-AllowBlank <bool>] [-ErrorTitle <string>] [-ErrorMessage <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -181,10 +181,10 @@ Accept wildcard characters: False
 Validation operator.
 
 ```yaml
-Type: String
+Type: ExcelDataValidationOperator
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: Between, NotBetween, Equal, NotEqual, LessThan, LessThanOrEqual, GreaterThan, GreaterThanOrEqual
 
 Required: True
 Position: 1

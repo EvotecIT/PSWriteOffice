@@ -113,6 +113,8 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
 
     /// <summary>Color values applied to the series in order.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string[] SeriesColor { get; set; } = Array.Empty<string>();
 
     /// <summary>Add a legend to the chart.</summary>
@@ -121,8 +123,7 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
 
     /// <summary>Legend position when <c>-Legend</c> is used.</summary>
     [Parameter]
-    [ValidateSet("Left", "Right", "Top", "Bottom", "TopRight")]
-    public string LegendPosition { get; set; } = "Right";
+    public OfficeChartLegendPosition LegendPosition { get; set; } = OfficeChartLegendPosition.Right;
 
     /// <summary>Optional X axis title for non-pie charts.</summary>
     [Parameter]
@@ -278,7 +279,7 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
 
         if (Legend.IsPresent || SeriesProperty.Length > 1)
         {
-            chart.AddLegend(ResolveLegendPosition(LegendPosition));
+            chart.AddLegend(LegendPosition);
         }
     }
 
@@ -289,18 +290,6 @@ public sealed class AddOfficeWordChartCommand : PSCmdlet
             : DefaultSeriesPalette[index % DefaultSeriesPalette.Length];
 
         return OfficeColor.Parse(colorValue);
-    }
-
-    private static OfficeChartLegendPosition ResolveLegendPosition(string position)
-    {
-        return position switch
-        {
-            "Left" => OfficeChartLegendPosition.Left,
-            "Top" => OfficeChartLegendPosition.Top,
-            "Bottom" => OfficeChartLegendPosition.Bottom,
-            "TopRight" => OfficeChartLegendPosition.TopRight,
-            _ => OfficeChartLegendPosition.Right
-        };
     }
 
     private static object? GetPropertyValue(object item, string propertyName)

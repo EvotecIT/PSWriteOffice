@@ -36,6 +36,7 @@ public sealed class GetOfficeDocumentAssetCommand : OfficeDocumentReaderCommandB
 
     /// <summary>Only include assets with one of these normalized kinds, such as image or preview.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeDocumentAssetKindArgumentCompleter))]
     public string[]? Kind { get; set; }
 
     /// <summary>Only include assets with one of these media types.</summary>

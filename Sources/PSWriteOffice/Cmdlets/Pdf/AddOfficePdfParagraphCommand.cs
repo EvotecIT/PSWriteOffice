@@ -34,8 +34,10 @@ public sealed class AddOfficePdfParagraphCommand : PSCmdlet
     [Parameter]
     public PdfAlign Align { get; set; } = PdfAlign.Left;
 
-    /// <summary>Optional text color in #RRGGBB format.</summary>
+    /// <summary>Optional text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Emit the updated document.</summary>

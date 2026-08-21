@@ -8,7 +8,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Add a start node.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\Flow.vsdx {
+///   <code>OfficeVisio -Path .\Flow.vsdx {
 ///     VisioEllipse -Key start -Text 'Start' -X 1 -Y 5 -Width 1.4 -Height 0.7 -FillColor '#DCFCE7'
 /// }</code>
 ///   <para>Adds an ellipse to the active Visio page.</para>
@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Alias("VisioEllipse")]
 [OutputType(typeof(VisioShape))]
 public sealed class AddOfficeVisioEllipseCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
-    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>New-OfficeVisio</c>.</summary>
+    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioPage? Page { get; set; }
 
@@ -55,10 +55,14 @@ public sealed class AddOfficeVisioEllipseCommand : PSWriteOffice.Cmdlets.OfficeM
 
     /// <summary>Fill color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Line color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Line weight.</summary>

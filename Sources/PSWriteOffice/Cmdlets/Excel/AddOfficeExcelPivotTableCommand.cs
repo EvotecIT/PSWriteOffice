@@ -76,7 +76,7 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
 
     /// <summary>Aggregation functions (Sum, Count, Average, etc.).</summary>
     [Parameter]
-    public string[]? DataFunction { get; set; }
+    public ExcelPivotDataFunction[]? DataFunction { get; set; }
 
     /// <summary>Display names for data fields.</summary>
     [Parameter]
@@ -96,11 +96,12 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
 
     /// <summary>Optional pivot table style name.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeExcelPivotStyleArgumentCompleter))]
     public string? PivotStyle { get; set; }
 
     /// <summary>Pivot layout (Compact, Outline, Tabular).</summary>
     [Parameter]
-    public string Layout { get; set; } = "Compact";
+    public ExcelPivotLayout Layout { get; set; } = ExcelPivotLayout.Compact;
 
     /// <summary>Show data fields on rows.</summary>
     [Parameter]
@@ -295,11 +296,6 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
     {
         var sheet = ResolveSheet();
         var dataFields = BuildDataFields();
-        if (!Enum.TryParse(Layout, ignoreCase: true, out ExcelPivotLayout layout))
-        {
-            throw new PSArgumentException($"Unknown pivot layout '{Layout}'.", nameof(Layout));
-        }
-
         var dataOnRows = ResolveToggle(DataOnRows, DataOnColumns, "DataOnRows/DataOnColumns");
         var showHeaders = ResolveToggle(ShowHeaders, HideHeaders, "ShowHeaders/HideHeaders");
         var showEmptyRows = ResolveToggle(ShowEmptyRows, HideEmptyRows, "ShowEmptyRows/HideEmptyRows");
@@ -322,7 +318,7 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
         InvokeAddPivotTable(
             sheet,
             dataFields,
-            layout,
+            Layout,
             dataOnRows,
             showHeaders,
             showEmptyRows,
@@ -361,7 +357,7 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
             return null;
         }
 
-        var functions = ParseFunctions(DataFunction);
+        var functions = DataFunction?.ToList() ?? new List<ExcelPivotDataFunction>();
         if (functions.Count > 1 && functions.Count != DataField.Length)
         {
             throw new PSArgumentException("When providing multiple DataFunction values, the count must match DataField.");
@@ -584,24 +580,6 @@ public sealed class AddOfficeExcelPivotTableCommand : PSCmdlet
     private ExcelPivotDataField CreatePivotDataField(string fieldName, ExcelPivotDataFunction function, string? displayName, string? numberFormat)
     {
         return new ExcelPivotDataField(fieldName, function, displayName, numberFormatId: null, numberFormat: numberFormat);
-    }
-
-    private static List<ExcelPivotDataFunction> ParseFunctions(string[]? functions)
-    {
-        var result = new List<ExcelPivotDataFunction>();
-        if (functions == null || functions.Length == 0) return result;
-
-        foreach (var raw in functions)
-        {
-            if (string.IsNullOrWhiteSpace(raw)) continue;
-            if (!OpenXmlValueParser.TryParse(raw, out ExcelPivotDataFunction fn))
-            {
-                throw new PSArgumentException($"Unknown DataFunction '{raw}'.");
-            }
-            result.Add(fn);
-        }
-
-        return result;
     }
 
     private ExcelSheet ResolveSheet()

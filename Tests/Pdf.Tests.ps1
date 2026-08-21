@@ -1408,6 +1408,23 @@ startxref
         $text | Should -Match 'rich inline text'
     }
 
+    It 'renders every rich-text value offered by tab completion' {
+        $path = Join-Path $TestDrive 'rich-text-completion-values.pdf'
+        New-OfficePdf -Path $path {
+            PdfText -Run @(
+                PdfTextRun 'Total' -Baseline Normal
+                PdfTextRun -Kind Tab -TabLeader Hyphens -TabAlignment DecimalSeparator
+                PdfTextRun '12.34'
+                PdfTextRun -Kind Tab -TabLeader Underscores -TabAlignment Right
+                PdfTextRun 'Done'
+            )
+        } | Out-Null
+
+        Get-OfficePdfText -Path $path | Should -Match 'Total'
+        Get-OfficePdfText -Path $path | Should -Match '12.34'
+        Get-OfficePdfText -Path $path | Should -Match 'Done'
+    }
+
     It 'normalizes typed text run kinds before rendering adapters consume them' {
         $assembly = [PSWriteOffice.Cmdlets.Text.NewOfficeTextRunCommand].Assembly
         $parserType = $assembly.GetType('PSWriteOffice.Services.Text.OfficeTextRunParser', $true)

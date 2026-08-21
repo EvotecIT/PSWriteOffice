@@ -11,12 +11,12 @@ Reads shape summaries from a slide or presentation.
 ## SYNTAX
 ### Slide (Default)
 ```powershell
-Get-OfficePowerPointShape [-Slide <PowerPointSlide>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Get-OfficePowerPointShape [-Slide <PowerPointSlide>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <OfficePowerPointShapeKind[]>] [<CommonParameters>]
 ```
 
 ### Presentation
 ```powershell
-Get-OfficePowerPointShape [-Presentation <PowerPointPresentation>] [-Index <Int32>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <string[]>] [<CommonParameters>]
+Get-OfficePowerPointShape [-Presentation <PowerPointPresentation>] [-Index <Int32>] [-ShapeIndex <int[]>] [-Name <string[]>] [-Kind <OfficePowerPointShapeKind[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -60,7 +60,7 @@ Accept wildcard characters: False
 Optional shape kind filter.
 
 ```yaml
-Type: String[]
+Type: OfficePowerPointShapeKind[]
 Parameter Sets: Slide, Presentation
 Aliases: None
 Possible values: TextBox, Picture, Table, Chart, AutoShape, GroupShape

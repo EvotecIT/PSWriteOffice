@@ -36,8 +36,10 @@ public sealed class SetOfficeWordBackgroundCommand : PSCmdlet
     [Parameter(ValueFromPipeline = true)]
     public WordDocument? Document { get; set; }
 
-    /// <summary>Background color in hex format (#RRGGBB or RRGGBB).</summary>
+    /// <summary>Background color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetColor, Position = 0)]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string Color { get; set; } = string.Empty;
 
     /// <summary>Path to the background image.</summary>

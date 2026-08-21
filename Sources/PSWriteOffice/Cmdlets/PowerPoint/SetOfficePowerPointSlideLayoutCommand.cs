@@ -26,10 +26,12 @@ public sealed class SetOfficePowerPointSlideLayoutCommand : PSWriteOffice.Cmdlet
 
     /// <summary>Slide master index to use.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int Master { get; set; }
 
     /// <summary>Layout index to use.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetIndex)]
+    [ValidateRange(0, int.MaxValue)]
     public int Layout { get; set; }
 
     /// <summary>Layout name to use.</summary>

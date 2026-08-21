@@ -11,7 +11,7 @@ Adds a tab stop to a Word paragraph.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordTabStop [-Position] <int> [-Paragraph <WordParagraph>] [-Alignment <string>] [-Leader <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordTabStop [-Position] <int> [-Paragraph <WordParagraph>] [-Alignment <WordTabAlignment>] [-Leader <WordTabLeader>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,10 +32,10 @@ Adds a decimal tab stop at three inches.
 Tab alignment.
 
 ```yaml
-Type: String
+Type: WordTabAlignment
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Left, Center, Right, Decimal, Bar, Clear
+Possible values: Clear, Left, Start, Center, Right, End, Decimal, Bar, Number
 
 Required: False
 Position: named
@@ -48,7 +48,7 @@ Accept wildcard characters: False
 Leader character.
 
 ```yaml
-Type: String
+Type: WordTabLeader
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: None, Dot, Hyphen, Underscore, Heavy, MiddleDot

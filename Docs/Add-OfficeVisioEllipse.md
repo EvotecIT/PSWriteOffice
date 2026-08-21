@@ -21,7 +21,7 @@ Adds an ellipse shape to the current Visio page.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\Flow.vsdx {
+PS> OfficeVisio -Path .\Flow.vsdx {
     VisioEllipse -Key start -Text 'Start' -X 1 -Y 5 -Width 1.4 -Height 0.7 -FillColor '#DCFCE7'
 }
 ```
@@ -127,7 +127,7 @@ Accept wildcard characters: False
 ```
 
 ### -Page
-Target page. Optional inside VisioPage or New-OfficeVisio.
+Target page. Optional inside VisioPage or OfficeVisio.
 
 ```yaml
 Type: VisioPage

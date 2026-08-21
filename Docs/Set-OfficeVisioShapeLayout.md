@@ -21,7 +21,7 @@ Applies OfficeIMO Visio selection layout and layer operations to shapes.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\Layout.vsdx {
+PS> OfficeVisio -Path .\Layout.vsdx {
     VisioRectangle -Key one -Text 'One'
     VisioRectangle -Key two -Text 'Two'
     VisioLayout -ShapeId one,two -HorizontalStack -HorizontalSpacing 0.4
@@ -193,7 +193,7 @@ Accept wildcard characters: False
 ```
 
 ### -Page
-Page that owns the shapes. Optional inside New-OfficeVisio/VisioPage DSL scopes.
+Page that owns the shapes. Optional inside OfficeVisio/VisioPage DSL scopes.
 
 ```yaml
 Type: VisioPage

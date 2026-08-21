@@ -60,8 +60,7 @@ public sealed class AddOfficeExcelSubtotalSummaryCommand : PSCmdlet
 
     /// <summary>Subtotal function.</summary>
     [Parameter]
-    [ValidateSet("Sum", "Average", "Count", "CountNonBlank", "Max", "Min")]
-    public string Function { get; set; } = "Sum";
+    public ExcelSubtotalFunction Function { get; set; } = ExcelSubtotalFunction.Sum;
 
     /// <summary>Skip writing a summary header row.</summary>
     [Parameter]
@@ -106,11 +105,6 @@ public sealed class AddOfficeExcelSubtotalSummaryCommand : PSCmdlet
         int groupColumn = ResolveColumn(sheet, GroupColumn, headerRow, used.FirstColumn, used.LastColumn, nameof(GroupColumn));
         int[] valueColumns = Array.ConvertAll(ValueColumn, column => ResolveColumn(sheet, column, headerRow, used.FirstColumn, used.LastColumn, nameof(ValueColumn)));
 
-        if (!Enum.TryParse(Function, ignoreCase: true, out ExcelSubtotalFunction function))
-        {
-            throw new PSArgumentException($"Unknown subtotal function '{Function}'.", nameof(Function));
-        }
-
         if (OutlineLevel < 1 || OutlineLevel > 7)
         {
             throw new PSArgumentOutOfRangeException(nameof(OutlineLevel), OutlineLevel, "Excel outline level must be between 1 and 7.");
@@ -124,7 +118,7 @@ public sealed class AddOfficeExcelSubtotalSummaryCommand : PSCmdlet
             GroupColumn = groupColumn,
             ValueColumns = valueColumns,
             SummaryStartRow = SummaryStartRow,
-            Function = function,
+            Function = Function,
             IncludeHeader = !NoHeader.IsPresent,
             IncludeGrandTotal = !NoGrandTotal.IsPresent,
             OutlineDetailRows = !NoOutline.IsPresent,

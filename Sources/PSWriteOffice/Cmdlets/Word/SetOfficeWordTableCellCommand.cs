@@ -50,59 +50,22 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
     /// <summary>Replace the visible cell text.</summary>
     [Parameter] public string? Text { get; set; }
 
-    /// <summary>Cell shading fill color as #RRGGBB.</summary>
-    [Parameter] public string? ShadingFillColor { get; set; }
+    /// <summary>Cell shading fill color. Named colors and hexadecimal values are accepted.</summary>
+    [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
+    public string? ShadingFillColor { get; set; }
 
     /// <summary>Cell shading pattern.</summary>
     [Parameter]
-    [ValidateSet(
-        "Nil",
-        "Clear",
-        "Solid",
-        "HorizontalStripe",
-        "VerticalStripe",
-        "ReverseDiagonalStripe",
-        "DiagonalStripe",
-        "HorizontalCross",
-        "DiagonalCross",
-        "ThinHorizontalStripe",
-        "ThinVerticalStripe",
-        "ThinReverseDiagonalStripe",
-        "ThinDiagonalStripe",
-        "ThinHorizontalCross",
-        "ThinDiagonalCross",
-        "Percent5",
-        "Percent10",
-        "Percent12",
-        "Percent15",
-        "Percent20",
-        "Percent25",
-        "Percent30",
-        "Percent35",
-        "Percent37",
-        "Percent40",
-        "Percent45",
-        "Percent50",
-        "Percent55",
-        "Percent60",
-        "Percent62",
-        "Percent65",
-        "Percent70",
-        "Percent75",
-        "Percent80",
-        "Percent85",
-        "Percent87",
-        "Percent90",
-        "Percent95")]
-    public string? ShadingPattern { get; set; }
+    public WordShadingPattern? ShadingPattern { get; set; }
 
     /// <summary>Cell width value.</summary>
     [Parameter] public int? Width { get; set; }
 
     /// <summary>Cell width unit type.</summary>
     [Parameter]
-    [ValidateSet("Nil", "Pct", "Dxa", "Auto")]
-    public string? WidthType { get; set; }
+    public WordTableWidthUnit? WidthType { get; set; }
 
     /// <summary>Cell text direction.</summary>
     [Parameter] public WordTextDirection? TextDirection { get; set; }
@@ -141,9 +104,9 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
 
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Text))) Cell.AddParagraph(Text ?? string.Empty, removeExistingParagraphs: true);
         if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingFillColor))) Cell.ShadingFillColorHex = ShadingFillColor ?? string.Empty;
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingPattern))) Cell.ShadingPattern = ParseOfficeValue<WordShadingPattern>(ShadingPattern, nameof(ShadingPattern));
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(ShadingPattern))) Cell.ShadingPattern = ShadingPattern;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Width))) Cell.Width = Width;
-        if (MyInvocation.BoundParameters.ContainsKey(nameof(WidthType))) Cell.WidthType = ParseOfficeValue<WordTableWidthUnit>(WidthType, nameof(WidthType));
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(WidthType))) Cell.WidthType = WidthType;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(TextDirection))) Cell.TextDirection = TextDirection;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(WrapText))) Cell.WrapText = WrapText ?? false;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(FitText))) Cell.FitText = FitText ?? false;
@@ -158,10 +121,4 @@ public sealed class SetOfficeWordTableCellCommand : PSCmdlet
         }
     }
 
-    private static T? ParseOfficeValue<T>(string? value, string parameterName) where T : struct
-    {
-        if (string.IsNullOrWhiteSpace(value)) return null;
-        if (PSWriteOffice.Services.OpenXmlValueParser.TryParse<T>(value, out var parsed)) return parsed;
-        throw new PSArgumentException($"Unknown {parameterName} value '{value}'.", parameterName);
-    }
 }

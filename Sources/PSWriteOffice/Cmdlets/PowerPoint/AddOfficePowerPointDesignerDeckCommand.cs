@@ -37,6 +37,8 @@ public sealed class AddOfficePowerPointDesignerDeckCommand : PSCmdlet
 
     /// <summary>Brand accent color used to derive the deck palette.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string AccentColor { get; set; } = "#008C95";
 
     /// <summary>Stable seed used for deterministic design choices.</summary>
@@ -65,11 +67,11 @@ public sealed class AddOfficePowerPointDesignerDeckCommand : PSCmdlet
 
     /// <summary>Creative direction pack name, such as Boardroom, FieldProof, TechnicalMap, or QuietAppendix.</summary>
     [Parameter]
-    public string? CreativeDirectionPack { get; set; }
+    public PowerPointCreativeDirectionPack? CreativeDirectionPack { get; set; }
 
     /// <summary>Auto layout strategy, such as ContentFirst, DesignFirst, Compact, or VisualFirst.</summary>
     [Parameter]
-    public string? LayoutStrategy { get; set; }
+    public PowerPointAutoLayoutStrategy? LayoutStrategy { get; set; }
 
     /// <summary>Design alternative count to consider. 0 uses OfficeIMO defaults.</summary>
     [Parameter]
@@ -104,24 +106,14 @@ public sealed class AddOfficePowerPointDesignerDeckCommand : PSCmdlet
             .FromBrand(AccentColor, Seed, Purpose)
             .WithIdentity(Name, Eyebrow, FooterLeft, FooterRight);
 
-        if (!string.IsNullOrWhiteSpace(CreativeDirectionPack))
+        if (CreativeDirectionPack.HasValue)
         {
-            if (!OpenXmlValueParser.TryParse(CreativeDirectionPack, out PowerPointCreativeDirectionPack pack))
-            {
-                throw new PSArgumentException($"Unknown CreativeDirectionPack '{CreativeDirectionPack}'.", nameof(CreativeDirectionPack));
-            }
-
-            brief.WithCreativeDirectionPack(pack);
+            brief.WithCreativeDirectionPack(CreativeDirectionPack.Value);
         }
 
-        if (!string.IsNullOrWhiteSpace(LayoutStrategy))
+        if (LayoutStrategy.HasValue)
         {
-            if (!OpenXmlValueParser.TryParse(LayoutStrategy, out PowerPointAutoLayoutStrategy strategy))
-            {
-                throw new PSArgumentException($"Unknown LayoutStrategy '{LayoutStrategy}'.", nameof(LayoutStrategy));
-            }
-
-            brief.WithLayoutStrategy(strategy);
+            brief.WithLayoutStrategy(LayoutStrategy.Value);
         }
 
         if (Preview.IsPresent)

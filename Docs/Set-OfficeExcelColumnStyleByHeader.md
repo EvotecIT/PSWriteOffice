@@ -11,12 +11,12 @@ Applies common number, fill, font, and status styles to a worksheet column resol
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelColumnStyleByHeader [-Header] <string> [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelColumnStyleByHeader [-Header] <string> [-IncludeHeader] [-Style <OfficeExcelColumnStylePreset>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <OfficeExcelColumnAlignment>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelColumnStyleByHeader [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelColumnStyleByHeader [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-IncludeHeader] [-Style <OfficeExcelColumnStylePreset>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <OfficeExcelColumnAlignment>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -40,7 +40,7 @@ Styles Revenue as currency and colors Status cells by their text.
 Align cell content in the resolved column.
 
 ```yaml
-Type: String
+Type: OfficeExcelColumnAlignment
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Left, Center, Right
@@ -360,7 +360,7 @@ Accept wildcard characters: False
 Preset number style to apply.
 
 ```yaml
-Type: String
+Type: OfficeExcelColumnStylePreset
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Number, Integer, Percent, Currency, Date, DateTime, Time, DurationHours, Text, NumberFormat

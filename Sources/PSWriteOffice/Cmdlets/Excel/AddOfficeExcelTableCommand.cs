@@ -99,7 +99,7 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
 
     /// <summary>Built-in table style to apply.</summary>
     [Parameter]
-    public string TableStyle { get; set; } = "TableStyleMedium9";
+    public ExcelTableStyle TableStyle { get; set; } = ExcelTableStyle.TableStyleMedium9;
 
     /// <summary>Emphasize the first table column when the selected style supports it.</summary>
     [Parameter]
@@ -162,11 +162,6 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             throw new ArgumentOutOfRangeException("StartRow/StartColumn must be 1 or greater.");
         }
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
-        {
-            throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
-        }
-
         var resolvedTableName = ResolveTableName(table);
         var range = sheet.InsertDataTableAsTable(
             table,
@@ -174,12 +169,12 @@ public sealed class AddOfficeExcelTableCommand : PSCmdlet
             startColumn: StartColumn,
             includeHeaders: !NoHeader.IsPresent,
             tableName: resolvedTableName,
-            style: style,
+            style: TableStyle,
             includeAutoFilter: !NoAutoFilter.IsPresent);
         ExcelTableStyleOptionService.Apply(
             sheet,
             range,
-            style,
+            TableStyle,
             ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowFirstColumn), ShowFirstColumn),
             ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowLastColumn), ShowLastColumn),
             ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(NoRowStripes), NoRowStripes),

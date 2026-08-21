@@ -64,12 +64,11 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
     /// <summary>Rule type to author.</summary>
     [Parameter]
     [Alias("Type")]
-    [ValidateSet("CellIs", "Expression", "Formula", "DuplicateValues", "UniqueValues", "Top", "Top10", "Bottom", "Bottom10", "AboveAverage", "BelowAverage", "ContainsText", "NotContainsText", "BeginsWith", "EndsWith", "ContainsBlanks", "NotContainsBlanks", "ContainsErrors", "NotContainsErrors", "TimePeriod")]
-    public string RuleType { get; set; } = "CellIs";
+    public OfficeExcelConditionalRuleType RuleType { get; set; } = OfficeExcelConditionalRuleType.CellIs;
 
     /// <summary>Conditional formatting operator.</summary>
     [Parameter(Position = 1)]
-    public string? Operator { get; set; }
+    public ExcelConditionalFormattingOperator? Operator { get; set; }
 
     /// <summary>Primary formula or value.</summary>
     [Parameter(Position = 2)]
@@ -101,7 +100,7 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
 
     /// <summary>Time period used by time-period rules.</summary>
     [Parameter]
-    public string? TimePeriod { get; set; }
+    public ExcelConditionalTimePeriod? TimePeriod { get; set; }
 
     /// <summary>Stop evaluating later rules when this rule is true.</summary>
     [Parameter]
@@ -142,10 +141,10 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
 
     private void ApplyRule(ExcelSheet sheet, string targetRange)
     {
-        switch (ResolveRuleType())
+        switch (RuleType)
         {
-            case "CellIs":
-                if (string.IsNullOrWhiteSpace(Operator))
+            case OfficeExcelConditionalRuleType.CellIs:
+                if (!Operator.HasValue)
                 {
                     throw new PSArgumentException("Operator is required for CellIs conditional formatting rules.", nameof(Operator));
                 }
@@ -153,100 +152,70 @@ public sealed class AddOfficeExcelConditionalRuleCommand : PSCmdlet
                 {
                     throw new PSArgumentException("Formula1 is required for CellIs conditional formatting rules.", nameof(Formula1));
                 }
-                if (!OpenXmlValueParser.TryParse<ExcelConditionalFormattingOperator>(Operator!, out var op))
-                {
-                    throw new PSArgumentException($"Unknown conditional formatting operator '{Operator}'.", nameof(Operator));
-                }
-                sheet.AddConditionalRule(targetRange, op, Formula1!, Formula2);
+                sheet.AddConditionalRule(targetRange, Operator.Value, Formula1!, Formula2);
                 break;
-            case "Expression":
-            case "Formula":
+            case OfficeExcelConditionalRuleType.Expression:
+            case OfficeExcelConditionalRuleType.Formula:
                 if (string.IsNullOrWhiteSpace(Formula1))
                 {
                     throw new PSArgumentException("Formula1 is required for formula conditional formatting rules.", nameof(Formula1));
                 }
                 sheet.AddConditionalFormulaRule(targetRange, Formula1!, StopIfTrue.IsPresent);
                 break;
-            case "DuplicateValues":
+            case OfficeExcelConditionalRuleType.DuplicateValues:
                 sheet.AddConditionalDuplicateValuesRule(targetRange);
                 break;
-            case "UniqueValues":
+            case OfficeExcelConditionalRuleType.UniqueValues:
                 sheet.AddConditionalUniqueValuesRule(targetRange);
                 break;
-            case "Top":
-            case "Top10":
+            case OfficeExcelConditionalRuleType.Top:
+            case OfficeExcelConditionalRuleType.Top10:
                 sheet.AddConditionalTopBottomRule(targetRange, Rank, bottom: false, percent: Percent.IsPresent);
                 break;
-            case "Bottom":
-            case "Bottom10":
+            case OfficeExcelConditionalRuleType.Bottom:
+            case OfficeExcelConditionalRuleType.Bottom10:
                 sheet.AddConditionalTopBottomRule(targetRange, Rank, bottom: true, percent: Percent.IsPresent);
                 break;
-            case "AboveAverage":
+            case OfficeExcelConditionalRuleType.AboveAverage:
                 sheet.AddConditionalAboveAverageRule(targetRange, aboveAverage: true, equalAverage: EqualAverage.IsPresent, standardDeviation: StandardDeviation, stopIfTrue: StopIfTrue.IsPresent);
                 break;
-            case "BelowAverage":
+            case OfficeExcelConditionalRuleType.BelowAverage:
                 sheet.AddConditionalAboveAverageRule(targetRange, aboveAverage: false, equalAverage: EqualAverage.IsPresent, standardDeviation: StandardDeviation, stopIfTrue: StopIfTrue.IsPresent);
                 break;
-            case "ContainsText":
+            case OfficeExcelConditionalRuleType.ContainsText:
                 sheet.AddConditionalTextRule(targetRange, ExcelConditionalFormatType.ContainsText, RequireText());
                 break;
-            case "NotContainsText":
+            case OfficeExcelConditionalRuleType.NotContainsText:
                 sheet.AddConditionalTextRule(targetRange, ExcelConditionalFormatType.NotContainsText, RequireText());
                 break;
-            case "BeginsWith":
+            case OfficeExcelConditionalRuleType.BeginsWith:
                 sheet.AddConditionalTextRule(targetRange, ExcelConditionalFormatType.BeginsWith, RequireText());
                 break;
-            case "EndsWith":
+            case OfficeExcelConditionalRuleType.EndsWith:
                 sheet.AddConditionalTextRule(targetRange, ExcelConditionalFormatType.EndsWith, RequireText());
                 break;
-            case "ContainsBlanks":
+            case OfficeExcelConditionalRuleType.ContainsBlanks:
                 sheet.AddConditionalBlanksRule(targetRange, containsBlanks: true, stopIfTrue: StopIfTrue.IsPresent);
                 break;
-            case "NotContainsBlanks":
+            case OfficeExcelConditionalRuleType.NotContainsBlanks:
                 sheet.AddConditionalBlanksRule(targetRange, containsBlanks: false, stopIfTrue: StopIfTrue.IsPresent);
                 break;
-            case "ContainsErrors":
+            case OfficeExcelConditionalRuleType.ContainsErrors:
                 sheet.AddConditionalErrorsRule(targetRange, containsErrors: true, stopIfTrue: StopIfTrue.IsPresent);
                 break;
-            case "NotContainsErrors":
+            case OfficeExcelConditionalRuleType.NotContainsErrors:
                 sheet.AddConditionalErrorsRule(targetRange, containsErrors: false, stopIfTrue: StopIfTrue.IsPresent);
                 break;
-            case "TimePeriod":
-                if (string.IsNullOrWhiteSpace(TimePeriod))
+            case OfficeExcelConditionalRuleType.TimePeriod:
+                if (!TimePeriod.HasValue)
                 {
                     throw new PSArgumentException("TimePeriod is required for time-period conditional formatting rules.", nameof(TimePeriod));
                 }
-                if (!OpenXmlValueParser.TryParse<ExcelConditionalTimePeriod>(TimePeriod!, out var period))
-                {
-                    throw new PSArgumentException($"Unknown conditional formatting time period '{TimePeriod}'.", nameof(TimePeriod));
-                }
-                sheet.AddConditionalTimePeriodRule(targetRange, period, StopIfTrue.IsPresent);
+                sheet.AddConditionalTimePeriodRule(targetRange, TimePeriod.Value, StopIfTrue.IsPresent);
                 break;
             default:
                 throw new PSArgumentException($"Unknown conditional formatting rule type '{RuleType}'.", nameof(RuleType));
         }
-    }
-
-    private string ResolveRuleType()
-    {
-        string[] supportedRuleTypes =
-        {
-            "CellIs", "Expression", "Formula", "DuplicateValues", "UniqueValues",
-            "Top", "Top10", "Bottom", "Bottom10", "AboveAverage", "BelowAverage",
-            "ContainsText", "NotContainsText", "BeginsWith", "EndsWith",
-            "ContainsBlanks", "NotContainsBlanks", "ContainsErrors", "NotContainsErrors",
-            "TimePeriod"
-        };
-
-        foreach (string supportedRuleType in supportedRuleTypes)
-        {
-            if (string.Equals(supportedRuleType, RuleType, System.StringComparison.OrdinalIgnoreCase))
-            {
-                return supportedRuleType;
-            }
-        }
-
-        return RuleType;
     }
 
     private string RequireText()
