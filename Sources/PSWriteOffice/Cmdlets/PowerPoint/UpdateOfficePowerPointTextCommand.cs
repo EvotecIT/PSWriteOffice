@@ -10,7 +10,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Replace fiscal year text across the whole deck.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointUpdateText.pptx
+///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointUpdateText.pptx
 /// $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
 /// Add-OfficePowerPointTextBox -Slide $slide -Text 'FY24 summary' | Out-Null
 /// Set-OfficePowerPointNotes -Slide $slide -Text 'Mention FY24 assumptions.' | Out-Null
@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsData.Update, "OfficePowerPointText", DefaultParameterSetName = ParameterSetAuto)]
 [Alias("Replace-OfficePowerPointText")]
 [OutputType(typeof(int))]
-public sealed class UpdateOfficePowerPointTextCommand : PSCmdlet
-{
+public sealed class UpdateOfficePowerPointTextCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetAuto = "Auto";
     private const string ParameterSetPresentation = "Presentation";
     private const string ParameterSetSlide = "Slide";
@@ -52,13 +51,10 @@ public sealed class UpdateOfficePowerPointTextCommand : PSCmdlet
     public SwitchParameter IncludeNotes { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             int replacements;
-            switch (ParameterSetName)
-            {
+            switch (ParameterSetName) {
                 case ParameterSetPresentation:
                     replacements = (Presentation ?? throw new InvalidOperationException("Presentation was not provided."))
                         .ReplaceText(OldValue, NewValue ?? string.Empty, IncludeTables, IncludeNotes.IsPresent);
@@ -72,21 +68,17 @@ public sealed class UpdateOfficePowerPointTextCommand : PSCmdlet
                     break;
             }
 
-            WriteObject(replacements);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(replacements);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointUpdateTextFailed", ErrorCategory.InvalidOperation, Presentation ?? (object?)Slide));
         }
     }
 
-    private int ReplaceUsingDslContext()
-    {
+    private int ReplaceUsingDslContext() {
         var context = PowerPointDslContext.Current
             ?? throw new InvalidOperationException("Specify -Presentation, -Slide, or run inside New-OfficePowerPoint.");
 
-        if (context.CurrentSlide != null)
-        {
+        if (context.CurrentSlide != null) {
             return context.CurrentSlide.ReplaceText(OldValue, NewValue ?? string.Empty, IncludeTables, IncludeNotes.IsPresent);
         }
 

@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// </example>
 [Cmdlet(VerbsCommon.Copy, "OfficePowerPointSlide")]
 [OutputType(typeof(PowerPointSlide))]
-public sealed class CopyOfficePowerPointSlideCommand : PSCmdlet
-{
+public sealed class CopyOfficePowerPointSlideCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Presentation to update (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointPresentation? Presentation { get; set; }
@@ -35,17 +34,13 @@ public sealed class CopyOfficePowerPointSlideCommand : PSCmdlet
     public int? InsertAt { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var presentation = Presentation ?? PowerPointDslContext.Current?.Presentation
                 ?? throw new InvalidOperationException("Presentation was not provided. Use -Presentation or run inside New-OfficePowerPoint.");
 
-            WriteObject(presentation.DuplicateSlide(Index, InsertAt));
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(presentation.DuplicateSlide(Index, InsertAt));
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointCopySlideFailed", ErrorCategory.InvalidOperation, Presentation));
         }
     }

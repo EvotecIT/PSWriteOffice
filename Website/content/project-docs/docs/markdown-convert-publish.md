@@ -11,7 +11,7 @@ Markdown is often the editable source while HTML is the delivery artifact. Keep 
 `ConvertTo-OfficeMarkdownHtml` supports fragment or document output, visual themes, CSS delivery modes, anchor links, task lists, footnotes, external-link attributes, and explicit URL or image restrictions.
 
 ```powershell
-ConvertTo-OfficeMarkdownHtml -InputPath '.\Runbook.md' `
+ConvertTo-OfficeMarkdownHtml -Path '.\Runbook.md' `
     -OutputPath '.\Runbook.html' -DocumentMode `
     -Title 'Operations runbook' -IncludeAnchorLinks
 ```

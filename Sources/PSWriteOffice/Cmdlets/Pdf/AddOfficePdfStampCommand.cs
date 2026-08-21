@@ -30,8 +30,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 [Cmdlet(VerbsCommon.Add, "OfficePdfStamp", DefaultParameterSetName = ParameterSetText, SupportsShouldProcess = true)]
 [Alias("PdfStamp")]
 [OutputType(typeof(FileInfo))]
-public sealed class AddOfficePdfStampCommand : PSCmdlet
-{
+public sealed class AddOfficePdfStampCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetText = "Text";
     private const string ParameterSetImage = "Image";
 
@@ -101,11 +100,9 @@ public sealed class AddOfficePdfStampCommand : PSCmdlet
     public SwitchParameter Watermark { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write stamped PDF"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write stamped PDF")) {
             return;
         }
 
@@ -117,13 +114,11 @@ public sealed class AddOfficePdfStampCommand : PSCmdlet
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath).RequireSuccess();
-        WriteObject(new FileInfo(outputPath));
+        WritePassThru(new FileInfo(outputPath));
     }
 
-    private PdfDocument StampText(PdfDocument document)
-    {
-        var options = new PdfTextStampOptions
-        {
+    private PdfDocument StampText(PdfDocument document) {
+        var options = new PdfTextStampOptions {
             X = X,
             Y = Y,
             FontSize = FontSize,
@@ -131,8 +126,7 @@ public sealed class AddOfficePdfStampCommand : PSCmdlet
             BehindContent = Watermark.IsPresent
         };
         var color = PdfCommandUtilities.ParseColor(Color);
-        if (color.HasValue)
-        {
+        if (color.HasValue) {
             options.Color = color.Value;
         }
 
@@ -142,10 +136,8 @@ public sealed class AddOfficePdfStampCommand : PSCmdlet
             : document.Stamp.Text(Text!, options);
     }
 
-    private PdfDocument StampImage(PdfDocument document)
-    {
-        var options = new PdfImageStampOptions
-        {
+    private PdfDocument StampImage(PdfDocument document) {
+        var options = new PdfImageStampOptions {
             X = X,
             Y = Y,
             Width = Width,

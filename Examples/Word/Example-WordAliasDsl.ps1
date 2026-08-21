@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $orders = @(
     [PSCustomObject]@{ Customer = 'Contoso'; Total = 1850; Status = 'Open' }
     [PSCustomObject]@{ Customer = 'Fabrikam'; Total = 640; Status = 'Closed' }
@@ -40,6 +39,6 @@ New-OfficeWord -Path $docPath {
             WordBold (Get-Date -Format 'yyyy-MM-dd HH:mm')
         }
     }
-} -PassThru | Out-Null
+}
 
 Write-Host "Document saved to $docPath"

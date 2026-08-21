@@ -16,7 +16,7 @@ Unprotect-OfficeExcelWorkbook [-PassThru] [-WhatIf] [-Confirm] [<CommonParameter
 
 ### Path
 ```powershell
-Unprotect-OfficeExcelWorkbook [-InputPath] <string> [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Unprotect-OfficeExcelWorkbook [-Path] <string> [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -56,22 +56,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -PassThru
 Emit the workbook after removing protection.
 
@@ -83,6 +67,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

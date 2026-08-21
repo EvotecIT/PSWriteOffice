@@ -17,16 +17,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelTheme", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelTheme")]
 [OutputType(typeof(PSObject))]
-public sealed class SetOfficeExcelThemeCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelThemeCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -53,42 +52,31 @@ public sealed class SetOfficeExcelThemeCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
 
         string? xml = ResolveThemeXml();
-        if (Default.IsPresent)
-        {
+        if (Default.IsPresent) {
             workbook.Document.ResetWorkbookTheme(Name);
-        }
-        else if (xml != null)
-        {
+        } else if (xml != null) {
             workbook.Document.SetWorkbookThemeXml(xml);
-            if (!string.IsNullOrWhiteSpace(Name))
-            {
+            if (!string.IsNullOrWhiteSpace(Name)) {
                 workbook.Document.SetWorkbookThemeName(Name!);
             }
-        }
-        else if (!string.IsNullOrWhiteSpace(Name))
-        {
+        } else if (!string.IsNullOrWhiteSpace(Name)) {
             workbook.Document.SetWorkbookThemeName(Name!);
-        }
-        else
-        {
+        } else {
             throw new PSArgumentException("Specify -Default, -Xml, -XmlPath, or -Name.");
         }
 
         ExcelWorkbookThemeInfo info = workbook.Document.GetWorkbookTheme(includeXml: false);
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var result = new PSObject();
             result.Properties.Add(new PSNoteProperty("HasTheme", info.HasTheme));
             result.Properties.Add(new PSNoteProperty("Name", info.Name));
@@ -96,20 +84,16 @@ public sealed class SetOfficeExcelThemeCommand : PSCmdlet
         }
     }
 
-    private string? ResolveThemeXml()
-    {
-        if (!string.IsNullOrWhiteSpace(Xml) && !string.IsNullOrWhiteSpace(XmlPath))
-        {
+    private string? ResolveThemeXml() {
+        if (!string.IsNullOrWhiteSpace(Xml) && !string.IsNullOrWhiteSpace(XmlPath)) {
             throw new PSArgumentException("Specify either Xml or XmlPath, not both.");
         }
 
-        if (!string.IsNullOrWhiteSpace(Xml))
-        {
+        if (!string.IsNullOrWhiteSpace(Xml)) {
             return Xml;
         }
 
-        if (string.IsNullOrWhiteSpace(XmlPath))
-        {
+        if (string.IsNullOrWhiteSpace(XmlPath)) {
             return null;
         }
 

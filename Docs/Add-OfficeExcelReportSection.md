@@ -11,7 +11,7 @@ Adds a section heading to the current Excel report sheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportSection [-Text] <string> [<CommonParameters>]
+Add-OfficeExcelReportSection [-Text] <string> [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,6 +32,22 @@ PS> New-OfficeExcel -Path .\Operations.xlsx {
 Uses the report composer to add a section heading and narrative text.
 
 ## PARAMETERS
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -Text
 Section heading text.

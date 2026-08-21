@@ -21,15 +21,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsData.Compare, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelWorkbookCompare")]
 [OutputType(typeof(PSObject))]
-public sealed class CompareOfficeExcelWorkbookCommand : PSCmdlet
-{
+public sealed class CompareOfficeExcelWorkbookCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "ReferencePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "ReferencePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook path to compare against.</summary>
     [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetPath)]
@@ -65,15 +64,13 @@ public sealed class CompareOfficeExcelWorkbookCommand : PSCmdlet
     [Parameter]
     public SwitchParameter SkipComments { get; set; }
 
-    protected override void ProcessRecord()
-    {
-        using var left = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var left = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         using var right = ParameterSetName == ParameterSetPath
             ? ExcelWorkbookCommandService.OpenWorkbook(this, DifferencePath, readOnly: true)
             : new ExcelWorkbookCommandScope(DifferenceDocument, ownsDocument: false);
 
-        var report = left.Document.CompareWorkbook(right.Document, new ExcelWorkbookDiffOptions
-        {
+        var report = left.Document.CompareWorkbook(right.Document, new ExcelWorkbookDiffOptions {
             MaxDifferences = MaxDifferences,
             CompareCells = !SkipCells.IsPresent,
             CompareCellStyles = !SkipCellStyles.IsPresent,
@@ -89,8 +86,7 @@ public sealed class CompareOfficeExcelWorkbookCommand : PSCmdlet
         WriteObject(output);
     }
 
-    private static PSObject CreateDifference(ExcelWorkbookDifference difference)
-    {
+    private static PSObject CreateDifference(ExcelWorkbookDifference difference) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("Category", difference.Category));
         item.Properties.Add(new PSNoteProperty("Message", difference.Message));

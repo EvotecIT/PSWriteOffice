@@ -8,8 +8,7 @@ if (Test-Path -LiteralPath $moduleManifest) {
 }
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $wordPath = Join-Path $documents 'Showcase-RichTextRuns.docx'
 $excelPath = Join-Path $documents 'Showcase-RichTextRuns.xlsx'
 $pdfPath = Join-Path $documents 'Showcase-RichTextRuns.pdf'
@@ -46,7 +45,7 @@ WordNew -Path $wordPath {
             , @('Backup', (WordTableCellSpec -Run @(WordTextRun 'Watch' -Color DarkOrange -Bold)), 'Operations')
         )
     }
-} -PassThru | Out-Null
+}
 
 ExcelNew -Path $excelPath {
     ExcelSheet -Name 'Summary' -Content {
@@ -62,7 +61,7 @@ ExcelNew -Path $excelPath {
         ExcelTable -Data $serviceRows -TableName 'ServiceReadiness'
         ExcelAutoFit
     }
-} -PassThru | Out-Null
+}
 
 PdfNew -Path $pdfPath {
     PdfHeading 'Rich text runs'
@@ -83,7 +82,7 @@ PdfNew -Path $pdfPath {
         , @((PdfTableCell -Run @(PdfTextRun 'Identity Sync' -Bold; PdfTextRun ' 99.98%' -Color SeaGreen)), 'Ready', 'Platform')
         , @('Backup', (PdfTableCell -Run @(PdfTextRun 'Watch' -Color DarkOrange -Bold)), 'Operations')
     )
-} -PassThru | Out-Null
+}
 
 PptNew -Path $pptPath {
     PptSlide {
@@ -114,7 +113,7 @@ PptNew -Path $pptPath {
             , @('Backup', @{ Run = @(PptTextRun 'Watch' -Color DarkOrange -Bold) }, 'Operations')
         ) -X 70 -Y 190 -Width 560 -Height 220
     }
-} -PassThru | Out-Null
+}
 
 Write-Host "Word document saved to $wordPath"
 Write-Host "Excel workbook saved to $excelPath"

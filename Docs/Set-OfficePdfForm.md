@@ -11,7 +11,7 @@ Fills and optionally flattens simple AcroForm fields in an existing PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfForm -Path <string> -OutputPath <string> [-Password <string>] [-IgnorePermissionRestrictions] [-Field <hashtable>] [-Flatten] [-KeepNeedAppearances] [-Incremental] [-AppearanceFontPath <string>] [-AppearanceFontFamilyName <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficePdfForm -Path <string> -OutputPath <string> [-Password <string>] [-IgnorePermissionRestrictions] [-Field <hashtable>] [-Flatten] [-KeepNeedAppearances] [-Incremental] [-AppearanceFontPath <string>] [-AppearanceFontFamilyName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -155,6 +155,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

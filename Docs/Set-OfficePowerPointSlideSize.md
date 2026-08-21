@@ -11,27 +11,27 @@ Sets the slide size for a PowerPoint presentation.
 ## SYNTAX
 ### Preset (Default)
 ```powershell
-Set-OfficePowerPointSlideSize -Preset <PowerPointSlideSizePreset> [-Presentation <PowerPointPresentation>] [-Portrait] [<CommonParameters>]
+Set-OfficePowerPointSlideSize -Preset <PowerPointSlideSizePreset> [-Presentation <PowerPointPresentation>] [-Portrait] [-PassThru] [<CommonParameters>]
 ```
 
 ### Centimeters
 ```powershell
-Set-OfficePowerPointSlideSize -WidthCm <double> -HeightCm <double> [-Presentation <PowerPointPresentation>] [<CommonParameters>]
+Set-OfficePowerPointSlideSize -WidthCm <double> -HeightCm <double> [-Presentation <PowerPointPresentation>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Inches
 ```powershell
-Set-OfficePowerPointSlideSize -WidthInches <double> -HeightInches <double> [-Presentation <PowerPointPresentation>] [<CommonParameters>]
+Set-OfficePowerPointSlideSize -WidthInches <double> -HeightInches <double> [-Presentation <PowerPointPresentation>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Points
 ```powershell
-Set-OfficePowerPointSlideSize -WidthPoints <double> -HeightPoints <double> [-Presentation <PowerPointPresentation>] [<CommonParameters>]
+Set-OfficePowerPointSlideSize -WidthPoints <double> -HeightPoints <double> [-Presentation <PowerPointPresentation>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Emus
 ```powershell
-Set-OfficePowerPointSlideSize -WidthEmus <long> -HeightEmus <long> [-Presentation <PowerPointPresentation>] [<CommonParameters>]
+Set-OfficePowerPointSlideSize -WidthEmus <long> -HeightEmus <long> [-Presentation <PowerPointPresentation>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,7 +51,7 @@ Applies the 16:9 widescreen preset before adding slides.
 
 ### EXAMPLE 2
 ```powershell
-PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointCustomSize.pptx
+PS> $ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCustomSize.pptx
 Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0
 Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Custom size'
 ```
@@ -118,6 +118,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Preset, Centimeters, Inches, Points, Emus
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

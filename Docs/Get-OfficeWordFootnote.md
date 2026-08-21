@@ -11,7 +11,7 @@ Gets footnotes from a Word document or section.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordFootnote [-InputPath] <string> [<CommonParameters>]
+Get-OfficeWordFootnote [-Path] <string> [<CommonParameters>]
 ```
 
 ### Document
@@ -57,13 +57,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the document.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

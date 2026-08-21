@@ -17,16 +17,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsSecurity.Unprotect, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelWorkbookUnprotect")]
 [OutputType(typeof(ExcelDocument), typeof(FileInfo))]
-public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet
-{
+public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -37,18 +36,15 @@ public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var pathPassThru = string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase);
         string? resolvedPath = pathPassThru
-            ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath)
+            ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
             : null;
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
 
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-
-        {
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
 
             return;
 
@@ -58,8 +54,7 @@ public sealed class UnprotectOfficeExcelWorkbookCommand : PSCmdlet
         document.UnprotectWorkbook();
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(pathPassThru ? new FileInfo(resolvedPath!) : document);
         }
     }

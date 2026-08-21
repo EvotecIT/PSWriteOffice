@@ -15,16 +15,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelConditionalFormatting", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelConditionalFormatting")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelConditionalFormattingCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelConditionalFormattingCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to inspect.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -60,18 +59,15 @@ public sealed class GetOfficeExcelConditionalFormattingCommand : PSCmdlet
     public SwitchParameter IncludeHeader { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var path = string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)
-            ? InputPath
+            ? Path
             : null;
 
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
-        {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex)) {
             string? targetRange = ExcelTargetRangeResolver.ResolveOptional(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent);
-            foreach (var rule in sheet.GetConditionalFormattingRules(targetRange))
-            {
+            foreach (var rule in sheet.GetConditionalFormattingRules(targetRange)) {
                 WriteObject(ExcelRuleRecordService.CreateConditionalFormattingRecord(rule, sheet.Name, path));
             }
         }

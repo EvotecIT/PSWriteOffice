@@ -14,8 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelChartPoint", DefaultParameterSetName = ParameterSetIndex)]
 [Alias("ExcelChartPoint")]
 [OutputType(typeof(ExcelChart))]
-public sealed class SetOfficeExcelChartPointCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelChartPointCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetIndex = "Index";
     private const string ParameterSetSeriesName = "Name";
 
@@ -52,34 +51,25 @@ public sealed class SetOfficeExcelChartPointCommand : PSCmdlet
     public double? LineWidthPoints { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             bool hasFill = !string.IsNullOrWhiteSpace(FillColor);
             bool hasLine = !string.IsNullOrWhiteSpace(LineColor);
-            if (!hasFill && !hasLine && !LineWidthPoints.HasValue)
-            {
+            if (!hasFill && !hasLine && !LineWidthPoints.HasValue) {
                 throw new PSArgumentException("Specify FillColor, LineColor, or LineWidthPoints to style the chart point.");
             }
-            if (LineWidthPoints.HasValue && !hasLine)
-            {
+            if (LineWidthPoints.HasValue && !hasLine) {
                 throw new PSArgumentException("LineColor is required when LineWidthPoints is used.");
             }
 
-            if (ParameterSetName == ParameterSetSeriesName)
-            {
+            if (ParameterSetName == ParameterSetSeriesName) {
                 Chart.SetDataPointColor(SeriesName, PointIndex, FillColor, LineColor, LineWidthPoints, IgnoreCase);
-            }
-            else
-            {
+            } else {
                 Chart.SetDataPointColor(SeriesIndex, PointIndex, FillColor, LineColor, LineWidthPoints);
             }
 
-            WriteObject(Chart);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(Chart);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "ExcelChartPointFailed", ErrorCategory.InvalidOperation, Chart));
         }
     }

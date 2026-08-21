@@ -11,7 +11,7 @@ Runs OfficeIMO safe workbook repairs for common package, table, view, print, dra
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Repair-OfficeExcelWorkbook [-InputPath] <string> [-SkipDefinedNames] [-SkipTables] [-SkipSheetViews] [-SkipPrintSettings] [-SkipDrawings] [-SkipCalculation] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Repair-OfficeExcelWorkbook [-Path] <string> [-SkipDefinedNames] [-SkipTables] [-SkipSheetViews] [-SkipPrintSettings] [-SkipDrawings] [-SkipCalculation] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -53,22 +53,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to repair.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NoSave
 Do not save after applying repairs to an open document.
 
@@ -96,6 +80,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to repair.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

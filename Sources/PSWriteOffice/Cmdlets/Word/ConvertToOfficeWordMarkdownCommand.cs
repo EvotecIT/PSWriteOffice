@@ -24,15 +24,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsData.ConvertTo, "OfficeWordMarkdown", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ConvertTo-WordMarkdown")]
 [OutputType(typeof(string), typeof(FileInfo))]
-public sealed class ConvertToOfficeWordMarkdownCommand : PSCmdlet
-{
+public sealed class ConvertToOfficeWordMarkdownCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to a .docx file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path")]
-    public string FilePath { get; set; } = string.Empty;
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Word document instance to convert.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -68,87 +67,66 @@ public sealed class ConvertToOfficeWordMarkdownCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document was not provided.");
             }
 
-            var options = new WordToMarkdownOptions
-            {
+            var options = new WordToMarkdownOptions {
                 EnableUnderline = EnableUnderline.IsPresent,
                 EnableHighlight = EnableHighlight.IsPresent,
                 ImageExportMode = ImageExportMode
             };
 
-            if (!string.IsNullOrWhiteSpace(FontFamily))
-            {
+            if (!string.IsNullOrWhiteSpace(FontFamily)) {
                 options.FontFamily = FontFamily;
             }
 
-            if (!string.IsNullOrWhiteSpace(ImageDirectory))
-            {
+            if (!string.IsNullOrWhiteSpace(ImageDirectory)) {
                 options.ImageDirectory = SessionState.Path.GetUnresolvedProviderPathFromPSPath(ImageDirectory);
             }
 
-            if (!string.IsNullOrWhiteSpace(OutputPath))
-            {
+            if (!string.IsNullOrWhiteSpace(OutputPath)) {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-                if (!ShouldProcess(resolvedOutput, "Write Markdown converted from Word document"))
-                {
+                if (!ShouldProcess(resolvedOutput, "Write Markdown converted from Word document")) {
                     return;
                 }
 
-                var directory = Path.GetDirectoryName(resolvedOutput);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
+                var directory = System.IO.Path.GetDirectoryName(resolvedOutput);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
                     Directory.CreateDirectory(directory);
                 }
 
                 document.SaveAsMarkdown(resolvedOutput, options);
-                if (PassThru.IsPresent)
-                {
+                if (PassThru.IsPresent) {
                     WriteObject(new FileInfo(resolvedOutput));
                 }
-            }
-            else
-            {
+            } else {
                 if (options.ImageExportMode == ImageExportMode.File && !string.IsNullOrWhiteSpace(options.ImageDirectory) &&
-                    !ShouldProcess(options.ImageDirectory, "Export Word images while converting to Markdown"))
-                {
+                    !ShouldProcess(options.ImageDirectory, "Export Word images while converting to Markdown")) {
                     options.ImageExportMode = ImageExportMode.Base64;
                     options.ImageDirectory = null;
                 }
 
                 WriteObject(document.ToMarkdown(options));
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "WordToMarkdownFailed", ErrorCategory.InvalidOperation,
-                ParameterSetName == ParameterSetPath ? FilePath : Document));
-        }
-        finally
-        {
-            if (dispose)
-            {
+                ParameterSetName == ParameterSetPath ? Path : Document));
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

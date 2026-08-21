@@ -11,12 +11,12 @@ Adds a table to a PowerPoint slide.
 ## SYNTAX
 ### InputObject (Default)
 ```powershell
-Add-OfficePowerPointTable [[-Slide] <PowerPointSlide>] [-InputObject] <Object> [-Header <string[]>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-StyleId <string>] [<CommonParameters>]
+Add-OfficePowerPointTable [[-Slide] <PowerPointSlide>] [-InputObject] <Object> [-Header <string[]>] [-NoHeader] [-View <OfficeTableView>] [-CollectionSeparator <string>] [-DictionaryEntrySeparator <string>] [-DictionaryKeyValueSeparator <string>] [-MaxCollectionItems <int>] [-MaxNestingDepth <int>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Size
 ```powershell
-Add-OfficePowerPointTable [[-Slide] <PowerPointSlide>] -Rows <int> -Columns <int> [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-StyleId <string>] [<CommonParameters>]
+Add-OfficePowerPointTable [[-Slide] <PowerPointSlide>] -Rows <int> -Columns <int> [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-StyleId <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -184,6 +184,22 @@ Skip writing header row.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: InputObject
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: InputObject, Size
 Aliases: None
 Possible values:
 

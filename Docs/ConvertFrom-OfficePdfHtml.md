@@ -16,7 +16,7 @@ ConvertFrom-OfficePdfHtml [-Html] <string> [-OutputPath <string>] [-Profile <Htm
 
 ### Path
 ```powershell
-ConvertFrom-OfficePdfHtml -InputPath <string> [-OutputPath <string>] [-Profile <HtmlConversionProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertFrom-OfficePdfHtml -Path <string> [-OutputPath <string>] [-Profile <HtmlConversionProfile>] [-TrustedDocumentProfile] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-Options <HtmlPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -63,22 +63,6 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
-```
-
-### -InputPath
-Path to an HTML file.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -140,6 +124,22 @@ Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to an HTML file.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False

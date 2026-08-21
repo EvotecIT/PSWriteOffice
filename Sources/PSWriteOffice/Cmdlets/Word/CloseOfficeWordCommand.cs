@@ -21,12 +21,11 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Save to a new path and open the file.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Show</code>
+///   <code>Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Open</code>
 ///   <para>Saves updates to <c>Report-final.docx</c>, opens it, and disposes the document.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Close, "OfficeWord", DefaultParameterSetName = ParameterSetCurrent)]
-public sealed class CloseOfficeWordCommand : PSCmdlet
-{
+public sealed class CloseOfficeWordCommand : PSCmdlet {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetCurrent = "Current";
     private const string ParameterSetAll = "All";
@@ -54,55 +53,46 @@ public sealed class CloseOfficeWordCommand : PSCmdlet
 
     /// <summary>Open the file after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <summary>Password used to save the document as an encrypted package.</summary>
     [Parameter]
     public string? Password { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (All.IsPresent)
-        {
+    protected override void ProcessRecord() {
+        if (All.IsPresent) {
             var documents = WordDocumentService.GetTrackedDocuments();
-            for (var index = documents.Count - 1; index >= 0; index--)
-            {
+            for (var index = documents.Count - 1; index >= 0; index--) {
                 CloseSingleDocument(documents[index]);
             }
             return;
         }
 
         WordDocument? document;
-        if (ParameterSetName == ParameterSetDocument)
-        {
+        if (ParameterSetName == ParameterSetDocument) {
             document = Document;
-            if (document == null)
-            {
+            if (document == null) {
                 throw new PSArgumentNullException(nameof(Document), "Provide a WordDocument instance when using -Document.");
             }
-        }
-        else
-        {
+        } else {
             document = WordDocumentService.GetCurrentTrackedDocument();
         }
 
-        if (document == null)
-        {
+        if (document == null) {
             throw new PSInvalidOperationException("No tracked Word document was found. Pass -Document or open a document with Get-OfficeWord/New-OfficeWord first.");
         }
 
         CloseSingleDocument(document);
     }
 
-    private void CloseSingleDocument(WordDocument document)
-    {
-        if (Save.IsPresent || !string.IsNullOrEmpty(Path))
-        {
+    private void CloseSingleDocument(WordDocument document) {
+        if (Save.IsPresent || !string.IsNullOrEmpty(Path)) {
             var resolvedPath = !string.IsNullOrWhiteSpace(Path)
                 ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
                 : null;
-            WordDocumentService.SaveDocument(document, Show.IsPresent, resolvedPath, Password);
+            WordDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, Password);
             return;
         }
 

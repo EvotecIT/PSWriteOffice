@@ -11,12 +11,12 @@ Adds a text box to a slide.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficePowerPointTextBox -Text <string> [-Slide <PowerPointSlide>] [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [<CommonParameters>]
+Add-OfficePowerPointTextBox -Text <string> [-Slide <PowerPointSlide>] [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Run
 ```powershell
-Add-OfficePowerPointTextBox -Run <Object[]> [-Slide <PowerPointSlide>] [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [<CommonParameters>]
+Add-OfficePowerPointTextBox -Run <Object[]> [-Slide <PowerPointSlide>] [-X <int>] [-Y <int>] [-Width <int>] [-Height <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,6 +42,22 @@ Box height in points.
 
 ```yaml
 Type: Int32
+Parameter Sets: Text, Run
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Text, Run
 Aliases: None
 Possible values:

@@ -21,15 +21,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelPivotTable", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelPivotTables")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelPivotTableCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelPivotTableCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -48,73 +47,56 @@ public sealed class GetOfficeExcelPivotTableCommand : PSCmdlet
     public int? SheetIndex { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         ExcelDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-                if (!File.Exists(resolvedPath))
-                {
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+                if (!File.Exists(resolvedPath)) {
                     throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
                 }
                 document = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Excel workbook was not provided.");
             }
 
             var sheetFilter = ResolveSheetName(document);
             var pivots = document.GetPivotTables();
 
-            foreach (var pivot in pivots)
-            {
+            foreach (var pivot in pivots) {
                 if (!string.IsNullOrWhiteSpace(sheetFilter) &&
-                    !string.Equals(pivot.SheetName, sheetFilter, StringComparison.OrdinalIgnoreCase))
-                {
+                    !string.Equals(pivot.SheetName, sheetFilter, StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
                 if (!string.IsNullOrWhiteSpace(Name) &&
-                    !string.Equals(pivot.Name, Name, StringComparison.OrdinalIgnoreCase))
-                {
+                    !string.Equals(pivot.Name, Name, StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
                 WriteObject(CreateRecord(pivot));
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }
     }
 
-    private string? ResolveSheetName(ExcelDocument document)
-    {
-        if (!string.IsNullOrWhiteSpace(Sheet))
-        {
+    private string? ResolveSheetName(ExcelDocument document) {
+        if (!string.IsNullOrWhiteSpace(Sheet)) {
             return Sheet;
         }
 
-        if (SheetIndex.HasValue)
-        {
-            if (SheetIndex.Value < 0 || SheetIndex.Value >= document.Sheets.Count)
-            {
+        if (SheetIndex.HasValue) {
+            if (SheetIndex.Value < 0 || SheetIndex.Value >= document.Sheets.Count) {
                 throw new ArgumentOutOfRangeException(nameof(SheetIndex), "SheetIndex is out of range.");
             }
             return document.Sheets[SheetIndex.Value].Name;
@@ -123,8 +105,7 @@ public sealed class GetOfficeExcelPivotTableCommand : PSCmdlet
         return null;
     }
 
-    private static PSObject CreateRecord(ExcelPivotTableInfo pivot)
-    {
+    private static PSObject CreateRecord(ExcelPivotTableInfo pivot) {
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Name", pivot.Name));
         record.Properties.Add(new PSNoteProperty("Sheet", pivot.SheetName));
@@ -151,11 +132,9 @@ public sealed class GetOfficeExcelPivotTableCommand : PSCmdlet
         return record;
     }
 
-    private static PSObject[] CreateDataFieldRecords(IReadOnlyList<ExcelPivotDataFieldInfo> dataFields)
-    {
+    private static PSObject[] CreateDataFieldRecords(IReadOnlyList<ExcelPivotDataFieldInfo> dataFields) {
         var list = new List<PSObject>(dataFields.Count);
-        foreach (var field in dataFields)
-        {
+        foreach (var field in dataFields) {
             var record = new PSObject();
             record.Properties.Add(new PSNoteProperty("FieldName", field.FieldName));
             record.Properties.Add(new PSNoteProperty("Function", field.Function.ToString()));

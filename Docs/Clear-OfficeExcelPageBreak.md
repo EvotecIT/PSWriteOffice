@@ -11,17 +11,17 @@ Clears manual row or column page breaks from an Excel worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Clear-OfficeExcelPageBreak [-Sheet <string>] [-SheetIndex <Int32>] [-Row <int[]>] [-Column <int[]>] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelPageBreak [-Sheet <string>] [-SheetIndex <Int32>] [-Row <int[]>] [-Column <int[]>] [-All] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Clear-OfficeExcelPageBreak [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <int[]>] [-Column <int[]>] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelPageBreak [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <int[]>] [-Column <int[]>] [-All] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Clear-OfficeExcelPageBreak -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <int[]>] [-Column <int[]>] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelPageBreak -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <int[]>] [-Column <int[]>] [-All] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -88,13 +88,29 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
 Workbook path to update.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

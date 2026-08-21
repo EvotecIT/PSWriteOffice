@@ -5,8 +5,7 @@ param(
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Showcase-Excel-OperationalDashboard.xlsx'
 $logoPath = Join-Path $PSScriptRoot '..\Word\Example-WordTableCells.fixture.png'
 
@@ -80,7 +79,7 @@ New-OfficeExcel -Path $path {
             Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
 
         if (Test-Path $logoPath) {
-            ExcelImage -Path $logoPath -Address 'J1' -WidthPixels 140 -HeightPixels 52 -AltText 'PSWriteOffice operational dashboard logo' | Out-Null
+            ExcelImage -Path $logoPath -Address 'J1' -WidthPixels 140 -HeightPixels 52 -AltText 'PSWriteOffice operational dashboard logo'
         }
 
         ExcelHeaderFooter -HeaderCenter 'PSWriteOffice operational dashboard' -FooterRight 'Page &P of &N'
@@ -142,7 +141,7 @@ New-OfficeExcel -Path $path {
 } -Open:$Open
 
 $threaded = Add-OfficeExcelThreadedComment -Path $path -Sheet Summary -Address A2 -Text 'Review dashboard posture before sending to service owners.' -Author 'Automation Reviewer' -PassThru
-Add-OfficeExcelThreadedComment -Path $path -Sheet Summary -Address A2 -Text 'Ready for owner review.' -Author 'Report Owner' -ParentId $threaded.Id -Done | Out-Null
+Add-OfficeExcelThreadedComment -Path $path -Sheet Summary -Address A2 -Text 'Ready for owner review.' -Author 'Report Owner' -ParentId $threaded.Id -Done
 
 Add-OfficeExcelPowerQueryMetadata -Path $path `
     -Name 'OperationalDashboardQuery' `
@@ -151,7 +150,7 @@ Add-OfficeExcelPowerQueryMetadata -Path $path `
     -CommandText 'let Source = Excel.CurrentWorkbook(){[Name="ServiceHealth"]}[Content] in Source' `
     -Description 'Refresh metadata for Excel-compatible applications; PSWriteOffice does not execute Power Query.' `
     -RefreshOnOpen `
-    -PassThru | Out-Null
+
 
 $doctor = Test-OfficeExcelWorkbook -Path $path -SkipOpenXmlValidation
 $accessibility = Test-OfficeExcelAccessibility -Path $path

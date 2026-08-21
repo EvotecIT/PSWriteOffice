@@ -9,10 +9,10 @@ Markdown is simple text, but structure-aware parsing is safer than ad hoc regula
 ## Inspect semantic structures
 
 ```powershell
-$headings = Get-OfficeMarkdownHeading -InputPath '.\Article.md'
-$frontMatter = Get-OfficeMarkdownFrontMatter -InputPath '.\Article.md'
-$tables = Get-OfficeMarkdownTable -InputPath '.\Article.md' -AsObject
-$nodes = Get-OfficeMarkdownNode -InputPath '.\Article.md' -MaxDepth 3
+$headings = Get-OfficeMarkdownHeading -Path '.\Article.md'
+$frontMatter = Get-OfficeMarkdownFrontMatter -Path '.\Article.md'
+$tables = Get-OfficeMarkdownTable -Path '.\Article.md' -AsObject
+$nodes = Get-OfficeMarkdownNode -Path '.\Article.md' -MaxDepth 3
 ```
 
 Reader profiles and URL restrictions make parsing behavior explicit. Use heading level, text, anchor, node type, and depth filters to return only the structures the workflow needs.

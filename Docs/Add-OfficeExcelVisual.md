@@ -11,7 +11,7 @@ Adds a ChartForgeX artifact, portable SVG, or converted Office visual to an Exce
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelVisual [-InputObject] <Object> [-Worksheet <ExcelSheet>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-OffsetX <int>] [-OffsetY <int>] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
+Add-OfficeExcelVisual [-InputObject] <Object> [-Worksheet <ExcelSheet>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [-OffsetX <int>] [-OffsetY <int>] [-PassThru] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -192,6 +192,22 @@ Vertical offset in pixels from the cell origin.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the image added to the worksheet.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

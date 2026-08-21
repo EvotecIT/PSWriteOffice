@@ -11,17 +11,17 @@ Copies a worksheet within a workbook or from another workbook.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Copy-OfficeExcelSheet [[-SourceSheet] <string>] [-NewName] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Copy-OfficeExcelSheet [[-SourceSheet] <string>] [-NewName] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Copy-OfficeExcelSheet [-InputPath] <string> [[-SourceSheet] <string>] [-NewName] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Copy-OfficeExcelSheet [-Path] <string> [[-SourceSheet] <string>] [-NewName] <string> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Copy-OfficeExcelSheet [[-SourceSheet] <string>] [-NewName] <string> -Document <ExcelDocument> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Copy-OfficeExcelSheet [[-SourceSheet] <string>] [-NewName] <string> -Document <ExcelDocument> [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -84,22 +84,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Target workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NewName
 Name for the copied worksheet.
 
@@ -111,6 +95,38 @@ Possible values:
 
 Required: True
 Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Target workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

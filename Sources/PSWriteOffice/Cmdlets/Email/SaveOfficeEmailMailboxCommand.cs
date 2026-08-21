@@ -7,8 +7,7 @@ namespace PSWriteOffice.Cmdlets.Email;
 /// <summary>Saves a native mbox mailbox with output diagnostics.</summary>
 [Cmdlet(VerbsData.Save, "OfficeEmailMailbox", SupportsShouldProcess = true)]
 [OutputType(typeof(EmailWriteResult))]
-public sealed class SaveOfficeEmailMailboxCommand : PSCmdlet
-{
+public sealed class SaveOfficeEmailMailboxCommand : OfficeMutationCmdlet {
     /// <summary>Mailbox to save.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public EmailMailbox Mailbox { get; set; } = null!;
@@ -22,11 +21,10 @@ public sealed class SaveOfficeEmailMailboxCommand : PSCmdlet
     public EmailMailboxWriterOptions? Options { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         if (!ShouldProcess(output, "Save mbox mailbox")) return;
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
-        WriteObject(Mailbox.Save(output, Options));
+        WritePassThru(Mailbox.Save(output, Options));
     }
 }

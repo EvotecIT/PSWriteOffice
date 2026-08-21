@@ -14,8 +14,7 @@ It is adapted from `Examples/Pdf/Example-PdfReportDsl.ps1` and `Examples/Pdf/Exa
 Import-Module PSWriteOffice
 
 $outputDirectory = Join-Path $PSScriptRoot 'Output'
-New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
-
+$null = New-Item -ItemType Directory -Path $outputDirectory -Force
 $coverPath = Join-Path $outputDirectory 'Cover.pdf'
 $statusPath = Join-Path $outputDirectory 'Status.pdf'
 $finalPath = Join-Path $outputDirectory 'Combined.pdf'

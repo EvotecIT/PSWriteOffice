@@ -11,7 +11,7 @@ Gets Excel tables defined in a workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelTable [-InputPath] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
+Get-OfficeExcelTable [-Path] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Uri
@@ -73,22 +73,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the workbook.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
 Optional table name filter.
 
@@ -100,6 +84,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the workbook.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

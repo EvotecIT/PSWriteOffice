@@ -11,17 +11,17 @@ Adds a chart to a PowerPoint slide.
 ## SYNTAX
 ### Default (Default)
 ```powershell
-Add-OfficePowerPointChart [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [<CommonParameters>]
+Add-OfficePowerPointChart [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Categorical
 ```powershell
-Add-OfficePowerPointChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [<CommonParameters>]
+Add-OfficePowerPointChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Scatter
 ```powershell
-Add-OfficePowerPointChart -InputObject <Object[]> -XProperty <string> -YProperty <string[]> [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [<CommonParameters>]
+Add-OfficePowerPointChart -InputObject <Object[]> -XProperty <string> -YProperty <string[]> [-Slide <PowerPointSlide>] [-Type <PowerPointChartType>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Title <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -101,6 +101,22 @@ Aliases: Data
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Default, Categorical, Scatter
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

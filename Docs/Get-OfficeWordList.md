@@ -11,7 +11,7 @@ Gets lists from a Word document or section.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordList [-InputPath] <string> [-IncludeEmpty] [<CommonParameters>]
+Get-OfficeWordList [-Path] <string> [-IncludeEmpty] [<CommonParameters>]
 ```
 
 ### Document
@@ -85,13 +85,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the document to open read-only for list inspection.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

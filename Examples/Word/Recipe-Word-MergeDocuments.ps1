@@ -23,4 +23,4 @@ WordNew -Path $appendix {
     }
 }
 
-Join-OfficeWordDocument -InputPath $cover -AppendPath $detail,$appendix -OutputPath $merged
+Join-OfficeWordDocument -Path $cover -AppendPath $detail,$appendix -OutputPath $merged

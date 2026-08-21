@@ -16,7 +16,7 @@ Add-OfficeExcelThreadedComment -Address <string> -Text <string> [-Author <string
 
 ### Path
 ```powershell
-Add-OfficeExcelThreadedComment [-InputPath] <string> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <DateTime>] [-Done] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelThreadedComment [-Path] <string> -Address <string> -Text <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Author <string>] [-ParentId <string>] [-Id <string>] [-Date <DateTime>] [-Done] [-NoSave] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -137,22 +137,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NoSave
 Do not save when operating on a path-owned workbook.
 
@@ -196,6 +180,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

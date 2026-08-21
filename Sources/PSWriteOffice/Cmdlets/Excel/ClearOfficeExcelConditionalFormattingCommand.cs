@@ -15,16 +15,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Clear, "OfficeExcelConditionalFormatting", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelConditionalFormattingClear")]
-public sealed class ClearOfficeExcelConditionalFormattingCommand : PSCmdlet
-{
+public sealed class ClearOfficeExcelConditionalFormattingCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -60,17 +59,14 @@ public sealed class ClearOfficeExcelConditionalFormattingCommand : PSCmdlet
     public SwitchParameter IncludeHeader { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var shouldSave = false;
 
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
-        {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex)) {
             string? targetRange = ExcelTargetRangeResolver.ResolveOptional(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent);
             var target = string.IsNullOrWhiteSpace(targetRange) ? sheet.Name : $"{sheet.Name}!{targetRange}";
-            if (!ShouldProcess(target, "Clear Excel conditional formatting"))
-            {
+            if (!ShouldProcess(target, "Clear Excel conditional formatting")) {
                 continue;
             }
 
@@ -78,9 +74,9 @@ public sealed class ClearOfficeExcelConditionalFormattingCommand : PSCmdlet
             sheet.ClearConditionalFormatting(targetRange);
         }
 
-        if (shouldSave)
-        {
+        if (shouldSave) {
             workbook.SaveIfOwned();
+            WritePassThru(workbook.Document, workbook.OwnsDocument, Path);
         }
     }
 }

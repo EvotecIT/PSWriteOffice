@@ -14,8 +14,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordList")]
 [Alias("WordList")]
-public sealed class AddOfficeWordListCommand : PSCmdlet
-{
+public sealed class AddOfficeWordListCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Built-in list style or custom numbering scheme.</summary>
     [Parameter(Position = 1)]
     [Alias("Type")]
@@ -26,8 +25,7 @@ public sealed class AddOfficeWordListCommand : PSCmdlet
     public ScriptBlock? Content { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = WordDslContext.Require(this);
         var host = context.RequireParagraphHost();
         var anchor = host.AddParagraph();
@@ -35,15 +33,14 @@ public sealed class AddOfficeWordListCommand : PSCmdlet
         var list = anchor.AddList(Style);
         context.RegisterListAnchor(list, anchor);
 
-        using (context.Push(list))
-        {
+        using (context.Push(list)) {
             Content?.InvokeReturnAsIs();
         }
 
         var leftoverAnchor = context.ConsumeListAnchor(list);
-        if (leftoverAnchor != null && string.IsNullOrWhiteSpace(leftoverAnchor.Text))
-        {
+        if (leftoverAnchor != null && string.IsNullOrWhiteSpace(leftoverAnchor.Text)) {
             leftoverAnchor.Remove();
         }
+        WritePassThru(list);
     }
 }

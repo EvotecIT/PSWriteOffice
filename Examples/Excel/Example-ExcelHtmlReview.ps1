@@ -1,8 +1,7 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $workbookPath = Join-Path $documents 'Excel-HtmlReview.xlsx'
 $semanticHtmlPath = Join-Path $documents 'Excel-HtmlReview.semantic.html'
 $visualHtmlPath = Join-Path $documents 'Excel-HtmlReview.visual.html'
@@ -21,10 +20,10 @@ New-OfficeExcel -Path $workbookPath {
         Set-OfficeExcelCell -Cell 'E1' -Value 'Total incidents'
         Set-OfficeExcelColumn -Column 1, 2, 3, 4, 5 -AutoFit
     }
-} -PassThru | Out-Null
+}
 
-ConvertTo-OfficeExcelHtml -Path $workbookPath -OutputPath $semanticHtmlPath -Title 'Service Workbook Review' -PassThru | Out-Null
-ConvertTo-OfficeExcelHtml -Path $workbookPath -Profile VisualReview -OutputPath $visualHtmlPath -Title 'Service Workbook Visual Review' -PassThru | Out-Null
+ConvertTo-OfficeExcelHtml -Path $workbookPath -OutputPath $semanticHtmlPath -Title 'Service Workbook Review'
+ConvertTo-OfficeExcelHtml -Path $workbookPath -Profile VisualReview -OutputPath $visualHtmlPath -Title 'Service Workbook Visual Review'
 
 Write-Host "Workbook saved to $workbookPath"
 Write-Host "Semantic HTML saved to $semanticHtmlPath"

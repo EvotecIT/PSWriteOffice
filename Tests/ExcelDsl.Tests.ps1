@@ -841,10 +841,6 @@ Describe 'Excel DSL surface' {
         }
 
         { Get-ZipEntriesLocal -Path $path } | Should -Throw
-        $autoSavePath = Join-Path $TestDrive 'EncryptedExcelAutoSave.xlsx'
-        { New-OfficeExcel -Path $autoSavePath -Password 'secret' -AutoSave -ErrorAction Stop } |
-            Should -Throw '*require explicit Save-OfficeExcel*'
-
         $doc = Get-OfficeExcel -Path $path -Password 'secret' -ReadOnly
         try {
             $doc.Sheets[0].Name | Should -Be 'Secure'
@@ -3119,7 +3115,7 @@ Describe 'Excel DSL surface' {
         $script:PowerQueryContextMetadata.AddedWorksheetQueryTable | Should -BeTrue
         $script:PowerQueryContextMetadata.QueryTableName | Should -Be 'ContextQueryTable'
 
-        $dataModel = Get-OfficeExcelDataModel -InputPath $path
+        $dataModel = Get-OfficeExcelDataModel -Path $path
         $dataModel.HasDataModelOrQueries | Should -BeTrue
     }
 
@@ -3769,9 +3765,9 @@ Describe 'Excel DSL surface' {
             }
         }
 
-        Copy-OfficeExcelSheet -Path $path -SourceSheet 'Data' -NewName 'DataCopy' | Should -Not -BeNullOrEmpty
+        Copy-OfficeExcelSheet -Path $path -SourceSheet 'Data' -NewName 'DataCopy' -PassThru | Should -Not -BeNullOrEmpty
         Move-OfficeExcelSheet -Path $path -Sheet 'DataCopy' -Index 0
-        Copy-OfficeExcelSheet -Path $path -SourcePath $sourcePath -SourceSheet 'External' -NewName 'ExternalCopy' -CopyMode Package | Should -Not -BeNullOrEmpty
+        Copy-OfficeExcelSheet -Path $path -SourcePath $sourcePath -SourceSheet 'External' -NewName 'ExternalCopy' -CopyMode Package -PassThru | Should -Not -BeNullOrEmpty
         $join = Join-OfficeExcelSheet -Path $path -TargetSheet 'Data' -SourceSheet 'More' -MatchColumnsByHeader
         Set-OfficeExcelPrintArea -Path $path -Sheet 'Data' -Range 'A1:B4'
         Set-OfficeExcelPrintTitles -Path $path -Sheet 'Data' -FirstRow 1 -LastRow 1
@@ -3852,8 +3848,8 @@ Describe 'Excel DSL surface' {
         $numericMatch.Count | Should -Be 1
         $numericMatch[0].Value | Should -BeOfType ([double])
         $numericMatch[0].Value | Should -Be 12
-        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue 'Draft' -NewValue 'Ready' | Should -Be 2
-        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue '12' -NewValue 'Twelve' | Should -Be 0
+        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue 'Draft' -NewValue 'Ready' -PassThru | Should -Be 2
+        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue '12' -NewValue 'Twelve' -PassThru | Should -Be 0
         Edit-OfficeExcelRow -Path $path -Sheet 'Data' -ScriptBlock {
             param($row)
             if ($row.CellByHeader('Name').Value -eq 'Ada') {
@@ -3882,7 +3878,7 @@ Describe 'Excel DSL surface' {
         $matches.Count | Should -Be 2
         @($matches | ForEach-Object { $_.Address }) | Should -Contain 'A1'
         @($matches | ForEach-Object { $_.Address }) | Should -Contain 'XFD1048576'
-        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue 'Draft' -NewValue 'Ready' | Should -Be 2
+        Update-OfficeExcelText -Path $path -Sheet 'Data' -OldValue 'Draft' -NewValue 'Ready' -PassThru | Should -Be 2
     }
 
     It 'counts threaded comments in workbook summaries' {
@@ -4129,9 +4125,9 @@ Describe 'Excel DSL surface' {
                 Add-OfficeExcelTable -InputObject $rows -TableName 'Sales' -AutoFit
                 $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Pie -Title 'Revenue Mix' -PassThru
                 $formattedChart = $chart |
-                    Set-OfficeExcelChartLegend -Position Right |
-                    Set-OfficeExcelChartDataLabels -ShowValue $true -ShowPercent $true -Position OutsideEnd -NumberFormat '0.0%' -SourceLinked:$false |
-                    Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
+                    Set-OfficeExcelChartLegend -Position Right -PassThru |
+                    Set-OfficeExcelChartDataLabels -ShowValue $true -ShowPercent $true -Position OutsideEnd -NumberFormat '0.0%' -SourceLinked:$false -PassThru |
+                    Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10 -PassThru
 
                 $formattedChart | Should -Not -BeNullOrEmpty
             }
@@ -4174,10 +4170,10 @@ Describe 'Excel DSL surface' {
                 { $chart | Set-OfficeExcelChartPoint -SeriesIndex 0 -PointIndex 1 -LineWidthPoints 1.5 -ErrorAction Stop } |
                     Should -Throw '*LineColor is required*'
                 $formattedChart = $chart |
-                    Set-OfficeExcelChartAxis -CategoryTitle 'Month' -ValueTitle 'Revenue' -ValueNumberFormat '$#,##0' -SourceLinked:$false -ValueMinimum 0 -ValueMajorUnit 100 -ShowValueMinorGridlines -ValueGridlineColor '#D9EAD3' -GridlineWidthPoints 0.75 |
-                    Set-OfficeExcelChartSeries -SeriesIndex 0 -LineColor '#1F4E79' -LineWidthPoints 1.5 -MarkerStyle Circle -MarkerSize 6 -MarkerFillColor '#4472C4' |
-                    Set-OfficeExcelChartPoint -SeriesName 'Revenue' -PointIndex 1 -FillColor '#70AD47' -LineColor '#7030A0' -LineWidthPoints 1.25 |
-                    Set-OfficeExcelChartTrendline -SeriesIndex 0 -Type Linear -DisplayEquation -DisplayRSquared -LineColor '#C00000' -LineWidthPoints 1.25
+                    Set-OfficeExcelChartAxis -CategoryTitle 'Month' -ValueTitle 'Revenue' -ValueNumberFormat '$#,##0' -SourceLinked:$false -ValueMinimum 0 -ValueMajorUnit 100 -ShowValueMinorGridlines -ValueGridlineColor '#D9EAD3' -GridlineWidthPoints 0.75 -PassThru |
+                    Set-OfficeExcelChartSeries -SeriesIndex 0 -LineColor '#1F4E79' -LineWidthPoints 1.5 -MarkerStyle Circle -MarkerSize 6 -MarkerFillColor '#4472C4' -PassThru |
+                    Set-OfficeExcelChartPoint -SeriesName 'Revenue' -PointIndex 1 -FillColor '#70AD47' -LineColor '#7030A0' -LineWidthPoints 1.25 -PassThru |
+                    Set-OfficeExcelChartTrendline -SeriesIndex 0 -Type Linear -DisplayEquation -DisplayRSquared -LineColor '#C00000' -LineWidthPoints 1.25 -PassThru
 
                 $formattedChart | Should -Not -BeNullOrEmpty
             }

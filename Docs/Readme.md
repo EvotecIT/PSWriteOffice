@@ -595,6 +595,9 @@ Runs a script block against editable worksheet rows.
 ### [Export-OfficeCsv](Export-OfficeCsv.md)
 Exports objects or a CSV document to a CSV file.
 
+### [Export-OfficeDocumentPdf](Export-OfficeDocumentPdf.md)
+Exports a Word, Excel, PowerPoint, Markdown, or RTF document to PDF.
+
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
 Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
 
@@ -1166,7 +1169,7 @@ Saves an Excel workbook without disposing it.
 Saves an OfficeIMO LaTeX document.
 
 ### [Save-OfficeMarkdown](Save-OfficeMarkdown.md)
-Saves a Markdown document and optionally creates a PDF sidecar.
+Saves a Markdown document without changing its lifetime.
 
 ### [Save-OfficeOpenDocument](Save-OfficeOpenDocument.md)
 Saves a native OpenDocument model with entry-level preservation diagnostics.

@@ -11,12 +11,12 @@ Freezes panes on the current worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelFreeze [-TopRows <int>] [-LeftColumns <int>] [<CommonParameters>]
+Set-OfficeExcelFreeze [-TopRows <int>] [-LeftColumns <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelFreeze -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-TopRows <int>] [-LeftColumns <int>] [<CommonParameters>]
+Set-OfficeExcelFreeze -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-TopRows <int>] [-LeftColumns <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -61,6 +61,22 @@ Number of columns to freeze from the left.
 
 ```yaml
 Type: Int32
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:

@@ -72,7 +72,7 @@ try {
     $rows |
         Export-OfficeCsv `
             -Path $Path `
-            -ErrorAction Stop | Out-Null
+            -ErrorAction Stop
 
     $table = Import-OfficeCsv `
         -Path $Path `

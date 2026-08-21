@@ -23,8 +23,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelChartAxis")]
 [Alias("ExcelChartAxis")]
 [OutputType(typeof(ExcelChart))]
-public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelChartAxisCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Chart to update.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public ExcelChart Chart { get; set; } = null!;
@@ -114,41 +113,33 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
     public double? GridlineWidthPoints { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var categoryTitle = CategoryTitle;
-            if (!string.IsNullOrWhiteSpace(categoryTitle))
-            {
+            if (!string.IsNullOrWhiteSpace(categoryTitle)) {
                 Chart.SetCategoryAxisTitle(categoryTitle!, AxisGroup);
             }
 
             var valueTitle = ValueTitle;
-            if (!string.IsNullOrWhiteSpace(valueTitle))
-            {
+            if (!string.IsNullOrWhiteSpace(valueTitle)) {
                 Chart.SetValueAxisTitle(valueTitle!, AxisGroup);
             }
 
             var categoryNumberFormat = CategoryNumberFormat;
-            if (!string.IsNullOrWhiteSpace(categoryNumberFormat))
-            {
+            if (!string.IsNullOrWhiteSpace(categoryNumberFormat)) {
                 Chart.SetCategoryAxisNumberFormat(categoryNumberFormat!, SourceLinked, AxisGroup);
             }
 
             var valueNumberFormat = ValueNumberFormat;
-            if (!string.IsNullOrWhiteSpace(valueNumberFormat))
-            {
+            if (!string.IsNullOrWhiteSpace(valueNumberFormat)) {
                 Chart.SetValueAxisNumberFormat(valueNumberFormat!, SourceLinked, AxisGroup);
             }
 
-            if (ValueMinimum.HasValue || ValueMaximum.HasValue || ValueMajorUnit.HasValue || ValueMinorUnit.HasValue)
-            {
+            if (ValueMinimum.HasValue || ValueMaximum.HasValue || ValueMajorUnit.HasValue || ValueMinorUnit.HasValue) {
                 Chart.SetValueAxisScale(ValueMinimum, ValueMaximum, ValueMajorUnit, ValueMinorUnit, axisGroup: AxisGroup);
             }
 
-            if (CategoryMinimum.HasValue || CategoryMaximum.HasValue || CategoryMajorUnit.HasValue || CategoryMinorUnit.HasValue)
-            {
+            if (CategoryMinimum.HasValue || CategoryMaximum.HasValue || CategoryMajorUnit.HasValue || CategoryMinorUnit.HasValue) {
                 Chart.SetCategoryAxisScale(CategoryMinimum, CategoryMaximum, CategoryMajorUnit, CategoryMinorUnit, axisGroup: AxisGroup);
             }
 
@@ -165,8 +156,7 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
 
             bool categoryStyleRequested = !string.IsNullOrWhiteSpace(categoryGridlineColor) ||
                 (GridlineWidthPoints.HasValue && (categoryGridlinesRequested || widthOnlyRequest));
-            if (categoryGridlinesRequested || widthOnlyRequest)
-            {
+            if (categoryGridlinesRequested || widthOnlyRequest) {
                 bool showMajor = ShowCategoryMajorGridlines.IsPresent || ShowCategoryMinorGridlines.IsPresent || categoryStyleRequested;
                 Chart.SetCategoryAxisGridlines(showMajor,
                     ShowCategoryMinorGridlines.IsPresent, categoryGridlineColor, GridlineWidthPoints, AxisGroup);
@@ -174,17 +164,14 @@ public sealed class SetOfficeExcelChartAxisCommand : PSCmdlet
 
             bool valueStyleRequested = !string.IsNullOrWhiteSpace(valueGridlineColor) ||
                 (GridlineWidthPoints.HasValue && (valueGridlinesRequested || widthOnlyRequest));
-            if (valueGridlinesRequested || widthOnlyRequest)
-            {
+            if (valueGridlinesRequested || widthOnlyRequest) {
                 bool showMajor = ShowValueMajorGridlines.IsPresent || ShowValueMinorGridlines.IsPresent || valueStyleRequested;
                 Chart.SetValueAxisGridlines(showMajor,
                     ShowValueMinorGridlines.IsPresent, valueGridlineColor, GridlineWidthPoints, AxisGroup);
             }
 
-            WriteObject(Chart);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(Chart);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "ExcelChartAxisFailed", ErrorCategory.InvalidOperation, Chart));
         }
     }

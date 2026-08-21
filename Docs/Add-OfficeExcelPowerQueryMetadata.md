@@ -16,7 +16,7 @@ Add-OfficeExcelPowerQueryMetadata -Name <string> [-WorksheetName <string>] [-Que
 
 ### Path
 ```powershell
-Add-OfficeExcelPowerQueryMetadata [-InputPath] <string> -Name <string> [-WorksheetName <string>] [-QueryTableName <string>] [-Description <string>] [-CommandText <string>] [-RefreshOnOpen] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelPowerQueryMetadata [-Path] <string> -Name <string> [-WorksheetName <string>] [-QueryTableName <string>] [-Description <string>] [-CommandText <string>] [-RefreshOnOpen] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -92,22 +92,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
 Connection name stored in workbook metadata.
 
@@ -135,6 +119,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

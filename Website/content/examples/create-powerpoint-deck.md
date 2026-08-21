@@ -14,8 +14,7 @@ It is adapted from `Examples/PowerPoint/Example-PowerPointTransitionsAndSizing.p
 Import-Module PSWriteOffice
 
 $outputPath = Join-Path $PSScriptRoot 'Output\ServiceBrief.pptx'
-New-Item -ItemType Directory -Path (Split-Path $outputPath) -Force | Out-Null
-
+$null = New-Item -ItemType Directory -Path (Split-Path $outputPath) -Force
 $deck = New-OfficePowerPoint -Path $outputPath {
     PptSlide {
         PptTitle -Title 'Service Brief'

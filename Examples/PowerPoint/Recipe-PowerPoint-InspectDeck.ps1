@@ -11,7 +11,7 @@ PptNew -Path $path {
     }
 }
 
-$presentation = Get-OfficePowerPoint -FilePath $path
+$presentation = Get-OfficePowerPoint -Path $path
 foreach ($index in 0..($presentation.Slides.Count - 1)) {
     $slide = Get-OfficePowerPointSlide -Presentation $presentation -Index $index
     $summary = Get-OfficePowerPointSlideSummary -Slide $slide

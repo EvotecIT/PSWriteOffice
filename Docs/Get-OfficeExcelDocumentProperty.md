@@ -11,7 +11,7 @@ Gets built-in and application document properties from an Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelDocumentProperty [-InputPath] <string> [-Name <string[]>] [-BuiltIn] [-Application] [-Custom] [<CommonParameters>]
+Get-OfficeExcelDocumentProperty [-Path] <string> [-Name <string[]>] [-BuiltIn] [-Application] [-Custom] [<CommonParameters>]
 ```
 
 ### Document
@@ -99,22 +99,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the workbook.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
 Property name filter (wildcards supported).
 
@@ -129,6 +113,22 @@ Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
+```
+
+### -Path
+Path to the workbook.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

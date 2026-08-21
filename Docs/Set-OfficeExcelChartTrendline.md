@@ -11,12 +11,12 @@ Adds or replaces an Excel chart series trendline.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesIndex <int> -Type <string> [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [<CommonParameters>]
+Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesIndex <int> -Type <string> [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesName <string> -Type <string> [-IgnoreCase <bool>] [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [<CommonParameters>]
+Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesName <string> -Type <string> [-IgnoreCase <bool>] [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -182,6 +182,22 @@ Polynomial order.
 
 ```yaml
 Type: Int32
+Parameter Sets: Index, Name
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:

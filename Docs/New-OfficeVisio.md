@@ -11,7 +11,7 @@ Creates a new OfficeIMO.Visio document with an initial page and optional DSL con
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeVisio [-Path] <string> [[-Content] <scriptblock>] [-PageName <string>] [-Width <double>] [-Height <double>] [-Unit <VisioMeasurementUnit>] [-Title <string>] [-Author <string>] [-RequestRecalcOnOpen] [-UseMastersByDefault] [-NoSave] [-Show] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeVisio [-Path] <string> [[-Content] <scriptblock>] [-PageName <string>] [-Width <double>] [-Height <double>] [-Unit <VisioMeasurementUnit>] [-Title <string>] [-Author <string>] [-RequestRecalcOnOpen] [-UseMastersByDefault] [-NoSave] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -96,6 +96,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Open
+Open the document after saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -PageName
 Initial page name.
 
@@ -146,22 +162,6 @@ Accept wildcard characters: False
 
 ### -RequestRecalcOnOpen
 Ask Visio to recalculate layout and connector routing when the document opens.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Show
-Open the document after saving.
 
 ```yaml
 Type: SwitchParameter

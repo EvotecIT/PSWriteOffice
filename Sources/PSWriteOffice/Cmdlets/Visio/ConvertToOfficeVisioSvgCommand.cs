@@ -19,8 +19,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsData.ConvertTo, "OfficeVisioSvg", DefaultParameterSetName = PathParameterSet, SupportsShouldProcess = true)]
 [Alias("ConvertTo-VisioSvg")]
 [OutputType(typeof(string), typeof(FileInfo))]
-public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet
-{
+public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet {
     private const string PathParameterSet = "Path";
     private const string DocumentParameterSet = "Document";
 
@@ -76,11 +75,11 @@ public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet
 
     /// <summary>Open the SVG after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var options = VisioCommandUtilities.BuildImageOptions(
             this,
             PageIndex,
@@ -99,14 +98,12 @@ public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet
 
         string? targetPath = null;
 
-        if (!string.IsNullOrWhiteSpace(OutputPath))
-        {
+        if (!string.IsNullOrWhiteSpace(OutputPath)) {
             targetPath = VisioCommandUtilities.ResolveImageOutputPath(
                 this,
                 OutputPath!,
                 OfficeImageExportFormat.Svg);
-            if (!ShouldProcess(targetPath, "Write Visio SVG"))
-            {
+            if (!ShouldProcess(targetPath, "Write Visio SVG")) {
                 return;
             }
         }
@@ -114,13 +111,11 @@ public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet
         var document = VisioCommandUtilities.ResolveDocument(this, Document, Path);
         OfficeImageExportResult result = document.ExportImage(OfficeImageExportFormat.Svg, options);
 
-        if (targetPath != null)
-        {
+        if (targetPath != null) {
             VisioCommandUtilities.EnsureDirectory(targetPath);
             OfficeImageExportResult saved = result.Save(targetPath);
 
-            if (Show.IsPresent)
-            {
+            if (Open.IsPresent) {
                 FileOpenService.Open(saved.SavedPath!);
             }
 

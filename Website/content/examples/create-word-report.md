@@ -14,8 +14,7 @@ It is adapted from `Examples/Word/Example-WordBasic.ps1`.
 Import-Module PSWriteOffice
 
 $outputPath = Join-Path $PSScriptRoot 'Output\RevenueSnapshot.docx'
-New-Item -ItemType Directory -Path (Split-Path $outputPath) -Force | Out-Null
-
+$null = New-Item -ItemType Directory -Path (Split-Path $outputPath) -Force
 $data = @(
     [PSCustomObject]@{ Region = 'North America'; Revenue = 125000; YoY = '12%' }
     [PSCustomObject]@{ Region = 'EMEA'; Revenue = 98000; YoY = '22%' }

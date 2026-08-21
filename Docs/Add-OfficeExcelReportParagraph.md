@@ -11,7 +11,7 @@ Adds a paragraph line to the current Excel report sheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportParagraph [-Text] <string> [<CommonParameters>]
+Add-OfficeExcelReportParagraph [-Text] <string> [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,6 +32,22 @@ PS> New-OfficeExcel -Path .\Operations.xlsx {
 Adds prose to an OfficeIMO-composed Excel report sheet.
 
 ## PARAMETERS
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -Text
 Paragraph text.

@@ -11,7 +11,7 @@ Creates a Word document using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeWord [-OutputPath] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-PassThru] [-Open] [-NoSave] [-AutoSave] [-Password <string>] [-PdfPath <string>] [-PdfFontFamily <string>] [-PdfAllowSystemFontEmbedding] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeWord [-Path] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-PassThru] [-Open] [-NoSave] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,22 +44,6 @@ $document | Close-OfficeWord
 Associates the output path with a live document, adds content through the pipeline, then saves and closes it once.
 
 ## PARAMETERS
-
-### -AutoSave
-Enable OfficeIMO AutoSave mode.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -Content
 DSL scriptblock describing document content.
@@ -109,22 +93,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -OutputPath
-Destination path for the document.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -PassThru
 Emit a FileInfo for chaining.
 
@@ -157,49 +125,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -PdfAllowSystemFontEmbedding
-Allow the native Word PDF converter to embed installed system fonts used by the document.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: AllowSystemFontEmbedding
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -PdfFontFamily
-Optional default font family used by the native Word PDF converter.
+### -Path
+Destination path for the document.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: FilePath, OutputPath
 Possible values:
 
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -PdfPath
-Optional PDF path to create from the same Word document before closing it.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -22,15 +22,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsDiagnostic.Test, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ExcelWorkbookDoctor", "ExcelDoctor")]
 [OutputType(typeof(PSObject))]
-public sealed class TestOfficeExcelWorkbookCommand : PSCmdlet
-{
+public sealed class TestOfficeExcelWorkbookCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook document.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -46,28 +45,23 @@ public sealed class TestOfficeExcelWorkbookCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Quiet { get; set; }
 
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: !RepairDefinedNames.IsPresent);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: !RepairDefinedNames.IsPresent);
         if (RepairDefinedNames.IsPresent &&
-            !ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Repair Excel workbook diagnostics"))
-        {
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Repair Excel workbook diagnostics")) {
             return;
         }
 
-        var report = workbook.Document.RunWorkbookDoctor(new ExcelWorkbookDoctorOptions
-        {
+        var report = workbook.Document.RunWorkbookDoctor(new ExcelWorkbookDoctorOptions {
             ValidateOpenXml = !SkipOpenXmlValidation.IsPresent,
             RepairDefinedNames = RepairDefinedNames.IsPresent
         });
 
-        if (RepairDefinedNames.IsPresent)
-        {
+        if (RepairDefinedNames.IsPresent) {
             workbook.SaveIfOwned();
         }
 
-        if (Quiet.IsPresent)
-        {
+        if (Quiet.IsPresent) {
             WriteObject(!report.HasErrors);
             return;
         }
@@ -82,8 +76,7 @@ public sealed class TestOfficeExcelWorkbookCommand : PSCmdlet
         WriteObject(output);
     }
 
-    private static PSObject CreateIssue(ExcelWorkbookDiagnosticIssue issue)
-    {
+    private static PSObject CreateIssue(ExcelWorkbookDiagnosticIssue issue) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("Category", issue.Category));
         item.Properties.Add(new PSNoteProperty("Severity", issue.Severity.ToString()));

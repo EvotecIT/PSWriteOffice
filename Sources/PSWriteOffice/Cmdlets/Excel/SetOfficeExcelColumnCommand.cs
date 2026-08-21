@@ -15,8 +15,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelColumn")]
 [Alias("ExcelColumn")]
-public sealed class SetOfficeExcelColumnCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelColumnCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>1-based column index.</summary>
     [Parameter(Position = 0)]
     public int? Column { get; set; }
@@ -47,29 +46,24 @@ public sealed class SetOfficeExcelColumnCommand : PSCmdlet
     public SwitchParameter AutoFit { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = ExcelDslContext.Require(this);
         var sheet = context.RequireSheet();
 
         var columnIndex = ExcelHostExtensions.ResolveColumnIndex(Column, ColumnName);
-        if (columnIndex < 1)
-        {
+        if (columnIndex < 1) {
             throw new ArgumentOutOfRangeException(nameof(Column), "Column index must be 1 or greater.");
         }
 
         var hasAction = false;
 
-        if (Values != null && Values.Length > 0)
-        {
-            if (StartRow < 1)
-            {
+        if (Values != null && Values.Length > 0) {
+            if (StartRow < 1) {
                 throw new ArgumentOutOfRangeException(nameof(StartRow), "StartRow must be 1 or greater.");
             }
 
             var cells = new List<(int Row, int Column, object Value)>(Values.Length);
-            for (int i = 0; i < Values.Length; i++)
-            {
+            for (int i = 0; i < Values.Length; i++) {
                 var value = Values[i] ?? string.Empty;
                 cells.Add((StartRow + i, columnIndex, value));
             }
@@ -77,27 +71,24 @@ public sealed class SetOfficeExcelColumnCommand : PSCmdlet
             hasAction = true;
         }
 
-        if (Width.HasValue)
-        {
+        if (Width.HasValue) {
             sheet.SetColumnWidth(columnIndex, Width.Value);
             hasAction = true;
         }
 
-        if (Hidden.HasValue)
-        {
+        if (Hidden.HasValue) {
             sheet.SetColumnHidden(columnIndex, Hidden.Value);
             hasAction = true;
         }
 
-        if (AutoFit.IsPresent)
-        {
+        if (AutoFit.IsPresent) {
             sheet.AutoFitColumn(columnIndex);
             hasAction = true;
         }
 
-        if (!hasAction)
-        {
+        if (!hasAction) {
             throw new PSArgumentException("Provide -Values, -Width, -Hidden, or -AutoFit to update the column.");
         }
+        WritePassThru(sheet);
     }
 }

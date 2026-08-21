@@ -19,8 +19,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordHyperlink", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordHyperLink))]
-public sealed class GetOfficeWordHyperlinkCommand : PSCmdlet
-{
+public sealed class GetOfficeWordHyperlinkCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetSection = "Section";
@@ -28,8 +27,8 @@ public sealed class GetOfficeWordHyperlinkCommand : PSCmdlet
 
     /// <summary>Path to the document.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Document to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -61,13 +60,11 @@ public sealed class GetOfficeWordHyperlinkCommand : PSCmdlet
     public string[]? Anchor { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
+        try {
             IEnumerable<WordHyperLink> hyperlinks = ResolveHyperlinks(ref document, ref dispose);
 
             hyperlinks = FilterByPatterns(hyperlinks, Text, hyperlink => hyperlink.Text);
@@ -75,20 +72,15 @@ public sealed class GetOfficeWordHyperlinkCommand : PSCmdlet
             hyperlinks = FilterByPatterns(hyperlinks, Anchor, hyperlink => hyperlink.Anchor);
 
             WriteObject(hyperlinks, enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }
     }
 
-    private IEnumerable<WordHyperLink> ResolveHyperlinks(ref WordDocument? document, ref bool dispose)
-    {
-        switch (ParameterSetName)
-        {
+    private IEnumerable<WordHyperLink> ResolveHyperlinks(ref WordDocument? document, ref bool dispose) {
+        switch (ParameterSetName) {
             case ParameterSetParagraph:
                 return Paragraph.IsHyperLink && Paragraph.Hyperlink != null
                     ? new[] { Paragraph.Hyperlink }
@@ -98,7 +90,7 @@ public sealed class GetOfficeWordHyperlinkCommand : PSCmdlet
             case ParameterSetDocument:
                 return Document != null ? Document.HyperLinks : Array.Empty<WordHyperLink>();
             default:
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
                 return document.HyperLinks;
@@ -108,28 +100,22 @@ public sealed class GetOfficeWordHyperlinkCommand : PSCmdlet
     private static IEnumerable<WordHyperLink> FilterByPatterns(
         IEnumerable<WordHyperLink> hyperlinks,
         string[]? patterns,
-        Func<WordHyperLink, string?> valueSelector)
-    {
+        Func<WordHyperLink, string?> valueSelector) {
         var compiledPatterns = BuildPatterns(patterns);
-        if (compiledPatterns.Count == 0)
-        {
+        if (compiledPatterns.Count == 0) {
             return hyperlinks;
         }
 
-        return hyperlinks.Where(hyperlink =>
-        {
+        return hyperlinks.Where(hyperlink => {
             var value = valueSelector(hyperlink);
             return value != null && compiledPatterns.Any(pattern => pattern.IsMatch(value));
         });
     }
 
-    private static List<WildcardPattern> BuildPatterns(string[]? patterns)
-    {
+    private static List<WildcardPattern> BuildPatterns(string[]? patterns) {
         var compiled = new List<WildcardPattern>();
-        foreach (var pattern in patterns ?? Array.Empty<string>())
-        {
-            if (!string.IsNullOrWhiteSpace(pattern))
-            {
+        foreach (var pattern in patterns ?? Array.Empty<string>()) {
+            if (!string.IsNullOrWhiteSpace(pattern)) {
                 compiled.Add(new WildcardPattern(pattern, WildcardOptions.IgnoreCase));
             }
         }

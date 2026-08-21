@@ -25,8 +25,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdownFrontMatter", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(FrontMatterBlock.Entry))]
 public sealed class GetOfficeMarkdownFrontMatterCommand : PSCmdlet
-    , IMarkdownReaderOptionSource
-{
+    , IMarkdownReaderOptionSource {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
     private const string ParameterSetText = "Text";
@@ -37,8 +36,8 @@ public sealed class GetOfficeMarkdownFrontMatterCommand : PSCmdlet
 
     /// <summary>Path to the Markdown file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Markdown text to parse.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
@@ -100,14 +99,13 @@ public sealed class GetOfficeMarkdownFrontMatterCommand : PSCmdlet
     public SwitchParameter CaseSensitive { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var document = MarkdownDocumentResolver.Resolve(
             this,
             ParameterSetName,
             ParameterSetDocument,
             Document,
-            InputPath,
+            Path,
             Text,
             this);
 
@@ -118,10 +116,8 @@ public sealed class GetOfficeMarkdownFrontMatterCommand : PSCmdlet
             ? null
             : new WildcardPattern(Key, wildcardOptions);
 
-        foreach (var entry in document.FrontMatterEntries)
-        {
-            if (keyPattern != null && !keyPattern.IsMatch(entry.Key))
-            {
+        foreach (var entry in document.FrontMatterEntries) {
+            if (keyPattern != null && !keyPattern.IsMatch(entry.Key)) {
                 continue;
             }
 

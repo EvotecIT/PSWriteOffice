@@ -11,7 +11,7 @@ Removes PDF annotations matching friendly filters.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Remove-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-ObjectNumber <Int32>] [-PageNumber <Int32>] [-Subtype <string>] [-KeepPopups] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-ObjectNumber <Int32>] [-PageNumber <Int32>] [-Subtype <string>] [-KeepPopups] [-PassThruReport] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -96,6 +96,22 @@ Optional one-based page number filter.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

@@ -15,16 +15,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Clear, "OfficeExcelRange", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelRangeClear")]
-public sealed class ClearOfficeExcelRangeCommand : PSCmdlet
-{
+public sealed class ClearOfficeExcelRangeCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -90,30 +89,26 @@ public sealed class ClearOfficeExcelRangeCommand : PSCmdlet
     public SwitchParameter All { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var options = ResolveOptions();
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
         var target = $"{sheet.Name}!{Range}";
 
-        if (ShouldProcess(target, $"Clear Excel range ({options})"))
-        {
+        if (ShouldProcess(target, $"Clear Excel range ({options})")) {
             sheet.ClearRange(Range, options);
             workbook.SaveIfOwned();
+            WritePassThru(workbook.Document, workbook.OwnsDocument, Path);
         }
     }
 
-    private ExcelClearOptions ResolveOptions()
-    {
-        if (All.IsPresent || !AnyOptionSwitchPresent())
-        {
+    private ExcelClearOptions ResolveOptions() {
+        if (All.IsPresent || !AnyOptionSwitchPresent()) {
             return ExcelClearOptions.All;
         }
 
         var options = ExcelClearOptions.None;
-        if (Contents.IsPresent)
-        {
+        if (Contents.IsPresent) {
             options |= ExcelClearOptions.Values | ExcelClearOptions.Formulas;
         }
 
@@ -129,8 +124,7 @@ public sealed class ClearOfficeExcelRangeCommand : PSCmdlet
         return options;
     }
 
-    private bool AnyOptionSwitchPresent()
-    {
+    private bool AnyOptionSwitchPresent() {
         return Contents.IsPresent
             || Values.IsPresent
             || Formulas.IsPresent

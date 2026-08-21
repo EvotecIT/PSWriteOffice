@@ -18,8 +18,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsData.ConvertTo, "OfficeVisioPng", DefaultParameterSetName = PathParameterSet, SupportsShouldProcess = true)]
 [Alias("ConvertTo-VisioPng")]
 [OutputType(typeof(byte[]), typeof(FileInfo))]
-public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
-{
+public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet {
     private const string PathParameterSet = "Path";
     private const string DocumentParameterSet = "Document";
 
@@ -87,11 +86,11 @@ public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
 
     /// <summary>Open the PNG after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var options = VisioCommandUtilities.BuildImageOptions(
             this,
             PageIndex,
@@ -110,14 +109,12 @@ public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
 
         string? targetPath = null;
 
-        if (!string.IsNullOrWhiteSpace(OutputPath))
-        {
+        if (!string.IsNullOrWhiteSpace(OutputPath)) {
             targetPath = VisioCommandUtilities.ResolveImageOutputPath(
                 this,
                 OutputPath!,
                 OfficeImageExportFormat.Png);
-            if (!ShouldProcess(targetPath, "Write Visio PNG"))
-            {
+            if (!ShouldProcess(targetPath, "Write Visio PNG")) {
                 return;
             }
         }
@@ -125,13 +122,11 @@ public sealed class ConvertToOfficeVisioPngCommand : PSCmdlet
         var document = VisioCommandUtilities.ResolveDocument(this, Document, Path);
         OfficeImageExportResult result = document.ExportImage(OfficeImageExportFormat.Png, options);
 
-        if (targetPath != null)
-        {
+        if (targetPath != null) {
             VisioCommandUtilities.EnsureDirectory(targetPath);
             OfficeImageExportResult saved = result.Save(targetPath);
 
-            if (Show.IsPresent)
-            {
+            if (Open.IsPresent) {
                 FileOpenService.Open(saved.SavedPath!);
             }
 

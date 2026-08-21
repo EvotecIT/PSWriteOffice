@@ -11,7 +11,7 @@ Configures collapsible Excel outline grouping for worksheet rows.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelRowGroup [-StartRow] <int> [[-EndRow] <Int32>] [-OutlineLevel <int>] [-Collapsed] [-Hidden] [-Clear] [-KeepHidden] [-SummaryBelow <Boolean>] [<CommonParameters>]
+Set-OfficeExcelRowGroup [-StartRow] <int> [[-EndRow] <Int32>] [-OutlineLevel <int>] [-Collapsed] [-Hidden] [-Clear] [-KeepHidden] [-SummaryBelow <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -113,6 +113,22 @@ Excel outline level from 1 through 7.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

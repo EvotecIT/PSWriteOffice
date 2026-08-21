@@ -536,15 +536,15 @@ Describe 'Shared tabular input contracts' {
         }
 
         $powerPointPath = Join-Path $TestDrive 'Reader.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $powerPointPath -NoSave
+        $presentation = New-OfficePowerPoint -Path $powerPointPath -NoSave
         try {
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -PassThru
             $reader = New-TestTabularContractReader
             try {
                 $table = Add-OfficePowerPointTable -Slide $slide -InputObject $reader `
                     -CollectionSeparator ' | ' `
                     -DictionaryEntrySeparator '; ' `
-                    -DictionaryKeyValueSeparator ': '
+                    -DictionaryKeyValueSeparator ': ' -PassThru
             } finally {
                 $reader.Dispose()
             }
@@ -664,10 +664,10 @@ Describe 'Shared tabular input contracts' {
         }
 
         $powerPointPath = Join-Path $TestDrive 'ReadOnlyDictionary.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $powerPointPath -NoSave
+        $presentation = New-OfficePowerPoint -Path $powerPointPath -NoSave
         try {
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation
-            $table = Add-OfficePowerPointTable -Slide $slide -InputObject $row -CollectionSeparator ' | '
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -PassThru
+            $table = Add-OfficePowerPointTable -Slide $slide -InputObject $row -CollectionSeparator ' | ' -PassThru
             $table.GetCell(0, 0).Text | Should -Be 'Name'
             $table.GetCell(1, 0).Text | Should -Be 'Alpha'
             $table.GetCell(1, 1).Text | Should -Be 'One | Two'

@@ -11,7 +11,7 @@ Overlays or underlays one source PDF page on selected pages of another PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePdfPageOverlay -Path <string> -SourcePath <string> -OutputPath <string> [-SourcePageNumber <int>] [-PageRange <string>] [-Fit <PdfPageOverlayFit>] [-HorizontalAlign <PdfAlign>] [-VerticalAlign <PdfVerticalAlign>] [-X <Double>] [-Y <Double>] [-Width <Double>] [-Height <Double>] [-Opacity <double>] [-Underlay] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-SourcePassword <string>] [-IgnoreSourcePermissionRestrictions] [-SourceReadOptions <PdfReadOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfPageOverlay -Path <string> -SourcePath <string> -OutputPath <string> [-SourcePageNumber <int>] [-PageRange <string>] [-Fit <PdfPageOverlayFit>] [-HorizontalAlign <PdfAlign>] [-VerticalAlign <PdfVerticalAlign>] [-X <Double>] [-Y <Double>] [-Width <Double>] [-Height <Double>] [-Opacity <double>] [-Underlay] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-SourcePassword <string>] [-IgnoreSourcePermissionRestrictions] [-SourceReadOptions <PdfReadOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -146,6 +146,22 @@ Target page selector such as 1-3,odd,last. Omit to apply to every target page.
 
 ```yaml
 Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

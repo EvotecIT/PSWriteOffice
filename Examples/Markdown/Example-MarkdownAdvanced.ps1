@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Example-MarkdownAdvanced.md'
 $data = @(
     [pscustomobject]@{ Metric = 'Latency'; Value = '120ms' }
@@ -33,6 +32,6 @@ New-OfficeMarkdown -Path $path {
     MarkdownCode -Language 'powershell' -Content 'Get-Service | Select-Object -First 5'
     MarkdownHorizontalRule
     MarkdownQuote -Text 'Availability is a feature.'
-} -PassThru | Out-Null
+}
 
 Write-Host "Markdown saved to $path"

@@ -11,7 +11,7 @@ Loads an existing PowerPoint presentation.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePowerPoint -FilePath <string> [-Password <string>] [<CommonParameters>]
+Get-OfficePowerPoint -Path <string> [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,28 +21,12 @@ Returns an OfficeIMO PowerPointPresentation for downstream slide operations.
 
 ### EXAMPLE 1
 ```powershell
-PS> $ppt = Get-OfficePowerPoint -FilePath .\Quarterly.pptx
+PS> $ppt = Get-OfficePowerPoint -Path .\Quarterly.pptx
 ```
 
 Reads Quarterly.pptx and exposes the presentation object.
 
 ## PARAMETERS
-
-### -FilePath
-Path to the .pptx file.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -Password
 Password used to open an encrypted presentation package.
@@ -54,6 +38,22 @@ Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the .pptx file.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False

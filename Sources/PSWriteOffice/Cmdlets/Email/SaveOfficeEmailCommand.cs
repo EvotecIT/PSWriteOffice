@@ -8,8 +8,7 @@ namespace PSWriteOffice.Cmdlets.Email;
 /// <summary>Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.</summary>
 [Cmdlet(VerbsData.Save, "OfficeEmail", SupportsShouldProcess = true)]
 [OutputType(typeof(EmailWriteResult))]
-public sealed class SaveOfficeEmailCommand : PSCmdlet
-{
+public sealed class SaveOfficeEmailCommand : OfficeMutationCmdlet {
     /// <summary>Email document to save.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public EmailDocument Document { get; set; } = null!;
@@ -27,27 +26,25 @@ public sealed class SaveOfficeEmailCommand : PSCmdlet
     public EmailWriterOptions? Options { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         if (!ShouldProcess(output, "Save email artifact")) return;
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         if (Format == EmailFileFormat.Emlx ||
-            (!Format.HasValue && string.Equals(System.IO.Path.GetExtension(output), ".emlx", System.StringComparison.OrdinalIgnoreCase)))
-        {
+            (!Format.HasValue && string.Equals(System.IO.Path.GetExtension(output), ".emlx", System.StringComparison.OrdinalIgnoreCase))) {
             var writer = new EmailStoreEmlxWriter(new EmailStoreEmlxWriterOptions(Options));
             var result = writer.Write(Document, output);
-            if (result.HasErrors)
-            {
+            if (result.HasErrors) {
                 result.RequireNoLoss();
             }
 
-            WriteObject(result);
+            WritePassThru(result);
             return;
         }
 
-        WriteObject(Format.HasValue
+        var saveResult = Format.HasValue
             ? Document.Save(output, Format.Value, Options)
-            : Document.Save(output, Options));
+            : Document.Save(output, Options);
+        WritePassThru(saveResult);
     }
 }

@@ -14,8 +14,7 @@ This page collects small patterns from the Reader, Markdown, CSV, Word conversio
 Import-Module PSWriteOffice
 
 $outputDirectory = Join-Path $PSScriptRoot 'Output'
-New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
-
+$null = New-Item -ItemType Directory -Path $outputDirectory -Force
 $markdownPath = Join-Path $outputDirectory 'Summary.md'
 $csvPath = Join-Path $outputDirectory 'Status.csv'
 $wordPath = Join-Path $outputDirectory 'Summary.docx'

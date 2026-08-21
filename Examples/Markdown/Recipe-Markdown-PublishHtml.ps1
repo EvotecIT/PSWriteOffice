@@ -7,7 +7,7 @@ MarkdownNew -Path $markdownPath {
 }
 
 ConvertTo-OfficeMarkdownHtml `
-    -InputPath $markdownPath `
+    -Path $markdownPath `
     -OutputPath $htmlPath `
     -DocumentMode `
     -Title 'Operations handbook' `

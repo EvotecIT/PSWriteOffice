@@ -11,7 +11,7 @@ Gets a compact structural summary of an Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelSummary [-InputPath] <string> [-IncludeSheets] [-IncludeSchema] [<CommonParameters>]
+Get-OfficeExcelSummary [-Path] <string> [-IncludeSheets] [-IncludeSchema] [<CommonParameters>]
 ```
 
 ### Document
@@ -85,13 +85,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the workbook.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

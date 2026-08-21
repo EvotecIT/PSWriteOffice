@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointSlideTransition")]
 [Alias("PptTransition")]
 [OutputType(typeof(PowerPointSlide))]
-public sealed class SetOfficePowerPointSlideTransitionCommand : PSCmdlet
-{
+public sealed class SetOfficePowerPointSlideTransitionCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Slide to update (optional inside a slide DSL scope).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointSlide? Slide { get; set; }
@@ -27,16 +26,12 @@ public sealed class SetOfficePowerPointSlideTransitionCommand : PSCmdlet
     public PowerPointSlideTransition Transition { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
             slide.Transition = Transition;
-            WriteObject(slide);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(slide);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointSetTransitionFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }

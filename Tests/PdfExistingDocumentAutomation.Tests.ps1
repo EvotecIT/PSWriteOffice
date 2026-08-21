@@ -129,14 +129,14 @@ Describe 'Authenticated PDF automation' {
         } | Out-Null
 
         Move-OfficePdfPage -Path $source -PageRange 1 -BeforePage 4 -OutputPath $moved `
-            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+            -Password 'open' -IgnorePermissionRestrictions -PassThru | Should -BeOfType System.IO.FileInfo
         Remove-OfficePdfPage -Path $source -PageRange 2 -OutputPath $removed `
-            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+            -Password 'open' -IgnorePermissionRestrictions -PassThru | Should -BeOfType System.IO.FileInfo
         Set-OfficePdfPage -Path $source -PageRange 1 -Rotation 90 -OutputPath $rotated `
-            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+            -Password 'open' -IgnorePermissionRestrictions -PassThru | Should -BeOfType System.IO.FileInfo
         Set-OfficePdfPage -Path $source -PageRange 1 -BoxName CropBox `
             -Left 10 -Bottom 10 -Right 300 -Top 500 -OutputPath $boxed `
-            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+            -Password 'open' -IgnorePermissionRestrictions -PassThru | Should -BeOfType System.IO.FileInfo
 
         $movedPages = @(Get-OfficePdfText -Path $moved -ByPage)
         $movedPages[2].Text | Should -Match 'Restricted page one'
@@ -158,13 +158,13 @@ Describe 'Authenticated PDF automation' {
         } | Out-Null
 
         Set-OfficePdfForm -Path $source -OutputPath $output -Field @{ Name = 'Grace' } `
-            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+            -Password 'open' -IgnorePermissionRestrictions -PassThru | Should -BeOfType System.IO.FileInfo
         ConvertTo-OfficePdfFlatForm -Path $source -OutputPath $flat `
             -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
         Set-OfficePdfForm -Path $source -OutputPath $filledAndFlat -Field @{ Name = 'Flattened' } -Flatten `
-            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+            -Password 'open' -IgnorePermissionRestrictions -PassThru | Should -BeOfType System.IO.FileInfo
         Set-OfficePdfForm -Path $source -OutputPath $incremental -Field @{ Name = 'Incremental' } -Incremental `
-            -Password 'owner' | Should -BeOfType System.IO.FileInfo
+            -Password 'owner' -PassThru | Should -BeOfType System.IO.FileInfo
         $xfdf = Export-OfficePdfXfdf -Path $source -Password 'open' -IgnorePermissionRestrictions
         $xfdf = $xfdf -replace '>Ada<', '>Imported<'
         Import-OfficePdfXfdf -Path $source -Xfdf $xfdf -OutputPath $imported `
@@ -186,7 +186,7 @@ Describe 'Authenticated PDF automation' {
         } | Out-Null
 
         Set-OfficePdfMetadata -Path $source -OutputPath $metadata -Title 'Authenticated metadata' `
-            -Password 'open' -IgnorePermissionRestrictions | Should -BeOfType System.IO.FileInfo
+            -Password 'open' -IgnorePermissionRestrictions -PassThru | Should -BeOfType System.IO.FileInfo
         $sanitization = ConvertTo-OfficePdfSanitized -Path $source -OutputPath $sanitized `
             -Password 'open' -IgnorePermissionRestrictions
 
@@ -245,7 +245,7 @@ Describe 'General existing-page visual stamping' {
         } -Content {
             param($canvas, $page)
             $null = $canvas.Text("Canvas overlay $($page.PageNumber)/$($page.PageCount)", 36, 36, $page.Width - 72, 24, 11)
-        } | Should -BeOfType System.IO.FileInfo
+        } -PassThru | Should -BeOfType System.IO.FileInfo
 
         $configured | Should -HaveCount 1
         $pages = @(Get-OfficePdfText -Path $output -ByPage)
@@ -267,7 +267,7 @@ Describe 'General existing-page visual stamping' {
             ) -X 36 -Y 24 -FontSize 10
 
             PdfCanvasText 'Review copy' -X 36 -Y 60 -Italic
-        } | Should -BeOfType System.IO.FileInfo
+        } -PassThru | Should -BeOfType System.IO.FileInfo
 
         $text = Get-OfficePdfText -Path $output
         $text | Should -Match 'Owner: Platform'
@@ -308,9 +308,9 @@ Describe 'General existing-page visual stamping' {
         } | Out-Null
 
         Add-OfficePdfPageOverlay -Path $target -SourcePath $source -SourcePageNumber 2 `
-            -PageRange 2 -OutputPath $overlay | Should -BeOfType System.IO.FileInfo
+            -PageRange 2 -OutputPath $overlay -PassThru | Should -BeOfType System.IO.FileInfo
         Add-OfficePdfPageOverlay -Path $target -SourcePath $source -SourcePageNumber 1 `
-            -PageRange 1 -Underlay -OutputPath $underlay | Should -BeOfType System.IO.FileInfo
+            -PageRange 1 -Underlay -OutputPath $underlay -PassThru | Should -BeOfType System.IO.FileInfo
 
         $overlayPages = @(Get-OfficePdfText -Path $overlay -ByPage)
         $overlayPages[0].Text | Should -Not -Match 'Source page two'

@@ -22,8 +22,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsData.Update, "OfficeWordText", DefaultParameterSetName = ParameterSetAuto, SupportsShouldProcess = true)]
 [Alias("Replace-OfficeWordText")]
 [OutputType(typeof(int))]
-public sealed class UpdateOfficeWordTextCommand : PSCmdlet
-{
+public sealed class UpdateOfficeWordTextCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetAuto = "Auto";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
@@ -34,8 +33,8 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
 
     /// <summary>Path to the .docx file to update in place.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Text to find.</summary>
     [Parameter(Mandatory = true)]
@@ -68,30 +67,26 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
 
     /// <summary>Open the file after saving when using <c>-Path</c>.</summary>
     [Parameter(ParameterSetName = ParameterSetPath)]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (string.IsNullOrEmpty(OldValue))
-        {
+    protected override void ProcessRecord() {
+        if (string.IsNullOrEmpty(OldValue)) {
             throw new PSArgumentException("Provide text to replace.", nameof(OldValue));
         }
 
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            switch (ParameterSetName)
-            {
+        try {
+            switch (ParameterSetName) {
                 case ParameterSetDocument:
                     document = Document;
                     break;
                 case ParameterSetPath:
-                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-                    if (!ShouldProcess(resolvedPath, "Update Word document text"))
-                    {
+                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+                    if (!ShouldProcess(resolvedPath, "Update Word document text")) {
                         return;
                     }
 
@@ -103,13 +98,11 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                     break;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Specify -Document, -Path, or run inside New-OfficeWord.");
             }
 
-            if (ParameterSetName != ParameterSetPath && !ShouldProcess(GetDocumentTarget(document), "Update Word document text"))
-            {
+            if (ParameterSetName != ParameterSetPath && !ShouldProcess(GetDocumentTarget(document), "Update Word document text")) {
                 return;
             }
 
@@ -117,43 +110,34 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
             var replacement = NewValue ?? string.Empty;
             var replacements = document.FindAndReplace(OldValue, replacement, comparison);
 
-            if (IncludeHyperlinkText.IsPresent || IncludeHyperlinkUri.IsPresent || IncludeHyperlinkAnchor.IsPresent || IncludeHyperlinkTooltip.IsPresent)
-            {
+            if (IncludeHyperlinkText.IsPresent || IncludeHyperlinkUri.IsPresent || IncludeHyperlinkAnchor.IsPresent || IncludeHyperlinkTooltip.IsPresent) {
                 replacements += ReplaceHyperlinks(document, OldValue, replacement, comparison);
             }
 
-            if (ParameterSetName == ParameterSetPath)
-            {
-                WordDocumentService.SaveDocument(document, Show.IsPresent, null);
+            if (ParameterSetName == ParameterSetPath) {
+                WordDocumentService.SaveDocument(document, Open.IsPresent, null);
                 dispose = false;
             }
 
-            WriteObject(replacements);
-        }
-        finally
-        {
-            if (dispose && document != null)
-            {
+            WritePassThru(replacements);
+        } finally {
+            if (dispose && document != null) {
                 WordDocumentService.CloseDocument(document);
             }
         }
     }
 
-    private static string GetDocumentTarget(WordDocument document)
-    {
+    private static string GetDocumentTarget(WordDocument document) {
         return !string.IsNullOrWhiteSpace(document.FilePath)
             ? document.FilePath!
             : "Word document";
     }
 
-    private int ReplaceHyperlinks(WordDocument document, string oldValue, string newValue, StringComparison comparison)
-    {
+    private int ReplaceHyperlinks(WordDocument document, string oldValue, string newValue, StringComparison comparison) {
         var replacements = 0;
 
-        foreach (var hyperlink in document.HyperLinks)
-        {
-            if (IncludeHyperlinkText.IsPresent)
-            {
+        foreach (var hyperlink in document.HyperLinks) {
+            if (IncludeHyperlinkText.IsPresent) {
                 replacements += ReplaceTextValue(
                     hyperlink.Text,
                     updatedValue => hyperlink.Text = updatedValue,
@@ -162,8 +146,7 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                     comparison);
             }
 
-            if (IncludeHyperlinkAnchor.IsPresent)
-            {
+            if (IncludeHyperlinkAnchor.IsPresent) {
                 replacements += ReplaceNullableValue(
                     hyperlink.Anchor,
                     updatedValue => hyperlink.Anchor = updatedValue,
@@ -172,8 +155,7 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                     comparison);
             }
 
-            if (IncludeHyperlinkTooltip.IsPresent)
-            {
+            if (IncludeHyperlinkTooltip.IsPresent) {
                 replacements += ReplaceNullableValue(
                     hyperlink.Tooltip,
                     updatedValue => hyperlink.Tooltip = updatedValue,
@@ -182,18 +164,13 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
                     comparison);
             }
 
-            if (IncludeHyperlinkUri.IsPresent && hyperlink.Uri != null)
-            {
+            if (IncludeHyperlinkUri.IsPresent && hyperlink.Uri != null) {
                 var originalUri = hyperlink.Uri.OriginalString;
                 var updatedUri = ReplaceString(originalUri, oldValue, newValue, comparison, out var uriReplacements);
-                if (uriReplacements > 0)
-                {
-                    if (!Uri.TryCreate(updatedUri, UriKind.RelativeOrAbsolute, out var uri))
-                    {
+                if (uriReplacements > 0) {
+                    if (!Uri.TryCreate(updatedUri, UriKind.RelativeOrAbsolute, out var uri)) {
                         WriteWarning($"Skipping hyperlink URI '{originalUri}' because replacement produced invalid URI '{updatedUri}'.");
-                    }
-                    else
-                    {
+                    } else {
                         hyperlink.Uri = uri;
                         replacements += uriReplacements;
                     }
@@ -201,10 +178,8 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
             }
         }
 
-        if (IncludeHyperlinkAnchor.IsPresent)
-        {
-            foreach (var bookmark in document.Bookmarks)
-            {
+        if (IncludeHyperlinkAnchor.IsPresent) {
+            foreach (var bookmark in document.Bookmarks) {
                 replacements += ReplaceNullableValue(
                     bookmark.Name,
                     updatedValue => bookmark.Name = updatedValue,
@@ -217,45 +192,37 @@ public sealed class UpdateOfficeWordTextCommand : PSCmdlet
         return replacements;
     }
 
-    private static int ReplaceTextValue(string currentValue, Action<string> assign, string oldValue, string newValue, StringComparison comparison)
-    {
+    private static int ReplaceTextValue(string currentValue, Action<string> assign, string oldValue, string newValue, StringComparison comparison) {
         var updatedValue = ReplaceString(currentValue ?? string.Empty, oldValue, newValue, comparison, out var replacements);
-        if (replacements > 0)
-        {
+        if (replacements > 0) {
             assign(updatedValue);
         }
 
         return replacements;
     }
 
-    private static int ReplaceNullableValue(string? currentValue, Action<string?> assign, string oldValue, string newValue, StringComparison comparison)
-    {
-        if (currentValue == null)
-        {
+    private static int ReplaceNullableValue(string? currentValue, Action<string?> assign, string oldValue, string newValue, StringComparison comparison) {
+        if (currentValue == null) {
             return 0;
         }
 
         var updatedValue = ReplaceString(currentValue, oldValue, newValue, comparison, out var replacements);
-        if (replacements > 0)
-        {
+        if (replacements > 0) {
             assign(updatedValue);
         }
 
         return replacements;
     }
 
-    private static string ReplaceString(string source, string oldValue, string newValue, StringComparison comparison, out int replacements)
-    {
+    private static string ReplaceString(string source, string oldValue, string newValue, StringComparison comparison, out int replacements) {
         replacements = 0;
-        if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(oldValue))
-        {
+        if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(oldValue)) {
             return source;
         }
 
         var startIndex = 0;
         var result = source;
-        while ((startIndex = result.IndexOf(oldValue, startIndex, comparison)) >= 0)
-        {
+        while ((startIndex = result.IndexOf(oldValue, startIndex, comparison)) >= 0) {
             result = result.Remove(startIndex, oldValue.Length).Insert(startIndex, newValue);
             startIndex += newValue.Length;
             replacements++;

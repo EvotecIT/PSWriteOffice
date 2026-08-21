@@ -24,15 +24,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsData.ConvertTo, "OfficeWordHtml", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ConvertTo-WordHtml")]
 [OutputType(typeof(string), typeof(FileInfo))]
-public sealed class ConvertToOfficeWordHtmlCommand : PSCmdlet
-{
+public sealed class ConvertToOfficeWordHtmlCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to a .docx file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path")]
-    public string FilePath { get; set; } = string.Empty;
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Word document instance to convert.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -80,31 +79,24 @@ public sealed class ConvertToOfficeWordHtmlCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document was not provided.");
             }
 
-            var options = new WordToHtmlOptions
-            {
+            var options = new WordToHtmlOptions {
                 IncludeFontStyles = IncludeFontStyles.IsPresent,
                 IncludeListStyles = IncludeListStyles.IsPresent,
                 IncludeParagraphClasses = IncludeParagraphClasses.IsPresent,
@@ -112,55 +104,41 @@ public sealed class ConvertToOfficeWordHtmlCommand : PSCmdlet
                 IncludeDefaultCss = IncludeDefaultCss.IsPresent
             };
 
-            if (!string.IsNullOrWhiteSpace(FontFamily))
-            {
+            if (!string.IsNullOrWhiteSpace(FontFamily)) {
                 options.FontFamily = FontFamily;
             }
 
-            if (UseImagePaths.IsPresent)
-            {
+            if (UseImagePaths.IsPresent) {
                 options.EmbedImagesAsBase64 = false;
             }
 
-            if (ExcludeFootnotes.IsPresent)
-            {
+            if (ExcludeFootnotes.IsPresent) {
                 options.ExportFootnotes = false;
             }
 
-            if (!string.IsNullOrWhiteSpace(OutputPath))
-            {
+            if (!string.IsNullOrWhiteSpace(OutputPath)) {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-                if (!ShouldProcess(resolvedOutput, "Write HTML converted from Word document"))
-                {
+                if (!ShouldProcess(resolvedOutput, "Write HTML converted from Word document")) {
                     return;
                 }
 
-                var directory = Path.GetDirectoryName(resolvedOutput);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
+                var directory = System.IO.Path.GetDirectoryName(resolvedOutput);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
                     Directory.CreateDirectory(directory);
                 }
 
                 document.SaveAsHtml(resolvedOutput, options);
-                if (PassThru.IsPresent)
-                {
+                if (PassThru.IsPresent) {
                     WriteObject(new FileInfo(resolvedOutput));
                 }
-            }
-            else
-            {
+            } else {
                 WriteObject(document.ToHtml(options));
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "WordToHtmlFailed", ErrorCategory.InvalidOperation,
-                ParameterSetName == ParameterSetPath ? FilePath : Document));
-        }
-        finally
-        {
-            if (dispose)
-            {
+                ParameterSetName == ParameterSetPath ? Path : Document));
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

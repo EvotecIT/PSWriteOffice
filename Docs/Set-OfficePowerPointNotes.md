@@ -11,7 +11,7 @@ Sets speaker notes for a PowerPoint slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePowerPointNotes [-Text] <string> [-Slide <PowerPointSlide>] [<CommonParameters>]
+Set-OfficePowerPointNotes [-Text] <string> [-Slide <PowerPointSlide>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,6 +31,22 @@ PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointNotes.pptx {
 Writes speaker notes to a generated slide.
 
 ## PARAMETERS
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -Slide
 Slide whose notes should be updated (optional inside DSL).

@@ -17,16 +17,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsData.Update, "OfficeExcelComment", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelCommentUpdate")]
 [OutputType(typeof(int))]
-public sealed class UpdateOfficeExcelCommentCommand : PSCmdlet
-{
+public sealed class UpdateOfficeExcelCommentCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -82,20 +81,16 @@ public sealed class UpdateOfficeExcelCommentCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var filter = CreateRequiredFilter();
-        if (string.IsNullOrWhiteSpace(Text) == (Run == null || Run.Length == 0))
-        {
+        if (string.IsNullOrWhiteSpace(Text) == (Run == null || Run.Length == 0)) {
             throw new PSArgumentException("Specify exactly one of -Text or -Run.");
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var updated = 0;
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
-        {
-            if (!ShouldProcess(sheet.Name, "Update Excel comments"))
-            {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex)) {
+            if (!ShouldProcess(sheet.Name, "Update Excel comments")) {
                 continue;
             }
 
@@ -104,21 +99,17 @@ public sealed class UpdateOfficeExcelCommentCommand : PSCmdlet
                 : sheet.UpdateCommentsRichText(filter, ExcelRichTextRunService.ToRuns(Run), Author, Initials);
         }
 
-        if (updated > 0)
-        {
+        if (updated > 0) {
             workbook.SaveIfOwned();
         }
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(updated);
         }
     }
 
-    private ExcelCommentFilter CreateRequiredFilter()
-    {
-        if (!string.IsNullOrWhiteSpace(Address) && !string.IsNullOrWhiteSpace(Range))
-        {
+    private ExcelCommentFilter CreateRequiredFilter() {
+        if (!string.IsNullOrWhiteSpace(Address) && !string.IsNullOrWhiteSpace(Range)) {
             throw new PSArgumentException("Specify either -Address or -Range, not both.");
         }
 
@@ -126,13 +117,11 @@ public sealed class UpdateOfficeExcelCommentCommand : PSCmdlet
             || !string.IsNullOrWhiteSpace(Range)
             || !string.IsNullOrWhiteSpace(MatchAuthor)
             || !string.IsNullOrWhiteSpace(TextContains);
-        if (!hasFilter && !All.IsPresent)
-        {
+        if (!hasFilter && !All.IsPresent) {
             throw new PSArgumentException("Specify a comment filter or use -All.");
         }
 
-        return new ExcelCommentFilter
-        {
+        return new ExcelCommentFilter {
             A1Range = !string.IsNullOrWhiteSpace(Address) ? Address : Range,
             Author = MatchAuthor,
             TextContains = TextContains

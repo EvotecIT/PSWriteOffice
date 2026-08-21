@@ -18,16 +18,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelPrintTitles", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPrintTitles")]
-public sealed class SetOfficeExcelPrintTitlesCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelPrintTitlesCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -67,18 +66,14 @@ public sealed class SetOfficeExcelPrintTitlesCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (!Clear.IsPresent && !HasRows() && !HasColumns())
-        {
+    protected override void ProcessRecord() {
+        if (!Clear.IsPresent && !HasRows() && !HasColumns()) {
             throw new PSArgumentException("Provide row titles, column titles, or -Clear.");
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
 
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-
-        {
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
 
             return;
 
@@ -95,19 +90,16 @@ public sealed class SetOfficeExcelPrintTitlesCommand : PSCmdlet
             save: false);
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(sheet);
         }
     }
 
-    private bool HasRows()
-    {
+    private bool HasRows() {
         return FirstRow.HasValue && LastRow.HasValue;
     }
 
-    private bool HasColumns()
-    {
+    private bool HasColumns() {
         return FirstColumn.HasValue && LastColumn.HasValue;
     }
 

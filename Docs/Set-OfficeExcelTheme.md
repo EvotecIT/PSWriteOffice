@@ -16,7 +16,7 @@ Set-OfficeExcelTheme [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <stri
 
 ### Path
 ```powershell
-Set-OfficeExcelTheme [-InputPath] <string> [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelTheme [-Path] <string> [-Default] [-Xml <string>] [-XmlPath <string>] [-Name <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -72,22 +72,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
 Optional workbook theme name to apply after writing the theme.
 
@@ -115,6 +99,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

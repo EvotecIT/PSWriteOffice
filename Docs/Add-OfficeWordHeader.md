@@ -11,7 +11,7 @@ Adds content to a section header.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordHeader [[-Content] <scriptblock>] [-Type <WordHeaderFooterType>] [<CommonParameters>]
+Add-OfficeWordHeader [[-Content] <scriptblock>] [-Type <WordHeaderFooterType>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,6 +39,22 @@ Possible values:
 
 Required: False
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

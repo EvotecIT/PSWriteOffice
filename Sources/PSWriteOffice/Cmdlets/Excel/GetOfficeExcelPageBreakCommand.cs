@@ -16,16 +16,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelPageBreak", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelPageBreaks")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelPageBreakCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelPageBreakCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to inspect.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -49,29 +48,23 @@ public sealed class GetOfficeExcelPageBreakCommand : PSCmdlet
     public SwitchParameter Column { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var path = string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)
-            ? InputPath
+            ? Path
             : null;
         bool includeRows = Row.IsPresent || !Column.IsPresent;
         bool includeColumns = Column.IsPresent || !Row.IsPresent;
 
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
-        {
-            if (includeRows)
-            {
-                foreach (var row in sheet.GetManualRowPageBreaks())
-                {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex)) {
+            if (includeRows) {
+                foreach (var row in sheet.GetManualRowPageBreaks()) {
                     WriteObject(ExcelPageBreakRecordService.Create("Row", row, sheet.Name, path));
                 }
             }
 
-            if (includeColumns)
-            {
-                foreach (var column in sheet.GetManualColumnPageBreaks())
-                {
+            if (includeColumns) {
+                foreach (var column in sheet.GetManualColumnPageBreaks()) {
                     WriteObject(ExcelPageBreakRecordService.Create("Column", column, sheet.Name, path));
                 }
             }

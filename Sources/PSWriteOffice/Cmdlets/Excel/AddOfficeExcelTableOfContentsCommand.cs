@@ -21,16 +21,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Add, "OfficeExcelTableOfContents", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelTableOfContents")]
 [OutputType(typeof(ExcelDocument), typeof(FileInfo))]
-public sealed class AddOfficeExcelTableOfContentsCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelTableOfContentsCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Path to the workbook to update in place.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -76,7 +75,7 @@ public sealed class AddOfficeExcelTableOfContentsCommand : PSCmdlet
     [Parameter]
     public string BackLinkText { get; set; } = "\u2190 TOC";
 
-    /// <summary>Open the workbook after saving when <see cref="InputPath"/> is used.</summary>
+    /// <summary>Open the workbook after saving when <see cref="Path"/> is used.</summary>
     [Parameter]
     public SwitchParameter Open { get; set; }
 
@@ -85,20 +84,16 @@ public sealed class AddOfficeExcelTableOfContentsCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (BackLinkRow < 1)
-        {
+    protected override void ProcessRecord() {
+        if (BackLinkRow < 1) {
             throw new PSArgumentOutOfRangeException(nameof(BackLinkRow));
         }
 
-        if (BackLinkColumn < 1)
-        {
+        if (BackLinkColumn < 1) {
             throw new PSArgumentOutOfRangeException(nameof(BackLinkColumn));
         }
 
-        if (ParameterSetName == ParameterSetPath)
-        {
+        if (ParameterSetName == ParameterSetPath) {
             ProcessPath();
             return;
         }
@@ -109,41 +104,33 @@ public sealed class AddOfficeExcelTableOfContentsCommand : PSCmdlet
 
         Apply(document);
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(document);
         }
     }
 
-    private void ProcessPath()
-    {
-        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-        if (!File.Exists(resolvedPath))
-        {
+    private void ProcessPath() {
+        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        if (!File.Exists(resolvedPath)) {
             throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
         var fileInfo = new FileInfo(resolvedPath);
         var document = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false);
-        try
-        {
+        try {
             Apply(document);
             ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath);
-        }
-        catch
-        {
+        } catch {
             ExcelDocumentService.CloseDocument(document);
             throw;
         }
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(fileInfo);
         }
     }
 
-    private void Apply(ExcelDocument document)
-    {
+    private void Apply(ExcelDocument document) {
         document.AddTableOfContents(
             sheetName: SheetName,
             placeFirst: !DoNotPlaceFirst.IsPresent,
@@ -152,20 +139,17 @@ public sealed class AddOfficeExcelTableOfContentsCommand : PSCmdlet
             includeHiddenNamedRanges: IncludeHiddenNamedRanges.IsPresent,
             styled: !NoStyle.IsPresent);
 
-        if (AddBackLinks.IsPresent)
-        {
+        if (AddBackLinks.IsPresent) {
             AddBackLinksToSheets(document);
         }
     }
 
-    private void AddBackLinksToSheets(ExcelDocument document)
-    {
+    private void AddBackLinksToSheets(ExcelDocument document) {
         var useExplicitPlacement =
             MyInvocation.BoundParameters.ContainsKey(nameof(BackLinkRow)) ||
             MyInvocation.BoundParameters.ContainsKey(nameof(BackLinkColumn));
 
-        if (useExplicitPlacement)
-        {
+        if (useExplicitPlacement) {
             document.AddBackLinksToToc(
                 tocSheetName: SheetName,
                 row: BackLinkRow,
@@ -175,10 +159,8 @@ public sealed class AddOfficeExcelTableOfContentsCommand : PSCmdlet
         }
 
         var tocSheet = document[SheetName];
-        foreach (var sheet in document.Sheets)
-        {
-            if (string.Equals(sheet.Name, tocSheet.Name, System.StringComparison.OrdinalIgnoreCase))
-            {
+        foreach (var sheet in document.Sheets) {
+            if (string.Equals(sheet.Name, tocSheet.Name, System.StringComparison.OrdinalIgnoreCase)) {
                 continue;
             }
 

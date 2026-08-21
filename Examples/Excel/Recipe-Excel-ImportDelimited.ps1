@@ -8,7 +8,7 @@ ExcelNew -Path $workbook {
 }
 
 Import-OfficeExcelDelimitedText `
-    -InputPath $workbook `
+    -Path $workbook `
     -SourcePath $csv `
     -Delimiter ';' `
     -SheetName 'Sales'

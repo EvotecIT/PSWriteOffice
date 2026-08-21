@@ -26,7 +26,7 @@ Get-OfficeWordText -Document <WordDocument> [<CommonParameters>]
 
 ### Path
 ```powershell
-Get-OfficeWordText [-InputPath] <string> [<CommonParameters>]
+Get-OfficeWordText [-Path] <string> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -59,22 +59,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the document.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Paragraph
 Paragraph to enumerate.
 
@@ -88,6 +72,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the document.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

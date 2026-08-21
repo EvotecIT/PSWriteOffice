@@ -16,12 +16,11 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Copy, "OfficeExcelWorkbook", SupportsShouldProcess = true)]
 [Alias("ExcelWorkbookCopy", "ExcelPackageCopy")]
 [OutputType(typeof(FileInfo))]
-public sealed class CopyOfficeExcelWorkbookCommand : PSCmdlet
-{
+public sealed class CopyOfficeExcelWorkbookCommand : PSCmdlet {
     /// <summary>Source workbook or template package path.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    [Alias("Path", "InputPath", "SourcePath")]
-    public string FilePath { get; set; } = string.Empty;
+    [Alias("FilePath", "InputPath", "SourcePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Destination workbook path.</summary>
     [Parameter(Mandatory = true, Position = 1)]
@@ -37,20 +36,17 @@ public sealed class CopyOfficeExcelWorkbookCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        string sourcePath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
+    protected override void ProcessRecord() {
+        string sourcePath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         string destinationPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(DestinationPath);
 
-        if (!ShouldProcess(destinationPath, $"Copy workbook package from '{sourcePath}'"))
-        {
+        if (!ShouldProcess(destinationPath, $"Copy workbook package from '{sourcePath}'")) {
             return;
         }
 
         ExcelDocumentService.CopyWorkbookPackage(sourcePath, destinationPath, Force.IsPresent);
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(new FileInfo(destinationPath));
         }
     }

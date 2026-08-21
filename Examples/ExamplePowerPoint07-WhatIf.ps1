@@ -1,10 +1,9 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot 'Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'WhatIfExample.pptx'
-$presentation = New-OfficePowerPoint -FilePath $path
-Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 | Out-Null
+$presentation = New-OfficePowerPoint -Path $path -NoSave
+Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
 
 Save-OfficePowerPoint -Presentation $presentation -WhatIf
 Write-Host "WhatIf completed for $path"

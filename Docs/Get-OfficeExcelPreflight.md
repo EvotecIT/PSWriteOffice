@@ -11,7 +11,7 @@ Runs OfficeIMO Excel feature and workflow preflight checks.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelPreflight [-InputPath] <string> [-Capability <ExcelPreflightCapability[]>] [-IncludeFeatures] [-IncludeRepairHints] [-AsMarkdown] [-ThrowOnFailure] [<CommonParameters>]
+Get-OfficeExcelPreflight [-Path] <string> [-Capability <ExcelPreflightCapability[]>] [-IncludeFeatures] [-IncludeRepairHints] [-AsMarkdown] [-ThrowOnFailure] [<CommonParameters>]
 ```
 
 ### Document
@@ -115,13 +115,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the workbook.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

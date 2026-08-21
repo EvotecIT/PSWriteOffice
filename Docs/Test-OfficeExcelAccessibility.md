@@ -11,7 +11,7 @@ Checks workbook accessibility and compliance signals.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Test-OfficeExcelAccessibility [-InputPath] <string> [-Quiet] [<CommonParameters>]
+Test-OfficeExcelAccessibility [-Path] <string> [-Quiet] [<CommonParameters>]
 ```
 
 ### Document
@@ -52,13 +52,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

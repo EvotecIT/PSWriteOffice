@@ -16,7 +16,7 @@ Get-OfficeExcelWorksheetView [-Sheet <string>] [-SheetIndex <Int32>] [<CommonPar
 
 ### Path
 ```powershell
-Get-OfficeExcelWorksheetView [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
+Get-OfficeExcelWorksheetView [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Document
@@ -56,13 +56,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path to inspect.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

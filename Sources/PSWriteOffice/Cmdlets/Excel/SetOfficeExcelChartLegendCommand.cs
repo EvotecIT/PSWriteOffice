@@ -15,8 +15,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelChartLegend")]
 [OutputType(typeof(ExcelChart))]
-public sealed class SetOfficeExcelChartLegendCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelChartLegendCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Chart to update.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public ExcelChart Chart { get; set; } = null!;
@@ -55,37 +54,27 @@ public sealed class SetOfficeExcelChartLegendCommand : PSCmdlet
     public string? FontName { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (Hide.IsPresent)
-            {
+    protected override void ProcessRecord() {
+        try {
+            if (Hide.IsPresent) {
                 Chart.HideLegend();
-            }
-            else
-            {
+            } else {
                 Chart.SetLegend(ResolveLegendPosition(Position), Overlay);
             }
 
             if (FontSizePoints.HasValue || Bold.HasValue || Italic.HasValue ||
-                !string.IsNullOrWhiteSpace(Color) || !string.IsNullOrWhiteSpace(FontName))
-            {
+                !string.IsNullOrWhiteSpace(Color) || !string.IsNullOrWhiteSpace(FontName)) {
                 Chart.SetLegendTextStyle(FontSizePoints, Bold, Italic, Color, FontName);
             }
 
-            WriteObject(Chart);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(Chart);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "ExcelChartLegendFailed", ErrorCategory.InvalidOperation, Chart));
         }
     }
 
-    private static OfficeChartLegendPosition ResolveLegendPosition(string value)
-    {
-        return value switch
-        {
+    private static OfficeChartLegendPosition ResolveLegendPosition(string value) {
+        return value switch {
             "Bottom" => OfficeChartLegendPosition.Bottom,
             "Left" => OfficeChartLegendPosition.Left,
             "Right" => OfficeChartLegendPosition.Right,

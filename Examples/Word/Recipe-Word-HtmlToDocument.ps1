@@ -6,4 +6,4 @@ $html = @'
 '@
 
 ConvertFrom-OfficeWordHtml -Html $html -OutputPath '.\Service-Review.docx'
-ConvertTo-OfficeWordMarkdown -FilePath '.\Service-Review.docx' -OutputPath '.\Service-Review.md'
+ConvertTo-OfficeWordMarkdown -Path '.\Service-Review.docx' -OutputPath '.\Service-Review.md'

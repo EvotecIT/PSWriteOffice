@@ -11,7 +11,7 @@ Closes an Excel workbook and optionally saves it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Show] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [<CommonParameters>]
+Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -147,6 +147,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Open
+Open the workbook in Excel after saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Password
 Password used to save the workbook as an encrypted package.
 
@@ -213,22 +229,6 @@ Accept wildcard characters: False
 
 ### -Save
 Persist changes before closing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Show
-Open the workbook in Excel after saving.
 
 ```yaml
 Type: SwitchParameter

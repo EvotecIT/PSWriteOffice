@@ -25,16 +25,15 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Alias("ConvertTo-MarkdownHtml")]
 [OutputType(typeof(string), typeof(FileInfo))]
 public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
-    , IMarkdownReaderOptionSource
-{
+    , IMarkdownReaderOptionSource {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetText = "Text";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the Markdown file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Markdown text to convert.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
@@ -182,31 +181,23 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var readerOptions = MarkdownOptionUtilities.BuildReaderOptions(this);
 
         MarkdownDoc document;
-        if (ParameterSetName == ParameterSetDocument)
-        {
+        if (ParameterSetName == ParameterSetDocument) {
             document = Document ?? throw new InvalidOperationException("Markdown document was not provided.");
-        }
-        else if (ParameterSetName == ParameterSetPath)
-        {
-            var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!File.Exists(resolved))
-            {
+        } else if (ParameterSetName == ParameterSetPath) {
+            var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+            if (!File.Exists(resolved)) {
                 throw new FileNotFoundException($"File '{resolved}' was not found.", resolved);
             }
             document = MarkdownDoc.Load(resolved, readerOptions);
-        }
-        else
-        {
+        } else {
             document = MarkdownReader.Parse(Text ?? string.Empty, readerOptions);
         }
 
-        var options = new HtmlOptions
-        {
+        var options = new HtmlOptions {
             Kind = DocumentMode.IsPresent ? HtmlKind.Document : HtmlKind.Fragment,
             Style = Style,
             CssDelivery = CssDelivery,
@@ -215,48 +206,38 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
 
         ApplyHtmlOptions(options);
 
-        if (!string.IsNullOrWhiteSpace(Title))
-        {
+        if (!string.IsNullOrWhiteSpace(Title)) {
             options.Title = Title!;
         }
 
-        if (!string.IsNullOrWhiteSpace(OutputPath))
-        {
+        if (!string.IsNullOrWhiteSpace(OutputPath)) {
             var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-            if (!ShouldProcess(resolvedOutput, "Write HTML converted from Markdown"))
-            {
+            if (!ShouldProcess(resolvedOutput, "Write HTML converted from Markdown")) {
                 return;
             }
 
-            var directory = Path.GetDirectoryName(resolvedOutput);
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
+            var directory = System.IO.Path.GetDirectoryName(resolvedOutput);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
                 Directory.CreateDirectory(directory);
             }
 
             document.SaveAsHtml(resolvedOutput, options);
-            if (PassThru.IsPresent)
-            {
+            if (PassThru.IsPresent) {
                 WriteObject(new FileInfo(resolvedOutput));
             }
-        }
-        else
-        {
+        } else {
             WriteObject(options.Kind == HtmlKind.Document
                 ? document.ToHtmlDocument(options)
                 : document.ToHtmlFragment(options));
         }
     }
 
-    private void ApplyHtmlOptions(HtmlOptions options)
-    {
-        if (Theme.HasValue)
-        {
+    private void ApplyHtmlOptions(HtmlOptions options) {
+        if (Theme.HasValue) {
             options.Theme = MarkdownOptionUtilities.CreateTheme(Theme.Value);
         }
 
-        if (RawHtmlHandling.HasValue)
-        {
+        if (RawHtmlHandling.HasValue) {
             options.RawHtmlHandling = RawHtmlHandling.Value;
         }
 
@@ -270,23 +251,19 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
         options.ImagesLoadingLazy = ImagesLoadingLazy.IsPresent;
         options.ImagesDecodingAsync = ImagesDecodingAsync.IsPresent;
 
-        if (!string.IsNullOrWhiteSpace(BaseUri) && Uri.TryCreate(BaseUri, UriKind.Absolute, out var baseUri))
-        {
+        if (!string.IsNullOrWhiteSpace(BaseUri) && Uri.TryCreate(BaseUri, UriKind.Absolute, out var baseUri)) {
             options.BaseUri = baseUri;
         }
 
-        if (!string.IsNullOrWhiteSpace(ExternalLinksRel))
-        {
+        if (!string.IsNullOrWhiteSpace(ExternalLinksRel)) {
             options.ExternalLinksRel = ExternalLinksRel!;
         }
 
-        if (!string.IsNullOrWhiteSpace(ExternalLinksReferrerPolicy))
-        {
+        if (!string.IsNullOrWhiteSpace(ExternalLinksReferrerPolicy)) {
             options.ExternalLinksReferrerPolicy = ExternalLinksReferrerPolicy!;
         }
 
-        if (!string.IsNullOrWhiteSpace(ImagesReferrerPolicy))
-        {
+        if (!string.IsNullOrWhiteSpace(ImagesReferrerPolicy)) {
             options.ImagesReferrerPolicy = ImagesReferrerPolicy!;
         }
 
@@ -294,17 +271,13 @@ public sealed class ConvertToOfficeMarkdownHtmlCommand : PSCmdlet
         AddRange(options.AllowedHttpImageHosts, AllowedHttpImageHost);
     }
 
-    private static void AddRange(System.Collections.Generic.ICollection<string> target, string[]? values)
-    {
-        if (values == null)
-        {
+    private static void AddRange(System.Collections.Generic.ICollection<string> target, string[]? values) {
+        if (values == null) {
             return;
         }
 
-        foreach (var value in values)
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
+        foreach (var value in values) {
+            if (!string.IsNullOrWhiteSpace(value)) {
                 target.Add(value);
             }
         }

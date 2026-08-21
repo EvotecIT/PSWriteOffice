@@ -9,7 +9,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Delete the first slide.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointRemoveSlide.pptx
+///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRemoveSlide.pptx
 /// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
 /// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
 /// Remove-OfficePowerPointSlide -Presentation $ppt -Index 0 -Confirm:$false
@@ -17,8 +17,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <para>Removes the first slide and saves the updated deck.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Remove, "OfficePowerPointSlide", SupportsShouldProcess = true)]
-public class RemoveOfficePowerPointSlideCommand : PSCmdlet
-{
+public class RemoveOfficePowerPointSlideCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Presentation to modify.</summary>
     [Parameter(Mandatory = true)]
     public PowerPointPresentation Presentation { get; set; } = null!;
@@ -28,17 +27,13 @@ public class RemoveOfficePowerPointSlideCommand : PSCmdlet
     public int Index { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (ShouldProcess($"Slide {Index}", "Remove slide"))
-            {
+    protected override void ProcessRecord() {
+        try {
+            if (ShouldProcess($"Slide {Index}", "Remove slide")) {
                 Presentation.RemoveSlide(Index);
+                WritePassThru(Presentation);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointRemoveSlideFailed", ErrorCategory.InvalidOperation, Presentation));
         }
     }

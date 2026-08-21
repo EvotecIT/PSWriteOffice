@@ -23,15 +23,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsDiagnostic.Test, "OfficeExcelTemplateBinding", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelTemplateBinding", "ExcelTemplateValidate")]
 [OutputType(typeof(PSObject), typeof(string), typeof(bool))]
-public sealed class TestOfficeExcelTemplateBindingCommand : PSCmdlet
-{
+public sealed class TestOfficeExcelTemplateBindingCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook document.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -53,22 +52,18 @@ public sealed class TestOfficeExcelTemplateBindingCommand : PSCmdlet
     [Parameter]
     public SwitchParameter ThrowOnMissing { get; set; }
 
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var bindings = Binding.Cast<DictionaryEntry>().ToDictionary<DictionaryEntry, string, object?>(entry => entry.Key.ToString() ?? string.Empty, entry => entry.Value, System.StringComparer.OrdinalIgnoreCase);
         var report = workbook.Document.ValidateTemplateBindings(bindings);
-        if (ThrowOnMissing.IsPresent)
-        {
+        if (ThrowOnMissing.IsPresent) {
             report.Inspection.EnsureAllMarkersBound();
         }
-        if (Quiet.IsPresent)
-        {
+        if (Quiet.IsPresent) {
             WriteObject(report.Passed);
             return;
         }
-        if (AsMarkdown.IsPresent)
-        {
+        if (AsMarkdown.IsPresent) {
             WriteObject(report.Markdown);
             return;
         }

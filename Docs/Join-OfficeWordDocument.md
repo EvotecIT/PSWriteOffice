@@ -11,12 +11,12 @@ Appends one or more Word documents into a base Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Join-OfficeWordDocument [-InputPath] <string> [-AppendPath] <string[]> [-OutputPath <string>] [-Show] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeWordDocument [-Path] <string> [-AppendPath] <string[]> [-OutputPath <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Join-OfficeWordDocument [-AppendPath] <string[]> -Document <WordDocument> [-OutputPath <string>] [-Show] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeWordDocument [-AppendPath] <string[]> -Document <WordDocument> [-OutputPath <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -79,17 +79,17 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Base document path.
+### -Open
+Open the saved output with the shell.
 
 ```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, BasePath
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: Show
 Possible values:
 
-Required: True
-Position: 0
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -127,17 +127,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Show
-Open the saved output with the shell.
+### -Path
+Base document path.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: Path, Document
-Aliases: None
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, BasePath
 Possible values:
 
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

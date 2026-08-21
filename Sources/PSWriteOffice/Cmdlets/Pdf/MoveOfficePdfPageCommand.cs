@@ -18,8 +18,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// </example>
 [Cmdlet(VerbsCommon.Move, "OfficePdfPage", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
-public sealed class MoveOfficePdfPageCommand : PSCmdlet
-{
+public sealed class MoveOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Input PDF path.</summary>
     [Parameter(Mandatory = true)]
     [Alias("FilePath")]
@@ -46,11 +45,9 @@ public sealed class MoveOfficePdfPageCommand : PSCmdlet
     public SwitchParameter IgnorePermissionRestrictions { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write reordered PDF pages"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write reordered PDF pages")) {
             return;
         }
 
@@ -59,6 +56,6 @@ public sealed class MoveOfficePdfPageCommand : PSCmdlet
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Pages.Move(BeforePage, PageRange).Save(outputPath).RequireSuccess();
-        WriteObject(new FileInfo(outputPath));
+        WritePassThru(new FileInfo(outputPath));
     }
 }

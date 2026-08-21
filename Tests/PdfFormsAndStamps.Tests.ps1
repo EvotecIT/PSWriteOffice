@@ -29,7 +29,7 @@ Describe 'PDF forms and stamps' {
             CustomerName = 'Alice Example'
             Plan = 'Premium'
             Regions = 'EU'
-        } -Flatten | Should -BeOfType System.IO.FileInfo
+        } -Flatten -PassThru | Should -BeOfType System.IO.FileInfo
 
         $preflight = Get-OfficePdfPreflight -Path $filledPath
         $preflight.CanRead | Should -BeTrue
@@ -46,7 +46,7 @@ Describe 'PDF forms and stamps' {
         $filledPath = Join-Path $TestDrive 'nested\filled.pdf'
         Set-OfficePdfForm -Path $formPath -OutputPath $filledPath -Field @{
             CustomerName = 'Alice Example'
-        } | Should -BeOfType System.IO.FileInfo
+        } -PassThru | Should -BeOfType System.IO.FileInfo
 
         Test-Path $filledPath | Should -BeTrue
         (Get-OfficePdfPreflight -Path $filledPath).CanRead | Should -BeTrue
@@ -62,7 +62,7 @@ Describe 'PDF forms and stamps' {
         $filledPath = Join-Path $TestDrive 'appearance-filled.pdf'
         Set-OfficePdfForm -Path $formPath -OutputPath $filledPath -Field @{
             CustomerName = 'Alice Example'
-        } | Should -BeOfType System.IO.FileInfo
+        } -PassThru | Should -BeOfType System.IO.FileInfo
 
         $info = Get-OfficePdfInfo -Path $filledPath
         $raw = [System.Text.Encoding]::ASCII.GetString([System.IO.File]::ReadAllBytes($filledPath))
@@ -81,7 +81,7 @@ Describe 'PDF forms and stamps' {
         $filledPath = Join-Path $TestDrive 'legacy-appearance-filled.pdf'
         Set-OfficePdfForm -Path $formPath -OutputPath $filledPath -Field @{
             CustomerName = 'Alice Example'
-        } -KeepNeedAppearances | Should -BeOfType System.IO.FileInfo
+        } -KeepNeedAppearances -PassThru | Should -BeOfType System.IO.FileInfo
 
         (Get-OfficePdfInfo -Path $filledPath).AcroFormNeedAppearances | Should -BeTrue
     }
@@ -94,7 +94,7 @@ Describe 'PDF forms and stamps' {
         } | Out-Null
 
         $metadataPath = Join-Path $TestDrive 'metadata.pdf'
-        Set-OfficePdfMetadata -Path $sourcePath -OutputPath $metadataPath -Title 'Stamped Invoice' -Author 'PSWriteOffice' |
+        Set-OfficePdfMetadata -Path $sourcePath -OutputPath $metadataPath -Title 'Stamped Invoice' -Author 'PSWriteOffice' -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         $metadata = (Get-OfficePdfInfo -Path $metadataPath).Metadata
@@ -102,7 +102,7 @@ Describe 'PDF forms and stamps' {
         $metadata.Author | Should -Be 'PSWriteOffice'
 
         $stampedPath = Join-Path $TestDrive 'stamped.pdf'
-        Add-OfficePdfStamp -Path $metadataPath -OutputPath $stampedPath -Text 'APPROVED' -X 72 -Y 72 -FontSize 18 -Color '#008000' |
+        Add-OfficePdfStamp -Path $metadataPath -OutputPath $stampedPath -Text 'APPROVED' -X 72 -Y 72 -FontSize 18 -Color '#008000' -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         $text = Get-OfficePdfText -Path $stampedPath
@@ -118,11 +118,11 @@ Describe 'PDF forms and stamps' {
         } | Out-Null
 
         $metadataPath = Join-Path $TestDrive 'metadata\out.pdf'
-        Set-OfficePdfMetadata -Path $sourcePath -OutputPath $metadataPath -Title 'Nested Metadata' |
+        Set-OfficePdfMetadata -Path $sourcePath -OutputPath $metadataPath -Title 'Nested Metadata' -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         $stampedPath = Join-Path $TestDrive 'stamps\approved.pdf'
-        Add-OfficePdfStamp -Path $metadataPath -OutputPath $stampedPath -Text 'APPROVED' -X 72 -Y 72 |
+        Add-OfficePdfStamp -Path $metadataPath -OutputPath $stampedPath -Text 'APPROVED' -X 72 -Y 72 -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         Test-Path $metadataPath | Should -BeTrue

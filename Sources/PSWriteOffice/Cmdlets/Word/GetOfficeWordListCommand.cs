@@ -34,16 +34,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordList", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordList))]
-public sealed class GetOfficeWordListCommand : PSCmdlet
-{
+public sealed class GetOfficeWordListCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetSection = "Section";
 
     /// <summary>Path to the document to open read-only for list inspection.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Open document to inspect. The caller controls the document lifetime.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -58,53 +57,40 @@ public sealed class GetOfficeWordListCommand : PSCmdlet
     public SwitchParameter IncludeEmpty { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
+        try {
             IEnumerable<WordList> lists;
 
-            if (ParameterSetName == ParameterSetSection)
-            {
+            if (ParameterSetName == ParameterSetSection) {
                 lists = Section != null
                     ? Section.Lists
                     : Array.Empty<WordList>();
-            }
-            else
-            {
-                if (ParameterSetName == ParameterSetPath)
-                {
-                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+            } else {
+                if (ParameterSetName == ParameterSetPath) {
+                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                     document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                     dispose = true;
-                }
-                else
-                {
+                } else {
                     document = Document;
                 }
 
-                if (document == null)
-                {
+                if (document == null) {
                     throw new InvalidOperationException("Word document was not provided.");
                 }
 
                 lists = document.Lists;
             }
 
-            if (!IncludeEmpty.IsPresent)
-            {
+            if (!IncludeEmpty.IsPresent) {
                 lists = lists.Where(list => list.ListItems.Count > 0);
             }
 
             WriteObject(lists, enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

@@ -10,7 +10,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Append a slide with the default layout.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -FilePath .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt</code>
+///   <code>$ppt = New-OfficePowerPoint -Path .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt</code>
 ///   <para>Creates a deck and appends a new slide at the end.</para>
 /// </example>
 /// <example>
@@ -21,8 +21,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointSlide", DefaultParameterSetName = ParameterSetIndex)]
 [Alias("PptSlide")]
-public class AddOfficePowerPointSlideCommand : PSCmdlet
-{
+public class AddOfficePowerPointSlideCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetIndex = "Index";
     private const string ParameterSetByName = "Name";
     private const string ParameterSetByType = "Type";
@@ -56,20 +55,16 @@ public class AddOfficePowerPointSlideCommand : PSCmdlet
     public ScriptBlock? Content { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         PowerPointPresentation? presentation = Presentation;
-        try
-        {
+        try {
             var context = PowerPointDslContext.Current;
-            if (presentation == null)
-            {
+            if (presentation == null) {
                 presentation = (context ?? PowerPointDslContext.Require(this)).Presentation;
             }
 
             PowerPointSlide slide;
-            switch (ParameterSetName)
-            {
+            switch (ParameterSetName) {
                 case ParameterSetByName:
                     slide = presentation.AddSlide(LayoutName, Master, ignoreCase: !CaseSensitive.IsPresent);
                     break;
@@ -81,29 +76,21 @@ public class AddOfficePowerPointSlideCommand : PSCmdlet
                     break;
             }
 
-            if (Content != null)
-            {
-                if (context != null)
-                {
-                    using (context.Push(slide))
-                    {
+            if (Content != null) {
+                if (context != null) {
+                    using (context.Push(slide)) {
                         Content.InvokeReturnAsIs();
                     }
-                }
-                else
-                {
+                } else {
                     using (var scoped = PowerPointDslContext.Enter(presentation))
-                    using (scoped.Push(slide))
-                    {
+                    using (scoped.Push(slide)) {
                         Content.InvokeReturnAsIs();
                     }
                 }
             }
 
-            WriteObject(slide);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(slide);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointAddSlideFailed", ErrorCategory.InvalidOperation, presentation ?? Presentation));
         }
     }

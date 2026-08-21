@@ -16,7 +16,7 @@ Get-OfficeExcelDataValidation [-Sheet <string>] [-SheetIndex <Int32>] [-Range <s
 
 ### Path
 ```powershell
-Get-OfficeExcelDataValidation [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [<CommonParameters>]
+Get-OfficeExcelDataValidation [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [<CommonParameters>]
 ```
 
 ### Document
@@ -103,13 +103,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path to inspect.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

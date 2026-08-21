@@ -19,16 +19,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Add, "OfficeExcelThreadedComment", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelThreadedComment")]
 [OutputType(typeof(PSObject))]
-public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to operate on outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -80,19 +79,15 @@ public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
-    protected override void ProcessRecord()
-    {
-        if (ParameterSetName == ParameterSetPath)
-        {
-            using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, null!, readOnly: false);
-            if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-            {
+    protected override void ProcessRecord() {
+        if (ParameterSetName == ParameterSetPath) {
+            using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, null!, readOnly: false);
+            if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
                 return;
             }
 
             var result = AddComment(ExcelSheetResolver.Resolve(workbook.Document, Sheet, SheetIndex));
-            if (!NoSave.IsPresent)
-            {
+            if (!NoSave.IsPresent) {
                 workbook.SaveIfOwned();
             }
 
@@ -103,18 +98,15 @@ public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet
         ExcelSheet sheet = ParameterSetName == ParameterSetDocument
             ? ExcelSheetResolver.Resolve(Document, Sheet, SheetIndex)
             : ExcelDslContext.Require(this).RequireSheet();
-        if (!ExcelShouldProcessService.ShouldProcessTarget(this, sheet.Name, "Add Excel threaded comment"))
-        {
+        if (!ExcelShouldProcessService.ShouldProcessTarget(this, sheet.Name, "Add Excel threaded comment")) {
             return;
         }
 
         WriteResult(AddComment(sheet));
     }
 
-    private ExcelThreadedCommentResult AddComment(ExcelSheet sheet)
-    {
-        return sheet.AddThreadedComment(new ExcelThreadedCommentOptions
-        {
+    private ExcelThreadedCommentResult AddComment(ExcelSheet sheet) {
+        return sheet.AddThreadedComment(new ExcelThreadedCommentOptions {
             Address = Address,
             Text = Text,
             Author = string.IsNullOrWhiteSpace(Author) ? Environment.UserName : Author!,
@@ -125,10 +117,8 @@ public sealed class AddOfficeExcelThreadedCommentCommand : PSCmdlet
         });
     }
 
-    private void WriteResult(ExcelThreadedCommentResult result)
-    {
-        if (!PassThru.IsPresent)
-        {
+    private void WriteResult(ExcelThreadedCommentResult result) {
+        if (!PassThru.IsPresent) {
             return;
         }
 

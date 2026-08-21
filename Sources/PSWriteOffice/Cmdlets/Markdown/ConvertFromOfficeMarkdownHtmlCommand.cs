@@ -27,8 +27,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Alias("ConvertFrom-MarkdownHtml")]
 [OutputType(typeof(string), typeof(FileInfo), typeof(MarkdownDoc))]
 public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
-    , IMarkdownWriteOptionSource
-{
+    , IMarkdownWriteOptionSource {
     private const string ParameterSetHtml = "Html";
     private const string ParameterSetPath = "Path";
 
@@ -38,8 +37,8 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
 
     /// <summary>Path to an HTML file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Optional output path for the Markdown file.</summary>
     [Parameter]
@@ -123,36 +122,29 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
     public string? UnorderedListMarker { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (Options != null && Portable.IsPresent)
-            {
+    protected override void ProcessRecord() {
+        try {
+            if (Options != null && Portable.IsPresent) {
                 throw new PSArgumentException("Specify either -Options or -Portable, not both.");
             }
 
-            if (AsDocument.IsPresent && !string.IsNullOrWhiteSpace(OutputPath))
-            {
+            if (AsDocument.IsPresent && !string.IsNullOrWhiteSpace(OutputPath)) {
                 throw new PSArgumentException("Specify either -AsDocument or -OutputPath, not both.");
             }
 
             var html = Html;
             string? htmlFileDirectory = null;
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-                if (!File.Exists(resolvedPath))
-                {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+                if (!File.Exists(resolvedPath)) {
                     throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
                 }
 
                 html = File.ReadAllText(resolvedPath);
-                htmlFileDirectory = Path.GetDirectoryName(resolvedPath);
+                htmlFileDirectory = System.IO.Path.GetDirectoryName(resolvedPath);
             }
 
-            if (string.IsNullOrWhiteSpace(html))
-            {
+            if (string.IsNullOrWhiteSpace(html)) {
                 ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("HTML content cannot be empty."),
                     "HtmlEmpty",
@@ -164,53 +156,42 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
             var options = BuildOptions(htmlFileDirectory);
             if (string.IsNullOrWhiteSpace(OutputPath) &&
                 RequiresImageExtraction(options) &&
-                !ShouldProcess(options.Base64ImageOutputDirectory, "Extract Markdown images from HTML"))
-            {
+                !ShouldProcess(options.Base64ImageOutputDirectory, "Extract Markdown images from HTML")) {
                 return;
             }
 
-            if (AsDocument.IsPresent)
-            {
+            if (AsDocument.IsPresent) {
                 WriteObject(HtmlConversionDocument.Parse(html).ToMarkdownDocument(options));
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(OutputPath))
-            {
+            if (!string.IsNullOrWhiteSpace(OutputPath)) {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-                if (!ShouldProcess(resolvedOutput, "Write Markdown converted from HTML"))
-                {
+                if (!ShouldProcess(resolvedOutput, "Write Markdown converted from HTML")) {
                     return;
                 }
 
                 var markdown = HtmlConversionDocument.Parse(html).ToMarkdown(options);
-                var directory = Path.GetDirectoryName(resolvedOutput);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
+                var directory = System.IO.Path.GetDirectoryName(resolvedOutput);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
                     Directory.CreateDirectory(directory);
                 }
 
                 File.WriteAllText(resolvedOutput, markdown, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-                if (PassThru.IsPresent)
-                {
+                if (PassThru.IsPresent) {
                     WriteObject(new FileInfo(resolvedOutput));
                 }
-            }
-            else
-            {
+            } else {
                 var markdown = HtmlConversionDocument.Parse(html).ToMarkdown(options);
                 WriteObject(markdown);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "HtmlToMarkdownFailed", ErrorCategory.InvalidOperation,
-                ParameterSetName == ParameterSetPath ? InputPath : Html));
+                ParameterSetName == ParameterSetPath ? Path : Html));
         }
     }
 
-    private HtmlToMarkdownOptions BuildOptions(string? htmlFileDirectory)
-    {
+    private HtmlToMarkdownOptions BuildOptions(string? htmlFileDirectory) {
         var options = Options?.Clone()
             ?? (Portable.IsPresent
                 ? HtmlToMarkdownOptions.CreatePortableProfile()
@@ -221,44 +202,35 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
         options.PreserveUnsupportedBlocks = !DropUnsupportedBlocks.IsPresent;
         options.PreserveUnsupportedInlineHtml = !DropUnsupportedInlineHtml.IsPresent;
 
-        if (MaxInputCharacters.HasValue)
-        {
+        if (MaxInputCharacters.HasValue) {
             options.MaxInputCharacters = MaxInputCharacters.Value;
         }
 
-        if (Base64ImageHandling.HasValue)
-        {
+        if (Base64ImageHandling.HasValue) {
             options.Base64Images = Base64ImageHandling.Value;
         }
 
-        if (!string.IsNullOrWhiteSpace(Base64ImageOutputDirectory))
-        {
+        if (!string.IsNullOrWhiteSpace(Base64ImageOutputDirectory)) {
             options.Base64ImageOutputDirectory = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Base64ImageOutputDirectory);
         }
 
-        if (ListingCardMetadataMode.HasValue)
-        {
+        if (ListingCardMetadataMode.HasValue) {
             options.ListingCardMetadataMode = ListingCardMetadataMode.Value;
         }
 
-        if (MaxTableExpandedColumns.HasValue)
-        {
+        if (MaxTableExpandedColumns.HasValue) {
             options.MaxTableExpandedColumns = MaxTableExpandedColumns.Value;
         }
 
         var writeOptions = MarkdownOptionUtilities.BuildWriteOptions(this);
-        if (writeOptions != null)
-        {
+        if (writeOptions != null) {
             options.MarkdownWriteOptions = writeOptions;
         }
 
-        if (!string.IsNullOrWhiteSpace(BaseUri))
-        {
+        if (!string.IsNullOrWhiteSpace(BaseUri)) {
             options.BaseUri = new Uri(BaseUri, UriKind.Absolute);
-        }
-        else if (!string.IsNullOrWhiteSpace(htmlFileDirectory))
-        {
-            options.BaseUri = new Uri(Path.GetFullPath(htmlFileDirectory!) + Path.DirectorySeparatorChar);
+        } else if (!string.IsNullOrWhiteSpace(htmlFileDirectory)) {
+            options.BaseUri = new Uri(System.IO.Path.GetFullPath(htmlFileDirectory!) + System.IO.Path.DirectorySeparatorChar);
         }
 
         return options;

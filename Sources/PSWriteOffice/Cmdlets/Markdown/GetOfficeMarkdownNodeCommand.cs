@@ -24,8 +24,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdownNode", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject), typeof(MarkdownObject))]
 public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
-    , IMarkdownReaderOptionSource
-{
+    , IMarkdownReaderOptionSource {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
     private const string ParameterSetText = "Text";
@@ -36,8 +35,8 @@ public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
 
     /// <summary>Path to the Markdown file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Markdown text to parse.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
@@ -108,8 +107,7 @@ public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
     public SwitchParameter Raw { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var document = ResolveDocument();
         var wildcardOptions = CaseSensitive
             ? WildcardOptions.None
@@ -121,63 +119,51 @@ public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
         WriteNode(document, depth: 0, path: "Document", nodeTypePattern);
     }
 
-    private MarkdownDoc ResolveDocument()
-    {
-        if (ParameterSetName == ParameterSetDocument)
-        {
+    private MarkdownDoc ResolveDocument() {
+        if (ParameterSetName == ParameterSetDocument) {
             return Document ?? throw new PSArgumentException("Provide a Markdown document.");
         }
 
         var options = MarkdownOptionUtilities.BuildReaderOptions(this);
 
         string markdown;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!File.Exists(resolvedPath))
-            {
+        if (ParameterSetName == ParameterSetPath) {
+            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+            if (!File.Exists(resolvedPath)) {
                 throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
             markdown = File.ReadAllText(resolvedPath, Encoding.UTF8);
-        }
-        else
-        {
+        } else {
             markdown = Text ?? string.Empty;
         }
 
         return MarkdownReader.ParseWithSyntaxTree(markdown, options).Document;
     }
 
-    private void WriteNode(MarkdownObject node, int depth, string path, WildcardPattern? nodeTypePattern)
-    {
-        if (depth > MaxDepth)
-        {
+    private void WriteNode(MarkdownObject node, int depth, string path, WildcardPattern? nodeTypePattern) {
+        if (depth > MaxDepth) {
             return;
         }
 
         var typeName = node.GetType().Name;
-        if (nodeTypePattern == null || nodeTypePattern.IsMatch(typeName))
-        {
+        if (nodeTypePattern == null || nodeTypePattern.IsMatch(typeName)) {
             WriteObject(Raw ? node : CreateNodeRecord(node, depth, path, typeName));
         }
 
-        if (depth == MaxDepth)
-        {
+        if (depth == MaxDepth) {
             return;
         }
 
         var children = node.ChildObjects;
-        for (var i = 0; i < children.Count; i++)
-        {
+        for (var i = 0; i < children.Count; i++) {
             var child = children[i];
             var childPath = path + "/" + child.GetType().Name + "[" + i.ToString(System.Globalization.CultureInfo.InvariantCulture) + "]";
             WriteNode(child, depth + 1, childPath, nodeTypePattern);
         }
     }
 
-    private static PSObject CreateNodeRecord(MarkdownObject node, int depth, string path, string typeName)
-    {
+    private static PSObject CreateNodeRecord(MarkdownObject node, int depth, string path, string typeName) {
         var record = new PSObject();
         var span = node.SourceSpan;
 
@@ -197,10 +183,8 @@ public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
         return record;
     }
 
-    private static string? GetText(MarkdownObject node)
-    {
-        return node switch
-        {
+    private static string? GetText(MarkdownObject node) {
+        return node switch {
             HeadingBlock heading => heading.Text,
             CodeBlock code => code.Content,
             ImageBlock image => image.Alt,
@@ -208,16 +192,13 @@ public sealed class GetOfficeMarkdownNodeCommand : PSCmdlet
         };
     }
 
-    private static string? GetMarkdownPreview(MarkdownObject node)
-    {
-        if (node is not IMarkdownBlock block)
-        {
+    private static string? GetMarkdownPreview(MarkdownObject node) {
+        if (node is not IMarkdownBlock block) {
             return null;
         }
 
         var markdown = block.RenderMarkdown();
-        if (string.IsNullOrWhiteSpace(markdown))
-        {
+        if (string.IsNullOrWhiteSpace(markdown)) {
             return null;
         }
 

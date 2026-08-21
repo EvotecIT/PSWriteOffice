@@ -11,7 +11,7 @@ Applies a built-in style and color preset to an Excel chart.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelChartStyle -Chart <ExcelChart> [-StyleId <int>] [-ColorStyleId <int>] [<CommonParameters>]
+Set-OfficeExcelChartStyle -Chart <ExcelChart> [-StyleId <int>] [-ColorStyleId <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -49,6 +49,22 @@ Chart color style identifier.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

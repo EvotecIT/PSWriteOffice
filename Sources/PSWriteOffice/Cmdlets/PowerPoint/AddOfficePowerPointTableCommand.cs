@@ -22,8 +22,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointTable", DefaultParameterSetName = ParameterSetInputObject)]
 [Alias("PptTable")]
-public sealed class AddOfficePowerPointTableCommand : PSCmdlet
-{
+public sealed class AddOfficePowerPointTableCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetInputObject = "InputObject";
     private const string ParameterSetSize = "Size";
 
@@ -103,11 +102,9 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
     public string? StyleId { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         PowerPointSlide? slide = null;
-        try
-        {
+        try {
             ValidateDimensions();
             slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
 
@@ -115,36 +112,29 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
                 ? CreateSizedTable(slide)
                 : CreateDataTable(slide);
 
-            if (!string.IsNullOrWhiteSpace(StyleId))
-            {
+            if (!string.IsNullOrWhiteSpace(StyleId)) {
                 table.StyleId = StyleId;
             }
 
-            WriteObject(table);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(table);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointAddTableFailed", ErrorCategory.InvalidOperation, slide ?? Slide));
         }
     }
 
-    private PowerPointTable CreateSizedTable(PowerPointSlide slide)
-    {
-        if (Rows <= 0)
-        {
+    private PowerPointTable CreateSizedTable(PowerPointSlide slide) {
+        if (Rows <= 0) {
             throw new ArgumentOutOfRangeException(nameof(Rows), "Rows must be greater than 0.");
         }
 
-        if (Columns <= 0)
-        {
+        if (Columns <= 0) {
             throw new ArgumentOutOfRangeException(nameof(Columns), "Columns must be greater than 0.");
         }
 
         return slide.AddTablePoints(Rows, Columns, X, Y, Width, Height);
     }
 
-    private PowerPointTable CreateDataTable(PowerPointSlide slide)
-    {
+    private PowerPointTable CreateDataTable(PowerPointSlide slide) {
         var items = new List<object?>();
         TableInputCollector.AddInput(items, InputObject);
         var inputRows = TableInputCollector.RequireRows(items, nameof(InputObject));
@@ -161,8 +151,7 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
                 propertyNames: explicitHeaders,
                 header: NoHeader.IsPresent ? Array.Empty<string>() : explicitHeaders,
                 out var tableSpec,
-                normalizerOptions))
-        {
+                normalizerOptions)) {
             return CreateStructuredTable(slide, tableSpec);
         }
 
@@ -170,8 +159,7 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         var rows = NormalizeRows(normalized);
         var headers = ResolveHeaders(rows);
 
-        if (headers.Count == 0)
-        {
+        if (headers.Count == 0) {
             throw new InvalidOperationException("Unable to infer columns from the supplied data.");
         }
 
@@ -184,20 +172,16 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         return slide.AddTablePoints(rows, columns, includeHeaders: !NoHeader.IsPresent, X, Y, Width, Height);
     }
 
-    private PowerPointTable CreateStructuredTable(PowerPointSlide slide, OfficeTableSpec spec)
-    {
-        foreach (var placement in spec.Placements)
-        {
+    private PowerPointTable CreateStructuredTable(PowerPointSlide slide, OfficeTableSpec spec) {
+        foreach (var placement in spec.Placements) {
             PowerPointTableCellSpecService.Validate(placement.Cell);
         }
 
         var table = slide.AddTablePoints(spec.RowCount, spec.ColumnCount, X, Y, Width, Height);
-        foreach (var placement in spec.Placements)
-        {
+        foreach (var placement in spec.Placements) {
             var cell = table.GetCell(placement.RowIndex, placement.ColumnIndex);
             PowerPointTableCellSpecService.Apply(cell, placement.Cell);
-            if (placement.Cell.HasSpan)
-            {
+            if (placement.Cell.HasSpan) {
                 cell.Merge = (placement.Cell.RowSpan, placement.Cell.ColumnSpan);
             }
         }
@@ -205,38 +189,29 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         return table;
     }
 
-    private void ValidateDimensions()
-    {
-        if (Width <= 0)
-        {
+    private void ValidateDimensions() {
+        if (Width <= 0) {
             throw new ArgumentOutOfRangeException(nameof(Width), "Width must be greater than 0.");
         }
 
-        if (Height <= 0)
-        {
+        if (Height <= 0) {
             throw new ArgumentOutOfRangeException(nameof(Height), "Height must be greater than 0.");
         }
     }
 
-    private List<Dictionary<string, object?>> NormalizeRows(IReadOnlyList<object?> items)
-    {
+    private List<Dictionary<string, object?>> NormalizeRows(IReadOnlyList<object?> items) {
         var rows = new List<Dictionary<string, object?>>(items.Count);
-        foreach (var item in items)
-        {
-            if (item == null)
-            {
+        foreach (var item in items) {
+            if (item == null) {
                 rows.Add(new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase));
                 continue;
             }
 
-            if (item is IDictionary dict)
-            {
+            if (item is IDictionary dict) {
                 var row = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-                foreach (DictionaryEntry entry in dict)
-                {
+                foreach (DictionaryEntry entry in dict) {
                     var key = Convert.ToString(entry.Key, CultureInfo.InvariantCulture);
-                    if (string.IsNullOrWhiteSpace(key))
-                    {
+                    if (string.IsNullOrWhiteSpace(key)) {
                         continue;
                     }
                     row[key] = entry.Value;
@@ -246,8 +221,7 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
                 continue;
             }
 
-            rows.Add(new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
-            {
+            rows.Add(new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase) {
                 ["Value"] = item
             });
         }
@@ -255,22 +229,17 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         return rows;
     }
 
-    private List<string> ResolveHeaders(IReadOnlyList<Dictionary<string, object?>> rows)
-    {
+    private List<string> ResolveHeaders(IReadOnlyList<Dictionary<string, object?>> rows) {
         var explicitHeaders = ResolveExplicitHeaders();
-        if (explicitHeaders != null)
-        {
+        if (explicitHeaders != null) {
             return explicitHeaders.ToList();
         }
 
         var headers = new List<string>();
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var row in rows)
-        {
-            foreach (var key in row.Keys)
-            {
-                if (seen.Add(key))
-                {
+        foreach (var row in rows) {
+            foreach (var key in row.Keys) {
+                if (seen.Add(key)) {
                     headers.Add(key);
                 }
             }
@@ -279,10 +248,8 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
         return headers;
     }
 
-    private string[]? ResolveExplicitHeaders()
-    {
-        if (Header == null || Header.Length == 0)
-        {
+    private string[]? ResolveExplicitHeaders() {
+        if (Header == null || Header.Length == 0) {
             return null;
         }
 
@@ -291,8 +258,7 @@ public sealed class AddOfficePowerPointTableCommand : PSCmdlet
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
-        if (explicitHeaders.Length == 0)
-        {
+        if (explicitHeaders.Length == 0) {
             throw new PSArgumentException("Header cannot be empty.", nameof(Header));
         }
 

@@ -36,8 +36,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsData.ConvertFrom, "OfficeWordMarkdown", DefaultParameterSetName = ParameterSetMarkdown, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-WordMarkdown")]
 [OutputType(typeof(WordDocument), typeof(FileInfo))]
-public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
-{
+public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet {
     private const string ParameterSetMarkdown = "Markdown";
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
@@ -48,8 +47,8 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
 
     /// <summary>Path to a Markdown file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path")]
-    public string FilePath { get; set; } = string.Empty;
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Markdown document instance to convert.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -163,44 +162,36 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override async Task ProcessRecordAsync()
-    {
+    protected override async Task ProcessRecordAsync() {
         WordDocument? document = null;
 
-        try
-        {
-            if (FitImagesToPageContentWidth.IsPresent && FitImagesToContextWidth.IsPresent)
-            {
+        try {
+            if (FitImagesToPageContentWidth.IsPresent && FitImagesToContextWidth.IsPresent) {
                 throw new ArgumentException("Use either -FitImagesToPageContentWidth or -FitImagesToContextWidth, not both.");
             }
 
             ValidateTemplateParameters();
             var options = BuildOptions();
 
-            switch (ParameterSetName)
-            {
-                case ParameterSetPath:
-                {
-                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
-                    if (!File.Exists(resolvedPath))
-                    {
-                        throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
-                    }
+            switch (ParameterSetName) {
+                case ParameterSetPath: {
+                        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+                        if (!File.Exists(resolvedPath)) {
+                            throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
+                        }
 
-                    if (string.IsNullOrWhiteSpace(options.BaseUri))
-                    {
-                        options.BaseUri = BuildDirectoryUri(Path.GetDirectoryName(resolvedPath) ?? Directory.GetCurrentDirectory());
-                    }
+                        if (string.IsNullOrWhiteSpace(options.BaseUri)) {
+                            options.BaseUri = BuildDirectoryUri(System.IO.Path.GetDirectoryName(resolvedPath) ?? Directory.GetCurrentDirectory());
+                        }
 
-                    document = await ConvertMarkdownTextAsync(File.ReadAllText(resolvedPath), options).ConfigureAwait(false);
-                    break;
-                }
+                        document = await ConvertMarkdownTextAsync(File.ReadAllText(resolvedPath), options).ConfigureAwait(false);
+                        break;
+                    }
                 case ParameterSetDocument:
                     document = await ConvertMarkdownDocumentAsync(Document, options).ConfigureAwait(false);
                     break;
                 default:
-                    if (string.IsNullOrWhiteSpace(Markdown))
-                    {
+                    if (string.IsNullOrWhiteSpace(Markdown)) {
                         throw new ArgumentException("Markdown content cannot be empty.", nameof(Markdown));
                     }
 
@@ -208,55 +199,41 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
                     break;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document could not be created from Markdown.");
             }
 
-            if (!string.IsNullOrWhiteSpace(OutputPath))
-            {
+            if (!string.IsNullOrWhiteSpace(OutputPath)) {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-                if (!ShouldProcess(resolvedOutput, "Write Word document converted from Markdown"))
-                {
+                if (!ShouldProcess(resolvedOutput, "Write Word document converted from Markdown")) {
                     document.Dispose();
                     return;
                 }
 
-                var directory = Path.GetDirectoryName(resolvedOutput);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
+                var directory = System.IO.Path.GetDirectoryName(resolvedOutput);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
                     Directory.CreateDirectory(directory);
                 }
 
-                try
-                {
+                try {
                     document.Save(resolvedOutput);
-                }
-                finally
-                {
+                } finally {
                     document.Dispose();
                 }
 
-                if (Open.IsPresent)
-                {
+                if (Open.IsPresent) {
                     FileOpenService.Open(resolvedOutput);
                 }
 
-                if (PassThru.IsPresent)
-                {
+                if (PassThru.IsPresent) {
                     WriteObject(new FileInfo(resolvedOutput));
                 }
-            }
-            else
-            {
+            } else {
                 WriteObject(document);
             }
-        }
-        catch (Exception ex)
-        {
-            object? target = ParameterSetName switch
-            {
-                ParameterSetPath => FilePath,
+        } catch (Exception ex) {
+            object? target = ParameterSetName switch {
+                ParameterSetPath => Path,
                 ParameterSetDocument => Document,
                 _ => Markdown
             };
@@ -264,10 +241,8 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
         }
     }
 
-    private MarkdownToWordOptions BuildOptions()
-    {
-        if (ReaderOptions != null && Profile.HasValue)
-        {
+    private MarkdownToWordOptions BuildOptions() {
+        if (ReaderOptions != null && Profile.HasValue) {
             throw new PSArgumentException("Specify either -ReaderOptions or -Profile, not both.");
         }
 
@@ -275,58 +250,47 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
         options.AllowLocalImages = AllowLocalImages.IsPresent;
         options.OnWarning = WriteWarning;
 
-        if (RenderFrontMatter.IsPresent)
-        {
+        if (RenderFrontMatter.IsPresent) {
             options.RenderFrontMatter = true;
         }
 
-        if (options is MarkdownToWordTemplateOptions templateOptions)
-        {
+        if (options is MarkdownToWordTemplateOptions templateOptions) {
             templateOptions.BookmarkName = NormalizeOptionalText(BookmarkName);
             templateOptions.ContentControlTag = NormalizeOptionalText(ContentControlTag);
             templateOptions.ContentControlAlias = NormalizeOptionalText(ContentControlAlias);
             templateOptions.ReplacePlaceholder = !KeepPlaceholder.IsPresent;
         }
 
-        if (!string.IsNullOrWhiteSpace(FontFamily))
-        {
+        if (!string.IsNullOrWhiteSpace(FontFamily)) {
             options.FontFamily = FontFamily;
         }
 
-        if (!string.IsNullOrWhiteSpace(BaseUri))
-        {
+        if (!string.IsNullOrWhiteSpace(BaseUri)) {
             options.BaseUri = ResolveBaseUri(BaseUri!);
         }
 
-        if (Theme.HasValue)
-        {
+        if (Theme.HasValue) {
             options.Theme = MarkdownVisualTheme.Create(Theme.Value);
         }
 
-        if (AllowDataUriImages.HasValue)
-        {
+        if (AllowDataUriImages.HasValue) {
             options.AllowDataUriImages = AllowDataUriImages.Value;
         }
 
-        if (MaxDataUriImageBytes.HasValue)
-        {
+        if (MaxDataUriImageBytes.HasValue) {
             options.MaxDataUriImageBytes = MaxDataUriImageBytes.Value;
         }
 
-        if (PreferNarrativeSingleLineDefinitions.IsPresent)
-        {
+        if (PreferNarrativeSingleLineDefinitions.IsPresent) {
             options.PreferNarrativeSingleLineDefinitions = true;
         }
 
         var readerOptions = ReaderOptions ?? (Profile.HasValue
             ? MarkdownReaderOptions.CreateProfile(Profile.Value)
             : null);
-        if (readerOptions != null && NormalizeInput.HasValue)
-        {
+        if (readerOptions != null && NormalizeInput.HasValue) {
             readerOptions.InputNormalization.ApplyPreset(NormalizeInput.Value);
-        }
-        else if (readerOptions == null && NormalizeInput.HasValue)
-        {
+        } else if (readerOptions == null && NormalizeInput.HasValue) {
             readerOptions = MarkdownReaderOptions.CreateOfficeIMOProfile();
             readerOptions.InputNormalization.ApplyPreset(NormalizeInput.Value);
         }
@@ -338,12 +302,9 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
         TrySetOptionProperty(options, "MaxImageHeightPixels", MaxImageHeightPixels);
         TrySetOptionProperty(options, "MaxImageWidthPercentOfContent", MaxImageWidthPercentOfContent);
 
-        if (AllowedImageDirectory != null)
-        {
-            foreach (var entry in AllowedImageDirectory)
-            {
-                if (string.IsNullOrWhiteSpace(entry))
-                {
+        if (AllowedImageDirectory != null) {
+            foreach (var entry in AllowedImageDirectory) {
+                if (string.IsNullOrWhiteSpace(entry)) {
                     continue;
                 }
 
@@ -354,83 +315,68 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
         return options;
     }
 
-    private MarkdownToWordOptions CreateOptions()
-    {
+    private MarkdownToWordOptions CreateOptions() {
         return string.IsNullOrWhiteSpace(TemplatePath)
             ? new MarkdownToWordOptions()
             : new MarkdownToWordTemplateOptions();
     }
 
-    private Task<WordDocument> ConvertMarkdownTextAsync(string markdown, MarkdownToWordOptions options)
-    {
+    private Task<WordDocument> ConvertMarkdownTextAsync(string markdown, MarkdownToWordOptions options) {
         var markdownDocument = MarkdownReader.Parse(markdown, options.CreateReaderOptions());
         return ConvertMarkdownDocumentAsync(markdownDocument, options);
     }
 
-    private async Task<WordDocument> ConvertMarkdownDocumentAsync(MarkdownDoc markdownDocument, MarkdownToWordOptions options)
-    {
-        if (AllowRemoteImages.IsPresent)
-        {
+    private async Task<WordDocument> ConvertMarkdownDocumentAsync(MarkdownDoc markdownDocument, MarkdownToWordOptions options) {
+        if (AllowRemoteImages.IsPresent) {
             await MarkdownRemoteImageService.ConfigureResolverAsync(markdownDocument, options, CancelToken).ConfigureAwait(false);
         }
 
-        if (options is not MarkdownToWordTemplateOptions templateOptions)
-        {
+        if (options is not MarkdownToWordTemplateOptions templateOptions) {
             return markdownDocument.ToWordDocument(options);
         }
 
-        var templateDocument = WordDocument.Load(ResolveTemplatePath(), new WordLoadOptions
-        {
+        var templateDocument = WordDocument.Load(ResolveTemplatePath(), new WordLoadOptions {
             AccessMode = DocumentAccessMode.ReadWrite,
             PersistenceMode = DocumentPersistenceMode.Explicit
         });
         return markdownDocument.ToWordDocument(templateDocument, templateOptions);
     }
 
-    private void ValidateTemplateParameters()
-    {
+    private void ValidateTemplateParameters() {
         var hasTemplateTarget = !string.IsNullOrWhiteSpace(BookmarkName)
             || !string.IsNullOrWhiteSpace(ContentControlTag)
             || !string.IsNullOrWhiteSpace(ContentControlAlias)
             || KeepPlaceholder.IsPresent;
 
-        if (hasTemplateTarget && string.IsNullOrWhiteSpace(TemplatePath))
-        {
+        if (hasTemplateTarget && string.IsNullOrWhiteSpace(TemplatePath)) {
             throw new ArgumentException("Template insertion parameters require -TemplatePath.", nameof(TemplatePath));
         }
     }
 
-    private string ResolveTemplatePath()
-    {
-        if (string.IsNullOrWhiteSpace(TemplatePath))
-        {
+    private string ResolveTemplatePath() {
+        if (string.IsNullOrWhiteSpace(TemplatePath)) {
             throw new ArgumentException("Template path cannot be empty.", nameof(TemplatePath));
         }
 
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(TemplatePath);
-        if (!File.Exists(resolvedPath))
-        {
+        if (!File.Exists(resolvedPath)) {
             throw new FileNotFoundException($"Template file '{resolvedPath}' was not found.", resolvedPath);
         }
 
         return resolvedPath;
     }
 
-    private static string? NormalizeOptionalText(string? value)
-    {
+    private static string? NormalizeOptionalText(string? value) {
         return string.IsNullOrWhiteSpace(value) ? null : value;
     }
 
-    private static void TrySetOptionProperty(object target, string propertyName, object? value)
-    {
-        if (value == null)
-        {
+    private static void TrySetOptionProperty(object target, string propertyName, object? value) {
+        if (value == null) {
             return;
         }
 
         var property = target.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
-        if (property == null || !property.CanWrite)
-        {
+        if (property == null || !property.CanWrite) {
             return;
         }
 
@@ -438,55 +384,45 @@ public sealed class ConvertFromOfficeWordMarkdownCommand : AsyncPSCmdlet
         property.SetValue(target, convertedValue);
     }
 
-    private static object? ConvertOptionValue(object value, Type propertyType)
-    {
+    private static object? ConvertOptionValue(object value, Type propertyType) {
         var targetType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
-        if (targetType.IsInstanceOfType(value))
-        {
+        if (targetType.IsInstanceOfType(value)) {
             return value;
         }
 
-        if (targetType.IsEnum && value is string text)
-        {
+        if (targetType.IsEnum && value is string text) {
             return Enum.Parse(targetType, text, ignoreCase: true);
         }
 
         return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
     }
 
-    private string ResolveBaseUri(string value)
-    {
-        if (Uri.TryCreate(value, UriKind.Absolute, out var uri))
-        {
+    private string ResolveBaseUri(string value) {
+        if (Uri.TryCreate(value, UriKind.Absolute, out var uri)) {
             return uri.ToString();
         }
 
         var resolved = SessionState.Path.GetUnresolvedProviderPathFromPSPath(value);
-        if (Directory.Exists(resolved))
-        {
+        if (Directory.Exists(resolved)) {
             return BuildDirectoryUri(resolved);
         }
 
-        if (File.Exists(resolved))
-        {
+        if (File.Exists(resolved)) {
             return new Uri(resolved).AbsoluteUri;
         }
 
-        if (Path.HasExtension(resolved))
-        {
-            return new Uri(Path.GetFullPath(resolved)).AbsoluteUri;
+        if (System.IO.Path.HasExtension(resolved)) {
+            return new Uri(System.IO.Path.GetFullPath(resolved)).AbsoluteUri;
         }
 
         return BuildDirectoryUri(resolved);
     }
 
-    private static string BuildDirectoryUri(string path)
-    {
-        var fullPath = Path.GetFullPath(path);
-        if (!fullPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal)
-            && !fullPath.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-        {
-            fullPath += Path.DirectorySeparatorChar;
+    private static string BuildDirectoryUri(string path) {
+        var fullPath = System.IO.Path.GetFullPath(path);
+        if (!fullPath.EndsWith(System.IO.Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal)
+            && !fullPath.EndsWith(System.IO.Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal)) {
+            fullPath += System.IO.Path.DirectorySeparatorChar;
         }
 
         return new Uri(fullPath).AbsoluteUri;

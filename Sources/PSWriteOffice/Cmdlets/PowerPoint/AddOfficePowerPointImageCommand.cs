@@ -21,8 +21,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointImage")]
 [Alias("PptImage")]
 [OutputType(typeof(PowerPointPicture))]
-public sealed class AddOfficePowerPointImageCommand : PSCmdlet
-{
+public sealed class AddOfficePowerPointImageCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Target slide that will receive the picture (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointSlide? Slide { get; set; }
@@ -48,27 +47,21 @@ public sealed class AddOfficePowerPointImageCommand : PSCmdlet
     public double Height { get; set; } = 150;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (Width <= 0)
-            {
+    protected override void ProcessRecord() {
+        try {
+            if (Width <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(Width), "Width must be greater than 0.");
             }
 
-            if (Height <= 0)
-            {
+            if (Height <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(Height), "Height must be greater than 0.");
             }
 
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
             var picture = slide.AddPicturePoints(resolvedPath, X, Y, Width, Height);
-            WriteObject(picture);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(picture);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointAddImageFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }

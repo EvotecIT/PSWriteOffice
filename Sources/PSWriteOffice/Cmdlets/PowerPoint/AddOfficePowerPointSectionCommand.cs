@@ -21,8 +21,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointSection")]
 [Alias("PptSection")]
 [OutputType(typeof(PowerPointSectionInfo))]
-public sealed class AddOfficePowerPointSectionCommand : PSCmdlet
-{
+public sealed class AddOfficePowerPointSectionCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Presentation to update (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointPresentation? Presentation { get; set; }
@@ -36,36 +35,28 @@ public sealed class AddOfficePowerPointSectionCommand : PSCmdlet
     public int? StartSlideIndex { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var context = PowerPointDslContext.Current;
             var presentation = Presentation ?? context?.Presentation
                 ?? throw new InvalidOperationException("Presentation was not provided. Use -Presentation or run inside New-OfficePowerPoint.");
 
             int startIndex = ResolveStartSlideIndex(presentation, context);
-            WriteObject(presentation.AddSection(Name, startIndex));
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(presentation.AddSection(Name, startIndex));
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointAddSectionFailed", ErrorCategory.InvalidOperation, Presentation));
         }
     }
 
-    private int ResolveStartSlideIndex(PowerPointPresentation presentation, PowerPointDslContext? context)
-    {
-        if (StartSlideIndex.HasValue)
-        {
+    private int ResolveStartSlideIndex(PowerPointPresentation presentation, PowerPointDslContext? context) {
+        if (StartSlideIndex.HasValue) {
             return StartSlideIndex.Value;
         }
 
         var currentSlide = context?.CurrentSlide;
-        if (currentSlide != null)
-        {
+        if (currentSlide != null) {
             int index = presentation.Slides.ToList().IndexOf(currentSlide);
-            if (index >= 0)
-            {
+            if (index >= 0) {
                 return index;
             }
         }

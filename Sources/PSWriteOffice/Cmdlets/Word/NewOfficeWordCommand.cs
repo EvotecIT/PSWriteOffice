@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Management.Automation;
-using OfficeIMO.Word.Pdf;
 using PSWriteOffice.Services.Pdf;
 using PSWriteOffice.Services.Word;
 
@@ -32,12 +31,11 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeWord", SupportsShouldProcess = true)]
 [Alias("WordNew")]
-public sealed class NewOfficeWordCommand : PSCmdlet
-{
+public sealed class NewOfficeWordCommand : PSCmdlet {
     /// <summary>Destination path for the document.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    [Alias("FilePath", "Path")]
-    public string OutputPath { get; set; } = string.Empty;
+    [Alias("FilePath", "OutputPath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Existing .docx file to clone before running the DSL.</summary>
     [Parameter]
@@ -59,159 +57,93 @@ public sealed class NewOfficeWordCommand : PSCmdlet
     [Parameter]
     public SwitchParameter NoSave { get; set; }
 
-    /// <summary>Enable OfficeIMO AutoSave mode.</summary>
-    [Parameter]
-    public SwitchParameter AutoSave { get; set; }
-
     /// <summary>Password used to save the document as an encrypted package.</summary>
     [Parameter]
     public string? Password { get; set; }
 
-    /// <summary>Optional PDF path to create from the same Word document before closing it.</summary>
-    [Parameter]
-    public string? PdfPath { get; set; }
-
-    /// <summary>Optional default font family used by the native Word PDF converter.</summary>
-    [Parameter]
-    public string? PdfFontFamily { get; set; }
-
-    /// <summary>Allow the native Word PDF converter to embed installed system fonts used by the document.</summary>
-    [Parameter]
-    [Alias("AllowSystemFontEmbedding")]
-    public SwitchParameter PdfAllowSystemFontEmbedding { get; set; }
-
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (!NoSave.IsPresent && AutoSave.IsPresent && !string.IsNullOrEmpty(Password))
-        {
-            throw new PSArgumentException("Encrypted Word documents require explicit Save-OfficeWord -Password or Close-OfficeWord -Save -Password. -AutoSave cannot be used with -Password.");
-        }
-
+    protected override void ProcessRecord() {
         var fullPath = GetResolvedPath();
         var action = NoSave.IsPresent
             ? string.IsNullOrWhiteSpace(TemplatePath)
                 ? "Create in-memory Word document"
                 : "Create Word document from template"
             : "Write new Word document";
-        if (!PdfCommandUtilities.ShouldWrite(this, fullPath, action))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, fullPath, action)) {
             return;
         }
 
-        if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath))
-        {
-            var directory = Path.GetDirectoryName(fullPath);
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
+        if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath)) {
+            var directory = System.IO.Path.GetDirectoryName(fullPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
                 Directory.CreateDirectory(directory);
             }
         }
 
         var document = CreateOrLoadDocument(fullPath);
-        try
-        {
-            if (NoSave.IsPresent)
-            {
+        var closed = false;
+        try {
+            if (NoSave.IsPresent) {
                 WordDocumentService.UpdateSaveAssociation(document, fullPath, encrypted: false);
             }
 
-            if (Content == null)
-            {
+            if (Content != null) {
+                WordDocumentService.InvokeDsl(document, Content);
+            }
+
+            if (NoSave.IsPresent) {
                 WriteObject(document);
                 return;
             }
 
-            WordDocumentService.InvokeDsl(document, Content);
-
-            if (NoSave.IsPresent)
-            {
-                WriteObject(document);
-                return;
-            }
-
-            SavePdfIfRequested(document);
             WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
+            WordDocumentService.CloseDocument(document);
+            closed = true;
 
-            if (PassThru.IsPresent)
-            {
+            if (PassThru.IsPresent) {
                 WriteObject(new FileInfo(fullPath));
             }
-        }
-        catch
-        {
-            WordDocumentService.CloseDocument(document);
+        } catch {
+            if (!closed) {
+                WordDocumentService.CloseDocument(document);
+            }
             throw;
         }
     }
 
-    private string GetResolvedPath()
-    {
-        var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-        return Path.IsPathRooted(providerPath)
+    private string GetResolvedPath() {
+        var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        return System.IO.Path.IsPathRooted(providerPath)
             ? providerPath
-            : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
+            : System.IO.Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 
-    private OfficeIMO.Word.WordDocument CreateOrLoadDocument(string fullPath)
-    {
-        if (string.IsNullOrWhiteSpace(TemplatePath))
-        {
-            if (NoSave.IsPresent)
-            {
+    private OfficeIMO.Word.WordDocument CreateOrLoadDocument(string fullPath) {
+        if (string.IsNullOrWhiteSpace(TemplatePath)) {
+            if (NoSave.IsPresent) {
                 return WordDocumentService.CreateInMemoryDocument();
             }
 
-            return WordDocumentService.CreateDocument(fullPath, AutoSave.IsPresent);
+            return WordDocumentService.CreateDocument(fullPath, autoSave: false);
         }
 
         var templatePath = ResolveFileSystemPath(TemplatePath!);
-        if (!File.Exists(templatePath))
-        {
+        if (!File.Exists(templatePath)) {
             throw new FileNotFoundException($"Template file {templatePath} doesn't exist.", templatePath);
         }
 
-        if (!string.Equals(templatePath, fullPath, StringComparison.OrdinalIgnoreCase))
-        {
+        if (!string.Equals(templatePath, fullPath, StringComparison.OrdinalIgnoreCase)) {
             File.Copy(templatePath, fullPath, overwrite: true);
         }
 
-        return WordDocumentService.LoadDocument(fullPath, readOnly: false, autoSave: AutoSave.IsPresent);
+        return WordDocumentService.LoadDocument(fullPath, readOnly: false, autoSave: false);
     }
 
-    private string ResolveFileSystemPath(string path)
-    {
+    private string ResolveFileSystemPath(string path) {
         var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
-        return Path.IsPathRooted(providerPath)
+        return System.IO.Path.IsPathRooted(providerPath)
             ? providerPath
-            : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
+            : System.IO.Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 
-    private void SavePdfIfRequested(OfficeIMO.Word.WordDocument document)
-    {
-        if (string.IsNullOrWhiteSpace(PdfPath))
-        {
-            return;
-        }
-
-        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
-        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Word PDF"))
-        {
-            return;
-        }
-
-        PdfCommandUtilities.EnsureDirectory(pdfPath);
-        if (PdfAllowSystemFontEmbedding.IsPresent || !string.IsNullOrWhiteSpace(PdfFontFamily))
-        {
-            var pdfOptions = new WordPdfSaveOptions
-            {
-                FontFamily = PdfFontFamily
-            };
-            pdfOptions.ResourcePolicy.AllowSystemFontEmbedding = PdfAllowSystemFontEmbedding.IsPresent;
-            document.SaveAsPdf(pdfPath, pdfOptions).RequireSuccess();
-            return;
-        }
-
-        document.SaveAsPdf(pdfPath).RequireSuccess();
-    }
 }

@@ -11,7 +11,7 @@ Copies a workbook package while preserving package parts.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Copy-OfficeExcelWorkbook [-FilePath] <string> [-DestinationPath] <string> [-Force] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Copy-OfficeExcelWorkbook [-Path] <string> [-DestinationPath] <string> [-Force] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,22 +46,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -FilePath
-Source workbook or template package path.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: Path, InputPath, SourcePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Force
 Replace an existing destination workbook.
 
@@ -89,6 +73,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Source workbook or template package path.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath, InputPath, SourcePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

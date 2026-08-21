@@ -26,16 +26,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Join, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Merge-OfficeExcelWorkbook", "ExcelWorkbookJoin", "ExcelWorkbookMerge")]
 [OutputType(typeof(ExcelWorkbookMergeResult))]
-public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
-{
+public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Target workbook path to create or update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath", "OutputPath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath", "OutputPath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Target workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -68,49 +67,38 @@ public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
     public ExcelWorksheetCopyMode CopyMode { get; set; } = ExcelWorksheetCopyMode.Package;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (SourceDocument != null && SourcePath is { Length: > 0 })
-        {
+    protected override void ProcessRecord() {
+        if (SourceDocument != null && SourcePath is { Length: > 0 }) {
             throw new PSArgumentException("Specify either -SourceDocument or -SourcePath, not both.");
         }
 
-        if (SourceDocument == null && (SourcePath == null || SourcePath.Length == 0))
-        {
+        if (SourceDocument == null && (SourcePath == null || SourcePath.Length == 0)) {
             throw new PSArgumentException("Provide SourceDocument or SourcePath.");
         }
 
-        if (string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase))
-        {
-            var resolvedTargetPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        if (string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)) {
+            var resolvedTargetPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
             var action = File.Exists(resolvedTargetPath)
                 ? "Update Excel workbook with merged sheets"
                 : "Write Excel workbook with merged sheets";
-            if (!ShouldProcess(resolvedTargetPath, action))
-            {
+            if (!ShouldProcess(resolvedTargetPath, action)) {
                 return;
             }
         }
 
         using var targetWorkbook = ResolveTargetWorkbook();
         if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase) &&
-            !ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, InputPath, "Merge Excel workbook sheets"))
-        {
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, Path, "Merge Excel workbook sheets")) {
             return;
         }
 
         var results = new List<ExcelWorkbookMergeResult>();
 
-        if (SourceDocument != null)
-        {
+        if (SourceDocument != null) {
             results.Add(MergeSourceWorkbook(targetWorkbook.Document, SourceDocument));
-        }
-        else
-        {
-            foreach (var sourcePath in SourcePath!)
-            {
-                if (string.IsNullOrWhiteSpace(sourcePath))
-                {
+        } else {
+            foreach (var sourcePath in SourcePath!) {
+                if (string.IsNullOrWhiteSpace(sourcePath)) {
                     continue;
                 }
 
@@ -121,40 +109,33 @@ public sealed class JoinOfficeExcelWorkbookCommand : PSCmdlet
         }
 
         targetWorkbook.SaveIfOwned();
-        foreach (var result in results)
-        {
+        foreach (var result in results) {
             WriteObject(result);
         }
     }
 
-    private ExcelWorkbookCommandScope ResolveTargetWorkbook()
-    {
-        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase))
-        {
-            return ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+    private ExcelWorkbookCommandScope ResolveTargetWorkbook() {
+        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)) {
+            return ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         }
 
-        var resolvedTargetPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-        var targetDirectory = Path.GetDirectoryName(resolvedTargetPath);
-        if (!string.IsNullOrWhiteSpace(targetDirectory))
-        {
+        var resolvedTargetPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        var targetDirectory = System.IO.Path.GetDirectoryName(resolvedTargetPath);
+        if (!string.IsNullOrWhiteSpace(targetDirectory)) {
             Directory.CreateDirectory(targetDirectory);
         }
 
         var document = File.Exists(resolvedTargetPath)
             ? ExcelDocumentService.LoadDocument(resolvedTargetPath, readOnly: false, autoSave: false)
-            : ExcelDocument.Create(resolvedTargetPath, new ExcelCreateOptions
-            {
+            : ExcelDocument.Create(resolvedTargetPath, new ExcelCreateOptions {
                 PersistenceMode = DocumentPersistenceMode.Explicit
             });
 
         return new ExcelWorkbookCommandScope(document, ownsDocument: true);
     }
 
-    private ExcelWorkbookMergeResult MergeSourceWorkbook(ExcelDocument targetDocument, ExcelDocument sourceDocument)
-    {
-        return targetDocument.MergeWorkbookFrom(sourceDocument, new ExcelWorkbookMergeOptions
-        {
+    private ExcelWorkbookMergeResult MergeSourceWorkbook(ExcelDocument targetDocument, ExcelDocument sourceDocument) {
+        return targetDocument.MergeWorkbookFrom(sourceDocument, new ExcelWorkbookMergeOptions {
             SheetNames = SourceSheet,
             SheetNamePrefix = SheetNamePrefix,
             SheetNameValidationMode = ValidationMode,

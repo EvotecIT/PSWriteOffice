@@ -11,7 +11,7 @@ Moves selected pages before another page and writes a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Move-OfficePdfPage -Path <string> -PageRange <string> -BeforePage <int> -OutputPath <string> [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
+Move-OfficePdfPage -Path <string> -PageRange <string> -BeforePage <int> -OutputPath <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -90,6 +90,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

@@ -43,18 +43,18 @@ Describe 'PDF reverse conversion workflows' {
         Test-Path -LiteralPath $excelPath | Should -BeTrue
         Test-Path -LiteralPath $powerPointPath | Should -BeTrue
 
-        $wordText = (Get-OfficeWordText -InputPath $wordPath | ForEach-Object Text) -join ' '
+        $wordText = (Get-OfficeWordText -Path $wordPath | ForEach-Object Text) -join ' '
         $wordText | Should -Match 'Quarterly results'
         $wordText | Should -Match 'Revenue improved'
 
         $excelReport.Entries.Count | Should -BeGreaterThan 0
-        $excelSummary = Get-OfficeExcelSummary -InputPath $excelPath -IncludeSheets
+        $excelSummary = Get-OfficeExcelSummary -Path $excelPath -IncludeSheets
         $rows = @(Import-OfficeExcel -Path $excelPath -WorksheetName $excelSummary.Sheets[0].Name)
         $rows | Should -HaveCount 3
         $rows[0].Region | Should -Be 'North'
         $rows[0].Revenue | Should -Be 1250
 
-        $presentation = Get-OfficePowerPoint -FilePath $powerPointPath
+        $presentation = Get-OfficePowerPoint -Path $powerPointPath
         try {
             $slides = @($presentation | Get-OfficePowerPointSlideSummary)
             $slides | Should -HaveCount 1

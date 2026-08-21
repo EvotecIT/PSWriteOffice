@@ -11,7 +11,7 @@ Runs a script block against editable worksheet rows.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Edit-OfficeExcelRow [-InputPath] <string> [-ScriptBlock] <scriptblock> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-NumericAsDecimal] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Edit-OfficeExcelRow [-Path] <string> [-ScriptBlock] <scriptblock> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-NumericAsDecimal] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -49,22 +49,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NumericAsDecimal
 Prefer decimals instead of doubles for numeric values.
 
@@ -92,6 +76,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

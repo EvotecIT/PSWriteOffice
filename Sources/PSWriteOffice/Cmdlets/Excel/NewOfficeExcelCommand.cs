@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Excel;
-using OfficeIMO.Excel.Pdf;
 using PSWriteOffice.Services.Excel;
 using PSWriteOffice.Services.Pdf;
 
@@ -28,12 +27,11 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeExcel", SupportsShouldProcess = true)]
 [Alias("ExcelNew")]
-public sealed class NewOfficeExcelCommand : PSCmdlet
-{
+public sealed class NewOfficeExcelCommand : PSCmdlet {
     /// <summary>Destination path for the workbook.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    [Alias("Path")]
-    public string FilePath { get; set; } = string.Empty;
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>DSL scriptblock describing workbook content.</summary>
     [Parameter(Position = 1)]
@@ -43,10 +41,6 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     [Parameter]
     [Alias("Template")]
     public string? TemplatePath { get; set; }
-
-    /// <summary>Opt into OfficeIMO automatic saves during operations.</summary>
-    [Parameter]
-    public SwitchParameter AutoSave { get; set; }
 
     /// <summary>Skip saving the workbook after running the DSL.</summary>
     [Parameter]
@@ -97,10 +91,6 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     [ValidateSet("1900", "1904", "NineteenHundred", "NineteenFour")]
     public string? DateSystem { get; set; }
 
-    /// <summary>Optional PDF path to create from the same workbook before closing it.</summary>
-    [Parameter]
-    public string? PdfPath { get; set; }
-
     /// <summary>Emit a <see cref="FileInfo"/> for convenience.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
@@ -146,29 +136,20 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
     public string? LastModifiedBy { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (!NoSave.IsPresent && AutoSave.IsPresent && !string.IsNullOrEmpty(Password))
-        {
-            throw new PSArgumentException("Encrypted Excel workbooks require explicit Save-OfficeExcel -Password or Close-OfficeExcel -Save -Password. -AutoSave cannot be used with -Password.");
-        }
-
-        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
+    protected override void ProcessRecord() {
+        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var action = NoSave.IsPresent
             ? string.IsNullOrWhiteSpace(TemplatePath)
                 ? "Create in-memory Excel workbook"
                 : "Create Excel workbook from template"
             : "Write new Excel workbook";
-        if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, action))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, action)) {
             return;
         }
 
-        if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath))
-        {
-            var directory = Path.GetDirectoryName(resolvedPath);
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
+        if (!NoSave.IsPresent || !string.IsNullOrWhiteSpace(TemplatePath)) {
+            var directory = System.IO.Path.GetDirectoryName(resolvedPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
                 Directory.CreateDirectory(directory);
             }
         }
@@ -176,15 +157,14 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
         var document = string.IsNullOrWhiteSpace(TemplatePath)
             ? NoSave.IsPresent
                 ? ExcelDocumentService.CreateInMemoryDocument()
-                : ExcelDocumentService.CreateDocument(resolvedPath, AutoSave.IsPresent)
+                : ExcelDocumentService.CreateDocument(resolvedPath, autoSave: false)
             : ExcelDocumentService.CreateDocumentFromTemplate(
                 SessionState.Path.GetUnresolvedProviderPathFromPSPath(TemplatePath!),
                 resolvedPath,
-                AutoSave.IsPresent);
-        try
-        {
-            if (NoSave.IsPresent)
-            {
+                autoSave: false);
+        var closed = false;
+        try {
+            if (NoSave.IsPresent) {
                 ExcelDocumentService.UpdateSaveAssociation(document, resolvedPath, encrypted: false);
             }
 
@@ -202,15 +182,12 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
                 ApplicationName,
                 LastModifiedBy);
 
-            using (ExcelDslContext.Enter(document))
-            {
+            using (ExcelDslContext.Enter(document)) {
                 Content?.InvokeReturnAsIs();
             }
 
-            if (!NoSave.IsPresent)
-            {
-                if (document.Sheets.Count == 0)
-                {
+            if (!NoSave.IsPresent) {
+                if (document.Sheets.Count == 0) {
                     document.AddWorksheet(string.Empty, ExcelSheetNameValidationMode.Sanitize);
                 }
                 var saveOptions = ExcelDocumentService.CreateSaveOptions(
@@ -222,41 +199,23 @@ public sealed class NewOfficeExcelCommand : PSCmdlet
                     ClearCachedFormulaResults.IsPresent,
                     MarkFormulasDirty.IsPresent,
                     ForceFullCalculationOnOpen.IsPresent);
-                SavePdfIfRequested(document);
                 ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, Password, saveOptions);
-            }
-            else
-            {
+                ExcelDocumentService.CloseDocument(document);
+                closed = true;
+            } else {
                 WriteObject(document);
                 return;
             }
-        }
-        catch
-        {
-            ExcelDocumentService.CloseDocument(document);
+        } catch {
+            if (!closed) {
+                ExcelDocumentService.CloseDocument(document);
+            }
             throw;
         }
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(new FileInfo(resolvedPath));
         }
     }
 
-    private void SavePdfIfRequested(ExcelDocument document)
-    {
-        if (string.IsNullOrWhiteSpace(PdfPath))
-        {
-            return;
-        }
-
-        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
-        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Excel PDF"))
-        {
-            return;
-        }
-
-        PdfCommandUtilities.EnsureDirectory(pdfPath);
-        document.SaveAsPdf(pdfPath).RequireSuccess();
-    }
 }

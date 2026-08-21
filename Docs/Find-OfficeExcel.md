@@ -11,7 +11,7 @@ Finds text in worksheet values.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Find-OfficeExcel [-InputPath] <string> [-Text] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-CaseSensitive] [-Regex] [-Exact] [<CommonParameters>]
+Find-OfficeExcel [-Path] <string> [-Text] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-CaseSensitive] [-Regex] [-Exact] [<CommonParameters>]
 ```
 
 ### Document
@@ -84,13 +84,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path to inspect.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

@@ -19,8 +19,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointNotes")]
 [Alias("PptNotes")]
 [OutputType(typeof(PowerPointSlide))]
-public sealed class SetOfficePowerPointNotesCommand : PSCmdlet
-{
+public sealed class SetOfficePowerPointNotesCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Slide whose notes should be updated (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointSlide? Slide { get; set; }
@@ -30,17 +29,13 @@ public sealed class SetOfficePowerPointNotesCommand : PSCmdlet
     public string Text { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
             var notes = slide.Notes;
             notes.Text = Text ?? string.Empty;
-            WriteObject(slide);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(slide);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointSetNotesFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }

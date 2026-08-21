@@ -10,8 +10,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointVisual")]
 [Alias("PptVisual")]
 [OutputType(typeof(PowerPointPicture))]
-public sealed class AddOfficePowerPointVisualCommand : OfficeVisualCommandBase
-{
+public sealed class AddOfficePowerPointVisualCommand : OfficeVisualCommandBase {
     /// <summary>ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or SVG file path.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     public object InputObject { get; set; } = null!;
@@ -28,10 +27,16 @@ public sealed class AddOfficePowerPointVisualCommand : OfficeVisualCommandBase
     [Parameter]
     public double Y { get; set; }
 
+    /// <summary>Emit the picture added to the slide.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         PowerPointSlide slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
-        WriteObject(slide.AddVisualArtifact(ResolveVisual(InputObject), X, Y));
+        var picture = slide.AddVisualArtifact(ResolveVisual(InputObject), X, Y);
+        if (PassThru.IsPresent) {
+            WriteObject(picture);
+        }
     }
 }

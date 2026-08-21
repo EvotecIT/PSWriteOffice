@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelCell")]
 [Alias("ExcelCell")]
-public sealed class SetOfficeExcelCellCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelCellCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Worksheet to modify outside a DSL context.</summary>
     [Parameter(ValueFromPipeline = true)]
     [Alias("SheetObject")]
@@ -80,8 +79,7 @@ public sealed class SetOfficeExcelCellCommand : PSCmdlet
     public double GradientDegree { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var sheet = ResolveSheet();
         var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
         var hasValueChange = Value != null || Formula != null || NumberFormat != null;
@@ -89,46 +87,38 @@ public sealed class SetOfficeExcelCellCommand : PSCmdlet
             || !string.IsNullOrWhiteSpace(GradientFrom)
             || !string.IsNullOrWhiteSpace(GradientTo);
 
-        if (!hasValueChange && !hasStyleChange)
-        {
+        if (!hasValueChange && !hasStyleChange) {
             throw new PSArgumentException("Provide -Value, -Formula, -NumberFormat, -BackgroundColor, or -GradientFrom/-GradientTo to modify the cell.");
         }
 
-        if (!string.IsNullOrWhiteSpace(GradientFrom) ^ !string.IsNullOrWhiteSpace(GradientTo))
-        {
+        if (!string.IsNullOrWhiteSpace(GradientFrom) ^ !string.IsNullOrWhiteSpace(GradientTo)) {
             throw new PSArgumentException("Specify both -GradientFrom and -GradientTo for a gradient fill.");
         }
 
-        if (hasValueChange)
-        {
+        if (hasValueChange) {
             sheet.Cell(row, column, Value, Formula, NumberFormat);
         }
 
-        if (!string.IsNullOrWhiteSpace(BackgroundColor))
-        {
+        if (!string.IsNullOrWhiteSpace(BackgroundColor)) {
             sheet.CellBackground(row, column, BackgroundColor!);
         }
 
-        if (!string.IsNullOrWhiteSpace(GradientFrom) && !string.IsNullOrWhiteSpace(GradientTo))
-        {
+        if (!string.IsNullOrWhiteSpace(GradientFrom) && !string.IsNullOrWhiteSpace(GradientTo)) {
             sheet.CellGradientBackground(row, column, GradientFrom!, GradientTo!, GradientDegree);
         }
+        WritePassThru(sheet);
     }
 
-    private ExcelSheet ResolveSheet()
-    {
-        if (Worksheet != null && Document != null)
-        {
+    private ExcelSheet ResolveSheet() {
+        if (Worksheet != null && Document != null) {
             throw new PSArgumentException("Use either -Worksheet or -Document, not both.");
         }
 
-        if (Worksheet != null)
-        {
+        if (Worksheet != null) {
             return Worksheet;
         }
 
-        if (Document != null)
-        {
+        if (Document != null) {
             return ExcelSheetResolver.Resolve(Document, Sheet, SheetIndex);
         }
 

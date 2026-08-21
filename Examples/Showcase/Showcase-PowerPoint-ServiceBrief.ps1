@@ -5,8 +5,7 @@ param(
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Showcase-PowerPoint-ServiceBrief.pptx'
 
 $process = @(
@@ -73,12 +72,12 @@ New-OfficePowerPoint -Path $path {
     PptSlideSize -Preset Screen16x9
     PptDesignerDeck -Plan $plan -AccentColor '#008C95' -Seed 'pswriteoffice-showcase' -Purpose 'technical service brief' -Name 'PSWriteOffice Showcase' -FooterLeft 'PSWriteOffice' -FooterRight 'OfficeIMO designer' -CreativeDirectionPack TechnicalMap -LayoutStrategy ContentFirst
 
-    $chartSlide = PptSlide
+    $chartSlide = PptSlide -PassThru
     PptTitle -Slide $chartSlide -Title 'Coverage and polish scorecard'
     PptChart -Slide $chartSlide -Type ClusteredColumn -Data $chartRows -CategoryProperty Product -SeriesProperty Coverage, Polish -Title 'Current Surface vs Polish Target' -X 58 -Y 118 -Width 610 -Height 265
     PptNotes -Slide $chartSlide -Text 'Use this slide as the bridge between the designer slides and the concrete backlog.'
 
-    $tableSlide = PptSlide
+    $tableSlide = PptSlide -PassThru
     PptTitle -Slide $tableSlide -Title 'Immediate implementation path'
     PptTable -Slide $tableSlide -Data $tableRows -X 64 -Y 132 -Width 590 -Height 210
     PptNotes -Slide $tableSlide -Text 'Close with the next concrete pull request slices: visual screenshots, blog drafts, and richer wrappers.'
@@ -89,7 +88,7 @@ New-OfficePowerPoint -Path $path {
     Get-OfficePowerPointSlide -Index 0 | PptTransition -Transition Fade
 } -Open:$Open
 
-$presentation = Get-OfficePowerPoint -FilePath $path
+$presentation = Get-OfficePowerPoint -Path $path
 $summary = Get-OfficePowerPointSlideSummary -Presentation $presentation
 $presentation | Close-OfficePowerPoint
 

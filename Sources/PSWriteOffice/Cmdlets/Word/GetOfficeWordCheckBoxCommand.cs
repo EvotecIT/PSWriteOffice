@@ -21,15 +21,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Get, "OfficeWordCheckBox", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordCheckBoxes")]
 [OutputType(typeof(WordCheckBox))]
-public sealed class GetOfficeWordCheckBoxCommand : PSCmdlet
-{
+public sealed class GetOfficeWordCheckBoxCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the .docx file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Word document to read.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -54,38 +53,29 @@ public sealed class GetOfficeWordCheckBoxCommand : PSCmdlet
     public SwitchParameter Unchecked { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document was not provided.");
             }
 
             var aliasPatterns = WordFilterHelpers.BuildPatterns(Alias);
             var tagPatterns = WordFilterHelpers.BuildPatterns(Tag);
             bool? filterChecked = null;
-            if (Checked.IsPresent && !Unchecked.IsPresent)
-            {
+            if (Checked.IsPresent && !Unchecked.IsPresent) {
                 filterChecked = true;
-            }
-            else if (Unchecked.IsPresent && !Checked.IsPresent)
-            {
+            } else if (Unchecked.IsPresent && !Checked.IsPresent) {
                 filterChecked = false;
             }
 
@@ -94,17 +84,13 @@ public sealed class GetOfficeWordCheckBoxCommand : PSCmdlet
                 WordFilterHelpers.Matches(control.Alias, aliasPatterns) &&
                 WordFilterHelpers.Matches(control.Tag, tagPatterns));
 
-            if (filterChecked.HasValue)
-            {
+            if (filterChecked.HasValue) {
                 results = results.Where(control => control.IsChecked == filterChecked.Value);
             }
 
             WriteObject(results, enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

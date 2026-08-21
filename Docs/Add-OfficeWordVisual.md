@@ -11,7 +11,7 @@ Adds a ChartForgeX artifact, portable SVG, or converted Office visual to Word.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeWordVisual [-InputObject] <Object> [-Paragraph <WordParagraph>] [-Wrap <WordImageTextWrapping>] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
+Add-OfficeWordVisual [-InputObject] <Object> [-Paragraph <WordParagraph>] [-Wrap <WordImageTextWrapping>] [-PassThru] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -145,6 +145,22 @@ Target paragraph. Inside the Word DSL, the current paragraph is used by default.
 
 ```yaml
 Type: WordParagraph
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the image added to the paragraph.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

@@ -22,8 +22,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointBullets")]
 [Alias("PptBullets")]
 [OutputType(typeof(PowerPointTextBox))]
-public sealed class AddOfficePowerPointBulletsCommand : PSCmdlet
-{
+public sealed class AddOfficePowerPointBulletsCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Target slide that will receive the bullet list (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointSlide? Slide { get; set; }
@@ -57,17 +56,13 @@ public sealed class AddOfficePowerPointBulletsCommand : PSCmdlet
     public string? BulletChar { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (Width <= 0)
-            {
+    protected override void ProcessRecord() {
+        try {
+            if (Width <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(Width), "Width must be greater than 0.");
             }
 
-            if (Height <= 0)
-            {
+            if (Height <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(Height), "Height must be greater than 0.");
             }
 
@@ -75,18 +70,14 @@ public sealed class AddOfficePowerPointBulletsCommand : PSCmdlet
             var items = NormalizeItems(Bullets);
             var textBox = slide.AddTextBoxPoints(string.Empty, X, Y, Width, Height);
             textBox.SetBullets(items, Level, ResolveBulletChar());
-            WriteObject(textBox);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(textBox);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointAddBulletsFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }
 
-    private static List<string> NormalizeItems(string[]? items)
-    {
-        if (items == null || items.Length == 0)
-        {
+    private static List<string> NormalizeItems(string[]? items) {
+        if (items == null || items.Length == 0) {
             throw new PSArgumentException("Bullets cannot be empty.", nameof(Bullets));
         }
 
@@ -96,18 +87,15 @@ public sealed class AddOfficePowerPointBulletsCommand : PSCmdlet
             .Cast<string>()
             .ToList();
 
-        if (list.Count == 0)
-        {
+        if (list.Count == 0) {
             throw new PSArgumentException("Bullets cannot be empty.", nameof(Bullets));
         }
 
         return list;
     }
 
-    private char ResolveBulletChar()
-    {
-        if (string.IsNullOrWhiteSpace(BulletChar))
-        {
+    private char ResolveBulletChar() {
+        if (string.IsNullOrWhiteSpace(BulletChar)) {
             return '\u2022';
         }
 

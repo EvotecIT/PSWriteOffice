@@ -14,8 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelRowGroup")]
 [Alias("ExcelRowGroup")]
-public sealed class SetOfficeExcelRowGroupCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelRowGroupCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>First 1-based row in the group.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public int StartRow { get; set; }
@@ -49,28 +48,26 @@ public sealed class SetOfficeExcelRowGroupCommand : PSCmdlet
     public bool? SummaryBelow { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = ExcelDslContext.Require(this);
         var sheet = context.RequireSheet();
         var lastRow = EndRow ?? StartRow;
 
-        if (OutlineLevel < 1 || OutlineLevel > 7)
-        {
+        if (OutlineLevel < 1 || OutlineLevel > 7) {
             throw new PSArgumentOutOfRangeException(nameof(OutlineLevel), OutlineLevel, "Excel outline level must be between 1 and 7.");
         }
 
-        if (SummaryBelow.HasValue)
-        {
+        if (SummaryBelow.HasValue) {
             sheet.SetOutlineSummary(summaryBelow: SummaryBelow.Value);
         }
 
-        if (Clear.IsPresent)
-        {
+        if (Clear.IsPresent) {
             sheet.ClearRowGroup(StartRow, lastRow, unhide: !KeepHidden.IsPresent);
+            WritePassThru(sheet);
             return;
         }
 
         sheet.GroupRows(StartRow, lastRow, (byte)OutlineLevel, Collapsed.IsPresent, Hidden.IsPresent);
+        WritePassThru(sheet);
     }
 }

@@ -11,12 +11,12 @@ Sets a cell value, formula, or number format within the current worksheet.
 ## SYNTAX
 ### Coordinates
 ```powershell
-Set-OfficeExcelCell [-Worksheet <ExcelSheet>] [-Document <ExcelDocument>] [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
+Set-OfficeExcelCell [-Worksheet <ExcelSheet>] [-Document <ExcelDocument>] [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Address
 ```powershell
-Set-OfficeExcelCell [-Worksheet <ExcelSheet>] [-Document <ExcelDocument>] [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [<CommonParameters>]
+Set-OfficeExcelCell [-Worksheet <ExcelSheet>] [-Document <ExcelDocument>] [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Value <Object>] [-Formula <string>] [-NumberFormat <string>] [-BackgroundColor <string>] [-GradientFrom <string>] [-GradientTo <string>] [-GradientDegree <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -173,6 +173,22 @@ Number format code to apply.
 
 ```yaml
 Type: String
+Parameter Sets: Coordinates, Address
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Coordinates, Address
 Aliases: None
 Possible values:

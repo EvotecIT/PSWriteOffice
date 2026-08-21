@@ -17,8 +17,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelChartSeries", DefaultParameterSetName = ParameterSetIndex)]
 [Alias("ExcelChartSeries")]
 [OutputType(typeof(ExcelChart))]
-public sealed class SetOfficeExcelChartSeriesCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelChartSeriesCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetIndex = "Index";
     private const string ParameterSetSeriesName = "Name";
 
@@ -71,37 +70,26 @@ public sealed class SetOfficeExcelChartSeriesCommand : PSCmdlet
     public double? MarkerLineWidthPoints { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var fillColor = FillColor;
-            if (!string.IsNullOrWhiteSpace(fillColor))
-            {
-                if (ParameterSetName == ParameterSetSeriesName)
-                {
+            if (!string.IsNullOrWhiteSpace(fillColor)) {
+                if (ParameterSetName == ParameterSetSeriesName) {
                     Chart.SetSeriesFillColor(SeriesName, fillColor!, IgnoreCase);
-                }
-                else
-                {
+                } else {
                     Chart.SetSeriesFillColor(SeriesIndex, fillColor!);
                 }
             }
 
             var lineColor = LineColor;
-            if (!string.IsNullOrWhiteSpace(lineColor) || LineWidthPoints.HasValue)
-            {
-                if (string.IsNullOrWhiteSpace(lineColor))
-                {
+            if (!string.IsNullOrWhiteSpace(lineColor) || LineWidthPoints.HasValue) {
+                if (string.IsNullOrWhiteSpace(lineColor)) {
                     throw new PSArgumentException("LineColor is required when LineWidthPoints is used because the current OfficeIMO chart API applies series line width together with a line color.");
                 }
 
-                if (ParameterSetName == ParameterSetSeriesName)
-                {
+                if (ParameterSetName == ParameterSetSeriesName) {
                     Chart.SetSeriesLineColor(SeriesName, lineColor!, LineWidthPoints, IgnoreCase);
-                }
-                else
-                {
+                } else {
                     Chart.SetSeriesLineColor(SeriesIndex, lineColor!, LineWidthPoints);
                 }
             }
@@ -109,27 +97,20 @@ public sealed class SetOfficeExcelChartSeriesCommand : PSCmdlet
             var markerStyleName = string.IsNullOrWhiteSpace(MarkerStyle) ? "Circle" : MarkerStyle!;
             bool markerRequested = !string.IsNullOrWhiteSpace(MarkerStyle) || MarkerSize.HasValue ||
                 !string.IsNullOrWhiteSpace(MarkerFillColor) || !string.IsNullOrWhiteSpace(MarkerLineColor) || MarkerLineWidthPoints.HasValue;
-            if (markerRequested)
-            {
-                if (!OpenXmlValueParser.TryParse(markerStyleName, out OfficeChartMarkerShape markerStyle))
-                {
+            if (markerRequested) {
+                if (!OpenXmlValueParser.TryParse(markerStyleName, out OfficeChartMarkerShape markerStyle)) {
                     throw new PSArgumentException($"Unknown MarkerStyle '{MarkerStyle}'.");
                 }
 
-                if (ParameterSetName == ParameterSetSeriesName)
-                {
+                if (ParameterSetName == ParameterSetSeriesName) {
                     Chart.SetSeriesMarker(SeriesName, markerStyle, MarkerSize, MarkerFillColor, MarkerLineColor, MarkerLineWidthPoints, IgnoreCase);
-                }
-                else
-                {
+                } else {
                     Chart.SetSeriesMarker(SeriesIndex, markerStyle, MarkerSize, MarkerFillColor, MarkerLineColor, MarkerLineWidthPoints);
                 }
             }
 
-            WriteObject(Chart);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(Chart);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "ExcelChartSeriesFailed", ErrorCategory.InvalidOperation, Chart));
         }
     }

@@ -613,9 +613,9 @@ Describe 'PDF cmdlets' {
         $copy = Join-Path $TestDrive 'copy.pdf'
         $removed = Join-Path $TestDrive 'removed.pdf'
 
-        Set-OfficePdfPage -Path $path -Rotation 90 -OutputPath $rotated | Should -BeOfType System.IO.FileInfo
-        Copy-OfficePdfPage -Path $path -PageRange '1' -OutputPath $copy | Should -BeOfType System.IO.FileInfo
-        Remove-OfficePdfPage -Path $path -PageRange '2' -OutputPath $removed | Should -BeOfType System.IO.FileInfo
+        Set-OfficePdfPage -Path $path -Rotation 90 -OutputPath $rotated -PassThru | Should -BeOfType System.IO.FileInfo
+        Copy-OfficePdfPage -Path $path -PageRange '1' -OutputPath $copy -PassThru | Should -BeOfType System.IO.FileInfo
+        Remove-OfficePdfPage -Path $path -PageRange '2' -OutputPath $removed -PassThru | Should -BeOfType System.IO.FileInfo
 
         (Get-OfficePdfInfo -Path $copy).PageCount | Should -Be 1
         (Get-OfficePdfInfo -Path $removed).PageCount | Should -Be 1
@@ -745,7 +745,7 @@ Describe 'PDF cmdlets' {
             PdfParagraph 'Leave second page'
         } | Out-Null
 
-        Set-OfficePdfPage -Path $path -OutputPath $outputPath -PageRange '1' -PageSize Letter -ResizeMargin 18 |
+        Set-OfficePdfPage -Path $path -OutputPath $outputPath -PageRange '1' -PageSize Letter -ResizeMargin 18 -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         $info = Get-OfficePdfInfo -Path $outputPath
@@ -807,7 +807,7 @@ Describe 'PDF cmdlets' {
             PdfParagraph 'Incremental body text'
         } | Out-Null
 
-        Set-OfficePdfMetadata -Path $path -OutputPath $incrementalPath -Title 'Updated title' -Incremental |
+        Set-OfficePdfMetadata -Path $path -OutputPath $incrementalPath -Title 'Updated title' -Incremental -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         (Get-Item $incrementalPath).Length | Should -BeGreaterThan (Get-Item $path).Length
@@ -850,7 +850,7 @@ startxref
 %%EOF
 '@ | Set-Content -Path $path -NoNewline -Encoding Ascii
 
-        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental |
+        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         (Get-Item $outputPath).Length | Should -BeGreaterThan (Get-Item $path).Length
@@ -893,7 +893,7 @@ startxref
 %%EOF
 '@ | Set-Content -Path $path -NoNewline -Encoding Ascii
 
-        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental -KeepNeedAppearances |
+        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental -KeepNeedAppearances -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         $field = Get-OfficePdfFormField -Path $outputPath -Name Name
@@ -945,7 +945,7 @@ startxref
 %%EOF
 '@ | Set-Content -Path $path -NoNewline -Encoding Ascii
 
-        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental |
+        Set-OfficePdfForm -Path $path -OutputPath $outputPath -Field @{ Name = 'Grace' } -Incremental -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         $field = Get-OfficePdfFormField -Path $outputPath -Name Name
@@ -965,7 +965,7 @@ startxref
             PdfParagraph 'Page box source'
         } | Out-Null
 
-        Set-OfficePdfPage -Path $path -OutputPath $outputPath -BoxName TrimBox -Left 12 -Bottom 14 -Right 222 -Top 244 |
+        Set-OfficePdfPage -Path $path -OutputPath $outputPath -BoxName TrimBox -Left 12 -Bottom 14 -Right 222 -Top 244 -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         $geometry = (Get-OfficePdfInfo -Path $outputPath).Pages[0].Geometry
@@ -1130,7 +1130,7 @@ startxref
         $preparedReport.Signatures[0].ByteRangeCoversEndOfFile | Should -BeTrue
 
         [IO.File]::WriteAllBytes($signaturePath, [byte[]](0x30, 0x82, 0x01, 0x0A, 0xAA, 0x55))
-        $signedReport = Set-OfficePdfSignature -Path $preparedPath -SignaturePath $signaturePath -OutputPath $signedPath -PassThruReport
+        $signedReport = Set-OfficePdfSignature -Path $preparedPath -SignaturePath $signaturePath -OutputPath $signedPath -PassThruReport -PassThru
         $signedReport.HasSignatures | Should -BeTrue
         $signedReport.Signatures[0].Signature.ByteRangeValues -join ',' | Should -Be ($plan.ByteRangeValues -join ',')
         $signedReport.Findings.Code | Should -Contain 'SignatureDetachedCmsSubFilter'

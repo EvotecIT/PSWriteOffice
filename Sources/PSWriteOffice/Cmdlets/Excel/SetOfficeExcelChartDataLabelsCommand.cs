@@ -15,8 +15,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelChartDataLabels")]
 [OutputType(typeof(ExcelChart))]
-public sealed class SetOfficeExcelChartDataLabelsCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelChartDataLabelsCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Chart to update.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public ExcelChart Chart { get; set; } = null!;
@@ -95,36 +94,28 @@ public sealed class SetOfficeExcelChartDataLabelsCommand : PSCmdlet
     public SwitchParameter NoLine { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             Chart.SetDataLabels(ShowValue, ShowCategoryName, ShowSeriesName, ShowLegendKey, ShowPercent, ResolveDataLabelPosition(Position), NumberFormat, SourceLinked);
 
             if (FontSizePoints.HasValue || Bold.HasValue || Italic.HasValue ||
-                !string.IsNullOrWhiteSpace(Color) || !string.IsNullOrWhiteSpace(FontName))
-            {
+                !string.IsNullOrWhiteSpace(Color) || !string.IsNullOrWhiteSpace(FontName)) {
                 Chart.SetDataLabelTextStyle(FontSizePoints, Bold, Italic, Color, FontName);
             }
 
             if (!string.IsNullOrWhiteSpace(FillColor) || !string.IsNullOrWhiteSpace(LineColor) ||
-                LineWidthPoints.HasValue || NoFill.IsPresent || NoLine.IsPresent)
-            {
+                LineWidthPoints.HasValue || NoFill.IsPresent || NoLine.IsPresent) {
                 Chart.SetDataLabelShapeStyle(FillColor, LineColor, LineWidthPoints, NoFill.IsPresent, NoLine.IsPresent);
             }
 
-            WriteObject(Chart);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(Chart);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "ExcelChartDataLabelsFailed", ErrorCategory.InvalidOperation, Chart));
         }
     }
 
-    private static OfficeChartDataLabelPosition? ResolveDataLabelPosition(string? value)
-    {
-        return value switch
-        {
+    private static OfficeChartDataLabelPosition? ResolveDataLabelPosition(string? value) {
+        return value switch {
             null => null,
             "BestFit" => OfficeChartDataLabelPosition.BestFit,
             "Bottom" => OfficeChartDataLabelPosition.Bottom,

@@ -1,19 +1,18 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'PowerPoint-TransitionsAndSizing.pptx'
 
-$presentation = New-OfficePowerPoint -FilePath $path
-Set-OfficePowerPointSlideSize -Presentation $presentation -Preset Screen16x9 | Out-Null
+$presentation = New-OfficePowerPoint -Path $path -NoSave
+Set-OfficePowerPointSlideSize -Presentation $presentation -Preset Screen16x9
 
-$intro = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
-Set-OfficePowerPointSlideTitle -Slide $intro -Title 'Executive Summary' | Out-Null
-Set-OfficePowerPointSlideTransition -Slide $intro -Transition Fade | Out-Null
+$intro = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
+Set-OfficePowerPointSlideTitle -Slide $intro -Title 'Executive Summary'
+Set-OfficePowerPointSlideTransition -Slide $intro -Transition Fade
 
-$details = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
-Set-OfficePowerPointSlideTitle -Slide $details -Title 'Details' | Out-Null
-Set-OfficePowerPointSlideTransition -Slide $details -Transition Morph | Out-Null
+$details = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
+Set-OfficePowerPointSlideTitle -Slide $details -Title 'Details'
+Set-OfficePowerPointSlideTransition -Slide $details -Transition Morph
 
 Save-OfficePowerPoint -Presentation $presentation
 

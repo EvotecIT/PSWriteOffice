@@ -89,7 +89,7 @@ Describe 'PDF readback and compliance cmdlets' {
             PdfParagraph 'Explicit attachment document'
         }
 
-        $updated = $document | PdfAttachment -Path $attachmentPath -Name 'explicit-payload.txt'
+        $updated = $document | PdfAttachment -Path $attachmentPath -Name 'explicit-payload.txt' -PassThru
         $updated | Save-OfficePdf -Path $pdfPath | Out-Null
 
         $updated | Should -BeOfType OfficeIMO.Pdf.PdfDocument
@@ -232,7 +232,7 @@ startxref
 %%EOF
 '@ | Set-Content -Path $pdfPath -NoNewline -Encoding Ascii
 
-        $updateReport = Set-OfficePdfAnnotation -Path $pdfPath -OutputPath $updatedPath -ObjectNumber 4 -Contents 'Updated note' -Title 'Reviewer' -Name 'Note-2' -Color '#0080FF' -RemoveAction -PassThruReport
+        $updateReport = Set-OfficePdfAnnotation -Path $pdfPath -OutputPath $updatedPath -ObjectNumber 4 -Contents 'Updated note' -Title 'Reviewer' -Name 'Note-2' -Color '#0080FF' -RemoveAction -PassThruReport -PassThru
         $updateReport.Applied | Should -BeTrue
         $updated = @(Get-OfficePdfAnnotation -Path $updatedPath -Subtype Text)
         $updated.Count | Should -Be 1
@@ -241,7 +241,7 @@ startxref
         $updated[0].Name | Should -Be 'Note-2'
         $updated[0].HasAdditionalActions | Should -BeFalse
 
-        $removeReport = Remove-OfficePdfAnnotation -Path $updatedPath -OutputPath $removedPath -Subtype Text -PassThruReport
+        $removeReport = Remove-OfficePdfAnnotation -Path $updatedPath -OutputPath $removedPath -Subtype Text -PassThruReport -PassThru
         $removeReport.Applied | Should -BeTrue
         @(Get-OfficePdfAnnotation -Path $removedPath -Subtype Text).Count | Should -Be 0
     }

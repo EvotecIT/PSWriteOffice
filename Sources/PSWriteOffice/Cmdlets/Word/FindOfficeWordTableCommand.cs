@@ -40,8 +40,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Find, "OfficeWordTable", DefaultParameterSetName = ParameterSetPathText)]
 [OutputType(typeof(WordTable))]
-public sealed class FindOfficeWordTableCommand : PSCmdlet
-{
+public sealed class FindOfficeWordTableCommand : PSCmdlet {
     private const string ParameterSetPathText = "PathText";
     private const string ParameterSetPathRegex = "PathRegex";
     private const string ParameterSetDocumentText = "DocumentText";
@@ -50,8 +49,8 @@ public sealed class FindOfficeWordTableCommand : PSCmdlet
     /// <summary>Path to the document to open read-only for searching.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathText)]
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathRegex)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Open document to inspect. The caller controls the document lifetime.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentText)]
@@ -77,26 +76,20 @@ public sealed class FindOfficeWordTableCommand : PSCmdlet
     public SwitchParameter IncludeNested { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPathText || ParameterSetName == ParameterSetPathRegex)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        try {
+            if (ParameterSetName == ParameterSetPathText || ParameterSetName == ParameterSetPathRegex) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document was not provided.");
             }
 
@@ -108,18 +101,13 @@ public sealed class FindOfficeWordTableCommand : PSCmdlet
                 ? document.TablesIncludingNestedTables
                 : document.Tables;
 
-            foreach (var table in tables)
-            {
-                if (WordObjectSearch.MatchesTable(table, matcher))
-                {
+            foreach (var table in tables) {
+                if (WordObjectSearch.MatchesTable(table, matcher)) {
                     WriteObject(table);
                 }
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

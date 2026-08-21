@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfForm", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
-public sealed class SetOfficePdfFormCommand : PSCmdlet
-{
+public sealed class SetOfficePdfFormCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Input PDF path.</summary>
     [Parameter(Mandatory = true)]
     [Alias("FilePath")]
@@ -64,35 +63,28 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
     public string? AppearanceFontFamilyName { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (Incremental.IsPresent)
-        {
-            if (Flatten.IsPresent)
-            {
+        if (Incremental.IsPresent) {
+            if (Flatten.IsPresent) {
                 throw new PSArgumentException("-Incremental cannot be combined with -Flatten because flattening requires a full rewrite.");
             }
 
-            if (!string.IsNullOrWhiteSpace(AppearanceFontPath))
-            {
+            if (!string.IsNullOrWhiteSpace(AppearanceFontPath)) {
                 throw new PSArgumentException("-Incremental uses built-in Helvetica appearance streams; use -KeepNeedAppearances or a full rewrite when custom appearance fonts are required.");
             }
 
-            if (Field == null || Field.Count == 0)
-            {
+            if (Field == null || Field.Count == 0) {
                 throw new PSArgumentException("Provide -Field values when using -Incremental.", nameof(Field));
             }
 
-            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write incrementally updated PDF form"))
-            {
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write incrementally updated PDF form")) {
                 return;
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            var options = new PdfIncrementalFormFieldUpdateOptions
-            {
+            var options = new PdfIncrementalFormFieldUpdateOptions {
                 KeepNeedAppearances = KeepNeedAppearances.IsPresent,
                 GenerateAppearanceStreams = !KeepNeedAppearances.IsPresent
             };
@@ -101,7 +93,7 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
                 .Forms.AppendRevision(PdfCommandUtilities.ConvertFieldValues(Field), options)
                 .Save(outputPath)
                 .RequireSuccess();
-            WriteObject(new FileInfo(outputPath));
+            WritePassThru(new FileInfo(outputPath));
             return;
         }
 
@@ -110,41 +102,33 @@ public sealed class SetOfficePdfFormCommand : PSCmdlet
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
         PdfDocument result;
-        if (Field == null || Field.Count == 0)
-        {
-            if (!Flatten.IsPresent)
-            {
+        if (Field == null || Field.Count == 0) {
+            if (!Flatten.IsPresent) {
                 throw new PSArgumentException("Provide -Field values or use -Flatten.", nameof(Field));
             }
 
             result = formOptions == null
                 ? document.Forms.Flatten()
                 : document.Forms.Flatten(formOptions);
-        }
-        else
-        {
+        } else {
             var values = PdfCommandUtilities.ConvertFieldValues(Field);
-            if (Flatten.IsPresent)
-            {
+            if (Flatten.IsPresent) {
                 result = formOptions == null
                     ? document.Forms.FillAndFlatten(values)
                     : document.Forms.FillAndFlatten(values, formOptions);
-            }
-            else
-            {
+            } else {
                 result = formOptions == null
                     ? document.Forms.Fill(values)
                     : document.Forms.Fill(values, formOptions);
             }
         }
 
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated PDF form"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated PDF form")) {
             return;
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath).RequireSuccess();
-        WriteObject(new FileInfo(outputPath));
+        WritePassThru(new FileInfo(outputPath));
     }
 }

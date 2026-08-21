@@ -25,8 +25,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsData.ConvertFrom, "OfficeWordHtml", DefaultParameterSetName = ParameterSetHtml, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-WordHtml")]
 [OutputType(typeof(WordDocument), typeof(FileInfo))]
-public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
-{
+public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet {
     private const string ParameterSetHtml = "Html";
     private const string ParameterSetPath = "Path";
 
@@ -36,8 +35,8 @@ public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
 
     /// <summary>Path to an HTML file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path")]
-    public string FilePath { get; set; } = string.Empty;
+    [Alias("FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Optional output path for the .docx file.</summary>
     [Parameter]
@@ -93,21 +92,17 @@ public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var html = Html;
             string? htmlFileDirectory = null;
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(FilePath);
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 html = File.ReadAllText(resolvedPath);
-                htmlFileDirectory = Path.GetDirectoryName(resolvedPath);
+                htmlFileDirectory = System.IO.Path.GetDirectoryName(resolvedPath);
             }
 
-            if (string.IsNullOrWhiteSpace(html))
-            {
+            if (string.IsNullOrWhiteSpace(html)) {
                 ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("HTML content cannot be empty."),
                     "HtmlEmpty",
@@ -116,34 +111,26 @@ public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
                 return;
             }
 
-            var options = new HtmlToWordOptions
-            {
+            var options = new HtmlToWordOptions {
                 IncludeListStyles = IncludeListStyles.IsPresent,
                 ContinueNumbering = ContinueNumbering.IsPresent,
                 SupportsHeadingNumbering = SupportsHeadingNumbering.IsPresent,
                 RenderPreAsTable = RenderPreAsTable.IsPresent
             };
 
-            if (!string.IsNullOrWhiteSpace(FontFamily))
-            {
+            if (!string.IsNullOrWhiteSpace(FontFamily)) {
                 options.FontFamily = FontFamily;
             }
 
-            if (!string.IsNullOrWhiteSpace(BasePath))
-            {
+            if (!string.IsNullOrWhiteSpace(BasePath)) {
                 options.BasePath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(BasePath);
-            }
-            else if (!string.IsNullOrWhiteSpace(htmlFileDirectory))
-            {
+            } else if (!string.IsNullOrWhiteSpace(htmlFileDirectory)) {
                 options.BasePath = htmlFileDirectory;
             }
 
-            if (StylesheetPath != null)
-            {
-                foreach (var entry in StylesheetPath)
-                {
-                    if (string.IsNullOrWhiteSpace(entry))
-                    {
+            if (StylesheetPath != null) {
+                foreach (var entry in StylesheetPath) {
+                    if (string.IsNullOrWhiteSpace(entry)) {
                         continue;
                     }
 
@@ -151,72 +138,55 @@ public sealed class ConvertFromOfficeWordHtmlCommand : PSCmdlet
                 }
             }
 
-            if (StylesheetContent != null)
-            {
-                foreach (var entry in StylesheetContent)
-                {
-                    if (!string.IsNullOrWhiteSpace(entry))
-                    {
+            if (StylesheetContent != null) {
+                foreach (var entry in StylesheetContent) {
+                    if (!string.IsNullOrWhiteSpace(entry)) {
                         options.StylesheetContents.Add(entry);
                     }
                 }
             }
 
-            if (TableCaptionPosition.HasValue)
-            {
+            if (TableCaptionPosition.HasValue) {
                 options.TableCaptionPosition = TableCaptionPosition.Value;
             }
 
-            if (SectionTagHandling.HasValue)
-            {
+            if (SectionTagHandling.HasValue) {
                 options.SectionTagHandling = SectionTagHandling.Value;
             }
 
             var document = HtmlConversionDocument.Parse(html).ToWordDocument(options);
 
-            if (!string.IsNullOrWhiteSpace(OutputPath))
-            {
+            if (!string.IsNullOrWhiteSpace(OutputPath)) {
                 var resolvedOutput = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-                if (!ShouldProcess(resolvedOutput, "Write Word document converted from HTML"))
-                {
+                if (!ShouldProcess(resolvedOutput, "Write Word document converted from HTML")) {
                     document.Dispose();
                     return;
                 }
 
-                var directory = Path.GetDirectoryName(resolvedOutput);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
+                var directory = System.IO.Path.GetDirectoryName(resolvedOutput);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
                     Directory.CreateDirectory(directory);
                 }
 
-                try
-                {
+                try {
                     document.Save(resolvedOutput);
-                }
-                finally
-                {
+                } finally {
                     document.Dispose();
                 }
 
-                if (Open.IsPresent)
-                {
+                if (Open.IsPresent) {
                     FileOpenService.Open(resolvedOutput);
                 }
 
-                if (PassThru.IsPresent)
-                {
+                if (PassThru.IsPresent) {
                     WriteObject(new FileInfo(resolvedOutput));
                 }
-            }
-            else
-            {
+            } else {
                 WriteObject(document);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "HtmlToWordFailed", ErrorCategory.InvalidOperation,
-                ParameterSetName == ParameterSetPath ? FilePath : Html));
+                ParameterSetName == ParameterSetPath ? Path : Html));
         }
     }
 }

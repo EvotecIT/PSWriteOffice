@@ -16,16 +16,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Join, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("Merge-OfficeExcelSheet", "ExcelSheetJoin", "ExcelSheetMerge")]
 [OutputType(typeof(ExcelWorksheetMergeResult))]
-public sealed class JoinOfficeExcelSheetCommand : PSCmdlet
-{
+public sealed class JoinOfficeExcelSheetCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Target workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Target workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -88,11 +87,9 @@ public sealed class JoinOfficeExcelSheetCommand : PSCmdlet
     public SwitchParameter OverwriteExistingCells { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var targetWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var targetWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
@@ -106,10 +103,8 @@ public sealed class JoinOfficeExcelSheetCommand : PSCmdlet
         WriteObject(result);
     }
 
-    private ExcelWorksheetMergeOptions BuildOptions()
-    {
-        return new ExcelWorksheetMergeOptions
-        {
+    private ExcelWorksheetMergeOptions BuildOptions() {
+        return new ExcelWorksheetMergeOptions {
             SourceRange = SourceRange,
             TargetStartRow = TargetStartRow,
             TargetStartColumn = TargetStartColumn,

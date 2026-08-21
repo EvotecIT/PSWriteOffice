@@ -16,7 +16,7 @@ Invoke-OfficeExcelTemplateSheet [-Item] <Object> [-TemplateSheet <string>] [-She
 
 ### Path
 ```powershell
-Invoke-OfficeExcelTemplateSheet [-InputPath] <string> [-Item] <Object> [-TemplateSheet <string>] [-SheetNameProperty <string>] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-OfficeExcelTemplateSheet [-Path] <string> [-Item] <Object> [-TemplateSheet <string>] [-SheetNameProperty <string>] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -70,22 +70,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Item
 Pipeline data. Hashtables, dictionaries, PSCustomObjects, and typed objects are supported.
 
@@ -129,6 +113,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

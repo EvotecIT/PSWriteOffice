@@ -11,7 +11,7 @@ Writes a row of values to the current worksheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelRow [-Row] <int> [[-Values] <Object[]>] [-StartColumn <int>] [-Height <Double>] [-ClearHeight] [-AutoFit] [-Hidden <Boolean>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <Boolean>] [-WrapText <Boolean>] [-FontName <string>] [-BackgroundColor <string>] [-FirstColumn <Int32>] [-LastColumn <Int32>] [<CommonParameters>]
+Set-OfficeExcelRow [-Row] <int> [[-Values] <Object[]>] [-StartColumn <int>] [-Height <Double>] [-ClearHeight] [-AutoFit] [-Hidden <Boolean>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <Boolean>] [-WrapText <Boolean>] [-FontName <string>] [-BackgroundColor <string>] [-FirstColumn <Int32>] [-LastColumn <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -177,6 +177,22 @@ Last 1-based column affected by style options.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

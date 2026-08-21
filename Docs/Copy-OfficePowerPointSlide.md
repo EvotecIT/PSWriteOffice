@@ -11,7 +11,7 @@ Copies an existing slide within a PowerPoint presentation.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Copy-OfficePowerPointSlide -Index <int> [-Presentation <PowerPointPresentation>] [-InsertAt <Int32>] [<CommonParameters>]
+Copy-OfficePowerPointSlide -Index <int> [-Presentation <PowerPointPresentation>] [-InsertAt <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -54,6 +54,22 @@ Optional target index for the duplicate; omit to insert after the source slide.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

@@ -11,12 +11,12 @@ Clears any AutoFilter on the current worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Clear-OfficeExcelAutoFilter [<CommonParameters>]
+Clear-OfficeExcelAutoFilter [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Clear-OfficeExcelAutoFilter -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
+Clear-OfficeExcelAutoFilter -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,6 +46,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

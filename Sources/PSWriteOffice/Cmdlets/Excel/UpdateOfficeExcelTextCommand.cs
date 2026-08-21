@@ -21,16 +21,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsData.Update, "OfficeExcelText", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Replace-OfficeExcelText")]
 [OutputType(typeof(int))]
-public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
-{
+public sealed class UpdateOfficeExcelTextCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -65,64 +64,55 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Regex { get; set; }
 
-    /// <summary>Open the file after saving when using -Path.</summary>
+    /// <summary>Open the file after saving when using -System.IO.Path.</summary>
     [Parameter(ParameterSetName = ParameterSetPath)]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!ShouldProcess(resolvedPath, "Update Excel workbook text"))
-            {
+    protected override void ProcessRecord() {
+        if (ParameterSetName == ParameterSetPath) {
+            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+            if (!ShouldProcess(resolvedPath, "Update Excel workbook text")) {
                 return;
             }
         }
 
         var replacements = 0;
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var document = workbook.Document;
         if (ParameterSetName != ParameterSetPath &&
-            !ExcelShouldProcessService.ShouldProcessWorkbook(this, document, null, "Update Excel workbook text"))
-        {
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, document, null, "Update Excel workbook text")) {
             return;
         }
 
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
-        {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex)) {
             replacements += ReplaceInSheet(sheet);
         }
 
         workbook.SaveIfOwned();
-        var openPath = workbook.OwnsDocument && Show.IsPresent
-            ? document.FilePath ?? InputPath
+        var openPath = workbook.OwnsDocument && Open.IsPresent
+            ? document.FilePath ?? Path
             : null;
 
-        if (!string.IsNullOrWhiteSpace(openPath))
-        {
+        if (!string.IsNullOrWhiteSpace(openPath)) {
             workbook.Dispose();
             FileOpenService.Open(openPath!);
         }
 
-        WriteObject(replacements);
+        WritePassThru(replacements);
     }
 
-    private int ReplaceInSheet(ExcelSheet sheet)
-    {
+    private int ReplaceInSheet(ExcelSheet sheet) {
         var count = 0;
         var range = string.IsNullOrWhiteSpace(Range) ? sheet.UsedRangeA1 : Range!;
-        foreach (var cell in sheet.EnumerateRange(range))
-        {
-            if (cell.Value is not string text)
-            {
+        foreach (var cell in sheet.EnumerateRange(range)) {
+            if (cell.Value is not string text) {
                 continue;
             }
 
             var updated = ReplaceString(text, out var cellReplacements);
-            if (cellReplacements == 0)
-            {
+            if (cellReplacements == 0) {
                 continue;
             }
 
@@ -133,18 +123,15 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
         return count;
     }
 
-    private string ReplaceString(string value, out int replacements)
-    {
+    private string ReplaceString(string value, out int replacements) {
         replacements = 0;
-        if (Regex.IsPresent)
-        {
+        if (Regex.IsPresent) {
             var options = CaseSensitive.IsPresent ? RegexOptions.None : RegexOptions.IgnoreCase;
             var count = 0;
             var updated = System.Text.RegularExpressions.Regex.Replace(
                 value,
                 OldValue,
-                match =>
-                {
+                match => {
                     count++;
                     return NewValue;
                 },
@@ -155,14 +142,12 @@ public sealed class UpdateOfficeExcelTextCommand : PSCmdlet
 
         var comparison = CaseSensitive.IsPresent ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
         var index = value.IndexOf(OldValue, comparison);
-        if (index < 0)
-        {
+        if (index < 0) {
             return value;
         }
 
         var result = value;
-        while (index >= 0)
-        {
+        while (index >= 0) {
             result = result.Substring(0, index) + NewValue + result.Substring(index + OldValue.Length);
             replacements++;
             index = result.IndexOf(OldValue, index + NewValue.Length, comparison);

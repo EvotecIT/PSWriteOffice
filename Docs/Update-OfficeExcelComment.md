@@ -16,7 +16,7 @@ Update-OfficeExcelComment [-Sheet <string>] [-SheetIndex <Int32>] [-Address <str
 
 ### Path
 ```powershell
-Update-OfficeExcelComment [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Range <string>] [-MatchAuthor <string>] [-TextContains <string>] [-All] [-Text <string>] [-Run <Object[]>] [-Author <string>] [-Initials <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeExcelComment [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Range <string>] [-MatchAuthor <string>] [-TextContains <string>] [-All] [-Text <string>] [-Run <Object[]>] [-Author <string>] [-Initials <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -120,22 +120,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -MatchAuthor
 Existing comment author to match, ignoring case.
 
@@ -163,6 +147,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

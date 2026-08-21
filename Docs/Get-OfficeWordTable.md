@@ -11,7 +11,7 @@ Gets tables from a Word document or section.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordTable [-InputPath] <string> [-IncludeNested] [<CommonParameters>]
+Get-OfficeWordTable [-Path] <string> [-IncludeNested] [<CommonParameters>]
 ```
 
 ### Document
@@ -74,13 +74,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the document.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

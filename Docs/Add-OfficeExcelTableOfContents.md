@@ -16,7 +16,7 @@ Add-OfficeExcelTableOfContents [-SheetName <string>] [-DoNotPlaceFirst] [-NoHype
 
 ### Path
 ```powershell
-Add-OfficeExcelTableOfContents [-InputPath] <string> [-SheetName <string>] [-DoNotPlaceFirst] [-NoHyperlinks] [-IncludeNamedRanges] [-IncludeHiddenNamedRanges] [-NoStyle] [-AddBackLinks] [-BackLinkRow <int>] [-BackLinkColumn <int>] [-BackLinkText <string>] [-Open] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelTableOfContents [-Path] <string> [-SheetName <string>] [-DoNotPlaceFirst] [-NoHyperlinks] [-IncludeNamedRanges] [-IncludeHiddenNamedRanges] [-NoStyle] [-AddBackLinks] [-BackLinkRow <int>] [-BackLinkColumn <int>] [-BackLinkText <string>] [-Open] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
@@ -171,22 +171,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the workbook to update in place.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NoHyperlinks
 Disable internal hyperlinks in the TOC sheet.
 
@@ -220,7 +204,7 @@ Accept wildcard characters: False
 ```
 
 ### -Open
-Open the workbook after saving when InputPath is used.
+Open the workbook after saving when Path is used.
 
 ```yaml
 Type: SwitchParameter
@@ -246,6 +230,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the workbook to update in place.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -116,7 +116,7 @@ Describe 'Expanded OfficeIMO support' {
         foreach ($case in $cases) {
             $path = Join-Path $TestDrive "native.$($case.Extension)"
             $document = New-OfficeOpenDocument -Kind $case.Kind
-            $save = $document | Save-OfficeOpenDocument -Path $path -FailOnLoss
+            $save = $document | Save-OfficeOpenDocument -Path $path -FailOnLoss -PassThru
             $save.HasLoss | Should -BeFalse
             Test-Path -LiteralPath $path | Should -BeTrue
             (Get-OfficeOpenDocument -Path $path).GetType().FullName | Should -Be $case.Type
@@ -191,13 +191,17 @@ Describe 'Expanded OfficeIMO support' {
         $message.Body.Text = 'OfficeIMO email body'
         $message.Properties['Emlx:Flag:Flagged'] = $true
 
+        $quietEmailPath = Join-Path $TestDrive 'quiet-message.eml'
+        @($message | Save-OfficeEmail -Path $quietEmailPath) | Should -HaveCount 0
+        Test-Path -LiteralPath $quietEmailPath | Should -BeTrue
+
         foreach ($extension in 'eml', 'emlx', 'msg', 'dat') {
             $path = Join-Path $TestDrive "message.$extension"
             $format = if ($extension -eq 'dat') { 'Tnef' } else { $null }
             $result = if ($format) {
-                $message | Save-OfficeEmail -Path $path -Format $format
+                $message | Save-OfficeEmail -Path $path -Format $format -PassThru
             } else {
-                $message | Save-OfficeEmail -Path $path
+                $message | Save-OfficeEmail -Path $path -PassThru
             }
             $result.GetType().FullName | Should -Be 'OfficeIMO.Email.EmailWriteResult'
             Test-Path -LiteralPath $path | Should -BeTrue
@@ -223,7 +227,8 @@ Describe 'Expanded OfficeIMO support' {
         $mailbox = [Activator]::CreateInstance($emailMailboxType)
         $mailbox.Messages.Add([Activator]::CreateInstance($emailMailboxEntryType, @($message)))
         $mailboxPath = Join-Path $TestDrive 'mailbox.mbox'
-        $mailboxResult = $mailbox | Save-OfficeEmailMailbox -Path $mailboxPath
+        @($mailbox | Save-OfficeEmailMailbox -Path $mailboxPath) | Should -HaveCount 0
+        $mailboxResult = $mailbox | Save-OfficeEmailMailbox -Path $mailboxPath -PassThru
         $mailboxResult.GetType().FullName | Should -Be 'OfficeIMO.Email.EmailWriteResult'
         (Get-OfficeEmailMailbox -Path $mailboxPath).Messages.Count | Should -Be 1
     }

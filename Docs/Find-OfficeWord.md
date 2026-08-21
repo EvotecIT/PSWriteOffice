@@ -11,12 +11,12 @@ Finds text matches inside a Word document.
 ## SYNTAX
 ### PathText (Default)
 ```powershell
-Find-OfficeWord [-InputPath] <string> [-Text] <string> [-CaseSensitive] [<CommonParameters>]
+Find-OfficeWord [-Path] <string> [-Text] <string> [-CaseSensitive] [<CommonParameters>]
 ```
 
 ### PathRegex
 ```powershell
-Find-OfficeWord [-InputPath] <string> [-Pattern] <string> [-CaseSensitive] [-AsResult] [<CommonParameters>]
+Find-OfficeWord [-Path] <string> [-Pattern] <string> [-CaseSensitive] [-AsResult] [<CommonParameters>]
 ```
 
 ### DocumentText
@@ -103,13 +103,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the .docx file.
 
 ```yaml
 Type: String
 Parameter Sets: PathText, PathRegex
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

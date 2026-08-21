@@ -10,5 +10,5 @@ $document | Save-OfficeMarkdown -Path $markdownPath
 
 ConvertFrom-OfficeWordMarkdown -Document $document -OutputPath $wordPath
 $word = Get-OfficeWord -Path $wordPath
-$word | Save-OfficeWord -PdfPath $pdfPath
+$word | Export-OfficeDocumentPdf -Path $pdfPath
 $word | Close-OfficeWord

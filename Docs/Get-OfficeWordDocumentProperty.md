@@ -11,7 +11,7 @@ Gets built-in and custom document properties from a Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordDocumentProperty [-InputPath] <string> [-Name <string[]>] [-BuiltIn] [-Custom] [<CommonParameters>]
+Get-OfficeWordDocumentProperty [-Path] <string> [-Name <string[]>] [-BuiltIn] [-Custom] [<CommonParameters>]
 ```
 
 ### Document
@@ -84,22 +84,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the document.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
 Property name filter (wildcards supported).
 
@@ -114,6 +98,22 @@ Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
+```
+
+### -Path
+Path to the document.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

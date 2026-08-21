@@ -7,6 +7,6 @@ MarkdownNew -Path $path {
     MarkdownTable -InputObject @([pscustomobject]@{ Control = 'Backups'; Status = 'Ready' })
 }
 
-Get-OfficeMarkdownFrontMatter -InputPath $path
-Get-OfficeMarkdownHeading -InputPath $path
-Get-OfficeMarkdownTable -InputPath $path -AsObject
+Get-OfficeMarkdownFrontMatter -Path $path
+Get-OfficeMarkdownHeading -Path $path
+Get-OfficeMarkdownTable -Path $path -AsObject

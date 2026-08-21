@@ -19,7 +19,7 @@ ExcelNew -Path $source {
 }
 
 Join-OfficeExcelWorkbook `
-    -InputPath $target `
+    -Path $target `
     -SourcePath $source `
     -SourceSheet 'North', 'South' `
     -SheetNamePrefix 'Region '

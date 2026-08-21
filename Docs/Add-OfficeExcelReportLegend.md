@@ -11,7 +11,7 @@ Adds a legend table to the current Excel report sheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportLegend [[-Title] <string>] -Header <string[]> -InputObject <Object[]> [-FirstColumnFillByValue <hashtable>] [-HeaderFillColor <string>] [-CaseSensitive] [<CommonParameters>]
+Add-OfficeExcelReportLegend [[-Title] <string>] -Header <string[]> -InputObject <Object[]> [-FirstColumnFillByValue <hashtable>] [-HeaderFillColor <string>] [-CaseSensitive] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -110,6 +110,22 @@ Aliases: Rows
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

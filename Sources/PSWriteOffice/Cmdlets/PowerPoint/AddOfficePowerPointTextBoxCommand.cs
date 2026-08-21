@@ -19,8 +19,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointTextBox", DefaultParameterSetName = "Text")]
 [Alias("PptTextBox")]
-public class AddOfficePowerPointTextBoxCommand : PSCmdlet
-{
+public class AddOfficePowerPointTextBoxCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetText = "Text";
     private const string ParameterSetRun = "Run";
 
@@ -54,26 +53,20 @@ public class AddOfficePowerPointTextBoxCommand : PSCmdlet
     public int Height { get; set; } = 50;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
-            if (ParameterSetName == ParameterSetRun)
-            {
+            if (ParameterSetName == ParameterSetRun) {
                 PowerPointTextRunService.ValidateRuns(Run!, allowHyperlinks: true);
             }
 
             var textBox = slide.AddTextBoxPoints(Text ?? string.Empty, X, Y, Width, Height);
-            if (ParameterSetName == ParameterSetRun)
-            {
+            if (ParameterSetName == ParameterSetRun) {
                 PowerPointTextRunService.ApplyRuns(textBox, Run!);
             }
 
-            WriteObject(textBox);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(textBox);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointAddTextBoxFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }

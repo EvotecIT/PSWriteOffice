@@ -9,8 +9,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 [Cmdlet(VerbsCommon.Remove, "OfficePdfAnnotation", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 [OutputType(typeof(PdfAnnotationEditResult))]
-public sealed class RemoveOfficePdfAnnotationCommand : PSCmdlet
-{
+public sealed class RemoveOfficePdfAnnotationCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Input PDF path.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [Alias("FilePath")]
@@ -49,17 +48,14 @@ public sealed class RemoveOfficePdfAnnotationCommand : PSCmdlet
     public SwitchParameter PassThruReport { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         string outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!ShouldProcess(outputPath, "Remove PDF annotations"))
-        {
+        if (!ShouldProcess(outputPath, "Remove PDF annotations")) {
             return;
         }
 
-        var options = new PdfAnnotationRemovalOptions
-        {
+        var options = new PdfAnnotationRemovalOptions {
             ObjectNumber = ObjectNumber,
             PageNumber = PageNumber,
             Subtype = Subtype,
@@ -71,6 +67,11 @@ public sealed class RemoveOfficePdfAnnotationCommand : PSCmdlet
             .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Annotations.Remove(options);
         result.ToDocument().Save(outputPath).RequireSuccess();
-        WriteObject(PassThruReport.IsPresent ? result : new FileInfo(outputPath));
+        if (PassThruReport.IsPresent) {
+            WriteObject(result);
+            return;
+        }
+
+        WritePassThru(new FileInfo(outputPath));
     }
 }

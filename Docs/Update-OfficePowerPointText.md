@@ -11,17 +11,17 @@ Replaces text in a PowerPoint slide or presentation.
 ## SYNTAX
 ### Auto (Default)
 ```powershell
-Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-IncludeTables <bool>] [-IncludeNotes] [<CommonParameters>]
+Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-IncludeTables <bool>] [-IncludeNotes] [-PassThru] [<CommonParameters>]
 ```
 
 ### Presentation
 ```powershell
-Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-Presentation <PowerPointPresentation>] [-IncludeTables <bool>] [-IncludeNotes] [<CommonParameters>]
+Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-Presentation <PowerPointPresentation>] [-IncludeTables <bool>] [-IncludeNotes] [-PassThru] [<CommonParameters>]
 ```
 
 ### Slide
 ```powershell
-Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-Slide <PowerPointSlide>] [-IncludeTables <bool>] [-IncludeNotes] [<CommonParameters>]
+Update-OfficePowerPointText -OldValue <string> -NewValue <string> [-Slide <PowerPointSlide>] [-IncludeTables <bool>] [-IncludeNotes] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,7 +31,7 @@ Can replace text in text boxes, tables, and optionally notes using the OfficeIMO
 
 ### EXAMPLE 1
 ```powershell
-PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointUpdateText.pptx
+PS> $ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointUpdateText.pptx
 $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
 Add-OfficePowerPointTextBox -Slide $slide -Text 'FY24 summary' | Out-Null
 Set-OfficePowerPointNotes -Slide $slide -Text 'Mention FY24 assumptions.' | Out-Null
@@ -100,6 +100,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Auto, Presentation, Slide
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

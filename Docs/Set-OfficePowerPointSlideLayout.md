@@ -11,17 +11,17 @@ Changes the layout used by a slide.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficePowerPointSlideLayout -Layout <int> [-Slide <PowerPointSlide>] [-Master <int>] [<CommonParameters>]
+Set-OfficePowerPointSlideLayout -Layout <int> [-Slide <PowerPointSlide>] [-Master <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficePowerPointSlideLayout -LayoutName <string> [-Slide <PowerPointSlide>] [-Master <int>] [-CaseSensitive] [<CommonParameters>]
+Set-OfficePowerPointSlideLayout -LayoutName <string> [-Slide <PowerPointSlide>] [-Master <int>] [-CaseSensitive] [-PassThru] [<CommonParameters>]
 ```
 
 ### Type
 ```powershell
-Set-OfficePowerPointSlideLayout -LayoutType <PowerPointSlideLayoutType> [-Slide <PowerPointSlide>] [-Master <int>] [<CommonParameters>]
+Set-OfficePowerPointSlideLayout -LayoutType <PowerPointSlideLayoutType> [-Slide <PowerPointSlide>] [-Master <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -107,6 +107,22 @@ Slide master index to use.
 
 ```yaml
 Type: Int32
+Parameter Sets: Index, Name, Type
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Index, Name, Type
 Aliases: None
 Possible values:

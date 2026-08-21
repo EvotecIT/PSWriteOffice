@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsCommon.Add, "OfficeVisioTextBox")]
 [Alias("VisioTextBox", "VisioText")]
 [OutputType(typeof(VisioShape))]
-public sealed class AddOfficeVisioTextBoxCommand : PSCmdlet
-{
+public sealed class AddOfficeVisioTextBoxCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>New-OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioPage? Page { get; set; }
@@ -71,13 +70,12 @@ public sealed class AddOfficeVisioTextBoxCommand : PSCmdlet
     public double? LineWeight { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = VisioDslContext.Current;
         var page = Page ?? VisioDslContext.Require(this).RequirePage();
         var shape = page.AddTextBox(X, Y, Width, Height, Text, Unit);
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, Name ?? Key, NameU, FillColor, LineColor, LineWeight, null, null, null);
         context?.RegisterShape(page, Key, shape);
-        WriteObject(shape);
+        WritePassThru(shape);
     }
 }

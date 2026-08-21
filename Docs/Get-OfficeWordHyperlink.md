@@ -11,7 +11,7 @@ Gets hyperlinks from a Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordHyperlink [-InputPath] <string> [-Text <string[]>] [-Url <string[]>] [-Anchor <string[]>] [<CommonParameters>]
+Get-OfficeWordHyperlink [-Path] <string> [-Text <string[]>] [-Url <string[]>] [-Anchor <string[]>] [<CommonParameters>]
 ```
 
 ### Document
@@ -78,22 +78,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the document.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Paragraph
 Paragraph to inspect.
 
@@ -107,6 +91,22 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the document.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

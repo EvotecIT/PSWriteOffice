@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointSlideTitle")]
 [Alias("PptTitle")]
-public class SetOfficePowerPointSlideTitleCommand : PSCmdlet
-{
+public class SetOfficePowerPointSlideTitleCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Slide whose title should change (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointSlide? Slide { get; set; }
@@ -27,27 +26,20 @@ public class SetOfficePowerPointSlideTitleCommand : PSCmdlet
     public string Title { get; set; } = null!;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
             var titleBox = slide.GetPlaceholder(PowerPointPlaceholderType.Title) ??
                            slide.GetPlaceholder(PowerPointPlaceholderType.CenteredTitle);
 
-            if (titleBox != null)
-            {
+            if (titleBox != null) {
                 titleBox.Text = Title;
-            }
-            else
-            {
+            } else {
                 slide.AddTitle(Title);
             }
 
-            WriteObject(slide);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(slide);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointSetTitleFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }

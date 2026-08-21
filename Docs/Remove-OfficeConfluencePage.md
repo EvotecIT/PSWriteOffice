@@ -11,7 +11,7 @@ Plans or deletes a Confluence Cloud page.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Remove-OfficeConfluencePage [-PageId] <string> [-Session <ConfluenceSession>] [-Purge] [-Draft] [-PlanOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-OfficeConfluencePage [-PageId] <string> [-Session <ConfluenceSession>] [-Purge] [-Draft] [-PlanOnly] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -62,6 +62,22 @@ Possible values:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Return the completed delete plan after a live operation.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

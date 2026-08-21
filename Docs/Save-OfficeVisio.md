@@ -11,7 +11,7 @@ Saves an OfficeIMO.Visio document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeVisio [-Document] <VisioDocument> [[-Path] <string>] [-Show] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficeVisio [-Document] <VisioDocument> [[-Path] <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,8 +45,24 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -Open
+Open the document after saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -PassThru
-Emit the document object instead of the saved file.
+Emit the document object for further processing.
 
 ```yaml
 Type: SwitchParameter
@@ -77,22 +93,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Show
-Open the document after saving.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
@@ -103,7 +103,6 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 - `OfficeIMO.Visio.VisioDocument`
-- `System.IO.FileInfo`
 
 ## RELATED LINKS
 

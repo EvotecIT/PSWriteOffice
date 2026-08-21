@@ -11,7 +11,7 @@ Saves a presentation without disposing it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficePowerPoint -Presentation <PowerPointPresentation> [-Path <string>] [-Show] [-Password <string>] [-PdfPath <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficePowerPoint -Presentation <PowerPointPresentation> [-Path <string>] [-Open] [-Password <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,15 +21,31 @@ Use Close-OfficePowerPoint -Save when the presentation should be saved and close
 
 ### EXAMPLE 1
 ```powershell
-PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointSave.pptx
+PS> $ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSave.pptx
 $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
 Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Saved later'
-Save-OfficePowerPoint -Presentation $ppt -PdfPath .\Examples\Documents\PowerPointSave.pdf
+Save-OfficePowerPoint -Presentation $ppt
 ```
 
-Saves the current presentation and exports a PDF sidecar.
+Saves the current presentation without closing it.
 
 ## PARAMETERS
+
+### -Open
+Launch the saved file in the default viewer.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -PassThru
 Emit the still-open presentation for further processing.
@@ -79,22 +95,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -PdfPath
-Optional PDF path to create from the same presentation.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Presentation
 Presentation instance to save.
 
@@ -108,22 +108,6 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
-```
-
-### -Show
-Launch the saved file in the default viewer.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

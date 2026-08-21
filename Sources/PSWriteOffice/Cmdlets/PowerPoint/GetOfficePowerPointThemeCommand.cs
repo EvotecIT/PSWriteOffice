@@ -9,7 +9,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Inspect the default master theme.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointThemeRead.pptx
+///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeRead.pptx
 /// Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Service Brief'
 /// Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos Display' -MinorLatin 'Aptos'
 /// Get-OfficePowerPointTheme -Presentation $ppt | Select-Object Name, Master</code>
@@ -18,8 +18,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Get, "OfficePowerPointTheme")]
 [Alias("PptTheme")]
 [OutputType(typeof(PowerPointThemeInfo))]
-public sealed class GetOfficePowerPointThemeCommand : PSCmdlet
-{
+public sealed class GetOfficePowerPointThemeCommand : PSCmdlet {
     /// <summary>Presentation to inspect (optional inside New-OfficePowerPoint).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointPresentation? Presentation { get; set; }
@@ -29,10 +28,8 @@ public sealed class GetOfficePowerPointThemeCommand : PSCmdlet
     public int Master { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var presentation = Presentation ?? PowerPointDslContext.Require(this).Presentation;
             var info = new PowerPointThemeInfo(
                 Master,
@@ -41,9 +38,7 @@ public sealed class GetOfficePowerPointThemeCommand : PSCmdlet
                 presentation.GetThemeFonts(Master));
 
             WriteObject(info);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointGetThemeFailed", ErrorCategory.InvalidOperation, Presentation));
         }
     }

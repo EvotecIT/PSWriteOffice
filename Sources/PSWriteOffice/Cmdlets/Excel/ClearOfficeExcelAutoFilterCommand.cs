@@ -13,8 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Clear, "OfficeExcelAutoFilter", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelAutoFilterClear")]
-public sealed class ClearOfficeExcelAutoFilterCommand : PSCmdlet
-{
+public sealed class ClearOfficeExcelAutoFilterCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
@@ -31,18 +30,15 @@ public sealed class ClearOfficeExcelAutoFilterCommand : PSCmdlet
     public int? SheetIndex { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var sheet = ResolveSheet();
         sheet.AutoFilterClear();
+        WritePassThru(sheet);
     }
 
-    private ExcelSheet ResolveSheet()
-    {
-        if (ParameterSetName == ParameterSetDocument)
-        {
-            if (Document == null)
-            {
+    private ExcelSheet ResolveSheet() {
+        if (ParameterSetName == ParameterSetDocument) {
+            if (Document == null) {
                 throw new PSArgumentException("Provide an Excel document.");
             }
 

@@ -21,16 +21,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelRange", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject), typeof(System.Collections.Hashtable), typeof(DataTable))]
-public sealed class GetOfficeExcelRangeCommand : AsyncPSCmdlet
-{
+public sealed class GetOfficeExcelRangeCommand : AsyncPSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetUri = "Uri";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Remote workbook URI to read.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetUri)]
@@ -74,8 +73,7 @@ public sealed class GetOfficeExcelRangeCommand : AsyncPSCmdlet
     public SwitchParameter AsDataTable { get; set; }
 
     /// <inheritdoc />
-    protected override async Task ProcessRecordAsync()
-    {
+    protected override async Task ProcessRecordAsync() {
         var options = ExcelReadOutputService.CreateOptions(NumericAsDecimal.IsPresent);
         options.CancellationToken = CancelToken;
         ExcelReadOutputService.ConfigureSelection(options, Sheet, SheetIndex ?? (Sheet == null ? 0 : null), Range, HeadersInFirstRow);
@@ -85,17 +83,13 @@ public sealed class GetOfficeExcelRangeCommand : AsyncPSCmdlet
         ExcelReadOutputService.WriteOutput(this, table, AsDataTable.IsPresent, AsHashtable.IsPresent);
     }
 
-    private async Task<ExcelWorkbookDataReader> CreateDataReaderAsync(ExcelReadOptions options)
-    {
-        if (ParameterSetName == ParameterSetDocument)
-        {
+    private async Task<ExcelWorkbookDataReader> CreateDataReaderAsync(ExcelReadOptions options) {
+        if (ParameterSetName == ParameterSetDocument) {
             return Document.CreateDataReader(options);
         }
 
-        if (ParameterSetName == ParameterSetUri)
-        {
-            if (Uri == null)
-            {
+        if (ParameterSetName == ParameterSetUri) {
+            if (Uri == null) {
                 throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
             }
 
@@ -103,9 +97,8 @@ public sealed class GetOfficeExcelRangeCommand : AsyncPSCmdlet
                 .ConfigureAwait(false);
         }
 
-        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-        if (!File.Exists(resolvedPath))
-        {
+        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        if (!File.Exists(resolvedPath)) {
             throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 

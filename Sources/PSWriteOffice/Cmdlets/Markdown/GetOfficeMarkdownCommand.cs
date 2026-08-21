@@ -22,15 +22,14 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdown", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(MarkdownDoc))]
 public sealed class GetOfficeMarkdownCommand : PSCmdlet
-    , IMarkdownReaderOptionSource
-{
+    , IMarkdownReaderOptionSource {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetText = "Text";
 
     /// <summary>Path to the Markdown file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Markdown text to parse.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
@@ -84,23 +83,18 @@ public sealed class GetOfficeMarkdownCommand : PSCmdlet
     MarkdownReaderOptions? IMarkdownReaderOptionSource.ReaderOptions => Options;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var options = MarkdownOptionUtilities.BuildReaderOptions(this);
 
         MarkdownDoc document;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!File.Exists(resolvedPath))
-            {
+        if (ParameterSetName == ParameterSetPath) {
+            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+            if (!File.Exists(resolvedPath)) {
                 throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
             document = MarkdownDoc.Load(resolvedPath, options);
-        }
-        else
-        {
+        } else {
             document = MarkdownReader.Parse(Text ?? string.Empty, options);
         }
 

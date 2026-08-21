@@ -10,8 +10,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Add, "OfficeExcelVisual")]
 [Alias("ExcelVisual")]
 [OutputType(typeof(ExcelImage))]
-public sealed class AddOfficeExcelVisualCommand : OfficeVisualCommandBase
-{
+public sealed class AddOfficeExcelVisualCommand : OfficeVisualCommandBase {
     /// <summary>ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or SVG file path.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     public object InputObject { get; set; } = null!;
@@ -41,11 +40,17 @@ public sealed class AddOfficeExcelVisualCommand : OfficeVisualCommandBase
     [Parameter]
     public int OffsetY { get; set; }
 
+    /// <summary>Emit the image added to the worksheet.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         ExcelSheet worksheet = Worksheet ?? ExcelDslContext.Require(this).RequireSheet();
         (int row, int column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
-        WriteObject(worksheet.AddVisualArtifact(row, column, ResolveVisual(InputObject), OffsetX, OffsetY));
+        var image = worksheet.AddVisualArtifact(row, column, ResolveVisual(InputObject), OffsetX, OffsetY);
+        if (PassThru.IsPresent) {
+            WriteObject(image);
+        }
     }
 }

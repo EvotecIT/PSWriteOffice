@@ -18,12 +18,11 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 [Cmdlet(VerbsCommon.New, "OfficeRtf", SupportsShouldProcess = true)]
 [Alias("RtfNew")]
 [OutputType(typeof(FileInfo), typeof(RtfDocument))]
-public sealed class NewOfficeRtfCommand : PSCmdlet
-{
+public sealed class NewOfficeRtfCommand : PSCmdlet {
     /// <summary>Destination path for the RTF file.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    [Alias("FilePath", "Path")]
-    public string OutputPath { get; set; } = string.Empty;
+    [Alias("FilePath", "OutputPath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Plain paragraph text to add to the document.</summary>
     [Parameter(Position = 1, ValueFromPipeline = true)]
@@ -40,40 +39,33 @@ public sealed class NewOfficeRtfCommand : PSCmdlet
     private readonly List<string> _paragraphs = new();
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (Text != null)
-        {
+    protected override void ProcessRecord() {
+        if (Text != null) {
             _paragraphs.AddRange(Text);
         }
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
+    protected override void EndProcessing() {
         var document = RtfDocument.Create();
-        foreach (var paragraph in _paragraphs)
-        {
+        foreach (var paragraph in _paragraphs) {
             document.AddParagraph(paragraph);
         }
 
-        if (NoSave.IsPresent)
-        {
+        if (NoSave.IsPresent) {
             WriteObject(document);
             return;
         }
 
-        var path = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, path, "Write new RTF document"))
-        {
+        var path = PdfCommandUtilities.ResolvePath(this, Path);
+        if (!PdfCommandUtilities.ShouldWrite(this, path, "Write new RTF document")) {
             return;
         }
 
         PdfCommandUtilities.EnsureDirectory(path);
         document.Save(path, encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(new FileInfo(path));
         }
     }

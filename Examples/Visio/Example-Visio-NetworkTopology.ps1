@@ -7,15 +7,14 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module PSWriteOffice -ErrorAction Stop
 
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $OutputDirectory -ItemType Directory -Force
 $path = Join-Path $OutputDirectory 'Example-Visio-NetworkTopology.vsdx'
 $svgPath = Join-Path $OutputDirectory 'Example-Visio-NetworkTopology.svg'
 $pngPath = Join-Path $OutputDirectory 'Example-Visio-NetworkTopology.png'
 
 New-OfficeVisio -Path $path -Title 'Branch office topology' -Author 'PSWriteOffice' -Width 11 -Height 7 -UseMastersByDefault -RequestRecalcOnOpen {
-    Import-OfficeVisioStencil -BuiltIn Network -Name Net -Default | Out-Null
-    Import-OfficeVisioStencil -BuiltIn Infrastructure -Name Infra | Out-Null
+    Import-OfficeVisioStencil -BuiltIn Network -Name Net -Default
+    Import-OfficeVisioStencil -BuiltIn Infrastructure -Name Infra
 
     VisioTextBox 'Branch office network' -X 5.5 -Y 6.35 -Width 4.5 -Height 0.42 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
     VisioTextBox 'Zones, devices, and traffic paths from the OfficeIMO network stencil catalog.' -X 5.5 -Y 5.98 -Width 6.4 -Height 0.28 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
@@ -43,10 +42,10 @@ New-OfficeVisio -Path $path -Title 'Branch office topology' -Author 'PSWriteOffi
     VisioConnector -From core -To printer -Kind Straight -FromSide Right -ToSide Left -EndArrow Triangle -LineColor '#64748B'
     VisioConnector -From core -To app -Kind Straight -FromSide Right -ToSide Left -EndArrow Triangle -Label 'VLAN 20' -LineColor '#7C3AED'
     VisioConnector -From app -To nas -Kind Straight -FromSide Right -ToSide Left -EndArrow Triangle -Label 'backup' -LineColor '#C026D3'
-} | Out-Null
+}
 
-ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgPath | Out-Null
-ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath | Out-Null
+ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgPath
+ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath
 
 if ($Open) {
     Invoke-Item $svgPath

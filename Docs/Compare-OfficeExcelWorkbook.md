@@ -11,7 +11,7 @@ Compares two workbooks by sheets, cells, formulas, styles, tables, comments, nam
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Compare-OfficeExcelWorkbook [-InputPath] <string> [-DifferencePath] <string> [-MaxDifferences <int>] [-SkipCells] [-SkipCellStyles] [-SkipNamedRanges] [-SkipTables] [-SkipWorksheetMetadata] [-SkipComments] [<CommonParameters>]
+Compare-OfficeExcelWorkbook [-Path] <string> [-DifferencePath] <string> [-MaxDifferences <int>] [-SkipCells] [-SkipCellStyles] [-SkipNamedRanges] [-SkipTables] [-SkipWorksheetMetadata] [-SkipComments] [<CommonParameters>]
 ```
 
 ### Document
@@ -86,22 +86,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, ReferencePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -MaxDifferences
 Maximum number of differences to report.
 
@@ -113,6 +97,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, ReferencePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

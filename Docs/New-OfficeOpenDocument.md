@@ -11,7 +11,7 @@ Creates a native ODT, ODS, or ODP document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeOpenDocument [-Kind] <OdfDocumentKind> [[-Path] <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeOpenDocument [-Kind] <OdfDocumentKind> [[-Path] <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -43,6 +43,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -PassThru
+Emit the saved file when a destination path is supplied.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Path
 Optional initial destination path.
 
@@ -69,6 +85,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 - `OfficeIMO.OpenDocument.OdfDocument`
+- `System.IO.FileInfo`
 
 ## RELATED LINKS
 

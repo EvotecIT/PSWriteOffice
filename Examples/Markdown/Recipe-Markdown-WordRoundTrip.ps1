@@ -7,5 +7,5 @@ MarkdownNew -Path $markdownPath {
     MarkdownList -Items 'Prepare', 'Approve', 'Deploy'
 }
 
-ConvertFrom-OfficeWordMarkdown -FilePath $markdownPath -OutputPath $wordPath
-ConvertTo-OfficeWordMarkdown -FilePath $wordPath -OutputPath $roundTripPath
+ConvertFrom-OfficeWordMarkdown -Path $markdownPath -OutputPath $wordPath
+ConvertTo-OfficeWordMarkdown -Path $wordPath -OutputPath $roundTripPath

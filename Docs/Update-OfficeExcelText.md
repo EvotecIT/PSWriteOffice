@@ -11,12 +11,12 @@ Replaces text in worksheet values.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Update-OfficeExcelText [-InputPath] <string> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-CaseSensitive] [-Regex] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeExcelText [-Path] <string> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-CaseSensitive] [-Regex] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Update-OfficeExcelText -Document <ExcelDocument> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-CaseSensitive] [-Regex] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeExcelText -Document <ExcelDocument> -OldValue <string> -NewValue <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-CaseSensitive] [-Regex] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -69,22 +69,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NewValue
 Replacement text.
 
@@ -112,6 +96,54 @@ Possible values:
 
 Required: True
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Open
+Open the file after saving when using -System.IO.Path.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -171,22 +203,6 @@ Worksheet index when using a workbook object or path.
 ```yaml
 Type: Int32
 Parameter Sets: Path, Document
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Show
-Open the file after saving when using -Path.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Path
 Aliases: None
 Possible values:
 

@@ -21,8 +21,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointBackground", DefaultParameterSetName = ParameterSetColor)]
 [Alias("PptBackground")]
 [OutputType(typeof(PowerPointSlide))]
-public sealed class SetOfficePowerPointBackgroundCommand : PSCmdlet
-{
+public sealed class SetOfficePowerPointBackgroundCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetColor = "Color";
     private const string ParameterSetImage = "Image";
     private const string ParameterSetClear = "Clear";
@@ -44,14 +43,11 @@ public sealed class SetOfficePowerPointBackgroundCommand : PSCmdlet
     public SwitchParameter Clear { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
 
-            switch (ParameterSetName)
-            {
+            switch (ParameterSetName) {
                 case ParameterSetImage:
                     slide.SetBackgroundImage(ResolvePath(ImagePath));
                     break;
@@ -64,26 +60,21 @@ public sealed class SetOfficePowerPointBackgroundCommand : PSCmdlet
                     break;
             }
 
-            WriteObject(slide);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(slide);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointSetBackgroundFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }
 
-    private string ResolvePath(string path)
-    {
+    private string ResolvePath(string path) {
         var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
         return System.IO.Path.IsPathRooted(providerPath)
             ? providerPath
             : System.IO.Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 
-    private static string NormalizeColor(string color)
-    {
-        if (string.IsNullOrWhiteSpace(color))
-        {
+    private static string NormalizeColor(string color) {
+        if (string.IsNullOrWhiteSpace(color)) {
             throw new PSArgumentException("Color cannot be empty.", nameof(Color));
         }
 

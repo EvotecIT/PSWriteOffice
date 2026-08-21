@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Add, "OfficeWordVisual")]
 [Alias("WordVisual")]
 [OutputType(typeof(WordImage))]
-public sealed class AddOfficeWordVisualCommand : OfficeVisualCommandBase
-{
+public sealed class AddOfficeWordVisualCommand : OfficeVisualCommandBase {
     /// <summary>ChartForgeX VisualArtifact, OfficeVisualSource, OfficeVisualConversionResult, or SVG file path.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     public object InputObject { get; set; } = null!;
@@ -30,15 +29,20 @@ public sealed class AddOfficeWordVisualCommand : OfficeVisualCommandBase
     [Parameter]
     public WordImageTextWrapping Wrap { get; set; } = WordImageTextWrapping.InLineWithText;
 
+    /// <summary>Emit the image added to the paragraph.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordParagraph paragraph = Paragraph ?? ResolveParagraph();
-        WriteObject(paragraph.AddVisualArtifact(ResolveVisual(InputObject), Wrap));
+        var image = paragraph.AddVisualArtifact(ResolveVisual(InputObject), Wrap);
+        if (PassThru.IsPresent) {
+            WriteObject(image);
+        }
     }
 
-    private WordParagraph ResolveParagraph()
-    {
+    private WordParagraph ResolveParagraph() {
         WordDslContext context = WordDslContext.Require(this);
         return context.CurrentParagraph ?? context.RequireParagraphHost().AddParagraph();
     }

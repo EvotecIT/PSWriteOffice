@@ -11,7 +11,7 @@ Saves a native OpenDocument model with entry-level preservation diagnostics.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeOpenDocument [-Path] <string> -Document <OdfDocument> [-Options <OdfSaveOptions>] [-FailOnLoss] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficeOpenDocument [-Path] <string> -Document <OdfDocument> [-Options <OdfSaveOptions>] [-FailOnLoss] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -64,6 +64,22 @@ Optional package save and preservation settings.
 
 ```yaml
 Type: OdfSaveOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the save result, including preservation diagnostics.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

@@ -17,8 +17,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelChartTrendline", DefaultParameterSetName = ParameterSetIndex)]
 [Alias("ExcelChartTrendline")]
 [OutputType(typeof(ExcelChart))]
-public sealed class SetOfficeExcelChartTrendlineCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelChartTrendlineCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetIndex = "Index";
     private const string ParameterSetSeriesName = "Name";
 
@@ -79,28 +78,20 @@ public sealed class SetOfficeExcelChartTrendlineCommand : PSCmdlet
     public double? LineWidthPoints { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (!OpenXmlValueParser.TryParse(Type, out OfficeChartTrendlineType trendlineType))
-            {
+    protected override void ProcessRecord() {
+        try {
+            if (!OpenXmlValueParser.TryParse(Type, out OfficeChartTrendlineType trendlineType)) {
                 throw new PSArgumentException($"Unknown trendline type '{Type}'.");
             }
 
-            if (ParameterSetName == ParameterSetSeriesName)
-            {
+            if (ParameterSetName == ParameterSetSeriesName) {
                 Chart.SetSeriesTrendline(SeriesName, trendlineType, Order, Period, Forward, Backward, Intercept, DisplayEquation.IsPresent, DisplayRSquared.IsPresent, LineColor, LineWidthPoints, IgnoreCase);
-            }
-            else
-            {
+            } else {
                 Chart.SetSeriesTrendline(SeriesIndex, trendlineType, Order, Period, Forward, Backward, Intercept, DisplayEquation.IsPresent, DisplayRSquared.IsPresent, LineColor, LineWidthPoints);
             }
 
-            WriteObject(Chart);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(Chart);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "ExcelChartTrendlineFailed", ErrorCategory.InvalidOperation, Chart));
         }
     }

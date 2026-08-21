@@ -16,7 +16,7 @@ Set-OfficeExcelPrintTitles [-Sheet <string>] [-SheetIndex <Int32>] [-FirstRow <I
 
 ### Path
 ```powershell
-Set-OfficeExcelPrintTitles [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-FirstRow <Int32>] [-LastRow <Int32>] [-FirstColumn <Int32>] [-LastColumn <Int32>] [-Clear] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelPrintTitles [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-FirstRow <Int32>] [-LastRow <Int32>] [-FirstColumn <Int32>] [-LastColumn <Int32>] [-Clear] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -107,22 +107,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -LastColumn
 Last 1-based column to repeat.
 
@@ -166,6 +150,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

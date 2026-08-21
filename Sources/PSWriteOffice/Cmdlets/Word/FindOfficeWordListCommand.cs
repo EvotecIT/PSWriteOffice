@@ -38,8 +38,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Find, "OfficeWordList", DefaultParameterSetName = ParameterSetPathText)]
 [OutputType(typeof(WordList))]
-public sealed class FindOfficeWordListCommand : PSCmdlet
-{
+public sealed class FindOfficeWordListCommand : PSCmdlet {
     private const string ParameterSetPathText = "PathText";
     private const string ParameterSetPathRegex = "PathRegex";
     private const string ParameterSetDocumentText = "DocumentText";
@@ -50,8 +49,8 @@ public sealed class FindOfficeWordListCommand : PSCmdlet
     /// <summary>Path to the document to open read-only for searching.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathText)]
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathRegex)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Open document to inspect. The caller controls the document lifetime.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentText)]
@@ -80,35 +79,26 @@ public sealed class FindOfficeWordListCommand : PSCmdlet
     public SwitchParameter CaseSensitive { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
+        try {
             IEnumerable<WordList> lists;
-            if (ParameterSetName == ParameterSetSectionText || ParameterSetName == ParameterSetSectionRegex)
-            {
+            if (ParameterSetName == ParameterSetSectionText || ParameterSetName == ParameterSetSectionRegex) {
                 lists = Section != null
                     ? Section.Lists
                     : Array.Empty<WordList>();
-            }
-            else
-            {
-                if (ParameterSetName == ParameterSetPathText || ParameterSetName == ParameterSetPathRegex)
-                {
-                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+            } else {
+                if (ParameterSetName == ParameterSetPathText || ParameterSetName == ParameterSetPathRegex) {
+                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                     document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                     dispose = true;
-                }
-                else
-                {
+                } else {
                     document = Document;
                 }
 
-                if (document == null)
-                {
+                if (document == null) {
                     throw new InvalidOperationException("Word document was not provided.");
                 }
 
@@ -119,18 +109,13 @@ public sealed class FindOfficeWordListCommand : PSCmdlet
                 ? WordObjectSearch.CreateRegexMatcher(Pattern, CaseSensitive.IsPresent)
                 : WordObjectSearch.CreateTextMatcher(Text, CaseSensitive.IsPresent);
 
-            foreach (var list in lists.Where(list => list.ListItems.Count > 0))
-            {
-                if (WordObjectSearch.MatchesList(list, matcher))
-                {
+            foreach (var list in lists.Where(list => list.ListItems.Count > 0)) {
+                if (WordObjectSearch.MatchesList(list, matcher)) {
                     WriteObject(list);
                 }
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

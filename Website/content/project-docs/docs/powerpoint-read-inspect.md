@@ -9,7 +9,7 @@ Use the PowerPoint read surface to inventory a deck before modification, build a
 ## Inspect slide by slide
 
 ```powershell
-$presentation = Get-OfficePowerPoint -FilePath '.\Briefing.pptx'
+$presentation = Get-OfficePowerPoint -Path '.\Briefing.pptx'
 for ($index = 0; $index -lt $presentation.Slides.Count; $index++) {
     $slide = Get-OfficePowerPointSlide -Presentation $presentation -Index $index
     Get-OfficePowerPointSlideSummary -Slide $slide

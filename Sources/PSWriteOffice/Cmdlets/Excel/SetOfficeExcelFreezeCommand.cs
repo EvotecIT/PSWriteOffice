@@ -19,8 +19,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelFreeze", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelFreeze")]
-public sealed class SetOfficeExcelFreezeCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelFreezeCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
@@ -44,28 +43,23 @@ public sealed class SetOfficeExcelFreezeCommand : PSCmdlet
     public int LeftColumns { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (TopRows < 0 || LeftColumns < 0)
-        {
+    protected override void ProcessRecord() {
+        if (TopRows < 0 || LeftColumns < 0) {
             throw new PSArgumentException("TopRows and LeftColumns must be zero or greater.");
         }
 
-        if (TopRows == 0 && LeftColumns == 0)
-        {
+        if (TopRows == 0 && LeftColumns == 0) {
             throw new PSArgumentException("Specify TopRows and/or LeftColumns to freeze.");
         }
 
         var sheet = ResolveSheet();
         sheet.Freeze(TopRows, LeftColumns);
+        WritePassThru(sheet);
     }
 
-    private ExcelSheet ResolveSheet()
-    {
-        if (ParameterSetName == ParameterSetDocument)
-        {
-            if (Document == null)
-            {
+    private ExcelSheet ResolveSheet() {
+        if (ParameterSetName == ParameterSetDocument) {
+            if (Document == null) {
                 throw new PSArgumentException("Provide an Excel document.");
             }
 

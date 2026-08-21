@@ -11,7 +11,7 @@ Adds a basic shape to a slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointShape [-Slide <PowerPointSlide>] [-ShapeType <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Name <string>] [-FillColor <string>] [-OutlineColor <string>] [-OutlineWidth <Double>] [<CommonParameters>]
+Add-OfficePowerPointShape [-Slide <PowerPointSlide>] [-ShapeType <string>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Name <string>] [-FillColor <string>] [-OutlineColor <string>] [-OutlineWidth <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -101,6 +101,22 @@ Outline width in points.
 
 ```yaml
 Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

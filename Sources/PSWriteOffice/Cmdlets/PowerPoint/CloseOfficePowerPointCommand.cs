@@ -10,18 +10,17 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Close without saving.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = Get-OfficePowerPoint -FilePath .\deck.pptx; Close-OfficePowerPoint -Presentation $ppt</code>
+///   <code>$ppt = Get-OfficePowerPoint -Path .\deck.pptx; Close-OfficePowerPoint -Presentation $ppt</code>
 ///   <para>Releases the loaded presentation instance.</para>
 /// </example>
 /// <example>
 ///   <summary>Save, open, and close.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Close-OfficePowerPoint -Presentation $ppt -Save -Show</code>
+///   <code>Close-OfficePowerPoint -Presentation $ppt -Save -Open</code>
 ///   <para>Saves the presentation, opens it in PowerPoint, and releases the object.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Close, "OfficePowerPoint", SupportsShouldProcess = true)]
-public sealed class CloseOfficePowerPointCommand : PSCmdlet
-{
+public sealed class CloseOfficePowerPointCommand : PSCmdlet {
     /// <summary>Presentation to close.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     [ValidateNotNull]
@@ -33,31 +32,26 @@ public sealed class CloseOfficePowerPointCommand : PSCmdlet
 
     /// <summary>Open the presentation in PowerPoint after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <summary>Password used to save the presentation as an encrypted package.</summary>
     [Parameter]
     public string? Password { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (Presentation == null)
-        {
+    protected override void ProcessRecord() {
+        if (Presentation == null) {
             WriteError(new ErrorRecord(new ArgumentNullException(nameof(Presentation)), "PresentationNull", ErrorCategory.InvalidArgument, null));
             return;
         }
 
-        try
-        {
-            var action = Save.IsPresent || Show.IsPresent ? "Save and close" : "Close";
-            if (ShouldProcess("PowerPoint presentation", action))
-            {
-                PowerPointDocumentService.ClosePresentation(Presentation, Save.IsPresent, Show.IsPresent, Password);
+        try {
+            var action = Save.IsPresent || Open.IsPresent ? "Save and close" : "Close";
+            if (ShouldProcess("PowerPoint presentation", action)) {
+                PowerPointDocumentService.ClosePresentation(Presentation, Save.IsPresent, Open.IsPresent, Password);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointCloseFailed", ErrorCategory.InvalidOperation, Presentation));
         }
     }

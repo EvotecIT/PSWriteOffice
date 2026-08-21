@@ -15,8 +15,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePdfSignature", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo), typeof(PdfSignatureValidationReport))]
-public sealed class SetOfficePdfSignatureCommand : PSCmdlet
-{
+public sealed class SetOfficePdfSignatureCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Prepared PDF path.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [Alias("FilePath")]
@@ -43,13 +42,11 @@ public sealed class SetOfficePdfSignatureCommand : PSCmdlet
     public SwitchParameter PassThruReport { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         var signaturePath = PdfCommandUtilities.ResolvePath(this, SignaturePath);
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write signed PDF"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write signed PDF")) {
             return;
         }
 
@@ -59,8 +56,11 @@ public sealed class SetOfficePdfSignatureCommand : PSCmdlet
             .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Security.CompleteExternalSignature(File.ReadAllBytes(signaturePath));
         document.Save(outputPath).RequireSuccess();
-        WriteObject(PassThruReport.IsPresent
-            ? document.Security.ValidateSignatures()
-            : new FileInfo(outputPath));
+        if (PassThruReport.IsPresent) {
+            WriteObject(document.Security.ValidateSignatures());
+            return;
+        }
+
+        WritePassThru(new FileInfo(outputPath));
     }
 }

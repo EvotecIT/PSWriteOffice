@@ -16,16 +16,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Add, "OfficeExcelTimeline", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelTimeline")]
 [OutputType(typeof(PSObject))]
-public sealed class AddOfficeExcelTimelineCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelTimelineCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -52,16 +51,13 @@ public sealed class AddOfficeExcelTimelineCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
-        ExcelPackagePartInfo part = workbook.Document.AddWorkbookTimelineCache(new ExcelTimelineCacheOptions
-        {
+        ExcelPackagePartInfo part = workbook.Document.AddWorkbookTimelineCache(new ExcelTimelineCacheOptions {
             Name = Name,
             SourceName = SourceName,
             PivotTableName = PivotTableName,
@@ -71,8 +67,7 @@ public sealed class AddOfficeExcelTimelineCommand : PSCmdlet
         string contentType = part.ContentType;
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var result = new PSObject();
             result.Properties.Add(new PSNoteProperty("Name", Name));
             result.Properties.Add(new PSNoteProperty("Kind", "Timeline"));

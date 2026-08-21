@@ -27,16 +27,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Copy, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelSheetCopy")]
 [OutputType(typeof(ExcelSheet))]
-public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
-{
+public sealed class CopyOfficeExcelSheetCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Target workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Target workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -73,11 +72,9 @@ public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
     public ExcelWorksheetCopyMode CopyMode { get; set; } = ExcelWorksheetCopyMode.Package;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var targetWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var targetWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, targetWorkbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
@@ -95,6 +92,6 @@ public sealed class CopyOfficeExcelSheetCommand : PSCmdlet
                 new ExcelWorksheetCopyOptions { CopyMode = CopyMode });
 
         targetWorkbook.SaveIfOwned();
-        WriteObject(copied);
+        WritePassThru(copied);
     }
 }

@@ -11,7 +11,7 @@ Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeEmail [-Path] <string> -Document <EmailDocument> [-Format <EmailFileFormat>] [-Options <EmailWriterOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficeEmail [-Path] <string> -Document <EmailDocument> [-Format <EmailFileFormat>] [-Options <EmailWriterOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -64,6 +64,22 @@ Optional preservation, projection, encoding, and output limits.
 
 ```yaml
 Type: EmailWriterOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

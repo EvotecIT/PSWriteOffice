@@ -11,6 +11,6 @@ PptNew -Path $path {
     }
 }
 
-$presentation = Get-OfficePowerPoint -FilePath $path
+$presentation = Get-OfficePowerPoint -Path $path
 Update-OfficePowerPointText -Presentation $presentation -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
 Close-OfficePowerPoint -Presentation $presentation -Save

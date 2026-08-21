@@ -11,7 +11,7 @@ Gets bookmarks from a Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordBookmark [-InputPath] <string> [-Name <string[]>] [<CommonParameters>]
+Get-OfficeWordBookmark [-Path] <string> [-Name <string[]>] [<CommonParameters>]
 ```
 
 ### Document
@@ -52,22 +52,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the .docx file.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
 Bookmark name filter (wildcards supported).
 
@@ -82,6 +66,22 @@ Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: True
+```
+
+### -Path
+Path to the .docx file.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
 ```
 
 ### CommonParameters

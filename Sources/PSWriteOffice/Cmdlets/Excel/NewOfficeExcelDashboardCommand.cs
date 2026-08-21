@@ -18,8 +18,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.New, "OfficeExcelDashboard", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelDashboard")]
 [OutputType(typeof(PSObject))]
-public sealed class NewOfficeExcelDashboardCommand : PSCmdlet
-{
+public sealed class NewOfficeExcelDashboardCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
@@ -28,8 +27,8 @@ public sealed class NewOfficeExcelDashboardCommand : PSCmdlet
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
@@ -108,34 +107,28 @@ public sealed class NewOfficeExcelDashboardCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         TableInputCollector.AddInput(_items, InputObject, preserveTabularInput: true);
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
+    protected override void EndProcessing() {
         var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         var table = ExcelTabularInputService.ToDataTable(rows, TableName);
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
-        {
+        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style)) {
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
 
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-
-        {
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
 
             return;
 
         }
 
         ExcelSheet sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
-        ExcelDashboardResult result = sheet.AddDashboard(table, new ExcelDashboardOptions
-        {
+        ExcelDashboardResult result = sheet.AddDashboard(table, new ExcelDashboardOptions {
             Title = Title,
             Subtitle = Subtitle,
             TableRow = TableRow,
@@ -152,8 +145,7 @@ public sealed class NewOfficeExcelDashboardCommand : PSCmdlet
         });
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var output = new PSObject();
             output.Properties.Add(new PSNoteProperty("TableRange", result.TableRange));
             output.Properties.Add(new PSNoteProperty("TableName", result.TableName));

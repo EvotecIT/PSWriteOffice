@@ -21,16 +21,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelNamedRange", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelNamedRangeCommand : AsyncPSCmdlet
-{
+public sealed class GetOfficeExcelNamedRangeCommand : AsyncPSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetUri = "Uri";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Remote workbook URI to inspect.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetUri)]
@@ -58,27 +57,20 @@ public sealed class GetOfficeExcelNamedRangeCommand : AsyncPSCmdlet
     public int? SheetIndex { get; set; }
 
     /// <inheritdoc />
-    protected override async Task ProcessRecordAsync()
-    {
+    protected override async Task ProcessRecordAsync() {
         ExcelDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-                if (!File.Exists(resolvedPath))
-                {
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+                if (!File.Exists(resolvedPath)) {
                     throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
                 }
                 document = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else if (ParameterSetName == ParameterSetUri)
-            {
-                if (Uri == null)
-                {
+            } else if (ParameterSetName == ParameterSetUri) {
+                if (Uri == null) {
                     throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
                 }
 
@@ -88,65 +80,52 @@ public sealed class GetOfficeExcelNamedRangeCommand : AsyncPSCmdlet
                     allowHttp: AllowHttp.IsPresent,
                     cancellationToken: CancelToken).ConfigureAwait(false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Excel workbook was not provided.");
             }
 
             var scope = ResolveSheet(document);
 
-            if (!string.IsNullOrWhiteSpace(Name))
-            {
+            if (!string.IsNullOrWhiteSpace(Name)) {
                 var range = document.GetNamedRange(Name!, scope);
-                if (range != null)
-                {
+                if (range != null) {
                     WriteObject(CreateRecord(
                         Name!,
                         range,
                         scope,
-                        ParameterSetName == ParameterSetPath ? InputPath : null,
+                        ParameterSetName == ParameterSetPath ? Path : null,
                         ParameterSetName == ParameterSetUri ? Uri : null));
                 }
                 return;
             }
 
             var ranges = document.GetAllNamedRanges(scope);
-            foreach (var entry in ranges)
-            {
+            foreach (var entry in ranges) {
                 WriteObject(CreateRecord(
                     entry.Key,
                     entry.Value,
                     scope,
-                    ParameterSetName == ParameterSetPath ? InputPath : null,
+                    ParameterSetName == ParameterSetPath ? Path : null,
                     ParameterSetName == ParameterSetUri ? Uri : null));
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }
     }
 
-    private ExcelSheet? ResolveSheet(ExcelDocument document)
-    {
-        if (!string.IsNullOrWhiteSpace(Sheet))
-        {
+    private ExcelSheet? ResolveSheet(ExcelDocument document) {
+        if (!string.IsNullOrWhiteSpace(Sheet)) {
             return document[Sheet!];
         }
 
-        if (SheetIndex.HasValue)
-        {
-            if (SheetIndex.Value < 0 || SheetIndex.Value >= document.Sheets.Count)
-            {
+        if (SheetIndex.HasValue) {
+            if (SheetIndex.Value < 0 || SheetIndex.Value >= document.Sheets.Count) {
                 throw new ArgumentOutOfRangeException(nameof(SheetIndex), "SheetIndex is out of range.");
             }
             return document.Sheets[SheetIndex.Value];
@@ -155,40 +134,33 @@ public sealed class GetOfficeExcelNamedRangeCommand : AsyncPSCmdlet
         return null;
     }
 
-    private static PSObject CreateRecord(string name, string range, ExcelSheet? scope, string? path, Uri? uri)
-    {
+    private static PSObject CreateRecord(string name, string range, ExcelSheet? scope, string? path, Uri? uri) {
         var record = new PSObject();
         var sheetName = scope?.Name;
         record.Properties.Add(new PSNoteProperty("Name", name));
         record.Properties.Add(new PSNoteProperty("Range", NormalizeRange(range)));
         record.Properties.Add(new PSNoteProperty("Scope", sheetName ?? "Workbook"));
-        if (!string.IsNullOrWhiteSpace(sheetName))
-        {
+        if (!string.IsNullOrWhiteSpace(sheetName)) {
             record.Properties.Add(new PSNoteProperty("Sheet", sheetName));
             record.Properties.Add(new PSNoteProperty("WorksheetName", sheetName));
         }
-        if (!string.IsNullOrWhiteSpace(path))
-        {
+        if (!string.IsNullOrWhiteSpace(path)) {
             record.Properties.Add(new PSNoteProperty("Path", path));
-            record.Properties.Add(new PSNoteProperty("InputPath", path));
+            record.Properties.Add(new PSNoteProperty("Path", path));
         }
-        if (uri != null)
-        {
+        if (uri != null) {
             record.Properties.Add(new PSNoteProperty("Uri", uri));
         }
         return record;
     }
 
-    private static string NormalizeRange(string range)
-    {
-        if (string.IsNullOrWhiteSpace(range))
-        {
+    private static string NormalizeRange(string range) {
+        if (string.IsNullOrWhiteSpace(range)) {
             return range;
         }
 
         var separatorIndex = FindSheetSeparator(range);
-        if (separatorIndex >= 0)
-        {
+        if (separatorIndex >= 0) {
             var prefix = range.Substring(0, separatorIndex + 1);
             var reference = range.Substring(separatorIndex + 1);
             return prefix + NormalizeA1Reference(reference);
@@ -197,22 +169,17 @@ public sealed class GetOfficeExcelNamedRangeCommand : AsyncPSCmdlet
         return NormalizeA1Reference(range);
     }
 
-    private static string NormalizeA1Reference(string reference)
-    {
+    private static string NormalizeA1Reference(string reference) {
         return Regex.IsMatch(reference, @"^\$?[A-Za-z]{1,3}\$?\d+(?::\$?[A-Za-z]{1,3}\$?\d+)?$")
             ? reference.Replace("$", string.Empty)
             : reference;
     }
 
-    private static int FindSheetSeparator(string range)
-    {
+    private static int FindSheetSeparator(string range) {
         var inQuotedSheetName = false;
-        for (var i = 0; i < range.Length; i++)
-        {
-            if (range[i] == '\'')
-            {
-                if (inQuotedSheetName && i + 1 < range.Length && range[i + 1] == '\'')
-                {
+        for (var i = 0; i < range.Length; i++) {
+            if (range[i] == '\'') {
+                if (inQuotedSheetName && i + 1 < range.Length && range[i + 1] == '\'') {
                     i++;
                     continue;
                 }
@@ -221,8 +188,7 @@ public sealed class GetOfficeExcelNamedRangeCommand : AsyncPSCmdlet
                 continue;
             }
 
-            if (!inQuotedSheetName && range[i] == '!')
-            {
+            if (!inQuotedSheetName && range[i] == '!') {
                 return i;
             }
         }

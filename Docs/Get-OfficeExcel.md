@@ -11,7 +11,7 @@ Opens an existing Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcel [-InputPath] <string> [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
+Get-OfficeExcel [-Path] <string> [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
 ```
 
 ### Uri
@@ -65,22 +65,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the workbook to load.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Password
 Password used to open an encrypted workbook package.
 
@@ -92,6 +76,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the workbook to load.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

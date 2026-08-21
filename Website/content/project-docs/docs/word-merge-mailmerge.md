@@ -10,7 +10,7 @@ Word has two distinct merge workflows. Document merge appends complete files int
 
 ```powershell
 Join-OfficeWordDocument `
-    -InputPath '.\Cover.docx' `
+    -Path '.\Cover.docx' `
     -AppendPath '.\Report.docx','.\Appendix.docx' `
     -OutputPath '.\Delivery-Pack.docx'
 ```

@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <para>Saves pending changes through OfficeIMO's normal save path, validates the package, and releases the workbook.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Close, "OfficeExcel")]
-public sealed class CloseOfficeExcelCommand : PSCmdlet
-{
+public sealed class CloseOfficeExcelCommand : PSCmdlet {
     /// <summary>Workbook to close.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public ExcelDocument Document { get; set; } = null!;
@@ -36,7 +35,8 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet
 
     /// <summary>Open the workbook in Excel after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <summary>Password used to save the workbook as an encrypted package.</summary>
     [Parameter]
@@ -80,15 +80,12 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet
     public string? DateSystem { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (Document == null)
-        {
+    protected override void ProcessRecord() {
+        if (Document == null) {
             return;
         }
 
-        if (Save.IsPresent || !string.IsNullOrEmpty(Path))
-        {
+        if (Save.IsPresent || !string.IsNullOrEmpty(Path)) {
             ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
             var resolvedPath = !string.IsNullOrWhiteSpace(Path)
                 ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
@@ -102,10 +99,8 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet
                 ClearCachedFormulaResults.IsPresent,
                 MarkFormulasDirty.IsPresent,
                 ForceFullCalculationOnOpen.IsPresent);
-            ExcelDocumentService.SaveDocument(Document, Show.IsPresent, resolvedPath, Password, saveOptions);
-        }
-        else
-        {
+            ExcelDocumentService.SaveDocument(Document, Open.IsPresent, resolvedPath, Password, saveOptions);
+        } else {
             ExcelDocumentService.CloseDocument(Document);
         }
     }

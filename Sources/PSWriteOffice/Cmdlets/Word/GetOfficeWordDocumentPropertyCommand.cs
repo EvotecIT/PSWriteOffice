@@ -20,15 +20,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordDocumentProperty", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordDocumentPropertyInfo))]
-public sealed class GetOfficeWordDocumentPropertyCommand : PSCmdlet
-{
+public sealed class GetOfficeWordDocumentPropertyCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the document.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Document to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -48,26 +47,20 @@ public sealed class GetOfficeWordDocumentPropertyCommand : PSCmdlet
     public SwitchParameter Custom { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document was not provided.");
             }
 
@@ -76,29 +69,22 @@ public sealed class GetOfficeWordDocumentPropertyCommand : PSCmdlet
 
             IEnumerable<WordDocumentPropertyInfo> properties = WordDocumentPropertyService.GetProperties(document, includeBuiltIn, includeCustom);
             var patterns = BuildPatterns(Name);
-            if (patterns.Count > 0)
-            {
+            if (patterns.Count > 0) {
                 properties = properties.Where(property => patterns.Any(pattern => pattern.IsMatch(property.Name)));
             }
 
             WriteObject(properties, enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }
     }
 
-    private static List<WildcardPattern> BuildPatterns(string[]? patterns)
-    {
+    private static List<WildcardPattern> BuildPatterns(string[]? patterns) {
         var compiled = new List<WildcardPattern>();
-        foreach (var pattern in patterns ?? Array.Empty<string>())
-        {
-            if (!string.IsNullOrWhiteSpace(pattern))
-            {
+        foreach (var pattern in patterns ?? Array.Empty<string>()) {
+            if (!string.IsNullOrWhiteSpace(pattern)) {
                 compiled.Add(new WildcardPattern(pattern, WildcardOptions.IgnoreCase));
             }
         }

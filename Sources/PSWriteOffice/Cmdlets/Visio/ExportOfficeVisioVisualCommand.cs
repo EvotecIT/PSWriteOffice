@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficeVisioVisual", SupportsShouldProcess = true)]
 [OutputType(typeof(OfficeVisioVisualConversionResult), typeof(FileInfo))]
-public sealed class ExportOfficeVisioVisualCommand : OfficeVisioVisualCommandBase
-{
+public sealed class ExportOfficeVisioVisualCommand : OfficeVisioVisualCommandBase {
     private object? _bufferedInput;
     private bool _inputSeen;
 
@@ -32,22 +31,20 @@ public sealed class ExportOfficeVisioVisualCommand : OfficeVisioVisualCommandBas
 
     /// <summary>Open the generated VSDX after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <summary>Emit the conversion result instead of the saved file.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (BufferPipelineByte(InputObject))
-        {
+    protected override void ProcessRecord() {
+        if (BufferPipelineByte(InputObject)) {
             return;
         }
 
-        if (_inputSeen)
-        {
+        if (_inputSeen) {
             throw new PSInvalidOperationException(
                 "Export-OfficeVisioVisual accepts one input artifact for one output path. Invoke the cmdlet separately for each destination.");
         }
@@ -56,35 +53,29 @@ public sealed class ExportOfficeVisioVisualCommand : OfficeVisioVisualCommandBas
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
+    protected override void EndProcessing() {
         byte[]? jsonBytes = CompletePipelineBytes();
-        if (jsonBytes != null)
-        {
+        if (jsonBytes != null) {
             _bufferedInput = jsonBytes;
             _inputSeen = true;
         }
 
-        if (!_inputSeen)
-        {
+        if (!_inputSeen) {
             return;
         }
 
         string fullPath = VisioCommandUtilities.ResolvePath(this, Path);
-        if (!string.Equals(System.IO.Path.GetExtension(fullPath), ".vsdx", System.StringComparison.OrdinalIgnoreCase))
-        {
+        if (!string.Equals(System.IO.Path.GetExtension(fullPath), ".vsdx", System.StringComparison.OrdinalIgnoreCase)) {
             throw new PSArgumentException("Native editable Visio output must use the .vsdx extension.", nameof(Path));
         }
-        if (!ShouldProcess(fullPath, "Export CFX visual artifact as native editable Visio"))
-        {
+        if (!ShouldProcess(fullPath, "Export CFX visual artifact as native editable Visio")) {
             return;
         }
 
         OfficeVisioVisualConversionResult result = ResolveVisioVisual(_bufferedInput!);
         VisioCommandUtilities.EnsureDirectory(fullPath);
         result.Document.Save(fullPath);
-        if (Show.IsPresent)
-        {
+        if (Open.IsPresent) {
             FileOpenService.Open(fullPath);
         }
         WriteObject(PassThru.IsPresent ? result : new FileInfo(fullPath));
