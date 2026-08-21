@@ -1911,8 +1911,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ExportOfficeDocumentPdfCommand.cs",
-      "sourceLine": 36,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ExportOfficeDocumentPdfCommand.cs#L36"
+      "sourceLine": 37,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ExportOfficeDocumentPdfCommand.cs#L37"
     },
     {
       "name": "Export-OfficeExcel",
@@ -3286,6 +3286,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelDashboardCommand.cs#L21"
     },
     {
+      "name": "New-OfficeExcelPdfOptions",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelPdfOptionsCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelPdfOptionsCommand.cs#L18"
+    },
+    {
       "name": "New-OfficeMarkdown",
       "kind": "Cmdlet",
       "aliases": [
@@ -3294,6 +3302,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/NewOfficeMarkdownCommand.cs",
       "sourceLine": 33,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/NewOfficeMarkdownCommand.cs#L33"
+    },
+    {
+      "name": "New-OfficeMarkdownPdfOptions",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/NewOfficeMarkdownPdfOptionsCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Markdown/NewOfficeMarkdownPdfOptionsCommand.cs#L18"
     },
     {
       "name": "New-OfficeOpenDocument",
@@ -3383,6 +3399,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointDeckPlanCommand.cs#L27"
     },
     {
+      "name": "New-OfficePowerPointPdfOptions",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointPdfOptionsCommand.cs",
+      "sourceLine": 16,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePowerPointPdfOptionsCommand.cs#L16"
+    },
+    {
       "name": "New-OfficeRtf",
       "kind": "Cmdlet",
       "aliases": [
@@ -3391,6 +3415,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfCommand.cs",
       "sourceLine": 21,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfCommand.cs#L21"
+    },
+    {
+      "name": "New-OfficeRtfPdfOptions",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfPdfOptionsCommand.cs",
+      "sourceLine": 15,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfPdfOptionsCommand.cs#L15"
     },
     {
       "name": "New-OfficeTextRun",
@@ -3436,6 +3468,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs",
       "sourceLine": 34,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs#L34"
+    },
+    {
+      "name": "New-OfficeWordPdfOptions",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordPdfOptionsCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordPdfOptionsCommand.cs#L18"
     },
     {
       "name": "New-OfficeWordTableCell",

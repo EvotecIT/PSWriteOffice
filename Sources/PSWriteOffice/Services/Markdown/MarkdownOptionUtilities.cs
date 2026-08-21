@@ -163,7 +163,7 @@ internal static class MarkdownOptionUtilities
 
     internal static MarkdownPdfSaveOptions BuildPdfOptions(IMarkdownPdfOptionSource source, PSCmdlet command, string? fallbackBaseDirectory)
     {
-        var options = source.MarkdownPdfOptions ?? new MarkdownPdfSaveOptions();
+        var options = source.MarkdownPdfOptions?.Clone() ?? new MarkdownPdfSaveOptions();
 
         if (source.PdfOptions != null) options.PdfOptions = source.PdfOptions;
         if (source.PdfTheme.HasValue) options.Theme = MarkdownVisualTheme.Create(source.PdfTheme.Value);
@@ -200,8 +200,8 @@ internal static class MarkdownOptionUtilities
 
     internal static void SetPdfResultVariables(IMarkdownPdfOptionSource source, PSCmdlet command, OfficeIMO.Pdf.PdfSaveResult result)
     {
-        SetVariable(command, source.PdfWarningVariable, result.Warnings);
-        SetVariable(command, source.PdfConversionReportVariable, result.Report);
+        PdfCommandUtilities.SetVariable(command, source.PdfWarningVariable, result.Warnings);
+        PdfCommandUtilities.SetVariable(command, source.PdfConversionReportVariable, result.Report);
     }
 
     internal static MarkdownVisualTheme CreateTheme(OfficeVisualThemeKind kind) => MarkdownVisualTheme.Create(kind);
@@ -241,13 +241,4 @@ internal static class MarkdownOptionUtilities
         };
     }
 
-    private static void SetVariable(PSCmdlet command, string? name, object? value)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            return;
-        }
-
-        command.SessionState.PSVariable.Set(name!, value);
-    }
 }

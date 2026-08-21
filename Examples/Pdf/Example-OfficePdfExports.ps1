@@ -38,7 +38,16 @@ New-OfficeMarkdown -Path $markdownPath {
     MarkdownParagraph 'Markdown keeps the same authoring mindset with format-appropriate simplification.'
     MarkdownTable -InputObject $rows
 }
-Export-OfficeDocumentPdf -InputPath $markdownPath -Path $markdownPdf
+$markdownOptions = New-OfficeMarkdownPdfOptions `
+    -Title 'Markdown PDF export' `
+    -Author 'PSWriteOffice' `
+    -CreateOutlineFromHeadings
+Export-OfficeDocumentPdf `
+    -InputPath $markdownPath `
+    -Path $markdownPdf `
+    -MarkdownOptions $markdownOptions `
+    -PdfWarningVariable markdownWarnings `
+    -PdfConversionReportVariable markdownReport
 
 New-OfficePowerPoint -Path $powerPointPath {
     PptSlide {

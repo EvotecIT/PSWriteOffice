@@ -1060,8 +1060,14 @@ Creates a new Excel workbook using the DSL.
 ### [New-OfficeExcelDashboard](New-OfficeExcelDashboard.md)
 Builds a worksheet dashboard from tabular data using OfficeIMO dashboard defaults.
 
+### [New-OfficeExcelPdfOptions](New-OfficeExcelPdfOptions.md)
+Creates discoverable Excel-to-PDF conversion options for Export-OfficeDocumentPdf.
+
 ### [New-OfficeMarkdown](New-OfficeMarkdown.md)
 Creates a Markdown document using a DSL scriptblock.
+
+### [New-OfficeMarkdownPdfOptions](New-OfficeMarkdownPdfOptions.md)
+Creates discoverable Markdown-to-PDF conversion options for Export-OfficeDocumentPdf.
 
 ### [New-OfficeOpenDocument](New-OfficeOpenDocument.md)
 Creates a native ODT, ODS, or ODP document.
@@ -1090,8 +1096,14 @@ Creates a PowerPoint presentation using the DSL.
 ### [New-OfficePowerPointDeckPlan](New-OfficePowerPointDeckPlan.md)
 Creates a semantic PowerPoint deck plan for designer rendering.
 
+### [New-OfficePowerPointPdfOptions](New-OfficePowerPointPdfOptions.md)
+Creates discoverable PowerPoint-to-PDF conversion options for Export-OfficeDocumentPdf.
+
 ### [New-OfficeRtf](New-OfficeRtf.md)
 Creates an RTF document with plain paragraph content.
+
+### [New-OfficeRtfPdfOptions](New-OfficeRtfPdfOptions.md)
+Creates discoverable RTF-to-PDF conversion options for Export-OfficeDocumentPdf.
 
 ### [New-OfficeTextRun](New-OfficeTextRun.md)
 Creates a reusable rich text run specification for Word, Excel, PowerPoint, and PDF commands.
@@ -1104,6 +1116,9 @@ Generates the OfficeIMO Visio reference gallery as editable .vsdx diagrams.
 
 ### [New-OfficeWord](New-OfficeWord.md)
 Creates a Word document using the DSL.
+
+### [New-OfficeWordPdfOptions](New-OfficeWordPdfOptions.md)
+Creates discoverable Word-to-PDF conversion options for Export-OfficeDocumentPdf.
 
 ### [New-OfficeWordTableCell](New-OfficeWordTableCell.md)
 Creates a reusable Word table cell definition for explicit table rows.

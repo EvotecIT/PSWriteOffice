@@ -5,6 +5,7 @@ using OfficeIMO.Excel;
 using OfficeIMO.Excel.Pdf;
 using OfficeIMO.Markdown;
 using OfficeIMO.Markdown.Pdf;
+using OfficeIMO.Pdf;
 using OfficeIMO.PowerPoint;
 using OfficeIMO.PowerPoint.Pdf;
 using OfficeIMO.Rtf;
@@ -75,6 +76,14 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     [Parameter]
     public RtfPdfSaveOptions? RtfOptions { get; set; }
 
+    /// <summary>Variable name that receives structured PDF conversion warnings.</summary>
+    [Parameter]
+    public string? PdfWarningVariable { get; set; }
+
+    /// <summary>Variable name that receives the structured PDF conversion report.</summary>
+    [Parameter]
+    public string? PdfConversionReportVariable { get; set; }
+
     /// <summary>Open the PDF after exporting it.</summary>
     [Parameter]
     [Alias("Show")]
@@ -100,7 +109,10 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
                 document = LoadDocument(out closeOwnedDocument);
             }
 
-            SaveDocument(document, outputPath);
+            PdfSaveResult result = SaveDocument(document, outputPath);
+            PdfCommandUtilities.SetVariable(this, PdfWarningVariable, result.Warnings);
+            PdfCommandUtilities.SetVariable(this, PdfConversionReportVariable, result.Report);
+            result.RequireSuccess();
         } finally {
             closeOwnedDocument?.Invoke();
         }
@@ -144,23 +156,18 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
         }
     }
 
-    private void SaveDocument(object document, string outputPath) {
+    private PdfSaveResult SaveDocument(object document, string outputPath) {
         switch (document) {
             case WordDocument word:
-                word.SaveAsPdf(outputPath, WordOptions ?? new WordPdfSaveOptions()).RequireSuccess();
-                return;
+                return word.SaveAsPdf(outputPath, WordOptions ?? new WordPdfSaveOptions());
             case ExcelDocument excel:
-                excel.SaveAsPdf(outputPath, ExcelOptions ?? new ExcelPdfSaveOptions()).RequireSuccess();
-                return;
+                return excel.SaveAsPdf(outputPath, ExcelOptions ?? new ExcelPdfSaveOptions());
             case PowerPointPresentation powerPoint:
-                powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointPdfSaveOptions()).RequireSuccess();
-                return;
+                return powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointPdfSaveOptions());
             case MarkdownDoc markdown:
-                markdown.SaveAsPdf(outputPath, MarkdownOptions ?? new MarkdownPdfSaveOptions()).RequireSuccess();
-                return;
+                return markdown.SaveAsPdf(outputPath, MarkdownOptions ?? new MarkdownPdfSaveOptions());
             case RtfDocument rtf:
-                rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfPdfSaveOptions()).RequireSuccess();
-                return;
+                return rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfPdfSaveOptions());
             default:
                 throw new PSArgumentException(
                     $"Document type '{document?.GetType().FullName ?? "<null>"}' cannot be exported to PDF. Use a WordDocument, ExcelDocument, PowerPointPresentation, MarkdownDoc, or RtfDocument.",

@@ -10,7 +10,7 @@ PSWriteOffice is not limited to the three desktop Office formats. Smaller comman
 
 ## Markdown
 
-Twenty-five commands build and inspect typed Markdown. Add headings, paragraphs, lists, task lists, tables, code, callouts, details, front matter, images, quotes, definition lists, and tables of contents. Reader commands expose headings, nodes, tables, and front matter; converters bridge HTML and Word workflows.
+Twenty-six commands build and inspect typed Markdown. Add headings, paragraphs, lists, task lists, tables, code, callouts, details, front matter, images, quotes, definition lists, and tables of contents. Reader commands expose headings, nodes, tables, and front matter; converters bridge HTML and Word workflows.
 
 Start with the [operations runbook](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Markdown/Recipe-Markdown-OperationsRunbook.ps1) for operational content or the [release notes recipe](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Markdown/Recipe-Markdown-ReleaseNotes.ps1) for publishable change documentation. The [DSL cookbook](/docs/pswriteoffice/dsl-cookbook/) includes both and shows how the same data can also produce Word, Excel, PowerPoint, and PDF output.
 
@@ -24,7 +24,7 @@ Use the focused Markdown guides for complete workflows:
 
 ## RTF
 
-Five canonical commands create, load, update, convert, and inspect Rich Text Format documents. Use RTF when a lightweight rich-text interchange file is the required source or destination, and keep loss-aware conversion diagnostics for complex content.
+Six canonical commands create, load, update, convert, inspect, and configure PDF export for Rich Text Format documents. Use RTF when a lightweight rich-text interchange file is the required source or destination, and keep loss-aware conversion diagnostics for complex content.
 
 See [update and convert RTF](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Rtf/Recipe-Rtf-UpdateAndConvert.ps1) for an end-to-end example.
 

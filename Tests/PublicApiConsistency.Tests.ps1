@@ -68,6 +68,52 @@ Describe 'PSWriteOffice public API consistency' {
         $command.ParameterSets.Name | Should -Contain 'Path'
     }
 
+    It 'provides a discoverable PowerShell builder for every PDF export options type' {
+        $command = Get-Command Export-OfficeDocumentPdf
+        $builders = [ordered]@{
+            WordOptions       = 'New-OfficeWordPdfOptions'
+            ExcelOptions      = 'New-OfficeExcelPdfOptions'
+            PowerPointOptions = 'New-OfficePowerPointPdfOptions'
+            MarkdownOptions   = 'New-OfficeMarkdownPdfOptions'
+            RtfOptions        = 'New-OfficeRtfPdfOptions'
+        }
+
+        foreach ($entry in $builders.GetEnumerator()) {
+            $builder = Get-Command $entry.Value
+            $builder.OutputType.Type.Name | Should -Contain $command.Parameters[$entry.Key].ParameterType.Name
+        }
+
+        foreach ($builderName in $builders.Values) {
+            $builder = Get-Command $builderName
+            @($builder.Parameters.Values | Where-Object ParameterType -eq ([System.Nullable[bool]])) |
+                Should -HaveCount 0 -Because "$builderName should expose idiomatic switches rather than nullable .NET booleans"
+        }
+    }
+
+    It 'does not require raw writer or OpenDocument load option objects for common controls' {
+        $openDocument = Get-Command Get-OfficeOpenDocument
+        foreach ($parameter in @(
+            'Password',
+            'MaxPackageBytes',
+            'MaxEntries',
+            'MaxEntryUncompressedBytes',
+            'MaxTotalUncompressedBytes',
+            'MaxTotalKdfIterations',
+            'MaxCompressionRatio',
+            'MaxDepth',
+            'MaxXmlCharacters',
+            'MaxXmlDepth'
+        )) {
+            $openDocument.Parameters.Keys | Should -Contain $parameter
+        }
+
+        foreach ($name in 'Save-OfficeAsciiDoc', 'Save-OfficeLatex') {
+            $command = Get-Command $name
+            $command.Parameters.Keys | Should -Contain 'Mode'
+            $command.Parameters.Keys | Should -Contain 'LineEnding'
+        }
+    }
+
     It 'uses Path and DestinationPath for file copies' {
         $command = Get-Command Copy-OfficeExcelWorkbook
 

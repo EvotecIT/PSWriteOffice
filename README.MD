@@ -320,6 +320,29 @@ $document | Export-OfficeDocumentPdf -Path .\Report-Live.pdf
 $document | Close-OfficeWord
 ```
 
+Format-specific controls are created with discoverable PowerShell commands—no
+hashtable keys or .NET constructors to guess:
+
+```powershell
+$pdfOptions = New-OfficeMarkdownPdfOptions `
+    -Title 'Service report' `
+    -Author 'Evotec' `
+    -IncludeLocalImages `
+    -BaseDirectory .\Assets `
+    -CreateOutlineFromHeadings
+
+Export-OfficeDocumentPdf `
+    -InputPath .\Report.md `
+    -Path .\Report.pdf `
+    -MarkdownOptions $pdfOptions `
+    -PdfWarningVariable pdfWarnings `
+    -PdfConversionReportVariable pdfReport
+```
+
+Equivalent builders are available for Word, Excel, PowerPoint, and RTF:
+`New-OfficeWordPdfOptions`, `New-OfficeExcelPdfOptions`,
+`New-OfficePowerPointPdfOptions`, and `New-OfficeRtfPdfOptions`.
+
 ### Excel chart finishing
 
 ```powershell

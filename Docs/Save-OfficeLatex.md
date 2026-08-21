@@ -11,7 +11,7 @@ Saves an OfficeIMO LaTeX document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeLatex [-Document] <LatexDocument> [-Path] <string> [-Options <LatexWriterOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficeLatex [-Document] <LatexDocument> [-Path] <string> [-Options <LatexWriterOptions>] [-Mode <LatexWriterMode>] [-LineEnding <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -40,6 +40,38 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -LineEnding
+Canonical line ending: LF, CRLF, or CR. Omit it to retain the source preference.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: LF, CRLF, CR
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Mode
+Writer mode. Preserve retains unchanged source; Canonical normalizes output.
+
+```yaml
+Type: LatexWriterMode
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Preserve, Canonical
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

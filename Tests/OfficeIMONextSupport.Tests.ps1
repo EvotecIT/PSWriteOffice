@@ -106,6 +106,24 @@ Describe 'Expanded OfficeIMO support' {
         Test-Path -LiteralPath $brokenLatexOutput | Should -BeFalse
     }
 
+    It 'exposes writer modes and line endings as ordinary PowerShell parameters' {
+        $asciiSource = Join-Path $TestDrive 'writer-source.adoc'
+        $asciiOutput = Join-Path $TestDrive 'writer-output.adoc'
+        [System.IO.File]::WriteAllText($asciiSource, "= Title`n`nBody")
+        Get-OfficeAsciiDoc -Path $asciiSource |
+            Save-OfficeAsciiDoc -Path $asciiOutput -Mode Canonical -LineEnding CRLF
+        [System.IO.File]::ReadAllText($asciiOutput) | Should -Match "`r`n"
+
+        $latexSource = Join-Path $TestDrive 'writer-source.tex'
+        $latexOutput = Join-Path $TestDrive 'writer-output.tex'
+        [System.IO.File]::WriteAllText($latexSource, "\\documentclass{article}`n\\begin{document}`nBody`n\\end{document}")
+        Get-OfficeLatex -Path $latexSource |
+            Save-OfficeLatex -Path $latexOutput -Mode Canonical -LineEnding LF
+        $latexText = [System.IO.File]::ReadAllText($latexOutput)
+        $latexText | Should -Match "`n"
+        $latexText | Should -Not -Match "`r`n"
+    }
+
     It 'creates and reloads native ODT, ODS, and ODP packages' {
         $cases = @(
             @{ Kind = 'Text'; Extension = 'odt'; Type = 'OfficeIMO.OpenDocument.OdtDocument' },
@@ -121,6 +139,9 @@ Describe 'Expanded OfficeIMO support' {
             Test-Path -LiteralPath $path | Should -BeTrue
             (Get-OfficeOpenDocument -Path $path).GetType().FullName | Should -Be $case.Type
         }
+
+        { Get-OfficeOpenDocument -Path $path -MaxPackageBytes 1 -ErrorAction Stop } |
+            Should -Throw '*package*'
     }
 
     It 'protects OpenDocument destinations and validates conversion extensions' {

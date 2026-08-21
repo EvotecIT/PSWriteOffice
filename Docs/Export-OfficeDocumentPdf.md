@@ -11,12 +11,12 @@ Exports a Word, Excel, PowerPoint, Markdown, or RTF document to PDF.
 ## SYNTAX
 ### Document (Default)
 ```powershell
-Export-OfficeDocumentPdf [-Document] <Object> [-Path] <string> [-WordOptions <WordPdfSaveOptions>] [-ExcelOptions <ExcelPdfSaveOptions>] [-PowerPointOptions <PowerPointPdfSaveOptions>] [-MarkdownOptions <MarkdownPdfSaveOptions>] [-RtfOptions <RtfPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeDocumentPdf [-Document] <Object> [-Path] <string> [-WordOptions <WordPdfSaveOptions>] [-ExcelOptions <ExcelPdfSaveOptions>] [-PowerPointOptions <PowerPointPdfSaveOptions>] [-MarkdownOptions <MarkdownPdfSaveOptions>] [-RtfOptions <RtfPdfSaveOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Export-OfficeDocumentPdf [-InputPath] <string> [-Path] <string> [-Password <string>] [-WordOptions <WordPdfSaveOptions>] [-ExcelOptions <ExcelPdfSaveOptions>] [-PowerPointOptions <PowerPointPdfSaveOptions>] [-MarkdownOptions <MarkdownPdfSaveOptions>] [-RtfOptions <RtfPdfSaveOptions>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeDocumentPdf [-InputPath] <string> [-Path] <string> [-Password <string>] [-WordOptions <WordPdfSaveOptions>] [-ExcelOptions <ExcelPdfSaveOptions>] [-PowerPointOptions <PowerPointPdfSaveOptions>] [-MarkdownOptions <MarkdownPdfSaveOptions>] [-RtfOptions <RtfPdfSaveOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -161,6 +161,38 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PdfConversionReportVariable
+Variable name that receives the structured PDF conversion report.
+
+```yaml
+Type: String
+Parameter Sets: Document, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PdfWarningVariable
+Variable name that receives structured PDF conversion warnings.
+
+```yaml
+Type: String
+Parameter Sets: Document, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
