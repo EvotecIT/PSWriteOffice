@@ -11,12 +11,12 @@ Opens an existing Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcel [-Path] <string> [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
+Get-OfficeExcel [-Path] <string> [-ReadOnly] [-Password <string>] [<CommonParameters>]
 ```
 
 ### Uri
 ```powershell
-Get-OfficeExcel [-Uri] <uri> [-AllowHttp] [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
+Get-OfficeExcel [-Uri] <uri> [-AllowHttp] [-ReadOnly] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,22 +39,6 @@ Allow HTTP workbook downloads in addition to HTTPS.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Uri
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -AutoSave
-Enable automatic saves on the underlying document.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Path, Uri
 Aliases: None
 Possible values:
 

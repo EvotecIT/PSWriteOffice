@@ -11,12 +11,12 @@ Exports workbook sheets as PNG or SVG images with one result per sheet.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Export-OfficeExcelImage [-Path] <string> [-OutputPath] <string> [-Format <OfficeImageExportFormat>] [-Options <ExcelWorkbookImageExportOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeExcelImage [-Path] <string> [-OutputPath] <string> [-Format <OfficeImageExportFormat>] [-Options <ExcelWorkbookImageExportOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Export-OfficeExcelImage [-OutputPath] <string> -Document <ExcelDocument> [-Format <OfficeImageExportFormat>] [-Options <ExcelWorkbookImageExportOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeExcelImage [-OutputPath] <string> -Document <ExcelDocument> [-Format <OfficeImageExportFormat>] [-Options <ExcelWorkbookImageExportOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,7 +29,7 @@ Exports workbook sheets as PNG or SVG images with one result per sheet.
 PS> Export-OfficeExcelImage -Path .\Report.xlsx -OutputPath .\Images
 ```
 
-Writes one image per selected sheet and returns OfficeImageExportResult objects.
+Writes one image per selected sheet. Add -PassThru to receive the structured export results.
 
 ## PARAMETERS
 
@@ -92,6 +92,22 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit one structured image export result per saved sheet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

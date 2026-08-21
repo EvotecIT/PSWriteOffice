@@ -21,7 +21,8 @@ Saves an OfficeIMO LaTeX document.
 
 ### EXAMPLE 1
 ```powershell
-Save-OfficeLatex -Path 'C:\Path'
+PS> $document = Get-OfficeLatex -Path .\Article.tex
+$document | Save-OfficeLatex -Path .\Article-normalized.tex -Mode Canonical
 ```
 
 

@@ -63,6 +63,10 @@ public sealed class NewOfficeWordCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
+        if (NoSave.IsPresent && Open.IsPresent) {
+            throw new PSArgumentException("-Open cannot be used with -NoSave because no file is written. Save the returned document explicitly, then use -Open on Save-OfficeWord.", nameof(Open));
+        }
+
         var fullPath = GetResolvedPath();
         var action = NoSave.IsPresent
             ? string.IsNullOrWhiteSpace(TemplatePath)
@@ -97,7 +101,6 @@ public sealed class NewOfficeWordCommand : PSCmdlet {
             }
 
             WordDocumentService.SaveDocument(document, Open.IsPresent, fullPath, Password);
-            WordDocumentService.CloseDocument(document);
             closed = true;
 
             if (PassThru.IsPresent) {

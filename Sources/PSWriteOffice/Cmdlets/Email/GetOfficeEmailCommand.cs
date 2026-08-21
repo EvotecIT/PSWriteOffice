@@ -8,6 +8,12 @@ using OfficeIMO.Email.Store;
 namespace PSWriteOffice.Cmdlets.Email;
 
 /// <summary>Reads a native EML, EMLX, MSG, or TNEF artifact with bounded diagnostics.</summary>
+/// <example>
+///   <summary>Read a message without retaining attachment payloads.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$options = New-OfficeEmailReaderOptions -ExcludeAttachmentContent -MaxAttachmentBytes 25MB
+/// Get-OfficeEmail -Path .\Message.msg -Options $options -AsResult</code>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeEmail")]
 [OutputType(typeof(EmailDocument), typeof(EmailReadResult), typeof(EmailStoreReadResult))]
 public sealed class GetOfficeEmailCommand : PSCmdlet

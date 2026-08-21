@@ -36,13 +36,33 @@ See [safe CSV export](https://github.com/EvotecIT/PSWriteOffice/blob/main/Exampl
 
 ## OpenDocument
 
-Five commands create, read, convert, and save ODT, ODS, and ODP artifacts through OfficeIMO.OpenDocument. These are native managed workflows rather than LibreOffice automation.
+OpenDocument commands create, read, convert, and save ODT, ODS, and ODP artifacts through OfficeIMO.OpenDocument. These are native managed workflows rather than LibreOffice automation. Creation is composable from PowerShell: ODT supports headings and paragraphs, ODS supports sheets and typed cells, and ODP supports slides and positioned text boxes.
+
+```powershell
+New-OfficeOpenDocument -Kind Text -Path .\Report.odt -Content {
+    Add-OfficeOpenDocumentHeading -Text 'Service report' -Level 1
+    Add-OfficeOpenDocumentParagraph -Text 'Generated without desktop Office or LibreOffice.'
+}
+
+New-OfficeOpenDocument -Kind Spreadsheet -Path .\Status.ods -Content {
+    Add-OfficeOpenDocumentSheet -Name Services -Content {
+        Set-OfficeOpenDocumentCell -Row 0 -Column 0 -Value 'Service'
+        Set-OfficeOpenDocumentCell -Row 0 -Column 1 -Value 'Healthy'
+        Set-OfficeOpenDocumentCell -Row 1 -Column 0 -Value 'Directory'
+        Set-OfficeOpenDocumentCell -Row 1 -Column 1 -Value $true
+    }
+}
+```
+
+Use `New-OfficeWordOpenDocumentOptions`, `New-OfficeExcelOpenDocumentOptions`, or `New-OfficePowerPointOpenDocumentOptions` when conversion needs explicit fidelity or resource controls. The raw OfficeIMO option parameters remain available as an advanced escape hatch.
 
 ## Email
 
-Four commands load and save messages and mailbox artifacts through OfficeIMO.Email. The underlying engine covers multiple message, personal-information, store, and address-book families; exact support and diagnostics belong to the generated command/API reference.
+Four artifact commands load and save messages and mailbox files through OfficeIMO.Email, and five option builders expose their safety and fidelity policies. The underlying engine covers multiple message, personal-information, store, and address-book families; exact support and diagnostics belong to the generated command/API reference.
 
-The module boundary is deliberate. PSWriteOffice treats email as document content: it reads or writes supported artifacts and lets OfficeIMO.Reader normalize mail sources for mixed-format search and reporting. [Mailozaurr](https://github.com/EvotecIT/Mailozaurr) owns transport, authentication, mailbox/store lifecycle, PST/OST import and conversion, querying, export, and delivery. Workflows can use Mailozaurr to acquire or deliver content and pass ordinary paths or attachments to PSWriteOffice without either module duplicating the other's operational responsibilities.
+The module boundary is deliberate. PSWriteOffice treats email as document content: it reads or writes supported artifacts and lets OfficeIMO.Reader normalize mail sources for mixed-format search and reporting. [Mailozaurr](https://github.com/EvotecIT/Mailozaurr) owns transport, authentication, mailbox/store lifecycle, PST/OST import and conversion, querying, export, and delivery. Workflows can use Mailozaurr to acquire or deliver content and pass ordinary paths or attachments to PSWriteOffice without either module duplicating the other's operational responsibilities. The [PDF delivery recipe](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Integrations/Recipe-Mailozaurr-PdfDelivery.ps1) is a runnable handoff: PSWriteOffice creates the attachment and Mailozaurr sends it. It uses `-WhatIf` unless `-Send` is explicitly supplied.
+
+Advanced safety and fidelity controls are also PowerShell-native. Use `New-OfficeEmailReaderOptions`, `New-OfficeEmailWriterOptions`, `New-OfficeEmailStoreReaderOptions`, `New-OfficeEmailMailboxReaderOptions`, and `New-OfficeEmailMailboxWriterOptions`; their output binds directly to the matching `-Options` or `-StoreOptions` parameter. You do not need a hashtable, `New-Object`, or an OfficeIMO constructor.
 
 ## AsciiDoc and LaTeX
 

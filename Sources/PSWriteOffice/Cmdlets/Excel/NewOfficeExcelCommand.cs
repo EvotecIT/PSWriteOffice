@@ -137,6 +137,10 @@ public sealed class NewOfficeExcelCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
+        if (NoSave.IsPresent && Open.IsPresent) {
+            throw new PSArgumentException("-Open cannot be used with -NoSave because no file is written. Save the returned workbook explicitly, then use -Open on Save-OfficeExcel.", nameof(Open));
+        }
+
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         var action = NoSave.IsPresent
             ? string.IsNullOrWhiteSpace(TemplatePath)
@@ -200,7 +204,6 @@ public sealed class NewOfficeExcelCommand : PSCmdlet {
                     MarkFormulasDirty.IsPresent,
                     ForceFullCalculationOnOpen.IsPresent);
                 ExcelDocumentService.SaveDocument(document, Open.IsPresent, resolvedPath, Password, saveOptions);
-                ExcelDocumentService.CloseDocument(document);
                 closed = true;
             } else {
                 WriteObject(document);

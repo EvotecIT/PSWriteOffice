@@ -11,7 +11,7 @@ Opens an existing Word document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeWord [-Path] <string> [[-Content] <scriptblock>] [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
+Get-OfficeWord [-Path] <string> [[-Content] <scriptblock>] [-ReadOnly] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,22 +34,6 @@ PS> $doc = Get-OfficeWord -Path .\Report.docx { WordParagraph -Text 'Appended by
 Loads the document, appends content through the DSL, and returns the open document for saving or further edits.
 
 ## PARAMETERS
-
-### -AutoSave
-Enable AutoSave when editing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -Content
 Optional DSL scriptblock to execute against the loaded document.

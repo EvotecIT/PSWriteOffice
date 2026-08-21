@@ -11,12 +11,12 @@ Exports presentation slides as PNG or SVG images with one result per slide.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Export-OfficePowerPointImage [-Path] <string> [-OutputPath] <string> [-Format <OfficeImageExportFormat>] [-Options <PowerPointPresentationImageExportOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePowerPointImage [-Path] <string> [-OutputPath] <string> [-Format <OfficeImageExportFormat>] [-Options <PowerPointPresentationImageExportOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Presentation
 ```powershell
-Export-OfficePowerPointImage [-OutputPath] <string> -Presentation <PowerPointPresentation> [-Format <OfficeImageExportFormat>] [-Options <PowerPointPresentationImageExportOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePowerPointImage [-OutputPath] <string> -Presentation <PowerPointPresentation> [-Format <OfficeImageExportFormat>] [-Options <PowerPointPresentationImageExportOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,7 +29,7 @@ Exports presentation slides as PNG or SVG images with one result per slide.
 PS> Export-OfficePowerPointImage -Path .\Deck.pptx -OutputPath .\Slides -Format Svg
 ```
 
-Writes one image per selected slide and returns OfficeImageExportResult objects.
+Writes one image per selected slide. Add -PassThru to receive the structured export results.
 
 ## PARAMETERS
 
@@ -76,6 +76,22 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit one structured image export result per saved slide.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Presentation
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

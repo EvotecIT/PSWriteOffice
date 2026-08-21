@@ -21,7 +21,8 @@ Reads a native mbox mailbox with bounded per-message diagnostics.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficeEmailMailbox -Path 'C:\Path'
+PS> $options = New-OfficeEmailMailboxReaderOptions -MaxMessageCount 5000
+Get-OfficeEmailMailbox -Path .\Archive.mbox -Options $options -AsResult
 ```
 
 

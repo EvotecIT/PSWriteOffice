@@ -21,7 +21,8 @@ Compares rendered PDF pages and returns pixel-level review artifacts.
 
 ### EXAMPLE 1
 ```powershell
-PS> $options = [OfficeIMO.Pdf.PdfVisualComparisonOptions]::new(); $options.AllowedDifferenceRatio = 0.001; Compare-OfficePdfVisual -ReferencePath .\Expected.pdf -DifferencePath .\Actual.pdf -PageRange '1-3' -Options $options
+PS> $options = New-OfficePdfVisualComparisonOptions -AllowedDifferenceRatio 0.001 -ChannelTolerance 2
+Compare-OfficePdfVisual -ReferencePath .\Expected.pdf -DifferencePath .\Actual.pdf -PageRange '1-3' -Options $options
 ```
 
 Returns per-page difference ratios, images, and diagnostics.

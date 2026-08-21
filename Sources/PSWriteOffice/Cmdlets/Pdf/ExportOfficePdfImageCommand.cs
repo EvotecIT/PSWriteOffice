@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <summary>Export selected pages as PNG files.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>Export-OfficePdfImage -Path .\Report.pdf -OutputPath .\Pages -PageRange '1-3,5'</code>
-///   <para>Writes the selected pages and returns normalized image results with rendering diagnostics.</para>
+///   <para>Writes the selected pages. Add <c>-PassThru</c> to receive normalized image results with rendering diagnostics.</para>
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficePdfImage", SupportsShouldProcess = true)]
 [OutputType(typeof(OfficeImageExportResult))]
@@ -50,6 +50,10 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IgnorePermissionRestrictions { get; set; }
 
+    /// <summary>Emit one structured image export result per saved page.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -70,7 +74,8 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
             var page = pages[index];
             int pageNumber = GetPageNumber(page, index + 1);
             var file = System.IO.Path.Combine(output, $"page-{pageNumber:D4}{page.FileExtension}");
-            WriteObject(page.Save(file, OfficeImageExportFileConflictPolicy.Replace));
+            OfficeImageExportResult result = page.Save(file, OfficeImageExportFileConflictPolicy.Replace);
+            if (PassThru.IsPresent) WriteObject(result);
         }
     }
 

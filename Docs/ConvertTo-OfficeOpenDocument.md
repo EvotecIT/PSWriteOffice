@@ -36,19 +36,8 @@ Converts Word, Excel, or PowerPoint content to native OpenDocument with fidelity
 
 ### EXAMPLE 1
 ```powershell
-ConvertTo-OfficeOpenDocument -Path 'C:\Path'
-```
-
-
-### EXAMPLE 2
-```powershell
-ConvertTo-OfficeOpenDocument -ExcelDocument 'Value'
-```
-
-
-### EXAMPLE 3
-```powershell
-ConvertTo-OfficeOpenDocument -PowerPointPresentation 'Value'
+PS> $options = New-OfficeWordOpenDocumentOptions -IncludeImages -IncludeHeadersAndFooters
+ConvertTo-OfficeOpenDocument -Path .\Report.docx -OutputPath .\Report.odt -WordOptions $options -FailOnLoss
 ```
 
 

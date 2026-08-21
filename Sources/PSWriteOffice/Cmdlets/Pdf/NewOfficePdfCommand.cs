@@ -188,6 +188,10 @@ public sealed class NewOfficePdfCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
+        if (NoSave.IsPresent && Open.IsPresent) {
+            throw new PSArgumentException("-Open cannot be used with -NoSave because no file is written. Save the returned PDF explicitly, then use -Open on Save-OfficePdf.", nameof(Open));
+        }
+
         var savePath = string.IsNullOrWhiteSpace(Path) || NoSave.IsPresent
             ? null
             : PdfCommandUtilities.ResolvePath(this, Path!);

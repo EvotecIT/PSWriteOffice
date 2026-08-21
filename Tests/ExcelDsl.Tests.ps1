@@ -923,8 +923,7 @@ Describe 'Excel DSL surface' {
             Close-OfficeExcel -Document $doc
         }
 
-        { Get-OfficeExcel -Path $path -Password 'secret' -AutoSave -ErrorAction Stop } |
-            Should -Throw '*require explicit Save-OfficeExcel*'
+        (Get-Command Get-OfficeExcel).Parameters.Keys | Should -Not -Contain 'AutoSave'
     }
 
     It 'clears encrypted workbook associations after HTML conversion' {

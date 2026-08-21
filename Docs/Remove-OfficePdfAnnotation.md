@@ -21,7 +21,7 @@ Removes PDF annotations matching friendly filters.
 
 ### EXAMPLE 1
 ```powershell
-Remove-OfficePdfAnnotation -Path 'C:\Path'
+PS> Remove-OfficePdfAnnotation -Path .\Reviewed.pdf -OutputPath .\Clean.pdf -PageNumber 1 -Subtype Text -Confirm:$false
 ```
 
 

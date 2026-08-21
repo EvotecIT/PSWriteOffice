@@ -5,6 +5,12 @@ using OfficeIMO.AsciiDoc;
 namespace PSWriteOffice.Cmdlets.AsciiDoc;
 
 /// <summary>Saves an OfficeIMO AsciiDoc document.</summary>
+/// <example>
+///   <summary>Load, edit, and save an AsciiDoc document.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$document = Get-OfficeAsciiDoc -Path .\Guide.adoc
+/// $document | Save-OfficeAsciiDoc -Path .\Guide-normalized.adoc -Mode Canonical</code>
+/// </example>
 [Cmdlet(VerbsData.Save, "OfficeAsciiDoc", SupportsShouldProcess = true)]
 [OutputType(typeof(AsciiDocDocument))]
 public sealed class SaveOfficeAsciiDocCommand : PSCmdlet

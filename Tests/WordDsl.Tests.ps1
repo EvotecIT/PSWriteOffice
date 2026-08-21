@@ -316,8 +316,7 @@ Describe 'Word DSL surface' {
             $document | Close-OfficeWord
         }
 
-        { Get-OfficeWord -Path $path -Password 'secret' -AutoSave -ErrorAction Stop } |
-            Should -Throw '*require explicit Save-OfficeWord*'
+        (Get-Command Get-OfficeWord).Parameters.Keys | Should -Not -Contain 'AutoSave'
     }
 
     It 'runs the Word DSL against a cloned template document' {

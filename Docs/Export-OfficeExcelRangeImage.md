@@ -11,12 +11,12 @@ Exports one worksheet range as an image file.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Export-OfficeExcelRangeImage [-Path] <string> [[-OutputPath] <string>] -WorksheetName <string> -Range <string> [-Format <OfficeImageExportFormat>] [-Options <ExcelImageExportOptions>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeExcelRangeImage [-Path] <string> [[-OutputPath] <string>] -WorksheetName <string> -Range <string> [-Format <OfficeImageExportFormat>] [-Options <ExcelImageExportOptions>] [-Force] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Export-OfficeExcelRangeImage [[-OutputPath] <string>] -Document <ExcelDocument> -WorksheetName <string> -Range <string> [-Format <OfficeImageExportFormat>] [-Options <ExcelImageExportOptions>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeExcelRangeImage [[-OutputPath] <string>] -Document <ExcelDocument> -WorksheetName <string> -Range <string> [-Format <OfficeImageExportFormat>] [-Options <ExcelImageExportOptions>] [-Force] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -107,6 +107,22 @@ Possible values:
 
 Required: False
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the structured image export result when a destination path is used.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

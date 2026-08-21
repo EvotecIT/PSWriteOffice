@@ -175,6 +175,21 @@ Adds a Markdown table of contents placeholder.
 ### [Add-OfficeMarkdownTaskList](Add-OfficeMarkdownTaskList.md)
 Adds a Markdown task list.
 
+### [Add-OfficeOpenDocumentHeading](Add-OfficeOpenDocumentHeading.md)
+Adds a heading to an OpenDocument text document.
+
+### [Add-OfficeOpenDocumentParagraph](Add-OfficeOpenDocumentParagraph.md)
+Adds a paragraph to an OpenDocument text document.
+
+### [Add-OfficeOpenDocumentSheet](Add-OfficeOpenDocumentSheet.md)
+Adds a worksheet to an OpenDocument spreadsheet and optionally runs nested cell content.
+
+### [Add-OfficeOpenDocumentSlide](Add-OfficeOpenDocumentSlide.md)
+Adds a slide to an OpenDocument presentation and optionally runs nested slide content.
+
+### [Add-OfficeOpenDocumentTextBox](Add-OfficeOpenDocumentTextBox.md)
+Adds a positioned text box to an OpenDocument presentation slide.
+
 ### [Add-OfficePdfAttachment](Add-OfficePdfAttachment.md)
 Adds an embedded file attachment to a generated PDF document.
 
@@ -641,7 +656,7 @@ Exports CFX semantic visual-artifact input as a native editable VSDX diagram.
 Plans, compiles, or exports a Word document to Google Docs.
 
 ### [Export-OfficeWordImage](Export-OfficeWordImage.md)
-Exports a Word page as PNG or SVG with structured image diagnostics.
+Exports one or more Word pages through the format-neutral OfficeIMO image pipeline.
 
 ### [Find-OfficeExcel](Find-OfficeExcel.md)
 Finds text in worksheet values.
@@ -1054,14 +1069,44 @@ Creates an in-memory Confluence Cloud session.
 ### [New-OfficeDocumentReader](New-OfficeDocumentReader.md)
 Creates an immutable fully configured OfficeIMO document reader.
 
+### [New-OfficeEmailMailboxReaderOptions](New-OfficeEmailMailboxReaderOptions.md)
+Creates bounded mbox reader settings through ordinary PowerShell parameters.
+
+### [New-OfficeEmailMailboxWriterOptions](New-OfficeEmailMailboxWriterOptions.md)
+Creates deterministic mbox writer settings through ordinary PowerShell parameters.
+
+### [New-OfficeEmailReaderOptions](New-OfficeEmailReaderOptions.md)
+Creates bounded EML, MSG, and TNEF reader settings through ordinary PowerShell parameters.
+
+### [New-OfficeEmailStoreReaderOptions](New-OfficeEmailStoreReaderOptions.md)
+Creates bounded email-store reader settings without requiring .NET constructor syntax.
+
+### [New-OfficeEmailWriterOptions](New-OfficeEmailWriterOptions.md)
+Creates deterministic email writer settings through ordinary PowerShell parameters.
+
 ### [New-OfficeExcel](New-OfficeExcel.md)
 Creates a new Excel workbook using the DSL.
 
 ### [New-OfficeExcelDashboard](New-OfficeExcelDashboard.md)
 Builds a worksheet dashboard from tabular data using OfficeIMO dashboard defaults.
 
+### [New-OfficeExcelImageOptions](New-OfficeExcelImageOptions.md)
+Creates discoverable rendering settings for Excel range and chart image export.
+
+### [New-OfficeExcelOpenDocumentOptions](New-OfficeExcelOpenDocumentOptions.md)
+Creates Excel/OpenDocument conversion settings.
+
 ### [New-OfficeExcelPdfOptions](New-OfficeExcelPdfOptions.md)
 Creates discoverable Excel-to-PDF conversion options for Export-OfficeDocumentPdf.
+
+### [New-OfficeExcelWorkbookImageOptions](New-OfficeExcelWorkbookImageOptions.md)
+Creates discoverable sheet selection and rendering settings for Export-OfficeExcelImage.
+
+### [New-OfficeHtmlConversionOptions](New-OfficeHtmlConversionOptions.md)
+Creates discoverable parsing, trust, and document settings for HTML conversion.
+
+### [New-OfficeHtmlRenderOptions](New-OfficeHtmlRenderOptions.md)
+Creates discoverable layout, resource-limit, and rendering settings for HTML image export.
 
 ### [New-OfficeMarkdown](New-OfficeMarkdown.md)
 Creates a Markdown document using a DSL scriptblock.
@@ -1074,6 +1119,15 @@ Creates a native ODT, ODS, or ODP document.
 
 ### [New-OfficePdf](New-OfficePdf.md)
 Creates a PDF document using the OfficeIMO.Pdf composition engine.
+
+### [New-OfficePdfExcelImportOptions](New-OfficePdfExcelImportOptions.md)
+Creates discoverable PDF-table-to-Excel reconstruction settings.
+
+### [New-OfficePdfImageOptions](New-OfficePdfImageOptions.md)
+Creates discoverable thumbnail and rendering settings for Export-OfficePdfImage.
+
+### [New-OfficePdfPowerPointImportOptions](New-OfficePdfPowerPointImportOptions.md)
+Creates discoverable PDF-to-PowerPoint reconstruction settings.
 
 ### [New-OfficePdfSignature](New-OfficePdfSignature.md)
 Prepares an existing PDF for external digital signing by appending a signature field, /ByteRange, and reserved /Contents placeholder.
@@ -1090,14 +1144,29 @@ Creates a typed text or choice field for a PDF table cell.
 ### [New-OfficePdfTableCellImage](New-OfficePdfTableCellImage.md)
 Creates a typed image for a PDF table cell.
 
+### [New-OfficePdfVisualComparisonOptions](New-OfficePdfVisualComparisonOptions.md)
+Creates discoverable rendering and tolerance settings for Compare-OfficePdfVisual.
+
+### [New-OfficePdfWordImportOptions](New-OfficePdfWordImportOptions.md)
+Creates discoverable PDF-to-Word reconstruction settings.
+
 ### [New-OfficePowerPoint](New-OfficePowerPoint.md)
 Creates a PowerPoint presentation using the DSL.
 
 ### [New-OfficePowerPointDeckPlan](New-OfficePowerPointDeckPlan.md)
 Creates a semantic PowerPoint deck plan for designer rendering.
 
+### [New-OfficePowerPointImageOptions](New-OfficePowerPointImageOptions.md)
+Creates discoverable slide selection and rendering settings for Export-OfficePowerPointImage.
+
+### [New-OfficePowerPointOpenDocumentOptions](New-OfficePowerPointOpenDocumentOptions.md)
+Creates PowerPoint/OpenDocument conversion settings.
+
 ### [New-OfficePowerPointPdfOptions](New-OfficePowerPointPdfOptions.md)
 Creates discoverable PowerPoint-to-PDF conversion options for Export-OfficeDocumentPdf.
+
+### [New-OfficeReaderHierarchyOptions](New-OfficeReaderHierarchyOptions.md)
+Creates discoverable token and hierarchy settings for Get-OfficeDocumentHierarchy.
 
 ### [New-OfficeRtf](New-OfficeRtf.md)
 Creates an RTF document with plain paragraph content.
@@ -1114,11 +1183,26 @@ Creates a new OfficeIMO.Visio document with an initial page and optional DSL con
 ### [New-OfficeVisioGallery](New-OfficeVisioGallery.md)
 Generates the OfficeIMO Visio reference gallery as editable .vsdx diagrams.
 
+### [New-OfficeVisioImageOptions](New-OfficeVisioImageOptions.md)
+Creates discoverable page and rendering settings for Export-OfficeVisioImage.
+
 ### [New-OfficeWord](New-OfficeWord.md)
 Creates a Word document using the DSL.
 
+### [New-OfficeWordComparisonOptions](New-OfficeWordComparisonOptions.md)
+Creates discoverable structural comparison settings for Compare-OfficeWordDocument.
+
+### [New-OfficeWordImageOptions](New-OfficeWordImageOptions.md)
+Creates discoverable page and rendering settings for Export-OfficeWordImage.
+
+### [New-OfficeWordOpenDocumentOptions](New-OfficeWordOpenDocumentOptions.md)
+Creates Word/OpenDocument conversion settings.
+
 ### [New-OfficeWordPdfOptions](New-OfficeWordPdfOptions.md)
 Creates discoverable Word-to-PDF conversion options for Export-OfficeDocumentPdf.
+
+### [New-OfficeWordRevisionFilter](New-OfficeWordRevisionFilter.md)
+Creates a discoverable Word revision filter for Resolve-OfficeWordRevision.
 
 ### [New-OfficeWordTableCell](New-OfficeWordTableCell.md)
 Creates a reusable Word table cell definition for explicit table rows.
@@ -1341,6 +1425,9 @@ Sets worksheet view options such as gridlines, direction, zoom, and view mode.
 
 ### [Set-OfficeExcelWriteReservation](Set-OfficeExcelWriteReservation.md)
 Sets workbook write-reservation metadata.
+
+### [Set-OfficeOpenDocumentCell](Set-OfficeOpenDocumentCell.md)
+Sets a typed zero-based cell value in an OpenDocument spreadsheet.
 
 ### [Set-OfficePdfAnnotation](Set-OfficePdfAnnotation.md)
 Updates a single indirect PDF annotation.

@@ -16,6 +16,8 @@ $services | Export-OfficeExcel -Path '.\Services.xlsx' -WorksheetName 'Services'
 
 This is the closest fit for inventory exports, query results, and data passed from modules such as DbaClientX. Start here unless the workbook needs several sheets, formulas, charts, or carefully placed content.
 
+The same object boundary works for operational modules. The [PSEventViewer report recipe](https://github.com/EvotecIT/PSWriteOffice/blob/main/Examples/Integrations/Recipe-PSEventViewer-OfficeReport.ps1) queries typed events once, projects stable report columns, and creates both Excel and Word deliverables without requiring either module to know about the other's internals.
+
 ## Incremental jobs: keep the document object
 
 Use an object when normal PowerShell control flow decides what to add. Create the document with `-NoSave`, pass it through composition commands, then save and close it once.

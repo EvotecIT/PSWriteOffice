@@ -21,7 +21,8 @@ Converts native ODT, ODS, or ODP content to Word, Excel, or PowerPoint with fide
 
 ### EXAMPLE 1
 ```powershell
-ConvertFrom-OfficeOpenDocument -Path 'C:\Path'
+PS> $options = New-OfficeExcelOpenDocumentOptions -IncludeBasicStyles -MaximumExpandedCells 250000
+ConvertFrom-OfficeOpenDocument -Path .\Status.ods -OutputPath .\Status.xlsx -ExcelOptions $options
 ```
 
 

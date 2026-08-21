@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <summary>Export visible sheets as PNG files.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>Export-OfficeExcelImage -Path .\Report.xlsx -OutputPath .\Images</code>
-///   <para>Writes one image per selected sheet and returns OfficeImageExportResult objects.</para>
+///   <para>Writes one image per selected sheet. Add <c>-PassThru</c> to receive the structured export results.</para>
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficeExcelImage", DefaultParameterSetName = "Path", SupportsShouldProcess = true)]
 [OutputType(typeof(OfficeImageExportResult))]
@@ -38,6 +38,10 @@ public sealed class ExportOfficeExcelImageCommand : PSCmdlet
     [Parameter]
     public ExcelWorkbookImageExportOptions? Options { get; set; }
 
+    /// <summary>Emit one structured image export result per saved sheet.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -55,7 +59,7 @@ public sealed class ExportOfficeExcelImageCommand : PSCmdlet
                 document = owned;
             }
             IReadOnlyList<OfficeImageExportResult> results = document.SaveAsImages(output, Format, Options);
-            WriteObject(results, enumerateCollection: true);
+            if (PassThru.IsPresent) WriteObject(results, enumerateCollection: true);
         }
         finally
         {

@@ -4,6 +4,12 @@ using OfficeIMO.Email;
 namespace PSWriteOffice.Cmdlets.Email;
 
 /// <summary>Reads a native mbox mailbox with bounded per-message diagnostics.</summary>
+/// <example>
+///   <summary>Read a bounded mbox mailbox with diagnostics.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$options = New-OfficeEmailMailboxReaderOptions -MaxMessageCount 5000
+/// Get-OfficeEmailMailbox -Path .\Archive.mbox -Options $options -AsResult</code>
+/// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeEmailMailbox")]
 [OutputType(typeof(EmailMailbox), typeof(EmailMailboxReadResult))]
 public sealed class GetOfficeEmailMailboxCommand : PSCmdlet

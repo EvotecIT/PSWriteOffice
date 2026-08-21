@@ -6,6 +6,11 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Removes PDF annotations matching friendly filters.</summary>
+/// <example>
+///   <summary>Remove text annotations from the first page.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Remove-OfficePdfAnnotation -Path .\Reviewed.pdf -OutputPath .\Clean.pdf -PageNumber 1 -Subtype Text -Confirm:$false</code>
+/// </example>
 [Cmdlet(VerbsCommon.Remove, "OfficePdfAnnotation", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 [OutputType(typeof(PdfAnnotationEditResult))]

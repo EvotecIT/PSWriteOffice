@@ -21,7 +21,8 @@ Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.
 
 ### EXAMPLE 1
 ```powershell
-Save-OfficeEmail -Document 'Value'
+PS> $options = New-OfficeEmailWriterOptions -ConversionLossPolicy Block
+$message | Save-OfficeEmail -Path .\Message.eml -Options $options -PassThru
 ```
 
 

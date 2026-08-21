@@ -5,6 +5,12 @@ using OfficeIMO.Latex;
 namespace PSWriteOffice.Cmdlets.Latex;
 
 /// <summary>Saves an OfficeIMO LaTeX document.</summary>
+/// <example>
+///   <summary>Load and save a canonical LaTeX document.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$document = Get-OfficeLatex -Path .\Article.tex
+/// $document | Save-OfficeLatex -Path .\Article-normalized.tex -Mode Canonical</code>
+/// </example>
 [Cmdlet(VerbsData.Save, "OfficeLatex", SupportsShouldProcess = true)]
 [OutputType(typeof(LatexDocument))]
 public sealed class SaveOfficeLatexCommand : PSCmdlet

@@ -7,6 +7,11 @@ using PSWriteOffice.Services.Pdf;
 namespace PSWriteOffice.Cmdlets.Pdf;
 
 /// <summary>Exports PDF word, line, region, and reading-order diagnostics as PNG or SVG.</summary>
+/// <example>
+///   <summary>Export an SVG layout overlay for the first page.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$result = Export-OfficePdfLayoutOverlay -Path .\Report.pdf -OutputPath .\Report-layout.svg -Page 1 -Format Svg -PassThru</code>
+/// </example>
 [Cmdlet(VerbsData.Export, "OfficePdfLayoutOverlay", SupportsShouldProcess = true)]
 [OutputType(typeof(OfficeImageExportResult))]
 public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
@@ -54,6 +59,10 @@ public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IgnorePermissionRestrictions { get; set; }
 
+    /// <summary>Emit the structured image export result.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -73,9 +82,10 @@ public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
         };
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
         File.WriteAllBytes(output, bytes);
-        WriteObject(new OfficeImageExportResult(Format,
+        var result = new OfficeImageExportResult(Format,
             checked((int)System.Math.Ceiling(drawing.Width * Scale)),
             checked((int)System.Math.Ceiling(drawing.Height * Scale)),
-            bytes, $"Page {Page} layout", $"{input}#page={Page}"));
+            bytes, $"Page {Page} layout", $"{input}#page={Page}");
+        if (PassThru.IsPresent) WriteObject(result);
     }
 }

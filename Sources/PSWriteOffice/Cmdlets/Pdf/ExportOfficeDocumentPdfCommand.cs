@@ -32,19 +32,26 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>Export-OfficeDocumentPdf -InputPath .\Report.docx -Path .\Report.pdf -PassThru</code>
 /// </example>
+/// <example>
+///   <summary>Configure Markdown PDF export with ordinary PowerShell parameters.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$options = New-OfficeMarkdownPdfOptions -Title 'Service report' -IncludeLocalImages -BaseDirectory .\Assets
+/// Export-OfficeDocumentPdf -InputPath .\Report.md -Path .\Report.pdf -MarkdownOptions $options</code>
+///   <para>The New-Office*PdfOptions commands build every format-specific options object; no hashtable or .NET constructor is required.</para>
+/// </example>
 [Cmdlet(VerbsData.Export, "OfficeDocumentPdf", DefaultParameterSetName = ParameterSetDocument, SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
-    /// <summary>Live Word, Excel, PowerPoint, Markdown, or RTF document to export.</summary>
+    /// <summary>Live Word, Excel, PowerPoint, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, ParameterSetName = ParameterSetDocument)]
     public object Document { get; set; } = null!;
 
     /// <summary>Source .docx, .xlsx, .pptx, .md, .markdown, or .rtf file.</summary>
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("SourcePath")]
+    [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, Position = 0, ParameterSetName = ParameterSetPath)]
+    [Alias("SourcePath", "FullName")]
     public string InputPath { get; set; } = string.Empty;
 
     /// <summary>Destination PDF path.</summary>
@@ -101,13 +108,20 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        object document = UnwrapDocument(Document);
+        object document;
         Action? closeOwnedDocument = null;
         string? sourcePath = null;
 
         try {
             if (ParameterSetName == ParameterSetPath) {
-                document = LoadDocument(out closeOwnedDocument, out sourcePath);
+                document = LoadDocument(InputPath, out closeOwnedDocument, out sourcePath);
+            } else {
+                document = UnwrapDocument(Document);
+                if (document is FileInfo file) {
+                    document = LoadDocument(file.FullName, out closeOwnedDocument, out sourcePath);
+                } else if (document is string path) {
+                    document = LoadDocument(path, out closeOwnedDocument, out sourcePath);
+                }
             }
 
             PdfSaveResult result = SaveDocument(document, outputPath, sourcePath);
@@ -127,8 +141,8 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
         }
     }
 
-    private object LoadDocument(out Action? closeOwnedDocument, out string sourcePath) {
-        sourcePath = PdfCommandUtilities.ResolveExistingFilePath(this, InputPath);
+    private object LoadDocument(string inputPath, out Action? closeOwnedDocument, out string sourcePath) {
+        sourcePath = PdfCommandUtilities.ResolveExistingFilePath(this, inputPath);
         switch (System.IO.Path.GetExtension(sourcePath).ToLowerInvariant()) {
             case ".docx": {
                     var document = WordDocumentService.LoadDocument(sourcePath, readOnly: true, autoSave: false, Password);

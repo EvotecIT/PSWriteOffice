@@ -8,7 +8,8 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// <example>
 ///   <summary>Compare selected pages with a small pixel tolerance.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$options = [OfficeIMO.Pdf.PdfVisualComparisonOptions]::new(); $options.AllowedDifferenceRatio = 0.001; Compare-OfficePdfVisual -ReferencePath .\Expected.pdf -DifferencePath .\Actual.pdf -PageRange '1-3' -Options $options</code>
+///   <code>$options = New-OfficePdfVisualComparisonOptions -AllowedDifferenceRatio 0.001 -ChannelTolerance 2
+/// Compare-OfficePdfVisual -ReferencePath .\Expected.pdf -DifferencePath .\Actual.pdf -PageRange '1-3' -Options $options</code>
 ///   <para>Returns per-page difference ratios, images, and diagnostics.</para>
 /// </example>
 [Cmdlet(VerbsData.Compare, "OfficePdfVisual")]

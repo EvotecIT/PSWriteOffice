@@ -6,6 +6,12 @@ using OfficeIMO.Email.Store;
 namespace PSWriteOffice.Cmdlets.Email;
 
 /// <summary>Saves an email document as EML, EMLX, MSG, or TNEF with fidelity diagnostics.</summary>
+/// <example>
+///   <summary>Save a message with an explicit loss policy.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$options = New-OfficeEmailWriterOptions -ConversionLossPolicy Block
+/// $message | Save-OfficeEmail -Path .\Message.eml -Options $options -PassThru</code>
+/// </example>
 [Cmdlet(VerbsData.Save, "OfficeEmail", SupportsShouldProcess = true)]
 [OutputType(typeof(EmailWriteResult))]
 public sealed class SaveOfficeEmailCommand : OfficeMutationCmdlet {

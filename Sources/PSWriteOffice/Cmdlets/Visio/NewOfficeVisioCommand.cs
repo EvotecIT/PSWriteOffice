@@ -77,6 +77,10 @@ public sealed class NewOfficeVisioCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
+        if (NoSave.IsPresent && Open.IsPresent) {
+            throw new PSArgumentException("-Open cannot be used with -NoSave because no file is written. Save the returned document explicitly, then use -Open on Save-OfficeVisio.", nameof(Open));
+        }
+
         var fullPath = VisioCommandUtilities.ResolvePath(this, Path);
         if (!NoSave.IsPresent) {
             if (!ShouldProcess(fullPath, "Write new Visio document")) {

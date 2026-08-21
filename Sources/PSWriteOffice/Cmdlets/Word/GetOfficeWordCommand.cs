@@ -30,10 +30,6 @@ public sealed class GetOfficeWordCommand : PSCmdlet {
     [Parameter]
     public SwitchParameter ReadOnly { get; set; }
 
-    /// <summary>Enable AutoSave when editing.</summary>
-    [Parameter]
-    public SwitchParameter AutoSave { get; set; }
-
     /// <summary>Password used to open an encrypted document package.</summary>
     [Parameter]
     public string? Password { get; set; }
@@ -45,12 +41,17 @@ public sealed class GetOfficeWordCommand : PSCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var fullPath = ResolvePath();
-        var document = WordDocumentService.LoadDocument(fullPath, ReadOnly.IsPresent, AutoSave.IsPresent, Password);
-        if (Content != null) {
-            WordDocumentService.InvokeDsl(document, Content);
-        }
+        var document = WordDocumentService.LoadDocument(fullPath, ReadOnly.IsPresent, autoSave: false, Password);
+        try {
+            if (Content != null) {
+                WordDocumentService.InvokeDsl(document, Content);
+            }
 
-        WriteObject(document);
+            WriteObject(document);
+        } catch {
+            WordDocumentService.CloseDocument(document);
+            throw;
+        }
     }
 
     private string ResolvePath() {

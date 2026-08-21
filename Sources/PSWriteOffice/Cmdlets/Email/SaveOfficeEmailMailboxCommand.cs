@@ -5,6 +5,12 @@ using OfficeIMO.Email;
 namespace PSWriteOffice.Cmdlets.Email;
 
 /// <summary>Saves a native mbox mailbox with output diagnostics.</summary>
+/// <example>
+///   <summary>Save an mboxrd mailbox and return its diagnostics.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$options = New-OfficeEmailMailboxWriterOptions -Variant Mboxrd
+/// $mailbox | Save-OfficeEmailMailbox -Path .\Archive.mbox -Options $options -PassThru</code>
+/// </example>
 [Cmdlet(VerbsData.Save, "OfficeEmailMailbox", SupportsShouldProcess = true)]
 [OutputType(typeof(EmailWriteResult))]
 public sealed class SaveOfficeEmailMailboxCommand : OfficeMutationCmdlet {

@@ -104,7 +104,7 @@ Describe 'Visio cmdlets' {
             }
         } | Out-Null
 
-        $results = @(Export-OfficeVisioImage -Path $path -OutputPath $output -Format Svg)
+        $results = @(Export-OfficeVisioImage -Path $path -OutputPath $output -Format Svg -PassThru)
         $results | Should -HaveCount 2
         $results | ForEach-Object {
             $_.GetType().FullName | Should -Be 'OfficeIMO.Drawing.OfficeImageExportResult'

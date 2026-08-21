@@ -21,7 +21,8 @@ Saves an OfficeIMO AsciiDoc document.
 
 ### EXAMPLE 1
 ```powershell
-Save-OfficeAsciiDoc -Path 'C:\Path'
+PS> $document = Get-OfficeAsciiDoc -Path .\Guide.adoc
+$document | Save-OfficeAsciiDoc -Path .\Guide-normalized.adoc -Mode Canonical
 ```
 
 

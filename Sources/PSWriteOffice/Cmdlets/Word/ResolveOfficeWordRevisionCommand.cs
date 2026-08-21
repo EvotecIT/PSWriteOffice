@@ -9,7 +9,8 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Accept revisions by one author into a new document.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$filter = [OfficeIMO.Word.WordRevisionFilter]::new(); $filter.Author = 'Reviewer'; Resolve-OfficeWordRevision -Path .\Draft.docx -OutputPath .\Accepted.docx -Action Accept -Filter $filter</code>
+///   <code>$filter = New-OfficeWordRevisionFilter -Author 'Reviewer' -InContentControl
+/// Resolve-OfficeWordRevision -Path .\Draft.docx -OutputPath .\Accepted.docx -Action Accept -Filter $filter</code>
 ///   <para>Applies only matching revisions, saves the result, and returns the matched revision report.</para>
 /// </example>
 [Cmdlet(VerbsDiagnostic.Resolve, "OfficeWordRevision", DefaultParameterSetName = "Path", SupportsShouldProcess = true)]

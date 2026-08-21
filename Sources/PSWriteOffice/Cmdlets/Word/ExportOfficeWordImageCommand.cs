@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Drawing;
@@ -6,12 +7,18 @@ using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Word;
 
-/// <summary>Exports a Word page as PNG or SVG with structured image diagnostics.</summary>
+/// <summary>Exports one or more Word pages through the format-neutral OfficeIMO image pipeline.</summary>
 /// <example>
 ///   <summary>Export the first page as SVG.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>Export-OfficeWordImage -Path .\Report.docx -OutputPath .\Report.svg -Format Svg</code>
-///   <para>Returns the OfficeIMO image export result after writing the image.</para>
+///   <para>Writes the image quietly. Add <c>-PassThru</c> to receive the structured export result.</para>
+/// </example>
+/// <example>
+///   <summary>Export every page as JPEG files.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Export-OfficeWordImage -Path .\Report.docx -OutputPath .\Pages -Format Jpeg -AllPages</code>
+///   <para>For a bounded batch, create options with <c>New-OfficeWordImageOptions -PageIndex 0 -PageCount 2</c>.</para>
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficeWordImage", DefaultParameterSetName = "Path", SupportsShouldProcess = true)]
 [OutputType(typeof(OfficeImageExportResult))]
@@ -25,7 +32,7 @@ public sealed class ExportOfficeWordImageCommand : PSCmdlet
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = "Document")]
     public WordDocument Document { get; set; } = null!;
 
-    /// <summary>Destination PNG or SVG path.</summary>
+    /// <summary>Destination image file, or destination folder when -AllPages or Options.PageCount requests a batch.</summary>
     [Parameter(Mandatory = true, Position = 1)]
     public string OutputPath { get; set; } = string.Empty;
 
@@ -37,12 +44,28 @@ public sealed class ExportOfficeWordImageCommand : PSCmdlet
     [Parameter]
     public WordImageExportOptions? Options { get; set; }
 
+    /// <summary>Export every estimated page to the destination folder.</summary>
+    [Parameter]
+    public SwitchParameter AllPages { get; set; }
+
+    /// <summary>Emit the structured image export result.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-        if (!ShouldProcess(output, $"Export Word page as {Format}")) return;
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
+        bool batch = AllPages.IsPresent || Options?.PageCount.HasValue == true;
+        if (!ShouldProcess(output, batch ? $"Export Word pages as {Format}" : $"Export Word page as {Format}")) return;
+        if (batch)
+        {
+            Directory.CreateDirectory(output);
+        }
+        else
+        {
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output) ?? SessionState.Path.CurrentFileSystemLocation.Path);
+        }
         WordDocument? owned = null;
         try
         {
@@ -53,9 +76,24 @@ public sealed class ExportOfficeWordImageCommand : PSCmdlet
                 owned = WordDocumentService.LoadDocument(input, readOnly: true, autoSave: false);
                 document = owned;
             }
-            WriteObject(Format == OfficeImageExportFormat.Svg
-                ? document.SaveAsSvg(output, Options)
-                : document.SaveAsPng(output, Options));
+
+            WordImageExportOptions effectiveOptions = Options?.Clone() ?? new WordImageExportOptions();
+            if (AllPages.IsPresent)
+            {
+                effectiveOptions.PageIndex = 0;
+                effectiveOptions.PageCount = null;
+            }
+
+            if (batch)
+            {
+                IReadOnlyList<OfficeImageExportResult> results = document.SaveAsImages(output, Format, effectiveOptions);
+                if (PassThru.IsPresent) WriteObject(results, enumerateCollection: true);
+            }
+            else
+            {
+                OfficeImageExportResult result = document.ExportImage(Format, effectiveOptions).Save(output);
+                if (PassThru.IsPresent) WriteObject(result);
+            }
         }
         finally
         {

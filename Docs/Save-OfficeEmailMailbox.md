@@ -21,7 +21,8 @@ Saves a native mbox mailbox with output diagnostics.
 
 ### EXAMPLE 1
 ```powershell
-Save-OfficeEmailMailbox -Mailbox 'Value'
+PS> $options = New-OfficeEmailMailboxWriterOptions -Variant Mboxrd
+$mailbox | Save-OfficeEmailMailbox -Path .\Archive.mbox -Options $options -PassThru
 ```
 
 

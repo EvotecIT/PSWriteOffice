@@ -52,6 +52,10 @@ public class NewOfficePowerPointCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
+        if (NoSave.IsPresent && Open.IsPresent) {
+            throw new PSArgumentException("-Open cannot be used with -NoSave because no file is written. Save the returned presentation explicitly, then use -Open on Save-OfficePowerPoint.", nameof(Open));
+        }
+
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
         if (NoSave.IsPresent) {
             if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Create PowerPoint presentation")) {

@@ -38,10 +38,6 @@ public sealed class GetOfficeExcelCommand : AsyncPSCmdlet {
     [Parameter]
     public SwitchParameter ReadOnly { get; set; }
 
-    /// <summary>Enable automatic saves on the underlying document.</summary>
-    [Parameter]
-    public SwitchParameter AutoSave { get; set; }
-
     /// <summary>Password used to open an encrypted workbook package.</summary>
     [Parameter]
     public string? Password { get; set; }
@@ -49,10 +45,6 @@ public sealed class GetOfficeExcelCommand : AsyncPSCmdlet {
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync() {
         if (ParameterSetName == ParameterSetUri) {
-            if (AutoSave.IsPresent) {
-                throw new PSArgumentException("Remote workbooks cannot be opened with AutoSave. Save to a local path explicitly after loading.");
-            }
-
             if (Uri == null) {
                 throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
             }
@@ -72,7 +64,7 @@ public sealed class GetOfficeExcelCommand : AsyncPSCmdlet {
             throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
-        ExcelDocument document = ExcelDocumentService.LoadDocument(resolvedPath, ReadOnly.IsPresent, AutoSave.IsPresent, Password);
+        ExcelDocument document = ExcelDocumentService.LoadDocument(resolvedPath, ReadOnly.IsPresent, autoSave: false, Password);
         WriteObject(document);
     }
 }

@@ -36,10 +36,18 @@ PS> Export-OfficeDocumentPdf -InputPath .\Report.docx -Path .\Report.pdf -PassTh
 ```
 
 
+### EXAMPLE 3
+```powershell
+PS> $options = New-OfficeMarkdownPdfOptions -Title 'Service report' -IncludeLocalImages -BaseDirectory .\Assets
+Export-OfficeDocumentPdf -InputPath .\Report.md -Path .\Report.pdf -MarkdownOptions $options
+```
+
+The New-Office*PdfOptions commands build every format-specific options object; no hashtable or .NET constructor is required.
+
 ## PARAMETERS
 
 ### -Document
-Live Word, Excel, PowerPoint, Markdown, or RTF document to export.
+Live Word, Excel, PowerPoint, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.
 
 ```yaml
 Type: Object
@@ -76,13 +84,13 @@ Source .docx, .xlsx, .pptx, .md, .markdown, or .rtf file.
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: SourcePath
+Aliases: SourcePath, FullName
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -252,6 +260,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 - `System.Object`
+- `System.String`
 
 ## OUTPUTS
 
