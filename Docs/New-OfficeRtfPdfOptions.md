@@ -21,7 +21,7 @@ Creates discoverable RTF-to-PDF conversion options for Export-OfficeDocumentPdf.
 
 ### EXAMPLE 1
 ```powershell
-PS> $options = New-OfficeRtfPdfOptions -IncludeImages $true -IncludeTables $true -IncludeHeaderFooters $true -MaximumSystemFontFamilies 32
+PS> $options = New-OfficeRtfPdfOptions -IncludeImages -IncludeTables -IncludeHeaderFooters -MaximumSystemFontFamilies 32
 Export-OfficeDocumentPdf -InputPath .\Report.rtf -Path .\Report.pdf -RtfOptions $options
 ```
 

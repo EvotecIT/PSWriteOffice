@@ -7,7 +7,7 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 /// <example>
 ///   <summary>Include document structure and bound system-font discovery.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$options = New-OfficeRtfPdfOptions -IncludeImages $true -IncludeTables $true -IncludeHeaderFooters $true -MaximumSystemFontFamilies 32
+///   <code>$options = New-OfficeRtfPdfOptions -IncludeImages -IncludeTables -IncludeHeaderFooters -MaximumSystemFontFamilies 32
 /// Export-OfficeDocumentPdf -InputPath .\Report.rtf -Path .\Report.pdf -RtfOptions $options</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeRtfPdfOptions")]

@@ -115,6 +115,27 @@ Describe 'Office document PDF exports' {
         $markdownPdfReport.Warnings | Should -Not -BeNull
     }
 
+    It 'resolves relative Markdown images from the source file directory' {
+        $sourceDirectory = Join-Path $TestDrive 'markdown-source'
+        $markdownPath = Join-Path $sourceDirectory 'report.md'
+        $imagePath = Join-Path $sourceDirectory 'relative-image.png'
+        $pdfPath = Join-Path $TestDrive 'markdown-relative-image.pdf'
+        New-Item -ItemType Directory -Path $sourceDirectory | Out-Null
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Assets\CellImage.png') -Destination $imagePath
+        Set-Content -LiteralPath $markdownPath -Value '# Relative image', '![Local image](relative-image.png)'
+
+        $options = New-OfficeMarkdownPdfOptions -IncludeLocalImages
+        Export-OfficeDocumentPdf `
+            -InputPath $markdownPath `
+            -Path $pdfPath `
+            -MarkdownOptions $options `
+            -PdfWarningVariable markdownImageWarnings
+
+        Test-Path -LiteralPath $pdfPath | Should -BeTrue
+        @($markdownImageWarnings | Where-Object Code -Like 'LocalImage*').Count | Should -Be 0
+        $options.BaseDirectory | Should -BeNullOrEmpty
+    }
+
     It 'exports saved native documents through one explicit command' {
         $wordPath = Join-Path $TestDrive 'new-word.docx'
         $wordPdf = Join-Path $TestDrive 'new-word.pdf'

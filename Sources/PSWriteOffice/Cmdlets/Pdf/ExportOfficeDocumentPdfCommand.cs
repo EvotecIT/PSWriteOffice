@@ -103,13 +103,14 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
         PdfCommandUtilities.EnsureDirectory(outputPath);
         object document = UnwrapDocument(Document);
         Action? closeOwnedDocument = null;
+        string? sourcePath = null;
 
         try {
             if (ParameterSetName == ParameterSetPath) {
-                document = LoadDocument(out closeOwnedDocument);
+                document = LoadDocument(out closeOwnedDocument, out sourcePath);
             }
 
-            PdfSaveResult result = SaveDocument(document, outputPath);
+            PdfSaveResult result = SaveDocument(document, outputPath, sourcePath);
             PdfCommandUtilities.SetVariable(this, PdfWarningVariable, result.Warnings);
             PdfCommandUtilities.SetVariable(this, PdfConversionReportVariable, result.Report);
             result.RequireSuccess();
@@ -126,8 +127,8 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
         }
     }
 
-    private object LoadDocument(out Action? closeOwnedDocument) {
-        var sourcePath = PdfCommandUtilities.ResolveExistingFilePath(this, InputPath);
+    private object LoadDocument(out Action? closeOwnedDocument, out string sourcePath) {
+        sourcePath = PdfCommandUtilities.ResolveExistingFilePath(this, InputPath);
         switch (System.IO.Path.GetExtension(sourcePath).ToLowerInvariant()) {
             case ".docx": {
                     var document = WordDocumentService.LoadDocument(sourcePath, readOnly: true, autoSave: false, Password);
@@ -156,7 +157,7 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
         }
     }
 
-    private PdfSaveResult SaveDocument(object document, string outputPath) {
+    private PdfSaveResult SaveDocument(object document, string outputPath, string? sourcePath) {
         switch (document) {
             case WordDocument word:
                 return word.SaveAsPdf(outputPath, WordOptions ?? new WordPdfSaveOptions());
@@ -165,7 +166,7 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
             case PowerPointPresentation powerPoint:
                 return powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointPdfSaveOptions());
             case MarkdownDoc markdown:
-                return markdown.SaveAsPdf(outputPath, MarkdownOptions ?? new MarkdownPdfSaveOptions());
+                return markdown.SaveAsPdf(outputPath, PrepareMarkdownOptions(sourcePath));
             case RtfDocument rtf:
                 return rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfPdfSaveOptions());
             default:
@@ -173,6 +174,17 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
                     $"Document type '{document?.GetType().FullName ?? "<null>"}' cannot be exported to PDF. Use a WordDocument, ExcelDocument, PowerPointPresentation, MarkdownDoc, or RtfDocument.",
                     nameof(Document));
         }
+    }
+
+    private MarkdownPdfSaveOptions PrepareMarkdownOptions(string? sourcePath) {
+        var options = MarkdownOptions?.Clone() ?? new MarkdownPdfSaveOptions();
+        if (options.ResourcePolicy.AllowLocalFileAccess &&
+            string.IsNullOrWhiteSpace(options.BaseDirectory) &&
+            !string.IsNullOrWhiteSpace(sourcePath)) {
+            options.BaseDirectory = System.IO.Path.GetDirectoryName(sourcePath);
+        }
+
+        return options;
     }
 
     private static object UnwrapDocument(object document) {

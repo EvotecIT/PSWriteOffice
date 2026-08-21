@@ -142476,7 +142476,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$options = New-OfficeRtfPdfOptions -IncludeImages $true -IncludeTables $true -IncludeHeaderFooters $true -MaximumSystemFontFamilies 32&#xD;
+        <dev:code>$options = New-OfficeRtfPdfOptions -IncludeImages -IncludeTables -IncludeHeaderFooters -MaximumSystemFontFamilies 32&#xD;
             Export-OfficeDocumentPdf -InputPath .\Report.rtf -Path .\Report.pdf -RtfOptions $options</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
