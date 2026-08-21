@@ -9,7 +9,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 ///   <summary>Render the first Visio page with text and connector labels.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$options = New-OfficeVisioImageOptions -PageIndex 0 -PageCount 1 -RenderText -RenderConnectorLabels
-/// Export-OfficeVisioImage -Path .\Diagram.vsdx -OutputPath .\Preview.svg -Options $options</code>
+/// Export-OfficeVisioImage -Path .\Diagram.vsdx -OutputPath .\Preview -Format Svg -Options $options</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeVisioImageOptions")]
 [OutputType(typeof(VisioImageExportOptions))]

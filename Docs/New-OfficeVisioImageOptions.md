@@ -22,7 +22,7 @@ Creates discoverable page and rendering settings for Export-OfficeVisioImage.
 ### EXAMPLE 1
 ```powershell
 PS> $options = New-OfficeVisioImageOptions -PageIndex 0 -PageCount 1 -RenderText -RenderConnectorLabels
-Export-OfficeVisioImage -Path .\Diagram.vsdx -OutputPath .\Preview.svg -Options $options
+Export-OfficeVisioImage -Path .\Diagram.vsdx -OutputPath .\Preview -Format Svg -Options $options
 ```
 
 

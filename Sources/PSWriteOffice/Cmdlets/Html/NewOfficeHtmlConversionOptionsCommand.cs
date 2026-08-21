@@ -30,7 +30,7 @@ public sealed class NewOfficeHtmlConversionOptionsCommand : PSCmdlet {
         var options = new HtmlConversionDocumentOptions();
         if (Profile.HasValue) options.Profile = Profile.Value;
         if (Trust.HasValue) options.Trust = Trust.Value;
-        if (!string.IsNullOrWhiteSpace(BaseUri)) options.BaseUri = new Uri(BaseUri!, UriKind.RelativeOrAbsolute);
+        if (!string.IsNullOrWhiteSpace(BaseUri)) options.BaseUri = HtmlOptionsCommandUtilities.NormalizeBaseUri(SessionState, BaseUri!);
         if (IsBound(nameof(UseBodyContentsOnly))) options.UseBodyContentsOnly = UseBodyContentsOnly.IsPresent;
         if (IsBound(nameof(IncludeNormalizedHtml))) options.IncludeNormalizedHtml = IncludeNormalizedHtml.IsPresent;
         WriteObject(options);

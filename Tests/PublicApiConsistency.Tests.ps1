@@ -70,7 +70,9 @@ Describe 'PSWriteOffice public API consistency' {
             $builder.OutputType.Type.Name | Should -Contain $consumer.Parameters[$contract.Parameter].ParameterType.Name
             @($builder.Parameters.Values | Where-Object ParameterType -eq ([System.Nullable[bool]])) |
                 Should -HaveCount 0 -Because "$($contract.Builder) should expose PowerShell switches rather than nullable booleans"
-            $exampleText = Get-Help $contract.Builder -Examples | Out-String
+            $helpPath = Join-Path (Join-Path $PSScriptRoot '..\Docs') "$($contract.Builder).md"
+            Test-Path -LiteralPath $helpPath | Should -BeTrue -Because "$($contract.Builder) should have generated command help"
+            $exampleText = Get-Content -LiteralPath $helpPath -Raw
             $exampleText | Should -Match ([regex]::Escape($contract.Command)) -Because "$($contract.Builder) should show how its result reaches the consuming command"
             $exampleText | Should -Not -Match "(?m)-[A-Za-z]+\s+'Value'" -Because "$($contract.Builder) should not publish generated placeholder examples"
         }
@@ -107,6 +109,31 @@ Describe 'PSWriteOffice public API consistency' {
         $command.Parameters.Keys | Should -Contain 'Open'
         $command.ParameterSets.Name | Should -Contain 'Document'
         $command.ParameterSets.Name | Should -Contain 'Path'
+    }
+
+    It 'accepts a password when a source path string is piped to PDF export' {
+        $sourcePath = Join-Path $TestDrive 'encrypted.docx'
+        $outputPath = Join-Path $TestDrive 'encrypted.pdf'
+
+        { $sourcePath | Export-OfficeDocumentPdf -Path $outputPath -Password 'secret' -WhatIf -ErrorAction Stop } |
+            Should -Not -Throw
+    }
+
+    It 'normalizes filesystem directories used as HTML base URIs' {
+        $assetsPath = Join-Path $TestDrive 'Assets'
+        New-Item -ItemType Directory -Path $assetsPath | Out-Null
+
+        foreach ($options in @(
+            New-OfficeHtmlConversionOptions -BaseUri $assetsPath
+            New-OfficeHtmlRenderOptions -BaseUri $assetsPath
+        )) {
+            $options.BaseUri.IsAbsoluteUri | Should -BeTrue
+            $options.BaseUri.IsFile | Should -BeTrue
+            $options.BaseUri.AbsoluteUri | Should -Match '/$'
+        }
+
+        (New-OfficeHtmlConversionOptions -BaseUri 'https://example.test/assets/').BaseUri.AbsoluteUri |
+            Should -Be 'https://example.test/assets/'
     }
 
     It 'provides a discoverable PowerShell builder for every PDF export options type' {

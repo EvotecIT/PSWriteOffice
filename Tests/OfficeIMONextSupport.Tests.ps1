@@ -180,6 +180,12 @@ Describe 'Expanded OfficeIMO support' {
         $sheet = $objectSpreadsheet | Add-OfficeOpenDocumentSheet -Name 'Object' -PassThru
         $cell = $sheet | Set-OfficeOpenDocumentCell -Row 0 -Column 0 -Value 42 -PassThru
         $cell.Value.AsDouble() | Should -Be 42
+
+        $numericValues = @([sbyte]-7, [uint16]8, [uint32]9, [uint64]10)
+        for ($column = 0; $column -lt $numericValues.Count; $column++) {
+            $numericCell = $sheet | Set-OfficeOpenDocumentCell -Row 1 -Column $column -Value $numericValues[$column] -PassThru
+            $numericCell.Value.AsDouble() | Should -Be ([double]$numericValues[$column])
+        }
     }
 
     It 'protects OpenDocument destinations and validates conversion extensions' {

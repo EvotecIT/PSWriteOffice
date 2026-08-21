@@ -46,10 +46,14 @@ public sealed class SetOfficeOpenDocumentCellCommand : PSCmdlet {
         switch (value) {
             case null: cell.ClearValue(); break;
             case bool boolean: cell.SetBoolean(boolean); break;
+            case sbyte number: cell.SetNumber(number); break;
             case byte number: cell.SetNumber(number); break;
             case short number: cell.SetNumber(number); break;
+            case ushort number: cell.SetNumber(number); break;
             case int number: cell.SetNumber(number); break;
+            case uint number: cell.SetNumber(number); break;
             case long number: cell.SetNumber(number); break;
+            case ulong number: cell.SetNumber(number); break;
             case float number: cell.SetNumber(number); break;
             case double number: cell.SetNumber(number); break;
             case decimal number: cell.SetDecimal(number); break;

@@ -60,7 +60,7 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     public string Path { get; set; } = string.Empty;
 
     /// <summary>Password used to open an encrypted Word, Excel, or PowerPoint source file.</summary>
-    [Parameter(ParameterSetName = ParameterSetPath)]
+    [Parameter]
     public string? Password { get; set; }
 
     /// <summary>Word-specific PDF options.</summary>

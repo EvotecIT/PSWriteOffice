@@ -11,7 +11,7 @@ Exports a Word, Excel, PowerPoint, Markdown, or RTF document to PDF.
 ## SYNTAX
 ### Document (Default)
 ```powershell
-Export-OfficeDocumentPdf [-Document] <Object> [-Path] <string> [-WordOptions <WordPdfSaveOptions>] [-ExcelOptions <ExcelPdfSaveOptions>] [-PowerPointOptions <PowerPointPdfSaveOptions>] [-MarkdownOptions <MarkdownPdfSaveOptions>] [-RtfOptions <RtfPdfSaveOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeDocumentPdf [-Document] <Object> [-Path] <string> [-Password <string>] [-WordOptions <WordPdfSaveOptions>] [-ExcelOptions <ExcelPdfSaveOptions>] [-PowerPointOptions <PowerPointPdfSaveOptions>] [-MarkdownOptions <MarkdownPdfSaveOptions>] [-RtfOptions <RtfPdfSaveOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
@@ -147,7 +147,7 @@ Password used to open an encrypted Word, Excel, or PowerPoint source file.
 
 ```yaml
 Type: String
-Parameter Sets: Path
+Parameter Sets: Document, Path
 Aliases: None
 Possible values:
 

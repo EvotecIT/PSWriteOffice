@@ -60,7 +60,7 @@ public sealed class NewOfficeHtmlRenderOptionsCommand : OfficeImageOptionsComman
         if (DefaultFontFamily != null) options.DefaultFontFamily = DefaultFontFamily;
         if (DefaultFontSize.HasValue) options.DefaultFontSize = DefaultFontSize.Value;
         if (DefaultLineHeight.HasValue) options.DefaultLineHeight = DefaultLineHeight.Value;
-        if (!string.IsNullOrWhiteSpace(BaseUri)) options.BaseUri = new Uri(BaseUri!, UriKind.RelativeOrAbsolute);
+        if (!string.IsNullOrWhiteSpace(BaseUri)) options.BaseUri = HtmlOptionsCommandUtilities.NormalizeBaseUri(SessionState, BaseUri!);
         if (MaxPageCount.HasValue) options.MaxPageCount = MaxPageCount.Value;
         if (MaxInputCharacters.HasValue) options.MaxInputCharacters = MaxInputCharacters.Value;
         if (MaxHtmlNodes.HasValue) options.MaxHtmlNodes = MaxHtmlNodes.Value;

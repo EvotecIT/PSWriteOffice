@@ -81857,6 +81857,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password used to open an encrypted Word, Excel, or PowerPoint source file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutputPath,FilePath">
           <maml:name>Path</maml:name>
           <maml:description>
@@ -152802,7 +152814,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>$options = New-OfficeVisioImageOptions -PageIndex 0 -PageCount 1 -RenderText -RenderConnectorLabels&#xD;
-            Export-OfficeVisioImage -Path .\Diagram.vsdx -OutputPath .\Preview.svg -Options $options</dev:code>
+            Export-OfficeVisioImage -Path .\Diagram.vsdx -OutputPath .\Preview -Format Svg -Options $options</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
