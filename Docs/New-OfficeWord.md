@@ -15,7 +15,7 @@ New-OfficeWord [-Path] <string> [[-Content] <scriptblock>] [-TemplatePath <strin
 ```
 
 ## DESCRIPTION
-Handles file creation or template cloning, scriptblock execution, optional autosave, and emits the document path when -PassThru is used.
+Handles file creation or template cloning, scriptblock execution, explicit save or live-document composition, and emits the document path when -PassThru is used.
 
 ## EXAMPLES
 

@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeFonts.pptx {
 ///     Set-OfficePowerPointThemeFonts -MajorLatin 'Aptos Display' -MinorLatin 'Aptos' -AllMasters
-///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Theme fonts'
+///     Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Theme fonts'
 /// }</code>
 ///   <para>Updates theme fonts before creating slides.</para>
 /// </example>

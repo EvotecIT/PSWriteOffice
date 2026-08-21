@@ -24,7 +24,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Open</code>
 ///   <para>Saves updates to <c>Report-final.docx</c>, opens it, and disposes the document.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Close, "OfficeWord", DefaultParameterSetName = ParameterSetCurrent)]
+[Cmdlet(VerbsCommon.Close, "OfficeWord", DefaultParameterSetName = ParameterSetCurrent, SupportsShouldProcess = true)]
 public sealed class CloseOfficeWordCommand : PSCmdlet {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetCurrent = "Current";
@@ -51,7 +51,7 @@ public sealed class CloseOfficeWordCommand : PSCmdlet {
     [Parameter(ParameterSetName = ParameterSetCurrent)]
     public string? Path { get; set; }
 
-    /// <summary>Open the file after saving.</summary>
+    /// <summary>Open the file after saving. Requires -Save or -Path.</summary>
     [Parameter]
     [Alias("Show")]
     public SwitchParameter Open { get; set; }
@@ -62,6 +62,10 @@ public sealed class CloseOfficeWordCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
+        if (Open.IsPresent && !Save.IsPresent && string.IsNullOrWhiteSpace(Path)) {
+            throw new PSArgumentException("Use -Save or -Path with -Open so the document is persisted before it is opened.", nameof(Open));
+        }
+
         if (All.IsPresent) {
             var documents = WordDocumentService.GetTrackedDocuments();
             for (var index = documents.Count - 1; index >= 0; index--) {
@@ -88,7 +92,13 @@ public sealed class CloseOfficeWordCommand : PSCmdlet {
     }
 
     private void CloseSingleDocument(WordDocument document) {
-        if (Save.IsPresent || !string.IsNullOrEmpty(Path)) {
+        var shouldSave = Save.IsPresent || !string.IsNullOrWhiteSpace(Path);
+        var action = shouldSave ? "Save and close" : "Close";
+        if (!ShouldProcess("Word document", action)) {
+            return;
+        }
+
+        if (shouldSave) {
             var resolvedPath = !string.IsNullOrWhiteSpace(Path)
                 ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
                 : null;

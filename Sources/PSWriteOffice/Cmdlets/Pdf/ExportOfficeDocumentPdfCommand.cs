@@ -93,16 +93,16 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         object document = UnwrapDocument(Document);
-        IDisposable? ownedDocument = null;
+        Action? closeOwnedDocument = null;
 
         try {
             if (ParameterSetName == ParameterSetPath) {
-                document = LoadDocument(out ownedDocument);
+                document = LoadDocument(out closeOwnedDocument);
             }
 
             SaveDocument(document, outputPath);
         } finally {
-            ownedDocument?.Dispose();
+            closeOwnedDocument?.Invoke();
         }
 
         if (Open.IsPresent) {
@@ -114,30 +114,30 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
         }
     }
 
-    private object LoadDocument(out IDisposable? ownedDocument) {
+    private object LoadDocument(out Action? closeOwnedDocument) {
         var sourcePath = PdfCommandUtilities.ResolveExistingFilePath(this, InputPath);
         switch (System.IO.Path.GetExtension(sourcePath).ToLowerInvariant()) {
             case ".docx": {
                     var document = WordDocumentService.LoadDocument(sourcePath, readOnly: true, autoSave: false, Password);
-                    ownedDocument = document;
+                    closeOwnedDocument = () => WordDocumentService.CloseDocument(document);
                     return document;
                 }
             case ".xlsx": {
                     var document = ExcelDocumentService.LoadDocument(sourcePath, readOnly: true, autoSave: false, Password);
-                    ownedDocument = document;
+                    closeOwnedDocument = () => ExcelDocumentService.CloseDocument(document);
                     return document;
                 }
             case ".pptx": {
                     var document = PowerPointDocumentService.LoadPresentation(sourcePath, Password, readOnly: true);
-                    ownedDocument = document;
+                    closeOwnedDocument = () => PowerPointDocumentService.ClosePresentation(document, save: false, show: false);
                     return document;
                 }
             case ".md":
             case ".markdown":
-                ownedDocument = null;
+                closeOwnedDocument = null;
                 return MarkdownDoc.Load(sourcePath);
             case ".rtf":
-                ownedDocument = null;
+                closeOwnedDocument = null;
                 return RtfDocument.Load(sourcePath);
             default:
                 throw new PSArgumentException("Supported PDF source extensions are .docx, .xlsx, .pptx, .md, .markdown, and .rtf.", nameof(InputPath));

@@ -22,7 +22,7 @@ Sets speaker notes for a PowerPoint slide.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointNotes.pptx {
-    $slide = Add-OfficePowerPointSlide -Layout 1
+    $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Executive summary'
     Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this slide under five minutes and focus on decisions.'
 }

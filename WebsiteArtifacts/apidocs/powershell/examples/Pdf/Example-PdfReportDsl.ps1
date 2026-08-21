@@ -3,8 +3,7 @@ $ErrorActionPreference = 'Stop'
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Example-PdfReportDsl.pdf'
 $attachmentPath = Join-Path $documents 'Example-PdfReportDsl-notes.txt'
 Set-Content -LiteralPath $attachmentPath -Value 'Synthetic report notes embedded by PSWriteOffice.' -Encoding UTF8
@@ -66,7 +65,7 @@ New-OfficePdf -Path $path {
 
     PdfSpacer 10
     PdfAttachment -Path $attachmentPath -Description 'Generated example notes'
-} -PassThru | Out-Null
+}
 
 $info = Get-OfficePdfInfo -Path $path
 [pscustomobject]@{

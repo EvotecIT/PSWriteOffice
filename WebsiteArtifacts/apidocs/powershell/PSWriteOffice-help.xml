@@ -35493,7 +35493,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointBullets.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Delivery update'&#xD;
                 Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next steps' -X 60 -Y 120 -Width 420 -Height 180&#xD;
             }</dev:code>
@@ -36103,7 +36103,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
                 [pscustomobject]@{ Month = 'Feb'; Sales = 55; Profit = 13 }&#xD;
             )&#xD;
             New-OfficePowerPoint -Path .\Examples\Documents\PowerPointChart.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Add-OfficePowerPointChart -Slide $slide -InputObject $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'&#xD;
             }</dev:code>
         <dev:remarks>
@@ -36120,7 +36120,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
                 [pscustomobject]@{ Quarter = 2; Revenue = 34 }&#xD;
             )&#xD;
             New-OfficePowerPoint -Path .\Examples\Documents\PowerPointScatter.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Add-OfficePowerPointChart -Slide $slide -Type Scatter -InputObject $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'&#xD;
             }</dev:code>
         <dev:remarks>
@@ -36770,7 +36770,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         </maml:introduction>
         <dev:code>$image = '.\Tests\Assets\CellImage.png'&#xD;
             New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImage.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Evidence'&#xD;
                 Add-OfficePowerPointImage -Slide $slide -Path $image -X 60 -Y 130 -Width 180 -Height 120&#xD;
             }</dev:code>
@@ -38316,8 +38316,8 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSections.pptx {&#xD;
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Overview'&#xD;
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Results'&#xD;
+                Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Overview'&#xD;
+                Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Results'&#xD;
                 Add-OfficePowerPointSection -Name 'Results' -StartSlideIndex 1&#xD;
             }</dev:code>
         <dev:remarks>
@@ -38630,7 +38630,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointShape.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 120 -Width 220 -Height 90 -FillColor '#DDEEFF' -OutlineColor '#2563EB' -OutlineWidth 1&#xD;
                 Add-OfficePowerPointTextBox -Slide $slide -Text 'Highlighted status' -X 80 -Y 145 -Width 180 -Height 32&#xD;
             }</dev:code>
@@ -39049,7 +39049,9 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ppt = New-OfficePowerPoint -Path .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -Path .\deck.pptx -NoSave&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt&#xD;
+            $ppt | Close-OfficePowerPoint -Save</dev:code>
         <dev:remarks>
           <maml:para>Creates a deck and appends a new slide at the end.</maml:para>
         </dev:remarks>
@@ -40137,7 +40139,7 @@ table formatting, borders, and style choices are preserved.</maml:para>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointTextBox.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Add-OfficePowerPointTextBox -Slide $slide -Text 'Quarterly overview' -X 80 -Y 150 -Width 320 -Height 50&#xD;
                 Add-OfficePowerPointTextBox -Slide $slide -Text 'Generated by PSWriteOffice' -X 80 -Y 210 -Width 320 -Height 35&#xD;
             }</dev:code>
@@ -57233,7 +57235,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
           <maml:name>Open</maml:name>
           <maml:description>
-            <maml:para>Open the workbook in Excel after saving.</maml:para>
+            <maml:para>Open the workbook after saving. Requires -Save or -Path.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -57410,7 +57412,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
         <maml:name>Open</maml:name>
         <maml:description>
-          <maml:para>Open the workbook in Excel after saving.</maml:para>
+          <maml:para>Open the workbook after saving. Requires -Save or -Path.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -57544,7 +57546,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
           <maml:name>Open</maml:name>
           <maml:description>
-            <maml:para>Open the presentation in PowerPoint after saving.</maml:para>
+            <maml:para>Open the presentation after saving. Requires -Save or -Path.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -57557,6 +57559,18 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:name>Password</maml:name>
           <maml:description>
             <maml:para>Password used to save the presentation as an encrypted package.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Optional target path when saving.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -57595,7 +57609,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
         <maml:name>Open</maml:name>
         <maml:description>
-          <maml:para>Open the presentation in PowerPoint after saving.</maml:para>
+          <maml:para>Open the presentation after saving. Requires -Save or -Path.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -57608,6 +57622,18 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:name>Password</maml:name>
         <maml:description>
           <maml:para>Password used to save the presentation as an encrypted package.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Optional target path when saving.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -57708,7 +57734,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
           <maml:name>Open</maml:name>
           <maml:description>
-            <maml:para>Open the file after saving.</maml:para>
+            <maml:para>Open the file after saving. Requires -Save or -Path.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -57771,7 +57797,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
           <maml:name>Open</maml:name>
           <maml:description>
-            <maml:para>Open the file after saving.</maml:para>
+            <maml:para>Open the file after saving. Requires -Save or -Path.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -57834,7 +57860,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
           <maml:name>Open</maml:name>
           <maml:description>
-            <maml:para>Open the file after saving.</maml:para>
+            <maml:para>Open the file after saving. Requires -Save or -Path.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -57909,7 +57935,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
         <maml:name>Open</maml:name>
         <maml:description>
-          <maml:para>Open the file after saving.</maml:para>
+          <maml:para>Open the file after saving. Requires -Save or -Path.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -78037,9 +78063,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCopySlide.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Original'&#xD;
-                $copy = Copy-OfficePowerPointSlide -Index 0&#xD;
+                $copy = Copy-OfficePowerPointSlide -Index 0 -PassThru&#xD;
                 Set-OfficePowerPointSlideTitle -Slide $copy -Title 'Copied appendix'&#xD;
             }</dev:code>
         <dev:remarks>
@@ -115022,7 +115048,7 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointLayoutBox.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 $box = Get-OfficePowerPointLayoutBox -MarginCm 1.5&#xD;
                 Add-OfficePowerPointTextBox -Slide $slide -Text 'Inside the content box' -X ($box.LeftPoints) -Y ($box.TopPoints) -Width ($box.WidthPoints) -Height 60&#xD;
             }</dev:code>
@@ -115036,7 +115062,7 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointColumns.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 $columns = Get-OfficePowerPointLayoutBox -ColumnCount 2 -MarginCm 1.5 -GutterCm 1.0&#xD;
                 Add-OfficePowerPointTextBox -Slide $slide -Text 'Left column' -X ($columns[0].LeftPoints) -Y ($columns[0].TopPoints) -Width ($columns[0].WidthPoints) -Height 80&#xD;
                 Add-OfficePowerPointTextBox -Slide $slide -Text 'Right column' -X ($columns[1].LeftPoints) -Y ($columns[1].TopPoints) -Width ($columns[1].WidthPoints) -Height 80&#xD;
@@ -115613,10 +115639,11 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSectionsRead.pptx&#xD;
-            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null&#xD;
-            Add-OfficePowerPointSection -Presentation $ppt -Name 'Appendix' -StartSlideIndex 0 | Out-Null&#xD;
-            Get-OfficePowerPointSection -Presentation $ppt | Select-Object Name, FirstSlideIndex, SlideCount</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSectionsRead.pptx -NoSave&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1&#xD;
+            Add-OfficePowerPointSection -Presentation $ppt -Name 'Appendix' -StartSlideIndex 0&#xD;
+            Get-OfficePowerPointSection -Presentation $ppt | Select-Object Name, FirstSlideIndex, SlideCount&#xD;
+            $ppt | Close-OfficePowerPoint</dev:code>
         <dev:remarks>
           <maml:para>Returns section information including section names and slide indexes.</maml:para>
         </dev:remarks>
@@ -116245,10 +116272,11 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeRead.pptx&#xD;
+        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeRead.pptx -NoSave&#xD;
             Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Service Brief'&#xD;
             Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos Display' -MinorLatin 'Aptos'&#xD;
-            Get-OfficePowerPointTheme -Presentation $ppt | Select-Object Name, Master</dev:code>
+            Get-OfficePowerPointTheme -Presentation $ppt | Select-Object Name, Master&#xD;
+            $ppt | Close-OfficePowerPoint</dev:code>
         <dev:remarks>
           <maml:para>Returns theme information after updating the deck theme metadata.</maml:para>
         </dev:remarks>
@@ -127659,7 +127687,7 @@ the script needs to work with list objects directly instead of using a text sear
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImportTarget.pptx {&#xD;
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Target deck'&#xD;
+                Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Target deck'&#xD;
                 Import-OfficePowerPointSlide -SourcePath .\Examples\Documents\SourceDeck.pptx -SourceIndex 0 -InsertAt 1&#xD;
             }</dev:code>
         <dev:remarks>
@@ -140793,7 +140821,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Handles file creation or template cloning, scriptblock execution, optional autosave, and emits the document path when -PassThru is used.</maml:para>
+      <maml:para>Handles file creation or template cloning, scriptblock execution, explicit save or live-document composition, and emits the document path when -PassThru is used.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -144470,11 +144498,11 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRemoveSlide.pptx&#xD;
-            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null&#xD;
-            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null&#xD;
+        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRemoveSlide.pptx -NoSave&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1&#xD;
             Remove-OfficePowerPointSlide -Presentation $ppt -Index 0 -Confirm:$false&#xD;
-            Save-OfficePowerPoint -Presentation $ppt</dev:code>
+            Close-OfficePowerPoint -Presentation $ppt -Save</dev:code>
         <dev:remarks>
           <maml:para>Removes the first slide and saves the updated deck.</maml:para>
         </dev:remarks>
@@ -145092,10 +145120,11 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRenameSection.pptx&#xD;
-            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null&#xD;
-            Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 0 | Out-Null&#xD;
-            Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive' -PassThru</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRenameSection.pptx -NoSave&#xD;
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1&#xD;
+            Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 0&#xD;
+            Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive' -PassThru&#xD;
+            $ppt | Close-OfficePowerPoint -Save</dev:code>
         <dev:remarks>
           <maml:para>Renames the first matching section and returns the updated section metadata.</maml:para>
         </dev:remarks>
@@ -147574,8 +147603,8 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSave.pptx&#xD;
-            $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1&#xD;
+        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSave.pptx -NoSave&#xD;
+            $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 -PassThru&#xD;
             Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Saved later'&#xD;
             Save-OfficePowerPoint -Presentation $ppt</dev:code>
         <dev:remarks>
@@ -173426,7 +173455,7 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointNotes.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Executive summary'&#xD;
                 Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this slide under five minutes and focus on decisions.'&#xD;
             }</dev:code>
@@ -173626,7 +173655,7 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointPlaceholderText.pptx {&#xD;
-                $slide = Add-OfficePowerPointSlide -Layout 1&#xD;
+                $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru&#xD;
                 Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Title -Text 'Agenda'&#xD;
                 Set-OfficePowerPointPlaceholderText -Slide $slide -PlaceholderType Body -Text 'Review signals and decisions' -IgnoreMissing&#xD;
             }</dev:code>
@@ -175314,7 +175343,7 @@ contents, then save or close the presentation.</maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointWidescreen.pptx {&#xD;
                 Set-OfficePowerPointSlideSize -Preset Screen16x9&#xD;
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Widescreen deck'&#xD;
+                Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Widescreen deck'&#xD;
             }</dev:code>
         <dev:remarks>
           <maml:para>Applies the 16:9 widescreen preset before adding slides.</maml:para>
@@ -175325,9 +175354,10 @@ contents, then save or close the presentation.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCustomSize.pptx&#xD;
+        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCustomSize.pptx -NoSave&#xD;
             Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0&#xD;
-            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Custom size'</dev:code>
+            Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Custom size'&#xD;
+            $ppt | Close-OfficePowerPoint -Save</dev:code>
         <dev:remarks>
           <maml:para>Sets the presentation slide size to a custom 25.4 x 14.0 cm layout.</maml:para>
         </dev:remarks>
@@ -176594,7 +176624,7 @@ cell inside a deck that already exists.</maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeFonts.pptx {&#xD;
                 Set-OfficePowerPointThemeFonts -MajorLatin 'Aptos Display' -MinorLatin 'Aptos' -AllMasters&#xD;
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Theme fonts'&#xD;
+                Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Theme fonts'&#xD;
             }</dev:code>
         <dev:remarks>
           <maml:para>Updates theme fonts before creating slides.</maml:para>
@@ -176745,7 +176775,7 @@ cell inside a deck that already exists.</maml:para>
         </maml:introduction>
         <dev:code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeName.pptx {&#xD;
                 Set-OfficePowerPointThemeName -Name 'Service Brief' -AllMasters&#xD;
-                Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Named theme'&#xD;
+                Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Named theme'&#xD;
             }</dev:code>
         <dev:remarks>
           <maml:para>Applies a friendly theme name across every master before saving.</maml:para>
@@ -183557,7 +183587,7 @@ cell inside a deck that already exists.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
           <maml:name>Open</maml:name>
           <maml:description>
-            <maml:para>Open the file after saving when using -System.IO.Path.</maml:para>
+            <maml:para>Open the file after saving when using -Path.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -183803,7 +183833,7 @@ cell inside a deck that already exists.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
         <maml:name>Open</maml:name>
         <maml:description>
-          <maml:para>Open the file after saving when using -System.IO.Path.</maml:para>
+          <maml:para>Open the file after saving when using -Path.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -183910,7 +183940,7 @@ cell inside a deck that already exists.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready&#xD;
+        <dev:code>$count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready -PassThru&#xD;
             [pscustomobject]@{&#xD;
                 Path = '.\Report.xlsx'&#xD;
                 Replacements = $count&#xD;
@@ -184265,11 +184295,12 @@ cell inside a deck that already exists.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointUpdateText.pptx&#xD;
-            $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1&#xD;
-            Add-OfficePowerPointTextBox -Slide $slide -Text 'FY24 summary' | Out-Null&#xD;
-            Set-OfficePowerPointNotes -Slide $slide -Text 'Mention FY24 assumptions.' | Out-Null&#xD;
-            Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes</dev:code>
+        <dev:code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointUpdateText.pptx -NoSave&#xD;
+            $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 -PassThru&#xD;
+            Add-OfficePowerPointTextBox -Slide $slide -Text 'FY24 summary'&#xD;
+            Set-OfficePowerPointNotes -Slide $slide -Text 'Mention FY24 assumptions.'&#xD;
+            $count = Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes -PassThru&#xD;
+            $ppt | Close-OfficePowerPoint -Save</dev:code>
         <dev:remarks>
           <maml:para>Replaces matching text throughout the presentation and notes, returning the replacement count.</maml:para>
         </dev:remarks>
@@ -185371,7 +185402,7 @@ cell inside a deck that already exists.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25'</dev:code>
+        <dev:code>$count = $doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' -PassThru</dev:code>
         <dev:remarks>
           <maml:para>Updates matching text in the loaded document and returns the number of replacements.</maml:para>
         </dev:remarks>

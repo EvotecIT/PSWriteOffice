@@ -10,7 +10,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Replace text in an open document.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25'</code>
+///   <code>$count = $doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' -PassThru</code>
 ///   <para>Updates matching text in the loaded document and returns the number of replacements.</para>
 /// </example>
 /// <example>

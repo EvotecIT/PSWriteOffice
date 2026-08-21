@@ -129,14 +129,18 @@ public static class PowerPointDocumentService
     }
 
     /// <summary>Closes a presentation, optionally saving and opening it first.</summary>
-    public static void ClosePresentation(PowerPointPresentation presentation, bool save, bool show, string? password = null)
+    public static void ClosePresentation(PowerPointPresentation presentation, bool save, bool show, string? password = null) =>
+        ClosePresentation(presentation, save, show, password, filePath: null);
+
+    /// <summary>Closes a presentation, optionally saving to a new path and opening it first.</summary>
+    public static void ClosePresentation(PowerPointPresentation presentation, bool save, bool show, string? password, string? filePath)
     {
         if (presentation == null) throw new ArgumentNullException(nameof(presentation));
         EnsureExternalPresentationUsesExplicitPersistence(presentation);
         string? savedPath = null;
         if (save || show)
         {
-            savedPath = SavePresentation(presentation, show: false, password, filePath: null);
+            savedPath = SavePresentation(presentation, show: false, password, filePath);
         }
 
         try

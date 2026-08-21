@@ -26,7 +26,7 @@ Replaces text in worksheet values.
 
 ### EXAMPLE 1
 ```powershell
-PS> $count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready
+PS> $count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready -PassThru
 [pscustomobject]@{
     Path = '.\Report.xlsx'
     Replacements = $count
@@ -102,7 +102,7 @@ Accept wildcard characters: False
 ```
 
 ### -Open
-Open the file after saving when using -System.IO.Path.
+Open the file after saving when using -Path.
 
 ```yaml
 Type: SwitchParameter

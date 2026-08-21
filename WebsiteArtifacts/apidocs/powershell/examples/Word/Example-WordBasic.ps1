@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $data = @(
     [PSCustomObject]@{ Region = 'North America'; Revenue = 125000; YoY = '12%' }
     [PSCustomObject]@{ Region = 'EMEA'; Revenue = 98000; YoY = '22%' }
@@ -30,6 +29,6 @@ New-OfficeWord -Path $docPath {
             Add-OfficeWordTableCondition -FilterScript { $_.Revenue -gt 100000 } -BackgroundColor '#e6fffb'
         }
     }
-} -PassThru | Out-Null
+}
 
 Write-Host "Document saved to $docPath"

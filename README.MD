@@ -145,7 +145,10 @@ and `-SignaturePath` are reserved for files with a distinct role. Older
 Commands that create, save, or mutate a document are quiet by default. Use
 `-PassThru` only when the next pipeline step needs the result. Use `-NoSave`
 when you want a live OfficeIMO document for incremental composition, and
-`-Open` when the completed file should be opened after it is written.
+`-Open` when the completed file should be opened after it is written. On
+`Close-OfficeWord`, `Close-OfficeExcel`, and `Close-OfficePowerPoint`, combine
+`-Open` with `-Save` or `-Path`; opening never silently decides whether changes
+should be persisted.
 
 ```powershell
 # One-shot DSL: save and finish without Out-Null.

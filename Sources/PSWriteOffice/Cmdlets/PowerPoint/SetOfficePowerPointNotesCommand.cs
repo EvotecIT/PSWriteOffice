@@ -10,7 +10,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <summary>Attach speaker notes.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointNotes.pptx {
-///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
 ///     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Executive summary'
 ///     Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this slide under five minutes and focus on decisions.'
 /// }</code>

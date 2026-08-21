@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $docPath = Join-Path $documents 'Word-MarkdownSource.docx'
 $markdownPath = Join-Path $documents 'Word-MarkdownSource.md'
 $roundtripPath = Join-Path $documents 'Word-MarkdownRoundtrip.docx'
@@ -13,10 +12,10 @@ New-OfficeWord -Path $docPath {
         Add-OfficeWordListItem -Text 'Alpha'
         Add-OfficeWordListItem -Text 'Beta'
     }
-} | Out-Null
+}
 
-ConvertTo-OfficeWordMarkdown -Path $docPath -OutputPath $markdownPath -PassThru | Out-Null
-ConvertFrom-OfficeWordMarkdown -Path $markdownPath -OutputPath $roundtripPath -PassThru | Out-Null
+ConvertTo-OfficeWordMarkdown -Path $docPath -OutputPath $markdownPath
+ConvertFrom-OfficeWordMarkdown -Path $markdownPath -OutputPath $roundtripPath
 
 Write-Host "Markdown saved to $markdownPath"
 Write-Host "Round-trip document saved to $roundtripPath"

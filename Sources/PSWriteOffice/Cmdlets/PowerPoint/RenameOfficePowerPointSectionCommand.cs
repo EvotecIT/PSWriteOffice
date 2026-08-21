@@ -10,10 +10,11 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Rename a section in a presentation.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRenameSection.pptx
-/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
-/// Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 0 | Out-Null
-/// Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive' -PassThru</code>
+///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRenameSection.pptx -NoSave
+/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+/// Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 0
+/// Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive' -PassThru
+/// $ppt | Close-OfficePowerPoint -Save</code>
 ///   <para>Renames the first matching section and returns the updated section metadata.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Rename, "OfficePowerPointSection")]

@@ -43,7 +43,7 @@ Supports common presets as well as explicit width and height in centimeters, inc
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointWidescreen.pptx {
     Set-OfficePowerPointSlideSize -Preset Screen16x9
-    Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Widescreen deck'
+    Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Widescreen deck'
 }
 ```
 
@@ -51,9 +51,10 @@ Applies the 16:9 widescreen preset before adding slides.
 
 ### EXAMPLE 2
 ```powershell
-PS> $ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCustomSize.pptx
+PS> $ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCustomSize.pptx -NoSave
 Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0
-Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Custom size'
+Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Custom size'
+$ppt | Close-OfficePowerPoint -Save
 ```
 
 Sets the presentation slide size to a custom 25.4 x 14.0 cm layout.

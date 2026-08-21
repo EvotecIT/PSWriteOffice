@@ -7,6 +7,8 @@ BeforeAll {
     $script:apiRoot = Join-Path $script:repoRoot 'WebsiteArtifacts\apidocs\powershell'
     $script:generatedHelpPath = Join-Path $script:repoRoot 'Docs\Generated\PSWriteOffice-help.xml'
     $script:sourceSnapshotManifestPath = Join-Path $script:apiRoot 'PSWriteOffice.psd1'
+    $script:sourceExamplesRoot = Join-Path $script:repoRoot 'Examples'
+    $script:snapshotExamplesRoot = Join-Path $script:apiRoot 'examples'
     $script:commandFamiliesGuidePath = Join-Path $script:repoRoot 'Website\content\project-docs\docs\command-families.md'
     $script:overviewGuidePath = Join-Path $script:repoRoot 'Website\content\project-docs\docs\overview.md'
     $script:projectDocsRoot = Join-Path $script:repoRoot 'Website\content\project-docs\docs'
@@ -14,6 +16,28 @@ BeforeAll {
 }
 
 Describe 'PSWriteOffice website documentation catalog' {
+    It 'keeps the website example snapshot identical to the repository examples' {
+        $sourceFiles = @(Get-ChildItem -LiteralPath $script:sourceExamplesRoot -Recurse -File)
+        $snapshotFiles = @(Get-ChildItem -LiteralPath $script:snapshotExamplesRoot -Recurse -File)
+
+        $sourceByPath = @{}
+        foreach ($file in $sourceFiles) {
+            $relative = $file.FullName.Substring($script:sourceExamplesRoot.Length).TrimStart('\', '/')
+            $sourceByPath[$relative] = $file.FullName
+        }
+        $snapshotByPath = @{}
+        foreach ($file in $snapshotFiles) {
+            $relative = $file.FullName.Substring($script:snapshotExamplesRoot.Length).TrimStart('\', '/')
+            $snapshotByPath[$relative] = $file.FullName
+        }
+
+        @($sourceByPath.Keys | Sort-Object) | Should -Be @($snapshotByPath.Keys | Sort-Object)
+        foreach ($relative in $sourceByPath.Keys) {
+            (Get-FileHash -LiteralPath $sourceByPath[$relative] -Algorithm SHA256).Hash |
+                Should -Be (Get-FileHash -LiteralPath $snapshotByPath[$relative] -Algorithm SHA256).Hash -Because $relative
+        }
+    }
+
     It 'covers every exported cmdlet exactly once' {
         $outputPath = Join-Path $TestDrive 'command-catalog.json'
         & $script:catalogScript -RepositoryRoot $script:repoRoot -OutputPath $outputPath | Out-Null

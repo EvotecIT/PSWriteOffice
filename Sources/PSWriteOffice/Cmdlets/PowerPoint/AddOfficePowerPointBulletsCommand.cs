@@ -13,7 +13,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <summary>Add a bullet list.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointBullets.pptx {
-///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
 ///     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Delivery update'
 ///     Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next steps' -X 60 -Y 120 -Width 420 -Height 180
 /// }</code>

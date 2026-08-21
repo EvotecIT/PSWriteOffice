@@ -11,17 +11,17 @@ Closes one or more tracked Word documents, optionally saving them.
 ## SYNTAX
 ### Current (Default)
 ```powershell
-Close-OfficeWord [-Current] [-Save] [-Path <string>] [-Open] [-Password <string>] [<CommonParameters>]
+Close-OfficeWord [-Current] [-Save] [-Path <string>] [-Open] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Close-OfficeWord [-Document] <WordDocument> [-Save] [-Path <string>] [-Open] [-Password <string>] [<CommonParameters>]
+Close-OfficeWord [-Document] <WordDocument> [-Save] [-Path <string>] [-Open] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### All
 ```powershell
-Close-OfficeWord -All [-Save] [-Open] [-Password <string>] [<CommonParameters>]
+Close-OfficeWord -All [-Save] [-Open] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -101,7 +101,7 @@ Accept wildcard characters: False
 ```
 
 ### -Open
-Open the file after saving.
+Open the file after saving. Requires -Save or -Path.
 
 ```yaml
 Type: SwitchParameter

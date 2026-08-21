@@ -11,9 +11,9 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <summary>Duplicate the first slide and insert the copy after it.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCopySlide.pptx {
-///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
 ///     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Original'
-///     $copy = Copy-OfficePowerPointSlide -Index 0
+///     $copy = Copy-OfficePowerPointSlide -Index 0 -PassThru
 ///     Set-OfficePowerPointSlideTitle -Slide $copy -Title 'Copied appendix'
 /// }</code>
 ///   <para>Duplicates a slide and updates the copied slide title.</para>

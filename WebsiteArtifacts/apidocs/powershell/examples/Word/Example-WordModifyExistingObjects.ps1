@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Word-ModifyExistingObjects.docx'
 
 $initialRisks = @(
@@ -19,7 +18,7 @@ New-OfficeWord -Path $path {
         WordListItem -Text 'Initial review'
         WordListItem -Text 'Security approval'
     }
-} | Out-Null
+}
 
 # Second pass: treat the file as an existing document that came from a user or template.
 $document = Get-OfficeWord -Path $path
@@ -31,26 +30,21 @@ try {
             Item  = 'Mitigation plan'
             Owner = 'Service Desk'
             State = 'Ready'
-        }) -PassThru |
-        Out-Null
+        }) -PassThru
 
     $riskTable |
-        Add-OfficeWordTableRow -Values 'Release communication', 'Operations', 'Draft' |
-        Out-Null
+        Add-OfficeWordTableRow -Values 'Release communication', 'Operations', 'Draft'
 
     $riskTable |
         Get-OfficeWordTableCell -Row 2 -Column 2 |
-        Set-OfficeWordTableCell -Text 'Investigating' -ShadingFillColor '#fff2cc' -ShadingPattern Clear |
-        Out-Null
+        Set-OfficeWordTableCell -Text 'Investigating' -ShadingFillColor '#fff2cc' -ShadingPattern Clear
 
     Find-OfficeWordList -Document $document -Text 'Initial review' |
-        Add-OfficeWordListItem -Text 'Business sign-off' |
-        Out-Null
+        Add-OfficeWordListItem -Text 'Business sign-off'
 
     Get-OfficeWordList -Document $document |
         Where-Object { $_.ListItems.Text -contains 'Initial review' } |
-        Add-OfficeWordListItem -Text 'Go-live approval' |
-        Out-Null
+        Add-OfficeWordListItem -Text 'Go-live approval'
 } finally {
     Close-OfficeWord -Document $document -Save
 }

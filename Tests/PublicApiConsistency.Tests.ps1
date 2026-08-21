@@ -78,6 +78,30 @@ Describe 'PSWriteOffice public API consistency' {
         $command.Parameters['DestinationPath'].Aliases | Should -Contain 'OutputPath'
     }
 
+    It 'uses one explicit persistence contract when closing Office documents' {
+        foreach ($name in 'Close-OfficeWord', 'Close-OfficeExcel', 'Close-OfficePowerPoint') {
+            $command = Get-Command $name
+            $command.Parameters.Keys | Should -Contain 'Save' -Because "$name should make persistence explicit"
+            $command.Parameters.Keys | Should -Contain 'Path' -Because "$name should support save-as while closing"
+            $command.Parameters.Keys | Should -Contain 'Open' -Because "$name should use the common viewer switch"
+            $command.Parameters.Keys | Should -Contain 'WhatIf' -Because "$name can save or dispose a live document"
+            $command.Parameters.Keys | Should -Contain 'Confirm' -Because "$name can save or dispose a live document"
+        }
+
+        $word = New-OfficeWord -Path (Join-Path $TestDrive 'close-word.docx') -NoSave
+        $excel = New-OfficeExcel -Path (Join-Path $TestDrive 'close-excel.xlsx') -NoSave
+        $powerPoint = New-OfficePowerPoint -Path (Join-Path $TestDrive 'close-powerpoint.pptx') -NoSave
+        try {
+            { $word | Close-OfficeWord -Open -ErrorAction Stop } | Should -Throw '*Use -Save or -Path with -Open*'
+            { $excel | Close-OfficeExcel -Open -ErrorAction Stop } | Should -Throw '*Use -Save or -Path with -Open*'
+            { $powerPoint | Close-OfficePowerPoint -Open -ErrorAction Stop } | Should -Throw '*Use -Save or -Path with -Open*'
+        } finally {
+            if ($word) { $word | Close-OfficeWord -Confirm:$false }
+            if ($excel) { $excel | Close-OfficeExcel -Confirm:$false }
+            if ($powerPoint) { $powerPoint | Close-OfficePowerPoint -Confirm:$false }
+        }
+    }
+
     It 'keeps saved New commands quiet unless PassThru is requested' {
         $cases = @(
             @{ Name = 'Word'; Extension = 'docx' }
@@ -120,6 +144,7 @@ Describe 'PSWriteOffice public API consistency' {
         $publicRoots = @(
             Join-Path $PSScriptRoot '..\Examples'
             Join-Path $PSScriptRoot '..\Website\content'
+            Join-Path $PSScriptRoot '..\WebsiteArtifacts\apidocs\powershell\examples'
         )
         $offenders = [System.Collections.Generic.List[string]]::new()
 
@@ -174,6 +199,119 @@ Describe 'PSWriteOffice public API consistency' {
                     if ($commandNames | Where-Object { $_ -match 'Office' }) {
                         $line = $snippet.LineOffset + $pipeline.Extent.StartLineNumber
                         $offenders.Add(('{0}:{1}' -f $file.FullName, $line))
+                    }
+                }
+            }
+        }
+
+        $offenders | Should -BeNullOrEmpty
+    }
+
+    It 'teaches PassThru whenever a quiet command feeds another expression' {
+        $roots = @(
+            Join-Path $PSScriptRoot '..\Examples'
+            Join-Path $PSScriptRoot '..\Website\content'
+            Join-Path $PSScriptRoot '..\WebsiteArtifacts\apidocs\powershell\examples'
+            Join-Path $PSScriptRoot '..\Sources\PSWriteOffice\Cmdlets'
+        )
+        $mutationVerbs = @('Add', 'Clear', 'Copy', 'Edit', 'Move', 'Protect', 'Remove', 'Rename', 'Save', 'Set', 'Unprotect', 'Update')
+        $savedNewCommands = @(
+            'New-OfficeExcel'
+            'New-OfficeMarkdown'
+            'New-OfficePdf'
+            'New-OfficePowerPoint'
+            'New-OfficeRtf'
+            'New-OfficeVisio'
+            'New-OfficeWord'
+        )
+        $offenders = [System.Collections.Generic.List[string]]::new()
+
+        $files = @(
+            foreach ($root in $roots) {
+                Get-ChildItem -LiteralPath $root -Recurse -File | Where-Object { $_.Extension -in '.ps1', '.md', '.cs' }
+            }
+        )
+        foreach ($file in $files) {
+            $content = [System.IO.File]::ReadAllText($file.FullName)
+            $snippets = switch ($file.Extension) {
+                '.ps1' { @([pscustomobject]@{ Text = $content; LineOffset = 0 }) }
+                '.md' {
+                    @(
+                        [regex]::Matches($content, '(?ms)^```powershell\s*\r?\n(?<code>.*?)^```\s*$') | ForEach-Object {
+                            [pscustomobject]@{
+                                Text = $_.Groups['code'].Value
+                                LineOffset = @($content.Substring(0, $_.Groups['code'].Index) -split '\r?\n').Count - 1
+                            }
+                        }
+                    )
+                }
+                '.cs' {
+                    @(
+                        [regex]::Matches($content, '(?ms)///\s*<code>(?<code>.*?)</code>') | ForEach-Object {
+                            $code = [Net.WebUtility]::HtmlDecode(($_.Groups['code'].Value -replace '(?m)^\s*///\s?', ''))
+                            [pscustomobject]@{
+                                Text = $code
+                                LineOffset = @($content.Substring(0, $_.Groups['code'].Index) -split '\r?\n').Count - 1
+                            }
+                        }
+                    )
+                }
+            }
+
+            foreach ($snippet in $snippets) {
+                $tokens = $null
+                $errors = $null
+                $ast = [System.Management.Automation.Language.Parser]::ParseInput($snippet.Text, [ref] $tokens, [ref] $errors)
+
+                foreach ($assignment in $ast.FindAll({
+                            param($node)
+                            $node -is [System.Management.Automation.Language.AssignmentStatementAst]
+                        }, $true)) {
+                    if ($assignment.Right -isnot [System.Management.Automation.Language.PipelineAst]) { continue }
+                    $command = $assignment.Right.PipelineElements[0]
+                    if ($command -isnot [System.Management.Automation.Language.CommandAst]) { continue }
+
+                    $commandName = $command.GetCommandName()
+                    if ([string]::IsNullOrWhiteSpace($commandName)) { continue }
+                    $commandInfo = Get-Command $commandName -ErrorAction SilentlyContinue
+                    if ($commandInfo -is [System.Management.Automation.AliasInfo]) {
+                        $commandInfo = $commandInfo.ResolvedCommand
+                    }
+                    if ($commandInfo.ModuleName -ne 'PSWriteOffice') { continue }
+
+                    $text = $command.Extent.Text
+                    $isSavedNew = $commandInfo.Name -in $savedNewCommands -and $text -match '(?i)(?:^|\s)-Path(?:\s|$)'
+                    $isQuietValue = ($commandInfo.Verb -in $mutationVerbs -and $commandInfo.Name -ne 'Set-OfficeConfluenceManagedSection') -or $isSavedNew
+                    $hasExplicitOutput = $text -match '(?i)(?:^|\s)-PassThru(?:\s|$)' -or
+                        ($commandInfo.Verb -eq 'New' -and $text -match '(?i)(?:^|\s)-NoSave(?:\s|$)')
+                    if ($isQuietValue -and -not $hasExplicitOutput) {
+                        $line = $snippet.LineOffset + $command.Extent.StartLineNumber
+                        $offenders.Add(('{0}:{1} assignment from {2}' -f $file.FullName, $line, $commandInfo.Name))
+                    }
+                }
+
+                foreach ($pipeline in $ast.FindAll({
+                            param($node)
+                            $node -is [System.Management.Automation.Language.PipelineAst]
+                        }, $true)) {
+                    if ($pipeline.PipelineElements.Count -lt 2) { continue }
+                    foreach ($element in $pipeline.PipelineElements[0..($pipeline.PipelineElements.Count - 2)]) {
+                        if ($element -isnot [System.Management.Automation.Language.CommandAst]) { continue }
+                        $commandName = $element.GetCommandName()
+                        if ([string]::IsNullOrWhiteSpace($commandName)) { continue }
+                        $commandInfo = Get-Command $commandName -ErrorAction SilentlyContinue
+                        if ($commandInfo -is [System.Management.Automation.AliasInfo]) {
+                            $commandInfo = $commandInfo.ResolvedCommand
+                        }
+                        if ($commandInfo.ModuleName -ne 'PSWriteOffice' -or
+                            -not $commandInfo.Parameters.ContainsKey('PassThru') -or
+                            $commandInfo.Verb -notin $mutationVerbs) {
+                            continue
+                        }
+                        if ($element.Extent.Text -notmatch '(?i)(?:^|\s)-PassThru(?:\s|$)') {
+                            $line = $snippet.LineOffset + $element.Extent.StartLineNumber
+                            $offenders.Add(('{0}:{1} pipeline from {2}' -f $file.FullName, $line, $commandInfo.Name))
+                        }
                     }
                 }
             }

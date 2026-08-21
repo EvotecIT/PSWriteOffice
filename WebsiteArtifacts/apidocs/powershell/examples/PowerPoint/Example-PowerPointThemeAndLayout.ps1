@@ -1,12 +1,11 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'PowerPoint-ThemeAndLayout.pptx'
-$ppt = New-OfficePowerPoint -FilePath $path
+$ppt = New-OfficePowerPoint -Path $path -NoSave
 
-$slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
-Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Theme Demo' | Out-Null
+$slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 -PassThru
+Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Theme Demo'
 
 $layouts = Get-OfficePowerPointLayout -Presentation $ppt
 $targetLayout = $layouts | Where-Object LayoutIndex -ne $slide.LayoutIndex | Select-Object -First 1
@@ -19,17 +18,17 @@ Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLati
 Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Contoso Theme' -AllMasters
 
 if ($targetLayout.Type) {
-    $slide | Set-OfficePowerPointSlideLayout -LayoutType $targetLayout.Type -Master $targetLayout.MasterIndex | Out-Null
+    $slide | Set-OfficePowerPointSlideLayout -LayoutType $targetLayout.Type -Master $targetLayout.MasterIndex
 } elseif ($targetLayout.Name) {
-    $slide | Set-OfficePowerPointSlideLayout -LayoutName $targetLayout.Name -Master $targetLayout.MasterIndex | Out-Null
+    $slide | Set-OfficePowerPointSlideLayout -LayoutName $targetLayout.Name -Master $targetLayout.MasterIndex
 } else {
-    $slide | Set-OfficePowerPointSlideLayout -Layout $targetLayout.LayoutIndex -Master $targetLayout.MasterIndex | Out-Null
+    $slide | Set-OfficePowerPointSlideLayout -Layout $targetLayout.LayoutIndex -Master $targetLayout.MasterIndex
 }
 
 $theme = Get-OfficePowerPointTheme -Presentation $ppt
 $theme | Format-List
 
 Save-OfficePowerPoint -Presentation $ppt
-$ppt.Dispose()
+$ppt | Close-OfficePowerPoint
 
 Write-Host "Presentation saved to $path"

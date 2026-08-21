@@ -11,7 +11,7 @@ Closes a PowerPoint presentation and optionally saves it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Close-OfficePowerPoint -Presentation <PowerPointPresentation> [-Save] [-Open] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Close-OfficePowerPoint -Presentation <PowerPointPresentation> [-Save] [-Path <string>] [-Open] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,7 +36,7 @@ Saves the presentation, opens it in PowerPoint, and releases the object.
 ## PARAMETERS
 
 ### -Open
-Open the presentation in PowerPoint after saving.
+Open the presentation after saving. Requires -Save or -Path.
 
 ```yaml
 Type: SwitchParameter
@@ -58,6 +58,22 @@ Password used to save the presentation as an encrypted package.
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Optional target path when saving.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath
 Possible values:
 
 Required: False

@@ -36,7 +36,7 @@ PS> $rows = @(
     [pscustomobject]@{ Month = 'Feb'; Sales = 55; Profit = 13 }
 )
 New-OfficePowerPoint -Path .\Examples\Documents\PowerPointChart.pptx {
-    $slide = Add-OfficePowerPointSlide -Layout 1
+    $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
     Add-OfficePowerPointChart -Slide $slide -InputObject $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
 }
 ```
@@ -50,7 +50,7 @@ PS> $rows = @(
     [pscustomobject]@{ Quarter = 2; Revenue = 34 }
 )
 New-OfficePowerPoint -Path .\Examples\Documents\PowerPointScatter.pptx {
-    $slide = Add-OfficePowerPointSlide -Layout 1
+    $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
     Add-OfficePowerPointChart -Slide $slide -Type Scatter -InputObject $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
 }
 ```

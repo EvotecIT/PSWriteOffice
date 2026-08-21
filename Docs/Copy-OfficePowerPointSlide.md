@@ -22,9 +22,9 @@ Uses OfficeIMO slide duplication so charts, notes, and shapes are preserved.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCopySlide.pptx {
-    $slide = Add-OfficePowerPointSlide -Layout 1
+    $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Original'
-    $copy = Copy-OfficePowerPointSlide -Index 0
+    $copy = Copy-OfficePowerPointSlide -Index 0 -PassThru
     Set-OfficePowerPointSlideTitle -Slide $copy -Title 'Copied appendix'
 }
 ```

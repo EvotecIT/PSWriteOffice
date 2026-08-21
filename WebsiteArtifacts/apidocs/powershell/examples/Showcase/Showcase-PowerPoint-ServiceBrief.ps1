@@ -5,8 +5,7 @@ param(
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Showcase-PowerPoint-ServiceBrief.pptx'
 
 $process = @(
@@ -70,35 +69,27 @@ $plan = PptDeckPlan {
 }
 
 New-OfficePowerPoint -Path $path {
-    PptSlideSize -Preset Screen16x9 | Out-Null
-    PptDesignerDeck -Plan $plan -AccentColor '#008C95' -Seed 'pswriteoffice-showcase' -Purpose 'technical service brief' -Name 'PSWriteOffice Showcase' -FooterLeft 'PSWriteOffice' -FooterRight 'OfficeIMO designer' -CreativeDirectionPack TechnicalMap -LayoutStrategy ContentFirst | Out-Null
+    PptSlideSize -Preset Screen16x9
+    PptDesignerDeck -Plan $plan -AccentColor '#008C95' -Seed 'pswriteoffice-showcase' -Purpose 'technical service brief' -Name 'PSWriteOffice Showcase' -FooterLeft 'PSWriteOffice' -FooterRight 'OfficeIMO designer' -CreativeDirectionPack TechnicalMap -LayoutStrategy ContentFirst
 
-    PptSlide {
-        PptTitle -Title 'Coverage and polish scorecard' | Out-Null
-        PptChart -Type ClusteredColumn -Data $chartRows -CategoryProperty Product -SeriesProperty Coverage, Polish -Title 'Current Surface vs Polish Target' -X 58 -Y 118 -Width 610 -Height 265 | Out-Null
-        PptNotes -Text 'Use this slide as the bridge between the designer slides and the concrete backlog.'
-    } | Out-Null
+    $chartSlide = PptSlide -PassThru
+    PptTitle -Slide $chartSlide -Title 'Coverage and polish scorecard'
+    PptChart -Slide $chartSlide -Type ClusteredColumn -Data $chartRows -CategoryProperty Product -SeriesProperty Coverage, Polish -Title 'Current Surface vs Polish Target' -X 58 -Y 118 -Width 610 -Height 265
+    PptNotes -Slide $chartSlide -Text 'Use this slide as the bridge between the designer slides and the concrete backlog.'
 
-    PptSlide {
-        PptTitle -Title 'Immediate implementation path' | Out-Null
-        PptTable -Data $tableRows -X 64 -Y 132 -Width 590 -Height 210 | Out-Null
-        PptNotes -Text 'Close with the next concrete pull request slices: visual screenshots, blog drafts, and richer wrappers.'
-    } | Out-Null
+    $tableSlide = PptSlide -PassThru
+    PptTitle -Slide $tableSlide -Title 'Immediate implementation path'
+    PptTable -Slide $tableSlide -Data $tableRows -X 64 -Y 132 -Width 590 -Height 210
+    PptNotes -Slide $tableSlide -Text 'Close with the next concrete pull request slices: visual screenshots, blog drafts, and richer wrappers.'
+
+    PptSection -Name 'Designer story' -StartSlideIndex 0
+    PptSection -Name 'Evidence appendix' -StartSlideIndex 6
+    PptTransition -Slide $chartSlide -Transition PushLeft
+    Get-OfficePowerPointSlide -Index 0 | PptTransition -Transition Fade
 } -Open:$Open
 
-$ppt = Get-OfficePowerPoint -FilePath $path
-try {
-    Add-OfficePowerPointSection -Presentation $ppt -Name 'Designer story' -StartSlideIndex 0 | Out-Null
-    Add-OfficePowerPointSection -Presentation $ppt -Name 'Evidence appendix' -StartSlideIndex 6 | Out-Null
-    Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTransition -Transition Fade | Out-Null
-    Get-OfficePowerPointSlide -Presentation $ppt -Index 6 | Set-OfficePowerPointSlideTransition -Transition PushLeft | Out-Null
-    Save-OfficePowerPoint -Presentation $ppt
-}
-finally {
-    $ppt.Dispose()
-}
+$presentation = Get-OfficePowerPoint -Path $path
+$summary = Get-OfficePowerPointSlideSummary -Presentation $presentation
+$presentation | Close-OfficePowerPoint
 
-$summary = Get-OfficePowerPoint -FilePath $path | Get-OfficePowerPointSlideSummary
-$summary | Format-Table Index, Title, ShapeCount, TextBoxCount, ChartCount, TableCount, HasNotes
-
-Write-Host "Presentation saved to $path"
+$summary | Select-Object SlideIndex, Title, ShapeCount, TextBoxCount, ChartCount, TableCount, HasNotes

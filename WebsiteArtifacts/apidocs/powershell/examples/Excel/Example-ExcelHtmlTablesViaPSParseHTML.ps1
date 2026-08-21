@@ -2,8 +2,7 @@ Import-Module PSParseHTML -ErrorAction Stop
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $outputDirectory = Join-Path $PSScriptRoot '..\Documents'
-New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
-
+$null = New-Item -ItemType Directory -Path $outputDirectory -Force
 $htmlPath = Join-Path $outputDirectory 'HtmlTables.html'
 $excelPath = Join-Path $outputDirectory 'HtmlTables.xlsx'
 

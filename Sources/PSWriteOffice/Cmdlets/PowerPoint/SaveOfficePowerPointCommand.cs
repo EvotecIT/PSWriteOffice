@@ -10,8 +10,8 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Save and open the deck.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSave.pptx
-/// $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSave.pptx -NoSave
+/// $slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 -PassThru
 /// Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Saved later'
 /// Save-OfficePowerPoint -Presentation $ppt</code>
 ///   <para>Saves the current presentation without closing it.</para>

@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// <example>
 ///   <summary>Replace status text and verify the update count.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready
+///   <code>$count = Update-OfficeExcelText -Path .\Report.xlsx -Sheet Summary -OldValue Draft -NewValue Ready -PassThru
 /// [pscustomobject]@{
 ///     Path = '.\Report.xlsx'
 ///     Replacements = $count
@@ -64,7 +64,7 @@ public sealed class UpdateOfficeExcelTextCommand : PSWriteOffice.Cmdlets.OfficeM
     [Parameter]
     public SwitchParameter Regex { get; set; }
 
-    /// <summary>Open the file after saving when using -System.IO.Path.</summary>
+    /// <summary>Open the file after saving when using -Path.</summary>
     [Parameter(ParameterSetName = ParameterSetPath)]
     [Alias("Show")]
     public SwitchParameter Open { get; set; }

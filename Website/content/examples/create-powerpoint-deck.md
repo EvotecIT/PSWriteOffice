@@ -13,9 +13,9 @@ It is adapted from `Examples/PowerPoint/Example-PowerPointTransitionsAndSizing.p
 ```powershell
 Import-Module PSWriteOffice
 
-$outputPath = Join-Path $PSScriptRoot 'Output\ServiceBrief.pptx'
-$null = New-Item -ItemType Directory -Path (Split-Path $outputPath) -Force
-$deck = New-OfficePowerPoint -Path $outputPath {
+$outputDirectory = (New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot 'Output') -Force).FullName
+$outputPath = Join-Path $outputDirectory 'ServiceBrief.pptx'
+$deck = New-OfficePowerPoint -Path $outputPath -NoSave {
     PptSlide {
         PptTitle -Title 'Service Brief'
         PptTextBox -Text 'Generated with PSWriteOffice' -X 80 -Y 145 -Width 360 -Height 50
@@ -29,7 +29,7 @@ Get-OfficePowerPointSlide -Presentation $deck -Index 0 |
     Set-OfficePowerPointSlideTransition -Transition Fade
 
 Set-OfficePowerPointSlideSize -Presentation $deck -Preset Screen16x9
-Save-OfficePowerPoint -Presentation $deck
+Close-OfficePowerPoint -Presentation $deck -Save
 ```
 
 ## What this demonstrates

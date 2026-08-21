@@ -12,11 +12,10 @@ Create with `-NoSave`, add slides through an explicit presentation target, then 
 
 ```powershell
 $presentation = New-OfficePowerPoint -Path '.\Briefing.pptx' -NoSave
-$slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType Text
+$slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType Text -PassThru
 Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Actions'
 Add-OfficePowerPointTextBox -Slide $slide -Text 'Confirm the production date.' -X 90 -Y 170 -Width 700 -Height 60
-$presentation | Save-OfficePowerPoint
-$presentation | Close-OfficePowerPoint
+$presentation | Close-OfficePowerPoint -Save
 ```
 
 ## Choose direct authoring or a deck plan

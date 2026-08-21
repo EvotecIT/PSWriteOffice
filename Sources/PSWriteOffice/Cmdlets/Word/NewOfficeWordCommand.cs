@@ -7,7 +7,7 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.Word;
 
 /// <summary>Creates a Word document using the DSL.</summary>
-/// <para>Handles file creation or template cloning, scriptblock execution, optional autosave, and emits the document path when <c>-PassThru</c> is used.</para>
+/// <para>Handles file creation or template cloning, scriptblock execution, explicit save or live-document composition, and emits the document path when <c>-PassThru</c> is used.</para>
 /// <example>
 ///   <summary>Create a document inline.</summary>
 ///   <prefix>PS&gt; </prefix>

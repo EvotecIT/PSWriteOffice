@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $rows = @(
     [PSCustomObject]@{ Region = 'North America'; Revenue = 125000 }
     [PSCustomObject]@{ Region = 'EMEA'; Revenue = 98000 }
@@ -28,9 +27,13 @@ New-OfficeWord -Path $docPath {
     Add-OfficeWordChart -Type Line -Data $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -XAxisTitle 'Month' -YAxisTitle 'Value' -SeriesColor '#1f77b4', '#ff7f0e'
 
     Add-OfficeWordParagraph -Text 'Pie chart anchored inside a table cell'
-    $table = Add-OfficeWordTable -InputObject $tableRows -Style 'GridTable1LightAccent1' -PassThru
-    $cellParagraph = $table.Rows[1].Cells[1].AddParagraph()
-    Add-OfficeWordChart -Paragraph $cellParagraph -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Cell Revenue Mix' -WidthPixels 420 -HeightPixels 280
-} | Out-Null
+    Add-OfficeWordTable -InputObject $tableRows -Style 'GridTable1LightAccent1' {
+        WordTableCell -Row 1 -Column 1 {
+            WordParagraph {
+                WordChart -Type Pie -Data $rows -CategoryProperty Region -SeriesProperty Revenue -Title 'Cell Revenue Mix' -WidthPixels 420 -HeightPixels 280
+            }
+        }
+    }
+}
 
 Write-Host "Document saved to $docPath"

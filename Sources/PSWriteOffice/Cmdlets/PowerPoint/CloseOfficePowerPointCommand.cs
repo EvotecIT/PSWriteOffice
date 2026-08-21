@@ -30,7 +30,12 @@ public sealed class CloseOfficePowerPointCommand : PSCmdlet {
     [Parameter]
     public SwitchParameter Save { get; set; }
 
-    /// <summary>Open the presentation in PowerPoint after saving.</summary>
+    /// <summary>Optional target path when saving.</summary>
+    [Parameter]
+    [Alias("FilePath")]
+    public string? Path { get; set; }
+
+    /// <summary>Open the presentation after saving. Requires -Save or -Path.</summary>
     [Parameter]
     [Alias("Show")]
     public SwitchParameter Open { get; set; }
@@ -46,10 +51,18 @@ public sealed class CloseOfficePowerPointCommand : PSCmdlet {
             return;
         }
 
+        if (Open.IsPresent && !Save.IsPresent && string.IsNullOrWhiteSpace(Path)) {
+            throw new PSArgumentException("Use -Save or -Path with -Open so the presentation is persisted before it is opened.", nameof(Open));
+        }
+
         try {
-            var action = Save.IsPresent || Open.IsPresent ? "Save and close" : "Close";
+            var shouldSave = Save.IsPresent || !string.IsNullOrWhiteSpace(Path);
+            var action = shouldSave ? "Save and close" : "Close";
             if (ShouldProcess("PowerPoint presentation", action)) {
-                PowerPointDocumentService.ClosePresentation(Presentation, Save.IsPresent, Open.IsPresent, Password);
+                var resolvedPath = !string.IsNullOrWhiteSpace(Path)
+                    ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)
+                    : null;
+                PowerPointDocumentService.ClosePresentation(Presentation, shouldSave, Open.IsPresent, Password, resolvedPath);
             }
         } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointCloseFailed", ErrorCategory.InvalidOperation, Presentation));

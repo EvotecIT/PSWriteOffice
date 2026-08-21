@@ -31,7 +31,7 @@ Supports direct document objects, file paths, and the active DSL document. Hyper
 
 ### EXAMPLE 1
 ```powershell
-PS> $doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25'
+PS> $count = $doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' -PassThru
 ```
 
 Updates matching text in the loaded document and returns the number of replacements.

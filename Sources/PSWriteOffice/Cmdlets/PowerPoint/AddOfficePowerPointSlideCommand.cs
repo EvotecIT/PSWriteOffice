@@ -10,7 +10,9 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Append a slide with the default layout.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -Path .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt</code>
+///   <code>$ppt = New-OfficePowerPoint -Path .\deck.pptx -NoSave
+/// Add-OfficePowerPointSlide -Presentation $ppt
+/// $ppt | Close-OfficePowerPoint -Save</code>
 ///   <para>Creates a deck and appends a new slide at the end.</para>
 /// </example>
 /// <example>

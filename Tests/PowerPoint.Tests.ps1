@@ -68,6 +68,23 @@ Describe 'PowerPoint cmdlets' {
         }
     }
 
+    It 'saves to a new path while closing a presentation' {
+        $sourcePath = Join-Path $TestDrive 'PowerPointCloseSource.pptx'
+        $savedAsPath = Join-Path (Join-Path $TestDrive 'close-save-as') 'PowerPointClose.Copy.pptx'
+        $presentation = New-OfficePowerPoint -Path $sourcePath -NoSave
+        Add-OfficePowerPointSlide -Presentation $presentation
+
+        Close-OfficePowerPoint -Presentation $presentation -Path $savedAsPath
+
+        Test-Path -LiteralPath $savedAsPath | Should -BeTrue
+        $reloaded = Get-OfficePowerPoint -Path $savedAsPath
+        try {
+            $reloaded.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
     It 'saves an external OfficeIMO presentation without closing it and supports save as' {
         $savedAsPath = Join-Path (Join-Path $TestDrive 'save-as-output') 'PowerPointExternal.Copy.pptx'
         $seedPath = Join-Path $TestDrive 'PowerPointTypeSeed.pptx'
@@ -310,10 +327,20 @@ Describe 'PowerPoint cmdlets' {
             $_.GetParameters()[1].ParameterType -eq [bool] -and
             $_.GetParameters()[2].ParameterType -eq [string]
         }
+        $close = $serviceType.GetMethods() | Where-Object {
+            $_.Name -eq 'ClosePresentation' -and
+            $_.GetParameters().Count -eq 4
+        }
+        $closeWithPath = $serviceType.GetMethods() | Where-Object {
+            $_.Name -eq 'ClosePresentation' -and
+            $_.GetParameters().Count -eq 5
+        }
 
         $load | Should -HaveCount 1
         $save | Should -HaveCount 1
         $save.ReturnType | Should -Be ([void])
+        $close | Should -HaveCount 1
+        $closeWithPath | Should -HaveCount 1
     }
 
     It 'round-trips encrypted presentations through lifecycle cmdlets' {

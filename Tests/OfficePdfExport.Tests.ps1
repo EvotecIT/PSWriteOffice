@@ -5,6 +5,22 @@ BeforeAll {
         Join-Path $PSScriptRoot '..\PSWriteOffice.psd1'
     }
     Import-Module $ModuleManifest -Global -ErrorAction Stop
+
+    function Get-OfficePrivateRegistryCount {
+        param(
+            [Parameter(Mandatory)]
+            [string] $TypeName,
+            [Parameter(Mandatory)]
+            [string] $FieldName
+        )
+
+        $type = [AppDomain]::CurrentDomain.GetAssemblies() |
+            ForEach-Object { $_.GetType($TypeName, $false) } |
+            Where-Object { $null -ne $_ } |
+            Select-Object -First 1
+        $field = $type.GetField($FieldName, [Reflection.BindingFlags]'NonPublic,Static')
+        $field.GetValue($null).Count
+    }
 }
 
 Describe 'Office document PDF exports' {
@@ -75,6 +91,34 @@ Describe 'Office document PDF exports' {
         Get-OfficePdfText -Path $pdf | Should -Match 'Word PDF export smoke'
     }
 
+    It 'releases encrypted path sources through their owning document services' {
+        $password = 'pdf-export-secret'
+        $wordPath = Join-Path $TestDrive 'encrypted-word.docx'
+        $wordPdf = Join-Path $TestDrive 'encrypted-word.pdf'
+        $excelPath = Join-Path $TestDrive 'encrypted-excel.xlsx'
+        $excelPdf = Join-Path $TestDrive 'encrypted-excel.pdf'
+
+        New-OfficeWord -Path $wordPath -Password $password {
+            WordParagraph -Text 'Encrypted Word PDF export'
+        }
+        New-OfficeExcel -Path $excelPath -Password $password {
+            ExcelSheet 'Data' {
+                ExcelCell -Address A1 -Value 'Encrypted Excel PDF export'
+            }
+        }
+
+        $wordBefore = Get-OfficePrivateRegistryCount -TypeName 'PSWriteOffice.Services.Word.WordDocumentService' -FieldName 'EncryptedSourcePaths'
+        $excelBefore = Get-OfficePrivateRegistryCount -TypeName 'PSWriteOffice.Services.Excel.ExcelDocumentService' -FieldName 'EncryptedSourcePaths'
+
+        Export-OfficeDocumentPdf -InputPath $wordPath -Path $wordPdf -Password $password
+        Export-OfficeDocumentPdf -InputPath $excelPath -Path $excelPdf -Password $password
+
+        Get-OfficePrivateRegistryCount -TypeName 'PSWriteOffice.Services.Word.WordDocumentService' -FieldName 'EncryptedSourcePaths' | Should -Be $wordBefore
+        Get-OfficePrivateRegistryCount -TypeName 'PSWriteOffice.Services.Excel.ExcelDocumentService' -FieldName 'EncryptedSourcePaths' | Should -Be $excelBefore
+        Test-Path -LiteralPath $wordPdf | Should -BeTrue
+        Test-Path -LiteralPath $excelPdf | Should -BeTrue
+    }
+
     It 'exports an open Excel workbook to PDF' {
         $xlsx = Join-Path $TestDrive 'excel-report.xlsx'
         $pdf = Join-Path $TestDrive 'excel-report.pdf'
@@ -125,7 +169,11 @@ Describe 'Office document PDF exports' {
         }
 
         $presentation = Get-OfficePowerPoint -Path $pptx
-        $presentation | Export-OfficeDocumentPdf -Path $pdf
+        try {
+            $presentation | Export-OfficeDocumentPdf -Path $pdf
+        } finally {
+            $presentation | Close-OfficePowerPoint
+        }
 
         Test-Path $pptx | Should -BeTrue
         Test-Path $pdf | Should -BeTrue

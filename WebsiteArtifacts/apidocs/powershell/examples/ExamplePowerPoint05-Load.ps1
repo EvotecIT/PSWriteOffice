@@ -1,11 +1,10 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot 'Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'LoadExample.pptx'
-$presentation = New-OfficePowerPoint -FilePath $path
-Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 | Out-Null
+$presentation = New-OfficePowerPoint -Path $path -NoSave
+Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
 Save-OfficePowerPoint -Presentation $presentation
 
-$loaded = Get-OfficePowerPoint -FilePath $path
+$loaded = Get-OfficePowerPoint -Path $path
 Write-Host "Loaded presentation with $($loaded.Slides.Count) slide(s)."

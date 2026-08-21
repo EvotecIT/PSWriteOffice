@@ -21,8 +21,8 @@ Use Close-OfficePowerPoint -Save when the presentation should be saved and close
 
 ### EXAMPLE 1
 ```powershell
-PS> $ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSave.pptx
-$slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+PS> $ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSave.pptx -NoSave
+$slide = Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 -PassThru
 Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Saved later'
 Save-OfficePowerPoint -Presentation $ppt
 ```

@@ -31,7 +31,9 @@ Creates a slide using OfficeIMO master/layout indexes and can execute nested DSL
 
 ### EXAMPLE 1
 ```powershell
-PS> $ppt = New-OfficePowerPoint -Path .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt
+PS> $ppt = New-OfficePowerPoint -Path .\deck.pptx -NoSave
+Add-OfficePowerPointSlide -Presentation $ppt
+$ppt | Close-OfficePowerPoint -Save
 ```
 
 Creates a deck and appends a new slide at the end.

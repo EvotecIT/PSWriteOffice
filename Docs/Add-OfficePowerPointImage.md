@@ -23,7 +23,7 @@ Places the picture at the requested coordinates using point measurements.
 ```powershell
 PS> $image = '.\Tests\Assets\CellImage.png'
 New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImage.pptx {
-    $slide = Add-OfficePowerPointSlide -Layout 1
+    $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Evidence'
     Add-OfficePowerPointImage -Slide $slide -Path $image -X 60 -Y 130 -Width 180 -Height 120
 }

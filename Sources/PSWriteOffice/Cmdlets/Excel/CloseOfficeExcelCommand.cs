@@ -19,7 +19,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// $workbook | Close-OfficeExcel -Save -Path .\report-final.xlsx -SafePreflight -ValidateOpenXml</code>
 ///   <para>Saves pending changes through OfficeIMO's normal save path, validates the package, and releases the workbook.</para>
 /// </example>
-[Cmdlet(VerbsCommon.Close, "OfficeExcel")]
+[Cmdlet(VerbsCommon.Close, "OfficeExcel", SupportsShouldProcess = true)]
 public sealed class CloseOfficeExcelCommand : PSCmdlet {
     /// <summary>Workbook to close.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
@@ -33,7 +33,7 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet {
     [Parameter]
     public string? Path { get; set; }
 
-    /// <summary>Open the workbook in Excel after saving.</summary>
+    /// <summary>Open the workbook after saving. Requires -Save or -Path.</summary>
     [Parameter]
     [Alias("Show")]
     public SwitchParameter Open { get; set; }
@@ -85,7 +85,17 @@ public sealed class CloseOfficeExcelCommand : PSCmdlet {
             return;
         }
 
-        if (Save.IsPresent || !string.IsNullOrEmpty(Path)) {
+        if (Open.IsPresent && !Save.IsPresent && string.IsNullOrWhiteSpace(Path)) {
+            throw new PSArgumentException("Use -Save or -Path with -Open so the workbook is persisted before it is opened.", nameof(Open));
+        }
+
+        var shouldSave = Save.IsPresent || !string.IsNullOrWhiteSpace(Path);
+        var action = shouldSave ? "Save and close" : "Close";
+        if (!ShouldProcess("Excel workbook", action)) {
+            return;
+        }
+
+        if (shouldSave) {
             ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
             var resolvedPath = !string.IsNullOrWhiteSpace(Path)
                 ? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)

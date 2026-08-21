@@ -11,7 +11,7 @@ Closes an Excel workbook and optionally saves it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [<CommonParameters>]
+Close-OfficeExcel -Document <ExcelDocument> [-Save] [-Path <string>] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -148,7 +148,7 @@ Accept wildcard characters: False
 ```
 
 ### -Open
-Open the workbook in Excel after saving.
+Open the workbook after saving. Requires -Save or -Path.
 
 ```yaml
 Type: SwitchParameter

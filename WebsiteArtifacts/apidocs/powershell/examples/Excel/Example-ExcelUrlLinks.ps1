@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Excel-UrlLinks.xlsx'
 $rows = @(
     [PSCustomObject]@{ RFC = 'rfc7208'; Spec = 'rfc5321' }
@@ -18,6 +17,6 @@ New-OfficeExcel -Path $path {
         Set-OfficeExcelUrlLinksByHeader -Header 'RFC' -TableName 'LinksTable' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" } -TitleScript { param($text) "Open $text" }
         Set-OfficeExcelUrlLinks -Range 'D2:D3' -UrlScript { param($text) "https://datatracker.ietf.org/doc/html/$text" }
     }
-} | Out-Null
+}
 
 Write-Host "Workbook saved to $path"
