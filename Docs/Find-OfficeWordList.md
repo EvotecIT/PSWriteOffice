@@ -11,12 +11,12 @@ Finds Word lists containing matching list-item text.
 ## SYNTAX
 ### PathText (Default)
 ```powershell
-Find-OfficeWordList [-InputPath] <string> [-Text] <string> [-CaseSensitive] [<CommonParameters>]
+Find-OfficeWordList [-Path] <string> [-Text] <string> [-CaseSensitive] [<CommonParameters>]
 ```
 
 ### PathRegex
 ```powershell
-Find-OfficeWordList [-InputPath] <string> [-Pattern] <string> [-CaseSensitive] [<CommonParameters>]
+Find-OfficeWordList [-Path] <string> [-Pattern] <string> [-CaseSensitive] [<CommonParameters>]
 ```
 
 ### DocumentText
@@ -103,13 +103,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the document to open read-only for searching.
 
 ```yaml
 Type: String
 Parameter Sets: PathText, PathRegex
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

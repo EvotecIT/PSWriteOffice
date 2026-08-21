@@ -21,51 +21,41 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Get, "OfficeWordStatistics", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordStatistics")]
 [OutputType(typeof(WordDocumentStatisticsInfo))]
-public sealed class GetOfficeWordStatisticsCommand : PSCmdlet
-{
+public sealed class GetOfficeWordStatisticsCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the Word document.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Document to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public WordDocument Document { get; set; } = null!;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-                if (!File.Exists(resolvedPath))
-                {
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+                if (!File.Exists(resolvedPath)) {
                     throw new FileNotFoundException($"File {resolvedPath} doesn't exist.", resolvedPath);
                 }
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
             var statistics = document.Statistics ?? new WordDocumentStatistics(document);
 
             WriteObject(new WordDocumentStatisticsInfo(statistics));
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

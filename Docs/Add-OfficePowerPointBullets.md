@@ -11,7 +11,7 @@ Adds a bulleted list to a PowerPoint slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointBullets [-Bullets] <string[]> [-Slide <PowerPointSlide>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Level <int>] [-BulletChar <string>] [<CommonParameters>]
+Add-OfficePowerPointBullets [-Bullets] <string[]> [-Slide <PowerPointSlide>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-Level <int>] [-BulletChar <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,7 +22,7 @@ Creates a textbox and populates it with bullet paragraphs.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointBullets.pptx {
-    $slide = Add-OfficePowerPointSlide -Layout 1
+    $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Delivery update'
     Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next steps' -X 60 -Y 120 -Width 420 -Height 180
 }
@@ -85,6 +85,22 @@ List level (0-8).
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

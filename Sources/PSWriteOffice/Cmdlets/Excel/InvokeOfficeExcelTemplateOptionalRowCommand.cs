@@ -16,16 +16,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsLifecycle.Invoke, "OfficeExcelTemplateOptionalRow", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Low, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelTemplateOptionalRow", "ExcelTemplateOptionalRows")]
 [OutputType(typeof(int))]
-public sealed class InvokeOfficeExcelTemplateOptionalRowCommand : PSCmdlet
-{
+public sealed class InvokeOfficeExcelTemplateOptionalRowCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
@@ -73,10 +72,8 @@ public sealed class InvokeOfficeExcelTemplateOptionalRowCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (FirstRow < 1)
-        {
+    protected override void ProcessRecord() {
+        if (FirstRow < 1) {
             ThrowTerminatingError(new ErrorRecord(
                 new PSArgumentOutOfRangeException(nameof(FirstRow)),
                 "InvalidFirstRow",
@@ -84,8 +81,7 @@ public sealed class InvokeOfficeExcelTemplateOptionalRowCommand : PSCmdlet
                 FirstRow));
         }
 
-        if (RowCount < 1)
-        {
+        if (RowCount < 1) {
             ThrowTerminatingError(new ErrorRecord(
                 new PSArgumentOutOfRangeException(nameof(RowCount)),
                 "InvalidRowCount",
@@ -93,14 +89,13 @@ public sealed class InvokeOfficeExcelTemplateOptionalRowCommand : PSCmdlet
                 RowCount));
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
         var lastRow = FirstRow + RowCount - 1;
         var action = Remove.IsPresent
             ? "Remove Excel template optional rows"
             : "Apply Excel template optional rows";
-        if (!ShouldProcess($"{sheet.Name}!{FirstRow}:{lastRow}", action))
-        {
+        if (!ShouldProcess($"{sheet.Name}!{FirstRow}:{lastRow}", action)) {
             return;
         }
 
@@ -114,8 +109,7 @@ public sealed class InvokeOfficeExcelTemplateOptionalRowCommand : PSCmdlet
                 ExcelTemplateValueService.CreateOptions(CultureName, MissingValueBehavior, ThrowOnMissing.IsPresent));
 
         workbook.SaveIfOwned();
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(replacements);
         }
     }

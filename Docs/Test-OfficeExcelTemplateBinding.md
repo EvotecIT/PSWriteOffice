@@ -11,7 +11,7 @@ Validates Excel template markers against supplied bindings before applying a tem
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Test-OfficeExcelTemplateBinding [-InputPath] <string> -Binding <IDictionary> [-Quiet] [-AsMarkdown] [-ThrowOnMissing] [<CommonParameters>]
+Test-OfficeExcelTemplateBinding [-Path] <string> -Binding <IDictionary> [-Quiet] [-AsMarkdown] [-ThrowOnMissing] [<CommonParameters>]
 ```
 
 ### Document
@@ -87,13 +87,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

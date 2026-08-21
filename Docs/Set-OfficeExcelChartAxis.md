@@ -11,7 +11,7 @@ Configures common Excel chart axis titles, formats, scale, and gridlines.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelChartAxis -Chart <ExcelChart> [-AxisGroup <OfficeChartAxisGroup>] [-CategoryTitle <string>] [-ValueTitle <string>] [-CategoryNumberFormat <string>] [-ValueNumberFormat <string>] [-SourceLinked <bool>] [-ValueMinimum <Double>] [-ValueMaximum <Double>] [-ValueMajorUnit <Double>] [-ValueMinorUnit <Double>] [-CategoryMinimum <Double>] [-CategoryMaximum <Double>] [-CategoryMajorUnit <Double>] [-CategoryMinorUnit <Double>] [-ShowCategoryMajorGridlines] [-ShowCategoryMinorGridlines] [-ShowValueMajorGridlines] [-ShowValueMinorGridlines] [-CategoryGridlineColor <string>] [-ValueGridlineColor <string>] [-GridlineWidthPoints <Double>] [<CommonParameters>]
+Set-OfficeExcelChartAxis -Chart <ExcelChart> [-AxisGroup <OfficeChartAxisGroup>] [-CategoryTitle <string>] [-ValueTitle <string>] [-CategoryNumberFormat <string>] [-ValueNumberFormat <string>] [-SourceLinked <bool>] [-ValueMinimum <Double>] [-ValueMaximum <Double>] [-ValueMajorUnit <Double>] [-ValueMinorUnit <Double>] [-CategoryMinimum <Double>] [-CategoryMaximum <Double>] [-CategoryMajorUnit <Double>] [-CategoryMinorUnit <Double>] [-ShowCategoryMajorGridlines] [-ShowCategoryMinorGridlines] [-ShowValueMajorGridlines] [-ShowValueMinorGridlines] [-CategoryGridlineColor <string>] [-ValueGridlineColor <string>] [-GridlineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -185,6 +185,22 @@ Optional gridline width in points.
 
 ```yaml
 Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

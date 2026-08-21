@@ -16,16 +16,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelRefreshOnOpen", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelRefreshOnOpen")]
 [OutputType(typeof(PSObject))]
-public sealed class SetOfficeExcelRefreshOnOpenCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelRefreshOnOpenCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -56,11 +55,9 @@ public sealed class SetOfficeExcelRefreshOnOpenCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
@@ -76,8 +73,7 @@ public sealed class SetOfficeExcelRefreshOnOpenCommand : PSCmdlet
 
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var output = new PSObject();
             output.Properties.Add(new PSNoteProperty("Enabled", result.Enabled));
             output.Properties.Add(new PSNoteProperty("PivotCacheCount", result.PivotCacheCount));
@@ -86,20 +82,16 @@ public sealed class SetOfficeExcelRefreshOnOpenCommand : PSCmdlet
         }
     }
 
-    private bool? ResolveSavePivotSourceData()
-    {
-        if (SavePivotSourceData.IsPresent && NoSavePivotSourceData.IsPresent)
-        {
+    private bool? ResolveSavePivotSourceData() {
+        if (SavePivotSourceData.IsPresent && NoSavePivotSourceData.IsPresent) {
             throw new PSArgumentException("Specify either SavePivotSourceData or NoSavePivotSourceData, not both.");
         }
 
-        if (SavePivotSourceData.IsPresent)
-        {
+        if (SavePivotSourceData.IsPresent) {
             return true;
         }
 
-        if (NoSavePivotSourceData.IsPresent)
-        {
+        if (NoSavePivotSourceData.IsPresent) {
             return false;
         }
 

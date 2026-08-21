@@ -41,8 +41,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelTableRow", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [OutputType(typeof(ExcelTable))]
-public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelTableRowCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetTable = "Table";
@@ -51,8 +50,8 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
 
     /// <summary>Workbook path to open, update, save, and close.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Open workbook to update. The caller remains responsible for saving and closing it.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -92,10 +91,8 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase))
-        {
+    protected override void ProcessRecord() {
+        if (string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)) {
             TableInputCollector.AddInput(_items, InputObject, preserveTabularInput: true);
             return;
         }
@@ -104,50 +101,39 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
-        if (!string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase))
-        {
+    protected override void EndProcessing() {
+        if (!string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)) {
             return;
         }
 
         AppendRows(ExcelTabularInputService.ToDataTable(_items, TableName), saveOwnedWorkbook: true);
     }
 
-    private void AppendRows(System.Data.DataTable data, bool saveOwnedWorkbook)
-    {
+    private void AppendRows(System.Data.DataTable data, bool saveOwnedWorkbook) {
         ExcelTable table;
 
-        if (ParameterSetName == ParameterSetTable)
-        {
+        if (ParameterSetName == ParameterSetTable) {
             table = Table ?? throw new PSArgumentException("Provide an Excel table.", nameof(Table));
-            if (!ExcelShouldProcessService.ShouldProcessTarget(this, "Excel table", "Append Excel table rows"))
-            {
+            if (!ExcelShouldProcessService.ShouldProcessTarget(this, "Excel table", "Append Excel table rows")) {
                 return;
             }
 
             table.AppendDataTable(data);
-        }
-        else
-        {
-            using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-            if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Append Excel table rows"))
-            {
+        } else {
+            using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+            if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Append Excel table rows")) {
                 return;
             }
 
             table = ResolveTable(workbook.Document);
             table.AppendDataTable(data);
-            if (saveOwnedWorkbook)
-            {
+            if (saveOwnedWorkbook) {
                 workbook.SaveIfOwned();
             }
         }
 
-        if (PassThru.IsPresent)
-        {
-            if (string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase))
-            {
+        if (PassThru.IsPresent) {
+            if (string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)) {
                 WriteWarning("Path-owned workbooks are saved and closed by Add-OfficeExcelTableRow; no live ExcelTable is emitted. Open the workbook with Get-OfficeExcel when chaining table edits.");
                 return;
             }
@@ -156,17 +142,14 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
         }
     }
 
-    private System.Data.DataTable CreateDataTable(object? value)
-    {
+    private System.Data.DataTable CreateDataTable(object? value) {
         var items = new List<object?>();
         TableInputCollector.AddInput(items, value, preserveTabularInput: true);
         return ExcelTabularInputService.ToDataTable(items, TableName);
     }
 
-    private ExcelTable ResolveTable(ExcelDocument document)
-    {
-        if (!string.IsNullOrWhiteSpace(Sheet) || SheetIndex.HasValue)
-        {
+    private ExcelTable ResolveTable(ExcelDocument document) {
+        if (!string.IsNullOrWhiteSpace(Sheet) || SheetIndex.HasValue) {
             var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
             return sheet.Table(TableName);
         }
@@ -175,13 +158,11 @@ public sealed class AddOfficeExcelTableRowCommand : PSCmdlet
             .Where(sheet => sheet.GetTableRange(TableName) != null)
             .ToArray();
 
-        if (matches.Length == 0)
-        {
+        if (matches.Length == 0) {
             throw new PSArgumentException($"Table '{TableName}' was not found in the workbook.", nameof(TableName));
         }
 
-        if (matches.Length > 1)
-        {
+        if (matches.Length > 1) {
             throw new PSArgumentException(
                 $"Table '{TableName}' exists on multiple worksheets. Specify -Sheet or -SheetIndex to select one.",
                 nameof(TableName));

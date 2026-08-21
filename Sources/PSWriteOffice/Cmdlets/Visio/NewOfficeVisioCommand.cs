@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsCommon.New, "OfficeVisio", SupportsShouldProcess = true)]
 [Alias("VisioNew")]
 [OutputType(typeof(VisioDocument), typeof(FileInfo))]
-public sealed class NewOfficeVisioCommand : PSCmdlet
-{
+public sealed class NewOfficeVisioCommand : PSCmdlet {
     /// <summary>Destination .vsdx path.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     [Alias("FilePath")]
@@ -69,20 +68,22 @@ public sealed class NewOfficeVisioCommand : PSCmdlet
 
     /// <summary>Open the document after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <summary>Emit the document object instead of the saved file.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
+        if (NoSave.IsPresent && Open.IsPresent) {
+            throw new PSArgumentException("-Open cannot be used with -NoSave because no file is written. Save the returned document explicitly, then use -Open on Save-OfficeVisio.", nameof(Open));
+        }
+
         var fullPath = VisioCommandUtilities.ResolvePath(this, Path);
-        if (!NoSave.IsPresent)
-        {
-            if (!ShouldProcess(fullPath, "Write new Visio document"))
-            {
+        if (!NoSave.IsPresent) {
+            if (!ShouldProcess(fullPath, "Write new Visio document")) {
                 return;
             }
 
@@ -94,34 +95,31 @@ public sealed class NewOfficeVisioCommand : PSCmdlet
         document.Author = Author;
         document.UseMastersByDefault = UseMastersByDefault.IsPresent;
 
-        if (RequestRecalcOnOpen.IsPresent)
-        {
+        if (RequestRecalcOnOpen.IsPresent) {
             document.RequestRecalcOnOpen();
         }
 
         var page = document.AddPage(PageName, Width, Height, Unit);
-        if (Content != null)
-        {
+        if (Content != null) {
             using (var context = VisioDslContext.Enter(document))
-            using (context.Push(page))
-            {
+            using (context.Push(page)) {
                 Content.InvokeReturnAsIs();
             }
         }
 
-        if (NoSave.IsPresent)
-        {
+        if (NoSave.IsPresent) {
             WriteObject(document);
             return;
         }
 
         document.Save();
 
-        if (Show.IsPresent)
-        {
+        if (Open.IsPresent) {
             FileOpenService.Open(fullPath);
         }
 
-        WriteObject(PassThru.IsPresent ? document : new FileInfo(fullPath));
+        if (PassThru.IsPresent) {
+            WriteObject(new FileInfo(fullPath));
+        }
     }
 }

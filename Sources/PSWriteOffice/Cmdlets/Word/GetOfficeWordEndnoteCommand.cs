@@ -21,16 +21,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Get, "OfficeWordEndnote", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordEndnotes")]
 [OutputType(typeof(WordNoteInfo))]
-public sealed class GetOfficeWordEndnoteCommand : PSCmdlet
-{
+public sealed class GetOfficeWordEndnoteCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetSection = "Section";
 
     /// <summary>Path to the document.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Document to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -41,27 +40,21 @@ public sealed class GetOfficeWordEndnoteCommand : PSCmdlet
     public WordSection Section { get; set; } = null!;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
+        try {
             IEnumerable<WordEndNote> notes;
-            if (ParameterSetName == ParameterSetSection)
-            {
+            if (ParameterSetName == ParameterSetSection) {
                 notes = Section?.EndNotes ?? Enumerable.Empty<WordEndNote>();
-            }
-            else
-            {
+            } else {
                 document = ParameterSetName == ParameterSetPath
-                    ? WordDocumentService.LoadDocument(SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath), readOnly: true, autoSave: false)
+                    ? WordDocumentService.LoadDocument(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), readOnly: true, autoSave: false)
                     : Document;
                 dispose = ParameterSetName == ParameterSetPath;
 
-                if (document == null)
-                {
+                if (document == null) {
                     throw new InvalidOperationException("Word document was not provided.");
                 }
 
@@ -69,18 +62,14 @@ public sealed class GetOfficeWordEndnoteCommand : PSCmdlet
             }
 
             WriteObject(notes.Select(ToInfo), enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }
     }
 
-    private static WordNoteInfo ToInfo(WordEndNote note)
-    {
+    private static WordNoteInfo ToInfo(WordEndNote note) {
         var paragraphs = note.Paragraphs?
             .Select(paragraph => paragraph.Text)
             .Where(text => !string.IsNullOrWhiteSpace(text))

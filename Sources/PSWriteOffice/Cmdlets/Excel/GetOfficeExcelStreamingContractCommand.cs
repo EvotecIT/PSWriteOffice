@@ -20,23 +20,21 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelStreamingContract", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelStreamingContract")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelStreamingContractCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelStreamingContractCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook document.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public ExcelDocument Document { get; set; } = null!;
 
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var report = workbook.Document.GetStreamingContract();
         var output = new PSObject();
         output.Properties.Add(new PSNoteProperty("Path", workbook.Document.FilePath));

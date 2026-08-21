@@ -11,7 +11,7 @@ Adds an image to a PowerPoint slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointImage [-Path] <string> [-Slide <PowerPointSlide>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [<CommonParameters>]
+Add-OfficePowerPointImage [-Path] <string> [-Slide <PowerPointSlide>] [-X <double>] [-Y <double>] [-Width <double>] [-Height <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -23,7 +23,7 @@ Places the picture at the requested coordinates using point measurements.
 ```powershell
 PS> $image = '.\Tests\Assets\CellImage.png'
 New-OfficePowerPoint -Path .\Examples\Documents\PowerPointImage.pptx {
-    $slide = Add-OfficePowerPointSlide -Layout 1
+    $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Evidence'
     Add-OfficePowerPointImage -Slide $slide -Path $image -X 60 -Y 130 -Width 180 -Height 120
 }
@@ -38,6 +38,22 @@ Image height in points.
 
 ```yaml
 Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

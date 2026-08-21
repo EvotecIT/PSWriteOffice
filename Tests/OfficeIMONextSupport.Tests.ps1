@@ -106,6 +106,24 @@ Describe 'Expanded OfficeIMO support' {
         Test-Path -LiteralPath $brokenLatexOutput | Should -BeFalse
     }
 
+    It 'exposes writer modes and line endings as ordinary PowerShell parameters' {
+        $asciiSource = Join-Path $TestDrive 'writer-source.adoc'
+        $asciiOutput = Join-Path $TestDrive 'writer-output.adoc'
+        [System.IO.File]::WriteAllText($asciiSource, "= Title`n`nBody")
+        Get-OfficeAsciiDoc -Path $asciiSource |
+            Save-OfficeAsciiDoc -Path $asciiOutput -Mode Canonical -LineEnding CRLF
+        [System.IO.File]::ReadAllText($asciiOutput) | Should -Match "`r`n"
+
+        $latexSource = Join-Path $TestDrive 'writer-source.tex'
+        $latexOutput = Join-Path $TestDrive 'writer-output.tex'
+        [System.IO.File]::WriteAllText($latexSource, "\\documentclass{article}`n\\begin{document}`nBody`n\\end{document}")
+        Get-OfficeLatex -Path $latexSource |
+            Save-OfficeLatex -Path $latexOutput -Mode Canonical -LineEnding LF
+        $latexText = [System.IO.File]::ReadAllText($latexOutput)
+        $latexText | Should -Match "`n"
+        $latexText | Should -Not -Match "`r`n"
+    }
+
     It 'creates and reloads native ODT, ODS, and ODP packages' {
         $cases = @(
             @{ Kind = 'Text'; Extension = 'odt'; Type = 'OfficeIMO.OpenDocument.OdtDocument' },
@@ -116,17 +134,75 @@ Describe 'Expanded OfficeIMO support' {
         foreach ($case in $cases) {
             $path = Join-Path $TestDrive "native.$($case.Extension)"
             $document = New-OfficeOpenDocument -Kind $case.Kind
-            $save = $document | Save-OfficeOpenDocument -Path $path -FailOnLoss
+            $save = $document | Save-OfficeOpenDocument -Path $path -FailOnLoss -PassThru
             $save.HasLoss | Should -BeFalse
             Test-Path -LiteralPath $path | Should -BeTrue
             (Get-OfficeOpenDocument -Path $path).GetType().FullName | Should -Be $case.Type
+        }
+
+        { Get-OfficeOpenDocument -Path $path -MaxPackageBytes 1 -ErrorAction Stop } |
+            Should -Throw '*package*'
+    }
+
+    It 'authors ODT, ODS, and ODP content through PowerShell-native DSL and object surfaces' {
+        $textPath = Join-Path $TestDrive 'authored.odt'
+        New-OfficeOpenDocument -Kind Text -Path $textPath -Content {
+            Add-OfficeOpenDocumentHeading -Text 'Service report' -Level 1
+            Add-OfficeOpenDocumentParagraph -Text 'PowerShell-native OpenDocument text.'
+        }
+        $text = Get-OfficeOpenDocument -Path $textPath
+        $text.Paragraphs.Text | Should -Contain 'Service report'
+        $text.Paragraphs.Text | Should -Contain 'PowerShell-native OpenDocument text.'
+
+        $spreadsheetPath = Join-Path $TestDrive 'authored.ods'
+        New-OfficeOpenDocument -Kind Spreadsheet -Path $spreadsheetPath -Content {
+            Add-OfficeOpenDocumentSheet -Name 'Services' -Content {
+                Set-OfficeOpenDocumentCell -Row 0 -Column 0 -Value 'Service'
+                Set-OfficeOpenDocumentCell -Row 0 -Column 1 -Value 'Healthy'
+                Set-OfficeOpenDocumentCell -Row 1 -Column 0 -Value 'Directory'
+                Set-OfficeOpenDocumentCell -Row 1 -Column 1 -Value $true
+            }
+        }
+        $spreadsheet = Get-OfficeOpenDocument -Path $spreadsheetPath
+        $spreadsheet.GetSheet('Services').Cell(1, 1).Value.AsBoolean() | Should -BeTrue
+
+        $presentationPath = Join-Path $TestDrive 'authored.odp'
+        New-OfficeOpenDocument -Kind Presentation -Path $presentationPath -Content {
+            Add-OfficeOpenDocumentSlide -Name 'Overview' -Content {
+                Add-OfficeOpenDocumentTextBox -Text 'Quarterly review' -X 1 -Y 1 -Width 20 -Height 3
+            }
+        }
+        $presentation = Get-OfficeOpenDocument -Path $presentationPath
+        $presentation.Slides | Should -HaveCount 1
+        $presentation.Slides[0].Shapes | Should -HaveCount 1
+
+        $objectSpreadsheet = New-OfficeOpenDocument -Kind Spreadsheet
+        $sheet = $objectSpreadsheet | Add-OfficeOpenDocumentSheet -Name 'Object' -PassThru
+        $cell = $sheet | Set-OfficeOpenDocumentCell -Row 0 -Column 0 -Value 42 -PassThru
+        $cell.Value.AsDouble() | Should -Be 42
+
+        $numericValues = @([sbyte]-7, [uint16]8, [uint32]9, [uint64]10)
+        for ($column = 0; $column -lt $numericValues.Count; $column++) {
+            $numericCell = $sheet | Set-OfficeOpenDocumentCell -Row 1 -Column $column -Value $numericValues[$column] -PassThru
+            $numericCell.Value.AsDouble() | Should -Be ([double]$numericValues[$column])
         }
     }
 
     It 'protects OpenDocument destinations and validates conversion extensions' {
         $whatIfPath = Join-Path $TestDrive 'what-if.odt'
-        New-OfficeOpenDocument -Kind Text -Path $whatIfPath -WhatIf | Out-Null
+        $script:OpenDocumentWhatIfDslRan = $false
+        New-OfficeOpenDocument -Kind Text -Path $whatIfPath -WhatIf -Content {
+            $script:OpenDocumentWhatIfDslRan = $true
+        } | Out-Null
         Test-Path -LiteralPath $whatIfPath | Should -BeFalse
+        $script:OpenDocumentWhatIfDslRan | Should -BeFalse
+
+        $script:OpenDocumentInvalidExtensionDslRan = $false
+        $invalidDslPath = Join-Path $TestDrive 'invalid-content.ods'
+        { New-OfficeOpenDocument -Kind Text -Path $invalidDslPath -Content {
+                $script:OpenDocumentInvalidExtensionDslRan = $true
+            } -ErrorAction Stop } | Should -Throw '*must use the .odt extension*'
+        $script:OpenDocumentInvalidExtensionDslRan | Should -BeFalse
 
         $signedPath = Join-Path $TestDrive 'signed.odt'
         New-OfficeOpenDocument -Kind Text -Path $signedPath | Out-Null
@@ -181,6 +257,22 @@ Describe 'Expanded OfficeIMO support' {
     }
 
     It 'round-trips EML, EMLX, MSG, TNEF, and mbox artifacts' {
+        $readerOptions = New-OfficeEmailReaderOptions -ExcludeAttachmentContent -PreserveRawSource -MaxAttachmentBytes 25MB
+        $readerOptions.IncludeAttachmentContent | Should -BeFalse
+        $readerOptions.PreserveRawSource | Should -BeTrue
+        $readerOptions.MaxAttachmentBytes | Should -Be 25MB
+        $writerOptions = New-OfficeEmailWriterOptions -IncludeBccHeader -Base64LineLength 80
+        $writerOptions.IncludeBccHeader | Should -BeTrue
+        $mailboxReaderOptions = $readerOptions | New-OfficeEmailMailboxReaderOptions -MaxMessageCount 250
+        [object]::ReferenceEquals($mailboxReaderOptions.MessageOptions, $readerOptions) | Should -BeTrue
+        $mailboxReaderOptions.MaxMessageCount | Should -Be 250
+        $mailboxWriterOptions = $writerOptions | New-OfficeEmailMailboxWriterOptions
+        [object]::ReferenceEquals($mailboxWriterOptions.MessageOptions, $writerOptions) | Should -BeTrue
+        $storeOptions = New-OfficeEmailStoreReaderOptions -ExcludeAttachmentContent -MaxItemCount 250
+        $storeOptions.RetainAttachmentContent | Should -BeFalse
+        $storeOptions.MaxItemCount | Should -Be 250
+        { New-OfficeEmailWriterOptions -Base64LineLength 78 -ErrorAction Stop } | Should -Throw '*multiple of four*'
+
         $emailDocumentType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Email' -TypeName 'OfficeIMO.Email.EmailDocument' -CommandName 'Save-OfficeEmail'
         $emailAddressType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Email' -TypeName 'OfficeIMO.Email.EmailAddress' -CommandName 'Save-OfficeEmail'
         $emailMailboxType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Email' -TypeName 'OfficeIMO.Email.EmailMailbox' -CommandName 'Save-OfficeEmailMailbox'
@@ -191,13 +283,17 @@ Describe 'Expanded OfficeIMO support' {
         $message.Body.Text = 'OfficeIMO email body'
         $message.Properties['Emlx:Flag:Flagged'] = $true
 
+        $quietEmailPath = Join-Path $TestDrive 'quiet-message.eml'
+        @($message | Save-OfficeEmail -Path $quietEmailPath) | Should -HaveCount 0
+        Test-Path -LiteralPath $quietEmailPath | Should -BeTrue
+
         foreach ($extension in 'eml', 'emlx', 'msg', 'dat') {
             $path = Join-Path $TestDrive "message.$extension"
             $format = if ($extension -eq 'dat') { 'Tnef' } else { $null }
             $result = if ($format) {
-                $message | Save-OfficeEmail -Path $path -Format $format
+                $message | Save-OfficeEmail -Path $path -Format $format -PassThru
             } else {
-                $message | Save-OfficeEmail -Path $path
+                $message | Save-OfficeEmail -Path $path -PassThru
             }
             $result.GetType().FullName | Should -Be 'OfficeIMO.Email.EmailWriteResult'
             Test-Path -LiteralPath $path | Should -BeTrue
@@ -223,7 +319,8 @@ Describe 'Expanded OfficeIMO support' {
         $mailbox = [Activator]::CreateInstance($emailMailboxType)
         $mailbox.Messages.Add([Activator]::CreateInstance($emailMailboxEntryType, @($message)))
         $mailboxPath = Join-Path $TestDrive 'mailbox.mbox'
-        $mailboxResult = $mailbox | Save-OfficeEmailMailbox -Path $mailboxPath
+        @($mailbox | Save-OfficeEmailMailbox -Path $mailboxPath) | Should -HaveCount 0
+        $mailboxResult = $mailbox | Save-OfficeEmailMailbox -Path $mailboxPath -PassThru
         $mailboxResult.GetType().FullName | Should -Be 'OfficeIMO.Email.EmailWriteResult'
         (Get-OfficeEmailMailbox -Path $mailboxPath).Messages.Count | Should -Be 1
     }
@@ -238,13 +335,17 @@ Describe 'Expanded OfficeIMO support' {
         New-OfficePowerPoint -Path $powerPointPath { PptSlide { PptTitle -Title 'PowerPoint image' } } | Out-Null
         New-OfficePdf -Path $pdfPath { PdfParagraph 'PDF image' } | Out-Null
 
+        $quietImagePath = Join-Path $TestDrive 'word-quiet.svg'
+        @(Export-OfficeWordImage -Path $wordPath -OutputPath $quietImagePath -Format Svg) | Should -HaveCount 0
+        Test-Path -LiteralPath $quietImagePath | Should -BeTrue
+
         $results = @(
-            Export-OfficeWordImage -Path $wordPath -OutputPath (Join-Path $TestDrive 'word.svg') -Format Svg
-            Export-OfficeExcelImage -Path $excelPath -OutputPath (Join-Path $TestDrive 'excel-images') -Format Svg
-            Export-OfficePowerPointImage -Path $powerPointPath -OutputPath (Join-Path $TestDrive 'ppt-images') -Format Svg
-            Export-OfficeHtmlImage -Html '<h1>HTML image</h1>' -OutputPath (Join-Path $TestDrive 'html.svg') -Format Svg
-            Export-OfficePdfImage -Path $pdfPath -OutputPath (Join-Path $TestDrive 'pdf-images') -Format Svg
-            Export-OfficePdfImage -Path $pdfPath -OutputPath (Join-Path $TestDrive 'pdf-webp-images') -Format Webp
+            Export-OfficeWordImage -Path $wordPath -OutputPath (Join-Path $TestDrive 'word.svg') -Format Svg -PassThru
+            Export-OfficeExcelImage -Path $excelPath -OutputPath (Join-Path $TestDrive 'excel-images') -Format Svg -PassThru
+            Export-OfficePowerPointImage -Path $powerPointPath -OutputPath (Join-Path $TestDrive 'ppt-images') -Format Svg -PassThru
+            Export-OfficeHtmlImage -Html '<h1>HTML image</h1>' -OutputPath (Join-Path $TestDrive 'html.svg') -Format Svg -PassThru
+            Export-OfficePdfImage -Path $pdfPath -OutputPath (Join-Path $TestDrive 'pdf-images') -Format Svg -PassThru
+            Export-OfficePdfImage -Path $pdfPath -OutputPath (Join-Path $TestDrive 'pdf-webp-images') -Format Webp -PassThru
         )
 
         $results.Count | Should -BeGreaterOrEqual 5
@@ -258,10 +359,56 @@ Describe 'Expanded OfficeIMO support' {
 
         $htmlLines = @('<html><body>', '<h1>Pipeline heading</h1><p>Pipeline body</p>', '</body></html>')
         $pipelineHtmlPath = Join-Path $TestDrive 'pipeline-html.svg'
-        $pipelineHtml = @($htmlLines | Export-OfficeHtmlImage -OutputPath $pipelineHtmlPath -Format Svg)
+        $pipelineHtml = @($htmlLines | Export-OfficeHtmlImage -OutputPath $pipelineHtmlPath -Format Svg -PassThru)
         $pipelineHtml | Should -HaveCount 1
         $pipelineHtml[0].GetType().FullName | Should -Be 'OfficeIMO.Drawing.OfficeImageExportResult'
         Test-Path -LiteralPath $pipelineHtmlPath | Should -BeTrue
+    }
+
+    It 'writes the requested Word and HTML raster formats and exports Word page batches' {
+        $wordPath = Join-Path $TestDrive 'format-images.docx'
+        New-OfficeWord -Path $wordPath {
+            WordParagraph {
+                WordText 'First page'
+                WordBreak -BreakType Page
+                WordText 'Second page'
+            }
+        } | Out-Null
+
+        foreach ($format in 'Jpeg', 'Tiff', 'Webp') {
+            $extension = if ($format -eq 'Jpeg') { 'jpg' } else { $format.ToLowerInvariant() }
+            $wordResult = Export-OfficeWordImage -Path $wordPath -OutputPath (Join-Path $TestDrive "word.$extension") -Format $format -PassThru
+            $htmlResult = Export-OfficeHtmlImage -Html '<h1>Format contract</h1>' -OutputPath (Join-Path $TestDrive "html.$extension") -Format $format -PassThru
+
+            foreach ($result in $wordResult, $htmlResult) {
+                $result.Format.ToString() | Should -Be $format
+                Test-Path -LiteralPath $result.SavedPath | Should -BeTrue
+                $bytes = [System.IO.File]::ReadAllBytes($result.SavedPath)
+                switch ($format) {
+                    Jpeg {
+                        ($bytes[0..2] -join ',') | Should -Be '255,216,255'
+                    }
+                    Tiff {
+                        $littleEndian = @($bytes[0], $bytes[1], $bytes[2], $bytes[3]) -join ','
+                        $littleEndian -in '73,73,42,0', '77,77,0,42' | Should -BeTrue
+                    }
+                    Webp {
+                        [System.Text.Encoding]::ASCII.GetString($bytes, 0, 4) | Should -Be 'RIFF'
+                        [System.Text.Encoding]::ASCII.GetString($bytes, 8, 4) | Should -Be 'WEBP'
+                    }
+                }
+            }
+        }
+
+        $batchOptions = New-OfficeWordImageOptions -PageIndex 0 -PageCount 2
+        $batchFolder = Join-Path $TestDrive 'word-pages'
+        $batch = @(Export-OfficeWordImage -Path $wordPath -OutputPath $batchFolder -Format Svg -Options $batchOptions -PassThru)
+        $batch | Should -HaveCount 2
+        $batch[0].SequenceIndex | Should -Be 0
+        $batch[1].SequenceIndex | Should -Be 1
+        $batch[0].SequenceCount | Should -Be 2
+        $batch[1].SequenceCount | Should -Be 2
+        $batch | ForEach-Object { Test-Path -LiteralPath $_.SavedPath | Should -BeTrue }
     }
 
     It 'releases path-loaded PowerPoint presentations after image export' {
@@ -330,7 +477,7 @@ Describe 'Expanded OfficeIMO support' {
         Test-Path -LiteralPath $safePath | Should -BeTrue
         (Export-OfficePdfXfdf -Path $pdfPath) | Should -Match '<xfdf'
         (Get-OfficePdfInteractionMap -Path $pdfPath).GetType().FullName | Should -Be 'OfficeIMO.Pdf.PdfPageInteractionMap'
-        (Export-OfficePdfLayoutOverlay -Path $pdfPath -OutputPath $overlayPath).GetType().FullName |
+        (Export-OfficePdfLayoutOverlay -Path $pdfPath -OutputPath $overlayPath -PassThru).GetType().FullName |
             Should -Be 'OfficeIMO.Drawing.OfficeImageExportResult'
         Test-Path -LiteralPath $overlayPath | Should -BeTrue
         (Compare-OfficePdfVisual -ReferencePath $pdfPath -DifferencePath $pdfPath).GetType().FullName |

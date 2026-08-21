@@ -21,7 +21,7 @@ New-OfficeWord -Path $Path {
         FirstName = 'Ada'
         OrderId   = 4242
     }
-} | Out-Null
+}
 
 Get-OfficeWord -Path $Path -ReadOnly | ForEach-Object {
     try {
@@ -30,6 +30,6 @@ Get-OfficeWord -Path $Path -ReadOnly | ForEach-Object {
         (Find-OfficeWord -Path $Path -Text 'Ada').Count
         (Find-OfficeWord -Path $Path -Text '4242').Count
     } finally {
-        $_.Dispose()
+        $_ | Close-OfficeWord
     }
 }

@@ -17,16 +17,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelActiveSheet", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelActiveSheet")]
 [OutputType(typeof(ExcelSheet), typeof(PSObject))]
-public sealed class SetOfficeExcelActiveSheetCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelActiveSheetCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to operate on outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -48,18 +47,14 @@ public sealed class SetOfficeExcelActiveSheetCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (!string.IsNullOrWhiteSpace(Sheet) && SheetIndex.HasValue)
-        {
+    protected override void ProcessRecord() {
+        if (!string.IsNullOrWhiteSpace(Sheet) && SheetIndex.HasValue) {
             throw new PSArgumentException("Specify either -Sheet or -SheetIndex, not both.");
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
 
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-
-        {
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
 
             return;
 
@@ -69,30 +64,25 @@ public sealed class SetOfficeExcelActiveSheetCommand : PSCmdlet
         workbook.Document.SetActiveWorksheet(sheet);
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)
                 ? CreatePathRecord(workbook.Document, sheet)
                 : sheet);
         }
     }
 
-    private PSObject CreatePathRecord(ExcelDocument document, ExcelSheet sheet)
-    {
+    private PSObject CreatePathRecord(ExcelDocument document, ExcelSheet sheet) {
         var item = new PSObject();
-        item.Properties.Add(new PSNoteProperty("Path", document.FilePath ?? SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath)));
+        item.Properties.Add(new PSNoteProperty("Path", document.FilePath ?? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)));
         item.Properties.Add(new PSNoteProperty("Name", sheet.Name));
         item.Properties.Add(new PSNoteProperty("SheetName", sheet.Name));
         item.Properties.Add(new PSNoteProperty("SheetIndex", ResolveSheetIndex(document, sheet)));
         return item;
     }
 
-    private static int ResolveSheetIndex(ExcelDocument document, ExcelSheet sheet)
-    {
-        for (int i = 0; i < document.Sheets.Count; i++)
-        {
-            if (string.Equals(document.Sheets[i].Name, sheet.Name, StringComparison.OrdinalIgnoreCase))
-            {
+    private static int ResolveSheetIndex(ExcelDocument document, ExcelSheet sheet) {
+        for (int i = 0; i < document.Sheets.Count; i++) {
+            if (string.Equals(document.Sheets[i].Name, sheet.Name, StringComparison.OrdinalIgnoreCase)) {
                 return i;
             }
         }
@@ -100,21 +90,17 @@ public sealed class SetOfficeExcelActiveSheetCommand : PSCmdlet
         return -1;
     }
 
-    private ExcelSheet ResolveTargetSheet(ExcelDocument document)
-    {
-        if (ParameterSetName == ParameterSetContext)
-        {
+    private ExcelSheet ResolveTargetSheet(ExcelDocument document) {
+        if (ParameterSetName == ParameterSetContext) {
             var context = ExcelDslContext.Require(this);
             return context.RequireSheet();
         }
 
-        if (!string.IsNullOrWhiteSpace(Sheet))
-        {
+        if (!string.IsNullOrWhiteSpace(Sheet)) {
             return ExcelSheetResolver.Resolve(document, Sheet, null);
         }
 
-        if (SheetIndex.HasValue)
-        {
+        if (SheetIndex.HasValue) {
             return ExcelSheetResolver.Resolve(document, null, SheetIndex);
         }
 

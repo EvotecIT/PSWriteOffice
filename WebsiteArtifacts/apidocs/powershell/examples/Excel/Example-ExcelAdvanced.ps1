@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Example-ExcelAdvanced.xlsx'
 $data = @(
     [pscustomobject]@{ Region = 'North'; Quarter = 'Q1'; Sales = 1200; Status = 'New' }
@@ -29,7 +28,7 @@ New-OfficeExcel -Path $path {
         ExcelComment -Cell 'C2' -Text 'Review this value'
 
         if (Test-Path $imagePath) {
-            ExcelImage -Path $imagePath -Range 'I8:J12' -Name 'OfficeIMOLogo' -AltText 'OfficeIMO logo' | Out-Null
+            ExcelImage -Path $imagePath -Range 'I8:J12' -Name 'OfficeIMOLogo' -AltText 'OfficeIMO logo'
         }
     }
 

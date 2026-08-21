@@ -11,7 +11,7 @@ Loads a native ODT, ODS, or ODP document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeOpenDocument [-Path] <string> [-Options <OdfLoadOptions>] [<CommonParameters>]
+Get-OfficeOpenDocument [-Path] <string> [-Options <OdfLoadOptions>] [-Password <string>] [-MaxPackageBytes <Int64>] [-MaxEntries <Int32>] [-MaxEntryUncompressedBytes <Int64>] [-MaxTotalUncompressedBytes <Int64>] [-MaxTotalKdfIterations <Int64>] [-MaxCompressionRatio <Double>] [-MaxDepth <Int32>] [-MaxXmlCharacters <Int64>] [-MaxXmlDepth <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,11 +27,171 @@ Get-OfficeOpenDocument -Path 'C:\Path'
 
 ## PARAMETERS
 
+### -MaxCompressionRatio
+Maximum declared expansion ratio for a compressed entry.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxDepth
+Maximum archive path depth.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxEntries
+Maximum number of ZIP entries.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxEntryUncompressedBytes
+Maximum uncompressed size of one package entry.
+
+```yaml
+Type: Int64
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxPackageBytes
+Maximum source package size in bytes.
+
+```yaml
+Type: Int64
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxTotalKdfIterations
+Maximum aggregate PBKDF2 iterations across encrypted entries.
+
+```yaml
+Type: Int64
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxTotalUncompressedBytes
+Maximum aggregate uncompressed package size.
+
+```yaml
+Type: Int64
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxXmlCharacters
+Maximum characters allowed in one parsed XML part.
+
+```yaml
+Type: Int64
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxXmlDepth
+Maximum element nesting depth in one parsed XML part.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Options
 Optional bounded package and XML settings.
 
 ```yaml
 Type: OdfLoadOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Password
+Password used to decrypt an encrypted OpenDocument package.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

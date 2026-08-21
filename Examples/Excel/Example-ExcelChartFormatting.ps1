@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Excel-ChartFormatting.xlsx'
 $rows = @(
     [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
@@ -15,10 +14,10 @@ New-OfficeExcel -Path $path {
 
         $chart = Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type Pie -Title 'Revenue Mix' -PassThru
         $chart |
-            Set-OfficeExcelChartLegend -Position Right |
-            Set-OfficeExcelChartDataLabels -ShowValue $true -ShowPercent $true -Position OutsideEnd -NumberFormat '0.0%' -SourceLinked:$false |
-            Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10 | Out-Null
+            Set-OfficeExcelChartLegend -Position Right -PassThru |
+            Set-OfficeExcelChartDataLabels -ShowValue $true -ShowPercent $true -Position OutsideEnd -NumberFormat '0.0%' -SourceLinked:$false -PassThru |
+            Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
     }
-} | Out-Null
+}
 
 Write-Host "Workbook saved to $path"

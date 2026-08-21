@@ -11,17 +11,17 @@ Sets the slide background color or image.
 ## SYNTAX
 ### Color (Default)
 ```powershell
-Set-OfficePowerPointBackground [-Color] <string> [-Slide <PowerPointSlide>] [<CommonParameters>]
+Set-OfficePowerPointBackground [-Color] <string> [-Slide <PowerPointSlide>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Image
 ```powershell
-Set-OfficePowerPointBackground [-ImagePath] <string> [-Slide <PowerPointSlide>] [<CommonParameters>]
+Set-OfficePowerPointBackground [-ImagePath] <string> [-Slide <PowerPointSlide>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Clear
 ```powershell
-Set-OfficePowerPointBackground -Clear [-Slide <PowerPointSlide>] [<CommonParameters>]
+Set-OfficePowerPointBackground -Clear [-Slide <PowerPointSlide>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -88,6 +88,22 @@ Possible values:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Color, Image, Clear
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

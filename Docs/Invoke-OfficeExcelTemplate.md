@@ -16,7 +16,7 @@ Invoke-OfficeExcelTemplate -Value <hashtable> [-Sheet <string>] [-SheetIndex <In
 
 ### Path
 ```powershell
-Invoke-OfficeExcelTemplate [-InputPath] <string> -Value <hashtable> [-Sheet <string>] [-SheetIndex <Int32>] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-OfficeExcelTemplate [-Path] <string> -Value <hashtable> [-Sheet <string>] [-SheetIndex <Int32>] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -70,22 +70,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -MissingValueBehavior
 Behavior used when a marker is not supplied by -Value.
 
@@ -113,6 +97,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

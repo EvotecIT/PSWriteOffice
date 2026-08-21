@@ -11,7 +11,7 @@ Saves an Excel workbook without disposing it.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeExcel [-Document] <ExcelDocument> [-Path <string>] [-Show] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-PdfPath <string>] [-DateSystem <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficeExcel [-Document] <ExcelDocument> [-Path <string>] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -140,6 +140,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Open
+Open the workbook after saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -PassThru
 Emit the workbook for further processing.
 
@@ -188,22 +204,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -PdfPath
-Optional PDF path to create from the same workbook.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -SafePreflight
 Run OfficeIMO worksheet preflight cleanup before saving.
 
@@ -222,22 +222,6 @@ Accept wildcard characters: False
 
 ### -SafeRepairDefinedNames
 Repair common defined-name issues before saving.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Show
-Open the workbook after saving.
 
 ```yaml
 Type: SwitchParameter

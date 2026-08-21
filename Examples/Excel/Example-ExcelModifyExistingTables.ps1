@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Excel-ModifyExistingTables.xlsx'
 
 $initialRows = @(
@@ -16,7 +15,7 @@ New-OfficeExcel -Path $path {
     ExcelSheet 'Notes' {
         Set-OfficeExcelCell -Address A1 -Value 'This workbook is modified after it is created.'
     }
-} | Out-Null
+}
 
 # Second pass: append rows to the named table without rebuilding the workbook through the DSL.
 $workbook = Get-OfficeExcel -Path $path
@@ -26,8 +25,7 @@ try {
             Service = 'File Services'
             Status  = 'Ready'
             Owner   = 'Storage'
-        }) -PassThru |
-        Out-Null
+        }) -PassThru
 
     $moreRows = @(
         [PSCustomObject]@{ Service = 'Network'; Status = 'Investigating'; Owner = 'Platform' }
@@ -35,8 +33,7 @@ try {
     )
 
     $workbook |
-        Add-OfficeExcelTableRow -Sheet Readiness -TableName ServiceReadiness -InputObject $moreRows |
-        Out-Null
+        Add-OfficeExcelTableRow -Sheet Readiness -TableName ServiceReadiness -InputObject $moreRows
 } finally {
     Close-OfficeExcel -Document $workbook -Save
 }

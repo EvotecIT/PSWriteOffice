@@ -12,8 +12,7 @@ Use HTML review output when a workbook or deck needs lightweight inspection with
 Import-Module PSWriteOffice
 
 $outputDirectory = Join-Path $PSScriptRoot 'Output'
-New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
-
+$null = New-Item -ItemType Directory -Path $outputDirectory -Force
 $workbookPath = Join-Path $outputDirectory 'ServiceReview.xlsx'
 $deckPath = Join-Path $outputDirectory 'ServiceReview.pptx'
 
@@ -28,14 +27,14 @@ New-OfficeExcel -Path $workbookPath {
         Add-OfficeExcelTable -Data $rows -TableName 'Services' -TableStyle 'TableStyleMedium4'
         Set-OfficeExcelColumn -Column 1, 2, 3 -AutoFit
     }
-} -PassThru | Out-Null
+}
 
-$deck = New-OfficePowerPoint -FilePath $deckPath
-$slide = Add-OfficePowerPointSlide -Presentation $deck -Layout 1
-Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Service Review' | Out-Null
-Add-OfficePowerPointTextBox -Slide $slide -Text 'Review the service status before the weekly meeting.' -X 80 -Y 140 -Width 560 -Height 80 | Out-Null
-Save-OfficePowerPoint -Presentation $deck
-$deck.Dispose()
+$deck = New-OfficePowerPoint -Path $deckPath -NoSave
+$slide = Add-OfficePowerPointSlide -Presentation $deck -Layout 1 -PassThru
+Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Service Review'
+Add-OfficePowerPointTextBox -Slide $slide -Text 'Review the service status before the weekly meeting.' -X 80 -Y 140 -Width 560 -Height 80
+$deck | Save-OfficePowerPoint
+$deck | Close-OfficePowerPoint
 
 ConvertTo-OfficeExcelHtml -Path $workbookPath -OutputPath (Join-Path $outputDirectory 'ServiceReview.workbook.html') -Title 'Workbook Review'
 ConvertTo-OfficePowerPointHtml -Path $deckPath -Profile VisualReview -OutputPath (Join-Path $outputDirectory 'ServiceReview.deck.visual.html') -Title 'Deck Review'

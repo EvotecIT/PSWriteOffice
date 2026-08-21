@@ -11,7 +11,7 @@ Gets document statistics from a Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordStatistics [-InputPath] <string> [<CommonParameters>]
+Get-OfficeWordStatistics [-Path] <string> [<CommonParameters>]
 ```
 
 ### Document
@@ -52,13 +52,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the Word document.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

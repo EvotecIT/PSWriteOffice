@@ -11,7 +11,7 @@ Gets sections from a Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordSection [-InputPath] <string> [-Index <int[]>] [<CommonParameters>]
+Get-OfficeWordSection [-Path] <string> [-Index <int[]>] [<CommonParameters>]
 ```
 
 ### Document
@@ -68,13 +68,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the document.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

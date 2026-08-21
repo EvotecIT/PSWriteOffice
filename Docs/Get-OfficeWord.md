@@ -11,7 +11,7 @@ Opens an existing Word document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeWord [-InputPath] <string> [[-Content] <scriptblock>] [-ReadOnly] [-AutoSave] [-Password <string>] [<CommonParameters>]
+Get-OfficeWord [-Path] <string> [[-Content] <scriptblock>] [-ReadOnly] [-Password <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,22 +35,6 @@ Loads the document, appends content through the DSL, and returns the open docume
 
 ## PARAMETERS
 
-### -AutoSave
-Enable AutoSave when editing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Content
 Optional DSL scriptblock to execute against the loaded document.
 
@@ -67,22 +51,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the .docx. Accepts PS paths.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Password
 Password used to open an encrypted document package.
 
@@ -94,6 +62,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the .docx. Accepts PS paths.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

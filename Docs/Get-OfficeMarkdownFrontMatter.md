@@ -11,7 +11,7 @@ Gets YAML front matter entries from a Markdown document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeMarkdownFrontMatter [-InputPath] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <Int32>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <Boolean>] [-AllowDataUrls <Boolean>] [-AllowMailtoUrls <Boolean>] [-AllowProtocolRelativeUrls <Boolean>] [-RestrictUrlSchemes <Boolean>] [-AllowedUrlScheme <string[]>] [-Key <string>] [-CaseSensitive] [<CommonParameters>]
+Get-OfficeMarkdownFrontMatter [-Path] <string> [-Options <MarkdownReaderOptions>] [-Profile <MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <Int32>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <Boolean>] [-AllowDataUrls <Boolean>] [-AllowMailtoUrls <Boolean>] [-AllowProtocolRelativeUrls <Boolean>] [-RestrictUrlSchemes <Boolean>] [-AllowedUrlScheme <string[]>] [-Key <string>] [-CaseSensitive] [<CommonParameters>]
 ```
 
 ### Document
@@ -178,22 +178,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the Markdown file.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Key
 Optional wildcard pattern matched against front matter keys.
 
@@ -253,6 +237,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the Markdown file.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

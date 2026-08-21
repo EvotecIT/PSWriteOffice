@@ -16,15 +16,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 ///   <para>Loads <c>report.xlsx</c> for inspection without enabling writes.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcel", DefaultParameterSetName = ParameterSetPath)]
-public sealed class GetOfficeExcelCommand : AsyncPSCmdlet
-{
+public sealed class GetOfficeExcelCommand : AsyncPSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetUri = "Uri";
 
     /// <summary>Path to the workbook to load.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Remote workbook URI to load.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetUri)]
@@ -39,26 +38,14 @@ public sealed class GetOfficeExcelCommand : AsyncPSCmdlet
     [Parameter]
     public SwitchParameter ReadOnly { get; set; }
 
-    /// <summary>Enable automatic saves on the underlying document.</summary>
-    [Parameter]
-    public SwitchParameter AutoSave { get; set; }
-
     /// <summary>Password used to open an encrypted workbook package.</summary>
     [Parameter]
     public string? Password { get; set; }
 
     /// <inheritdoc />
-    protected override async Task ProcessRecordAsync()
-    {
-        if (ParameterSetName == ParameterSetUri)
-        {
-            if (AutoSave.IsPresent)
-            {
-                throw new PSArgumentException("Remote workbooks cannot be opened with AutoSave. Save to a local path explicitly after loading.");
-            }
-
-            if (Uri == null)
-            {
+    protected override async Task ProcessRecordAsync() {
+        if (ParameterSetName == ParameterSetUri) {
+            if (Uri == null) {
                 throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
             }
 
@@ -72,13 +59,12 @@ public sealed class GetOfficeExcelCommand : AsyncPSCmdlet
             return;
         }
 
-        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-        if (!File.Exists(resolvedPath))
-        {
+        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        if (!File.Exists(resolvedPath)) {
             throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
         }
 
-        ExcelDocument document = ExcelDocumentService.LoadDocument(resolvedPath, ReadOnly.IsPresent, AutoSave.IsPresent, Password);
+        ExcelDocument document = ExcelDocumentService.LoadDocument(resolvedPath, ReadOnly.IsPresent, autoSave: false, Password);
         WriteObject(document);
     }
 }

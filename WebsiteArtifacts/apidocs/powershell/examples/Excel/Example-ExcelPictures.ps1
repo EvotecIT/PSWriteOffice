@@ -1,8 +1,7 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Excel-Pictures.xlsx'
 $imagePath = Join-Path $PSScriptRoot '..\Word\Example-WordTableCells.fixture.png'
 
@@ -21,6 +20,6 @@ New-OfficeExcel -Path $path {
         ExcelColumn -ColumnName C -Width 18
         ExcelColumn -ColumnName E -Width 24
     }
-} | Out-Null
+}
 
 Write-Host "Workbook saved to $path"

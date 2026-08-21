@@ -11,7 +11,7 @@ Reads an explicit A1 range from an Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelRange [-InputPath] <string> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-HeadersInFirstRow <bool>] [-NumericAsDecimal] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
+Get-OfficeExcelRange [-Path] <string> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-HeadersInFirstRow <bool>] [-NumericAsDecimal] [-AsHashtable] [-AsDataTable] [<CommonParameters>]
 ```
 
 ### Uri
@@ -121,22 +121,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the workbook.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NumericAsDecimal
 Prefer decimals instead of doubles for numeric values.
 
@@ -148,6 +132,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the workbook.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

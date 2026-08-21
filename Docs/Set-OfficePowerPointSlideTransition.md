@@ -11,7 +11,7 @@ Sets the transition used when advancing to a slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePowerPointSlideTransition -Transition <PowerPointSlideTransition> [-Slide <PowerPointSlide>] [<CommonParameters>]
+Set-OfficePowerPointSlideTransition -Transition <PowerPointSlideTransition> [-Slide <PowerPointSlide>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,6 +27,22 @@ PS> Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPoint
 Updates the first slide so it uses the Fade transition.
 
 ## PARAMETERS
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -Slide
 Slide to update (optional inside a slide DSL scope).

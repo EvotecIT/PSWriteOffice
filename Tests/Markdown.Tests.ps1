@@ -250,18 +250,16 @@ Describe 'Markdown cmdlets' {
         ($doc2.ToMarkdown() | Select-String -Pattern 'Alpha' -AllMatches).Matches.Count | Should -Be 1
     }
 
-    It 'does not save Markdown or PDF sidecars when NoSave is used' {
+    It 'returns an in-memory Markdown document when NoSave is used' {
         $path = Join-Path $TestDrive 'NoSave.md'
-        $pdfPath = Join-Path $TestDrive 'NoSave.pdf'
 
-        $document = New-OfficeMarkdown -Path $path -PdfPath $pdfPath -NoSave {
+        $document = New-OfficeMarkdown -Path $path -NoSave {
             MarkdownHeading -Level 1 -Text 'Draft'
         }
 
         $document.GetType().FullName | Should -Be 'OfficeIMO.Markdown.MarkdownDoc'
         $document.ToMarkdown() | Should -Match '# Draft'
         Test-Path $path | Should -BeFalse
-        Test-Path $pdfPath | Should -BeFalse
     }
 
     It 'builds advanced Markdown blocks via DSL helpers' {

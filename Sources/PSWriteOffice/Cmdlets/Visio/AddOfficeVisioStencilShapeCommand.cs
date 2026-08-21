@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsCommon.Add, "OfficeVisioStencilShape", DefaultParameterSetName = CatalogNameParameterSet)]
 [Alias("VisioStencil")]
 [OutputType(typeof(VisioShape))]
-public sealed class AddOfficeVisioStencilShapeCommand : PSCmdlet
-{
+public sealed class AddOfficeVisioStencilShapeCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string CatalogObjectParameterSet = "CatalogObject";
     private const string CatalogNameParameterSet = "CatalogName";
     private const string BuiltInParameterSet = "BuiltIn";
@@ -105,8 +104,7 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSCmdlet
     public double? Angle { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = VisioDslContext.Current;
         var page = Page ?? VisioDslContext.Require(this).RequirePage();
         var catalog = ResolveCatalog(context);
@@ -126,23 +124,19 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSCmdlet
 
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, ShapeName ?? Key, NameU, FillColor, LineColor, LineWeight, LinePattern, FillPattern, Angle);
         context?.RegisterShape(page, Key, shape);
-        WriteObject(shape);
+        WritePassThru(shape);
     }
 
-    private VisioStencilCatalog ResolveCatalog(VisioDslContext? context)
-    {
-        if (ParameterSetName == CatalogObjectParameterSet)
-        {
+    private VisioStencilCatalog ResolveCatalog(VisioDslContext? context) {
+        if (ParameterSetName == CatalogObjectParameterSet) {
             return CatalogObject!;
         }
 
-        if (ParameterSetName == BuiltInParameterSet)
-        {
+        if (ParameterSetName == BuiltInParameterSet) {
             return VisioStencilCommandUtilities.GetBuiltInCatalog(BuiltIn);
         }
 
-        if (context != null)
-        {
+        if (context != null) {
             return context.ResolveStencilCatalog(Catalog);
         }
 
@@ -151,41 +145,34 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSCmdlet
             : throw new PSInvalidOperationException("A named stencil catalog can only be resolved inside New-OfficeVisio.");
     }
 
-    private static string CreateUniqueShapeId(VisioPage page, string baseId)
-    {
+    private static string CreateUniqueShapeId(VisioPage page, string baseId) {
         string stem = string.IsNullOrWhiteSpace(baseId) ? "stencil" : baseId.Trim();
         var existingIds = page.AllShapes()
             .Select(shape => shape.Id)
             .Where(id => !string.IsNullOrWhiteSpace(id))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        if (!existingIds.Contains(stem))
-        {
+        if (!existingIds.Contains(stem)) {
             return stem;
         }
 
-        for (int index = 2; ; index++)
-        {
+        for (int index = 2; ; index++) {
             string candidate = stem + "-" + index.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            if (!existingIds.Contains(candidate))
-            {
+            if (!existingIds.Contains(candidate)) {
                 return candidate;
             }
         }
     }
 
-    private static double ConvertStencilDefaultToPageUnit(double value, VisioStencilShape stencil, VisioPage page)
-    {
+    private static double ConvertStencilDefaultToPageUnit(double value, VisioStencilShape stencil, VisioPage page) {
         var sourceUnit = stencil.DefaultUnit ?? page.DefaultUnit;
-        var inches = sourceUnit switch
-        {
+        var inches = sourceUnit switch {
             VisioMeasurementUnit.Centimeters => value / 2.54,
             VisioMeasurementUnit.Millimeters => value / 25.4,
             _ => value
         };
 
-        return page.DefaultUnit switch
-        {
+        return page.DefaultUnit switch {
             VisioMeasurementUnit.Centimeters => inches * 2.54,
             VisioMeasurementUnit.Millimeters => inches * 25.4,
             _ => inches

@@ -35,7 +35,7 @@ New-OfficeWord -Path $path {
             WordTable -Data $nestedRows -Style TableGrid
         }
     }
-} | Out-Null
+}
 
 Write-Host "Document saved to $path"
 Write-Host "Image fixture saved to $imagePath"

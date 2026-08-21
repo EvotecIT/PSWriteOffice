@@ -23,8 +23,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 [Cmdlet(VerbsCommon.Add, "OfficePdfCanvas", SupportsShouldProcess = true)]
 [Alias("PdfCanvasStamp")]
 [OutputType(typeof(FileInfo))]
-public sealed class AddOfficePdfCanvasCommand : PSCmdlet
-{
+public sealed class AddOfficePdfCanvasCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Input PDF path.</summary>
     [Parameter(Mandatory = true)]
     [Alias("FilePath")]
@@ -68,39 +67,32 @@ public sealed class AddOfficePdfCanvasCommand : PSCmdlet
     public SwitchParameter IgnorePermissionRestrictions { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write canvas-stamped PDF"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write canvas-stamped PDF")) {
             return;
         }
 
         var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
         var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), readOptions);
         PdfOptions? renderingOptions = null;
-        if (ConfigureRendering is not null)
-        {
+        if (ConfigureRendering is not null) {
             renderingOptions = new PdfOptions();
             _ = ConfigureRendering.Invoke(renderingOptions);
         }
 
-        var options = new PdfCanvasStampOptions
-        {
+        var options = new PdfCanvasStampOptions {
             BehindContent = BehindContent.IsPresent,
             Opacity = Opacity,
             RenderingOptions = renderingOptions
         };
-        if (!string.IsNullOrWhiteSpace(PageRange))
-        {
+        if (!string.IsNullOrWhiteSpace(PageRange)) {
             options.UseTargetPages(PageRange!);
         }
 
         var result = document.Stamp.Content(
-            (canvas, page) =>
-            {
-                using (PdfCanvasDslContext.Enter(canvas, page))
-                {
+            (canvas, page) => {
+                using (PdfCanvasDslContext.Enter(canvas, page)) {
                     _ = Content.Invoke(canvas, page);
                 }
             },
@@ -108,6 +100,6 @@ public sealed class AddOfficePdfCanvasCommand : PSCmdlet
             readOptions);
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath).RequireSuccess();
-        WriteObject(new FileInfo(outputPath));
+        WritePassThru(new FileInfo(outputPath));
     }
 }

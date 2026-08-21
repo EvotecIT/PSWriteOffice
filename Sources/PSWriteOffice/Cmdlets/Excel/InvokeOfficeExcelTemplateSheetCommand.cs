@@ -17,8 +17,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsLifecycle.Invoke, "OfficeExcelTemplateSheet", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Low, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelTemplateSheet", "ExcelTemplateSheets")]
 [OutputType(typeof(int))]
-public sealed class InvokeOfficeExcelTemplateSheetCommand : PSCmdlet
-{
+public sealed class InvokeOfficeExcelTemplateSheetCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
@@ -26,8 +25,8 @@ public sealed class InvokeOfficeExcelTemplateSheetCommand : PSCmdlet
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetDocument)]
@@ -65,38 +64,32 @@ public sealed class InvokeOfficeExcelTemplateSheetCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         TableInputCollector.AddInput(_items, Item);
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
-        if (_items.Count == 0)
-        {
+    protected override void EndProcessing() {
+        if (_items.Count == 0) {
             return;
         }
 
         var items = ExcelTemplateValueService.ConvertRows(_items);
         Func<IDictionary<string, object?>, int, string>? sheetNameSelector = null;
-        if (!string.IsNullOrWhiteSpace(SheetNameProperty))
-        {
+        if (!string.IsNullOrWhiteSpace(SheetNameProperty)) {
             sheetNameSelector = (values, _) => ExcelTemplateValueService.GetStringValue(values, SheetNameProperty) ?? string.Empty;
         }
 
         var options = ExcelTemplateValueService.CreateOptions(CultureName, MissingValueBehavior, ThrowOnMissing.IsPresent);
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var templateSheetName = ExcelWorkbookCommandService.ResolveSheetNameOrCurrent(this, workbook.Document, ParameterSetName, TemplateSheet);
-        if (!ShouldProcess(templateSheetName, "Apply Excel template sheets"))
-        {
+        if (!ShouldProcess(templateSheetName, "Apply Excel template sheets")) {
             return;
         }
 
         var replacements = workbook.Document.ApplyTemplateSheets(templateSheetName, items, sheetNameSelector, options);
         workbook.SaveIfOwned();
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(replacements);
         }
     }

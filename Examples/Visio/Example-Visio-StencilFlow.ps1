@@ -7,14 +7,13 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module PSWriteOffice -ErrorAction Stop
 
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $OutputDirectory -ItemType Directory -Force
 $path = Join-Path $OutputDirectory 'Example-Visio-StencilFlow.vsdx'
 $svgPath = Join-Path $OutputDirectory 'Example-Visio-StencilFlow.svg'
 $pngPath = Join-Path $OutputDirectory 'Example-Visio-StencilFlow.png'
 
 New-OfficeVisio -Path $path -Title 'Customer onboarding flow' -Author 'PSWriteOffice' -Width 11 -Height 8.5 -UseMastersByDefault -RequestRecalcOnOpen {
-    Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default | Out-Null
+    Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
 
     VisioTextBox 'Customer onboarding' -X 5.5 -Y 7.55 -Width 5.2 -Height 0.42 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
     VisioTextBox 'A compact, editable flowchart generated from PowerShell and OfficeIMO stencils.' -X 5.5 -Y 7.08 -Width 6.4 -Height 0.32 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
@@ -39,10 +38,10 @@ New-OfficeVisio -Path $path -Title 'Customer onboarding flow' -Author 'PSWriteOf
     VisioConnector -From packet -To done -Kind Straight -FromSide Bottom -ToSide Top -EndArrow Triangle -LineColor '#0F766E'
     VisioConnector -From decision -To rework -Kind Straight -FromSide Bottom -ToSide Top -EndArrow Triangle -Label 'no' -LineColor '#E11D48'
     VisioConnector -From rework -To validate -Kind Straight -FromSide Left -ToSide Bottom -EndArrow Triangle -LineColor '#E11D48'
-} | Out-Null
+}
 
-ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgPath | Out-Null
-ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath | Out-Null
+ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgPath
+ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath
 
 if ($Open) {
     Invoke-Item $svgPath

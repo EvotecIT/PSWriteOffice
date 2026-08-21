@@ -19,16 +19,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Find, "OfficeExcel", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject))]
-public sealed class FindOfficeExcelCommand : PSCmdlet
-{
+public sealed class FindOfficeExcelCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to inspect.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -64,29 +63,23 @@ public sealed class FindOfficeExcelCommand : PSCmdlet
     public SwitchParameter Exact { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var document = workbook.Document;
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex))
-        {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, document, ParameterSetName, Sheet, SheetIndex)) {
             var range = string.IsNullOrWhiteSpace(Range) ? sheet.UsedRangeA1 : Range!;
-            foreach (var cell in sheet.EnumerateRange(range))
-            {
+            foreach (var cell in sheet.EnumerateRange(range)) {
                 var cellText = Convert.ToString(cell.Value, CultureInfo.InvariantCulture) ?? string.Empty;
-                if (IsMatch(cellText))
-                {
+                if (IsMatch(cellText)) {
                     WriteObject(CreateRecord(sheet.Name, cell.Row, cell.Column, cell.Value));
                 }
             }
         }
     }
 
-    private bool IsMatch(string value)
-    {
+    private bool IsMatch(string value) {
         var comparison = CaseSensitive.IsPresent ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-        if (Regex.IsPresent)
-        {
+        if (Regex.IsPresent) {
             var options = CaseSensitive.IsPresent ? RegexOptions.None : RegexOptions.IgnoreCase;
             return System.Text.RegularExpressions.Regex.IsMatch(value, Text, options);
         }
@@ -96,8 +89,7 @@ public sealed class FindOfficeExcelCommand : PSCmdlet
             : value.IndexOf(Text, comparison) >= 0;
     }
 
-    private static PSObject CreateRecord(string sheetName, int row, int column, object? value)
-    {
+    private static PSObject CreateRecord(string sheetName, int row, int column, object? value) {
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Sheet", sheetName));
         record.Properties.Add(new PSNoteProperty("Address", A1.CellReference(row, column)));

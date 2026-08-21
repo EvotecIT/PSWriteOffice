@@ -19,16 +19,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeExcelTable", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelTableCommand : AsyncPSCmdlet
-{
+public sealed class GetOfficeExcelTableCommand : AsyncPSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetUri = "Uri";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Remote workbook URI to inspect.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetUri)]
@@ -56,27 +55,20 @@ public sealed class GetOfficeExcelTableCommand : AsyncPSCmdlet
     public int? SheetIndex { get; set; }
 
     /// <inheritdoc />
-    protected override async Task ProcessRecordAsync()
-    {
+    protected override async Task ProcessRecordAsync() {
         ExcelDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-                if (!File.Exists(resolvedPath))
-                {
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+                if (!File.Exists(resolvedPath)) {
                     throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
                 }
                 document = ExcelDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else if (ParameterSetName == ParameterSetUri)
-            {
-                if (Uri == null)
-                {
+            } else if (ParameterSetName == ParameterSetUri) {
+                if (Uri == null) {
                     throw new PSArgumentException("Workbook URI was not provided.", nameof(Uri));
                 }
 
@@ -86,31 +78,25 @@ public sealed class GetOfficeExcelTableCommand : AsyncPSCmdlet
                     allowHttp: AllowHttp.IsPresent,
                     cancellationToken: CancelToken).ConfigureAwait(false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Excel workbook was not provided.");
             }
 
             var sheetFilter = ResolveSheetName(document);
             var tables = document.GetTables();
 
-            foreach (var table in tables)
-            {
+            foreach (var table in tables) {
                 if (!string.IsNullOrWhiteSpace(sheetFilter) &&
-                    !string.Equals(table.SheetName, sheetFilter, StringComparison.OrdinalIgnoreCase))
-                {
+                    !string.Equals(table.SheetName, sheetFilter, StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
                 if (!string.IsNullOrWhiteSpace(Name) &&
-                    !string.Equals(table.Name, Name, StringComparison.OrdinalIgnoreCase))
-                {
+                    !string.Equals(table.Name, Name, StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
@@ -118,30 +104,23 @@ public sealed class GetOfficeExcelTableCommand : AsyncPSCmdlet
                     table.Name,
                     table.Range,
                     table.SheetName,
-                    ParameterSetName == ParameterSetPath ? InputPath : null,
+                    ParameterSetName == ParameterSetPath ? Path : null,
                     ParameterSetName == ParameterSetUri ? Uri : null));
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }
     }
 
-    private string? ResolveSheetName(ExcelDocument document)
-    {
-        if (!string.IsNullOrWhiteSpace(Sheet))
-        {
+    private string? ResolveSheetName(ExcelDocument document) {
+        if (!string.IsNullOrWhiteSpace(Sheet)) {
             return Sheet;
         }
 
-        if (SheetIndex.HasValue)
-        {
-            if (SheetIndex.Value < 0 || SheetIndex.Value >= document.Sheets.Count)
-            {
+        if (SheetIndex.HasValue) {
+            if (SheetIndex.Value < 0 || SheetIndex.Value >= document.Sheets.Count) {
                 throw new ArgumentOutOfRangeException(nameof(SheetIndex), "SheetIndex is out of range.");
             }
             return document.Sheets[SheetIndex.Value].Name;
@@ -150,20 +129,17 @@ public sealed class GetOfficeExcelTableCommand : AsyncPSCmdlet
         return null;
     }
 
-    private static PSObject CreateRecord(string name, string range, string sheet, string? path, Uri? uri)
-    {
+    private static PSObject CreateRecord(string name, string range, string sheet, string? path, Uri? uri) {
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Name", name));
         record.Properties.Add(new PSNoteProperty("Range", range));
         record.Properties.Add(new PSNoteProperty("Sheet", sheet));
         record.Properties.Add(new PSNoteProperty("WorksheetName", sheet));
-        if (!string.IsNullOrWhiteSpace(path))
-        {
+        if (!string.IsNullOrWhiteSpace(path)) {
             record.Properties.Add(new PSNoteProperty("Path", path));
-            record.Properties.Add(new PSNoteProperty("InputPath", path));
+            record.Properties.Add(new PSNoteProperty("Path", path));
         }
-        if (uri != null)
-        {
+        if (uri != null) {
             record.Properties.Add(new PSNoteProperty("Uri", uri));
         }
         return record;

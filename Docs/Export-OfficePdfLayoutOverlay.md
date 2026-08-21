@@ -11,7 +11,7 @@ Exports PDF word, line, region, and reading-order diagnostics as PNG or SVG.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfLayoutOverlay [-Path] <string> [-OutputPath] <string> [-Page <int>] [-Format <OfficeImageExportFormat>] [-Scale <double>] [-Options <PdfLayoutDebugOverlayOptions>] [-LayoutOptions <PdfTextLayoutOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePdfLayoutOverlay [-Path] <string> [-OutputPath] <string> [-Page <int>] [-Format <OfficeImageExportFormat>] [-Scale <double>] [-Options <PdfLayoutDebugOverlayOptions>] [-LayoutOptions <PdfTextLayoutOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,7 +21,7 @@ Exports PDF word, line, region, and reading-order diagnostics as PNG or SVG.
 
 ### EXAMPLE 1
 ```powershell
-Export-OfficePdfLayoutOverlay -Path 'C:\Path'
+PS> $result = Export-OfficePdfLayoutOverlay -Path .\Report.pdf -OutputPath .\Report-layout.svg -Page 1 -Format Svg -PassThru
 ```
 
 
@@ -112,6 +112,22 @@ One-based page number.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the structured image export result.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

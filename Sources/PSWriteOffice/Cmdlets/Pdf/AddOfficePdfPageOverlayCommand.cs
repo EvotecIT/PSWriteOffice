@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 [Cmdlet(VerbsCommon.Add, "OfficePdfPageOverlay", SupportsShouldProcess = true)]
 [Alias("PdfPageOverlay")]
 [OutputType(typeof(FileInfo))]
-public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
-{
+public sealed class AddOfficePdfPageOverlayCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Target PDF path.</summary>
     [Parameter(Mandatory = true)]
     [Alias("FilePath")]
@@ -102,11 +101,9 @@ public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
     public PdfReadOptions? SourceReadOptions { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF page overlay"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF page overlay")) {
             return;
         }
 
@@ -118,8 +115,7 @@ public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
             SourceReadOptions,
             SourcePassword,
             IgnoreSourcePermissionRestrictions.IsPresent);
-        var options = new PdfPageOverlayOptions
-        {
+        var options = new PdfPageOverlayOptions {
             SourcePageNumber = SourcePageNumber,
             Fit = Fit,
             HorizontalAlignment = HorizontalAlign,
@@ -131,8 +127,7 @@ public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
             Opacity = Opacity,
             SourceReadOptions = sourceReadOptions
         };
-        if (!string.IsNullOrWhiteSpace(PageRange))
-        {
+        if (!string.IsNullOrWhiteSpace(PageRange)) {
             options.UseTargetPages(PageRange!);
         }
 
@@ -147,6 +142,6 @@ public sealed class AddOfficePdfPageOverlayCommand : PSCmdlet
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
         result.Save(outputPath).RequireSuccess();
-        WriteObject(new FileInfo(outputPath));
+        WritePassThru(new FileInfo(outputPath));
     }
 }

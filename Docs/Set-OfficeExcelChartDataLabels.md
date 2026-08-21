@@ -11,7 +11,7 @@ Configures data labels and optional styling for an Excel chart.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelChartDataLabels -Chart <ExcelChart> [-ShowValue <bool>] [-ShowCategoryName <bool>] [-ShowSeriesName <bool>] [-ShowLegendKey <bool>] [-ShowPercent <bool>] [-Position <string>] [-NumberFormat <string>] [-SourceLinked <bool>] [-FontSizePoints <Double>] [-Bold <Boolean>] [-Italic <Boolean>] [-Color <string>] [-FontName <string>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-NoFill] [-NoLine] [<CommonParameters>]
+Set-OfficeExcelChartDataLabels -Chart <ExcelChart> [-ShowValue <bool>] [-ShowCategoryName <bool>] [-ShowSeriesName <bool>] [-ShowLegendKey <bool>] [-ShowPercent <bool>] [-Position <string>] [-NumberFormat <string>] [-SourceLinked <bool>] [-FontSizePoints <Double>] [-Bold <Boolean>] [-Italic <Boolean>] [-Color <string>] [-FontName <string>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-NoFill] [-NoLine] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -209,6 +209,22 @@ Optional number format code.
 
 ```yaml
 Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

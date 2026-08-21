@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordTableCondition")]
 [Alias("WordTableCondition")]
-public sealed class AddOfficeWordTableConditionCommand : PSCmdlet
-{
+public sealed class AddOfficeWordTableConditionCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Predicate executed per data row (uses <c>$_</c>).</summary>
     [Parameter(Mandatory = true)]
     public ScriptBlock FilterScript { get; set; } = null!;
@@ -31,10 +30,8 @@ public sealed class AddOfficeWordTableConditionCommand : PSCmdlet
     public string? BackgroundColor { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (!TableStyle.HasValue && string.IsNullOrWhiteSpace(BackgroundColor))
-        {
+    protected override void ProcessRecord() {
+        if (!TableStyle.HasValue && string.IsNullOrWhiteSpace(BackgroundColor)) {
             ThrowTerminatingError(new ErrorRecord(
                 new ArgumentException("Specify TableStyle or BackgroundColor."),
                 "WordTableConditionNoAction",
@@ -48,12 +45,11 @@ public sealed class AddOfficeWordTableConditionCommand : PSCmdlet
         var normalizedColor = NormalizeColor(BackgroundColor);
 
         context.AddTableCondition(table, new WordTableConditionModel(FilterScript, TableStyle, normalizedColor));
+        WritePassThru(table);
     }
 
-    private static string? NormalizeColor(string? color)
-    {
-        if (string.IsNullOrWhiteSpace(color))
-        {
+    private static string? NormalizeColor(string? color) {
+        if (string.IsNullOrWhiteSpace(color)) {
             return null;
         }
 

@@ -31,8 +31,7 @@ Examples should write to a script-local or explicitly configured artifact direct
 
 ```powershell
 $outputRoot = Join-Path $PSScriptRoot 'Output'
-New-Item -ItemType Directory -Path $outputRoot -Force | Out-Null
-
+$null = New-Item -ItemType Directory -Path $outputRoot -Force
 $wordPath = Join-Path $outputRoot 'Report.docx'
 $pdfPath = Join-Path $outputRoot 'Report.pdf'
 ```

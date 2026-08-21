@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <summary>Create a rectangle highlight.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointShape.pptx {
-///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
 ///     Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 60 -Y 120 -Width 220 -Height 90 -FillColor '#DDEEFF' -OutlineColor '#2563EB' -OutlineWidth 1
 ///     Add-OfficePowerPointTextBox -Slide $slide -Text 'Highlighted status' -X 80 -Y 145 -Width 180 -Height 32
 /// }</code>
@@ -22,8 +22,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointShape")]
 [Alias("PptShape")]
-public sealed class AddOfficePowerPointShapeCommand : PSCmdlet
-{
+public sealed class AddOfficePowerPointShapeCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Target slide that will receive the shape (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointSlide? Slide { get; set; }
@@ -65,22 +64,17 @@ public sealed class AddOfficePowerPointShapeCommand : PSCmdlet
     public double? OutlineWidth { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (Width <= 0)
-            {
+    protected override void ProcessRecord() {
+        try {
+            if (Width <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(Width), "Width must be greater than 0.");
             }
 
-            if (Height <= 0)
-            {
+            if (Height <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(Height), "Height must be greater than 0.");
             }
 
-            if (OutlineWidth is < 0)
-            {
+            if (OutlineWidth is < 0) {
                 throw new ArgumentOutOfRangeException(nameof(OutlineWidth), "OutlineWidth cannot be negative.");
             }
 
@@ -89,49 +83,39 @@ public sealed class AddOfficePowerPointShapeCommand : PSCmdlet
             var shape = slide.AddShapePoints(shapeType, X, Y, Width, Height, Name);
 
             var fill = NormalizeColor(FillColor);
-            if (fill != null)
-            {
+            if (fill != null) {
                 shape.FillColor = fill;
             }
 
             var outline = NormalizeColor(OutlineColor);
-            if (outline != null)
-            {
+            if (outline != null) {
                 shape.OutlineColor = outline;
             }
 
-            if (OutlineWidth.HasValue)
-            {
+            if (OutlineWidth.HasValue) {
                 shape.OutlineWidthPoints = OutlineWidth.Value;
             }
 
-            WriteObject(shape);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(shape);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointAddShapeFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }
 
-    private static string? NormalizeColor(string? color)
-    {
-        if (string.IsNullOrWhiteSpace(color))
-        {
+    private static string? NormalizeColor(string? color) {
+        if (string.IsNullOrWhiteSpace(color)) {
             return null;
         }
 
         return OfficeColor.Parse(color!).ToRgbHex().ToLowerInvariant();
     }
 
-    private static OfficePresetShapeType ResolveShapeType(string? shapeType)
-    {
-        if (string.IsNullOrWhiteSpace(shapeType))
-        {
+    private static OfficePresetShapeType ResolveShapeType(string? shapeType) {
+        if (string.IsNullOrWhiteSpace(shapeType)) {
             return OfficePresetShapeType.Rectangle;
         }
 
-        if (!OpenXmlValueParser.TryParse<OfficePresetShapeType>(shapeType, out var parsed))
-        {
+        if (!OpenXmlValueParser.TryParse<OfficePresetShapeType>(shapeType, out var parsed)) {
             throw new PSArgumentException($"Unknown shape type '{shapeType}'.", nameof(ShapeType));
         }
 

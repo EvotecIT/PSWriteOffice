@@ -11,7 +11,7 @@ Adds a ChartForgeX artifact, portable SVG, or converted Office visual to a Power
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointVisual [-InputObject] <Object> [-Slide <PowerPointSlide>] [-X <double>] [-Y <double>] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
+Add-OfficePowerPointVisual [-InputObject] <Object> [-Slide <PowerPointSlide>] [-X <double>] [-Y <double>] [-PassThru] [-SvgPolicy <OfficeVisualSvgPolicy>] [-Width <Double>] [-Height <Double>] [-PointsPerPixel <double>] [-MaximumSvgElements <Int32>] [-MaximumSvgViewportDimension <Double>] [-MaximumSvgViewportPixels <Double>] [-Id <string>] [-Title <string>] [-AlternativeText <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -128,6 +128,22 @@ Optional maximum SVG viewport area in pixels. Increase the safe default only for
 
 ```yaml
 Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the picture added to the slide.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

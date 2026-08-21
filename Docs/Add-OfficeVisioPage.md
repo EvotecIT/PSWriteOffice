@@ -11,7 +11,7 @@ Adds a page to a Visio document and optionally executes nested DSL content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeVisioPage [-Name] <string> [[-Content] <scriptblock>] [-Document <VisioDocument>] [-Width <double>] [-Height <double>] [-Unit <VisioMeasurementUnit>] [<CommonParameters>]
+Add-OfficeVisioPage [-Name] <string> [[-Content] <scriptblock>] [-Document <VisioDocument>] [-Width <double>] [-Height <double>] [-Unit <VisioMeasurementUnit>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -91,6 +91,22 @@ Possible values:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

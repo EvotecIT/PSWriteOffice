@@ -11,12 +11,12 @@ Sets a formula in a worksheet cell.
 ## SYNTAX
 ### Coordinates
 ```powershell
-Set-OfficeExcelFormula -Formula <string> [-Row <Int32>] [-Column <Int32>] [<CommonParameters>]
+Set-OfficeExcelFormula -Formula <string> [-Row <Int32>] [-Column <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Address
 ```powershell
-Set-OfficeExcelFormula -Formula <string> [-Address <string>] [<CommonParameters>]
+Set-OfficeExcelFormula -Formula <string> [-Address <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -75,6 +75,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Coordinates, Address
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

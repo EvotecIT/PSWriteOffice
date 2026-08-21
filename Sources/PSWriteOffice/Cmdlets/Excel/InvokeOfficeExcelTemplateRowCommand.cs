@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsLifecycle.Invoke, "OfficeExcelTemplateRow", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Low, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelTemplateRow", "ExcelTemplateRows")]
 [OutputType(typeof(int))]
-public sealed class InvokeOfficeExcelTemplateRowCommand : PSCmdlet
-{
+public sealed class InvokeOfficeExcelTemplateRowCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
@@ -25,8 +24,8 @@ public sealed class InvokeOfficeExcelTemplateRowCommand : PSCmdlet
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -66,16 +65,13 @@ public sealed class InvokeOfficeExcelTemplateRowCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         TableInputCollector.AddInput(_rows, InputObject);
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
-        if (TemplateRow < 1)
-        {
+    protected override void EndProcessing() {
+        if (TemplateRow < 1) {
             ThrowTerminatingError(new ErrorRecord(
                 new PSArgumentOutOfRangeException(nameof(TemplateRow)),
                 "InvalidTemplateRow",
@@ -83,24 +79,21 @@ public sealed class InvokeOfficeExcelTemplateRowCommand : PSCmdlet
                 TemplateRow));
         }
 
-        if (_rows.Count == 0)
-        {
+        if (_rows.Count == 0) {
             return;
         }
 
         var rows = ExcelTemplateValueService.ConvertRows(_rows);
         var options = ExcelTemplateValueService.CreateOptions(CultureName, MissingValueBehavior, ThrowOnMissing.IsPresent);
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
-        if (!ShouldProcess($"{sheet.Name}!{TemplateRow}", "Apply Excel template rows"))
-        {
+        if (!ShouldProcess($"{sheet.Name}!{TemplateRow}", "Apply Excel template rows")) {
             return;
         }
 
         var replacements = sheet.ApplyTemplateRows(TemplateRow, rows, options);
         workbook.SaveIfOwned();
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(replacements);
         }
     }

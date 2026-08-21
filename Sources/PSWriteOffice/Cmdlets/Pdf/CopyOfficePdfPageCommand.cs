@@ -18,8 +18,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// </example>
 [Cmdlet(VerbsCommon.Copy, "OfficePdfPage", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
-public sealed class CopyOfficePdfPageCommand : PSCmdlet
-{
+public sealed class CopyOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Input PDF path.</summary>
     [Parameter(Mandatory = true)]
     [Alias("FilePath")]
@@ -42,11 +41,9 @@ public sealed class CopyOfficePdfPageCommand : PSCmdlet
     public SwitchParameter IgnorePermissionRestrictions { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write copied PDF pages"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write copied PDF pages")) {
             return;
         }
 
@@ -55,6 +52,6 @@ public sealed class CopyOfficePdfPageCommand : PSCmdlet
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Pages.Extract(PageRange).Save(outputPath).RequireSuccess();
-        WriteObject(new FileInfo(outputPath));
+        WritePassThru(new FileInfo(outputPath));
     }
 }

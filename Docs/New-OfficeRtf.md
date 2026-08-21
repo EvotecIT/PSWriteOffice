@@ -11,7 +11,7 @@ Creates an RTF document with plain paragraph content.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeRtf [-OutputPath] <string> [[-Text] <string[]>] [-PassThru] [-NoSave] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeRtf [-Path] <string> [[-Text] <string[]>] [-PassThru] [-NoSave] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,22 +45,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -OutputPath
-Destination path for the RTF file.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -PassThru
 Emit a FileInfo for chaining.
 
@@ -72,6 +56,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Destination path for the RTF file.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath, OutputPath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -11,7 +11,7 @@ Adds a colored callout block to the current Excel report sheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportCallout [[-Kind] <string>] [-Title] <string> [-Body] <string> [-WidthColumns <int>] [<CommonParameters>]
+Add-OfficeExcelReportCallout [[-Kind] <string>] [-Title] <string> [-Body] <string> [-WidthColumns <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -59,6 +59,22 @@ Possible values: Info, Success, Warning, Error, Critical
 
 Required: False
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

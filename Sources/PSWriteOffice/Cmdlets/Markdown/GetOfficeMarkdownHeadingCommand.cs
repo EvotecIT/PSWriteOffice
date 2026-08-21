@@ -21,8 +21,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdownHeading", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(MarkdownDoc.HeadingInfo))]
 public sealed class GetOfficeMarkdownHeadingCommand : PSCmdlet
-    , IMarkdownReaderOptionSource
-{
+    , IMarkdownReaderOptionSource {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
     private const string ParameterSetText = "Text";
@@ -33,8 +32,8 @@ public sealed class GetOfficeMarkdownHeadingCommand : PSCmdlet
 
     /// <summary>Path to the Markdown file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Markdown text to parse.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
@@ -110,10 +109,8 @@ public sealed class GetOfficeMarkdownHeadingCommand : PSCmdlet
     public SwitchParameter CaseSensitive { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (MinLevel > MaxLevel)
-        {
+    protected override void ProcessRecord() {
+        if (MinLevel > MaxLevel) {
             throw new PSArgumentException("-MinLevel cannot be greater than -MaxLevel.");
         }
 
@@ -122,7 +119,7 @@ public sealed class GetOfficeMarkdownHeadingCommand : PSCmdlet
             ParameterSetName,
             ParameterSetDocument,
             Document,
-            InputPath,
+            Path,
             Text,
             this);
 
@@ -136,20 +133,16 @@ public sealed class GetOfficeMarkdownHeadingCommand : PSCmdlet
             ? null
             : new WildcardPattern(Anchor!.TrimStart('#'), wildcardOptions);
 
-        foreach (var heading in document.GetHeadingInfos())
-        {
-            if (heading.Level < MinLevel || heading.Level > MaxLevel)
-            {
+        foreach (var heading in document.GetHeadingInfos()) {
+            if (heading.Level < MinLevel || heading.Level > MaxLevel) {
                 continue;
             }
 
-            if (textPattern != null && !textPattern.IsMatch(heading.Text))
-            {
+            if (textPattern != null && !textPattern.IsMatch(heading.Text)) {
                 continue;
             }
 
-            if (anchorPattern != null && !anchorPattern.IsMatch(heading.Anchor))
-            {
+            if (anchorPattern != null && !anchorPattern.IsMatch(heading.Anchor)) {
                 continue;
             }
 

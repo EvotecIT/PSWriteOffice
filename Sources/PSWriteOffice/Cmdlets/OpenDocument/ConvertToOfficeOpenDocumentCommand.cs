@@ -15,6 +15,12 @@ using PSWriteOffice.Services.Word;
 namespace PSWriteOffice.Cmdlets.OpenDocument;
 
 /// <summary>Converts Word, Excel, or PowerPoint content to native OpenDocument with fidelity evidence.</summary>
+/// <example>
+///   <summary>Convert Word to ODT and reject lossy conversion.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$options = New-OfficeWordOpenDocumentOptions -IncludeImages -IncludeHeadersAndFooters
+/// ConvertTo-OfficeOpenDocument -Path .\Report.docx -OutputPath .\Report.odt -WordOptions $options -FailOnLoss</code>
+/// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficeOpenDocument", DefaultParameterSetName = "Path", SupportsShouldProcess = true)]
 [OutputType(typeof(OdfConversionResult<OdtDocument>), typeof(OdfConversionResult<OdsDocument>), typeof(OdfConversionResult<OdpPresentation>))]
 public sealed class ConvertToOfficeOpenDocumentCommand : PSCmdlet

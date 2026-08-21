@@ -11,17 +11,17 @@ Adds a new slide to a PowerPoint presentation.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Add-OfficePowerPointSlide [[-Content] <scriptblock>] [-Presentation <PowerPointPresentation>] [-Master <int>] [-Layout <int>] [<CommonParameters>]
+Add-OfficePowerPointSlide [[-Content] <scriptblock>] [-Presentation <PowerPointPresentation>] [-Master <int>] [-Layout <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Add-OfficePowerPointSlide [[-Content] <scriptblock>] -LayoutName <string> [-Presentation <PowerPointPresentation>] [-Master <int>] [-CaseSensitive] [<CommonParameters>]
+Add-OfficePowerPointSlide [[-Content] <scriptblock>] -LayoutName <string> [-Presentation <PowerPointPresentation>] [-Master <int>] [-CaseSensitive] [-PassThru] [<CommonParameters>]
 ```
 
 ### Type
 ```powershell
-Add-OfficePowerPointSlide [[-Content] <scriptblock>] -LayoutType <PowerPointSlideLayoutType> [-Presentation <PowerPointPresentation>] [-Master <int>] [<CommonParameters>]
+Add-OfficePowerPointSlide [[-Content] <scriptblock>] -LayoutType <PowerPointSlideLayoutType> [-Presentation <PowerPointPresentation>] [-Master <int>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,7 +31,9 @@ Creates a slide using OfficeIMO master/layout indexes and can execute nested DSL
 
 ### EXAMPLE 1
 ```powershell
-PS> $ppt = New-OfficePowerPoint -FilePath .\deck.pptx; Add-OfficePowerPointSlide -Presentation $ppt
+PS> $ppt = New-OfficePowerPoint -Path .\deck.pptx -NoSave
+Add-OfficePowerPointSlide -Presentation $ppt
+$ppt | Close-OfficePowerPoint -Save
 ```
 
 Creates a deck and appends a new slide at the end.
@@ -130,6 +132,22 @@ Slide master index to use.
 
 ```yaml
 Type: Int32
+Parameter Sets: Index, Name, Type
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Index, Name, Type
 Aliases: None
 Possible values:

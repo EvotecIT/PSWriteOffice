@@ -18,15 +18,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelCommentAudit", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelCommentAudit", "ExcelCommentsAudit")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelCommentAuditCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelCommentAuditCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook document.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -36,9 +35,8 @@ public sealed class GetOfficeExcelCommentAuditCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IncludeComments { get; set; }
 
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var report = workbook.Document.InspectComments();
         var output = new PSObject();
         output.Properties.Add(new PSNoteProperty("Path", workbook.Document.FilePath));
@@ -47,8 +45,7 @@ public sealed class GetOfficeExcelCommentAuditCommand : PSCmdlet
         output.Properties.Add(new PSNoteProperty("ThreadedCommentCount", report.ThreadedCommentCount));
         output.Properties.Add(new PSNoteProperty("IssueCount", report.Issues.Count));
         output.Properties.Add(new PSNoteProperty("Issues", report.Issues.Select(CreateIssue).ToArray()));
-        if (IncludeComments.IsPresent)
-        {
+        if (IncludeComments.IsPresent) {
             output.Properties.Add(new PSNoteProperty("Comments", report.Comments.Select(CreateComment).ToArray()));
             output.Properties.Add(new PSNoteProperty("ThreadedComments", report.ThreadedComments.Select(CreateThreadedComment).ToArray()));
         }
@@ -56,8 +53,7 @@ public sealed class GetOfficeExcelCommentAuditCommand : PSCmdlet
         WriteObject(output);
     }
 
-    private static PSObject CreateIssue(ExcelWorkbookDiagnosticIssue issue)
-    {
+    private static PSObject CreateIssue(ExcelWorkbookDiagnosticIssue issue) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("Category", issue.Category));
         item.Properties.Add(new PSNoteProperty("Severity", issue.Severity.ToString()));
@@ -67,8 +63,7 @@ public sealed class GetOfficeExcelCommentAuditCommand : PSCmdlet
         return item;
     }
 
-    private static PSObject CreateComment(ExcelCommentRecord comment)
-    {
+    private static PSObject CreateComment(ExcelCommentRecord comment) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("SheetName", comment.SheetName));
         item.Properties.Add(new PSNoteProperty("CellReference", comment.CellReference));
@@ -77,8 +72,7 @@ public sealed class GetOfficeExcelCommentAuditCommand : PSCmdlet
         return item;
     }
 
-    private static PSObject CreateThreadedComment(ExcelThreadedCommentSnapshot comment)
-    {
+    private static PSObject CreateThreadedComment(ExcelThreadedCommentSnapshot comment) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("SheetName", comment.SheetName));
         item.Properties.Add(new PSNoteProperty("CellReference", comment.CellReference));

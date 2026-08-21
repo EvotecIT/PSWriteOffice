@@ -15,8 +15,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointSlideLayout", DefaultParameterSetName = ParameterSetIndex)]
 [Alias("PptSlideLayout")]
 [OutputType(typeof(PowerPointSlide))]
-public sealed class SetOfficePowerPointSlideLayoutCommand : PSCmdlet
-{
+public sealed class SetOfficePowerPointSlideLayoutCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetIndex = "Index";
     private const string ParameterSetByName = "Name";
     private const string ParameterSetByType = "Type";
@@ -46,13 +45,10 @@ public sealed class SetOfficePowerPointSlideLayoutCommand : PSCmdlet
     public SwitchParameter CaseSensitive { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
-            switch (ParameterSetName)
-            {
+            switch (ParameterSetName) {
                 case ParameterSetByName:
                     slide.SetLayout(LayoutName, Master, ignoreCase: !CaseSensitive.IsPresent);
                     break;
@@ -64,10 +60,8 @@ public sealed class SetOfficePowerPointSlideLayoutCommand : PSCmdlet
                     break;
             }
 
-            WriteObject(slide);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(slide);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointSetSlideLayoutFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }

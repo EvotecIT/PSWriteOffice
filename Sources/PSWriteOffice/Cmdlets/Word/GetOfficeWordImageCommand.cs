@@ -19,8 +19,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Get, "OfficeWordImage", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordImages")]
 [OutputType(typeof(WordImage))]
-public sealed class GetOfficeWordImageCommand : PSCmdlet
-{
+public sealed class GetOfficeWordImageCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetSection = "Section";
@@ -28,8 +27,8 @@ public sealed class GetOfficeWordImageCommand : PSCmdlet
 
     /// <summary>Path to the document.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Document to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -44,16 +43,13 @@ public sealed class GetOfficeWordImageCommand : PSCmdlet
     public WordParagraph Paragraph { get; set; } = null!;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
+        try {
             IEnumerable<WordImage> images;
-            switch (ParameterSetName)
-            {
+            switch (ParameterSetName) {
                 case ParameterSetSection:
                     images = Section != null
                         ? Section.Images
@@ -65,14 +61,11 @@ public sealed class GetOfficeWordImageCommand : PSCmdlet
                         : Array.Empty<WordImage>();
                     break;
                 default:
-                    if (ParameterSetName == ParameterSetPath)
-                    {
-                        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+                    if (ParameterSetName == ParameterSetPath) {
+                        var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                         document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                         dispose = true;
-                    }
-                    else
-                    {
+                    } else {
                         document = Document;
                     }
 
@@ -83,11 +76,8 @@ public sealed class GetOfficeWordImageCommand : PSCmdlet
             }
 
             WriteObject(images, enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

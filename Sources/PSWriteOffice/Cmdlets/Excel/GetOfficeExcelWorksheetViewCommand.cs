@@ -17,16 +17,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelWorksheetView", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelWorksheetView")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelWorksheetViewCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelWorksheetViewCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to inspect.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -41,21 +40,18 @@ public sealed class GetOfficeExcelWorksheetViewCommand : PSCmdlet
     public int? SheetIndex { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var path = string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)
-            ? InputPath
+            ? Path
             : null;
 
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
-        {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex)) {
             WriteObject(CreateViewRecord(sheet, sheet.GetViewInfo(), path));
         }
     }
 
-    private static PSObject CreateViewRecord(ExcelSheet sheet, ExcelWorksheetViewInfo view, string? path)
-    {
+    private static PSObject CreateViewRecord(ExcelSheet sheet, ExcelWorksheetViewInfo view, string? path) {
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("SheetName", sheet.Name));
         record.Properties.Add(new PSNoteProperty("Sheet", sheet.Name));
@@ -72,10 +68,9 @@ public sealed class GetOfficeExcelWorksheetViewCommand : PSCmdlet
         record.Properties.Add(new PSNoteProperty("View", view.View));
         record.Properties.Add(new PSNoteProperty("ZoomScale", view.ZoomScale));
         record.Properties.Add(new PSNoteProperty("ZoomScaleNormal", view.ZoomScaleNormal));
-        if (!string.IsNullOrWhiteSpace(path))
-        {
+        if (!string.IsNullOrWhiteSpace(path)) {
             record.Properties.Add(new PSNoteProperty("Path", path));
-            record.Properties.Add(new PSNoteProperty("InputPath", path));
+            record.Properties.Add(new PSNoteProperty("Path", path));
         }
 
         return record;

@@ -78,7 +78,7 @@ try {
             -AutoFit `
             -FreezeTopRow `
             -BoldTopRow `
-            -ErrorAction Stop | Out-Null
+            -ErrorAction Stop
 
     $table = Import-OfficeExcel `
         -Path $Path `

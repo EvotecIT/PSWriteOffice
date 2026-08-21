@@ -10,16 +10,16 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Rename a section in a presentation.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointRenameSection.pptx
-/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
-/// Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 0 | Out-Null
-/// Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive' -PassThru</code>
+///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRenameSection.pptx -NoSave
+/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+/// Add-OfficePowerPointSection -Presentation $ppt -Name 'Results' -StartSlideIndex 0
+/// Rename-OfficePowerPointSection -Presentation $ppt -Name 'Results' -NewName 'Deep Dive' -PassThru
+/// $ppt | Close-OfficePowerPoint -Save</code>
 ///   <para>Renames the first matching section and returns the updated section metadata.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Rename, "OfficePowerPointSection")]
 [OutputType(typeof(PowerPointSectionInfo), typeof(bool))]
-public sealed class RenameOfficePowerPointSectionCommand : PSCmdlet
-{
+public sealed class RenameOfficePowerPointSectionCommand : PSCmdlet {
     /// <summary>Presentation to update (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointPresentation? Presentation { get; set; }
@@ -41,16 +41,13 @@ public sealed class RenameOfficePowerPointSectionCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var presentation = Presentation ?? PowerPointDslContext.Current?.Presentation
                 ?? throw new InvalidOperationException("Presentation was not provided. Use -Presentation or run inside New-OfficePowerPoint.");
 
             bool renamed = presentation.RenameSection(Name, NewName, ignoreCase: !CaseSensitive.IsPresent);
-            if (!renamed)
-            {
+            if (!renamed) {
                 WriteError(new ErrorRecord(
                     new InvalidOperationException($"Section '{Name}' was not found."),
                     "PowerPointSectionNotFound",
@@ -59,22 +56,16 @@ public sealed class RenameOfficePowerPointSectionCommand : PSCmdlet
                 return;
             }
 
-            if (PassThru.IsPresent)
-            {
+            if (PassThru.IsPresent) {
                 var comparison = CaseSensitive.IsPresent ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
                 var section = presentation.GetSections().FirstOrDefault(s => string.Equals(s.Name, NewName, comparison));
-                if (!string.IsNullOrEmpty(section.Name))
-                {
+                if (!string.IsNullOrEmpty(section.Name)) {
                     WriteObject(section);
-                }
-                else
-                {
+                } else {
                     WriteObject(true);
                 }
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointRenameSectionFailed", ErrorCategory.InvalidOperation, Presentation));
         }
     }

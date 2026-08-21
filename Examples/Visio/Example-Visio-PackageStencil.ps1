@@ -24,8 +24,7 @@ if (-not (Test-Path -LiteralPath $StencilPackagePath)) {
     throw "Stencil package was not found. Provide -StencilPackagePath with a .vssx, .vstx, or .vsdx file."
 }
 
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $OutputDirectory -ItemType Directory -Force
 $path = Join-Path $OutputDirectory 'Example-Visio-PackageStencil.vsdx'
 $svgPath = Join-Path $OutputDirectory 'Example-Visio-PackageStencil.svg'
 $pngPath = Join-Path $OutputDirectory 'Example-Visio-PackageStencil.png'
@@ -37,7 +36,7 @@ if ($sampleStencils.Count -eq 0) {
 }
 
 New-OfficeVisio -Path $path -Title 'Package-backed stencils' -Author 'PSWriteOffice' -Width 10 -Height 6.5 -UseMastersByDefault -RequestRecalcOnOpen {
-    Import-OfficeVisioStencil -Catalog $catalog -Name Package -Default | Out-Null
+    Import-OfficeVisioStencil -Catalog $catalog -Name Package -Default
     VisioTextBox 'Package-backed stencil import' -X 5 -Y 5.8 -Width 4.6 -Height 0.38 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
     VisioTextBox "Loaded from $([System.IO.Path]::GetFileName($StencilPackagePath))" -X 5 -Y 5.42 -Width 5.2 -Height 0.26 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
 
@@ -50,10 +49,10 @@ New-OfficeVisio -Path $path -Title 'Package-backed stencils' -Author 'PSWriteOff
     VisioStencil -Stencil $third -Key importedC -Text 'Package master C' -X 8 -Y 3.4 -FillColor '#DCFCE7' -LineColor '#16A34A'
     VisioConnector -From importedA -To importedB -Kind Straight -FromSide Right -ToSide Left -EndArrow Triangle -Label 'loaded' -LineColor '#0284C7'
     VisioConnector -From importedB -To importedC -Kind Straight -FromSide Right -ToSide Left -EndArrow Triangle -Label 'reused' -LineColor '#16A34A'
-} | Out-Null
+}
 
-ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgPath | Out-Null
-ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath | Out-Null
+ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgPath
+ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath
 
 if ($Open) {
     Invoke-Item $svgPath

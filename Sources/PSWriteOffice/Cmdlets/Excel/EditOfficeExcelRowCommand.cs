@@ -14,16 +14,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsData.Edit, "OfficeExcelRow", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Edit-ExcelRow", "ExcelRowEdit")]
 [OutputType(typeof(ExcelPowerShellRowEdit))]
-public sealed class EditOfficeExcelRowCommand : PSCmdlet
-{
+public sealed class EditOfficeExcelRowCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -55,11 +54,9 @@ public sealed class EditOfficeExcelRowCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
@@ -74,14 +71,12 @@ public sealed class EditOfficeExcelRowCommand : PSCmdlet
 
         using var reader = document.CreateDataReader(options);
         var headers = new string[reader.FieldCount];
-        for (var columnIndex = 0; columnIndex < headers.Length; columnIndex++)
-        {
+        for (var columnIndex = 0; columnIndex < headers.Length; columnIndex++) {
             headers[columnIndex] = reader.GetName(columnIndex);
         }
 
         var dataRowIndex = 0;
-        while (reader.Read())
-        {
+        while (reader.Read()) {
             var values = new object[reader.FieldCount];
             reader.GetValues(values);
             var row = new ExcelPowerShellRowEdit(
@@ -92,8 +87,7 @@ public sealed class EditOfficeExcelRowCommand : PSCmdlet
                 values,
                 options.Culture);
             ScriptBlock.Invoke(row);
-            if (PassThru.IsPresent)
-            {
+            if (PassThru.IsPresent) {
                 WriteObject(row);
             }
 

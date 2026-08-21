@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeName.pptx {
 ///     Set-OfficePowerPointThemeName -Name 'Service Brief' -AllMasters
-///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Named theme'
+///     Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Named theme'
 /// }</code>
 ///   <para>Applies a friendly theme name across every master before saving.</para>
 /// </example>

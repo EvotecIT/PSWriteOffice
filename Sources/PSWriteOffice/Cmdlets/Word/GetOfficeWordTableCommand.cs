@@ -20,16 +20,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordTable", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordTable))]
-public sealed class GetOfficeWordTableCommand : PSCmdlet
-{
+public sealed class GetOfficeWordTableCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetSection = "Section";
 
     /// <summary>Path to the document.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Document to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -44,43 +43,31 @@ public sealed class GetOfficeWordTableCommand : PSCmdlet
     public SwitchParameter IncludeNested { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
+        try {
             IEnumerable<WordTable> tables;
 
-            if (ParameterSetName == ParameterSetSection)
-            {
-                if (Section == null)
-                {
+            if (ParameterSetName == ParameterSetSection) {
+                if (Section == null) {
                     tables = Array.Empty<WordTable>();
-                }
-                else
-                {
+                } else {
                     tables = IncludeNested.IsPresent
                         ? Section.TablesIncludingNestedTables
                         : Section.Tables;
                 }
-            }
-            else
-            {
-                if (ParameterSetName == ParameterSetPath)
-                {
-                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+            } else {
+                if (ParameterSetName == ParameterSetPath) {
+                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                     document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                     dispose = true;
-                }
-                else
-                {
+                } else {
                     document = Document;
                 }
 
-                if (document == null)
-                {
+                if (document == null) {
                     throw new InvalidOperationException("Word document was not provided.");
                 }
 
@@ -90,11 +77,8 @@ public sealed class GetOfficeWordTableCommand : PSCmdlet
             }
 
             WriteObject(tables, enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

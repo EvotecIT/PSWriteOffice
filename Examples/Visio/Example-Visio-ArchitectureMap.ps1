@@ -7,17 +7,16 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module PSWriteOffice -ErrorAction Stop
 
-New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $OutputDirectory -ItemType Directory -Force
 $path = Join-Path $OutputDirectory 'Example-Visio-ArchitectureMap.vsdx'
 $svgPath = Join-Path $OutputDirectory 'Example-Visio-ArchitectureMap.svg'
 $pngPath = Join-Path $OutputDirectory 'Example-Visio-ArchitectureMap.png'
 
 New-OfficeVisio -Path $path -Title 'Service architecture map' -Author 'PSWriteOffice' -Width 12 -Height 7.5 -UseMastersByDefault -RequestRecalcOnOpen {
-    Import-OfficeVisioStencil -BuiltIn Architecture -Name Arch -Default | Out-Null
-    Import-OfficeVisioStencil -BuiltIn Cloud -Name Cloud | Out-Null
-    Import-OfficeVisioStencil -BuiltIn SecurityIdentity -Name Security | Out-Null
-    Import-OfficeVisioStencil -BuiltIn DataPlatform -Name Data | Out-Null
+    Import-OfficeVisioStencil -BuiltIn Architecture -Name Arch -Default
+    Import-OfficeVisioStencil -BuiltIn Cloud -Name Cloud
+    Import-OfficeVisioStencil -BuiltIn SecurityIdentity -Name Security
+    Import-OfficeVisioStencil -BuiltIn DataPlatform -Name Data
 
     VisioTextBox 'SaaS control plane' -X 6 -Y 6.85 -Width 4.2 -Height 0.42 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
     VisioTextBox 'Boundaries, trust points, and platform services are editable Visio shapes.' -X 6 -Y 6.43 -Width 6.8 -Height 0.28 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
@@ -47,10 +46,10 @@ New-OfficeVisio -Path $path -Title 'Service architecture map' -Author 'PSWriteOf
     VisioConnector -From worker -To queue -Kind Straight -FromSide Bottom -ToSide Top -EndArrow Triangle -Label 'async' -LineColor '#0D9488'
     VisioConnector -From queue -To archive -Kind Straight -FromSide Right -ToSide Left -EndArrow Triangle -LineColor '#C026D3'
     VisioConnector -From sql -To monitor -Kind Straight -FromSide Right -ToSide Left -EndArrow Triangle -LineColor '#E11D48'
-} | Out-Null
+}
 
-ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgPath | Out-Null
-ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath | Out-Null
+ConvertTo-OfficeVisioSvg -Path $path -OutputPath $svgPath
+ConvertTo-OfficeVisioPng -Path $path -OutputPath $pngPath
 
 if ($Open) {
     Invoke-Item $svgPath

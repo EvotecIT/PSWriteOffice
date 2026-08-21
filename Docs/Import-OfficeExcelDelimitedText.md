@@ -11,7 +11,7 @@ Imports normalized CSV/TSV text into an Excel workbook through OfficeIMO.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Import-OfficeExcelDelimitedText [-InputPath] <string> -SourcePath <string> [-Delimiter <Char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-SkipRows <int>] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Import-OfficeExcelDelimitedText [-Path] <string> -SourcePath <string> [-Delimiter <Char>] [-SheetName <string>] [-CultureName <string>] [-NoHeader] [-SkipRows <int>] [-NoTable] [-NoTypeConversion] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -87,22 +87,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NoHeader
 Treat the first row as data.
 
@@ -162,6 +146,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

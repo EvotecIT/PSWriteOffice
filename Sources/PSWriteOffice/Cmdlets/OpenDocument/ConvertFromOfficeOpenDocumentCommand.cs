@@ -9,6 +9,12 @@ using OfficeIMO.Word.OpenDocument;
 namespace PSWriteOffice.Cmdlets.OpenDocument;
 
 /// <summary>Converts native ODT, ODS, or ODP content to Word, Excel, or PowerPoint with fidelity evidence.</summary>
+/// <example>
+///   <summary>Convert an ODS spreadsheet to Excel.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$options = New-OfficeExcelOpenDocumentOptions -IncludeBasicStyles -MaximumExpandedCells 250000
+/// ConvertFrom-OfficeOpenDocument -Path .\Status.ods -OutputPath .\Status.xlsx -ExcelOptions $options</code>
+/// </example>
 [Cmdlet(VerbsData.ConvertFrom, "OfficeOpenDocument", SupportsShouldProcess = true)]
 public sealed class ConvertFromOfficeOpenDocumentCommand : PSCmdlet
 {

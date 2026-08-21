@@ -18,8 +18,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsCommon.Add, "OfficeVisioPage")]
 [Alias("VisioPage")]
 [OutputType(typeof(VisioPage))]
-public sealed class AddOfficeVisioPageCommand : PSCmdlet
-{
+public sealed class AddOfficeVisioPageCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Target Visio document. Optional inside <c>New-OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioDocument? Document { get; set; }
@@ -45,31 +44,24 @@ public sealed class AddOfficeVisioPageCommand : PSCmdlet
     public ScriptBlock? Content { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = VisioDslContext.Current;
         var document = Document ?? (context ?? VisioDslContext.Require(this)).Document;
         var page = document.AddPage(Name, Width, Height, Unit);
 
-        if (Content != null)
-        {
-            if (context != null)
-            {
-                using (context.Push(page))
-                {
+        if (Content != null) {
+            if (context != null) {
+                using (context.Push(page)) {
                     Content.InvokeReturnAsIs();
                 }
-            }
-            else
-            {
+            } else {
                 using (var scoped = VisioDslContext.Enter(document))
-                using (scoped.Push(page))
-                {
+                using (scoped.Push(page)) {
                     Content.InvokeReturnAsIs();
                 }
             }
         }
 
-        WriteObject(page);
+        WritePassThru(page);
     }
 }

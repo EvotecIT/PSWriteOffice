@@ -11,7 +11,7 @@ Saves an OfficeIMO.Pdf document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficePdf [-Document] <PdfDocument> [-Path] <string> [-Show] [-PassThru] [-Password <string>] [-OwnerPassword <string>] [-Permission <Int32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficePdf [-Document] <PdfDocument> [-Path] <string> [-Open] [-PassThru] [-Password <string>] [-OwnerPassword <string>] [-Permission <Int32>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,6 +46,22 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -Open
+Open the PDF after saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -OwnerPassword
 Optional owner password for the generated encrypted PDF.
 
@@ -63,7 +79,7 @@ Accept wildcard characters: False
 ```
 
 ### -PassThru
-Emit the document instead of the saved file.
+Emit the document for further processing.
 
 ```yaml
 Type: SwitchParameter
@@ -126,22 +142,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Show
-Open the PDF after saving.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
@@ -152,7 +152,6 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 - `OfficeIMO.Pdf.PdfDocument`
-- `System.IO.FileInfo`
 
 ## RELATED LINKS
 

@@ -11,7 +11,7 @@ Injects externally produced CMS, CAdES, or timestamp signature bytes into a prep
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfSignature [-Path] <string> [-SignaturePath] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficePdfSignature [-Path] <string> [-SignaturePath] <string> [-OutputPath] <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PassThruReport] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -56,6 +56,22 @@ Possible values:
 
 Required: True
 Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

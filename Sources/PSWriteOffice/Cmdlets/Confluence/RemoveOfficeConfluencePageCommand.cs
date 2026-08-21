@@ -19,8 +19,7 @@ namespace PSWriteOffice.Cmdlets.Confluence;
 /// </example>
 [Cmdlet(VerbsCommon.Remove, "OfficeConfluencePage", SupportsShouldProcess = true)]
 [OutputType(typeof(ConfluencePageWritePlan))]
-public sealed class RemoveOfficeConfluencePageCommand : AsyncPSCmdlet
-{
+public sealed class RemoveOfficeConfluencePageCommand : AsyncPSCmdlet {
     /// <summary>Configured session required for a live delete operation.</summary>
     [Parameter]
     public ConfluenceSession? Session { get; set; }
@@ -42,27 +41,30 @@ public sealed class RemoveOfficeConfluencePageCommand : AsyncPSCmdlet
     [Parameter]
     public SwitchParameter PlanOnly { get; set; }
 
+    /// <summary>Return the completed delete plan after a live operation.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
-    protected override async Task ProcessRecordAsync()
-    {
+    protected override async Task ProcessRecordAsync() {
         ConfluencePageWritePlan plan = ConfluenceClient.PlanDeletePage(PageId, Purge.IsPresent, Draft.IsPresent);
-        if (PlanOnly.IsPresent)
-        {
+        if (PlanOnly.IsPresent) {
             WriteObject(plan);
             return;
         }
 
-        if (Session == null)
-        {
+        if (Session == null) {
             throw new PSInvalidOperationException("Provide -Session for a live operation, or use -PlanOnly.");
         }
 
-        if (!ShouldProcess(PageId, Purge.IsPresent ? "Permanently delete Confluence page" : "Delete Confluence page"))
-        {
+        if (!ShouldProcess(PageId, Purge.IsPresent ? "Permanently delete Confluence page" : "Delete Confluence page")) {
             return;
         }
 
         using var client = Session.CreateClient();
         await client.DeletePageAsync(PageId, Purge.IsPresent, Draft.IsPresent, CancelToken).ConfigureAwait(false);
+        if (PassThru.IsPresent) {
+            WriteObject(plan);
+        }
     }
 }

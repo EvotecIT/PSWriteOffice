@@ -15,7 +15,7 @@ New-OfficeWord -Path $Path {
         WordText 'Summary'
         WordBookmark -Name 'FY24Summary'
     }
-} | Out-Null
+}
 
 Update-OfficeWordText -Path $Path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkText -IncludeHyperlinkUri -IncludeHyperlinkAnchor -IncludeHyperlinkTooltip
 

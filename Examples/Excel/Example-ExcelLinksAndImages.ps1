@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Excel-LinksAndImages.xlsx'
 
 New-OfficeExcel -Path $path {
@@ -13,6 +12,6 @@ New-OfficeExcel -Path $path {
         Set-OfficeExcelHostHyperlink -Address 'B2' -Url 'https://learn.microsoft.com/office/open-xml/'
         Add-OfficeExcelImageFromUrl -Address 'D2' -Url 'https://raw.githubusercontent.com/github/explore/main/topics/powershell/powershell.png' -WidthPixels 48 -HeightPixels 48
     }
-} | Out-Null
+}
 
 Write-Host "Workbook saved to $path"

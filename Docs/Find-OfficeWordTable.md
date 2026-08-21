@@ -11,12 +11,12 @@ Finds Word tables containing matching cell text.
 ## SYNTAX
 ### PathText (Default)
 ```powershell
-Find-OfficeWordTable [-InputPath] <string> [-Text] <string> [-CaseSensitive] [-IncludeNested] [<CommonParameters>]
+Find-OfficeWordTable [-Path] <string> [-Text] <string> [-CaseSensitive] [-IncludeNested] [<CommonParameters>]
 ```
 
 ### PathRegex
 ```powershell
-Find-OfficeWordTable [-InputPath] <string> [-Pattern] <string> [-CaseSensitive] [-IncludeNested] [<CommonParameters>]
+Find-OfficeWordTable [-Path] <string> [-Pattern] <string> [-CaseSensitive] [-IncludeNested] [<CommonParameters>]
 ```
 
 ### DocumentText
@@ -112,13 +112,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the document to open read-only for searching.
 
 ```yaml
 Type: String
 Parameter Sets: PathText, PathRegex
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

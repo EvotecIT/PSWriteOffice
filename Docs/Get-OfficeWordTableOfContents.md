@@ -11,7 +11,7 @@ Gets the table of contents from a Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordTableOfContents [-InputPath] <string> [<CommonParameters>]
+Get-OfficeWordTableOfContents [-Path] <string> [<CommonParameters>]
 ```
 
 ### Document
@@ -54,13 +54,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the .docx file.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

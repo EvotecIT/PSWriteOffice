@@ -181,6 +181,22 @@ try {
 $apiRoot = Join-Path $ArtifactsRoot 'apidocs\powershell'
 New-Item -ItemType Directory -Path $apiRoot -Force | Out-Null
 
+$sourceExamplesRoot = Join-Path $RepositoryRoot 'Examples'
+$apiExamplesRoot = Join-Path $apiRoot 'examples'
+$artifactsBoundary = [System.IO.Path]::GetFullPath($ArtifactsRoot).TrimEnd(
+    [System.IO.Path]::DirectorySeparatorChar,
+    [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar
+$resolvedExamplesRoot = [System.IO.Path]::GetFullPath($apiExamplesRoot)
+if (-not $resolvedExamplesRoot.StartsWith($artifactsBoundary, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Refusing to refresh examples outside the website artifacts root: $resolvedExamplesRoot"
+}
+if (Test-Path -LiteralPath $apiExamplesRoot -PathType Container) {
+    [System.IO.Directory]::Delete($resolvedExamplesRoot, $true)
+}
+New-Item -ItemType Directory -Path $apiExamplesRoot -Force | Out-Null
+Get-ChildItem -LiteralPath $sourceExamplesRoot -Force |
+    Copy-Item -Destination $apiExamplesRoot -Recurse -Force
+
 $apiHelpPath = Join-Path $apiRoot "$moduleName-help.xml"
 $docsHelpPath = Join-Path $RepositoryRoot "Docs\Generated\$moduleName-help.xml"
 New-Item -ItemType Directory -Path (Split-Path -Parent $docsHelpPath) -Force | Out-Null

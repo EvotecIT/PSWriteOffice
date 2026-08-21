@@ -29,8 +29,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Find, "OfficeWord", DefaultParameterSetName = ParameterSetPathText)]
 [OutputType(typeof(WordParagraph), typeof(WordSearchResult))]
-public sealed class FindOfficeWordCommand : PSCmdlet
-{
+public sealed class FindOfficeWordCommand : PSCmdlet {
     private const string ParameterSetPathText = "PathText";
     private const string ParameterSetPathRegex = "PathRegex";
     private const string ParameterSetDocumentText = "DocumentText";
@@ -39,8 +38,8 @@ public sealed class FindOfficeWordCommand : PSCmdlet
     /// <summary>Path to the .docx file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathText)]
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPathRegex)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Word document to search.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocumentText)]
@@ -67,31 +66,24 @@ public sealed class FindOfficeWordCommand : PSCmdlet
     public SwitchParameter AsResult { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPathText || ParameterSetName == ParameterSetPathRegex)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        try {
+            if (ParameterSetName == ParameterSetPathText || ParameterSetName == ParameterSetPathRegex) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document was not provided.");
             }
 
-            if (ParameterSetName == ParameterSetPathText || ParameterSetName == ParameterSetDocumentText)
-            {
+            if (ParameterSetName == ParameterSetPathText || ParameterSetName == ParameterSetDocumentText) {
                 var comparison = CaseSensitive.IsPresent ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
                 var results = document.Find(Text, comparison);
                 WriteObject(results, enumerateCollection: true);
@@ -101,26 +93,19 @@ public sealed class FindOfficeWordCommand : PSCmdlet
             var regexOptions = CaseSensitive.IsPresent ? RegexOptions.None : RegexOptions.IgnoreCase;
             var regex = new Regex(Pattern, regexOptions);
             var result = document.Find(regex);
-            if (AsResult.IsPresent)
-            {
+            if (AsResult.IsPresent) {
                 WriteObject(result);
-            }
-            else
-            {
+            } else {
                 WriteObject(Flatten(result), enumerateCollection: true);
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }
     }
 
-    private static IEnumerable<WordParagraph> Flatten(WordSearchResult result)
-    {
+    private static IEnumerable<WordParagraph> Flatten(WordSearchResult result) {
         foreach (var paragraph in result.BodyParagraphs) yield return paragraph;
         foreach (var paragraph in result.TableParagraphs) yield return paragraph;
         foreach (var paragraph in result.DefaultHeaderParagraphs) yield return paragraph;

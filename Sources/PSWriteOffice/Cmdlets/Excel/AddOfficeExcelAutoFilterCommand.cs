@@ -24,8 +24,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelAutoFilter", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelAutoFilter")]
-public sealed class AddOfficeExcelAutoFilterCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelAutoFilterCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
@@ -50,19 +49,16 @@ public sealed class AddOfficeExcelAutoFilterCommand : PSCmdlet
     public Hashtable? Criteria { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var sheet = ResolveSheet();
         var criteria = ConvertCriteria(Criteria);
         sheet.AddAutoFilter(Range, criteria);
+        WritePassThru(sheet);
     }
 
-    private ExcelSheet ResolveSheet()
-    {
-        if (ParameterSetName == ParameterSetDocument)
-        {
-            if (Document == null)
-            {
+    private ExcelSheet ResolveSheet() {
+        if (ParameterSetName == ParameterSetDocument) {
+            if (Document == null) {
                 throw new PSArgumentException("Provide an Excel document.");
             }
 
@@ -73,29 +69,23 @@ public sealed class AddOfficeExcelAutoFilterCommand : PSCmdlet
         return context.RequireSheet();
     }
 
-    private static Dictionary<uint, IEnumerable<string>>? ConvertCriteria(Hashtable? criteria)
-    {
-        if (criteria == null || criteria.Count == 0)
-        {
+    private static Dictionary<uint, IEnumerable<string>>? ConvertCriteria(Hashtable? criteria) {
+        if (criteria == null || criteria.Count == 0) {
             return null;
         }
 
         var converted = new Dictionary<uint, IEnumerable<string>>();
-        foreach (DictionaryEntry entry in criteria)
-        {
-            if (entry.Key == null)
-            {
+        foreach (DictionaryEntry entry in criteria) {
+            if (entry.Key == null) {
                 continue;
             }
 
-            if (!TryGetColumnIndex(entry.Key, out uint index))
-            {
+            if (!TryGetColumnIndex(entry.Key, out uint index)) {
                 throw new PSArgumentException($"Invalid column index '{entry.Key}'. Use an integer index (0-based within the filter range).");
             }
 
             var values = NormalizeValues(entry.Value).ToArray();
-            if (values.Length == 0)
-            {
+            if (values.Length == 0) {
                 continue;
             }
 
@@ -105,11 +95,9 @@ public sealed class AddOfficeExcelAutoFilterCommand : PSCmdlet
         return converted.Count == 0 ? null : converted;
     }
 
-    private static bool TryGetColumnIndex(object key, out uint index)
-    {
+    private static bool TryGetColumnIndex(object key, out uint index) {
         index = 0;
-        switch (key)
-        {
+        switch (key) {
             case byte b:
                 index = b;
                 return true;
@@ -141,30 +129,23 @@ public sealed class AddOfficeExcelAutoFilterCommand : PSCmdlet
         }
     }
 
-    private static IEnumerable<string> NormalizeValues(object? value)
-    {
-        if (value == null)
-        {
+    private static IEnumerable<string> NormalizeValues(object? value) {
+        if (value == null) {
             yield break;
         }
 
-        if (value is string text)
-        {
-            if (!string.IsNullOrWhiteSpace(text))
-            {
+        if (value is string text) {
+            if (!string.IsNullOrWhiteSpace(text)) {
                 yield return text;
             }
             yield break;
         }
 
-        if (value is IEnumerable enumerable)
-        {
-            foreach (var item in enumerable)
-            {
+        if (value is IEnumerable enumerable) {
+            foreach (var item in enumerable) {
                 if (item == null) continue;
                 var itemText = item.ToString();
-                if (!string.IsNullOrWhiteSpace(itemText))
-                {
+                if (!string.IsNullOrWhiteSpace(itemText)) {
                     yield return itemText!;
                 }
             }
@@ -172,8 +153,7 @@ public sealed class AddOfficeExcelAutoFilterCommand : PSCmdlet
         }
 
         var single = value.ToString();
-        if (!string.IsNullOrWhiteSpace(single))
-        {
+        if (!string.IsNullOrWhiteSpace(single)) {
             yield return single!;
         }
     }

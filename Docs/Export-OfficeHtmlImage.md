@@ -11,17 +11,17 @@ Exports an HTML render surface as PNG or SVG with structured diagnostics.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Export-OfficeHtmlImage [-Path] <string> [-OutputPath] <string> [-Format <OfficeImageExportFormat>] [-PageIndex <int>] [-DocumentOptions <HtmlConversionDocumentOptions>] [-RenderOptions <HtmlRenderOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeHtmlImage [-Path] <string> [-OutputPath] <string> [-Format <OfficeImageExportFormat>] [-PageIndex <int>] [-DocumentOptions <HtmlConversionDocumentOptions>] [-RenderOptions <HtmlRenderOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Html
 ```powershell
-Export-OfficeHtmlImage [-OutputPath] <string> -Html <string> [-Format <OfficeImageExportFormat>] [-PageIndex <int>] [-DocumentOptions <HtmlConversionDocumentOptions>] [-RenderOptions <HtmlRenderOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeHtmlImage [-OutputPath] <string> -Html <string> [-Format <OfficeImageExportFormat>] [-PageIndex <int>] [-DocumentOptions <HtmlConversionDocumentOptions>] [-RenderOptions <HtmlRenderOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Export-OfficeHtmlImage [-OutputPath] <string> -Document <HtmlConversionDocument> [-Format <OfficeImageExportFormat>] [-PageIndex <int>] [-DocumentOptions <HtmlConversionDocumentOptions>] [-RenderOptions <HtmlRenderOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeHtmlImage [-OutputPath] <string> -Document <HtmlConversionDocument> [-Format <OfficeImageExportFormat>] [-PageIndex <int>] [-DocumentOptions <HtmlConversionDocumentOptions>] [-RenderOptions <HtmlRenderOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,7 +34,7 @@ Exports an HTML render surface as PNG or SVG with structured diagnostics.
 PS> Export-OfficeHtmlImage -Path .\Report.html -OutputPath .\Report.png
 ```
 
-Uses the dependency-free OfficeIMO HTML renderer and returns OfficeImageExportResult.
+Uses the dependency-free OfficeIMO HTML renderer. Add -PassThru to receive the structured export result.
 
 ## PARAMETERS
 
@@ -103,7 +103,7 @@ Accept wildcard characters: False
 ```
 
 ### -OutputPath
-Destination PNG or SVG path.
+Destination PNG, JPEG, TIFF, SVG, or WebP path.
 
 ```yaml
 Type: String
@@ -123,6 +123,22 @@ Zero-based rendered page index.
 
 ```yaml
 Type: Int32
+Parameter Sets: Path, Html, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the structured image export result.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Path, Html, Document
 Aliases: None
 Possible values:

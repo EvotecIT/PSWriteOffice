@@ -11,17 +11,17 @@ Closes one or more tracked Word documents, optionally saving them.
 ## SYNTAX
 ### Current (Default)
 ```powershell
-Close-OfficeWord [-Current] [-Save] [-Path <string>] [-Show] [-Password <string>] [<CommonParameters>]
+Close-OfficeWord [-Current] [-Save] [-Path <string>] [-Open] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Close-OfficeWord [-Document] <WordDocument> [-Save] [-Path <string>] [-Show] [-Password <string>] [<CommonParameters>]
+Close-OfficeWord [-Document] <WordDocument> [-Save] [-Path <string>] [-Open] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### All
 ```powershell
-Close-OfficeWord -All [-Save] [-Show] [-Password <string>] [<CommonParameters>]
+Close-OfficeWord -All [-Save] [-Open] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,7 +45,7 @@ Closes the current tracked document when a document handle is not passed explici
 
 ### EXAMPLE 3
 ```powershell
-PS> Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Show
+PS> Close-OfficeWord -Document $doc -Save -Path .\Report-final.docx -Open
 ```
 
 Saves updates to Report-final.docx, opens it, and disposes the document.
@@ -100,6 +100,22 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -Open
+Open the file after saving. Requires -Save or -Path.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Current, Document, All
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Password
 Password used to save the document as an encrypted package.
 
@@ -134,22 +150,6 @@ Accept wildcard characters: False
 
 ### -Save
 Persist changes before closing.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Current, Document, All
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Show
-Open the file after saving.
 
 ```yaml
 Type: SwitchParameter

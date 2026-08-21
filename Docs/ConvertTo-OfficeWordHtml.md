@@ -11,7 +11,7 @@ Converts a Word document to HTML.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeWordHtml [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-ExcludeFootnotes] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeWordHtml [-Path] <string> [-OutputPath <string>] [-FontFamily <string>] [-IncludeFontStyles] [-IncludeListStyles] [-IncludeParagraphClasses] [-IncludeRunClasses] [-IncludeDefaultCss] [-UseImagePaths] [-ExcludeFootnotes] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -67,22 +67,6 @@ Possible values:
 
 Required: False
 Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -FilePath
-Path to a .docx file.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path
-Possible values:
-
-Required: True
-Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -211,6 +195,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to a .docx file.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

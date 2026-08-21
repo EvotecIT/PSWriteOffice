@@ -16,7 +16,7 @@ New-OfficeExcelDashboard [-InputObject] <Object> [-Title <string>] [-Subtitle <s
 
 ### Path
 ```powershell
-New-OfficeExcelDashboard [-InputObject] <Object> -InputPath <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <Int32>] [-ChartColumn <Int32>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeExcelDashboard [-InputObject] <Object> -Path <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Title <string>] [-Subtitle <string>] [-TableName <string>] [-TableRow <int>] [-TableColumn <int>] [-TableStyle <string>] [-NoAutoFilter] [-NoAutoFit] [-NoChart] [-ChartPreset <ExcelDashboardChartPreset>] [-ChartTitle <string>] [-ChartRow <Int32>] [-ChartColumn <Int32>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -134,22 +134,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NoAutoFilter
 Disable AutoFilter dropdowns on the generated table.
 
@@ -208,6 +192,22 @@ Aliases: None
 Possible values:
 
 Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
 Position: named
 Default value: None
 Accept pipeline input: False

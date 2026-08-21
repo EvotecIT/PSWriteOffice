@@ -5,8 +5,7 @@ param(
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Showcase-Excel-OperationalDashboard.xlsx'
 $logoPath = Join-Path $PSScriptRoot '..\Word\Example-WordTableCells.fixture.png'
 
@@ -74,13 +73,13 @@ New-OfficeExcel -Path $path {
 
         ExcelTable -Data $legend -TableName 'StatusLegend' -StartRow 7 -StartColumn 1 -TableStyle 'TableStyleMedium4' -AutoFit
         ExcelTable -Data $statusMix -TableName 'StatusMix' -StartRow 7 -StartColumn 6 -TableStyle 'TableStyleMedium4' -AutoFit
-        ExcelChart -Range 'F7:G10' -Row 7 -Column 9 -Type Doughnut -Title 'Status Mix' -WidthPixels 440 -HeightPixels 260 |
-            Set-OfficeExcelChartLegend -Position Right |
-            Set-OfficeExcelChartDataLabels -ShowValue $true -ShowCategoryName $true -Position OutsideEnd |
+        ExcelChart -Range 'F7:G10' -Row 7 -Column 9 -Type Doughnut -Title 'Status Mix' -WidthPixels 440 -HeightPixels 260 -PassThru |
+            Set-OfficeExcelChartLegend -Position Right -PassThru |
+            Set-OfficeExcelChartDataLabels -ShowValue $true -ShowCategoryName $true -Position OutsideEnd -PassThru |
             Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
 
         if (Test-Path $logoPath) {
-            ExcelImage -Path $logoPath -Address 'J1' -WidthPixels 140 -HeightPixels 52 -AltText 'PSWriteOffice operational dashboard logo' | Out-Null
+            ExcelImage -Path $logoPath -Address 'J1' -WidthPixels 140 -HeightPixels 52 -AltText 'PSWriteOffice operational dashboard logo'
         }
 
         ExcelHeaderFooter -HeaderCenter 'PSWriteOffice operational dashboard' -FooterRight 'Page &P of &N'
@@ -95,12 +94,12 @@ New-OfficeExcel -Path $path {
         ExcelValidationList -Range 'F2:F50' -Values 'Healthy','Watch','Risk'
         ExcelConditionalColorScale -Range 'B2:B9' -StartColor '#F8696B' -EndColor '#63BE7B'
         ExcelConditionalDataBar -Range 'C2:C9' -Color '#5B9BD5'
-        ExcelConditionalIconSet -Range 'B2:B9' -IconSet ThreeTrafficLights1 -Reverse $true
+        ExcelConditionalIconSet -Range 'B2:B9' -IconSet ThreeTrafficLights1
         ExcelUrlLinksByHeader -Header 'Evidence' -TableName 'ServiceHealth' -UrlScript { param($text) "https://evotec.xyz/docs/$text" } -TitleScript { param($text) "Open $text" }
         ExcelPivotTable -SourceRange 'A1:F9' -DestinationCell 'J1' -Name 'ServiceStatusPivot' -RowField Status -DataField Incidents -DataDisplayName 'Total Incidents' -PivotStyle PivotStyleMedium9 -RefreshOnOpen
-        ExcelChart -Range 'A1:C9' -Row 12 -Column 1 -Type BarClustered -Title 'Health Score and Incidents' -WidthPixels 760 -HeightPixels 340 |
-            Set-OfficeExcelChartLegend -Position Bottom |
-            Set-OfficeExcelChartDataLabels -ShowValue $true -Position OutsideEnd |
+        ExcelChart -Range 'A1:C9' -Row 12 -Column 1 -Type BarClustered -Title 'Health Score and Incidents' -WidthPixels 760 -HeightPixels 340 -PassThru |
+            Set-OfficeExcelChartLegend -Position Bottom -PassThru |
+            Set-OfficeExcelChartDataLabels -ShowValue $true -Position OutsideEnd -PassThru |
             Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
         ExcelHeaderFooter -HeaderCenter 'Service details' -FooterRight 'Page &P of &N'
     }
@@ -114,9 +113,9 @@ New-OfficeExcel -Path $path {
         ExcelSparkline -DataRange 'B5:D5' -LocationRange 'E5'
         ExcelSparkline -DataRange 'B6:D6' -LocationRange 'E6'
         ExcelSparkline -DataRange 'B7:D7' -LocationRange 'E7'
-        ExcelChart -TableName 'TrendData' -Row 10 -Column 1 -Type Line -Title 'Availability, Incidents, and Automation' -WidthPixels 780 -HeightPixels 340 |
-            Set-OfficeExcelChartLegend -Position Bottom |
-            Set-OfficeExcelChartDataLabels -ShowValue $true -Position Top |
+        ExcelChart -TableName 'TrendData' -Row 10 -Column 1 -Type Line -Title 'Availability, Incidents, and Automation' -WidthPixels 780 -HeightPixels 340 -PassThru |
+            Set-OfficeExcelChartLegend -Position Bottom -PassThru |
+            Set-OfficeExcelChartDataLabels -ShowValue $true -Position Top -PassThru |
             Set-OfficeExcelChartStyle -StyleId 251 -ColorStyleId 10
         ExcelHeaderFooter -HeaderCenter 'Trend and automation' -FooterRight 'Page &P of &N'
     }
@@ -124,7 +123,7 @@ New-OfficeExcel -Path $path {
     ExcelSheet 'Owner Summary' {
         ExcelTable -Data $ownerSummary -TableName 'OwnerSummary' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium5' -AutoFit
         ExcelConditionalDataBar -Range 'D2:D20' -Color '#ED7D31'
-        ExcelConditionalIconSet -Range 'C2:C20' -IconSet ThreeTrafficLights1 -Reverse $true
+        ExcelConditionalIconSet -Range 'C2:C20' -IconSet ThreeTrafficLights1
         ExcelHeaderFooter -HeaderCenter 'Owner summary' -FooterRight 'Page &P of &N'
     }
 
@@ -142,7 +141,7 @@ New-OfficeExcel -Path $path {
 } -Open:$Open
 
 $threaded = Add-OfficeExcelThreadedComment -Path $path -Sheet Summary -Address A2 -Text 'Review dashboard posture before sending to service owners.' -Author 'Automation Reviewer' -PassThru
-Add-OfficeExcelThreadedComment -Path $path -Sheet Summary -Address A2 -Text 'Ready for owner review.' -Author 'Report Owner' -ParentId $threaded.Id -Done | Out-Null
+Add-OfficeExcelThreadedComment -Path $path -Sheet Summary -Address A2 -Text 'Ready for owner review.' -Author 'Report Owner' -ParentId $threaded.Id -Done
 
 Add-OfficeExcelPowerQueryMetadata -Path $path `
     -Name 'OperationalDashboardQuery' `
@@ -151,7 +150,7 @@ Add-OfficeExcelPowerQueryMetadata -Path $path `
     -CommandText 'let Source = Excel.CurrentWorkbook(){[Name="ServiceHealth"]}[Content] in Source' `
     -Description 'Refresh metadata for Excel-compatible applications; PSWriteOffice does not execute Power Query.' `
     -RefreshOnOpen `
-    -PassThru | Out-Null
+
 
 $doctor = Test-OfficeExcelWorkbook -Path $path -SkipOpenXmlValidation
 $accessibility = Test-OfficeExcelAccessibility -Path $path

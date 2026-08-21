@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <summary>Export visible slides as SVG files.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>Export-OfficePowerPointImage -Path .\Deck.pptx -OutputPath .\Slides -Format Svg</code>
-///   <para>Writes one image per selected slide and returns OfficeImageExportResult objects.</para>
+///   <para>Writes one image per selected slide. Add <c>-PassThru</c> to receive the structured export results.</para>
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficePowerPointImage", DefaultParameterSetName = "Path", SupportsShouldProcess = true)]
 [OutputType(typeof(OfficeImageExportResult))]
@@ -38,6 +38,10 @@ public sealed class ExportOfficePowerPointImageCommand : PSCmdlet
     [Parameter]
     public PowerPointPresentationImageExportOptions? Options { get; set; }
 
+    /// <summary>Emit one structured image export result per saved slide.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -55,7 +59,7 @@ public sealed class ExportOfficePowerPointImageCommand : PSCmdlet
                 presentation = owned;
             }
             IReadOnlyList<OfficeImageExportResult> results = presentation.SaveAsImages(output, Format, Options);
-            WriteObject(results, enumerateCollection: true);
+            if (PassThru.IsPresent) WriteObject(results, enumerateCollection: true);
         }
         finally
         {

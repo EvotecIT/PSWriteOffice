@@ -11,7 +11,7 @@ Inspects workbook data model, query, connection, and external-link package parts
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelDataModel [-InputPath] <string> [<CommonParameters>]
+Get-OfficeExcelDataModel [-Path] <string> [<CommonParameters>]
 ```
 
 ### Document
@@ -52,13 +52,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

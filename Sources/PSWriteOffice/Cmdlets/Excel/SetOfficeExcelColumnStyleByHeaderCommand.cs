@@ -21,8 +21,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelColumnStyleByHeader", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelColumnStyleByHeader", "ExcelColumnStyle")]
-public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
@@ -113,15 +112,12 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
     public SwitchParameter IgnoreMissing { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (string.IsNullOrWhiteSpace(Header))
-        {
+    protected override void ProcessRecord() {
+        if (string.IsNullOrWhiteSpace(Header)) {
             throw new PSArgumentException("Header cannot be empty.", nameof(Header));
         }
 
-        if (Decimals < 0)
-        {
+        if (Decimals < 0) {
             throw new ArgumentOutOfRangeException(nameof(Decimals), "Decimals must be zero or greater.");
         }
 
@@ -139,10 +135,8 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
             IncludeHeader.IsPresent,
             out var builder,
             out var columnIndex,
-            preferDirectTabularMetadata: !requiresCellMaterialization))
-        {
-            if (IgnoreMissing.IsPresent)
-            {
+            preferDirectTabularMetadata: !requiresCellMaterialization)) {
+            if (IgnoreMissing.IsPresent) {
                 return;
             }
 
@@ -151,39 +145,31 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
 
         var hasAction = false;
 
-        if (!string.IsNullOrWhiteSpace(Style))
-        {
+        if (!string.IsNullOrWhiteSpace(Style)) {
             ApplyPreset(builder, Style!);
             hasAction = true;
-        }
-        else if (!string.IsNullOrWhiteSpace(NumberFormat))
-        {
+        } else if (!string.IsNullOrWhiteSpace(NumberFormat)) {
             builder.NumberFormat(NumberFormat!);
             hasAction = true;
         }
 
-        if (Bold.IsPresent)
-        {
+        if (Bold.IsPresent) {
             builder.Bold();
             hasAction = true;
         }
 
-        if (!string.IsNullOrWhiteSpace(BackgroundColor))
-        {
+        if (!string.IsNullOrWhiteSpace(BackgroundColor)) {
             builder.Background(BackgroundColor!);
             hasAction = true;
         }
 
-        if (!string.IsNullOrWhiteSpace(FontColor))
-        {
+        if (!string.IsNullOrWhiteSpace(FontColor)) {
             builder.FontColor(FontColor!);
             hasAction = true;
         }
 
-        if (!string.IsNullOrWhiteSpace(Alignment))
-        {
-            switch (Alignment)
-            {
+        if (!string.IsNullOrWhiteSpace(Alignment)) {
+            switch (Alignment) {
                 case "Left":
                     builder.AlignLeft();
                     break;
@@ -197,49 +183,41 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
             hasAction = true;
         }
 
-        if (BackgroundByText != null && BackgroundByText.Count > 0)
-        {
+        if (BackgroundByText != null && BackgroundByText.Count > 0) {
             builder.BackgroundByTextMap(ToStringMap(BackgroundByText, CaseSensitive.IsPresent), !CaseSensitive.IsPresent);
             hasAction = true;
         }
 
-        if (FontColorByText != null && FontColorByText.Count > 0)
-        {
+        if (FontColorByText != null && FontColorByText.Count > 0) {
             builder.FontColorByTextMap(ToStringMap(FontColorByText, CaseSensitive.IsPresent), !CaseSensitive.IsPresent);
             hasAction = true;
         }
 
-        if (BoldByText != null && BoldByText.Length > 0)
-        {
+        if (BoldByText != null && BoldByText.Length > 0) {
             var comparer = CaseSensitive.IsPresent ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
             builder.BoldByTextSet(new HashSet<string>(BoldByText, comparer), !CaseSensitive.IsPresent);
             hasAction = true;
         }
 
-        if (Width.HasValue)
-        {
+        if (Width.HasValue) {
             sheet.SetColumnWidth(columnIndex, Width.Value);
             hasAction = true;
         }
 
-        if (AutoFit.IsPresent)
-        {
+        if (AutoFit.IsPresent) {
             sheet.AutoFitColumn(columnIndex);
             hasAction = true;
         }
 
-        if (!hasAction)
-        {
+        if (!hasAction) {
             throw new PSArgumentException("Provide a style, color, width, AutoFit, or text map option to update the column.");
         }
+        WritePassThru(sheet);
     }
 
-    private ExcelSheet ResolveSheet()
-    {
-        if (ParameterSetName == ParameterSetDocument)
-        {
-            if (Document == null)
-            {
+    private ExcelSheet ResolveSheet() {
+        if (ParameterSetName == ParameterSetDocument) {
+            if (Document == null) {
                 throw new PSArgumentException("Provide an Excel document.");
             }
 
@@ -249,10 +227,8 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
         return ExcelDslContext.Require(this).RequireSheet();
     }
 
-    private void ApplyPreset(ExcelColumnStyleByHeaderBuilder builder, string style)
-    {
-        switch (style)
-        {
+    private void ApplyPreset(ExcelColumnStyleByHeaderBuilder builder, string style) {
+        switch (style) {
             case "Number":
                 builder.Number(Decimals);
                 break;
@@ -281,8 +257,7 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
                 builder.Text();
                 break;
             case "NumberFormat":
-                if (string.IsNullOrWhiteSpace(NumberFormat))
-                {
+                if (string.IsNullOrWhiteSpace(NumberFormat)) {
                     throw new PSArgumentException("Provide -NumberFormat when -Style NumberFormat is used.", nameof(NumberFormat));
                 }
                 builder.NumberFormat(NumberFormat!);
@@ -290,26 +265,21 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSCmdlet
         }
     }
 
-    private CultureInfo? ResolveCulture()
-    {
-        if (string.IsNullOrWhiteSpace(CultureName))
-        {
+    private CultureInfo? ResolveCulture() {
+        if (string.IsNullOrWhiteSpace(CultureName)) {
             return null;
         }
 
         return CultureInfo.GetCultureInfo(CultureName!);
     }
 
-    private static Dictionary<string, string> ToStringMap(Hashtable table, bool caseSensitive)
-    {
+    private static Dictionary<string, string> ToStringMap(Hashtable table, bool caseSensitive) {
         var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
         var result = new Dictionary<string, string>(comparer);
-        foreach (DictionaryEntry entry in table)
-        {
+        foreach (DictionaryEntry entry in table) {
             var key = Convert.ToString(entry.Key, CultureInfo.InvariantCulture);
             var value = Convert.ToString(entry.Value, CultureInfo.InvariantCulture);
-            if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
-            {
+            if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value)) {
                 result[key] = value;
             }
         }

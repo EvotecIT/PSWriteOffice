@@ -11,7 +11,7 @@ Creates an OfficeIMO-authored Visio-native container around existing shapes.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeVisioContainer [[-InputObject] <Object>] -Id <string> [-Page <VisioPage>] [-ShapeId <string[]>] [-Text <string>] [-Margin <Double>] [-HeadingHeight <Double>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-ContainerStyle <Int32>] [-HeadingStyle <Int32>] [-Locked] [-NoAutoResize] [-NoHighlight] [-NoRibbon] [<CommonParameters>]
+Add-OfficeVisioContainer [[-InputObject] <Object>] -Id <string> [-Page <VisioPage>] [-ShapeId <string[]>] [-Text <string>] [-Margin <Double>] [-HeadingHeight <Double>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-ContainerStyle <Int32>] [-HeadingStyle <Int32>] [-Locked] [-NoAutoResize] [-NoHighlight] [-NoRibbon] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -245,6 +245,22 @@ Page that owns the member shapes. Optional inside New-OfficeVisio/VisioPage DSL 
 
 ```yaml
 Type: VisioPage
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

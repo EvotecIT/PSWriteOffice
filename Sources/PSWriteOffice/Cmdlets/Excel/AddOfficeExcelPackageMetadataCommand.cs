@@ -16,16 +16,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Add, "OfficeExcelPackageMetadata", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPackageMetadata", "ExcelConnectionMetadata")]
 [OutputType(typeof(PSObject))]
-public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -50,11 +49,9 @@ public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
@@ -62,21 +59,17 @@ public sealed class AddOfficeExcelPackageMetadataCommand : PSCmdlet
 
         string? sheetName = null;
         ExcelPackagePartInfo part;
-        if (string.Equals(Kind, "QueryTable", StringComparison.OrdinalIgnoreCase))
-        {
+        if (string.Equals(Kind, "QueryTable", StringComparison.OrdinalIgnoreCase)) {
             sheetName = ExcelWorkbookCommandService.ResolveSheetNameOrCurrent(this, document, ParameterSetName, WorksheetName);
             part = document.AddWorksheetQueryTableMetadata(sheetName, Xml);
-        }
-        else
-        {
+        } else {
             part = document.AddWorkbookConnectionMetadata(Xml);
         }
 
         string contentType = part.ContentType;
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var result = new PSObject();
             result.Properties.Add(new PSNoteProperty("Kind", Kind));
             result.Properties.Add(new PSNoteProperty("WorksheetName", sheetName));

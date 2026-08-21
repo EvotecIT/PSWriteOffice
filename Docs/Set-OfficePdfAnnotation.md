@@ -11,7 +11,7 @@ Updates a single indirect PDF annotation.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> -ObjectNumber <int> [-Password <string>] [-IgnorePermissionRestrictions] [-Contents <string>] [-Title <string>] [-Name <string>] [-Flags <Int32>] [-Color <string>] [-RemoveAction] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficePdfAnnotation [-Path] <string> [-OutputPath] <string> -ObjectNumber <int> [-Password <string>] [-IgnorePermissionRestrictions] [-Contents <string>] [-Title <string>] [-Name <string>] [-Flags <Int32>] [-Color <string>] [-RemoveAction] [-PassThruReport] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -134,6 +134,22 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

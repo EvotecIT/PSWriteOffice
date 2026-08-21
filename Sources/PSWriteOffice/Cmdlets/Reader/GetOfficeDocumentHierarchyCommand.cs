@@ -8,7 +8,8 @@ namespace PSWriteOffice.Cmdlets.Reader;
 /// <example>
 ///   <summary>Create embedding-ready chunks with heading context.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$options = [OfficeIMO.Reader.ReaderHierarchicalChunkingOptions]::new(); $options.MaxTokens = 500; $result = Get-OfficeDocumentHierarchy -Path .\handbook.pdf -ChunkingOptions $options</code>
+///   <code>$options = New-OfficeReaderHierarchyOptions -MaxTokens 500 -OverlapTokens 50 -IncludeContextInText
+/// $result = Get-OfficeDocumentHierarchy -Path .\handbook.pdf -ChunkingOptions $options</code>
 ///   <para>Returns chunks, token evidence, overlap counts, and flattened parent/child nodes.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeDocumentHierarchy")]

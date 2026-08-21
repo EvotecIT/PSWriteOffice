@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsCommon.Add, "OfficeVisioEllipse")]
 [Alias("VisioEllipse")]
 [OutputType(typeof(VisioShape))]
-public sealed class AddOfficeVisioEllipseCommand : PSCmdlet
-{
+public sealed class AddOfficeVisioEllipseCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>New-OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioPage? Page { get; set; }
@@ -67,13 +66,12 @@ public sealed class AddOfficeVisioEllipseCommand : PSCmdlet
     public double? LineWeight { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = VisioDslContext.Current;
         var page = Page ?? VisioDslContext.Require(this).RequirePage();
         var shape = page.AddEllipse(X, Y, Width, Height, Text, Unit);
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, Name ?? Key, null, FillColor, LineColor, LineWeight, null, null, null);
         context?.RegisterShape(page, Key, shape);
-        WriteObject(shape);
+        WritePassThru(shape);
     }
 }

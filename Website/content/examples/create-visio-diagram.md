@@ -14,14 +14,13 @@ It is adapted from `Examples/Visio/Example-Visio-StencilFlow.ps1`.
 Import-Module PSWriteOffice
 
 $outputDirectory = Join-Path $PSScriptRoot 'Output'
-New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
-
+$null = New-Item -ItemType Directory -Path $outputDirectory -Force
 $visioPath = Join-Path $outputDirectory 'OnboardingFlow.vsdx'
 $svgPath = Join-Path $outputDirectory 'OnboardingFlow.svg'
 $pngPath = Join-Path $outputDirectory 'OnboardingFlow.png'
 
 New-OfficeVisio -Path $visioPath -Title 'Customer onboarding flow' -UseMastersByDefault -RequestRecalcOnOpen {
-    Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default | Out-Null
+    Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
 
     VisioStencil -Catalog Flow -Stencil process -Key intake -Text 'Intake' -X 1.5 -Y 4
     VisioStencil -Catalog Flow -Stencil decision -Key review -Text 'Review?' -X 4 -Y 4

@@ -29,7 +29,7 @@ Describe 'Excel image export cmdlets' {
             }
         } | Out-Null
 
-        $result = Export-OfficeExcelRangeImage -Path $workbookPath -WorksheetName Data -Range A1:B2 -OutputPath $outputPath
+        $result = Export-OfficeExcelRangeImage -Path $workbookPath -WorksheetName Data -Range A1:B2 -OutputPath $outputPath -PassThru
 
         Test-Path -LiteralPath $outputPath | Should -BeTrue
         $result.SavedPath | Should -Be ([System.IO.Path]::GetFullPath($outputPath))
@@ -50,7 +50,7 @@ Describe 'Excel image export cmdlets' {
             }
         } | Out-Null
 
-        $result = Export-OfficeExcelChartImage -Path $workbookPath -WorksheetName Data -ChartName $script:exportChartName -OutputPath $outputPath
+        $result = Export-OfficeExcelChartImage -Path $workbookPath -WorksheetName Data -ChartName $script:exportChartName -OutputPath $outputPath -PassThru
 
         Test-Path -LiteralPath $outputPath | Should -BeTrue
         $result.SavedPath | Should -Be ([System.IO.Path]::GetFullPath($outputPath))

@@ -13,8 +13,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelChartStyle")]
 [OutputType(typeof(ExcelChart))]
-public sealed class SetOfficeExcelChartStyleCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelChartStyleCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Chart to update.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true)]
     public ExcelChart Chart { get; set; } = null!;
@@ -28,15 +27,11 @@ public sealed class SetOfficeExcelChartStyleCommand : PSCmdlet
     public int ColorStyleId { get; set; } = 10;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             Chart.ApplyStylePreset(StyleId, ColorStyleId);
-            WriteObject(Chart);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(Chart);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "ExcelChartStyleFailed", ErrorCategory.InvalidOperation, Chart));
         }
     }

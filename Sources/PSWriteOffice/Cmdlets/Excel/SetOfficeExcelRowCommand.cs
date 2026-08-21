@@ -15,8 +15,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelRow")]
 [Alias("ExcelRow")]
-public sealed class SetOfficeExcelRowCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelRowCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>1-based row index.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public int Row { get; set; }
@@ -78,33 +77,27 @@ public sealed class SetOfficeExcelRowCommand : PSCmdlet
     public int? LastColumn { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = ExcelDslContext.Require(this);
         var sheet = context.RequireSheet();
 
-        if (Row < 1)
-        {
+        if (Row < 1) {
             throw new ArgumentOutOfRangeException(nameof(Row), "Row index must be 1 or greater.");
         }
 
-        if (StartColumn < 1)
-        {
+        if (StartColumn < 1) {
             throw new ArgumentOutOfRangeException(nameof(StartColumn), "StartColumn must be 1 or greater.");
         }
 
         var values = Values ?? Array.Empty<object>();
         var hasLayout = HasLayoutOptions();
-        if (values.Length == 0 && !hasLayout)
-        {
+        if (values.Length == 0 && !hasLayout) {
             throw new PSArgumentException("Provide row values or at least one layout/style option.", nameof(Values));
         }
 
-        if (values.Length > 0)
-        {
+        if (values.Length > 0) {
             var cells = new List<(int Row, int Column, object Value)>(values.Length);
-            for (int i = 0; i < values.Length; i++)
-            {
+            for (int i = 0; i < values.Length; i++) {
                 var value = values[i] ?? string.Empty;
                 cells.Add((Row, StartColumn + i, value));
             }
@@ -112,8 +105,7 @@ public sealed class SetOfficeExcelRowCommand : PSCmdlet
             sheet.CellValues(cells);
         }
 
-        if (hasLayout)
-        {
+        if (hasLayout) {
             sheet.SetRowLayout(Row, new ExcelRowLayoutOptions {
                 Height = Height,
                 ClearHeight = ClearHeight.IsPresent,
@@ -129,10 +121,10 @@ public sealed class SetOfficeExcelRowCommand : PSCmdlet
                 LastColumn = LastColumn ?? (values.Length > 0 ? StartColumn + values.Length - 1 : null)
             });
         }
+        WritePassThru(sheet);
     }
 
-    private bool HasLayoutOptions()
-    {
+    private bool HasLayoutOptions() {
         return Height.HasValue ||
             ClearHeight.IsPresent ||
             AutoFit.IsPresent ||

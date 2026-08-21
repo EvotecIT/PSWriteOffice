@@ -16,9 +16,8 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// </example>
 [Cmdlet(VerbsData.Save, "OfficeVisio", SupportsShouldProcess = true)]
 [Alias("VisioSave")]
-[OutputType(typeof(VisioDocument), typeof(FileInfo))]
-public sealed class SaveOfficeVisioCommand : PSCmdlet
-{
+[OutputType(typeof(VisioDocument))]
+public sealed class SaveOfficeVisioCommand : PSCmdlet {
     /// <summary>Visio document to save.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public VisioDocument Document { get; set; } = null!;
@@ -30,54 +29,52 @@ public sealed class SaveOfficeVisioCommand : PSCmdlet
 
     /// <summary>Open the document after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
-    /// <summary>Emit the document object instead of the saved file.</summary>
+    /// <summary>Emit the document object for further processing.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (string.IsNullOrWhiteSpace(Path))
-        {
+    protected override void ProcessRecord() {
+        if (string.IsNullOrWhiteSpace(Path)) {
             var associatedPath = Document.FilePath;
-            if (string.IsNullOrWhiteSpace(associatedPath))
-            {
+            if (string.IsNullOrWhiteSpace(associatedPath)) {
                 throw new PSInvalidOperationException("No file path provided. Use -Path or load the document from disk.");
             }
 
             var targetPath = associatedPath!;
 
-            if (!ShouldProcess(targetPath, "Save Visio document"))
-            {
+            if (!ShouldProcess(targetPath, "Save Visio document")) {
                 return;
             }
 
             Document.Save();
-            if (Show.IsPresent)
-            {
+            if (Open.IsPresent) {
                 FileOpenService.Open(targetPath);
             }
 
-            WriteObject(PassThru.IsPresent ? Document : new FileInfo(targetPath));
+            if (PassThru.IsPresent) {
+                WriteObject(Document);
+            }
             return;
         }
 
         var fullPath = VisioCommandUtilities.ResolvePath(this, Path!);
-        if (!ShouldProcess(fullPath, "Save Visio document"))
-        {
+        if (!ShouldProcess(fullPath, "Save Visio document")) {
             return;
         }
 
         VisioCommandUtilities.EnsureDirectory(fullPath);
         Document.Save(fullPath);
 
-        if (Show.IsPresent)
-        {
+        if (Open.IsPresent) {
             FileOpenService.Open(fullPath);
         }
 
-        WriteObject(PassThru.IsPresent ? Document : new FileInfo(fullPath));
+        if (PassThru.IsPresent) {
+            WriteObject(Document);
+        }
     }
 }

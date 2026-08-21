@@ -23,7 +23,7 @@ Sets the PowerPoint theme name.
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointThemeName.pptx {
     Set-OfficePowerPointThemeName -Name 'Service Brief' -AllMasters
-    Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Named theme'
+    Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Named theme'
 }
 ```
 

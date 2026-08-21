@@ -11,7 +11,7 @@ Gets picture content controls from a Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordPictureControl [-InputPath] <string> [-Alias <string[]>] [-Tag <string[]>] [<CommonParameters>]
+Get-OfficeWordPictureControl [-Path] <string> [-Alias <string[]>] [-Tag <string[]>] [<CommonParameters>]
 ```
 
 ### Document
@@ -68,13 +68,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the .docx file.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

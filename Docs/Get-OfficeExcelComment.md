@@ -16,7 +16,7 @@ Get-OfficeExcelComment [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string
 
 ### Path
 ```powershell
-Get-OfficeExcelComment [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Range <string>] [-Author <string>] [-TextContains <string>] [<CommonParameters>]
+Get-OfficeExcelComment [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Address <string>] [-Range <string>] [-Author <string>] [-TextContains <string>] [<CommonParameters>]
 ```
 
 ### Document
@@ -88,13 +88,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path to inspect.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

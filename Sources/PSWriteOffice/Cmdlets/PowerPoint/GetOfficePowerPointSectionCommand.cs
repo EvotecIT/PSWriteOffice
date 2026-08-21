@@ -10,16 +10,16 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>List all sections in a deck.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointSectionsRead.pptx
-/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
-/// Add-OfficePowerPointSection -Presentation $ppt -Name 'Appendix' -StartSlideIndex 0 | Out-Null
-/// Get-OfficePowerPointSection -Presentation $ppt | Select-Object Name, FirstSlideIndex, SlideCount</code>
+///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSectionsRead.pptx -NoSave
+/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+/// Add-OfficePowerPointSection -Presentation $ppt -Name 'Appendix' -StartSlideIndex 0
+/// Get-OfficePowerPointSection -Presentation $ppt | Select-Object Name, FirstSlideIndex, SlideCount
+/// $ppt | Close-OfficePowerPoint</code>
 ///   <para>Returns section information including section names and slide indexes.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePowerPointSection")]
 [OutputType(typeof(PowerPointSectionInfo))]
-public sealed class GetOfficePowerPointSectionCommand : PSCmdlet
-{
+public sealed class GetOfficePowerPointSectionCommand : PSCmdlet {
     /// <summary>Presentation to inspect (optional inside DSL).</summary>
     [Parameter(ValueFromPipeline = true)]
     public PowerPointPresentation? Presentation { get; set; }
@@ -33,27 +33,21 @@ public sealed class GetOfficePowerPointSectionCommand : PSCmdlet
     public SwitchParameter CaseSensitive { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var presentation = Presentation ?? PowerPointDslContext.Current?.Presentation
                 ?? throw new InvalidOperationException("Presentation was not provided. Use -Presentation or run inside New-OfficePowerPoint.");
 
             var comparison = CaseSensitive.IsPresent ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-            foreach (var section in presentation.GetSections())
-            {
+            foreach (var section in presentation.GetSections()) {
                 if (!string.IsNullOrWhiteSpace(Name) &&
-                    !string.Equals(section.Name, Name, comparison))
-                {
+                    !string.Equals(section.Name, Name, comparison)) {
                     continue;
                 }
 
                 WriteObject(section);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointGetSectionFailed", ErrorCategory.InvalidOperation, Presentation));
         }
     }

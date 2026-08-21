@@ -11,7 +11,7 @@ Converts Markdown content to HTML.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-DocumentMode] [-Style <HtmlStyle>] [-CssDelivery <CssDelivery>] [-AssetMode <AssetMode>] [-Title <string>] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <Int32>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <Boolean>] [-AllowDataUrls <Boolean>] [-AllowMailtoUrls <Boolean>] [-AllowProtocolRelativeUrls <Boolean>] [-RestrictUrlSchemes <Boolean>] [-AllowedUrlScheme <string[]>] [-Theme <OfficeVisualThemeKind>] [-RawHtmlHandling <RawHtmlHandling>] [-IncludeAnchorLinks] [-GitHubTaskListHtml] [-GitHubFootnoteHtml] [-ExternalLinksTargetBlank] [-ExternalLinksRel <string>] [-ExternalLinksReferrerPolicy <string>] [-RestrictHttpLinksToBaseOrigin] [-RestrictHttpImagesToBaseOrigin] [-BlockExternalHttpImages] [-ImagesLoadingLazy] [-ImagesDecodingAsync] [-ImagesReferrerPolicy <string>] [-AllowedHttpLinkHost <string[]>] [-AllowedHttpImageHost <string[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeMarkdownHtml [-Path] <string> [-OutputPath <string>] [-DocumentMode] [-Style <HtmlStyle>] [-CssDelivery <CssDelivery>] [-AssetMode <AssetMode>] [-Title <string>] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownDialectProfile>] [-BaseUri <string>] [-MaxInputCharacters <Int32>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-DisallowFileUrls <Boolean>] [-AllowDataUrls <Boolean>] [-AllowMailtoUrls <Boolean>] [-AllowProtocolRelativeUrls <Boolean>] [-RestrictUrlSchemes <Boolean>] [-AllowedUrlScheme <string[]>] [-Theme <OfficeVisualThemeKind>] [-RawHtmlHandling <RawHtmlHandling>] [-IncludeAnchorLinks] [-GitHubTaskListHtml] [-GitHubFootnoteHtml] [-ExternalLinksTargetBlank] [-ExternalLinksRel <string>] [-ExternalLinksReferrerPolicy <string>] [-RestrictHttpLinksToBaseOrigin] [-RestrictHttpImagesToBaseOrigin] [-BlockExternalHttpImages] [-ImagesLoadingLazy] [-ImagesDecodingAsync] [-ImagesReferrerPolicy <string>] [-AllowedHttpLinkHost <string[]>] [-AllowedHttpImageHost <string[]>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Text
@@ -397,22 +397,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the Markdown file.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -MaxInputCharacters
 Maximum Markdown input length accepted by the reader.
 
@@ -472,6 +456,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the Markdown file.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

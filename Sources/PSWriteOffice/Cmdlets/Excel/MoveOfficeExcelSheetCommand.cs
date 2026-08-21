@@ -19,16 +19,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Move, "OfficeExcelSheet", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("Set-OfficeExcelSheetOrder", "ExcelSheetOrder")]
-public sealed class MoveOfficeExcelSheetCommand : PSCmdlet
-{
+public sealed class MoveOfficeExcelSheetCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -53,11 +52,9 @@ public sealed class MoveOfficeExcelSheetCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
@@ -66,8 +63,7 @@ public sealed class MoveOfficeExcelSheetCommand : PSCmdlet
         document.ReorderWorksheet(sheet, Index);
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(sheet);
         }
     }

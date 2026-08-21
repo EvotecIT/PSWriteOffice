@@ -33,7 +33,7 @@ Describe 'PowerPoint cmdlets' {
     It 'does not create a NoSave presentation when WhatIf skips creation' {
         $path = Join-Path $TestDrive 'PowerPointNoSaveWhatIf.pptx'
 
-        New-OfficePowerPoint -FilePath $path -NoSave -WhatIf | Out-Null
+        New-OfficePowerPoint -Path $path -NoSave -WhatIf | Out-Null
 
         Test-Path -LiteralPath $path | Should -BeFalse
     }
@@ -42,7 +42,7 @@ Describe 'PowerPoint cmdlets' {
         $folder = Join-Path $TestDrive 'missing'
         $path = Join-Path $folder 'PowerPointNoSave.pptx'
 
-        $presentation = New-OfficePowerPoint -FilePath $path -NoSave
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         try {
             $presentation | Should -Not -BeNullOrEmpty
             Test-Path -LiteralPath $folder | Should -BeTrue
@@ -55,12 +55,29 @@ Describe 'PowerPoint cmdlets' {
 
     It 'closes a presentation through a PowerShell cmdlet' {
         $path = Join-Path $TestDrive 'PowerPointClose.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
 
         Close-OfficePowerPoint -Presentation $presentation -Save
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
+        try {
+            $reloaded.Slides.Count | Should -Be 1
+        } finally {
+            Close-OfficePowerPoint -Presentation $reloaded
+        }
+    }
+
+    It 'saves to a new path while closing a presentation' {
+        $sourcePath = Join-Path $TestDrive 'PowerPointCloseSource.pptx'
+        $savedAsPath = Join-Path (Join-Path $TestDrive 'close-save-as') 'PowerPointClose.Copy.pptx'
+        $presentation = New-OfficePowerPoint -Path $sourcePath -NoSave
+        Add-OfficePowerPointSlide -Presentation $presentation
+
+        Close-OfficePowerPoint -Presentation $presentation -Path $savedAsPath
+
+        Test-Path -LiteralPath $savedAsPath | Should -BeTrue
+        $reloaded = Get-OfficePowerPoint -Path $savedAsPath
         try {
             $reloaded.Slides.Count | Should -Be 1
         } finally {
@@ -71,7 +88,7 @@ Describe 'PowerPoint cmdlets' {
     It 'saves an external OfficeIMO presentation without closing it and supports save as' {
         $savedAsPath = Join-Path (Join-Path $TestDrive 'save-as-output') 'PowerPointExternal.Copy.pptx'
         $seedPath = Join-Path $TestDrive 'PowerPointTypeSeed.pptx'
-        $seed = New-OfficePowerPoint -FilePath $seedPath -NoSave
+        $seed = New-OfficePowerPoint -Path $seedPath -NoSave
         $presentationType = $seed.GetType()
         Close-OfficePowerPoint -Presentation $seed
         $create = $presentationType.GetMethods() |
@@ -94,7 +111,7 @@ Describe 'PowerPoint cmdlets' {
             }
         }
 
-        $reloaded = Get-OfficePowerPoint -FilePath $savedAsPath
+        $reloaded = Get-OfficePowerPoint -Path $savedAsPath
         try {
             $reloaded.Slides.Count | Should -Be 2
         } finally {
@@ -104,13 +121,13 @@ Describe 'PowerPoint cmdlets' {
 
     It 'does not persist edits made after save when closed without save' {
         $path = Join-Path $TestDrive 'PowerPointExplicitClose.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path -NoSave
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
         Save-OfficePowerPoint -Presentation $presentation
         Add-OfficePowerPointSlide -Presentation $presentation | Out-Null
         Close-OfficePowerPoint -Presentation $presentation
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloaded.Slides.Count | Should -Be 1
         } finally {
@@ -169,7 +186,7 @@ Describe 'PowerPoint cmdlets' {
             PptSlide { PptTitle -Title 'Encrypted source' }
         }
 
-        $presentation = Get-OfficePowerPoint -FilePath $sourcePath -Password 'secret'
+        $presentation = Get-OfficePowerPoint -Path $sourcePath -Password 'secret'
         try {
             Save-OfficePowerPoint -Presentation $presentation -Path $savedAsPath
         } finally {
@@ -178,13 +195,13 @@ Describe 'PowerPoint cmdlets' {
 
         Test-Path -LiteralPath $sourcePath | Should -BeTrue
         Test-Path -LiteralPath $savedAsPath | Should -BeTrue
-        $encryptedReload = Get-OfficePowerPoint -FilePath $sourcePath -Password 'secret'
+        $encryptedReload = Get-OfficePowerPoint -Path $sourcePath -Password 'secret'
         try {
             $encryptedReload.Slides.Count | Should -Be 1
         } finally {
             Close-OfficePowerPoint -Presentation $encryptedReload
         }
-        $reloaded = Get-OfficePowerPoint -FilePath $savedAsPath
+        $reloaded = Get-OfficePowerPoint -Path $savedAsPath
         try {
             $reloaded.Slides.Count | Should -Be 1
         } finally {
@@ -208,7 +225,7 @@ Describe 'PowerPoint cmdlets' {
             Close-OfficePowerPoint -Presentation $presentation
         }
 
-        $reloaded = Get-OfficePowerPoint -FilePath $savedAsPath -Password 'secret'
+        $reloaded = Get-OfficePowerPoint -Path $savedAsPath -Password 'secret'
         try {
             $reloaded.Slides.Count | Should -Be 1
         } finally {
@@ -247,7 +264,7 @@ Describe 'PowerPoint cmdlets' {
             Close-OfficePowerPoint -Presentation $presentation -ErrorAction SilentlyContinue
         }
 
-        $reloaded = Get-OfficePowerPoint -FilePath $sourcePath -Password 'secret'
+        $reloaded = Get-OfficePowerPoint -Path $sourcePath -Password 'secret'
         try {
             $reloaded.Slides.Count | Should -Be 1
         } finally {
@@ -275,7 +292,7 @@ Describe 'PowerPoint cmdlets' {
             Close-OfficePowerPoint -Presentation $presentation -ErrorAction SilentlyContinue
         }
 
-        $reloaded = Get-OfficePowerPoint -FilePath $encryptedTarget -Password 'secret'
+        $reloaded = Get-OfficePowerPoint -Path $encryptedTarget -Password 'secret'
         try {
             $reloaded.Slides.Count | Should -Be 1
         } finally {
@@ -310,10 +327,20 @@ Describe 'PowerPoint cmdlets' {
             $_.GetParameters()[1].ParameterType -eq [bool] -and
             $_.GetParameters()[2].ParameterType -eq [string]
         }
+        $close = $serviceType.GetMethods() | Where-Object {
+            $_.Name -eq 'ClosePresentation' -and
+            $_.GetParameters().Count -eq 4
+        }
+        $closeWithPath = $serviceType.GetMethods() | Where-Object {
+            $_.Name -eq 'ClosePresentation' -and
+            $_.GetParameters().Count -eq 5
+        }
 
         $load | Should -HaveCount 1
         $save | Should -HaveCount 1
         $save.ReturnType | Should -Be ([void])
+        $close | Should -HaveCount 1
+        $closeWithPath | Should -HaveCount 1
     }
 
     It 'round-trips encrypted presentations through lifecycle cmdlets' {
@@ -334,7 +361,7 @@ Describe 'PowerPoint cmdlets' {
 
         { Get-ZipEntriesLocal -Path $path } | Should -Throw
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path -Password 'secret'
+        $reloaded = Get-OfficePowerPoint -Path $path -Password 'secret'
         try {
             $reloaded.Slides.Count | Should -Be 1
         } finally {
@@ -344,7 +371,7 @@ Describe 'PowerPoint cmdlets' {
 
     It 'creates a presentation with shapes, tables, media, and notes' {
         $path = Join-Path $TestDrive 'PowerPointContent.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         $imagePath = New-TestOfficeImageFile -Directory $TestDrive
 
         $layouts = Get-OfficePowerPointLayout -Presentation $presentation
@@ -353,28 +380,28 @@ Describe 'PowerPoint cmdlets' {
         if ($layoutType) {
             $layoutMaster = $layoutType.MasterIndex
             $layoutIndex = $layoutType.LayoutIndex
-            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.LayoutType -Master $layoutType.MasterIndex
+            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.LayoutType -Master $layoutType.MasterIndex -PassThru
         } elseif ($layouts[0].Name) {
             $layoutMaster = $layouts[0].MasterIndex
             $layoutIndex = $layouts[0].LayoutIndex
-            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -LayoutName $layouts[0].Name -Master $layouts[0].MasterIndex
+            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -LayoutName $layouts[0].Name -Master $layouts[0].MasterIndex -PassThru
         } else {
             $layoutMaster = $layouts[0].MasterIndex
             $layoutIndex = $layouts[0].LayoutIndex
-            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout $layouts[0].LayoutIndex -Master $layouts[0].MasterIndex
+            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout $layouts[0].LayoutIndex -Master $layouts[0].MasterIndex -PassThru
         }
 
-        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Status Update'
-        $shape = Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 40 -Y 40 -Width 200 -Height 80 -FillColor '#DDEEFF' -OutlineColor '#1F4E79' -OutlineWidth 1
+        $shape = Add-OfficePowerPointShape -Slide $slide -ShapeType Rectangle -X 40 -Y 40 -Width 200 -Height 80 -FillColor '#DDEEFF' -OutlineColor '#1F4E79' -OutlineWidth 1 -PassThru
 
         $rows = @(
             [PSCustomObject]@{ Item = 'Alpha'; Qty = 10 }
             [PSCustomObject]@{ Item = 'Beta'; Qty = 20 }
         )
-        $table = Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 40 -Y 140 -Width 360 -Height 200
-        $image = Add-OfficePowerPointImage -Slide $slide -Path $imagePath -X 420 -Y 40 -Width 120 -Height 90
-        $bullets = Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 420 -Y 150 -Width 250 -Height 200
+        $table = Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 40 -Y 140 -Width 360 -Height 200 -PassThru
+        $image = Add-OfficePowerPointImage -Slide $slide -Path $imagePath -X 420 -Y 40 -Width 120 -Height 90 -PassThru
+        $bullets = Add-OfficePowerPointBullets -Slide $slide -Bullets 'Wins','Risks','Next Steps' -X 420 -Y 150 -Width 250 -Height 200 -PassThru
         Set-OfficePowerPointNotes -Slide $slide -Text 'Keep this under five minutes.'
 
         $slide.Shapes.Count | Should -BeGreaterThan 0
@@ -420,7 +447,7 @@ Describe 'PowerPoint cmdlets' {
         $presentation.Dispose()
         $presentation = $null
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloaded.Slides.Count | Should -Be 2
 
@@ -454,9 +481,9 @@ Describe 'PowerPoint cmdlets' {
 
     It 'supports transposed PowerPoint tables' {
         $path = Join-Path $TestDrive 'PowerPointTransposedTable.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         try {
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
             $rows = @(
                 [PSCustomObject]@{ Region = 'Europe'; Revenue = 21704714 }
                 [PSCustomObject]@{ Region = 'Asia'; Revenue = 8774099 }
@@ -474,9 +501,9 @@ Describe 'PowerPoint cmdlets' {
 
     It 'preserves the legacy PowerPoint table headers alias' {
         $path = Join-Path $TestDrive 'PowerPointHeadersAlias.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         try {
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
             $rows = @(
                 [PSCustomObject]@{ Item = 'Alpha'; Qty = 10 }
                 [PSCustomObject]@{ Item = 'Beta'; Qty = 20 }
@@ -494,9 +521,9 @@ Describe 'PowerPoint cmdlets' {
 
     It 'finds and modifies existing PowerPoint text boxes and tables' {
         $path = Join-Path $TestDrive 'PowerPointExistingShapeModify.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         try {
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
             Add-OfficePowerPointTextBox -Slide $slide -Text 'Draft status' -X 80 -Y 80 -Width 300 -Height 50 | Out-Null
             $rows = @(
                 [PSCustomObject]@{ Metric = 'Risk'; State = 'Open' }
@@ -526,7 +553,7 @@ Describe 'PowerPoint cmdlets' {
             }
         }
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $readyShape = Find-OfficePowerPointShape -Presentation $reloaded -Text 'Ready status' -Kind TextBox | Select-Object -First 1
             $readyShape | Should -Not -BeNullOrEmpty
@@ -547,13 +574,13 @@ Describe 'PowerPoint cmdlets' {
         }
 
         $path = Join-Path $TestDrive 'PowerPointRichTextRuns.pptx'
-        $presentation = PptNew -FilePath $path
+        $presentation = PptNew -Path $path -NoSave
         try {
-            $slide = PptSlide -Presentation $presentation -Layout 1
+            $slide = PptSlide -Presentation $presentation -Layout 1 -PassThru
             $textBox = PptTextBox -Slide $slide -Run @(
                 PptTextRun 'Status: '
                 PptTextRun 'Ready' -Color SeaGreen -Bold
-            ) -X 80 -Y 80 -Width 300 -Height 50
+            ) -X 80 -Y 80 -Width 300 -Height 50 -PassThru
             $textBox.Text | Should -Be 'Status: Ready'
             $textBox = $textBox | Set-OfficePowerPointShapeText -Run @(
                 PptTextRun 'Linked' -Color Crimson -BackgroundColor Yellow -FontName 'Arial' -FontSize 18 -LinkUri 'https://example.org/ppt'
@@ -588,7 +615,7 @@ Describe 'PowerPoint cmdlets' {
                 , @('Owner', 'Platform')
                 , @(@{ Text = 'Filled'; FillColor = 'Yellow'; Bold = $true }, 'Styled')
                 , @(@{ Run = 'Queued' }, 'String run')
-            ) -X 80 -Y 150 -Width 420 -Height 140
+            ) -X 80 -Y 150 -Width 420 -Height 140 -PassThru
             $table.GetCell(0, 0).Text | Should -Be 'Build Ready'
             $table.GetCell(0, 0).Runs[0].Bold | Should -BeTrue
             $table.GetCell(0, 0).Runs[0].Color | Should -Be 'FF0000'
@@ -617,7 +644,7 @@ Describe 'PowerPoint cmdlets' {
 
             $threeColumnTable = PptTable -Slide $slide -InputObject @(
                 , @('Metric', 'Scope', 'Value')
-            ) -X 80 -Y 320 -Width 420 -Height 120
+            ) -X 80 -Y 320 -Width 420 -Height 120 -PassThru
             $valueAfterSpan = $threeColumnTable | Add-OfficePowerPointTableRow -Values @(
                 @{ Text = 'Total'; ColumnSpan = 2; FillColor = 'AliceBlue' },
                 '42'
@@ -665,7 +692,7 @@ Describe 'PowerPoint cmdlets' {
             $baselineTextBox = PptTextBox -Slide $slide -Run @(
                 PptTextRun 'x'
                 PptTextRun '2' -Kind Superscript
-            ) -X 360 -Y 80 -Width 120 -Height 50
+            ) -X 360 -Y 80 -Width 120 -Height 50 -PassThru
             $baselineTextBox.Text | Should -Be 'x2'
 
             $baselineTable = PptTable -Slide $slide -InputObject @(
@@ -678,7 +705,7 @@ Describe 'PowerPoint cmdlets' {
                         )
                     }
                 )
-            ) -X 80 -Y 450 -Width 240 -Height 80
+            ) -X 80 -Y 450 -Width 240 -Height 80 -PassThru
             $baselineTable.GetCell(0, 0).Text | Should -Be 'H2O'
 
             Save-OfficePowerPoint -Presentation $presentation
@@ -697,16 +724,16 @@ Describe 'PowerPoint cmdlets' {
 
     It 'keeps ordinary style-named columns in PowerPoint object tables' {
         $path = Join-Path $TestDrive 'PowerPointOrdinaryStyleColumns.pptx'
-        $presentation = PptNew -FilePath $path
+        $presentation = PptNew -Path $path -NoSave
         try {
-            $slide = PptSlide -Presentation $presentation -Layout 1
+            $slide = PptSlide -Presentation $presentation -Layout 1 -PassThru
             $table = PptTable -Slide $slide -InputObject @(
                 [pscustomobject]@{
                     Text     = 'Apple'
                     Color    = 'Red'
                     FontSize = 'Large'
                 }
-            ) -X 80 -Y 150 -Width 300 -Height 100
+            ) -X 80 -Y 150 -Width 300 -Height 100 -PassThru
 
             $table.GetCell(0, 0).Text | Should -Be 'Text'
             $table.GetCell(0, 1).Text | Should -Be 'Color'
@@ -723,9 +750,9 @@ Describe 'PowerPoint cmdlets' {
 
     It 'validates structured PowerPoint table runs before creating the table' {
         $path = Join-Path $TestDrive 'PowerPointStructuredTableRunValidation.pptx'
-        $presentation = PptNew -FilePath $path
+        $presentation = PptNew -Path $path -NoSave
         try {
-            $slide = PptSlide -Presentation $presentation -Layout 1
+            $slide = PptSlide -Presentation $presentation -Layout 1 -PassThru
             @($slide.Tables).Count | Should -Be 0
 
             {
@@ -746,9 +773,9 @@ Describe 'PowerPoint cmdlets' {
 
     It 'validates PowerPoint text box runs before creating the shape' {
         $path = Join-Path $TestDrive 'PowerPointTextBoxRunValidation.pptx'
-        $presentation = PptNew -FilePath $path
+        $presentation = PptNew -Path $path -NoSave
         try {
-            $slide = PptSlide -Presentation $presentation -Layout 1
+            $slide = PptSlide -Presentation $presentation -Layout 1 -PassThru
             @($slide.TextBoxes).Count | Should -Be 0
 
             {
@@ -767,9 +794,9 @@ Describe 'PowerPoint cmdlets' {
 
     It 'preserves explicit headers on structured PowerPoint tables' {
         $path = Join-Path $TestDrive 'PowerPointStructuredHeaders.pptx'
-        $presentation = PptNew -FilePath $path
+        $presentation = PptNew -Path $path -NoSave
         try {
-            $slide = PptSlide -Presentation $presentation -Layout 1
+            $slide = PptSlide -Presentation $presentation -Layout 1 -PassThru
             $table = PptTable -Slide $slide -Headers Qty, Item -InputObject @(
                 [pscustomobject]@{
                     Item = 'Alpha'
@@ -779,7 +806,7 @@ Describe 'PowerPoint cmdlets' {
                     @{ Run = @(PptTextRun 'Total' -Bold) },
                     'Two'
                 )
-            ) -X 80 -Y 150 -Width 420 -Height 140
+            ) -X 80 -Y 150 -Width 420 -Height 140 -PassThru
 
             $table.GetCell(0, 0).Text | Should -Be 'Qty'
             $table.GetCell(0, 1).Text | Should -Be 'Item'
@@ -796,14 +823,14 @@ Describe 'PowerPoint cmdlets' {
 
     It 'keeps ordinary Run columns in PowerPoint object tables' {
         $path = Join-Path $TestDrive 'PowerPointOrdinaryRunColumn.pptx'
-        $presentation = PptNew -FilePath $path
+        $presentation = PptNew -Path $path -NoSave
         try {
-            $slide = PptSlide -Presentation $presentation -Layout 1
+            $slide = PptSlide -Presentation $presentation -Layout 1 -PassThru
             $table = PptTable -Slide $slide -InputObject @(
                 [pscustomobject]@{
                     Run = @('Nightly', 'Daily')
                 }
-            ) -X 80 -Y 150 -Width 300 -Height 100
+            ) -X 80 -Y 150 -Width 300 -Height 100 -PassThru
 
             $table.GetCell(0, 0).Text | Should -Be 'Run'
             $table.GetCell(1, 0).Text | Should -Match 'Nightly'
@@ -817,15 +844,15 @@ Describe 'PowerPoint cmdlets' {
 
     It 'finds existing PowerPoint shapes by metadata without a text term' {
         $path = Join-Path $TestDrive 'PowerPointMetadataShapeFind.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         try {
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
-            $textBox = Add-OfficePowerPointTextBox -Slide $slide -Text 'Metadata status' -X 80 -Y 80 -Width 300 -Height 50
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
+            $textBox = Add-OfficePowerPointTextBox -Slide $slide -Text 'Metadata status' -X 80 -Y 80 -Width 300 -Height 50 -PassThru
             $textBox.Name = 'Status.Primary'
             $rows = @(
                 [PSCustomObject]@{ Metric = 'Risk'; State = 'Open' }
             )
-            $table = Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 80 -Y 160 -Width 420 -Height 120
+            $table = Add-OfficePowerPointTable -Slide $slide -InputObject $rows -X 80 -Y 160 -Width 420 -Height 120 -PassThru
             $table.Name = 'Status.Table'
 
             $byName = Find-OfficePowerPointShape -Presentation $presentation -Name 'Status.*' -Kind TextBox
@@ -844,12 +871,12 @@ Describe 'PowerPoint cmdlets' {
 
     It 'arranges PowerPoint shapes through OfficeIMO layout helpers' {
         $path = Join-Path $TestDrive 'PowerPointShapeLayout.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         try {
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
-            $shape1 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.One' -ShapeType Rectangle -X 40 -Y 80 -Width 80 -Height 40
-            $shape2 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.Two' -ShapeType Rectangle -X 180 -Y 140 -Width 80 -Height 40
-            $shape3 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.Three' -ShapeType Rectangle -X 320 -Y 200 -Width 80 -Height 40
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
+            $shape1 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.One' -ShapeType Rectangle -X 40 -Y 80 -Width 80 -Height 40 -PassThru
+            $shape2 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.Two' -ShapeType Rectangle -X 180 -Y 140 -Width 80 -Height 40 -PassThru
+            $shape3 = Add-OfficePowerPointShape -Slide $slide -Name 'Kpi.Three' -ShapeType Rectangle -X 320 -Y 200 -Width 80 -Height 40 -PassThru
 
             @($shape1, $shape2, $shape3) | Set-OfficePowerPointShapeLayout -Slide $slide -Align Top
             $shape1.TopPoints | Should -Be $shape2.TopPoints
@@ -869,9 +896,9 @@ Describe 'PowerPoint cmdlets' {
 
     It 'reads notes without creating empty notes parts' {
         $path = Join-Path $TestDrive 'PowerPointNotesRead.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
 
-        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $slide -Title 'No notes yet'
 
         $notes = Get-OfficePowerPointNotes -Slide $slide -IncludeEmpty
@@ -902,7 +929,7 @@ Describe 'PowerPoint cmdlets' {
 
     It 'persists layout placeholder edits across save and reopen' {
         $path = Join-Path $TestDrive 'PowerPointLayoutEdits.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         $layoutPlaceholder = $null
 
         $layouts = Get-OfficePowerPointLayout -Presentation $presentation
@@ -912,15 +939,15 @@ Describe 'PowerPoint cmdlets' {
         if ($layoutType) {
             $layoutMaster = $layoutType.MasterIndex
             $layoutIndex = $layoutType.LayoutIndex
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.LayoutType -Master $layoutType.MasterIndex
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutType $layoutType.LayoutType -Master $layoutType.MasterIndex -PassThru
         } elseif ($layouts[0].Name) {
             $layoutMaster = $layouts[0].MasterIndex
             $layoutIndex = $layouts[0].LayoutIndex
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutName $layouts[0].Name -Master $layouts[0].MasterIndex
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -LayoutName $layouts[0].Name -Master $layouts[0].MasterIndex -PassThru
         } else {
             $layoutMaster = $layouts[0].MasterIndex
             $layoutIndex = $layouts[0].LayoutIndex
-            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout $layouts[0].LayoutIndex -Master $layouts[0].MasterIndex
+            $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout $layouts[0].LayoutIndex -Master $layouts[0].MasterIndex -PassThru
         }
 
         $layoutPlaceholders = Get-OfficePowerPointLayoutPlaceholder -Slide $slide
@@ -949,7 +976,7 @@ Describe 'PowerPoint cmdlets' {
         Save-OfficePowerPoint -Presentation $presentation
         $presentation.Dispose()
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloadedSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
             $reloadedLayoutPlaceholders = Get-OfficePowerPointLayoutPlaceholder -Slide $reloadedSlide
@@ -972,19 +999,19 @@ Describe 'PowerPoint cmdlets' {
 
     It 'removes slides and preserves the remaining title' {
         $path = Join-Path $TestDrive 'PowerPointRemoval.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
 
-        $firstSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        $firstSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $firstSlide -Title 'Remove me'
 
-        $secondSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        $secondSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $secondSlide -Title 'Keep me'
         Set-OfficePowerPointPlaceholderText -Slide $secondSlide -PlaceholderType Title -Text 'Keep me v2'
 
         Save-OfficePowerPoint -Presentation $presentation
         $presentation.Dispose()
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             Remove-OfficePowerPointSlide -Presentation $reloaded -Index 0 -Confirm:$false
             Save-OfficePowerPoint -Presentation $reloaded
@@ -994,7 +1021,7 @@ Describe 'PowerPoint cmdlets' {
             }
         }
 
-        $afterRemoval = Get-OfficePowerPoint -FilePath $path
+        $afterRemoval = Get-OfficePowerPoint -Path $path
         try {
             $afterRemoval.Slides.Count | Should -Be 1
             $remainingSlide = Get-OfficePowerPointSlide -Presentation $afterRemoval -Index 0
@@ -1012,23 +1039,23 @@ Describe 'PowerPoint cmdlets' {
 
     It 'copies a slide and preserves its content' {
         $path = Join-Path $TestDrive 'PowerPointCopy.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
 
-        $slide1 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        $slide1 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $slide1 -Title 'Quarterly Overview'
         Add-OfficePowerPointTextBox -Slide $slide1 -Text 'Revenue and margin summary' -X 80 -Y 150 -Width 320 -Height 60 | Out-Null
         Set-OfficePowerPointNotes -Slide $slide1 -Text 'Reuse this for the board deck.'
 
-        $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $slide2 -Title 'Closing Slide'
 
-        $copiedSlide = Copy-OfficePowerPointSlide -Presentation $presentation -Index 0 -InsertAt 1
+        $copiedSlide = Copy-OfficePowerPointSlide -Presentation $presentation -Index 0 -InsertAt 1 -PassThru
         $copiedSlide | Should -Not -BeNullOrEmpty
 
         Save-OfficePowerPoint -Presentation $presentation
         $presentation.Dispose()
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloaded.Slides.Count | Should -Be 3
 
@@ -1058,16 +1085,16 @@ Describe 'PowerPoint cmdlets' {
 
     It 'sets slide transitions and custom slide sizes' {
         $path = Join-Path $TestDrive 'PowerPointTransitionsAndSize.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
 
-        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Transition Demo' | Out-Null
 
-        $updatedSlide = $slide | Set-OfficePowerPointSlideTransition -Transition Fade
+        $updatedSlide = $slide | Set-OfficePowerPointSlideTransition -Transition Fade -PassThru
         $fadeTransition = Get-TestPSWriteOfficeEnumValue -AssemblyName 'OfficeIMO.PowerPoint' -TypeName 'OfficeIMO.PowerPoint.PowerPointSlideTransition' -Name 'Fade' -CommandName 'New-OfficePowerPoint'
         $updatedSlide.Transition | Should -Be $fadeTransition
 
-        $slideSize = Set-OfficePowerPointSlideSize -Presentation $presentation -WidthCm 25.4 -HeightCm 14.0
+        $slideSize = Set-OfficePowerPointSlideSize -Presentation $presentation -WidthCm 25.4 -HeightCm 14.0 -PassThru
         [math]::Round($slideSize.WidthCm, 1) | Should -Be 25.4
         [math]::Round($slideSize.HeightCm, 1) | Should -Be 14.0
 
@@ -1079,7 +1106,7 @@ Describe 'PowerPoint cmdlets' {
         $transitionNode | Should -Not -BeNullOrEmpty
         $transitionNode.SelectSingleNode("*[local-name()='fade']") | Should -Not -BeNullOrEmpty
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloadedSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
             $reloadedSlide.Transition | Should -Be $fadeTransition
@@ -1095,10 +1122,10 @@ Describe 'PowerPoint cmdlets' {
 
     It 'applies preset slide sizes including portrait orientation' {
         $path = Join-Path $TestDrive 'PowerPointPresetSize.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
         Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 | Out-Null
 
-        $presetSize = Set-OfficePowerPointSlideSize -Presentation $presentation -Preset Screen4x3 -Portrait
+        $presetSize = Set-OfficePowerPointSlideSize -Presentation $presentation -Preset Screen4x3 -Portrait -PassThru
         $presetSize.IsPortrait | Should -BeTrue
         [math]::Round($presetSize.WidthInches, 1) | Should -Be 7.5
         [math]::Round($presetSize.HeightInches, 1) | Should -Be 10.0
@@ -1106,7 +1133,7 @@ Describe 'PowerPoint cmdlets' {
         Save-OfficePowerPoint -Presentation $presentation
         $presentation.Dispose()
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloaded.SlideSize.IsPortrait | Should -BeTrue
             [math]::Round($reloaded.SlideSize.WidthInches, 1) | Should -Be 7.5
@@ -1155,7 +1182,7 @@ Describe 'PowerPoint cmdlets' {
 
         Test-Path $path | Should -BeTrue
 
-        $presentation = Get-OfficePowerPoint -FilePath $path
+        $presentation = Get-OfficePowerPoint -Path $path
         $slide = Get-OfficePowerPointSlide -Presentation $presentation -Index 0
         $summary = Get-OfficePowerPointSlideSummary -Slide $slide
         $summary.LayoutPlaceholderCount | Should -BeGreaterThan 0
@@ -1177,26 +1204,26 @@ Describe 'PowerPoint cmdlets' {
         $sourcePath = Join-Path $TestDrive 'PowerPointSourceDeck.pptx'
         $targetPath = Join-Path $TestDrive 'PowerPointTargetDeck.pptx'
 
-        $source = New-OfficePowerPoint -FilePath $sourcePath
-        $sourceSlide = Add-OfficePowerPointSlide -Presentation $source -Layout 1
+        $source = New-OfficePowerPoint -Path $sourcePath -NoSave
+        $sourceSlide = Add-OfficePowerPointSlide -Presentation $source -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $sourceSlide -Title 'FY24 Imported'
         Add-OfficePowerPointTextBox -Slide $sourceSlide -Text 'FY24 details from source' -X 80 -Y 150 -Width 320 -Height 60 | Out-Null
         Set-OfficePowerPointNotes -Slide $sourceSlide -Text 'FY24 source notes'
         Save-OfficePowerPoint -Presentation $source
 
-        $target = New-OfficePowerPoint -FilePath $targetPath
-        $introSlide = Add-OfficePowerPointSlide -Presentation $target -Layout 1
+        $target = New-OfficePowerPoint -Path $targetPath -NoSave
+        $introSlide = Add-OfficePowerPointSlide -Presentation $target -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $introSlide -Title 'FY24 Overview'
         Add-OfficePowerPointTextBox -Slide $introSlide -Text 'FY24 summary for leadership' -X 80 -Y 150 -Width 320 -Height 60 | Out-Null
         Set-OfficePowerPointNotes -Slide $introSlide -Text 'FY24 note for intro'
 
-        $resultsSlide = Add-OfficePowerPointSlide -Presentation $target -Layout 1
+        $resultsSlide = Add-OfficePowerPointSlide -Presentation $target -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $resultsSlide -Title 'FY24 Results'
         Add-OfficePowerPointTextBox -Slide $resultsSlide -Text 'FY24 results body' -X 80 -Y 150 -Width 320 -Height 60 | Out-Null
 
-        $introSection = Add-OfficePowerPointSection -Presentation $target -Name 'Intro' -StartSlideIndex 0
+        $introSection = Add-OfficePowerPointSection -Presentation $target -Name 'Intro' -StartSlideIndex 0 -PassThru
         $introSection.Name | Should -Be 'Intro'
-        $resultsSection = Add-OfficePowerPointSection -Presentation $target -Name 'Results' -StartSlideIndex 1
+        $resultsSection = Add-OfficePowerPointSection -Presentation $target -Name 'Results' -StartSlideIndex 1 -PassThru
         $resultsSection.Name | Should -Be 'Results'
 
         $renamedSection = Rename-OfficePowerPointSection -Presentation $target -Name 'Results' -NewName 'Deep Dive' -PassThru
@@ -1207,7 +1234,7 @@ Describe 'PowerPoint cmdlets' {
         ($sections | Where-Object Name -eq 'Intro').SlideIndices | Should -Contain 0
         ($sections | Where-Object Name -eq 'Deep Dive').SlideIndices | Should -Contain 1
 
-        $replacements = Update-OfficePowerPointText -Presentation $target -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
+        $replacements = Update-OfficePowerPointText -Presentation $target -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes -PassThru
         $replacements | Should -BeGreaterThan 0
 
         $importedSlide = Import-OfficePowerPointSlide -Presentation $target -SourcePath $sourcePath -SourceIndex 0 -InsertAt 1
@@ -1215,7 +1242,7 @@ Describe 'PowerPoint cmdlets' {
 
         Save-OfficePowerPoint -Presentation $target
 
-        $reloaded = Get-OfficePowerPoint -FilePath $targetPath
+        $reloaded = Get-OfficePowerPoint -Path $targetPath
         try {
             $reloaded.Slides.Count | Should -Be 3
 
@@ -1241,7 +1268,7 @@ Describe 'PowerPoint cmdlets' {
             ($sectionInfo | Where-Object Name -eq 'Intro').SlideIndices | Should -Contain 1
             ($sectionInfo | Where-Object Name -eq 'Deep Dive').SlideIndices | Should -Contain 2
 
-            $aliasReplacements = Replace-OfficePowerPointText -Presentation $reloaded -OldValue 'FY24' -NewValue 'FY26'
+            $aliasReplacements = Replace-OfficePowerPointText -Presentation $reloaded -OldValue 'FY24' -NewValue 'FY26' -PassThru
             $aliasReplacements | Should -BeGreaterThan 0
         } finally {
             if ($reloaded) {
@@ -1252,9 +1279,9 @@ Describe 'PowerPoint cmdlets' {
 
     It 'supports theme inspection, theme updates, and slide layout switching' {
         $path = Join-Path $TestDrive 'PowerPointThemeAndLayout.pptx'
-        $presentation = New-OfficePowerPoint -FilePath $path
+        $presentation = New-OfficePowerPoint -Path $path -NoSave
 
-        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+        $slide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
         Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Theme Demo' | Out-Null
 
         $layouts = Get-OfficePowerPointLayout -Presentation $presentation
@@ -1295,7 +1322,7 @@ Describe 'PowerPoint cmdlets' {
         Save-OfficePowerPoint -Presentation $presentation
         $presentation.Dispose()
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloadedTheme = Get-OfficePowerPointTheme -Presentation $reloaded
             $reloadedTheme.ThemeName | Should -Be 'Contoso Theme'
@@ -1319,13 +1346,13 @@ Describe 'PowerPoint cmdlets' {
         $presentation = $null
 
         try {
-            $presentation = New-OfficePowerPoint -FilePath $path
+            $presentation = New-OfficePowerPoint -Path $path -NoSave
 
             Set-OfficePowerPointSlideSize -Presentation $presentation -WidthCm 30 -HeightCm 20 | Out-Null
 
-            $colorSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $colorSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
             Set-OfficePowerPointSlideTitle -Slide $colorSlide -Title 'Layout Demo' | Out-Null
-            $updatedSlide = Set-OfficePowerPointBackground -Slide $colorSlide -Color '#F4F7FB'
+            $updatedSlide = Set-OfficePowerPointBackground -Slide $colorSlide -Color '#F4F7FB' -PassThru
             $updatedSlide | Should -Be $colorSlide
             $colorSlide.BackgroundColor | Should -Be 'f4f7fb'
 
@@ -1348,7 +1375,7 @@ Describe 'PowerPoint cmdlets' {
             Add-OfficePowerPointTextBox -Slide $colorSlide -Text 'Left column' -X $columns[0].LeftPoints -Y $columns[0].TopPoints -Width $columns[0].WidthPoints -Height 40 | Out-Null
             Add-OfficePowerPointTextBox -Slide $colorSlide -Text 'Right column' -X $columns[1].LeftPoints -Y $columns[1].TopPoints -Width $columns[1].WidthPoints -Height 40 | Out-Null
 
-            $imageSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $imageSlide = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
             Set-OfficePowerPointSlideTitle -Slide $imageSlide -Title 'Image Background' | Out-Null
             Set-OfficePowerPointBackground -Slide $imageSlide -ImagePath $imagePath | Out-Null
             $imageSlide.BackgroundColor | Should -BeNullOrEmpty
@@ -1370,7 +1397,7 @@ Describe 'PowerPoint cmdlets' {
         $entries = @(Get-ZipEntriesLocal -Path $path)
         ($entries | Where-Object { $_ -like 'ppt/media/*' }).Count | Should -BeGreaterThan 0
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloadedColorSlide = Get-OfficePowerPointSlide -Presentation $reloaded -Index 0
             $reloadedColorSlide.BackgroundColor | Should -Be 'f4f7fb'
@@ -1399,7 +1426,7 @@ Describe 'PowerPoint cmdlets' {
             )
         }
 
-        $preview = @(PptDesignerDeck -Plan $plan -AccentColor '#008C95' -Seed 'designer-test' -Purpose 'technical service brief' -Preview)
+        $preview = @(PptDesignerDeck -Plan $plan -AccentColor '#008C95' -Seed 'designer-test' -Purpose 'technical service brief' -Preview -PassThru)
         $preview.Count | Should -BeGreaterThan 0
 
         New-OfficePowerPoint -Path $path {
@@ -1409,7 +1436,7 @@ Describe 'PowerPoint cmdlets' {
         $entries = @(Get-ZipEntriesLocal -Path $path)
         ($entries | Where-Object { $_ -match '^ppt/slides/slide\d+\.xml$' }).Count | Should -BeGreaterThan 2
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloaded.Slides.Count | Should -BeGreaterThan 2
             $summary = @(Get-OfficePowerPointSlideSummary -Presentation $reloaded)
@@ -1452,23 +1479,23 @@ Describe 'PowerPoint cmdlets' {
         )
 
         try {
-            $presentation = New-OfficePowerPoint -FilePath $path
+            $presentation = New-OfficePowerPoint -Path $path -NoSave
 
-            $slide1 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $slide1 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
             Set-OfficePowerPointSlideTitle -Slide $slide1 -Title 'Column Chart' | Out-Null
-            $columnChart = Add-OfficePowerPointChart -Slide $slide1 -Data $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Title 'Sales vs Profit' -X 40 -Y 120 -Width 360 -Height 220
+            $columnChart = Add-OfficePowerPointChart -Slide $slide1 -Data $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Title 'Sales vs Profit' -X 40 -Y 120 -Width 360 -Height 220 -PassThru
             $columnChart | Should -Not -BeNullOrEmpty
             @($slide1.Charts).Count | Should -Be 1
 
-            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $slide2 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
             Set-OfficePowerPointSlideTitle -Slide $slide2 -Title 'Pie Chart' | Out-Null
-            $pieChart = Add-OfficePowerPointChart -Slide $slide2 -Type Pie -InputObject $rows -CategoryProperty Month -SeriesProperty Sales -Title 'Sales Mix' -X 40 -Y 120 -Width 320 -Height 220
+            $pieChart = Add-OfficePowerPointChart -Slide $slide2 -Type Pie -InputObject $rows -CategoryProperty Month -SeriesProperty Sales -Title 'Sales Mix' -X 40 -Y 120 -Width 320 -Height 220 -PassThru
             $pieChart | Should -Not -BeNullOrEmpty
             @($slide2.Charts).Count | Should -Be 1
 
-            $slide3 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1
+            $slide3 = Add-OfficePowerPointSlide -Presentation $presentation -Layout 1 -PassThru
             Set-OfficePowerPointSlideTitle -Slide $slide3 -Title 'Scatter Chart' | Out-Null
-            $scatterChart = Add-OfficePowerPointChart -Slide $slide3 -Type Scatter -Data $rows -XProperty MonthNumber -YProperty Sales, Profit -Title 'Trend Scatter' -X 40 -Y 120 -Width 360 -Height 220
+            $scatterChart = Add-OfficePowerPointChart -Slide $slide3 -Type Scatter -Data $rows -XProperty MonthNumber -YProperty Sales, Profit -Title 'Trend Scatter' -X 40 -Y 120 -Width 360 -Height 220 -PassThru
             $scatterChart | Should -Not -BeNullOrEmpty
             @($slide3.Charts).Count | Should -Be 1
 
@@ -1498,7 +1525,7 @@ Describe 'PowerPoint cmdlets' {
         $chart3Xml.OuterXml | Should -Match '<c:scatterChart'
         $chart3Xml.OuterXml | Should -Match 'Trend Scatter'
 
-        $reloaded = Get-OfficePowerPoint -FilePath $path
+        $reloaded = Get-OfficePowerPoint -Path $path
         try {
             $reloaded.Slides.Count | Should -Be 3
             (Get-OfficePowerPointShape -Presentation $reloaded | Where-Object Kind -eq 'Chart') | Should -HaveCount 3

@@ -11,7 +11,7 @@ Excel often sits in the middle of a pipeline: CSV or application data arrives, a
 `Import-OfficeExcelDelimitedText` adds normalized CSV or other delimited data to an existing workbook. Specify the delimiter and culture rather than relying on machine defaults.
 
 ```powershell
-Import-OfficeExcelDelimitedText -InputPath '.\Report.xlsx' `
+Import-OfficeExcelDelimitedText -Path '.\Report.xlsx' `
     -SourcePath '.\Sales.csv' -Delimiter ';' `
     -CultureName 'en-US' -SheetName Sales
 ```

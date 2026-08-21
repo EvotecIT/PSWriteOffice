@@ -19,16 +19,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelDataValidationMessage", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Low, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelDataValidationMessage")]
 [OutputType(typeof(PSObject))]
-public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -93,19 +92,16 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (!HasMessageOption())
-        {
+    protected override void ProcessRecord() {
+        if (!HasMessageOption()) {
             throw new PSArgumentException("Specify at least one prompt, error, or display option.");
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
         string targetRange = ExcelTargetRangeResolver.Resolve(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent);
         var target = $"{sheet.Name}!{targetRange}";
-        if (!ShouldProcess(target, "Set Excel data validation messages"))
-        {
+        if (!ShouldProcess(target, "Set Excel data validation messages")) {
             return;
         }
 
@@ -119,8 +115,7 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
         bool? boundShowErrorMessage = ResolveBoundDisplayFlag(nameof(ShowErrorMessage), ShowErrorMessage);
         bool showInputMessage = boundShowInputMessage ?? HasMessageText(promptTitle, prompt);
         bool showErrorMessage = boundShowErrorMessage ?? HasMessageText(errorTitle, errorMessage);
-        SetDataValidationMessages(sheet, targetRange, new ExcelDataValidationMessageOptions
-        {
+        SetDataValidationMessages(sheet, targetRange, new ExcelDataValidationMessageOptions {
             PromptTitle = promptTitle,
             Prompt = prompt,
             ErrorTitle = errorTitle,
@@ -144,20 +139,17 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
 
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var path = string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)
-                ? InputPath
+                ? Path
                 : null;
-            foreach (var validation in GetDataValidations(sheet, targetRange).Select(validation => ExcelRuleRecordService.CreateDataValidationRecord(validation, sheet.Name, path)))
-            {
+            foreach (var validation in GetDataValidations(sheet, targetRange).Select(validation => ExcelRuleRecordService.CreateDataValidationRecord(validation, sheet.Name, path))) {
                 WriteObject(validation);
             }
         }
     }
 
-    private bool HasMessageOption()
-    {
+    private bool HasMessageOption() {
         return MyInvocation.BoundParameters.ContainsKey(nameof(PromptTitle))
             || MyInvocation.BoundParameters.ContainsKey(nameof(Prompt))
             || MyInvocation.BoundParameters.ContainsKey(nameof(ErrorTitle))
@@ -166,13 +158,11 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
             || MyInvocation.BoundParameters.ContainsKey(nameof(ShowErrorMessage));
     }
 
-    private string? ResolveMessageValue(string parameterName, string? value, string? existing)
-    {
+    private string? ResolveMessageValue(string parameterName, string? value, string? existing) {
         return MyInvocation.BoundParameters.ContainsKey(parameterName) ? value : existing;
     }
 
-    private bool? ResolveBoundDisplayFlag(string parameterName, SwitchParameter value)
-    {
+    private bool? ResolveBoundDisplayFlag(string parameterName, SwitchParameter value) {
         return MyInvocation.BoundParameters.ContainsKey(parameterName)
             ? value.IsPresent
             : null;
@@ -184,18 +174,13 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
     private static ExcelDataValidationInfo? GetFirstDataValidation(ExcelSheet sheet, string targetRange)
         => GetDataValidations(sheet, targetRange).FirstOrDefault();
 
-    private static IReadOnlyList<ExcelDataValidationInfo> GetDataValidations(ExcelSheet sheet, string targetRange)
-    {
-        try
-        {
+    private static IReadOnlyList<ExcelDataValidationInfo> GetDataValidations(ExcelSheet sheet, string targetRange) {
+        try {
             var filtered = sheet.GetDataValidations(targetRange);
-            if (filtered.Count > 0)
-            {
+            if (filtered.Count > 0) {
                 return filtered;
             }
-        }
-        catch (ArgumentException)
-        {
+        } catch (ArgumentException) {
         }
 
         return sheet.GetDataValidations()
@@ -203,16 +188,11 @@ public sealed class SetOfficeExcelDataValidationMessageCommand : PSCmdlet
             .ToArray();
     }
 
-    private static void SetDataValidationMessages(ExcelSheet sheet, string targetRange, ExcelDataValidationMessageOptions options)
-    {
-        try
-        {
+    private static void SetDataValidationMessages(ExcelSheet sheet, string targetRange, ExcelDataValidationMessageOptions options) {
+        try {
             sheet.SetDataValidationMessages(targetRange, options);
-        }
-        catch (ArgumentException)
-        {
-            if (!GetDataValidations(sheet, targetRange).Any())
-            {
+        } catch (ArgumentException) {
+            if (!GetDataValidations(sheet, targetRange).Any()) {
                 throw;
             }
         }

@@ -11,12 +11,12 @@ Exports selected Visio pages through the format-neutral OfficeIMO image pipeline
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Export-OfficeVisioImage [-Path] <string> [-OutputPath] <string> [-Format <OfficeImageExportFormat>] [-Options <VisioImageExportOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeVisioImage [-Path] <string> [-OutputPath] <string> [-Format <OfficeImageExportFormat>] [-Options <VisioImageExportOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Export-OfficeVisioImage [-OutputPath] <string> -Document <VisioDocument> [-Format <OfficeImageExportFormat>] [-Options <VisioImageExportOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeVisioImage [-OutputPath] <string> -Document <VisioDocument> [-Format <OfficeImageExportFormat>] [-Options <VisioImageExportOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,7 +29,7 @@ Exports selected Visio pages through the format-neutral OfficeIMO image pipeline
 PS> Export-OfficeVisioImage -Path .\diagram.vsdx -OutputPath .\Images -Format Png
 ```
 
-Writes one PNG per selected page and returns one result object per file.
+Writes one PNG per selected page. Add -PassThru to receive one result object per file.
 
 ## PARAMETERS
 
@@ -92,6 +92,22 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit one structured image export result per saved page.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

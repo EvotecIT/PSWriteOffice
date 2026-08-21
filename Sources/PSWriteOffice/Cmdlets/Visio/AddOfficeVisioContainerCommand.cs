@@ -22,8 +22,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsCommon.Add, "OfficeVisioContainer")]
 [Alias("VisioContainer")]
 [OutputType(typeof(VisioShape))]
-public sealed class AddOfficeVisioContainerCommand : PSCmdlet
-{
+public sealed class AddOfficeVisioContainerCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private readonly List<object> _input = new();
 
     /// <summary>Shapes, shape selections, or shape keys/ids to include in the container.</summary>
@@ -97,68 +96,56 @@ public sealed class AddOfficeVisioContainerCommand : PSCmdlet
     public SwitchParameter NoRibbon { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         AddInput(InputObject);
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
+    protected override void EndProcessing() {
         var page = Page ?? VisioDslContext.Current?.CurrentPage;
-        if (page == null)
-        {
+        if (page == null) {
             throw new PSArgumentException("Provide -Page or run inside a VisioPage DSL scope.", nameof(Page));
         }
 
         var shapes = ResolveShapes(page);
-        if (shapes.Count == 0)
-        {
+        if (shapes.Count == 0) {
             throw new PSArgumentException("At least one member shape is required.", nameof(InputObject));
         }
 
         var options = BuildOptions();
         var container = page.AddContainer(Id, Text, shapes, options);
         VisioDslContext.Current?.RegisterShape(page, Id, container);
-        WriteObject(container);
+        WritePassThru(container);
     }
 
-    private VisioContainerOptions BuildOptions()
-    {
+    private VisioContainerOptions BuildOptions() {
         var options = new VisioContainerOptions();
 
-        if (Margin.HasValue)
-        {
+        if (Margin.HasValue) {
             options.Margin = Margin.Value;
         }
 
-        if (HeadingHeight.HasValue)
-        {
+        if (HeadingHeight.HasValue) {
             options.HeadingHeight = HeadingHeight.Value;
         }
 
-        if (!string.IsNullOrWhiteSpace(FillColor))
-        {
+        if (!string.IsNullOrWhiteSpace(FillColor)) {
             options.FillColor = OfficeColor.Parse(FillColor!);
         }
 
-        if (!string.IsNullOrWhiteSpace(LineColor))
-        {
+        if (!string.IsNullOrWhiteSpace(LineColor)) {
             options.LineColor = OfficeColor.Parse(LineColor!);
         }
 
-        if (LineWeight.HasValue)
-        {
+        if (LineWeight.HasValue) {
             options.LineWeight = LineWeight.Value;
         }
 
-        if (ContainerStyle.HasValue)
-        {
+        if (ContainerStyle.HasValue) {
             options.ContainerStyle = ContainerStyle.Value;
         }
 
-        if (HeadingStyle.HasValue)
-        {
+        if (HeadingStyle.HasValue) {
             options.HeadingStyle = HeadingStyle.Value;
         }
 
@@ -169,23 +156,18 @@ public sealed class AddOfficeVisioContainerCommand : PSCmdlet
         return options;
     }
 
-    private void AddInput(object? value)
-    {
-        if (value == null)
-        {
+    private void AddInput(object? value) {
+        if (value == null) {
             return;
         }
 
-        if (value is PSObject psObject)
-        {
+        if (value is PSObject psObject) {
             AddInput(psObject.BaseObject);
             return;
         }
 
-        if (value is IEnumerable enumerable && value is not string)
-        {
-            foreach (var item in enumerable)
-            {
+        if (value is IEnumerable enumerable && value is not string) {
+            foreach (var item in enumerable) {
                 AddInput(item);
             }
 
@@ -195,22 +177,17 @@ public sealed class AddOfficeVisioContainerCommand : PSCmdlet
         _input.Add(value);
     }
 
-    private List<VisioShape> ResolveShapes(VisioPage page)
-    {
+    private List<VisioShape> ResolveShapes(VisioPage page) {
         var shapes = new List<VisioShape>();
 
-        if (ShapeId != null)
-        {
-            foreach (var shapeId in ShapeId)
-            {
+        if (ShapeId != null) {
+            foreach (var shapeId in ShapeId) {
                 shapes.Add(ResolveShapeReference(page, shapeId));
             }
         }
 
-        foreach (var item in _input)
-        {
-            switch (item)
-            {
+        foreach (var item in _input) {
+            switch (item) {
                 case VisioShape shape:
                     shapes.Add(shape);
                     break;
@@ -225,16 +202,13 @@ public sealed class AddOfficeVisioContainerCommand : PSCmdlet
         return shapes.Distinct().ToList();
     }
 
-    private static VisioShape ResolveShapeReference(VisioPage page, string reference)
-    {
-        if (string.IsNullOrWhiteSpace(reference))
-        {
+    private static VisioShape ResolveShapeReference(VisioPage page, string reference) {
+        if (string.IsNullOrWhiteSpace(reference)) {
             throw new PSArgumentException("Shape reference cannot be empty.", nameof(ShapeId));
         }
 
         var context = VisioDslContext.Current;
-        if (context != null)
-        {
+        if (context != null) {
             return context.ResolveShape(page, reference);
         }
 

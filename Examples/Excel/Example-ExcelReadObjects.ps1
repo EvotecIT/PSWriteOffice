@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Excel-ReadObjects.xlsx'
 $rows = @(
     [PSCustomObject]@{ Region = 'NA'; Revenue = 100 }
@@ -17,7 +16,7 @@ New-OfficeExcel -Path $path {
         Set-OfficeExcelHeaderFooter -HeaderCenter 'Demo' -FooterRight 'Page &P of &N'
         Invoke-OfficeExcelAutoFit -Columns
     }
-} | Out-Null
+}
 
 $data = Get-OfficeExcelData -Path $path -Sheet 'Data'
 $data | Format-Table

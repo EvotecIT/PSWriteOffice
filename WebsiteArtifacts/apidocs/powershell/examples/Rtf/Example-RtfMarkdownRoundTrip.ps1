@@ -1,8 +1,7 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $markdownPath = Join-Path $documents 'Rtf-MarkdownRoundTrip.md'
 $rtfPath = Join-Path $documents 'Rtf-MarkdownRoundTrip.rtf'
 $roundTripMarkdownPath = Join-Path $documents 'Rtf-MarkdownRoundTrip.from-rtf.md'
@@ -22,8 +21,8 @@ The weekly service review is ready.
 | Reporting | Analytics |
 '@ | Set-Content -Path $markdownPath -Encoding UTF8
 
-ConvertTo-OfficeRtf -MarkdownPath $markdownPath -OutputPath $rtfPath -PassThru | Out-Null
-ConvertFrom-OfficeRtf -Path $rtfPath -As Markdown -OutputPath $roundTripMarkdownPath -PassThru | Out-Null
+ConvertTo-OfficeRtf -MarkdownPath $markdownPath -OutputPath $rtfPath
+ConvertFrom-OfficeRtf -Path $rtfPath -As Markdown -OutputPath $roundTripMarkdownPath
 
 Write-Host "Markdown saved to $markdownPath"
 Write-Host "RTF saved to $rtfPath"

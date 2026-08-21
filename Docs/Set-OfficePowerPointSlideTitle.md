@@ -11,7 +11,7 @@ Sets the text of the title placeholder on a slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePowerPointSlideTitle -Title <string> [-Slide <PowerPointSlide>] [<CommonParameters>]
+Set-OfficePowerPointSlideTitle -Title <string> [-Slide <PowerPointSlide>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,6 +27,22 @@ PS> Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPoint
 Updates the first slide’s title.
 
 ## PARAMETERS
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -Slide
 Slide whose title should change (optional inside DSL).

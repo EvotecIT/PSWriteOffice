@@ -11,12 +11,12 @@ Adds a text or image stamp to an existing PDF.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficePdfStamp -Path <string> -OutputPath <string> -Text <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <Double>] [-Y <Double>] [-FontSize <double>] [-Color <string>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfStamp -Path <string> -OutputPath <string> -Text <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <Double>] [-Y <Double>] [-FontSize <double>] [-Color <string>] [-Rotation <double>] [-Watermark] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Image
 ```powershell
-Add-OfficePdfStamp -Path <string> -OutputPath <string> -Image <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <Double>] [-Y <Double>] [-Width <Double>] [-Height <Double>] [-Rotation <double>] [-Watermark] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfStamp -Path <string> -OutputPath <string> -Image <string> [-Password <string>] [-IgnorePermissionRestrictions] [-PageRange <string>] [-X <Double>] [-Y <Double>] [-Width <Double>] [-Height <Double>] [-Rotation <double>] [-Watermark] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -148,6 +148,22 @@ Stamp selected pages, for example 1-3,5. Omit to stamp every page.
 
 ```yaml
 Type: String
+Parameter Sets: Text, Image
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Text, Image
 Aliases: None
 Possible values:

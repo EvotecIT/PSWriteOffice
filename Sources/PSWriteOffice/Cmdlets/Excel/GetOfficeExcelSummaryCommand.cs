@@ -27,15 +27,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelSummary", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelSummary")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelSummaryCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -50,22 +49,18 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
     public SwitchParameter IncludeSchema { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         ExcelDocument? loadedDocument = null;
         SpreadsheetDocument? spreadsheet = null;
         var dispose = false;
 
-        try
-        {
+        try {
             ExcelDocument currentDocument;
             string? path;
 
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-                if (!File.Exists(resolvedPath))
-                {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+                if (!File.Exists(resolvedPath)) {
                     throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
                 }
 
@@ -74,11 +69,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
                 spreadsheet = currentDocument.OpenXmlDocument;
                 path = resolvedPath;
                 dispose = true;
-            }
-            else
-            {
-                if (Document == null)
-                {
+            } else {
+                if (Document == null) {
                     throw new InvalidOperationException("Excel workbook was not provided.");
                 }
 
@@ -88,18 +80,14 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
             }
 
             WriteObject(CreateSummary(spreadsheet, path, IncludeSheets.IsPresent, IncludeSchema.IsPresent, currentDocument));
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 loadedDocument?.Dispose();
             }
         }
     }
 
-    private static PSObject CreateSummary(SpreadsheetDocument spreadsheet, string? path, bool includeSheets, bool includeSchema, ExcelDocument? document)
-    {
+    private static PSObject CreateSummary(SpreadsheetDocument spreadsheet, string? path, bool includeSheets, bool includeSchema, ExcelDocument? document) {
         var workbookPart = spreadsheet.WorkbookPart ?? throw new InvalidOperationException("Workbook part was not found.");
         var workbook = workbookPart.Workbook ?? throw new InvalidOperationException("Workbook was not found.");
         var sheets = workbook.Sheets?.Elements<Sheet>().ToList() ?? new List<Sheet>();
@@ -132,21 +120,18 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         summary.Properties.Add(new PSNoteProperty("CommentCount", sheetSummaries.Sum(GetIntProperty("CommentCount"))));
         summary.Properties.Add(new PSNoteProperty("NamedRangeCount", namedRangeCount));
 
-        if (includeSheets)
-        {
+        if (includeSheets) {
             summary.Properties.Add(new PSNoteProperty("Sheets", sheetSummaries));
         }
 
-        if (includeSchema && document != null)
-        {
+        if (includeSchema && document != null) {
             summary.Properties.Add(new PSNoteProperty("Schema", CreateSchemaSummary(document.CreateInspectionSnapshot())));
         }
 
         return summary;
     }
 
-    private static PSObject CreateSchemaSummary(ExcelWorkbookSnapshot snapshot)
-    {
+    private static PSObject CreateSchemaSummary(ExcelWorkbookSnapshot snapshot) {
         var schema = new PSObject();
         schema.Properties.Add(new PSNoteProperty("ActiveWorksheetIndex", snapshot.ActiveWorksheetIndex));
         schema.Properties.Add(new PSNoteProperty("ActiveWorksheetName", snapshot.ActiveWorksheetName));
@@ -168,8 +153,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         return schema;
     }
 
-    private static PSObject CreateSchemaWorksheet(ExcelWorksheetSnapshot worksheet)
-    {
+    private static PSObject CreateSchemaWorksheet(ExcelWorksheetSnapshot worksheet) {
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Name", worksheet.Name));
         record.Properties.Add(new PSNoteProperty("Index", worksheet.Index));
@@ -193,10 +177,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         return record;
     }
 
-    private static IEnumerable<PSObject> CreateSchemaTables(ExcelWorksheetSnapshot worksheet)
-    {
-        foreach (var table in worksheet.Tables)
-        {
+    private static IEnumerable<PSObject> CreateSchemaTables(ExcelWorksheetSnapshot worksheet) {
+        foreach (var table in worksheet.Tables) {
             var record = new PSObject();
             record.Properties.Add(new PSNoteProperty("SheetName", worksheet.Name));
             record.Properties.Add(new PSNoteProperty("Name", table.Name));
@@ -209,8 +191,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         }
     }
 
-    private static PSObject CreateSchemaNamedRange(ExcelNamedRangeSnapshot namedRange)
-    {
+    private static PSObject CreateSchemaNamedRange(ExcelNamedRangeSnapshot namedRange) {
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Name", namedRange.Name));
         record.Properties.Add(new PSNoteProperty("SheetName", namedRange.SheetName));
@@ -219,10 +200,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         return record;
     }
 
-    private static IEnumerable<PSObject> CreateSchemaFormulaCells(ExcelWorksheetSnapshot worksheet)
-    {
-        foreach (var cell in worksheet.Cells.Where(cell => !string.IsNullOrWhiteSpace(cell.Formula)))
-        {
+    private static IEnumerable<PSObject> CreateSchemaFormulaCells(ExcelWorksheetSnapshot worksheet) {
+        foreach (var cell in worksheet.Cells.Where(cell => !string.IsNullOrWhiteSpace(cell.Formula))) {
             var record = new PSObject();
             record.Properties.Add(new PSNoteProperty("SheetName", worksheet.Name));
             record.Properties.Add(new PSNoteProperty("Address", A1.CellReference(cell.Row, cell.Column)));
@@ -231,10 +210,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         }
     }
 
-    private static IEnumerable<PSObject> CreateSchemaRows(ExcelWorksheetSnapshot worksheet)
-    {
-        foreach (var row in worksheet.Rows)
-        {
+    private static IEnumerable<PSObject> CreateSchemaRows(ExcelWorksheetSnapshot worksheet) {
+        foreach (var row in worksheet.Rows) {
             var record = new PSObject();
             record.Properties.Add(new PSNoteProperty("SheetName", worksheet.Name));
             record.Properties.Add(new PSNoteProperty("Index", row.Index));
@@ -247,10 +224,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         }
     }
 
-    private static IEnumerable<PSObject> CreateSchemaColumns(ExcelWorksheetSnapshot worksheet)
-    {
-        foreach (var column in worksheet.Columns)
-        {
+    private static IEnumerable<PSObject> CreateSchemaColumns(ExcelWorksheetSnapshot worksheet) {
+        foreach (var column in worksheet.Columns) {
             var record = new PSObject();
             record.Properties.Add(new PSNoteProperty("SheetName", worksheet.Name));
             record.Properties.Add(new PSNoteProperty("StartIndex", column.StartIndex));
@@ -264,8 +239,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         }
     }
 
-    private static PSObject CreateSheetSummary(WorkbookPart workbookPart, Sheet sheet, int index, bool isActive)
-    {
+    private static PSObject CreateSheetSummary(WorkbookPart workbookPart, Sheet sheet, int index, bool isActive) {
         var state = NormalizeSheetState(sheet.State?.InnerText);
         var record = new PSObject();
         record.Properties.Add(new PSNoteProperty("Index", index));
@@ -273,21 +247,18 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         record.Properties.Add(new PSNoteProperty("State", state));
         record.Properties.Add(new PSNoteProperty("IsActive", isActive));
 
-        if (sheet.Id?.Value == null)
-        {
+        if (sheet.Id?.Value == null) {
             AddEmptySheetCounts(record);
             return record;
         }
 
         var sheetPart = workbookPart.GetPartById(sheet.Id.Value);
-        if (sheetPart is ChartsheetPart chartsheetPart)
-        {
+        if (sheetPart is ChartsheetPart chartsheetPart) {
             AddChartSheetCounts(record, chartsheetPart);
             return record;
         }
 
-        if (sheetPart is not WorksheetPart worksheetPart)
-        {
+        if (sheetPart is not WorksheetPart worksheetPart) {
             AddEmptySheetCounts(record);
             return record;
         }
@@ -311,10 +282,8 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         return record;
     }
 
-    private static int? GetActiveSheetIndex(Workbook workbook, int sheetCount)
-    {
-        if (sheetCount <= 0)
-        {
+    private static int? GetActiveSheetIndex(Workbook workbook, int sheetCount) {
+        if (sheetCount <= 0) {
             return null;
         }
 
@@ -323,8 +292,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
             .FirstOrDefault()?
             .ActiveTab?.Value ?? 0U;
 
-        if (activeTab >= sheetCount)
-        {
+        if (activeTab >= sheetCount) {
             return sheetCount - 1;
         }
 
@@ -336,8 +304,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
             ? ExcelDateSystem.NineteenFour
             : ExcelDateSystem.NineteenHundred;
 
-    private static void AddChartSheetCounts(PSObject record, ChartsheetPart chartsheetPart)
-    {
+    private static void AddChartSheetCounts(PSObject record, ChartsheetPart chartsheetPart) {
         record.Properties.Add(new PSNoteProperty("UsedRange", null));
         record.Properties.Add(new PSNoteProperty("TableCount", 0));
         record.Properties.Add(new PSNoteProperty("ChartCount", CountChartParts(chartsheetPart)));
@@ -348,21 +315,17 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         record.Properties.Add(new PSNoteProperty("Tables", Array.Empty<PSObject>()));
     }
 
-    private static int CountChartParts(OpenXmlPartContainer container)
-    {
+    private static int CountChartParts(OpenXmlPartContainer container) {
         return container.Parts.Sum(part =>
             (part.OpenXmlPart is ChartPart ? 1 : 0) + CountChartParts(part.OpenXmlPart));
     }
 
-    private static int CountPackagePartsByContentType(OpenXmlPartContainer container, string marker)
-    {
-        if (string.IsNullOrWhiteSpace(marker))
-        {
+    private static int CountPackagePartsByContentType(OpenXmlPartContainer container, string marker) {
+        if (string.IsNullOrWhiteSpace(marker)) {
             return 0;
         }
 
-        return container.Parts.Sum(part =>
-        {
+        return container.Parts.Sum(part => {
             var openXmlPart = part.OpenXmlPart;
             var count = openXmlPart.ContentType.IndexOf(marker, StringComparison.OrdinalIgnoreCase) >= 0 ? 1 : 0;
             return count + CountPackagePartsByContentType(openXmlPart, marker);
@@ -372,12 +335,10 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
     private static int CountPivotInteractionParts(
         WorkbookPart workbookPart,
         ExcelDocument? document,
-        ExcelPivotInteractionCacheKind kind)
-    {
+        ExcelPivotInteractionCacheKind kind) {
         string marker = kind == ExcelPivotInteractionCacheKind.Slicer ? "slicer" : "timeline";
         int nativeOrLegacyCount = CountPackagePartsByContentType(workbookPart, marker);
-        if (document == null)
-        {
+        if (document == null) {
             return nativeOrLegacyCount;
         }
 
@@ -387,8 +348,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         int combinedMetadataPartCount = caches
             .Select(cache => cache.RelationshipId)
             .Distinct(StringComparer.Ordinal)
-            .Count(relationshipId =>
-            {
+            .Count(relationshipId => {
                 OpenXmlPart part = workbookPart.GetPartById(relationshipId);
                 return part.ContentType.IndexOf(marker, StringComparison.OrdinalIgnoreCase) < 0;
             });
@@ -396,21 +356,17 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         return nativeOrLegacyCount + combinedMetadataPartCount;
     }
 
-    private static int CountComments(WorksheetPart worksheetPart)
-    {
+    private static int CountComments(WorksheetPart worksheetPart) {
         var legacyCount = worksheetPart.WorksheetCommentsPart?.Comments?.CommentList?.Elements<Comment>().Count() ?? 0;
         var threadedCount = worksheetPart.WorksheetThreadedCommentsParts.Sum(part =>
             part.ThreadedComments?.Elements<ThreadedComment>().Count() ?? 0);
         return legacyCount + threadedCount;
     }
 
-    private static IEnumerable<PSObject> GetTableRecords(WorksheetPart worksheetPart)
-    {
-        foreach (var tableDefinitionPart in worksheetPart.TableDefinitionParts)
-        {
+    private static IEnumerable<PSObject> GetTableRecords(WorksheetPart worksheetPart) {
+        foreach (var tableDefinitionPart in worksheetPart.TableDefinitionParts) {
             var table = tableDefinitionPart.Table;
-            if (table == null)
-            {
+            if (table == null) {
                 continue;
             }
 
@@ -422,8 +378,7 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         }
     }
 
-    private static void AddEmptySheetCounts(PSObject record)
-    {
+    private static void AddEmptySheetCounts(PSObject record) {
         record.Properties.Add(new PSNoteProperty("UsedRange", null));
         record.Properties.Add(new PSNoteProperty("TableCount", 0));
         record.Properties.Add(new PSNoteProperty("ChartCount", 0));
@@ -434,15 +389,12 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
         record.Properties.Add(new PSNoteProperty("Tables", Array.Empty<PSObject>()));
     }
 
-    private static Func<PSObject, int> GetIntProperty(string name)
-    {
+    private static Func<PSObject, int> GetIntProperty(string name) {
         return record => record.Properties[name]?.Value is int value ? value : 0;
     }
 
-    private static string NormalizeSheetState(string? state)
-    {
-        if (string.IsNullOrWhiteSpace(state))
-        {
+    private static string NormalizeSheetState(string? state) {
+        if (string.IsNullOrWhiteSpace(state)) {
             return "Visible";
         }
 
@@ -453,18 +405,15 @@ public sealed class GetOfficeExcelSummaryCommand : PSCmdlet
                 : "Visible";
     }
 
-    private static bool IsVisibleSheet(PSObject record)
-    {
+    private static bool IsVisibleSheet(PSObject record) {
         return string.Equals(record.Properties["State"]?.Value as string, "Visible", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool IsHiddenSheet(PSObject record)
-    {
+    private static bool IsHiddenSheet(PSObject record) {
         return string.Equals(record.Properties["State"]?.Value as string, "Hidden", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool IsVeryHiddenSheet(PSObject record)
-    {
+    private static bool IsVeryHiddenSheet(PSObject record) {
         return string.Equals(record.Properties["State"]?.Value as string, "VeryHidden", StringComparison.OrdinalIgnoreCase);
     }
 }

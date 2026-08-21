@@ -31,15 +31,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Join, "OfficeWordDocument", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("Merge-OfficeWordDocument", "WordDocumentJoin")]
 [OutputType(typeof(WordDocument))]
-public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
-{
+public sealed class JoinOfficeWordDocumentCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Base document path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "BasePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "BasePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Base document object.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -56,37 +55,30 @@ public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
 
     /// <summary>Open the saved output with the shell.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <summary>Emit the merged Word document instead of disposing it.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
+        try {
             string? saveTarget = null;
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = ResolveExistingPath(InputPath);
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = ResolveExistingPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: false, autoSave: false);
                 dispose = true;
                 saveTarget = string.IsNullOrWhiteSpace(OutputPath) ? resolvedPath : ResolveOutputPath(OutputPath!);
-            }
-            else
-            {
+            } else {
                 document = Document;
-                if (!string.IsNullOrWhiteSpace(OutputPath))
-                {
+                if (!string.IsNullOrWhiteSpace(OutputPath)) {
                     saveTarget = ResolveOutputPath(OutputPath!);
-                }
-                else if (Show.IsPresent)
-                {
+                } else if (Open.IsPresent) {
                     saveTarget = document.FilePath ?? throw new InvalidOperationException("No saved file path was available.");
                 }
             }
@@ -97,67 +89,52 @@ public sealed class JoinOfficeWordDocumentCommand : PSCmdlet
             var processAction = !string.IsNullOrWhiteSpace(saveTarget)
                 ? "Write joined Word document"
                 : "Join Word documents";
-            if (!ShouldProcess(processTarget, processAction))
-            {
+            if (!ShouldProcess(processTarget, processAction)) {
                 return;
             }
 
-            foreach (var sourcePath in AppendPath)
-            {
+            foreach (var sourcePath in AppendPath) {
                 using var source = WordDocumentService.LoadDocument(ResolveExistingPath(sourcePath), readOnly: true, autoSave: false);
                 document.AppendDocument(source);
             }
 
             string? savedPath = null;
 
-            if (!string.IsNullOrWhiteSpace(OutputPath))
-            {
+            if (!string.IsNullOrWhiteSpace(OutputPath)) {
                 savedPath = saveTarget;
                 document.Save(savedPath!);
-            }
-            else if (ParameterSetName == ParameterSetPath)
-            {
+            } else if (ParameterSetName == ParameterSetPath) {
                 document.Save();
                 savedPath = saveTarget;
-            }
-            else if (Show.IsPresent)
-            {
+            } else if (Open.IsPresent) {
                 savedPath = saveTarget;
                 document.Save();
             }
 
-            if (Show.IsPresent)
-            {
+            if (Open.IsPresent) {
                 FileOpenService.Open(savedPath ?? throw new InvalidOperationException("No saved file path was available."));
             }
 
-            if (PassThru.IsPresent)
-            {
+            if (PassThru.IsPresent) {
                 dispose = false;
                 WriteObject(document);
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }
     }
 
-    private string ResolveExistingPath(string path)
-    {
+    private string ResolveExistingPath(string path) {
         var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
-        if (!File.Exists(resolvedPath))
-        {
+        if (!File.Exists(resolvedPath)) {
             throw new FileNotFoundException($"File {resolvedPath} doesn't exist.", resolvedPath);
         }
         return resolvedPath;
     }
 
-    private string ResolveOutputPath(string path)
-    {
+    private string ResolveOutputPath(string path) {
         var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
         return System.IO.Path.IsPathRooted(providerPath)
             ? providerPath

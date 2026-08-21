@@ -16,7 +16,7 @@ Get-OfficeExcelRichText [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [
 
 ### Path
 ```powershell
-Get-OfficeExcelRichText [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [<CommonParameters>]
+Get-OfficeExcelRichText [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row <Int32>] [-Column <Int32>] [-Address <string>] [<CommonParameters>]
 ```
 
 ### Document
@@ -88,13 +88,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path to inspect.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

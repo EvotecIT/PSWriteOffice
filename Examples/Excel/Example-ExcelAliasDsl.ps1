@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $orders = @(
     [PSCustomObject]@{ Item = 'Router'; Qty = 15; Status = 'In Stock' }
     [PSCustomObject]@{ Item = 'Switch'; Qty = 4; Status = 'Low' }
@@ -18,6 +17,6 @@ New-OfficeExcel -Path $path {
 
         ExcelTable -Data $orders -TableName 'InventoryTable'
     }
-} -PassThru | Out-Null
+}
 
 Write-Host "Workbook saved to $path"

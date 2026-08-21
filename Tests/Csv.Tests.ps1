@@ -1431,7 +1431,7 @@ Describe 'CSV cmdlets' {
         $path = Join-Path $TestDrive 'input-path-alias.csv'
         Set-Content -LiteralPath $path -Value "Name,Value`nAlpha,1" -Encoding UTF8
 
-        $document = Get-OfficeCsv -InputPath $path
+        $document = Get-OfficeCsv -Path $path
 
         $document.Header | Should -Be @('Name', 'Value')
         $document.AsEnumerable().Count | Should -Be 1

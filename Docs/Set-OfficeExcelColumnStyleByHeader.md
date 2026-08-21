@@ -11,12 +11,12 @@ Applies common number, fill, font, and status styles to a worksheet column resol
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelColumnStyleByHeader [-Header] <string> [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [<CommonParameters>]
+Set-OfficeExcelColumnStyleByHeader [-Header] <string> [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelColumnStyleByHeader [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [<CommonParameters>]
+Set-OfficeExcelColumnStyleByHeader [-Header] <string> -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-IncludeHeader] [-Style <string>] [-Decimals <int>] [-CultureName <string>] [-NumberFormat <string>] [-Pattern <string>] [-Bold] [-BackgroundColor <string>] [-FontColor <string>] [-Alignment <string>] [-BackgroundByText <hashtable>] [-FontColorByText <hashtable>] [-BoldByText <string[]>] [-CaseSensitive] [-Width <Double>] [-AutoFit] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -281,6 +281,22 @@ Custom number format. Also used when Style is NumberFormat.
 
 ```yaml
 Type: String
+Parameter Sets: Context, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Context, Document
 Aliases: None
 Possible values:

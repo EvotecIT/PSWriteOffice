@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $data = @(
     [PSCustomObject]@{ Region = 'North America'; Revenue = 125000; YoY = 0.12 }
     [PSCustomObject]@{ Region = 'EMEA'; Revenue = 98000; YoY = 0.22 }
@@ -15,6 +14,6 @@ New-OfficeExcel -Path $path {
         Add-OfficeExcelTable -Data $data -TableName 'Sales' -TableStyle 'TableStyleMedium9'
         Set-OfficeExcelColumn -Column 1 -AutoFit
     }
-} -PassThru | Out-Null
+}
 
 Write-Host "Workbook saved to $path"

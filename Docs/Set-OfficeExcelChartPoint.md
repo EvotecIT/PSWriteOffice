@@ -11,12 +11,12 @@ Configures fill and line styling for a single Excel chart data point.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficeExcelChartPoint -Chart <ExcelChart> -SeriesIndex <int> -PointIndex <uint> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [<CommonParameters>]
+Set-OfficeExcelChartPoint -Chart <ExcelChart> -SeriesIndex <int> -PointIndex <uint> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficeExcelChartPoint -Chart <ExcelChart> -SeriesName <string> -PointIndex <uint> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [<CommonParameters>]
+Set-OfficeExcelChartPoint -Chart <ExcelChart> -SeriesName <string> -PointIndex <uint> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -102,6 +102,22 @@ Point line width in points.
 
 ```yaml
 Type: Double
+Parameter Sets: Index, Name
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:

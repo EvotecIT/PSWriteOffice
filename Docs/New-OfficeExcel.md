@@ -11,7 +11,7 @@ Creates a new Excel workbook using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeExcel [-FilePath] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-AutoSave] [-NoSave] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-PdfPath <string>] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeExcel [-Path] <string> [[-Content] <scriptblock>] [-TemplatePath <string>] [-NoSave] [-Open] [-Password <string>] [-SafePreflight] [-SafeRepairDefinedNames] [-ValidateOpenXml] [-DisableFastPackageWriter] [-EvaluateFormulas] [-ClearCachedFormulaResults] [-MarkFormulasDirty] [-ForceFullCalculationOnOpen] [-DateSystem <string>] [-PassThru] [-DocumentTitle <string>] [-Author <string>] [-Subject <string>] [-Keywords <string>] [-Description <string>] [-Category <string>] [-Company <string>] [-Manager <string>] [-ApplicationName <string>] [-LastModifiedBy <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -60,22 +60,6 @@ Workbook author metadata.
 
 ```yaml
 Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -AutoSave
-Opt into OfficeIMO automatic saves during operations.
-
-```yaml
-Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -231,22 +215,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -FilePath
-Destination path for the workbook.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -ForceFullCalculationOnOpen
 Request a full workbook recalculation when opened in Excel-compatible applications.
 
@@ -391,17 +359,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -PdfPath
-Optional PDF path to create from the same workbook before closing it.
+### -Path
+Destination path for the workbook.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: FilePath
 Possible values:
 
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

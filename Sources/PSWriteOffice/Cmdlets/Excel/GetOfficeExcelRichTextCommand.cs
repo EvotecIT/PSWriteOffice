@@ -16,16 +16,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelRichText", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelRichTextRuns")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelRichTextCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelRichTextCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to inspect.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -59,18 +58,16 @@ public sealed class GetOfficeExcelRichTextCommand : PSCmdlet
     public string? Address { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
         var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
         var address = A1.CellReference(row, column);
         var path = string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)
-            ? InputPath
+            ? Path
             : null;
         var runs = sheet.GetRichText(row, column);
-        for (var index = 0; index < runs.Count; index++)
-        {
+        for (var index = 0; index < runs.Count; index++) {
             WriteObject(ExcelRichTextRunService.CreateRecord(runs[index], index, address, row, column, sheet.Name, path));
         }
     }

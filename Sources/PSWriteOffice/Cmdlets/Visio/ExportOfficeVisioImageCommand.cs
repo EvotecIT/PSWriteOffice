@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 ///   <summary>Export every page as PNG.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>Export-OfficeVisioImage -Path .\diagram.vsdx -OutputPath .\Images -Format Png</code>
-///   <para>Writes one PNG per selected page and returns one result object per file.</para>
+///   <para>Writes one PNG per selected page. Add <c>-PassThru</c> to receive one result object per file.</para>
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficeVisioImage", DefaultParameterSetName = "Path", SupportsShouldProcess = true)]
 [OutputType(typeof(OfficeImageExportResult))]
@@ -39,6 +39,10 @@ public sealed class ExportOfficeVisioImageCommand : PSCmdlet
     [Parameter]
     public VisioImageExportOptions? Options { get; set; }
 
+    /// <summary>Emit one structured image export result per saved page.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -51,6 +55,6 @@ public sealed class ExportOfficeVisioImageCommand : PSCmdlet
         Directory.CreateDirectory(output);
         var document = VisioCommandUtilities.ResolveDocument(this, Document, ParameterSetName == "Path" ? Path : null);
         IReadOnlyList<OfficeImageExportResult> results = document.SaveAsImages(output, Format, Options);
-        WriteObject(results, enumerateCollection: true);
+        if (PassThru.IsPresent) WriteObject(results, enumerateCollection: true);
     }
 }

@@ -21,15 +21,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 [Cmdlet(VerbsCommon.Get, "OfficeWordPictureControl", DefaultParameterSetName = ParameterSetPath)]
 [Alias("WordPictureControls")]
 [OutputType(typeof(WordPictureControl))]
-public sealed class GetOfficeWordPictureControlCommand : PSCmdlet
-{
+public sealed class GetOfficeWordPictureControlCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the .docx file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Word document to read.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -46,26 +45,20 @@ public sealed class GetOfficeWordPictureControlCommand : PSCmdlet
     public string[]? Tag { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document was not provided.");
             }
 
@@ -78,11 +71,8 @@ public sealed class GetOfficeWordPictureControlCommand : PSCmdlet
                 WordFilterHelpers.Matches(control.Tag, tagPatterns));
 
             WriteObject(results, enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

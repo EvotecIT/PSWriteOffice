@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordText", DefaultParameterSetName = ParameterSetParagraph)]
 [OutputType(typeof(WordParagraph))]
-public sealed class GetOfficeWordTextCommand : PSCmdlet
-{
+public sealed class GetOfficeWordTextCommand : PSCmdlet {
     private const string ParameterSetParagraph = "Paragraph";
     private const string ParameterSetSection = "Section";
     private const string ParameterSetDocument = "Document";
@@ -37,21 +36,18 @@ public sealed class GetOfficeWordTextCommand : PSCmdlet
 
     /// <summary>Path to the document.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
+        try {
             IEnumerable<WordParagraph> paragraphs;
 
-            switch (ParameterSetName)
-            {
+            switch (ParameterSetName) {
                 case ParameterSetParagraph:
                     paragraphs = Paragraph != null ? new[] { Paragraph } : Array.Empty<WordParagraph>();
                     break;
@@ -61,33 +57,27 @@ public sealed class GetOfficeWordTextCommand : PSCmdlet
                         : Array.Empty<WordParagraph>();
                     break;
                 case ParameterSetPath:
-                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+                    var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                     document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                     dispose = true;
                     paragraphs = document.Paragraphs;
                     break;
                 default:
                     document = Document;
-                    if (document == null)
-                    {
+                    if (document == null) {
                         throw new InvalidOperationException("Word document was not provided.");
                     }
                     paragraphs = document.Paragraphs;
                     break;
             }
 
-            foreach (var paragraph in paragraphs)
-            {
-                foreach (var text in paragraph.GetRuns())
-                {
+            foreach (var paragraph in paragraphs) {
+                foreach (var text in paragraph.GetRuns()) {
                     WriteObject(text);
                 }
             }
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

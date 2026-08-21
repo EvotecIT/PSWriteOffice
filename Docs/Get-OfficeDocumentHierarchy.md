@@ -21,7 +21,8 @@ Creates bounded token-aware chunks and a deterministic document hierarchy.
 
 ### EXAMPLE 1
 ```powershell
-PS> $options = [OfficeIMO.Reader.ReaderHierarchicalChunkingOptions]::new(); $options.MaxTokens = 500; $result = Get-OfficeDocumentHierarchy -Path .\handbook.pdf -ChunkingOptions $options
+PS> $options = New-OfficeReaderHierarchyOptions -MaxTokens 500 -OverlapTokens 50 -IncludeContextInText
+$result = Get-OfficeDocumentHierarchy -Path .\handbook.pdf -ChunkingOptions $options
 ```
 
 Returns chunks, token evidence, overlap counts, and flattened parent/child nodes.

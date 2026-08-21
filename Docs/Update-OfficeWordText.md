@@ -11,17 +11,17 @@ Replaces text in a Word document.
 ## SYNTAX
 ### Auto (Default)
 ```powershell
-Update-OfficeWordText -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeWordText -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Update-OfficeWordText -OldValue <string> -NewValue <string> [-Document <WordDocument>] [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeWordText -OldValue <string> -NewValue <string> [-Document <WordDocument>] [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Update-OfficeWordText [-InputPath] <string> -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-OfficeWordText [-Path] <string> -OldValue <string> -NewValue <string> [-CaseSensitive] [-IncludeHyperlinkText] [-IncludeHyperlinkUri] [-IncludeHyperlinkAnchor] [-IncludeHyperlinkTooltip] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,7 +31,7 @@ Supports direct document objects, file paths, and the active DSL document. Hyper
 
 ### EXAMPLE 1
 ```powershell
-PS> $doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25'
+PS> $count = $doc | Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' -PassThru
 ```
 
 Updates matching text in the loaded document and returns the number of replacements.
@@ -141,22 +141,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the .docx file to update in place.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -NewValue
 Replacement text.
 
@@ -189,17 +173,49 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Show
+### -Open
 Open the file after saving when using -Path.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Path
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Auto, Document, Path
 Aliases: None
 Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the .docx file to update in place.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -39,7 +39,7 @@ Describe 'PDF HTML cmdlets' {
         $path = Join-Path $TestDrive 'html-file-report.pdf'
         Set-Content -Path $htmlPath -Value '<h1>File HTML</h1><p>Loaded from disk.</p>' -Encoding UTF8
 
-        ConvertFrom-OfficePdfHtml -InputPath $htmlPath -OutputPath $path -PassThru |
+        ConvertFrom-OfficePdfHtml -Path $htmlPath -OutputPath $path -PassThru |
             Should -BeOfType System.IO.FileInfo
 
         Test-Path $path | Should -BeTrue

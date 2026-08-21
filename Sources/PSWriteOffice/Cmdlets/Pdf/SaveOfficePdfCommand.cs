@@ -19,9 +19,8 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <para>Creates a PDF document object first, then saves it to disk.</para>
 /// </example>
 [Cmdlet(VerbsData.Save, "OfficePdf", SupportsShouldProcess = true)]
-[OutputType(typeof(PdfDocument), typeof(FileInfo))]
-public sealed class SaveOfficePdfCommand : PSCmdlet
-{
+[OutputType(typeof(PdfDocument))]
+public sealed class SaveOfficePdfCommand : PSCmdlet {
     /// <summary>PDF document to save.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public PdfDocument Document { get; set; } = null!;
@@ -33,9 +32,10 @@ public sealed class SaveOfficePdfCommand : PSCmdlet
 
     /// <summary>Open the PDF after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
-    /// <summary>Emit the document instead of the saved file.</summary>
+    /// <summary>Emit the document for further processing.</summary>
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
@@ -54,11 +54,9 @@ public sealed class SaveOfficePdfCommand : PSCmdlet
     public int? Permission { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var fullPath = PdfCommandUtilities.ResolvePath(this, Path);
-        if (!PdfCommandUtilities.ShouldWrite(this, fullPath, "Save PDF"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, fullPath, "Save PDF")) {
             return;
         }
 
@@ -66,11 +64,12 @@ public sealed class SaveOfficePdfCommand : PSCmdlet
         var document = PdfCommandUtilities.ApplyEncryption(Document, Password, OwnerPassword, Permission);
         document.Save(fullPath).RequireSuccess();
 
-        if (Show.IsPresent)
-        {
+        if (Open.IsPresent) {
             FileOpenService.Open(fullPath);
         }
 
-        WriteObject(PassThru.IsPresent ? document : new FileInfo(fullPath));
+        if (PassThru.IsPresent) {
+            WriteObject(document);
+        }
     }
 }

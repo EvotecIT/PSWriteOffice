@@ -50,7 +50,7 @@ public enum WordChartType
 ///     [pscustomobject]@{ Month = 'Feb'; Sales = 12; Profit = 5 }
 ///     [pscustomobject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }
 /// )
-/// $doc = New-OfficeWord -Path .\Trend.docx -PassThru
+/// $doc = New-OfficeWord -Path .\Trend.docx -NoSave
 /// Add-OfficeWordChart -Document $doc -Type Line -InputObject $trend -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -Title 'Quarter trend'
 /// Save-OfficeWord -Document $doc</code>
 ///   <para>Creates a multi-series line chart on the document and shows a legend.</para>

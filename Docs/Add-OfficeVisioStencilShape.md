@@ -11,17 +11,17 @@ Adds a stencil shape to the current Visio page.
 ## SYNTAX
 ### CatalogName (Default)
 ```powershell
-Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] [-Page <VisioPage>] [-Catalog <string>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [<CommonParameters>]
+Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] [-Page <VisioPage>] [-Catalog <string>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### CatalogObject
 ```powershell
-Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] -CatalogObject <VisioStencilCatalog> [-Page <VisioPage>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [<CommonParameters>]
+Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] -CatalogObject <VisioStencilCatalog> [-Page <VisioPage>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### BuiltIn
 ```powershell
-Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] [-Page <VisioPage>] [-BuiltIn <OfficeVisioBuiltInStencilCatalog>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [<CommonParameters>]
+Add-OfficeVisioStencilShape [-Stencil] <string> [[-Text] <string>] [-Page <VisioPage>] [-BuiltIn <OfficeVisioBuiltInStencilCatalog>] [-Key <string>] [-X <double>] [-Y <double>] [-Width <Double>] [-Height <Double>] [-ShapeName <string>] [-NameU <string>] [-FillColor <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-FillPattern <Int32>] [-Angle <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -246,6 +246,22 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: CatalogName, CatalogObject, BuiltIn
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

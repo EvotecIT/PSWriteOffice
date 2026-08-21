@@ -27,8 +27,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficePdfCanvasText", DefaultParameterSetName = ParameterSetText)]
 [Alias("PdfCanvasText")]
-public sealed class AddOfficePdfCanvasTextCommand : PSCmdlet
-{
+public sealed class AddOfficePdfCanvasTextCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetText = "Text";
     private const string ParameterSetRun = "Run";
 
@@ -104,13 +103,11 @@ public sealed class AddOfficePdfCanvasTextCommand : PSCmdlet
     public PdfTextBaseline Baseline { get; set; } = PdfTextBaseline.Normal;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = PdfCanvasDslContext.Require(this);
         var width = Width ?? context.Page.Width - X;
         var height = Height ?? context.Page.Height - Y;
-        if (width <= 0 || height <= 0)
-        {
+        if (width <= 0 || height <= 0) {
             throw new PSArgumentException(
                 "The text area must remain inside the page. Adjust -X/-Y or provide positive -Width/-Height values.");
         }
@@ -129,12 +126,11 @@ public sealed class AddOfficePdfCanvasTextCommand : PSCmdlet
             Align,
             FontSize,
             LineHeight);
+        WritePassThru(context.Page);
     }
 
-    private PdfTextRun[] CreatePlainTextRuns()
-    {
-        if (Text.Length == 0)
-        {
+    private PdfTextRun[] CreatePlainTextRuns() {
+        if (Text.Length == 0) {
             throw new PSArgumentException("Provide at least one text value.");
         }
 

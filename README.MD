@@ -87,11 +87,23 @@ $latex = Get-OfficeMarkdown -Path .\Paper.md |
 Native email and Google Workspace commands keep provider and credential ownership explicit:
 
 ```powershell
-$message = Get-OfficeEmail -Path .\Message.msg -AsResult
+$readerOptions = New-OfficeEmailReaderOptions -ExcludeAttachmentContent -MaxAttachmentBytes 25MB
+$message = Get-OfficeEmail -Path .\Message.msg -Options $readerOptions -AsResult
 $mailbox = Get-OfficeEmailMailbox -Path .\Archive.mbox -AsResult
 $docsPlan = Export-OfficeWordGoogleDocument -Path .\Report.docx -PlanOnly
 $sheetsBatch = Export-OfficeExcelGoogleSpreadsheet -Path .\Data.xlsx -AsBatch
 ```
+
+PSWriteOffice owns the document-workflow side of email: reading or writing standalone message and mailbox artifacts, and searching supported mail sources through the normalized `OfficeIMO.Reader` model. [Mailozaurr](https://github.com/EvotecIT/Mailozaurr) owns operational email and mailbox management, including transport, authentication, mailbox/store lifecycle, PST/OST import and conversion, querying, export, and delivery. Use PSWriteOffice when mail is an input to a report or mixed-document search; use Mailozaurr to acquire, manage, convert, or send the mail, then pass ordinary paths and attachments between the modules.
+
+The integration recipes make those boundaries executable:
+
+```powershell
+.\Examples\Integrations\Recipe-Mailozaurr-PdfDelivery.ps1 -SmtpServer smtp.example.com
+.\Examples\Integrations\Recipe-PSEventViewer-OfficeReport.ps1 -LogName System -MaxEvents 200
+```
+
+The Mailozaurr recipe generates a real PDF but keeps delivery under `-WhatIf` until `-Send` is supplied. The PSEventViewer recipe queries events once and turns the projected results into Word and Excel reports.
 
 Confluence writes can be reviewed before a session or tenant is involved:
 
@@ -130,6 +142,38 @@ Install and import the module once in the session:
 ```powershell
 Install-Module -Name PSWriteOffice -Scope CurrentUser
 Import-Module PSWriteOffice
+```
+
+### Predictable paths and pipeline output
+
+The public commands use `-Path` for the primary file. Converters use
+`-OutputPath` when they also accept a source `-Path`; copy operations use
+`-DestinationPath`. More specific names such as `-TemplatePath`, `-SourcePath`,
+and `-SignaturePath` are reserved for files with a distinct role. Older
+`-FilePath` spellings remain aliases where they were previously public.
+
+Commands that create, save, or mutate a document are quiet by default. Use
+`-PassThru` only when the next pipeline step needs the result. Use `-NoSave`
+when you want a live OfficeIMO document for incremental composition, and
+`-Open` when the completed file should be opened after it is written. On
+`Close-OfficeWord`, `Close-OfficeExcel`, and `Close-OfficePowerPoint`, combine
+`-Open` with `-Save` or `-Path`; opening never silently decides whether changes
+should be persisted.
+
+```powershell
+# One-shot DSL: save and finish without Out-Null.
+New-OfficeWord -Path .\Report.docx {
+    WordParagraph -Text 'Ready for review'
+}
+
+# Incremental composition: keep the live document until the explicit save.
+$document = New-OfficeWord -Path .\Report.docx -NoSave
+$document | Add-OfficeWordParagraph -Text 'Ready for review'
+$document | Save-OfficeWord
+$document | Close-OfficeWord
+
+# Capture a mutation result only when it is useful.
+$slide = Add-OfficePowerPointSlide -Presentation $presentation -PassThru
 ```
 
 ### Word
@@ -200,7 +244,7 @@ New-OfficePowerPoint -Path .\Deck.pptx {
 ```
 
 ```powershell
-$ppt = Get-OfficePowerPoint -FilePath .\Deck.pptx
+$ppt = Get-OfficePowerPoint -Path .\Deck.pptx
 Add-OfficePowerPointSection -Presentation $ppt -Name 'Intro' -StartSlideIndex 0
 Rename-OfficePowerPointSection -Presentation $ppt -Name 'Intro' -NewName 'Opening'
 Update-OfficePowerPointText -Presentation $ppt -OldValue 'FY24' -NewValue 'FY25' -IncludeNotes
@@ -208,12 +252,14 @@ Copy-OfficePowerPointSlide -Presentation $ppt -Index 0
 Get-OfficePowerPointSlide -Presentation $ppt -Index 0 | Set-OfficePowerPointSlideTransition -Transition Fade
 Set-OfficePowerPointSlideSize -Presentation $ppt -Preset Screen16x9
 Import-OfficePowerPointSlide -Presentation $ppt -SourcePath .\SourceDeck.pptx -SourceIndex 0
+$ppt | Save-OfficePowerPoint
+$ppt | Close-OfficePowerPoint
 ```
 
 ### PowerPoint theme and layout helpers
 
 ```powershell
-$ppt = Get-OfficePowerPoint -FilePath .\Deck.pptx
+$ppt = Get-OfficePowerPoint -Path .\Deck.pptx
 Set-OfficePowerPointThemeColor -Presentation $ppt -Colors @{ Accent1 = '#C00000'; Accent2 = '#00B0F0' } -AllMasters
 Set-OfficePowerPointThemeFonts -Presentation $ppt -MajorLatin 'Aptos' -MinorLatin 'Calibri' -AllMasters
 Set-OfficePowerPointThemeName -Presentation $ppt -Name 'Contoso Theme' -AllMasters
@@ -273,6 +319,40 @@ Split-OfficePdf -Path .\Report.pdf -OutputDirectory .\Pages
 Get-OfficePdfText -Path .\Report.pdf
 ```
 
+Export the same authored document to PDF explicitly instead of coupling PDF
+sidecars to each lifecycle command:
+
+```powershell
+Export-OfficeDocumentPdf -InputPath .\Report.docx -Path .\Report.pdf
+
+$document = Get-OfficeWord -Path .\Report.docx
+$document | Export-OfficeDocumentPdf -Path .\Report-Live.pdf
+$document | Close-OfficeWord
+```
+
+Format-specific controls are created with discoverable PowerShell commands—no
+hashtable keys or .NET constructors to guess:
+
+```powershell
+$pdfOptions = New-OfficeMarkdownPdfOptions `
+    -Title 'Service report' `
+    -Author 'Evotec' `
+    -IncludeLocalImages `
+    -BaseDirectory .\Assets `
+    -CreateOutlineFromHeadings
+
+Export-OfficeDocumentPdf `
+    -InputPath .\Report.md `
+    -Path .\Report.pdf `
+    -MarkdownOptions $pdfOptions `
+    -PdfWarningVariable pdfWarnings `
+    -PdfConversionReportVariable pdfReport
+```
+
+Equivalent builders are available for Word, Excel, PowerPoint, and RTF:
+`New-OfficeWordPdfOptions`, `New-OfficeExcelPdfOptions`,
+`New-OfficePowerPointPdfOptions`, and `New-OfficeRtfPdfOptions`.
+
 ### Excel chart finishing
 
 ```powershell
@@ -314,7 +394,7 @@ ExcelSheet 'Summary' {
 ### RTF
 
 ```powershell
-New-OfficeRtf -OutputPath .\Report.rtf -Text 'Summary', 'Ready for review'
+New-OfficeRtf -Path .\Report.rtf -Text 'Summary', 'Ready for review'
 Get-OfficeRtf -Path .\Report.rtf
 Update-OfficeRtfText -Path .\Report.rtf -OutputPath .\Report-Updated.rtf -OldText 'review' -NewText 'release'
 ConvertFrom-OfficeRtf -Path .\Report-Updated.rtf -As Pdf -OutputPath .\Report.pdf
@@ -478,12 +558,16 @@ ConvertFrom-OfficeRtf -Path .\Report.rtf -As Html -OutputPath .\Report.html -Inc
 ### Word charts with the current API
 
 ```powershell
-$doc = New-OfficeWord -Path .\Report.docx
-$chart = $doc.AddChart('Revenue Mix')
-$chart.AddPie('North America', 125000).
-    AddPie('EMEA', 98000).
-    AddPie('APAC', 143000) | Out-Null
-Close-OfficeWord -Document $doc -Save
+$doc = New-OfficeWord -Path .\Report.docx -NoSave
+$chartData = @(
+    [PSCustomObject]@{ Region = 'North America'; Revenue = 125000 }
+    [PSCustomObject]@{ Region = 'EMEA'; Revenue = 98000 }
+    [PSCustomObject]@{ Region = 'APAC'; Revenue = 143000 }
+)
+Add-OfficeWordChart -Document $doc -Type Pie -InputObject $chartData `
+    -CategoryProperty Region -SeriesProperty Revenue -Title 'Revenue Mix'
+$doc | Save-OfficeWord
+$doc | Close-OfficeWord
 ```
 
 ### Word tables with extra columns
@@ -500,7 +584,7 @@ New-OfficeWord -Path .\Report.docx {
 ### PowerPoint inspection
 
 ```powershell
-$ppt = Get-OfficePowerPoint -FilePath .\Deck.pptx
+$ppt = Get-OfficePowerPoint -Path .\Deck.pptx
 Get-OfficePowerPointSlide -Presentation $ppt
 Get-OfficePowerPointSlideSummary -Presentation $ppt
 Get-OfficePowerPointNotes -Presentation $ppt

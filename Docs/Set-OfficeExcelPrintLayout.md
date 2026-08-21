@@ -16,7 +16,7 @@ Set-OfficeExcelPrintLayout [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <Exc
 
 ### Path
 ```powershell
-Set-OfficeExcelPrintLayout [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <OfficePageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <UInt32>] [-FitToHeight <UInt32>] [-Scale <UInt32>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <Int32>] [-RepeatLastRow <Int32>] [-RepeatFirstColumn <Int32>] [-RepeatLastColumn <Int32>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficeExcelPrintLayout [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Preset <ExcelPrintLayoutPreset>] [-PrintArea <string>] [-Orientation <OfficePageOrientation>] [-Margins <ExcelMarginPreset>] [-FitToWidth <UInt32>] [-FitToHeight <UInt32>] [-Scale <UInt32>] [-PageOrder <ExcelPageOrder>] [-RepeatFirstRow <Int32>] [-RepeatLastRow <Int32>] [-RepeatFirstColumn <Int32>] [-RepeatLastColumn <Int32>] [-NoPresetPrintTitles] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -81,22 +81,6 @@ Possible values:
 
 Required: False
 Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -177,6 +161,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

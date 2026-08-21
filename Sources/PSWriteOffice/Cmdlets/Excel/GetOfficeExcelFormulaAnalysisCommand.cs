@@ -19,15 +19,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelFormulaAnalysis", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelFormulaAnalysis", "ExcelFormulaAudit")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelFormulaAnalysisCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelFormulaAnalysisCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook document.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -37,25 +36,22 @@ public sealed class GetOfficeExcelFormulaAnalysisCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IncludeFormulas { get; set; }
 
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var report = workbook.Document.AnalyzeFormulas();
         var output = new PSObject();
         output.Properties.Add(new PSNoteProperty("Path", workbook.Document.FilePath));
         output.Properties.Add(new PSNoteProperty("FormulaCount", report.FormulaCount));
         output.Properties.Add(new PSNoteProperty("VolatileFormulaCount", report.VolatileFormulaCount));
         output.Properties.Add(new PSNoteProperty("ExternalReferenceCount", report.ExternalReferenceCount));
-        if (IncludeFormulas.IsPresent)
-        {
+        if (IncludeFormulas.IsPresent) {
             output.Properties.Add(new PSNoteProperty("Formulas", report.Formulas.Select(CreateFormula).ToArray()));
         }
 
         WriteObject(output);
     }
 
-    private static PSObject CreateFormula(ExcelFormulaInfo formula)
-    {
+    private static PSObject CreateFormula(ExcelFormulaInfo formula) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("SheetName", formula.SheetName));
         item.Properties.Add(new PSNoteProperty("Address", formula.Address));

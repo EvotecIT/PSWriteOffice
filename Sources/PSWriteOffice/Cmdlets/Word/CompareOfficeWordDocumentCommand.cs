@@ -11,6 +11,12 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <code>$result = Compare-OfficeWordDocument -ReferencePath .\Before.docx -DifferencePath .\After.docx -RedlinePath .\Redline.docx</code>
 ///   <para>Returns deterministic findings and saves a Word document containing revision marks.</para>
 /// </example>
+/// <example>
+///   <summary>Ignore whitespace and volatile metadata.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>$options = New-OfficeWordComparisonOptions -IgnoreWhitespace -CompareVolatileMetadata:$false
+/// Compare-OfficeWordDocument -ReferencePath .\Before.docx -DifferencePath .\After.docx -Options $options</code>
+/// </example>
 [Cmdlet(VerbsData.Compare, "OfficeWordDocument", SupportsShouldProcess = true)]
 [OutputType(typeof(WordComparisonResult))]
 public sealed class CompareOfficeWordDocumentCommand : PSCmdlet

@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $services = @(
     [PSCustomObject]@{
         Name        = 'Directory API'
@@ -43,6 +42,6 @@ New-OfficeWord -Path $docPath {
     Add-OfficeWordParagraph -Text 'Calculated and projected columns'
     Add-OfficeWordParagraph -Text 'Shape your objects before Add-OfficeWordTable when you want extra columns or friendlier labels.'
     Add-OfficeWordTable -InputObject $tableData -Style 'GridTable1LightAccent1'
-} | Out-Null
+}
 
 Write-Host "Document saved to $docPath"

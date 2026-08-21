@@ -21,16 +21,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Add, "OfficeExcelPowerQueryMetadata", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPowerQueryMetadata", "ExcelQueryMetadata")]
 [OutputType(typeof(PSObject))]
-public sealed class AddOfficeExcelPowerQueryMetadataCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelPowerQueryMetadataCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetContext = "Context";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook document to update.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -65,22 +64,18 @@ public sealed class AddOfficeExcelPowerQueryMetadataCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
         string? sheetName = WorksheetName;
-        if (string.IsNullOrWhiteSpace(sheetName) && string.Equals(ParameterSetName, ParameterSetContext, System.StringComparison.OrdinalIgnoreCase))
-        {
+        if (string.IsNullOrWhiteSpace(sheetName) && string.Equals(ParameterSetName, ParameterSetContext, System.StringComparison.OrdinalIgnoreCase)) {
             sheetName = ExcelDslContext.Require(this).RequireSheet().Name;
         }
 
-        var result = workbook.Document.AddPowerQueryMetadata(new ExcelPowerQueryMetadataOptions
-        {
+        var result = workbook.Document.AddPowerQueryMetadata(new ExcelPowerQueryMetadataOptions {
             Name = Name,
             WorksheetName = sheetName,
             QueryTableName = QueryTableName,
@@ -90,8 +85,7 @@ public sealed class AddOfficeExcelPowerQueryMetadataCommand : PSCmdlet
         });
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var output = new PSObject();
             output.Properties.Add(new PSNoteProperty("Path", workbook.Document.FilePath));
             output.Properties.Add(new PSNoteProperty("ConnectionName", result.ConnectionName));

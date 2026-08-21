@@ -11,7 +11,7 @@ Gets workbook formula references, functions, volatile formulas, and external lin
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelFormulaAnalysis [-InputPath] <string> [-IncludeFormulas] [<CommonParameters>]
+Get-OfficeExcelFormulaAnalysis [-Path] <string> [-IncludeFormulas] [<CommonParameters>]
 ```
 
 ### Document
@@ -68,13 +68,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

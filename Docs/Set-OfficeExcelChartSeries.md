@@ -11,12 +11,12 @@ Configures Excel chart series colors, line style, and markers.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesIndex <int> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <string>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [<CommonParameters>]
+Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesIndex <int> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <string>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesName <string> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <string>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [<CommonParameters>]
+Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesName <string> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <string>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -182,6 +182,22 @@ Marker style name.
 
 ```yaml
 Type: String
+Parameter Sets: Index, Name
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: Index, Name
 Aliases: None
 Possible values:

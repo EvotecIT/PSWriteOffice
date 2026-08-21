@@ -11,7 +11,7 @@ Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contrac
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfImage [-Path] <string> [-OutputPath] <string> [-PageRange <string>] [-Format <OfficeImageExportFormat>] [-Options <PdfImageExportOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePdfImage [-Path] <string> [-OutputPath] <string> [-PageRange <string>] [-Format <OfficeImageExportFormat>] [-Options <PdfImageExportOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,7 +24,7 @@ Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contrac
 PS> Export-OfficePdfImage -Path .\Report.pdf -OutputPath .\Pages -PageRange '1-3,5'
 ```
 
-Writes the selected pages and returns normalized image results with rendering diagnostics.
+Writes the selected pages. Add -PassThru to receive normalized image results with rendering diagnostics.
 
 ## PARAMETERS
 
@@ -97,6 +97,22 @@ Optional one-based ranges such as 1-3,5.
 
 ```yaml
 Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit one structured image export result per saved page.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

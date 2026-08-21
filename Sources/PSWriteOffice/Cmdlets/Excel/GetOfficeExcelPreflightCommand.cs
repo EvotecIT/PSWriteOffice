@@ -18,15 +18,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelPreflight", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelPreflight")]
 [OutputType(typeof(PSObject), typeof(string))]
-public sealed class GetOfficeExcelPreflightCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelPreflightCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the workbook.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -53,30 +52,23 @@ public sealed class GetOfficeExcelPreflightCommand : PSCmdlet
     public SwitchParameter ThrowOnFailure { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var document = workbook.Document;
         var report = document.InspectFeatures();
         var capabilities = ResolveCapabilities();
 
-        if (ThrowOnFailure.IsPresent)
-        {
-            if (Capability != null && Capability.Length > 0)
-            {
-                foreach (var capability in capabilities)
-                {
+        if (ThrowOnFailure.IsPresent) {
+            if (Capability != null && Capability.Length > 0) {
+                foreach (var capability in capabilities) {
                     report.EnsureCan(capability);
                 }
-            }
-            else
-            {
+            } else {
                 report.EnsureNoAdvancedFeatures();
             }
         }
 
-        if (AsMarkdown.IsPresent)
-        {
+        if (AsMarkdown.IsPresent) {
             WriteObject(report.ToMarkdown());
             return;
         }
@@ -84,10 +76,8 @@ public sealed class GetOfficeExcelPreflightCommand : PSCmdlet
         WriteObject(CreatePreflightObject(document, report, capabilities, IncludeFeatures.IsPresent, IncludeRepairHints.IsPresent));
     }
 
-    private ExcelPreflightCapability[] ResolveCapabilities()
-    {
-        if (Capability != null && Capability.Length > 0)
-        {
+    private ExcelPreflightCapability[] ResolveCapabilities() {
+        if (Capability != null && Capability.Length > 0) {
             return Capability;
         }
 
@@ -101,8 +91,7 @@ public sealed class GetOfficeExcelPreflightCommand : PSCmdlet
         ExcelFeatureReport report,
         ExcelPreflightCapability[] capabilities,
         bool includeFeatures,
-        bool includeRepairHints)
-    {
+        bool includeRepairHints) {
         var result = new PSObject();
         result.Properties.Add(new PSNoteProperty("Path", document.FilePath));
         result.Properties.Add(new PSNoteProperty("HasAdvancedFeatures", report.HasAdvancedFeatures));
@@ -113,16 +102,14 @@ public sealed class GetOfficeExcelPreflightCommand : PSCmdlet
         result.Properties.Add(new PSNoteProperty("UnsupportedFeatureCount", report.UnsupportedFeatures.Count));
         result.Properties.Add(new PSNoteProperty("Capabilities", capabilities.Select(capability => CreateCapabilityObject(report, capability, includeRepairHints)).ToArray()));
 
-        if (includeFeatures)
-        {
+        if (includeFeatures) {
             result.Properties.Add(new PSNoteProperty("Features", report.Features.Select(CreateFeatureObject).ToArray()));
         }
 
         return result;
     }
 
-    private static PSObject CreateCapabilityObject(ExcelFeatureReport report, ExcelPreflightCapability capability, bool includeRepairHints)
-    {
+    private static PSObject CreateCapabilityObject(ExcelFeatureReport report, ExcelPreflightCapability capability, bool includeRepairHints) {
         var diagnostics = report.GetCapabilityDiagnostics(capability).ToArray();
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("Name", capability.ToString()));
@@ -130,16 +117,14 @@ public sealed class GetOfficeExcelPreflightCommand : PSCmdlet
         item.Properties.Add(new PSNoteProperty("CanAttempt", report.Can(capability)));
         item.Properties.Add(new PSNoteProperty("Diagnostics", diagnostics));
         item.Properties.Add(new PSNoteProperty("DiagnosticText", diagnostics.Length == 0 ? string.Empty : string.Join("; ", diagnostics)));
-        if (includeRepairHints)
-        {
+        if (includeRepairHints) {
             item.Properties.Add(new PSNoteProperty("RepairHints", report.GetRepairHints(capability).Select(CreateRepairHintObject).ToArray()));
         }
 
         return item;
     }
 
-    private static PSObject CreateRepairHintObject(ExcelPreflightRepairHint hint)
-    {
+    private static PSObject CreateRepairHintObject(ExcelPreflightRepairHint hint) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("Capability", hint.Capability.ToString()));
         item.Properties.Add(new PSNoteProperty("FeatureName", hint.FeatureName));
@@ -149,8 +134,7 @@ public sealed class GetOfficeExcelPreflightCommand : PSCmdlet
         return item;
     }
 
-    private static PSObject CreateFeatureObject(ExcelFeatureFinding feature)
-    {
+    private static PSObject CreateFeatureObject(ExcelFeatureFinding feature) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("Category", feature.Category));
         item.Properties.Add(new PSNoteProperty("Name", feature.Name));

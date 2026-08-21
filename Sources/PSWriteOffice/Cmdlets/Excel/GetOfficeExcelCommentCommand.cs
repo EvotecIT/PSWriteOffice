@@ -17,16 +17,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelComment", DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelComments")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelCommentCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelCommentCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to inspect.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to inspect outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -57,37 +56,30 @@ public sealed class GetOfficeExcelCommentCommand : PSCmdlet
     public string? TextContains { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var path = string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)
-            ? InputPath
+            ? Path
             : null;
         var filter = CreateFilter();
 
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
-        {
-            foreach (var comment in sheet.FindComments(filter))
-            {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex)) {
+            foreach (var comment in sheet.FindComments(filter)) {
                 WriteObject(ExcelCommentRecordService.CreateRecord(comment, sheet.Name, path));
             }
         }
     }
 
-    private ExcelCommentFilter? CreateFilter()
-    {
-        if (!string.IsNullOrWhiteSpace(Address) && !string.IsNullOrWhiteSpace(Range))
-        {
+    private ExcelCommentFilter? CreateFilter() {
+        if (!string.IsNullOrWhiteSpace(Address) && !string.IsNullOrWhiteSpace(Range)) {
             throw new PSArgumentException("Specify either -Address or -Range, not both.");
         }
 
-        if (string.IsNullOrWhiteSpace(Address) && string.IsNullOrWhiteSpace(Range) && string.IsNullOrWhiteSpace(Author) && string.IsNullOrWhiteSpace(TextContains))
-        {
+        if (string.IsNullOrWhiteSpace(Address) && string.IsNullOrWhiteSpace(Range) && string.IsNullOrWhiteSpace(Author) && string.IsNullOrWhiteSpace(TextContains)) {
             return null;
         }
 
-        return new ExcelCommentFilter
-        {
+        return new ExcelCommentFilter {
             A1Range = !string.IsNullOrWhiteSpace(Address) ? Address : Range,
             Author = Author,
             TextContains = TextContains

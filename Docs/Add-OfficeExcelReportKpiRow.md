@@ -11,7 +11,7 @@ Adds a KPI row to the current Excel report sheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficeExcelReportKpiRow [-InputObject] <Object> [-PerRow <int>] [-LabelFillColor <string>] [<CommonParameters>]
+Add-OfficeExcelReportKpiRow [-InputObject] <Object> [-PerRow <int>] [-LabelFillColor <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,6 +53,22 @@ Optional fill color for KPI labels.
 
 ```yaml
 Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

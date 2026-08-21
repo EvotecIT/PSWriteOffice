@@ -1,7 +1,6 @@
 using System;
 using System.Management.Automation;
 using OfficeIMO.Excel;
-using OfficeIMO.Excel.Pdf;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
 using PSWriteOffice.Services.Pdf;
@@ -17,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsData.Save, "OfficeExcel", SupportsShouldProcess = true)]
 [OutputType(typeof(ExcelDocument))]
-public sealed class SaveOfficeExcelCommand : PSCmdlet
-{
+public sealed class SaveOfficeExcelCommand : PSCmdlet {
     /// <summary>Workbook to save.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
     public ExcelDocument Document { get; set; } = null!;
@@ -29,7 +27,8 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
 
     /// <summary>Open the workbook after saving.</summary>
     [Parameter]
-    public SwitchParameter Show { get; set; }
+    [Alias("Show")]
+    public SwitchParameter Open { get; set; }
 
     /// <summary>Password used to save the workbook as an encrypted package.</summary>
     [Parameter]
@@ -67,10 +66,6 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
     [Parameter]
     public SwitchParameter ForceFullCalculationOnOpen { get; set; }
 
-    /// <summary>Optional PDF path to create from the same workbook.</summary>
-    [Parameter]
-    public string? PdfPath { get; set; }
-
     /// <summary>Workbook date system for Excel date serials.</summary>
     [Parameter]
     [ValidateSet("1900", "1904", "NineteenHundred", "NineteenFour")]
@@ -81,16 +76,13 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (Document == null)
-        {
+    protected override void ProcessRecord() {
+        if (Document == null) {
             return;
         }
 
         var associatedPath = ExcelDocumentService.GetAssociatedPath(Document);
-        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(associatedPath))
-        {
+        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(associatedPath)) {
             throw new PSInvalidOperationException("No file path provided. Use -Path or open the workbook from disk.");
         }
 
@@ -105,48 +97,35 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
             ForceFullCalculationOnOpen.IsPresent);
 
         string savedPath;
-        if (!string.IsNullOrWhiteSpace(Path))
-        {
+        if (!string.IsNullOrWhiteSpace(Path)) {
             var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Save Excel workbook"))
-            {
+            if (!PdfCommandUtilities.ShouldWrite(this, resolvedPath, "Save Excel workbook")) {
                 return;
             }
 
             if (string.IsNullOrEmpty(Password) &&
                 ExcelDocumentService.IsEncryptedSource(Document) &&
-                string.Equals(System.IO.Path.GetFullPath(resolvedPath), System.IO.Path.GetFullPath(associatedPath!), StringComparison.OrdinalIgnoreCase))
-            {
+                string.Equals(System.IO.Path.GetFullPath(resolvedPath), System.IO.Path.GetFullPath(associatedPath!), StringComparison.OrdinalIgnoreCase)) {
                 throw new PSInvalidOperationException("Provide -Password when saving a workbook loaded from an encrypted package.");
             }
 
             ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
-            if (!string.IsNullOrEmpty(Password))
-            {
+            if (!string.IsNullOrEmpty(Password)) {
                 OfficeEncryptedPackageService.SaveExcel(Document, resolvedPath, Password!, false, saveOptions);
-            }
-            else
-            {
+            } else {
                 Document.Save(resolvedPath, saveOptions);
             }
             savedPath = resolvedPath;
-        }
-        else
-        {
-            if (!PdfCommandUtilities.ShouldWrite(this, associatedPath!, "Save Excel workbook"))
-            {
+        } else {
+            if (!PdfCommandUtilities.ShouldWrite(this, associatedPath!, "Save Excel workbook")) {
                 return;
             }
 
             ExcelDateSystemService.ApplyIfSpecified(Document, DateSystem, nameof(DateSystem));
-            if (!string.IsNullOrEmpty(Password))
-            {
+            if (!string.IsNullOrEmpty(Password)) {
                 OfficeEncryptedPackageService.SaveExcel(Document, associatedPath!, Password!, false, saveOptions);
-            }
-            else
-            {
-                if (ExcelDocumentService.IsEncryptedSource(Document))
-                {
+            } else {
+                if (ExcelDocumentService.IsEncryptedSource(Document)) {
                     throw new PSInvalidOperationException("Provide -Password when saving a workbook loaded from an encrypted package.");
                 }
 
@@ -156,33 +135,13 @@ public sealed class SaveOfficeExcelCommand : PSCmdlet
         }
 
         ExcelDocumentService.UpdateSaveAssociation(Document, savedPath, !string.IsNullOrEmpty(Password));
-        if (Show.IsPresent)
-        {
+        if (Open.IsPresent) {
             FileOpenService.Open(savedPath);
         }
 
-        SavePdfIfRequested();
-
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(Document);
         }
     }
 
-    private void SavePdfIfRequested()
-    {
-        if (string.IsNullOrWhiteSpace(PdfPath))
-        {
-            return;
-        }
-
-        var pdfPath = PdfCommandUtilities.ResolvePath(this, PdfPath!);
-        if (!PdfCommandUtilities.ShouldWrite(this, pdfPath, "Write Excel PDF"))
-        {
-            return;
-        }
-
-        PdfCommandUtilities.EnsureDirectory(pdfPath);
-        Document.SaveAsPdf(pdfPath).RequireSuccess();
-    }
 }

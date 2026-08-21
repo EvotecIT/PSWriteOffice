@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsCommon.Add, "OfficeVisioConnector", DefaultParameterSetName = ByKeyParameterSet)]
 [Alias("VisioConnector")]
 [OutputType(typeof(VisioConnector))]
-public sealed class AddOfficeVisioConnectorCommand : PSCmdlet
-{
+public sealed class AddOfficeVisioConnectorCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ByKeyParameterSet = "ByKey";
     private const string ByShapeParameterSet = "ByShape";
 
@@ -82,8 +81,7 @@ public sealed class AddOfficeVisioConnectorCommand : PSCmdlet
     public EndArrow? EndArrow { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = VisioDslContext.Current;
         var page = Page ?? (context ?? VisioDslContext.Require(this)).RequirePage();
         var fromShape = ParameterSetName == ByShapeParameterSet
@@ -95,13 +93,11 @@ public sealed class AddOfficeVisioConnectorCommand : PSCmdlet
 
         var connector = page.AddConnector(fromShape, toShape, Kind, FromSide, ToSide);
         VisioShapeCommandUtilities.ApplyConnectorStyle(connector, LineColor, LineWeight, LinePattern, BeginArrow, EndArrow, Label);
-        WriteObject(connector);
+        WritePassThru(connector);
     }
 
-    private VisioShape ResolveShape(VisioDslContext? context, VisioPage page, string value)
-    {
-        if (context != null)
-        {
+    private VisioShape ResolveShape(VisioDslContext? context, VisioPage page, string value) {
+        if (context != null) {
             return context.ResolveShape(page, value);
         }
 

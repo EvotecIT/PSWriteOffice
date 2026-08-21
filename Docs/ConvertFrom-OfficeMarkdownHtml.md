@@ -16,7 +16,7 @@ ConvertFrom-OfficeMarkdownHtml [-Html] <string> [-OutputPath <string>] [-AsDocum
 
 ### Path
 ```powershell
-ConvertFrom-OfficeMarkdownHtml [-InputPath] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <Int32>] [-Base64ImageHandling <HtmlBase64ImageHandling>] [-Base64ImageOutputDirectory <string>] [-ListingCardMetadataMode <HtmlListingCardMetadataMode>] [-MaxTableExpandedColumns <Int32>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertFrom-OfficeMarkdownHtml [-Path] <string> [-OutputPath <string>] [-AsDocument] [-PassThru] [-Options <HtmlToMarkdownOptions>] [-Portable] [-BaseUri <string>] [-IncludeDocumentChrome] [-PreserveScriptsAndStyles] [-DropUnsupportedBlocks] [-DropUnsupportedInlineHtml] [-MaxInputCharacters <Int32>] [-Base64ImageHandling <HtmlBase64ImageHandling>] [-Base64ImageOutputDirectory <string>] [-ListingCardMetadataMode <HtmlListingCardMetadataMode>] [-MaxTableExpandedColumns <Int32>] [-WriteOptions <MarkdownWriteOptions>] [-WriteProfile <OfficeMarkdownWriteProfile>] [-ImageRenderingMode <MarkdownImageRenderingMode>] [-LineEnding <string>] [-UnorderedListMarker <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -184,22 +184,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to an HTML file.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -LineEnding
 Markdown line ending: CRLF, LF, CR, or a literal line ending string.
 
@@ -307,6 +291,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to an HTML file.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

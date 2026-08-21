@@ -11,12 +11,12 @@ Adds a connector between two Visio shapes.
 ## SYNTAX
 ### ByKey (Default)
 ```powershell
-Add-OfficeVisioConnector -From <string> -To <string> [-Page <VisioPage>] [-Kind <ConnectorKind>] [-FromSide <VisioSide>] [-ToSide <VisioSide>] [-Label <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-BeginArrow <EndArrow>] [-EndArrow <EndArrow>] [<CommonParameters>]
+Add-OfficeVisioConnector -From <string> -To <string> [-Page <VisioPage>] [-Kind <ConnectorKind>] [-FromSide <VisioSide>] [-ToSide <VisioSide>] [-Label <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-BeginArrow <EndArrow>] [-EndArrow <EndArrow>] [-PassThru] [<CommonParameters>]
 ```
 
 ### ByShape
 ```powershell
-Add-OfficeVisioConnector -FromShape <VisioShape> -ToShape <VisioShape> [-Page <VisioPage>] [-Kind <ConnectorKind>] [-FromSide <VisioSide>] [-ToSide <VisioSide>] [-Label <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-BeginArrow <EndArrow>] [-EndArrow <EndArrow>] [<CommonParameters>]
+Add-OfficeVisioConnector -FromShape <VisioShape> -ToShape <VisioShape> [-Page <VisioPage>] [-Kind <ConnectorKind>] [-FromSide <VisioSide>] [-ToSide <VisioSide>] [-Label <string>] [-LineColor <string>] [-LineWeight <Double>] [-LinePattern <Int32>] [-BeginArrow <EndArrow>] [-EndArrow <EndArrow>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -210,6 +210,22 @@ Required: False
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: ByKey, ByShape
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

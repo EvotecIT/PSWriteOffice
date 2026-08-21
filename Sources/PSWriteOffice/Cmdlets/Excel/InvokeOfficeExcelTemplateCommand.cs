@@ -15,16 +15,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsLifecycle.Invoke, "OfficeExcelTemplate", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Low, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelTemplate", "ExcelTemplateApply")]
 [OutputType(typeof(int))]
-public sealed class InvokeOfficeExcelTemplateCommand : PSCmdlet
-{
+public sealed class InvokeOfficeExcelTemplateCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -60,18 +59,15 @@ public sealed class InvokeOfficeExcelTemplateCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var values = ExcelTemplateValueService.ConvertValues(Value);
         var options = ExcelTemplateValueService.CreateOptions(CultureName, MissingValueBehavior, ThrowOnMissing.IsPresent);
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var replacements = 0;
         var processedAnySheet = false;
 
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
-        {
-            if (!ShouldProcess(sheet.Name, "Apply Excel template markers"))
-            {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex)) {
+            if (!ShouldProcess(sheet.Name, "Apply Excel template markers")) {
                 continue;
             }
 
@@ -79,12 +75,10 @@ public sealed class InvokeOfficeExcelTemplateCommand : PSCmdlet
             processedAnySheet = true;
         }
 
-        if (processedAnySheet)
-        {
+        if (processedAnySheet) {
             workbook.SaveIfOwned();
         }
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(replacements);
         }
     }

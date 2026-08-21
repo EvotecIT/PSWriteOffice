@@ -13,7 +13,7 @@ Describe 'Visio cmdlets' {
     It 'creates, loads, and inspects a Visio document' {
         $path = Join-Path $TestDrive 'diagram.vsdx'
 
-        $document = New-OfficeVisio -Path $path -Title 'Visio smoke' -Author 'PSWriteOffice' -PassThru
+        $document = New-OfficeVisio -Path $path -Title 'Visio smoke' -Author 'PSWriteOffice' -NoSave
         $document.Pages[0].AddRectangle(2, 2, 2, 1, 'Visio smoke') | Out-Null
         $document | Save-OfficeVisio -Path $path | Out-Null
 
@@ -36,7 +36,7 @@ Describe 'Visio cmdlets' {
         $svgPath = Join-Path $TestDrive 'export.svg'
         $pngPath = Join-Path $TestDrive 'export.png'
 
-        $document = New-OfficeVisio -Path $path -PassThru
+        $document = New-OfficeVisio -Path $path -NoSave
         $document.Pages[0].AddRectangle(2, 2, 2, 1, 'SVG smoke') | Out-Null
         $document | Save-OfficeVisio -Path $path | Out-Null
 
@@ -81,12 +81,12 @@ Describe 'Visio cmdlets' {
 
     It 'saves to the associated path without closing the Visio document' {
         $path = Join-Path $TestDrive 'associated-save.vsdx'
-        $document = New-OfficeVisio -Path $path -PassThru
+        $document = New-OfficeVisio -Path $path -NoSave
         $document.Pages[0].AddRectangle(2, 2, 2, 1, 'First save') | Out-Null
 
-        $savedFile = $document | Save-OfficeVisio
-        $savedFile | Should -BeOfType System.IO.FileInfo
-        $savedFile.FullName | Should -Be $path
+        $savedOutput = @($document | Save-OfficeVisio)
+        $savedOutput | Should -HaveCount 0
+        Test-Path -LiteralPath $path | Should -BeTrue
 
         $document.Pages[0].AddRectangle(5, 2, 2, 1, 'Second save') | Out-Null
         $returned = $document | Save-OfficeVisio -PassThru
@@ -104,7 +104,7 @@ Describe 'Visio cmdlets' {
             }
         } | Out-Null
 
-        $results = @(Export-OfficeVisioImage -Path $path -OutputPath $output -Format Svg)
+        $results = @(Export-OfficeVisioImage -Path $path -OutputPath $output -Format Svg -PassThru)
         $results | Should -HaveCount 2
         $results | ForEach-Object {
             $_.GetType().FullName | Should -Be 'OfficeIMO.Drawing.OfficeImageExportResult'
@@ -346,7 +346,7 @@ Describe 'Visio cmdlets' {
     It 'arranges Visio shapes with OfficeIMO selection layout and layers' {
         $path = Join-Path $TestDrive 'visio-layout.vsdx'
 
-        $document = New-OfficeVisio -Path $path -PassThru
+        $document = New-OfficeVisio -Path $path -NoSave
         $page = $document.Pages[0]
         $shape1 = $page.AddRectangle(1, 4, 1, 0.5, 'One')
         $shape2 = $page.AddRectangle(3, 3, 1, 0.5, 'Two')
@@ -367,7 +367,7 @@ Describe 'Visio cmdlets' {
         $ordered[1].PinX | Should -BeGreaterThan $ordered[0].PinX
         $ordered[2].PinX | Should -BeGreaterThan $ordered[1].PinX
 
-        $container = Add-OfficeVisioContainer -Page $page -ShapeId $shape1.Id, $shape2.Id, $shape3.Id -Id 'milestone-container' -Text 'Milestones' -Margin 0.2 -HeadingHeight 0.3 -FillColor '#E0F2FE' -LineColor '#0369A1'
+        $container = Add-OfficeVisioContainer -Page $page -ShapeId $shape1.Id, $shape2.Id, $shape3.Id -Id 'milestone-container' -Text 'Milestones' -Margin 0.2 -HeadingHeight 0.3 -FillColor '#E0F2FE' -LineColor '#0369A1' -PassThru
         $container.IsContainer | Should -BeTrue
         $container.ContainerMemberIds | Should -Contain $shape1.Id
         $shape1.ContainerOwnerIds | Should -Contain 'milestone-container'

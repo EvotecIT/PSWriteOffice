@@ -21,10 +21,10 @@ The module manifest is the source of truth for exported cmdlets and aliases. The
 
 ## Major families
 
-- **Excel — 158 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, visual placement, and image export.
-- **Word — 92 commands:** sections, paragraphs, lists, tables, fields, content controls, review, mail merge, protection, merging, visual placement, and conversion.
-- **PDF — 85 commands:** composition, editable Word/Excel/PowerPoint reconstruction, text and image extraction, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, visual placement, and diagnostics.
-- **PowerPoint — 58 commands:** slides, sections, shapes, charts, tables, notes, themes, layouts, transitions, visual placement, import, inspection, and HTML review.
+- **Excel — 162 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, visual placement, and image export.
+- **Word — 97 commands:** sections, paragraphs, lists, tables, fields, content controls, review, mail merge, protection, merging, visual placement, and conversion.
+- **PDF — 91 commands:** composition, explicit Word/Excel/PowerPoint/Markdown/RTF export, editable Office reconstruction, text and image extraction, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, visual placement, and diagnostics.
+- **PowerPoint — 61 commands:** slides, sections, shapes, charts, tables, notes, themes, layouts, transitions, visual placement, import, inspection, and HTML review.
 - **Confluence Cloud — 7 commands:** plan, create, update, and remove pages; preserve managed sections; and list, upload, or download attachments.
 - **Protection capabilities — 1 commands:** inspect OfficeIMO's shared protected-content support contract as typed rows, JSON, or Markdown.
 - **Markdown, Visio, Reader, visuals, and open formats:** typed Markdown, VSDX diagrams and stencils, cross-format visual placement, normalized extraction, RTF, CSV, ODT/ODS/ODP, email, AsciiDoc, and LaTeX workflows.

@@ -18,8 +18,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 /// </example>
 [Cmdlet(VerbsCommon.Remove, "OfficePdfPage", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium)]
 [OutputType(typeof(FileInfo))]
-public sealed class RemoveOfficePdfPageCommand : PSCmdlet
-{
+public sealed class RemoveOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Input PDF path.</summary>
     [Parameter(Mandatory = true)]
     [Alias("FilePath")]
@@ -42,11 +41,9 @@ public sealed class RemoveOfficePdfPageCommand : PSCmdlet
     public SwitchParameter IgnorePermissionRestrictions { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF without selected pages"))
-        {
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF without selected pages")) {
             return;
         }
 
@@ -55,6 +52,6 @@ public sealed class RemoveOfficePdfPageCommand : PSCmdlet
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Pages.Delete(PageRange).Save(outputPath).RequireSuccess();
-        WriteObject(new FileInfo(outputPath));
+        WritePassThru(new FileInfo(outputPath));
     }
 }

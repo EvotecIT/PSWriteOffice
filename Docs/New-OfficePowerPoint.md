@@ -11,7 +11,7 @@ Creates a PowerPoint presentation using the DSL.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficePowerPoint [-FilePath] <string> [[-Content] <scriptblock>] [-Open] [-NoSave] [-PassThru] [-Password <string>] [-PdfPath <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficePowerPoint [-Path] <string> [[-Content] <scriptblock>] [-Open] [-NoSave] [-PassThru] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,10 +21,10 @@ Initializes a presentation, runs the DSL script block, and optionally saves the 
 
 ### EXAMPLE 1
 ```powershell
-PS> $ppt = New-OfficePowerPoint -FilePath .\deck.pptx
+PS> $ppt = New-OfficePowerPoint -Path .\deck.pptx -NoSave
 ```
 
-Creates deck.pptx and returns the live presentation object for further editing.
+Creates a live presentation associated with deck.pptx for incremental composition.
 
 ### EXAMPLE 2
 ```powershell
@@ -46,22 +46,6 @@ Possible values:
 
 Required: False
 Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -FilePath
-Destination path for the new .pptx.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: Path
-Possible values:
-
-Required: True
-Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -100,7 +84,7 @@ Accept wildcard characters: False
 ```
 
 ### -PassThru
-Emit a FileInfo for chaining.
+Emit the saved FileInfo for chaining.
 
 ```yaml
 Type: SwitchParameter
@@ -131,17 +115,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -PdfPath
-Optional PDF path to create from the same presentation before closing it.
+### -Path
+Destination path for the new .pptx.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: FilePath
 Possible values:
 
-Required: False
-Position: named
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -11,7 +11,7 @@ Merges worksheets from one or more workbooks into a target workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Join-OfficeExcelWorkbook [-InputPath] <string> [[-SourcePath] <string[]>] [-SourceDocument <ExcelDocument>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeExcelWorkbook [-Path] <string> [[-SourcePath] <string[]>] [-SourceDocument <ExcelDocument>] [-SourceSheet <string[]>] [-SheetNamePrefix <string>] [-ValidationMode <ExcelSheetNameValidationMode>] [-CopyMode <ExcelWorksheetCopyMode>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -76,13 +76,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Target workbook path to create or update.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath, OutputPath
+Aliases: InputPath, FilePath, OutputPath
 Possible values:
 
 Required: True

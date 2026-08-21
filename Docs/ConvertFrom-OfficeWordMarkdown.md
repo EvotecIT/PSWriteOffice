@@ -16,7 +16,7 @@ ConvertFrom-OfficeWordMarkdown [-Markdown] <string> [-OutputPath <string>] [-Tem
 
 ### Path
 ```powershell
-ConvertFrom-OfficeWordMarkdown [-FilePath] <string> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownDialectProfile>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-Theme <OfficeVisualThemeKind>] [-AllowDataUriImages <Boolean>] [-MaxDataUriImageBytes <Int64>] [-PreferNarrativeSingleLineDefinitions] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <Double>] [-MaxImageHeightPixels <Double>] [-MaxImageWidthPercentOfContent <Double>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertFrom-OfficeWordMarkdown [-Path] <string> [-OutputPath <string>] [-TemplatePath <string>] [-BookmarkName <string>] [-ContentControlTag <string>] [-ContentControlAlias <string>] [-KeepPlaceholder] [-RenderFrontMatter] [-FontFamily <string>] [-BaseUri <string>] [-AllowLocalImages] [-AllowedImageDirectory <string[]>] [-AllowRemoteImages] [-ReaderOptions <MarkdownReaderOptions>] [-Profile <MarkdownDialectProfile>] [-NormalizeInput <MarkdownInputNormalizationPreset>] [-Theme <OfficeVisualThemeKind>] [-AllowDataUriImages <Boolean>] [-MaxDataUriImageBytes <Int64>] [-PreferNarrativeSingleLineDefinitions] [-FitImagesToPageContentWidth] [-FitImagesToContextWidth] [-MaxImageWidthPixels <Double>] [-MaxImageHeightPixels <Double>] [-MaxImageWidthPercentOfContent <Double>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -193,22 +193,6 @@ Required: True
 Position: named
 Default value: None
 Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
-```
-
-### -FilePath
-Path to a Markdown file.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -415,6 +399,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to a Markdown file.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

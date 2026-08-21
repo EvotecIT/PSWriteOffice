@@ -19,7 +19,7 @@ New-OfficeWord -Path $Path {
         WordText 'Summary section'
         WordBookmark -Name 'Summary'
     }
-} | Out-Null
+}
 
 $links = Get-OfficeWordHyperlink -Path $Path
 $properties = Get-OfficeWordDocumentProperty -Path $Path

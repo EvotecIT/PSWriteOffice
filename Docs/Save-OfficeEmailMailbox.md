@@ -11,7 +11,7 @@ Saves a native mbox mailbox with output diagnostics.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeEmailMailbox [-Path] <string> -Mailbox <EmailMailbox> [-Options <EmailMailboxWriterOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficeEmailMailbox [-Path] <string> -Mailbox <EmailMailbox> [-Options <EmailMailboxWriterOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,7 +21,8 @@ Saves a native mbox mailbox with output diagnostics.
 
 ### EXAMPLE 1
 ```powershell
-Save-OfficeEmailMailbox -Mailbox 'Value'
+PS> $options = New-OfficeEmailMailboxWriterOptions -Variant Mboxrd
+$mailbox | Save-OfficeEmailMailbox -Path .\Archive.mbox -Options $options -PassThru
 ```
 
 
@@ -48,6 +49,22 @@ Optional mailbox variant, envelope, and output limits.
 
 ```yaml
 Type: EmailMailboxWriterOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

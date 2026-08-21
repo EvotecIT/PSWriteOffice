@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Excel-NavigationAndRanges.xlsx'
 $rows = @(
     [PSCustomObject]@{ Region = 'North America'; Revenue = 125000 }
@@ -19,7 +18,7 @@ New-OfficeExcel -Path $path {
         ExcelRow -Row 2 -Values 'Generated', (Get-Date -Format 'yyyy-MM-dd')
     }
     ExcelTableOfContents -IncludeNamedRanges
-} | Out-Null
+}
 
 Write-Host "Workbook saved to $path"
 Write-Host ''

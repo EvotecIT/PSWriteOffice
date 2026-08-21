@@ -14,8 +14,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelFormula")]
 [Alias("ExcelFormula")]
-public sealed class SetOfficeExcelFormulaCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelFormulaCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>1-based row index.</summary>
     [Parameter(ParameterSetName = "Coordinates")]
     public int? Row { get; set; }
@@ -33,11 +32,11 @@ public sealed class SetOfficeExcelFormulaCommand : PSCmdlet
     public string Formula { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = ExcelDslContext.Require(this);
         var sheet = context.RequireSheet();
         var (row, column) = ExcelHostExtensions.ResolveCellAddress(Row, Column, Address);
         sheet.Cell(row, column, value: null, formula: Formula, numberFormat: null);
+        WritePassThru(sheet);
     }
 }

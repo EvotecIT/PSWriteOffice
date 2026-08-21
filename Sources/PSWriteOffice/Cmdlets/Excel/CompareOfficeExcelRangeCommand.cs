@@ -17,16 +17,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsData.Compare, "OfficeExcelRange", DefaultParameterSetName = ParameterSetPath)]
 [Alias("Compare-OfficeExcelSheet", "ExcelCompare")]
 [OutputType(typeof(ExcelRangeDifference))]
-public sealed class CompareOfficeExcelRangeCommand : PSCmdlet
-{
+public sealed class CompareOfficeExcelRangeCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Left workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath", "LeftPath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath", "LeftPath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Left workbook object.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -78,17 +77,15 @@ public sealed class CompareOfficeExcelRangeCommand : PSCmdlet
     public SwitchParameter StrictNullEmpty { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var leftWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var leftWorkbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var leftDocument = leftWorkbook.Document;
         using var rightWorkbook = ResolveRightWorkbook(leftDocument);
         var rightDocument = rightWorkbook.Document;
         var leftSheet = ExcelWorkbookCommandService.ResolveSheet(this, leftDocument, ParameterSetName, LeftSheet, LeftSheetIndex);
         var rightSheet = ResolveRightSheet(rightDocument, leftSheet.Name);
 
-        var options = new ExcelRangeCompareOptions
-        {
+        var options = new ExcelRangeCompareOptions {
             TrimStrings = TrimStrings.IsPresent,
             IgnoreCase = IgnoreCase.IsPresent,
             TreatNullAndEmptyStringAsEqual = !StrictNullEmpty.IsPresent
@@ -104,20 +101,16 @@ public sealed class CompareOfficeExcelRangeCommand : PSCmdlet
         WriteObject(differences, enumerateCollection: true);
     }
 
-    private ExcelWorkbookCommandScope ResolveRightWorkbook(ExcelDocument leftDocument)
-    {
-        if (ParameterSetName == ParameterSetPath && !string.IsNullOrWhiteSpace(RightPath))
-        {
+    private ExcelWorkbookCommandScope ResolveRightWorkbook(ExcelDocument leftDocument) {
+        if (ParameterSetName == ParameterSetPath && !string.IsNullOrWhiteSpace(RightPath)) {
             return ExcelWorkbookCommandService.OpenWorkbook(this, RightPath!, readOnly: true);
         }
 
         return new ExcelWorkbookCommandScope(RightDocument ?? leftDocument, ownsDocument: false);
     }
 
-    private ExcelSheet ResolveRightSheet(ExcelDocument document, string leftSheetName)
-    {
-        if (!string.IsNullOrWhiteSpace(RightSheet) || RightSheetIndex.HasValue)
-        {
+    private ExcelSheet ResolveRightSheet(ExcelDocument document, string leftSheetName) {
+        if (!string.IsNullOrWhiteSpace(RightSheet) || RightSheetIndex.HasValue) {
             return ExcelSheetResolver.Resolve(document, RightSheet, RightSheetIndex);
         }
 

@@ -48,13 +48,13 @@ $familyDefinitions = @(
         id = 'pdf'; title = 'PDF'; description = 'Author, inspect, transform, sign, annotate, extract, preflight, and combine PDF files.'
         docs = 'pdf'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Pdf'
         samples = @('New-OfficePdf', 'Join-OfficePdf', 'Get-OfficePdfPreflight', 'Set-OfficePdfSignature')
-        match = { param($name) $name -match 'OfficePdf' }
+        match = { param($name) $name -match 'OfficePdf|OfficeDocumentPdf' }
     }
     [ordered]@{
         id = 'reader'; title = 'Reader and extraction'; description = 'Detect formats and extract normalized documents, chunks, tables, visuals, assets, and ingest results.'
         docs = 'reader'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Reader'
         samples = @('New-OfficeDocumentReader', 'Get-OfficeDocumentChunk', 'Get-OfficeDocumentTable', 'Search-OfficeDocument')
-        match = { param($name) $name -match 'OfficeDocument' -and $name -ne 'Get-OfficeDocumentPageMarkdown' }
+        match = { param($name) ($name -match 'OfficeDocument' -and $name -notin 'Get-OfficeDocumentPageMarkdown', 'Export-OfficeDocumentPdf') -or $name -match 'OfficeReader' }
     }
     [ordered]@{
         id = 'confluence'; title = 'Confluence Cloud'; description = 'Plan and publish pages, preserve managed sections, and transfer attachments through OfficeIMO.Confluence.'
@@ -87,9 +87,9 @@ $familyDefinitions = @(
         match = { param($name) $name -match 'OfficeCsv' }
     }
     [ordered]@{
-        id = 'open-document'; title = 'OpenDocument'; description = 'Create, read, and save ODT, ODS, and ODP workflows.'
+        id = 'open-document'; title = 'OpenDocument'; description = 'Compose, read, convert, and save ODT, ODS, and ODP workflows.'
         docs = 'open-text-formats'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples'
-        samples = @('New-OfficeOpenDocument', 'Get-OfficeOpenDocument', 'Save-OfficeOpenDocument')
+        samples = @('New-OfficeOpenDocument', 'Add-OfficeOpenDocumentParagraph', 'Set-OfficeOpenDocumentCell', 'Save-OfficeOpenDocument')
         match = { param($name) $name -match 'OfficeOpenDocument' }
     }
     [ordered]@{
@@ -114,7 +114,7 @@ $familyDefinitions = @(
         id = 'html'; title = 'HTML assets'; description = 'Export images and review surfaces used by document-to-HTML workflows.'
         docs = 'open-text-formats'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples'
         samples = @('Export-OfficeHtmlImage')
-        match = { param($name) $name -eq 'Export-OfficeHtmlImage' }
+        match = { param($name) $name -match 'OfficeHtml' }
     }
     [ordered]@{
         id = 'visuals'; title = 'Cross-format visuals'; description = 'Convert reusable visual artifacts for Word, Excel, PowerPoint, and PDF placement.'

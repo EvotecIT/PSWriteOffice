@@ -15,16 +15,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Clear, "OfficeExcelPageBreak", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium, DefaultParameterSetName = ParameterSetContext)]
 [Alias("ExcelPageBreakClear")]
-public sealed class ClearOfficeExcelPageBreakCommand : PSCmdlet
-{
+public sealed class ClearOfficeExcelPageBreakCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -52,42 +51,35 @@ public sealed class ClearOfficeExcelPageBreakCommand : PSCmdlet
     public SwitchParameter All { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (!All.IsPresent && Row.Length == 0 && Column.Length == 0)
-        {
+    protected override void ProcessRecord() {
+        if (!All.IsPresent && Row.Length == 0 && Column.Length == 0) {
             throw new PSArgumentException("Provide row breaks, column breaks, or -All.");
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         var shouldSave = false;
-        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex))
-        {
-            if (!ShouldProcess(sheet.Name, "Clear Excel manual page breaks"))
-            {
+        foreach (var sheet in ExcelWorkbookCommandService.ResolveSheets(this, workbook.Document, ParameterSetName, Sheet, SheetIndex)) {
+            if (!ShouldProcess(sheet.Name, "Clear Excel manual page breaks")) {
                 continue;
             }
 
-            if (All.IsPresent)
-            {
+            if (All.IsPresent) {
                 shouldSave |= sheet.ClearManualPageBreaks(save: false);
                 continue;
             }
 
-            foreach (var row in Row)
-            {
+            foreach (var row in Row) {
                 shouldSave |= sheet.RemoveManualRowPageBreak(row, save: false);
             }
 
-            foreach (var column in Column)
-            {
+            foreach (var column in Column) {
                 shouldSave |= sheet.RemoveManualColumnPageBreak(column, save: false);
             }
         }
 
-        if (shouldSave)
-        {
+        if (shouldSave) {
             workbook.SaveIfOwned();
+            WritePassThru(workbook.Document, workbook.OwnsDocument, Path);
         }
     }
 }

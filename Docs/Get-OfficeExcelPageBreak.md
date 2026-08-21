@@ -16,7 +16,7 @@ Get-OfficeExcelPageBreak [-Sheet <string>] [-SheetIndex <Int32>] [-Row] [-Column
 
 ### Path
 ```powershell
-Get-OfficeExcelPageBreak [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row] [-Column] [<CommonParameters>]
+Get-OfficeExcelPageBreak [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Row] [-Column] [<CommonParameters>]
 ```
 
 ### Document
@@ -72,13 +72,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path to inspect.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

@@ -25,8 +25,7 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportTitle")]
 [Alias("ExcelReportTitle")]
-public sealed class AddOfficeExcelReportTitleCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelReportTitleCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Title text.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Title { get; set; } = string.Empty;
@@ -36,9 +35,10 @@ public sealed class AddOfficeExcelReportTitleCommand : PSCmdlet
     public string? Subtitle { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        ExcelDslContext.Require(this).RequireComposer().Title(Title, Subtitle);
+    protected override void ProcessRecord() {
+        var context = ExcelDslContext.Require(this);
+        context.RequireComposer().Title(Title, Subtitle);
+        WritePassThru(context.RequireSheet());
     }
 }
 
@@ -56,16 +56,16 @@ public sealed class AddOfficeExcelReportTitleCommand : PSCmdlet
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportSection")]
 [Alias("ExcelReportSection")]
-public sealed class AddOfficeExcelReportSectionCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelReportSectionCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Section heading text.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Text { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        ExcelDslContext.Require(this).RequireComposer().Section(Text);
+    protected override void ProcessRecord() {
+        var context = ExcelDslContext.Require(this);
+        context.RequireComposer().Section(Text);
+        WritePassThru(context.RequireSheet());
     }
 }
 
@@ -83,16 +83,16 @@ public sealed class AddOfficeExcelReportSectionCommand : PSCmdlet
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportParagraph")]
 [Alias("ExcelReportParagraph")]
-public sealed class AddOfficeExcelReportParagraphCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelReportParagraphCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Paragraph text.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     public string Text { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        ExcelDslContext.Require(this).RequireComposer().Paragraph(Text);
+    protected override void ProcessRecord() {
+        var context = ExcelDslContext.Require(this);
+        context.RequireComposer().Paragraph(Text);
+        WritePassThru(context.RequireSheet());
     }
 }
 
@@ -111,16 +111,16 @@ public sealed class AddOfficeExcelReportParagraphCommand : PSCmdlet
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportSpacer")]
 [Alias("ExcelReportSpacer")]
-public sealed class AddOfficeExcelReportSpacerCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelReportSpacerCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Rows to advance. Defaults to the composer theme spacing.</summary>
     [Parameter(Position = 0)]
     public int Rows { get; set; } = -1;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        ExcelDslContext.Require(this).RequireComposer().Spacer(Rows);
+    protected override void ProcessRecord() {
+        var context = ExcelDslContext.Require(this);
+        context.RequireComposer().Spacer(Rows);
+        WritePassThru(context.RequireSheet());
     }
 }
 
@@ -137,8 +137,7 @@ public sealed class AddOfficeExcelReportSpacerCommand : PSCmdlet
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportCallout")]
 [Alias("ExcelReportCallout")]
-public sealed class AddOfficeExcelReportCalloutCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelReportCalloutCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Callout kind. Supported values include info, success, warning, error, and critical.</summary>
     [Parameter(Position = 0)]
     [ValidateSet("Info", "Success", "Warning", "Error", "Critical")]
@@ -157,9 +156,10 @@ public sealed class AddOfficeExcelReportCalloutCommand : PSCmdlet
     public int WidthColumns { get; set; } = 8;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        ExcelDslContext.Require(this).RequireComposer().Callout(Kind, Title, Body, WidthColumns);
+    protected override void ProcessRecord() {
+        var context = ExcelDslContext.Require(this);
+        context.RequireComposer().Callout(Kind, Title, Body, WidthColumns);
+        WritePassThru(context.RequireSheet());
     }
 }
 
@@ -176,8 +176,7 @@ public sealed class AddOfficeExcelReportCalloutCommand : PSCmdlet
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportKpiRow")]
 [Alias("ExcelReportKpiRow")]
-public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelReportKpiRowCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Hashtable or objects with Label/Value, Key/Value, Name/Value, or Title/Value properties.</summary>
     [Parameter(Mandatory = true, Position = 0)]
     [Alias("Data")]
@@ -192,9 +191,10 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
     public string? LabelFillColor { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        ExcelDslContext.Require(this).RequireComposer().KpiRow(ReportBlockInput.ToPairs(InputObject), PerRow, LabelFillColor);
+    protected override void ProcessRecord() {
+        var context = ExcelDslContext.Require(this);
+        context.RequireComposer().KpiRow(ReportBlockInput.ToPairs(InputObject), PerRow, LabelFillColor);
+        WritePassThru(context.RequireSheet());
     }
 }
 
@@ -215,8 +215,7 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSCmdlet
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportLegend")]
 [Alias("ExcelReportLegend")]
-public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelReportLegendCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Optional legend title.</summary>
     [Parameter(Position = 0)]
     public string? Title { get; set; }
@@ -244,14 +243,15 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
     public SwitchParameter CaseSensitive { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        ExcelDslContext.Require(this).RequireComposer().SectionLegend(
+    protected override void ProcessRecord() {
+        var context = ExcelDslContext.Require(this);
+        context.RequireComposer().SectionLegend(
             Title,
             Header,
             InputObject.Select(row => ReportBlockInput.ToRow(row, Header)),
             ReportBlockInput.ToStringMap(FirstColumnFillByValue, CaseSensitive.IsPresent),
             HeaderFillColor);
+        WritePassThru(context.RequireSheet());
     }
 }
 
@@ -272,8 +272,7 @@ public sealed class AddOfficeExcelReportLegendCommand : PSCmdlet
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelReportTable")]
 [Alias("ExcelReportTable")]
-public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelReportTableCommand : PSCmdlet {
     private readonly List<object?> _items = new();
 
     /// <summary>Objects to flatten and render as a table.</summary>
@@ -355,14 +354,12 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         TableInputCollector.AddInput(_items, InputObject, preserveTabularInput: true);
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
+    protected override void EndProcessing() {
         var inputRows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         var normalizerOptions = PowerShellObjectNormalizerOptions.ForTable(
             CollectionSeparator,
@@ -381,8 +378,7 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
         var requestedColumns = NormalizePropertyList(Property) ?? sourceColumns;
         var excludedProperties = NormalizePropertyList(ExcludeProperty) ?? Array.Empty<string>();
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
-        {
+        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style)) {
             throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
         }
 
@@ -390,16 +386,14 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
         var range = composer.TableFrom(
             table,
             Title,
-            configure: options =>
-            {
+            configure: options => {
                 options.Columns = requestedColumns;
                 options.ExcludeProperties = excludedProperties;
             },
             style: style,
             autoFilter: !NoAutoFilter.IsPresent,
             freezeHeaderRow: !NoFreezeHeaderRow.IsPresent,
-            visuals: options =>
-            {
+            visuals: options => {
                 options.AutoFormatDynamicCollections = !NoAutoFormatDynamicCollections.IsPresent;
                 options.ShowFirstColumn = ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowFirstColumn), ShowFirstColumn);
                 options.ShowLastColumn = ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowLastColumn), ShowLastColumn);
@@ -407,16 +401,13 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
                 options.ShowColumnStripes = ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowColumnStripes), ShowColumnStripes);
             });
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(range);
         }
     }
 
-    private static string[]? NormalizePropertyList(string[]? properties)
-    {
-        if (properties == null || properties.Length == 0)
-        {
+    private static string[]? NormalizePropertyList(string[]? properties) {
+        if (properties == null || properties.Length == 0) {
             return null;
         }
 
@@ -430,15 +421,11 @@ public sealed class AddOfficeExcelReportTableCommand : PSCmdlet
     }
 }
 
-internal static class ReportBlockInput
-{
-    public static IReadOnlyList<(string Label, object? Value)> ToPairs(object input)
-    {
-        if (input is IDictionary dictionary)
-        {
+internal static class ReportBlockInput {
+    public static IReadOnlyList<(string Label, object? Value)> ToPairs(object input) {
+        if (input is IDictionary dictionary) {
             var pairs = new List<(string Label, object? Value)>();
-            foreach (DictionaryEntry entry in dictionary)
-            {
+            foreach (DictionaryEntry entry in dictionary) {
                 pairs.Add((Convert.ToString(entry.Key, CultureInfo.InvariantCulture) ?? string.Empty, entry.Value));
             }
 
@@ -449,8 +436,7 @@ internal static class ReportBlockInput
             ? enumerable.Cast<object?>().Where(item => item != null).ToArray()
             : new[] { input };
 
-        return rows.Select(item =>
-        {
+        return rows.Select(item => {
             var psObject = PSObject.AsPSObject(item);
             var label = GetProperty(psObject, "Label")
                 ?? GetProperty(psObject, "Key")
@@ -463,16 +449,11 @@ internal static class ReportBlockInput
         }).ToArray();
     }
 
-    public static IReadOnlyList<string> ToRow(object input, IReadOnlyList<string> headers)
-    {
-        if (input is IDictionary dictionary)
-        {
-            return headers.Select(header =>
-            {
-                foreach (DictionaryEntry entry in dictionary)
-                {
-                    if (string.Equals(Convert.ToString(entry.Key, CultureInfo.InvariantCulture), header, StringComparison.OrdinalIgnoreCase))
-                    {
+    public static IReadOnlyList<string> ToRow(object input, IReadOnlyList<string> headers) {
+        if (input is IDictionary dictionary) {
+            return headers.Select(header => {
+                foreach (DictionaryEntry entry in dictionary) {
+                    if (string.Equals(Convert.ToString(entry.Key, CultureInfo.InvariantCulture), header, StringComparison.OrdinalIgnoreCase)) {
                         return Convert.ToString(entry.Value, CultureInfo.InvariantCulture) ?? string.Empty;
                     }
                 }
@@ -481,8 +462,7 @@ internal static class ReportBlockInput
             }).ToArray();
         }
 
-        if (input is IEnumerable enumerable and not string)
-        {
+        if (input is IEnumerable enumerable and not string) {
             return enumerable.Cast<object?>()
                 .Select(value => Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty)
                 .ToArray();
@@ -492,21 +472,17 @@ internal static class ReportBlockInput
         return headers.Select(header => Convert.ToString(GetPropertyValue(psObject, header), CultureInfo.InvariantCulture) ?? string.Empty).ToArray();
     }
 
-    public static Dictionary<string, string>? ToStringMap(Hashtable? table, bool caseSensitive = false)
-    {
-        if (table == null || table.Count == 0)
-        {
+    public static Dictionary<string, string>? ToStringMap(Hashtable? table, bool caseSensitive = false) {
+        if (table == null || table.Count == 0) {
             return null;
         }
 
         var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
         var result = new Dictionary<string, string>(comparer);
-        foreach (DictionaryEntry entry in table)
-        {
+        foreach (DictionaryEntry entry in table) {
             var key = Convert.ToString(entry.Key, CultureInfo.InvariantCulture);
             var value = Convert.ToString(entry.Value, CultureInfo.InvariantCulture);
-            if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
-            {
+            if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value)) {
                 result[key] = value;
             }
         }
@@ -514,13 +490,11 @@ internal static class ReportBlockInput
         return result;
     }
 
-    private static string? GetProperty(PSObject psObject, string name)
-    {
+    private static string? GetProperty(PSObject psObject, string name) {
         return Convert.ToString(GetPropertyValue(psObject, name), CultureInfo.InvariantCulture);
     }
 
-    private static object? GetPropertyValue(PSObject psObject, string name)
-    {
+    private static object? GetPropertyValue(PSObject psObject, string name) {
         return psObject.Properties[name]?.Value;
     }
 }

@@ -11,7 +11,7 @@ Appends one or more data rows to an existing Excel table.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Add-OfficeExcelTableRow [-InputPath] <string> [-InputObject] <Object> -TableName <string> [-Sheet <string>] [-SheetIndex <Int32>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelTableRow [-Path] <string> [-InputObject] <Object> -TableName <string> [-Sheet <string>] [-SheetIndex <Int32>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -91,22 +91,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to open, update, save, and close.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -PassThru
 Emit the updated table wrapper for open document or table inputs. Path-owned workbooks are saved and closed by this command,
 so they do not emit a live table wrapper.
@@ -119,6 +103,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to open, update, save, and close.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

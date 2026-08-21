@@ -26,15 +26,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsData.Import, "OfficeExcelDelimitedText", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium)]
 [Alias("ExcelDelimitedImport", "ExcelCsvImport")]
 [OutputType(typeof(PSObject))]
-public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
-{
+public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook document.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -70,55 +69,46 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var source = SessionState.Path.GetUnresolvedProviderPathFromPSPath(SourcePath);
-        if (!File.Exists(source))
-        {
+        if (!File.Exists(source)) {
             throw new FileNotFoundException($"Delimited text file '{source}' was not found.", source);
         }
 
         var target = ResolveTargetPath();
-        if (!ShouldProcess(target ?? "Excel document", "Import delimited text into Excel workbook"))
-        {
+        if (!ShouldProcess(target ?? "Excel document", "Import delimited text into Excel workbook")) {
             return;
         }
 
         using var workbook = ResolveWorkbook(target);
         var culture = string.IsNullOrWhiteSpace(CultureName) ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(CultureName!);
-        var loadOptions = new CsvLoadOptions
-        {
+        var loadOptions = new CsvLoadOptions {
             DetectDelimiter = !Delimiter.HasValue,
             HasHeaderRow = !NoHeader.IsPresent,
             SkipInitialRecords = SkipRows,
             Culture = culture
         };
-        if (Delimiter.HasValue)
-        {
+        if (Delimiter.HasValue) {
             loadOptions.Delimiter = Delimiter.Value;
         }
 
-        var result = workbook.Document.ImportCsvFile(source, new ExcelCsvImportOptions
-        {
+        var result = workbook.Document.ImportCsvFile(source, new ExcelCsvImportOptions {
             SheetName = string.IsNullOrWhiteSpace(SheetName) ? "Import" : SheetName!,
             IncludeHeaders = !NoHeader.IsPresent,
             CreateTable = !NoTable.IsPresent,
             LoadOptions = loadOptions,
-            ReaderOptions = new CsvDataReaderOptions
-            {
+            ReaderOptions = new CsvDataReaderOptions {
                 InferSchema = !NoTypeConversion.IsPresent
             }
         });
 
         workbook.SaveIfOwned();
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var output = new PSObject();
             output.Properties.Add(new PSNoteProperty("SheetName", result.SheetName));
             var rowCount = 0;
             var columnCount = 0;
-            if (!string.IsNullOrWhiteSpace(result.Range))
-            {
+            if (!string.IsNullOrWhiteSpace(result.Range)) {
                 var (firstRow, firstColumn, lastRow, lastColumn) = A1.ParseRange(result.Range);
                 rowCount = Math.Max(0, lastRow - firstRow + (NoHeader.IsPresent ? 1 : 0));
                 columnCount = lastColumn - firstColumn + 1;
@@ -133,32 +123,26 @@ public sealed class ImportOfficeExcelDelimitedTextCommand : PSCmdlet
         }
     }
 
-    private string? ResolveTargetPath()
-    {
-        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase))
-        {
+    private string? ResolveTargetPath() {
+        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)) {
             return Document.FilePath;
         }
 
-        return SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        return SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
     }
 
-    private ExcelWorkbookCommandScope ResolveWorkbook(string? targetPath)
-    {
-        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase))
-        {
+    private ExcelWorkbookCommandScope ResolveWorkbook(string? targetPath) {
+        if (!string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)) {
             return new ExcelWorkbookCommandScope(Document, ownsDocument: false);
         }
 
-        if (string.IsNullOrWhiteSpace(targetPath))
-        {
-            throw new PSArgumentException("Specify a workbook path.", nameof(InputPath));
+        if (string.IsNullOrWhiteSpace(targetPath)) {
+            throw new PSArgumentException("Specify a workbook path.", nameof(Path));
         }
 
         var resolvedPath = targetPath!;
-        var directory = Path.GetDirectoryName(resolvedPath);
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-        {
+        var directory = System.IO.Path.GetDirectoryName(resolvedPath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) {
             Directory.CreateDirectory(directory);
         }
 

@@ -11,7 +11,7 @@ Audits legacy notes and threaded comments preserved in an Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelCommentAudit [-InputPath] <string> [-IncludeComments] [<CommonParameters>]
+Get-OfficeExcelCommentAudit [-Path] <string> [-IncludeComments] [<CommonParameters>]
 ```
 
 ### Document
@@ -67,13 +67,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

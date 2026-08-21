@@ -11,12 +11,12 @@ Exports a Visio document page to dependency-free SVG.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeVisioSvg [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-IncludeXmlDeclaration] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeVisioSvg [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-IncludeXmlDeclaration] [-Open] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertTo-OfficeVisioSvg -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-IncludeXmlDeclaration] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeVisioSvg -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-IncludeXmlDeclaration] [-Open] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -146,6 +146,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Open
+Open the SVG after saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -OutputPath
 Optional output SVG path.
 
@@ -199,22 +215,6 @@ SVG pixels per Visio inch.
 
 ```yaml
 Type: Double
-Parameter Sets: Path, Document
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Show
-Open the SVG after saving.
-
-```yaml
-Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:

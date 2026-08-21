@@ -11,7 +11,7 @@ Gets pivot tables defined in a workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelPivotTable [-InputPath] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
+Get-OfficeExcelPivotTable [-Path] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Document
@@ -52,22 +52,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the workbook.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
 Optional pivot table name filter.
 
@@ -79,6 +63,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the workbook.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

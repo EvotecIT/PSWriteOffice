@@ -26,7 +26,8 @@ Accepts or rejects filtered Word revisions and returns an operation report.
 
 ### EXAMPLE 1
 ```powershell
-PS> $filter = [OfficeIMO.Word.WordRevisionFilter]::new(); $filter.Author = 'Reviewer'; Resolve-OfficeWordRevision -Path .\Draft.docx -OutputPath .\Accepted.docx -Action Accept -Filter $filter
+PS> $filter = New-OfficeWordRevisionFilter -Author 'Reviewer' -InContentControl
+Resolve-OfficeWordRevision -Path .\Draft.docx -OutputPath .\Accepted.docx -Action Accept -Filter $filter
 ```
 
 Applies only matching revisions, saves the result, and returns the matched revision report.

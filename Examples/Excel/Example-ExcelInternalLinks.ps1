@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Excel-InternalLinks.xlsx'
 $rows = @(
     [PSCustomObject]@{ Sheet = 'Alpha'; Target = 'Alpha' }
@@ -24,6 +23,6 @@ New-OfficeExcel -Path $path {
     Add-OfficeExcelSheet -Name 'Beta' -Content {
         Set-OfficeExcelCell -Address 'A1' -Value 'Beta Home'
     }
-} | Out-Null
+}
 
 Write-Host "Workbook saved to $path"

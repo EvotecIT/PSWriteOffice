@@ -11,7 +11,7 @@ Adds a section to a PowerPoint presentation.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointSection -Name <string> [-Presentation <PowerPointPresentation>] [-StartSlideIndex <Int32>] [<CommonParameters>]
+Add-OfficePowerPointSection -Name <string> [-Presentation <PowerPointPresentation>] [-StartSlideIndex <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,8 +22,8 @@ Creates a new section starting at the requested slide index or at the current sl
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointSections.pptx {
-    Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Overview'
-    Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Results'
+    Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Overview'
+    Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Results'
     Add-OfficePowerPointSection -Name 'Results' -StartSlideIndex 1
 }
 ```
@@ -42,6 +42,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

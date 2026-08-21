@@ -15,16 +15,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficeExcelRichText", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelRichText")]
-public sealed class SetOfficeExcelRichTextCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelRichTextCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -67,12 +66,10 @@ public sealed class SetOfficeExcelRichTextCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var runs = ExcelRichTextRunService.ToRuns(Run);
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
@@ -81,21 +78,18 @@ public sealed class SetOfficeExcelRichTextCommand : PSCmdlet
         sheet.SetRichText(row, column, runs);
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteRuns(sheet, row, column);
         }
     }
 
-    private void WriteRuns(ExcelSheet sheet, int row, int column)
-    {
+    private void WriteRuns(ExcelSheet sheet, int row, int column) {
         var address = A1.CellReference(row, column);
         var path = string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)
-            ? InputPath
+            ? Path
             : null;
         var runs = sheet.GetRichText(row, column);
-        for (var index = 0; index < runs.Count; index++)
-        {
+        for (var index = 0; index < runs.Count; index++) {
             WriteObject(ExcelRichTextRunService.CreateRecord(runs[index], index, address, row, column, sheet.Name, path));
         }
     }

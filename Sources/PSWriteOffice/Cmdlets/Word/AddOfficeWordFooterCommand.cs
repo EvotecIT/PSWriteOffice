@@ -14,8 +14,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordFooter")]
 [Alias("WordFooter")]
-public sealed class AddOfficeWordFooterCommand : PSCmdlet
-{
+public sealed class AddOfficeWordFooterCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>The footer kind (Default/First/Even).</summary>
     [Parameter]
     public WordHeaderFooterType Type { get; set; } = WordHeaderFooterType.Default;
@@ -25,15 +24,14 @@ public sealed class AddOfficeWordFooterCommand : PSCmdlet
     public ScriptBlock? Content { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = WordDslContext.Require(this);
         var section = context.RequireSection();
         var footer = section.GetOrCreateFooter(Type);
 
-        using (context.Push(footer))
-        {
+        using (context.Push(footer)) {
             Content?.InvokeReturnAsIs();
         }
+        WritePassThru(footer);
     }
 }

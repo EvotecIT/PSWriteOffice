@@ -20,8 +20,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 [Cmdlet(VerbsData.ConvertFrom, "OfficePdfHtml", DefaultParameterSetName = ParameterSetHtml, SupportsShouldProcess = true)]
 [Alias("ConvertFrom-PdfHtml")]
 [OutputType(typeof(byte[]), typeof(FileInfo))]
-public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
-{
+public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet {
     private const string ParameterSetHtml = "Html";
     private const string ParameterSetPath = "Path";
     private readonly StringBuilder _pipelineHtml = new();
@@ -33,8 +32,8 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
 
     /// <summary>Path to an HTML file.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Optional output path for the PDF file. When omitted, PDF bytes are written to the pipeline.</summary>
     [Parameter]
@@ -74,14 +73,10 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (ParameterSetName == ParameterSetHtml)
-            {
-                if (_receivedHtml)
-                {
+    protected override void ProcessRecord() {
+        try {
+            if (ParameterSetName == ParameterSetHtml) {
+                if (_receivedHtml) {
                     _pipelineHtml.AppendLine();
                 }
 
@@ -90,43 +85,33 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
                 return;
             }
 
-            string resolvedPath = PdfCommandUtilities.ResolvePath(this, InputPath);
-            if (!File.Exists(resolvedPath))
-            {
+            string resolvedPath = PdfCommandUtilities.ResolvePath(this, Path);
+            if (!File.Exists(resolvedPath)) {
                 throw new FileNotFoundException($"File '{resolvedPath}' was not found.", resolvedPath);
             }
 
-            ConvertHtml(File.ReadAllText(resolvedPath), Path.GetDirectoryName(resolvedPath));
-        }
-        catch (Exception ex)
-        {
+            ConvertHtml(File.ReadAllText(resolvedPath), System.IO.Path.GetDirectoryName(resolvedPath));
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "HtmlToPdfFailed", ErrorCategory.InvalidOperation,
-                ParameterSetName == ParameterSetPath ? InputPath : Html));
+                ParameterSetName == ParameterSetPath ? Path : Html));
         }
     }
 
     /// <inheritdoc />
-    protected override void EndProcessing()
-    {
-        if (ParameterSetName != ParameterSetHtml || !_receivedHtml)
-        {
+    protected override void EndProcessing() {
+        if (ParameterSetName != ParameterSetHtml || !_receivedHtml) {
             return;
         }
 
-        try
-        {
+        try {
             ConvertHtml(_pipelineHtml.ToString(), htmlFileDirectory: null);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "HtmlToPdfFailed", ErrorCategory.InvalidOperation, Html));
         }
     }
 
-    private void ConvertHtml(string html, string? htmlFileDirectory)
-    {
-        if (string.IsNullOrWhiteSpace(html))
-        {
+    private void ConvertHtml(string html, string? htmlFileDirectory) {
+        if (string.IsNullOrWhiteSpace(html)) {
             ThrowTerminatingError(new ErrorRecord(
                 new ArgumentException("HTML content cannot be empty."),
                 "HtmlEmpty",
@@ -137,29 +122,24 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
 
         string preparedHtml = ApplyStylesheets(html);
         HtmlPdfSaveOptions options = BuildOptions(htmlFileDirectory);
-        HtmlConversionDocument document = HtmlConversionDocument.Parse(preparedHtml, new HtmlConversionDocumentOptions
-        {
+        HtmlConversionDocument document = HtmlConversionDocument.Parse(preparedHtml, new HtmlConversionDocumentOptions {
             Profile = Profile,
             Trust = TrustedDocumentProfile.IsPresent ? HtmlInputTrust.Trusted : HtmlInputTrust.Untrusted,
             BaseUri = options.BaseUri
         });
-        if (!string.IsNullOrWhiteSpace(OutputPath))
-        {
+        if (!string.IsNullOrWhiteSpace(OutputPath)) {
             string outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath!);
-            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF from HTML"))
-            {
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write PDF from HTML")) {
                 return;
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
             document.SaveAsPdf(outputPath, options).RequireSuccess();
-            if (Open.IsPresent)
-            {
+            if (Open.IsPresent) {
                 FileOpenService.Open(outputPath);
             }
 
-            if (PassThru.IsPresent)
-            {
+            if (PassThru.IsPresent) {
                 WriteObject(new FileInfo(outputPath));
             }
 
@@ -169,45 +149,34 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
         WriteObject(document.ToPdf(options), enumerateCollection: false);
     }
 
-    private HtmlPdfSaveOptions BuildOptions(string? htmlFileDirectory)
-    {
+    private HtmlPdfSaveOptions BuildOptions(string? htmlFileDirectory) {
         HtmlPdfSaveOptions options = Options?.ClonePdf() ?? new HtmlPdfSaveOptions();
 
         ApplyResourceOptions(options, htmlFileDirectory);
         return options;
     }
 
-    private void ApplyResourceOptions(HtmlPdfSaveOptions options, string? htmlFileDirectory)
-    {
+    private void ApplyResourceOptions(HtmlPdfSaveOptions options, string? htmlFileDirectory) {
         string? resolvedBasePath = null;
-        if (!string.IsNullOrWhiteSpace(BasePath))
-        {
+        if (!string.IsNullOrWhiteSpace(BasePath)) {
             resolvedBasePath = PdfCommandUtilities.ResolvePath(this, BasePath!);
-        }
-        else if (!string.IsNullOrWhiteSpace(htmlFileDirectory))
-        {
+        } else if (!string.IsNullOrWhiteSpace(htmlFileDirectory)) {
             resolvedBasePath = htmlFileDirectory;
         }
 
-        if (!string.IsNullOrWhiteSpace(resolvedBasePath))
-        {
-            options.BaseUri = new Uri(Path.GetFullPath(resolvedBasePath!) + Path.DirectorySeparatorChar);
+        if (!string.IsNullOrWhiteSpace(resolvedBasePath)) {
+            options.BaseUri = new Uri(System.IO.Path.GetFullPath(resolvedBasePath!) + System.IO.Path.DirectorySeparatorChar);
         }
     }
 
-    private string ApplyStylesheets(string html)
-    {
+    private string ApplyStylesheets(string html) {
         var styles = new StringBuilder();
 
-        if (StylesheetPath != null)
-        {
-            foreach (string path in StylesheetPath)
-            {
-                if (!string.IsNullOrWhiteSpace(path))
-                {
+        if (StylesheetPath != null) {
+            foreach (string path in StylesheetPath) {
+                if (!string.IsNullOrWhiteSpace(path)) {
                     string resolvedPath = PdfCommandUtilities.ResolvePath(this, path);
-                    if (!File.Exists(resolvedPath))
-                    {
+                    if (!File.Exists(resolvedPath)) {
                         throw new FileNotFoundException($"Stylesheet file '{resolvedPath}' was not found.", resolvedPath);
                     }
 
@@ -216,12 +185,9 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet
             }
         }
 
-        if (StylesheetContent != null)
-        {
-            foreach (string content in StylesheetContent)
-            {
-                if (!string.IsNullOrWhiteSpace(content))
-                {
+        if (StylesheetContent != null) {
+            foreach (string content in StylesheetContent) {
+                if (!string.IsNullOrWhiteSpace(content)) {
                     styles.AppendLine(content);
                 }
             }

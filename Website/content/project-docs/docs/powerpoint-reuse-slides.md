@@ -32,7 +32,7 @@ PptNew -Path $targetPath {
     }
 }
 
-$presentation = Get-OfficePowerPoint -FilePath $targetPath
+$presentation = Get-OfficePowerPoint -Path $targetPath
 
 Import-OfficePowerPointSlide -Presentation $presentation `
     -SourcePath $sourcePath -SourceIndex 0 -InsertAt 1

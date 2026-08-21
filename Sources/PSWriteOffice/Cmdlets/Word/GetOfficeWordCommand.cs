@@ -20,20 +20,15 @@ namespace PSWriteOffice.Cmdlets.Word;
 ///   <para>Loads the document, appends content through the DSL, and returns the open document for saving or further edits.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWord")]
-public sealed class GetOfficeWordCommand : PSCmdlet
-{
+public sealed class GetOfficeWordCommand : PSCmdlet {
     /// <summary>Path to the .docx. Accepts PS paths.</summary>
     [Parameter(Mandatory = true, Position = 0)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Open in read-only mode.</summary>
     [Parameter]
     public SwitchParameter ReadOnly { get; set; }
-
-    /// <summary>Enable AutoSave when editing.</summary>
-    [Parameter]
-    public SwitchParameter AutoSave { get; set; }
 
     /// <summary>Password used to open an encrypted document package.</summary>
     [Parameter]
@@ -44,23 +39,25 @@ public sealed class GetOfficeWordCommand : PSCmdlet
     public ScriptBlock? Content { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var fullPath = ResolvePath();
-        var document = WordDocumentService.LoadDocument(fullPath, ReadOnly.IsPresent, AutoSave.IsPresent, Password);
-        if (Content != null)
-        {
-            WordDocumentService.InvokeDsl(document, Content);
-        }
+        var document = WordDocumentService.LoadDocument(fullPath, ReadOnly.IsPresent, autoSave: false, Password);
+        try {
+            if (Content != null) {
+                WordDocumentService.InvokeDsl(document, Content);
+            }
 
-        WriteObject(document);
+            WriteObject(document);
+        } catch {
+            WordDocumentService.CloseDocument(document);
+            throw;
+        }
     }
 
-    private string ResolvePath()
-    {
-        var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-        return Path.IsPathRooted(providerPath)
+    private string ResolvePath() {
+        var providerPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        return System.IO.Path.IsPathRooted(providerPath)
             ? providerPath
-            : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
+            : System.IO.Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, providerPath);
     }
 }

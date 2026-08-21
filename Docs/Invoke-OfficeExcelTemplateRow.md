@@ -16,7 +16,7 @@ Invoke-OfficeExcelTemplateRow [-InputObject] <Object> -TemplateRow <int> [-Sheet
 
 ### Path
 ```powershell
-Invoke-OfficeExcelTemplateRow [-InputPath] <string> [-InputObject] <Object> -TemplateRow <int> [-Sheet <string>] [-SheetIndex <Int32>] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-OfficeExcelTemplateRow [-Path] <string> [-InputObject] <Object> -TemplateRow <int> [-Sheet <string>] [-SheetIndex <Int32>] [-CultureName <string>] [-MissingValueBehavior <ExcelTemplateMissingValueBehavior>] [-ThrowOnMissing] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -86,22 +86,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -MissingValueBehavior
 Behavior used when a marker is not supplied by each input row.
 
@@ -129,6 +113,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

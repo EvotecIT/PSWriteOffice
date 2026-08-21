@@ -79,6 +79,14 @@ internal static class PdfCommandUtilities
         return cmdlet.ShouldProcess(path, action);
     }
 
+    internal static void SetVariable(PSCmdlet cmdlet, string? name, object? value)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            cmdlet.SessionState.PSVariable.Set(name!, value);
+        }
+    }
+
     internal static string GetSafeFileName(string fileName)
     {
         var invalid = Path.GetInvalidFileNameChars();

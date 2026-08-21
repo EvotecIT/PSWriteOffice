@@ -13,16 +13,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeExcelPageBreak", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPageBreak")]
-public sealed class AddOfficeExcelPageBreakCommand : PSCmdlet
-{
+public sealed class AddOfficeExcelPageBreakCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -50,18 +49,14 @@ public sealed class AddOfficeExcelPageBreakCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        if (Row.Length == 0 && Column.Length == 0)
-        {
+    protected override void ProcessRecord() {
+        if (Row.Length == 0 && Column.Length == 0) {
             throw new PSArgumentException("Provide at least one row or column page break.");
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
 
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-
-        {
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
 
             return;
 
@@ -69,41 +64,34 @@ public sealed class AddOfficeExcelPageBreakCommand : PSCmdlet
 
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, workbook.Document, ParameterSetName, Sheet, SheetIndex);
 
-        foreach (var row in Row)
-        {
+        foreach (var row in Row) {
             sheet.AddManualRowPageBreak(row, save: false);
         }
 
-        foreach (var column in Column)
-        {
+        foreach (var column in Column) {
             sheet.AddManualColumnPageBreak(column, save: false);
         }
 
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WritePageBreaks(sheet);
         }
     }
 
-    private void WritePageBreaks(ExcelSheet sheet)
-    {
-        foreach (var row in sheet.GetManualRowPageBreaks())
-        {
+    private void WritePageBreaks(ExcelSheet sheet) {
+        foreach (var row in sheet.GetManualRowPageBreaks()) {
             WriteObject(ExcelPageBreakRecordService.Create("Row", row, sheet.Name, PathForRecord()));
         }
 
-        foreach (var column in sheet.GetManualColumnPageBreaks())
-        {
+        foreach (var column in sheet.GetManualColumnPageBreaks()) {
             WriteObject(ExcelPageBreakRecordService.Create("Column", column, sheet.Name, PathForRecord()));
         }
     }
 
-    private string? PathForRecord()
-    {
+    private string? PathForRecord() {
         return string.Equals(ParameterSetName, ParameterSetPath, System.StringComparison.OrdinalIgnoreCase)
-            ? InputPath
+            ? Path
             : null;
     }
 }

@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Cmdlet(VerbsCommon.Add, "OfficeVisioRectangle")]
 [Alias("VisioRectangle", "VisioRect")]
 [OutputType(typeof(VisioShape))]
-public sealed class AddOfficeVisioRectangleCommand : PSCmdlet
-{
+public sealed class AddOfficeVisioRectangleCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>New-OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioPage? Page { get; set; }
@@ -83,13 +82,12 @@ public sealed class AddOfficeVisioRectangleCommand : PSCmdlet
     public double? Angle { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = VisioDslContext.Current;
         var page = Page ?? VisioDslContext.Require(this).RequirePage();
         var shape = page.AddRectangle(X, Y, Width, Height, Text, Unit);
         VisioShapeCommandUtilities.ApplyShapeStyle(shape, Name ?? Key, NameU, FillColor, LineColor, LineWeight, LinePattern, FillPattern, Angle);
         context?.RegisterShape(page, Key, shape);
-        WriteObject(shape);
+        WritePassThru(shape);
     }
 }

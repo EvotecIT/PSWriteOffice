@@ -16,7 +16,7 @@ Get-OfficeExcelConditionalFormatting [-Sheet <string>] [-SheetIndex <Int32>] [-R
 
 ### Path
 ```powershell
-Get-OfficeExcelConditionalFormatting [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [<CommonParameters>]
+Get-OfficeExcelConditionalFormatting [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Range <string>] [-HeaderName <string>] [-TableName <string>] [-HeaderRow <int>] [-IncludeHeader] [<CommonParameters>]
 ```
 
 ### Document
@@ -103,13 +103,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Workbook path to inspect.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: Path, FilePath
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True

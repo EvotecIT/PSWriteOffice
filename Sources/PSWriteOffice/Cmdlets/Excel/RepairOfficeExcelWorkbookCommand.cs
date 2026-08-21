@@ -20,15 +20,14 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsDiagnostic.Repair, "OfficeExcelWorkbook", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
 [Alias("ExcelWorkbookRepair", "ExcelRepair")]
 [OutputType(typeof(PSObject))]
-public sealed class RepairOfficeExcelWorkbookCommand : PSCmdlet
-{
+public sealed class RepairOfficeExcelWorkbookCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path to repair.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Open workbook document to repair.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -66,29 +65,24 @@ public sealed class RepairOfficeExcelWorkbookCommand : PSCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var shouldProcessChecked = false;
-        if (ParameterSetName == ParameterSetPath)
-        {
-            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
-            if (!ShouldProcess(resolvedPath, "Repair Excel workbook"))
-            {
+        if (ParameterSetName == ParameterSetPath) {
+            var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+            if (!ShouldProcess(resolvedPath, "Repair Excel workbook")) {
                 return;
             }
 
             shouldProcessChecked = true;
         }
 
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
         if (!shouldProcessChecked &&
-            !ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Repair Excel workbook"))
-        {
+            !ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Repair Excel workbook")) {
             return;
         }
 
-        var report = workbook.Document.RepairWorkbook(new ExcelWorkbookRepairOptions
-        {
+        var report = workbook.Document.RepairWorkbook(new ExcelWorkbookRepairOptions {
             DefinedNames = !SkipDefinedNames.IsPresent,
             Tables = !SkipTables.IsPresent,
             SheetViews = !SkipSheetViews.IsPresent,
@@ -98,13 +92,11 @@ public sealed class RepairOfficeExcelWorkbookCommand : PSCmdlet
             Save = !NoSave.IsPresent
         });
 
-        if (!NoSave.IsPresent)
-        {
+        if (!NoSave.IsPresent) {
             workbook.SaveIfOwned();
         }
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             var output = new PSObject();
             output.Properties.Add(new PSNoteProperty("Path", workbook.Document.FilePath));
             output.Properties.Add(new PSNoteProperty("ActionCount", report.ActionCount));
@@ -115,8 +107,7 @@ public sealed class RepairOfficeExcelWorkbookCommand : PSCmdlet
         }
     }
 
-    private static PSObject CreateAction(ExcelWorkbookRepairAction action)
-    {
+    private static PSObject CreateAction(ExcelWorkbookRepairAction action) {
         var item = new PSObject();
         item.Properties.Add(new PSNoteProperty("Category", action.Category));
         item.Properties.Add(new PSNoteProperty("SheetName", action.SheetName));

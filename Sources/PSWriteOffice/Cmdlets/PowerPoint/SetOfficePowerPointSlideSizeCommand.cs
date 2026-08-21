@@ -12,23 +12,23 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>New-OfficePowerPoint -Path .\Examples\Documents\PowerPointWidescreen.pptx {
 ///     Set-OfficePowerPointSlideSize -Preset Screen16x9
-///     Add-OfficePowerPointSlide -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Widescreen deck'
+///     Add-OfficePowerPointSlide -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Widescreen deck'
 /// }</code>
 ///   <para>Applies the 16:9 widescreen preset before adding slides.</para>
 /// </example>
 /// <example>
 ///   <summary>Set a custom size in centimeters.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointCustomSize.pptx
+///   <code>$ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCustomSize.pptx -NoSave
 /// Set-OfficePowerPointSlideSize -Presentation $ppt -WidthCm 25.4 -HeightCm 14.0
-/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Set-OfficePowerPointSlideTitle -Title 'Custom size'</code>
+/// Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 -PassThru | Set-OfficePowerPointSlideTitle -Title 'Custom size'
+/// $ppt | Close-OfficePowerPoint -Save</code>
 ///   <para>Sets the presentation slide size to a custom 25.4 x 14.0 cm layout.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Set, "OfficePowerPointSlideSize", DefaultParameterSetName = ParameterSetPreset)]
 [Alias("PptSlideSize")]
 [OutputType(typeof(PowerPointSlideSize))]
-public sealed class SetOfficePowerPointSlideSizeCommand : PSCmdlet
-{
+public sealed class SetOfficePowerPointSlideSizeCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetPreset = "Preset";
     private const string ParameterSetCentimeters = "Centimeters";
     private const string ParameterSetInches = "Inches";
@@ -80,16 +80,13 @@ public sealed class SetOfficePowerPointSlideSizeCommand : PSCmdlet
     public long HeightEmus { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
+    protected override void ProcessRecord() {
+        try {
             var presentation = Presentation ?? PowerPointDslContext.Current?.Presentation
                 ?? throw new InvalidOperationException("Presentation was not provided. Use -Presentation or run inside New-OfficePowerPoint.");
 
             var slideSize = presentation.SlideSize;
-            switch (ParameterSetName)
-            {
+            switch (ParameterSetName) {
                 case ParameterSetPreset:
                     slideSize.SetPreset(Preset, Portrait.IsPresent);
                     break;
@@ -109,10 +106,8 @@ public sealed class SetOfficePowerPointSlideSizeCommand : PSCmdlet
                     throw new InvalidOperationException($"Unsupported parameter set '{ParameterSetName}'.");
             }
 
-            WriteObject(slideSize);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(slideSize);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointSetSlideSizeFailed", ErrorCategory.InvalidOperation, Presentation));
         }
     }

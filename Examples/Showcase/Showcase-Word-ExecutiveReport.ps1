@@ -3,8 +3,7 @@ $ErrorActionPreference = 'Stop'
 Import-Module PSWriteOffice -ErrorAction Stop
 
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Showcase-Word-ExecutiveReport.docx'
 Remove-Item -Path $path -Force -ErrorAction SilentlyContinue
 
@@ -120,7 +119,7 @@ New-OfficeWord -Path $path {
         Update-OfficeWordFields
         Update-OfficeWordTableOfContents
     }
-} | Out-Null
+}
 
 $document = Get-OfficeWord -Path $path -ReadOnly
 try {
@@ -134,5 +133,5 @@ try {
         Endnotes        = @(Get-OfficeWordEndnote -Document $document).Count
     } | Format-List
 } finally {
-    $document.Dispose()
+    $document | Close-OfficeWord
 }

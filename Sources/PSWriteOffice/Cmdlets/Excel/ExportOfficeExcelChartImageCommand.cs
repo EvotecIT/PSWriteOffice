@@ -47,6 +47,10 @@ public sealed class ExportOfficeExcelChartImageCommand : PSCmdlet
     [Parameter]
     public SwitchParameter Force { get; set; }
 
+    /// <summary>Emit the structured image export result when a destination path is used.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
@@ -86,7 +90,7 @@ public sealed class ExportOfficeExcelChartImageCommand : PSCmdlet
                     ? OfficeImageExportFileConflictPolicy.Replace
                     : OfficeImageExportFileConflictPolicy.FailIfExists);
             }
-            WriteObject(result);
+            if (output == null || PassThru.IsPresent) WriteObject(result);
         }
         finally
         {

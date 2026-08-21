@@ -16,16 +16,15 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Set, "OfficeExcelPrintLayout", DefaultParameterSetName = ParameterSetContext, SupportsShouldProcess = true)]
 [Alias("ExcelPrintLayout")]
 [OutputType(typeof(ExcelSheet), typeof(PSObject))]
-public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
-{
+public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet {
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
 
     /// <summary>Workbook path to update.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook to update outside the DSL context.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -97,18 +96,15 @@ public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: false);
-        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, InputPath, "Update Excel workbook"))
-        {
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
+        if (!ExcelShouldProcessService.ShouldProcessWorkbook(this, workbook.Document, Path, "Update Excel workbook")) {
             return;
         }
 
         var document = workbook.Document;
         var sheet = ExcelWorkbookCommandService.ResolveSheet(this, document, ParameterSetName, Sheet, SheetIndex);
-        sheet.ApplyPrintLayout(new ExcelPrintLayoutOptions
-        {
+        sheet.ApplyPrintLayout(new ExcelPrintLayoutOptions {
             Preset = Preset,
             PrintArea = PrintArea,
             Orientation = Orientation,
@@ -126,18 +122,16 @@ public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
 
         workbook.SaveIfOwned();
 
-        if (PassThru.IsPresent)
-        {
+        if (PassThru.IsPresent) {
             WriteObject(string.Equals(ParameterSetName, ParameterSetPath, StringComparison.OrdinalIgnoreCase)
                 ? CreatePathRecord(document, sheet)
                 : sheet);
         }
     }
 
-    private PSObject CreatePathRecord(ExcelDocument document, ExcelSheet sheet)
-    {
+    private PSObject CreatePathRecord(ExcelDocument document, ExcelSheet sheet) {
         var item = new PSObject();
-        item.Properties.Add(new PSNoteProperty("Path", document.FilePath ?? SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath)));
+        item.Properties.Add(new PSNoteProperty("Path", document.FilePath ?? SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path)));
         item.Properties.Add(new PSNoteProperty("Name", sheet.Name));
         item.Properties.Add(new PSNoteProperty("SheetName", sheet.Name));
         item.Properties.Add(new PSNoteProperty("SheetIndex", ResolveSheetIndex(document, sheet)));
@@ -145,12 +139,9 @@ public sealed class SetOfficeExcelPrintLayoutCommand : PSCmdlet
         return item;
     }
 
-    private static int ResolveSheetIndex(ExcelDocument document, ExcelSheet sheet)
-    {
-        for (int i = 0; i < document.Sheets.Count; i++)
-        {
-            if (string.Equals(document.Sheets[i].Name, sheet.Name, StringComparison.OrdinalIgnoreCase))
-            {
+    private static int ResolveSheetIndex(ExcelDocument document, ExcelSheet sheet) {
+        for (int i = 0; i < document.Sheets.Count; i++) {
+            if (string.Equals(document.Sheets[i].Name, sheet.Name, StringComparison.OrdinalIgnoreCase)) {
                 return i;
             }
         }

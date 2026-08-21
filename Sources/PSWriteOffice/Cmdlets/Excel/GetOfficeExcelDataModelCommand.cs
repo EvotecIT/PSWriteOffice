@@ -18,23 +18,21 @@ namespace PSWriteOffice.Cmdlets.Excel;
 [Cmdlet(VerbsCommon.Get, "OfficeExcelDataModel", DefaultParameterSetName = ParameterSetPath)]
 [Alias("ExcelDataModel", "ExcelPowerQuery")]
 [OutputType(typeof(PSObject))]
-public sealed class GetOfficeExcelDataModelCommand : PSCmdlet
-{
+public sealed class GetOfficeExcelDataModelCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Workbook path.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("Path", "FilePath")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Workbook document.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public ExcelDocument Document { get; set; } = null!;
 
-    protected override void ProcessRecord()
-    {
-        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, InputPath, Document, readOnly: true);
+    protected override void ProcessRecord() {
+        using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: true);
         var report = workbook.Document.InspectDataModel();
         var output = new PSObject();
         output.Properties.Add(new PSNoteProperty("Path", workbook.Document.FilePath));

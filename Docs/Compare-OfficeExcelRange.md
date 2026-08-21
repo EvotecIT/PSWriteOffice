@@ -11,7 +11,7 @@ Compares two Excel worksheets or ranges and returns cell-level differences.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Compare-OfficeExcelRange [-InputPath] <string> [-RightPath <string>] [-LeftSheet <string>] [-LeftSheetIndex <Int32>] [-RightSheet <string>] [-RightSheetIndex <Int32>] [-LeftRange <string>] [-RightRange <string>] [-TrimStrings] [-IgnoreCase] [-StrictNullEmpty] [<CommonParameters>]
+Compare-OfficeExcelRange [-Path] <string> [-RightPath <string>] [-LeftSheet <string>] [-LeftSheetIndex <Int32>] [-RightSheet <string>] [-RightSheetIndex <Int32>] [-LeftRange <string>] [-RightRange <string>] [-TrimStrings] [-IgnoreCase] [-StrictNullEmpty] [<CommonParameters>]
 ```
 
 ### Document
@@ -73,22 +73,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Left workbook path.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath, LeftPath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -LeftRange
 Left A1 range. Defaults to the left worksheet used range.
 
@@ -132,6 +116,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Left workbook path.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath, LeftPath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

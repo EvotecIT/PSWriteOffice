@@ -9,7 +9,7 @@ Workbook consolidation and workbook comparison solve different problems. Joining
 ## Consolidate selected sheets
 
 ```powershell
-Join-OfficeExcelWorkbook -InputPath '.\Consolidated.xlsx' `
+Join-OfficeExcelWorkbook -Path '.\Consolidated.xlsx' `
     -SourcePath '.\Regions.xlsx' `
     -SourceSheet North,South `
     -SheetNamePrefix 'Region '

@@ -1,7 +1,6 @@
 Import-Module PSWriteOffice -ErrorAction Stop
 $documents = Join-Path $PSScriptRoot '..\Documents'
-New-Item -Path $documents -ItemType Directory -Force | Out-Null
-
+$null = New-Item -Path $documents -ItemType Directory -Force
 $path = Join-Path $documents 'Example-MarkdownDsl.md'
 $data = @(
     [pscustomobject]@{ Name = 'Alpha'; Value = 1 }
@@ -16,6 +15,6 @@ New-OfficeMarkdown -Path $path {
     MarkdownCode -Language 'powershell' -Content 'Get-Date'
     MarkdownHorizontalRule
     MarkdownQuote -Text 'Ship fast, learn faster.'
-} -PassThru | Out-Null
+}
 
 Write-Host "Markdown saved to $path"

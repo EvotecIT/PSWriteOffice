@@ -11,7 +11,7 @@ Configures collapsible Excel outline grouping for worksheet columns.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelColumnGroup [[-StartColumn] <Object>] [[-EndColumn] <Object>] [-StartColumnName <string>] [-EndColumnName <string>] [-OutlineLevel <int>] [-Collapsed] [-Hidden] [-Clear] [-KeepHidden] [-SummaryRight <Boolean>] [<CommonParameters>]
+Set-OfficeExcelColumnGroup [[-StartColumn] <Object>] [[-EndColumn] <Object>] [-StartColumnName <string>] [-EndColumnName <string>] [-OutlineLevel <int>] [-Collapsed] [-Hidden] [-Clear] [-KeepHidden] [-SummaryRight <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -129,6 +129,22 @@ Excel outline level from 1 through 7.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

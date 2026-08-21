@@ -20,15 +20,14 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeWordSection", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(WordSection))]
-public sealed class GetOfficeWordSectionCommand : PSCmdlet
-{
+public sealed class GetOfficeWordSectionCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";
     private const string ParameterSetDocument = "Document";
 
     /// <summary>Path to the document.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Document to inspect.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
@@ -39,39 +38,30 @@ public sealed class GetOfficeWordSectionCommand : PSCmdlet
     public int[]? Index { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         WordDocument? document = null;
         var dispose = false;
 
-        try
-        {
-            if (ParameterSetName == ParameterSetPath)
-            {
-                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(InputPath);
+        try {
+            if (ParameterSetName == ParameterSetPath) {
+                var resolvedPath = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
                 document = WordDocumentService.LoadDocument(resolvedPath, readOnly: true, autoSave: false);
                 dispose = true;
-            }
-            else
-            {
+            } else {
                 document = Document;
             }
 
-            if (document == null)
-            {
+            if (document == null) {
                 throw new InvalidOperationException("Word document was not provided.");
             }
 
             IEnumerable<WordSection> sections = document.Sections;
 
-            if (Index != null && Index.Length > 0)
-            {
+            if (Index != null && Index.Length > 0) {
                 var list = document.Sections;
                 var results = new List<WordSection>(Index.Length);
-                foreach (var idx in Index)
-                {
-                    if (idx < 0 || idx >= list.Count)
-                    {
+                foreach (var idx in Index) {
+                    if (idx < 0 || idx >= list.Count) {
                         throw new ArgumentOutOfRangeException(nameof(Index), $"Section index {idx} is out of range.");
                     }
                     results.Add(list[idx]);
@@ -80,11 +70,8 @@ public sealed class GetOfficeWordSectionCommand : PSCmdlet
             }
 
             WriteObject(sections, enumerateCollection: true);
-        }
-        finally
-        {
-            if (dispose)
-            {
+        } finally {
+            if (dispose) {
                 document?.Dispose();
             }
         }

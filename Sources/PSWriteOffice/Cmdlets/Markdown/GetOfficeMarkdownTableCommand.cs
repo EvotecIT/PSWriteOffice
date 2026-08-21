@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Markdown;
 [Cmdlet(VerbsCommon.Get, "OfficeMarkdownTable", DefaultParameterSetName = ParameterSetPath)]
 [OutputType(typeof(TableBlock), typeof(PSObject))]
 public sealed class GetOfficeMarkdownTableCommand : PSCmdlet
-    , IMarkdownReaderOptionSource
-{
+    , IMarkdownReaderOptionSource {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
     private const string ParameterSetText = "Text";
@@ -28,8 +27,8 @@ public sealed class GetOfficeMarkdownTableCommand : PSCmdlet
 
     /// <summary>Path to the Markdown file.</summary>
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetPath)]
-    [Alias("FilePath", "Path")]
-    public string InputPath { get; set; } = string.Empty;
+    [Alias("InputPath", "FilePath")]
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>Markdown text to parse.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetText)]
@@ -87,41 +86,34 @@ public sealed class GetOfficeMarkdownTableCommand : PSCmdlet
     MarkdownReaderOptions? IMarkdownReaderOptionSource.ReaderOptions => Options;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var document = MarkdownDocumentResolver.Resolve(
             this,
             ParameterSetName,
             ParameterSetDocument,
             Document,
-            InputPath,
+            Path,
             Text,
             this);
 
-        foreach (var table in document.DescendantTables())
-        {
-            if (!AsObject)
-            {
+        foreach (var table in document.DescendantTables()) {
+            if (!AsObject) {
                 WriteObject(table);
                 continue;
             }
 
-            foreach (var row in ConvertTableRows(table))
-            {
+            foreach (var row in ConvertTableRows(table)) {
                 WriteObject(row);
             }
         }
     }
 
-    private static IEnumerable<PSObject> ConvertTableRows(TableBlock table)
-    {
+    private static IEnumerable<PSObject> ConvertTableRows(TableBlock table) {
         var columnNames = GetColumnNames(table);
 
-        foreach (var row in table.Rows)
-        {
+        foreach (var row in table.Rows) {
             var item = new PSObject();
-            for (var i = 0; i < columnNames.Count; i++)
-            {
+            for (var i = 0; i < columnNames.Count; i++) {
                 var value = i < row.Count ? row[i] : string.Empty;
                 item.Properties.Add(new PSNoteProperty(columnNames[i], value));
             }
@@ -130,36 +122,28 @@ public sealed class GetOfficeMarkdownTableCommand : PSCmdlet
         }
     }
 
-    private static IReadOnlyList<string> GetColumnNames(TableBlock table)
-    {
+    private static IReadOnlyList<string> GetColumnNames(TableBlock table) {
         var columnCount = table.Headers.Count;
-        foreach (var row in table.Rows)
-        {
-            if (row.Count > columnCount)
-            {
+        foreach (var row in table.Rows) {
+            if (row.Count > columnCount) {
                 columnCount = row.Count;
             }
         }
 
         var names = new List<string>(columnCount);
         var seen = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        for (var i = 0; i < columnCount; i++)
-        {
+        for (var i = 0; i < columnCount; i++) {
             var name = i < table.Headers.Count ? table.Headers[i] : null;
-            if (string.IsNullOrWhiteSpace(name))
-            {
+            if (string.IsNullOrWhiteSpace(name)) {
                 name = "Column" + (i + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
             }
 
             var baseName = name!.Trim();
-            if (seen.TryGetValue(baseName, out var duplicateCount))
-            {
+            if (seen.TryGetValue(baseName, out var duplicateCount)) {
                 duplicateCount++;
                 seen[baseName] = duplicateCount;
                 baseName += duplicateCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            }
-            else
-            {
+            } else {
                 seen[baseName] = 1;
             }
 

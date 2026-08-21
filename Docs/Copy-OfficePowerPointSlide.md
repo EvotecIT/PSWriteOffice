@@ -11,7 +11,7 @@ Copies an existing slide within a PowerPoint presentation.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Copy-OfficePowerPointSlide -Index <int> [-Presentation <PowerPointPresentation>] [-InsertAt <Int32>] [<CommonParameters>]
+Copy-OfficePowerPointSlide -Index <int> [-Presentation <PowerPointPresentation>] [-InsertAt <Int32>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,9 +22,9 @@ Uses OfficeIMO slide duplication so charts, notes, and shapes are preserved.
 ### EXAMPLE 1
 ```powershell
 PS> New-OfficePowerPoint -Path .\Examples\Documents\PowerPointCopySlide.pptx {
-    $slide = Add-OfficePowerPointSlide -Layout 1
+    $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
     Set-OfficePowerPointSlideTitle -Slide $slide -Title 'Original'
-    $copy = Copy-OfficePowerPointSlide -Index 0
+    $copy = Copy-OfficePowerPointSlide -Index 0 -PassThru
     Set-OfficePowerPointSlideTitle -Slide $copy -Title 'Copied appendix'
 }
 ```
@@ -54,6 +54,22 @@ Optional target index for the duplicate; omit to insert after the source slide.
 
 ```yaml
 Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

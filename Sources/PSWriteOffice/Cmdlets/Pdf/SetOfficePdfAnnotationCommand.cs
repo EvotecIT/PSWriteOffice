@@ -9,8 +9,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 [Cmdlet(VerbsCommon.Set, "OfficePdfAnnotation", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 [OutputType(typeof(PdfAnnotationEditResult))]
-public sealed class SetOfficePdfAnnotationCommand : PSCmdlet
-{
+public sealed class SetOfficePdfAnnotationCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Input PDF path.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [Alias("FilePath")]
@@ -61,18 +60,15 @@ public sealed class SetOfficePdfAnnotationCommand : PSCmdlet
     public SwitchParameter PassThruReport { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         string outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!ShouldProcess(outputPath, "Update PDF annotation"))
-        {
+        if (!ShouldProcess(outputPath, "Update PDF annotation")) {
             return;
         }
 
         PdfColor? color = PdfCommandUtilities.ParseColor(Color);
-        var options = new PdfAnnotationUpdateOptions
-        {
+        var options = new PdfAnnotationUpdateOptions {
             Contents = Contents,
             Title = Title,
             Name = Name,
@@ -86,6 +82,11 @@ public sealed class SetOfficePdfAnnotationCommand : PSCmdlet
             .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Annotations.Update(ObjectNumber, options);
         result.ToDocument().Save(outputPath).RequireSuccess();
-        WriteObject(PassThruReport.IsPresent ? result : new FileInfo(outputPath));
+        if (PassThruReport.IsPresent) {
+            WriteObject(result);
+            return;
+        }
+
+        WritePassThru(new FileInfo(outputPath));
     }
 }

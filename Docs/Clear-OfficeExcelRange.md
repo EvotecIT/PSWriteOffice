@@ -11,17 +11,17 @@ Clears values, formulas, styles, and range metadata from an Excel worksheet rang
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Clear-OfficeExcelRange -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelRange -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Clear-OfficeExcelRange [-InputPath] <string> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelRange [-Path] <string> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Clear-OfficeExcelRange -Document <ExcelDocument> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-OfficeExcelRange -Document <ExcelDocument> -Range <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Contents] [-Values] [-Formulas] [-Styles] [-Comments] [-Hyperlinks] [-DataValidations] [-ConditionalFormatting] [-Merges] [-Sparklines] [-All] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -168,22 +168,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Merges
 Clear merged-cell definitions that overlap the selected range.
 
@@ -195,6 +179,38 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Context, Path, Document
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -16,8 +16,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordPageNumber")]
 [Alias("WordPageNumber")]
-public sealed class AddOfficeWordPageNumberCommand : PSCmdlet
-{
+public sealed class AddOfficeWordPageNumberCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>Include “of N” when true.</summary>
     [Parameter]
     public SwitchParameter IncludeTotalPages { get; set; }
@@ -29,15 +28,14 @@ public sealed class AddOfficeWordPageNumberCommand : PSCmdlet
     public string Separator { get; set; } = " of ";
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = WordDslContext.Require(this);
         WordHeaderFooter? target = context.CurrentFooter ?? context.CurrentHeader as WordHeaderFooter;
-        if (target == null)
-        {
+        if (target == null) {
             throw new InvalidOperationException("WordPageNumber must be called within WordHeader or WordFooter.");
         }
 
         target.AddPageNumber(IncludeTotalPages.IsPresent, Format, Separator);
+        WritePassThru(target);
     }
 }

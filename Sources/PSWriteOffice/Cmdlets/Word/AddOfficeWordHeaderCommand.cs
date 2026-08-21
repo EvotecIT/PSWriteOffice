@@ -14,8 +14,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// </example>
 [Cmdlet(VerbsCommon.Add, "OfficeWordHeader")]
 [Alias("WordHeader")]
-public sealed class AddOfficeWordHeaderCommand : PSCmdlet
-{
+public sealed class AddOfficeWordHeaderCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     /// <summary>The header type to modify.</summary>
     [Parameter]
     public WordHeaderFooterType Type { get; set; } = WordHeaderFooterType.Default;
@@ -25,15 +24,14 @@ public sealed class AddOfficeWordHeaderCommand : PSCmdlet
     public ScriptBlock? Content { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
+    protected override void ProcessRecord() {
         var context = WordDslContext.Require(this);
         var section = context.RequireSection();
         var header = section.GetOrCreateHeader(Type);
 
-        using (context.Push(header))
-        {
+        using (context.Push(header)) {
             Content?.InvokeReturnAsIs();
         }
+        WritePassThru(header);
     }
 }

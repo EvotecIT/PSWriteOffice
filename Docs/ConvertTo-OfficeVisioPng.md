@@ -11,12 +11,12 @@ Exports a Visio document page to native dependency-free PNG.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-ConvertTo-OfficeVisioPng [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <Int32>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <Int32>] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeVisioPng [-Path] <string> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <Int32>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <Int32>] [-Open] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-ConvertTo-OfficeVisioPng -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <Int32>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <Int32>] [-Show] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficeVisioPng -Document <VisioDocument> [-OutputPath <string>] [-PageIndex <int>] [-PixelsPerInch <Double>] [-BackgroundColor <string>] [-Transparent] [-NoText] [-FontFilePath <string>] [-FontFaceName <string>] [-FontCollectionIndex <Int32>] [-NoStencilArtwork] [-NoConnectorLabels] [-NoConnectorLabelOverlapResolution] [-Supersampling <Int32>] [-Open] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -178,6 +178,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Open
+Open the PNG after saving.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Path, Document
+Aliases: Show
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -OutputPath
 Optional output PNG path.
 
@@ -231,22 +247,6 @@ PNG pixels per Visio inch.
 
 ```yaml
 Type: Double
-Parameter Sets: Path, Document
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Show
-Open the PNG after saving.
-
-```yaml
-Type: SwitchParameter
 Parameter Sets: Path, Document
 Aliases: None
 Possible values:

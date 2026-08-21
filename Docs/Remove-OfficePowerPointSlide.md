@@ -11,7 +11,7 @@ Removes a slide by index.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Remove-OfficePowerPointSlide -Presentation <PowerPointPresentation> -Index <int> [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-OfficePowerPointSlide -Presentation <PowerPointPresentation> -Index <int> [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,11 +21,11 @@ Supports -WhatIf/-Confirm thanks to SupportsShouldProcess.
 
 ### EXAMPLE 1
 ```powershell
-PS> $ppt = New-OfficePowerPoint -FilePath .\Examples\Documents\PowerPointRemoveSlide.pptx
-Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
-Add-OfficePowerPointSlide -Presentation $ppt -Layout 1 | Out-Null
+PS> $ppt = New-OfficePowerPoint -Path .\Examples\Documents\PowerPointRemoveSlide.pptx -NoSave
+Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
+Add-OfficePowerPointSlide -Presentation $ppt -Layout 1
 Remove-OfficePowerPointSlide -Presentation $ppt -Index 0 -Confirm:$false
-Save-OfficePowerPoint -Presentation $ppt
+Close-OfficePowerPoint -Presentation $ppt -Save
 ```
 
 Removes the first slide and saves the updated deck.
@@ -42,6 +42,22 @@ Aliases: None
 Possible values:
 
 Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

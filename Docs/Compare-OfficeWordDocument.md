@@ -26,6 +26,13 @@ PS> $result = Compare-OfficeWordDocument -ReferencePath .\Before.docx -Differenc
 
 Returns deterministic findings and saves a Word document containing revision marks.
 
+### EXAMPLE 2
+```powershell
+PS> $options = New-OfficeWordComparisonOptions -IgnoreWhitespace -CompareVolatileMetadata:$false
+Compare-OfficeWordDocument -ReferencePath .\Before.docx -DifferencePath .\After.docx -Options $options
+```
+
+
 ## PARAMETERS
 
 ### -DifferencePath

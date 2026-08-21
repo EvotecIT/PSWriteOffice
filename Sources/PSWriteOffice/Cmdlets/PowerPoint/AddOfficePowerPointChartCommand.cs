@@ -11,8 +11,7 @@ using PSWriteOffice.Services.PowerPoint;
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
 /// <summary>Chart types supported by Add-OfficePowerPointChart.</summary>
-public enum PowerPointChartType
-{
+public enum PowerPointChartType {
     /// <summary>Clustered column chart.</summary>
     ClusteredColumn,
     /// <summary>Line chart.</summary>
@@ -35,7 +34,7 @@ public enum PowerPointChartType
 ///     [pscustomobject]@{ Month = 'Feb'; Sales = 55; Profit = 13 }
 /// )
 /// New-OfficePowerPoint -Path .\Examples\Documents\PowerPointChart.pptx {
-///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
 ///     Add-OfficePowerPointChart -Slide $slide -InputObject $rows -CategoryProperty Month -SeriesProperty Sales,Profit -Title 'Monthly performance'
 /// }</code>
 ///   <para>Creates a clustered column chart using Month for categories and Sales/Profit as series.</para>
@@ -48,7 +47,7 @@ public enum PowerPointChartType
 ///     [pscustomobject]@{ Quarter = 2; Revenue = 34 }
 /// )
 /// New-OfficePowerPoint -Path .\Examples\Documents\PowerPointScatter.pptx {
-///     $slide = Add-OfficePowerPointSlide -Layout 1
+///     $slide = Add-OfficePowerPointSlide -Layout 1 -PassThru
 ///     Add-OfficePowerPointChart -Slide $slide -Type Scatter -InputObject $rows -XProperty Quarter -YProperty Revenue -Title 'Revenue trend'
 /// }</code>
 ///   <para>Creates a scatter chart using Quarter on the X axis and Revenue on the Y axis.</para>
@@ -56,8 +55,7 @@ public enum PowerPointChartType
 [Cmdlet(VerbsCommon.Add, "OfficePowerPointChart", DefaultParameterSetName = ParameterSetDefault)]
 [Alias("PptChart")]
 [OutputType(typeof(PowerPointChart))]
-public sealed class AddOfficePowerPointChartCommand : PSCmdlet
-{
+public sealed class AddOfficePowerPointChartCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
     private const string ParameterSetDefault = "Default";
     private const string ParameterSetCategorical = "Categorical";
     private const string ParameterSetScatter = "Scatter";
@@ -113,43 +111,34 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
     public string? Title { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
-    {
-        try
-        {
-            if (Width <= 0)
-            {
+    protected override void ProcessRecord() {
+        try {
+            if (Width <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(Width), "Width must be greater than 0.");
             }
 
-            if (Height <= 0)
-            {
+            if (Height <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(Height), "Height must be greater than 0.");
             }
 
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
-            var chart = ParameterSetName switch
-            {
+            var chart = ParameterSetName switch {
                 ParameterSetCategorical => AddCategoricalChart(slide),
                 ParameterSetScatter => AddScatterChart(slide),
                 _ => AddDefaultChart(slide)
             };
 
-            if (!string.IsNullOrWhiteSpace(Title))
-            {
+            if (!string.IsNullOrWhiteSpace(Title)) {
                 chart.SetTitle(Title!);
             }
 
-            WriteObject(chart);
-        }
-        catch (Exception ex)
-        {
+            WritePassThru(chart);
+        } catch (Exception ex) {
             WriteError(new ErrorRecord(ex, "PowerPointAddChartFailed", ErrorCategory.InvalidOperation, Slide));
         }
     }
 
-    private PowerPointChart AddDefaultChart(PowerPointSlide slide)
-    {
+    private PowerPointChart AddDefaultChart(PowerPointSlide slide) {
         OfficeChartKind kind = GetOfficeChartKind(Type);
         OfficeChartData data = kind == OfficeChartKind.Scatter
             ? new OfficeChartData(
@@ -162,43 +151,35 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
         return slide.AddChartPoints(kind, data, X, Y, Width, Height);
     }
 
-    private PowerPointChart AddCategoricalChart(PowerPointSlide slide)
-    {
-        if (Type == PowerPointChartType.Scatter)
-        {
+    private PowerPointChart AddCategoricalChart(PowerPointSlide slide) {
+        if (Type == PowerPointChartType.Scatter) {
             throw new PSArgumentException("Use -XProperty and -YProperty when -Type Scatter is selected.", nameof(Type));
         }
 
-        if (SeriesProperty == null || SeriesProperty.Length == 0)
-        {
+        if (SeriesProperty == null || SeriesProperty.Length == 0) {
             throw new PSArgumentException("Provide at least one -SeriesProperty.", nameof(SeriesProperty));
         }
 
-        if ((Type == PowerPointChartType.Pie || Type == PowerPointChartType.Doughnut) && SeriesProperty.Length > 1)
-        {
+        if ((Type == PowerPointChartType.Pie || Type == PowerPointChartType.Doughnut) && SeriesProperty.Length > 1) {
             throw new PSArgumentException("Pie and Doughnut charts support only one series property.", nameof(SeriesProperty));
         }
 
         return slide.AddChartPoints(GetOfficeChartKind(Type), BuildChartData(), X, Y, Width, Height);
     }
 
-    private PowerPointChart AddScatterChart(PowerPointSlide slide)
-    {
-        if (Type != PowerPointChartType.Scatter)
-        {
+    private PowerPointChart AddScatterChart(PowerPointSlide slide) {
+        if (Type != PowerPointChartType.Scatter) {
             throw new PSArgumentException("Use -CategoryProperty/-SeriesProperty for non-scatter charts.", nameof(Type));
         }
 
-        if (YProperty == null || YProperty.Length == 0)
-        {
+        if (YProperty == null || YProperty.Length == 0) {
             throw new PSArgumentException("Provide at least one -YProperty.", nameof(YProperty));
         }
 
         return slide.AddChartPoints(OfficeChartKind.Scatter, BuildScatterChartData(), X, Y, Width, Height);
     }
 
-    private OfficeChartData BuildChartData()
-    {
+    private OfficeChartData BuildChartData() {
         var items = EnsureData();
         var categories = items.Select(item => ConvertToString(GetPropertyValue(item, CategoryProperty), CategoryProperty)).ToArray();
         var series = SeriesProperty.Select(property =>
@@ -208,8 +189,7 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
         return new OfficeChartData(categories, series);
     }
 
-    private OfficeChartData BuildScatterChartData()
-    {
+    private OfficeChartData BuildScatterChartData() {
         var items = EnsureData();
         var xValues = items.Select(item => ConvertToDouble(GetPropertyValue(item, XProperty), XProperty)).ToArray();
         var series = YProperty.Select(property =>
@@ -224,8 +204,7 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
             series);
     }
 
-    private static OfficeChartKind GetOfficeChartKind(PowerPointChartType type) => type switch
-    {
+    private static OfficeChartKind GetOfficeChartKind(PowerPointChartType type) => type switch {
         PowerPointChartType.Line => OfficeChartKind.Line,
         PowerPointChartType.Pie => OfficeChartKind.Pie,
         PowerPointChartType.Doughnut => OfficeChartKind.Doughnut,
@@ -233,77 +212,60 @@ public sealed class AddOfficePowerPointChartCommand : PSCmdlet
         _ => OfficeChartKind.ColumnClustered
     };
 
-    private object[] EnsureData()
-    {
-        if (InputObject == null || InputObject.Length == 0)
-        {
+    private object[] EnsureData() {
+        if (InputObject == null || InputObject.Length == 0) {
             throw new PSArgumentException("Provide at least one data item.", nameof(InputObject));
         }
 
         return InputObject;
     }
 
-    private static object? GetPropertyValue(object item, string propertyName)
-    {
-        if (item == null)
-        {
+    private static object? GetPropertyValue(object item, string propertyName) {
+        if (item == null) {
             throw new PSArgumentException("Chart data items cannot be null.");
         }
 
-        if (string.IsNullOrWhiteSpace(propertyName))
-        {
+        if (string.IsNullOrWhiteSpace(propertyName)) {
             throw new PSArgumentException("Property name cannot be empty.", nameof(propertyName));
         }
 
-        if (item is IDictionary dictionary)
-        {
-            foreach (DictionaryEntry entry in dictionary)
-            {
-                if (entry.Key is string key && string.Equals(key, propertyName, StringComparison.OrdinalIgnoreCase))
-                {
+        if (item is IDictionary dictionary) {
+            foreach (DictionaryEntry entry in dictionary) {
+                if (entry.Key is string key && string.Equals(key, propertyName, StringComparison.OrdinalIgnoreCase)) {
                     return entry.Value;
                 }
             }
         }
 
         var property = PSObject.AsPSObject(item).Properties[propertyName];
-        if (property == null)
-        {
+        if (property == null) {
             throw new PSArgumentException($"Property '{propertyName}' was not found on chart data item.");
         }
 
         return property.Value;
     }
 
-    private static string ConvertToString(object? value, string propertyName)
-    {
-        if (value == null)
-        {
+    private static string ConvertToString(object? value, string propertyName) {
+        if (value == null) {
             throw new PSArgumentException($"Property '{propertyName}' cannot be null.");
         }
 
         var text = Convert.ToString(value, CultureInfo.InvariantCulture);
-        if (string.IsNullOrWhiteSpace(text))
-        {
+        if (string.IsNullOrWhiteSpace(text)) {
             throw new PSArgumentException($"Property '{propertyName}' cannot be empty.");
         }
 
         return text;
     }
 
-    private static double ConvertToDouble(object? value, string propertyName)
-    {
-        if (value == null)
-        {
+    private static double ConvertToDouble(object? value, string propertyName) {
+        if (value == null) {
             throw new PSArgumentException($"Property '{propertyName}' cannot be null.");
         }
 
-        try
-        {
+        try {
             return Convert.ToDouble(value, CultureInfo.InvariantCulture);
-        }
-        catch (Exception)
-        {
+        } catch (Exception) {
             throw new PSArgumentException($"Property '{propertyName}' must be numeric.", propertyName);
         }
     }

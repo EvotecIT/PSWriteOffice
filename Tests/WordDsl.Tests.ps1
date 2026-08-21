@@ -256,10 +256,6 @@ Describe 'Word DSL surface' {
         }
 
         { Get-ZipEntriesLocal -Path $path } | Should -Throw
-        $autoSavePath = Join-Path $TestDrive 'EncryptedWordAutoSave.docx'
-        { New-OfficeWord -Path $autoSavePath -Password 'secret' -AutoSave -ErrorAction Stop } |
-            Should -Throw '*require explicit Save-OfficeWord*'
-
         $document = Get-OfficeWord -Path $path -Password 'secret' -ReadOnly
         try {
             $document.Paragraphs.Text | Should -Contain 'Encrypted Word value'
@@ -320,8 +316,7 @@ Describe 'Word DSL surface' {
             $document | Close-OfficeWord
         }
 
-        { Get-OfficeWord -Path $path -Password 'secret' -AutoSave -ErrorAction Stop } |
-            Should -Throw '*require explicit Save-OfficeWord*'
+        (Get-Command Get-OfficeWord).Parameters.Keys | Should -Not -Contain 'AutoSave'
     }
 
     It 'runs the Word DSL against a cloned template document' {
@@ -1129,7 +1124,7 @@ Describe 'Word DSL surface' {
             [PSCustomObject]@{ Month = 'Mar'; Sales = 15; Profit = 7 }
         )
 
-        $document = New-OfficeWord -Path $path
+        $document = New-OfficeWord -Path $path -NoSave
         try {
             $chart = Add-OfficeWordChart -Document $document -Type Line -InputObject $rows -CategoryProperty Month -SeriesProperty Sales, Profit -Legend -XAxisTitle 'Month' -YAxisTitle 'Value' -Title 'Monthly Trend' -PassThru
             $chart.Title | Should -Be 'Monthly Trend'
@@ -1473,7 +1468,7 @@ Describe 'Word DSL surface' {
             }
         } | Out-Null
 
-        $replacements = Update-OfficeWordText -Path $path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkText -IncludeHyperlinkUri -IncludeHyperlinkAnchor -IncludeHyperlinkTooltip
+        $replacements = Update-OfficeWordText -Path $path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkText -IncludeHyperlinkUri -IncludeHyperlinkAnchor -IncludeHyperlinkTooltip -PassThru
         $replacements | Should -BeGreaterThan 0
 
         $document = Get-OfficeWord -Path $path -ReadOnly
@@ -1509,7 +1504,7 @@ Describe 'Word DSL surface' {
             $editable.Dispose()
         }
 
-        $replacements = Update-OfficeWordText -Path $path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkUri
+        $replacements = Update-OfficeWordText -Path $path -OldValue 'FY24' -NewValue 'FY25' -IncludeHyperlinkUri -PassThru
         $replacements | Should -Be 2
 
         $document = Get-OfficeWord -Path $path -ReadOnly
@@ -1523,12 +1518,12 @@ Describe 'Word DSL surface' {
 
     It 'does not mutate live Word documents when text update uses WhatIf' {
         $path = Join-Path $TestDrive 'DslReplaceLiveWhatIf.docx'
-        $document = New-OfficeWord -Path $path
+        $document = New-OfficeWord -Path $path -NoSave
 
         try {
             $document.AddParagraph('FY24 live document') | Out-Null
 
-            Update-OfficeWordText -Document $document -OldValue 'FY24' -NewValue 'FY25' -WhatIf | Should -BeNullOrEmpty
+            Update-OfficeWordText -Document $document -OldValue 'FY24' -NewValue 'FY25' -WhatIf -PassThru | Should -BeNullOrEmpty
 
             (Find-OfficeWord -Document $document -Text 'FY24').Count | Should -Be 1
             (Find-OfficeWord -Document $document -Text 'FY25').Count | Should -Be 0
@@ -1539,12 +1534,12 @@ Describe 'Word DSL surface' {
 
     It 'does not mutate the tracked Word document when text update uses WhatIf' {
         $path = Join-Path $TestDrive 'DslReplaceTrackedWhatIf.docx'
-        $document = New-OfficeWord -Path $path
+        $document = New-OfficeWord -Path $path -NoSave
 
         try {
             $document.AddParagraph('FY24 tracked document') | Out-Null
 
-            Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' -WhatIf | Should -BeNullOrEmpty
+            Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' -WhatIf -PassThru | Should -BeNullOrEmpty
 
             (Find-OfficeWord -Document $document -Text 'FY24').Count | Should -Be 1
             (Find-OfficeWord -Document $document -Text 'FY25').Count | Should -Be 0
@@ -1557,14 +1552,14 @@ Describe 'Word DSL surface' {
         $pathOne = Join-Path $TestDrive 'TrackedOne.docx'
         $pathTwo = Join-Path $TestDrive 'TrackedTwo.docx'
 
-        $docOne = New-OfficeWord -Path $pathOne
-        $docTwo = New-OfficeWord -Path $pathTwo
+        $docOne = New-OfficeWord -Path $pathOne -NoSave
+        $docTwo = New-OfficeWord -Path $pathTwo -NoSave
 
         try {
             $docOne.AddParagraph('First tracked document') | Out-Null
             $docTwo.AddParagraph('Second tracked FY24 document') | Out-Null
 
-            Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' | Should -Be 1
+            Update-OfficeWordText -OldValue 'FY24' -NewValue 'FY25' -PassThru | Should -Be 1
 
             Close-OfficeWord -Save
             Close-OfficeWord -All -Save
@@ -1595,7 +1590,7 @@ Describe 'Word DSL surface' {
 
     It 'does not fall back to the tracked document when -Document is null' {
         $path = Join-Path $TestDrive 'NullDocumentGuard.docx'
-        $doc = New-OfficeWord -Path $path
+        $doc = New-OfficeWord -Path $path -NoSave
 
         try {
             $nullDocument = $null

@@ -11,7 +11,7 @@ Writes values or formatting to a column in the current worksheet.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelColumn [[-Column] <Int32>] [-ColumnName <string>] [-Values <Object[]>] [-StartRow <int>] [-Width <Double>] [-Hidden <Boolean>] [-AutoFit] [<CommonParameters>]
+Set-OfficeExcelColumn [[-Column] <Int32>] [-ColumnName <string>] [-Values <Object[]>] [-StartRow <int>] [-Width <Double>] [-Hidden <Boolean>] [-AutoFit] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -81,6 +81,22 @@ Hide or show the column.
 
 ```yaml
 Type: Boolean
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the object created or changed by the command.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

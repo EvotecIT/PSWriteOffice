@@ -16,7 +16,7 @@ Get-OfficeExcelTemplateMarker [-Sheet <string>] [-SheetIndex <Int32>] [-Value <h
 
 ### Path
 ```powershell
-Get-OfficeExcelTemplateMarker [-InputPath] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
+Get-OfficeExcelTemplateMarker [-Path] <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Value <hashtable>] [-MissingOnly] [<CommonParameters>]
 ```
 
 ### Document
@@ -54,22 +54,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Workbook path to inspect.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -MissingOnly
 Only returns markers that are not supplied by -Value.
 
@@ -81,6 +65,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Workbook path to inspect.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

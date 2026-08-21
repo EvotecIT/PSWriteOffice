@@ -21,7 +21,8 @@ Reads a native EML, EMLX, MSG, or TNEF artifact with bounded diagnostics.
 
 ### EXAMPLE 1
 ```powershell
-Get-OfficeEmail -Path 'C:\Path'
+PS> $options = New-OfficeEmailReaderOptions -ExcludeAttachmentContent -MaxAttachmentBytes 25MB
+Get-OfficeEmail -Path .\Message.msg -Options $options -AsResult
 ```
 
 

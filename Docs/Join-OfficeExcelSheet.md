@@ -16,7 +16,7 @@ Join-OfficeExcelSheet -SourceSheet <string> [-TargetSheet <string>] [-TargetShee
 
 ### Path
 ```powershell
-Join-OfficeExcelSheet [-InputPath] <string> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <Int32>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <Int32>] [-TargetStartColumn <Int32>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <Int32>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
+Join-OfficeExcelSheet [-Path] <string> -SourceSheet <string> [-TargetSheet <string>] [-TargetSheetIndex <Int32>] [-SourceDocument <ExcelDocument>] [-SourcePath <string>] [-SourceRange <string>] [-TargetStartRow <Int32>] [-TargetStartColumn <Int32>] [-NoSourceHeader] [-IncludeSourceHeader] [-MatchColumnsByHeader] [-TargetHeaderRow <Int32>] [-BlankRowsBefore <int>] [-OverwriteExistingCells] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
@@ -88,22 +88,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Target workbook path to update.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path, FilePath
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -MatchColumnsByHeader
 Match source columns to target columns by header text.
 
@@ -147,6 +131,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Target workbook path to update.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

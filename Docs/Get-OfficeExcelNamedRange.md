@@ -11,7 +11,7 @@ Gets defined names (named ranges) from an Excel workbook.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeExcelNamedRange [-InputPath] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
+Get-OfficeExcelNamedRange [-Path] <string> [-Name <string>] [-Sheet <string>] [-SheetIndex <Int32>] [<CommonParameters>]
 ```
 
 ### Uri
@@ -73,22 +73,6 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -InputPath
-Path to the workbook.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: FilePath, Path
-Possible values:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
 Optional named range to retrieve.
 
@@ -100,6 +84,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to the workbook.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: InputPath, FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -16,7 +16,7 @@ ConvertFrom-OfficeWordHtml [-Html] <string> [-OutputPath <string>] [-FontFamily 
 
 ### Path
 ```powershell
-ConvertFrom-OfficeWordHtml [-FilePath] <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-IncludeListStyles] [-ContinueNumbering] [-SupportsHeadingNumbering] [-RenderPreAsTable] [-TableCaptionPosition <TableCaptionPosition>] [-SectionTagHandling <SectionTagHandling>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertFrom-OfficeWordHtml [-Path] <string> [-OutputPath <string>] [-FontFamily <string>] [-BasePath <string>] [-StylesheetPath <string[]>] [-StylesheetContent <string[]>] [-IncludeListStyles] [-ContinueNumbering] [-SupportsHeadingNumbering] [-RenderPreAsTable] [-TableCaptionPosition <TableCaptionPosition>] [-SectionTagHandling <SectionTagHandling>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -67,22 +67,6 @@ Possible values:
 
 Required: False
 Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -FilePath
-Path to an HTML file.
-
-```yaml
-Type: String
-Parameter Sets: Path
-Aliases: Path
-Possible values:
-
-Required: True
-Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -179,6 +163,22 @@ Possible values:
 
 Required: False
 Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to an HTML file.
+
+```yaml
+Type: String
+Parameter Sets: Path
+Aliases: FilePath
+Possible values:
+
+Required: True
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -11,7 +11,7 @@ Gets fields from a Word document.
 ## SYNTAX
 ### Path (Default)
 ```powershell
-Get-OfficeWordField [-InputPath] <string> [-FieldType <WordFieldType[]>] [-Contains <string>] [-CaseSensitive] [<CommonParameters>]
+Get-OfficeWordField [-Path] <string> [-FieldType <WordFieldType[]>] [-Contains <string>] [-CaseSensitive] [<CommonParameters>]
 ```
 
 ### Document
@@ -100,13 +100,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -InputPath
+### -Path
 Path to the .docx file.
 
 ```yaml
 Type: String
 Parameter Sets: Path
-Aliases: FilePath, Path
+Aliases: InputPath, FilePath
 Possible values:
 
 Required: True
