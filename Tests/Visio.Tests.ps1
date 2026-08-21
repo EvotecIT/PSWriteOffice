@@ -266,8 +266,18 @@ Describe 'Visio cmdlets' {
             return
         }
 
+        $whatIfDirectory = Join-Path $TestDrive 'stencil-preview-gallery-whatif'
+        $whatIfOutput = @(Export-OfficeVisioStencilPreviewGallery -Path $templatePath -OutputDirectory $whatIfDirectory -IncludeUnsupportedMasters -WhatIf -PassThru)
+        $whatIfOutput | Should -HaveCount 0
+        Test-Path -LiteralPath $whatIfDirectory | Should -BeFalse
+
+        $quietDirectory = Join-Path $TestDrive 'stencil-preview-gallery-quiet'
+        $quietOutput = @(Export-OfficeVisioStencilPreviewGallery -Path $templatePath -OutputDirectory $quietDirectory -IncludeUnsupportedMasters)
+        $quietOutput | Should -HaveCount 0
+        Test-Path -LiteralPath (Join-Path $quietDirectory 'index.html') | Should -BeTrue
+
         $outputDirectory = Join-Path $TestDrive 'stencil-preview-gallery'
-        $gallery = Export-OfficeVisioStencilPreviewGallery -Path $templatePath -OutputDirectory $outputDirectory -IncludeUnsupportedMasters -Title 'Template stencil previews'
+        $gallery = Export-OfficeVisioStencilPreviewGallery -Path $templatePath -OutputDirectory $outputDirectory -IncludeUnsupportedMasters -Title 'Template stencil previews' -PassThru
 
         Test-Path -LiteralPath $gallery.OutputDirectory | Should -BeTrue
         Test-Path -LiteralPath $gallery.PreviewDirectory | Should -BeTrue
