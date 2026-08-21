@@ -94,7 +94,7 @@ New-OfficeExcel -Path $path {
         ExcelValidationList -Range 'F2:F50' -Values 'Healthy','Watch','Risk'
         ExcelConditionalColorScale -Range 'B2:B9' -StartColor '#F8696B' -EndColor '#63BE7B'
         ExcelConditionalDataBar -Range 'C2:C9' -Color '#5B9BD5'
-        ExcelConditionalIconSet -Range 'B2:B9' -IconSet ThreeTrafficLights1 -Reverse $true
+        ExcelConditionalIconSet -Range 'B2:B9' -IconSet ThreeTrafficLights1
         ExcelUrlLinksByHeader -Header 'Evidence' -TableName 'ServiceHealth' -UrlScript { param($text) "https://evotec.xyz/docs/$text" } -TitleScript { param($text) "Open $text" }
         ExcelPivotTable -SourceRange 'A1:F9' -DestinationCell 'J1' -Name 'ServiceStatusPivot' -RowField Status -DataField Incidents -DataDisplayName 'Total Incidents' -PivotStyle PivotStyleMedium9 -RefreshOnOpen
         ExcelChart -Range 'A1:C9' -Row 12 -Column 1 -Type BarClustered -Title 'Health Score and Incidents' -WidthPixels 760 -HeightPixels 340 -PassThru |
@@ -123,7 +123,7 @@ New-OfficeExcel -Path $path {
     ExcelSheet 'Owner Summary' {
         ExcelTable -Data $ownerSummary -TableName 'OwnerSummary' -StartRow 1 -StartColumn 1 -TableStyle 'TableStyleMedium5' -AutoFit
         ExcelConditionalDataBar -Range 'D2:D20' -Color '#ED7D31'
-        ExcelConditionalIconSet -Range 'C2:C20' -IconSet ThreeTrafficLights1 -Reverse $true
+        ExcelConditionalIconSet -Range 'C2:C20' -IconSet ThreeTrafficLights1
         ExcelHeaderFooter -HeaderCenter 'Owner summary' -FooterRight 'Page &P of &N'
     }
 
