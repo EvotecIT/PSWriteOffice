@@ -71,13 +71,13 @@ public sealed class SetOfficeExcelColumnStyleByHeaderCommand : PSWriteOffice.Cmd
 
     /// <summary>Apply a solid background color to the whole resolved column.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>Apply a font color to the whole resolved column.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FontColor { get; set; }
 

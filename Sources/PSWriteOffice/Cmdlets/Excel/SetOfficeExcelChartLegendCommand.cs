@@ -46,7 +46,7 @@ public sealed class SetOfficeExcelChartLegendCommand : PSWriteOffice.Cmdlets.Off
 
     /// <summary>Optional legend text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 

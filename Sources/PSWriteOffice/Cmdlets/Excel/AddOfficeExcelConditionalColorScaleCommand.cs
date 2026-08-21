@@ -63,13 +63,13 @@ public sealed class AddOfficeExcelConditionalColorScaleCommand : PSCmdlet
 
     /// <summary>Start color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, Position = 1)]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string StartColor { get; set; } = string.Empty;
 
     /// <summary>End color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, Position = 2)]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string EndColor { get; set; } = string.Empty;
 

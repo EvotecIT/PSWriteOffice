@@ -589,7 +589,7 @@ Describe 'PowerPoint cmdlets' {
             $textBox.Paragraphs[0].Runs[0].HighlightColor | Should -Be 'FFFF00'
             $textBox.Paragraphs[0].Runs[0].Hyperlink.AbsoluteUri | Should -Be 'https://example.org/ppt'
             $textBox = $textBox | Set-OfficePowerPointShapeText -Run @(
-                PptTextRun 'Plain'
+                PptTextRun 'Plain' -BackgroundColor None
             ) -PassThru
             $textBox.Text | Should -Be 'Plain'
             $textBox.Paragraphs[0].Runs[0].Color | Should -BeNullOrEmpty

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Drawing;
 using OfficeIMO.Pdf;
@@ -31,6 +32,12 @@ internal static class OfficeColorUtilities
             return null;
         }
 
+        var normalized = color!.Trim().TrimStart('#');
+        if (normalized.Length == 8 && normalized.All(Uri.IsHexDigit))
+        {
+            return normalized.ToUpperInvariant();
+        }
+
         OfficeColor parsed;
         try
         {
@@ -51,6 +58,12 @@ internal static class OfficeColorUtilities
             return null;
         }
 
+        var normalized = color!.Trim().TrimStart('#');
+        if (normalized.Length == 8 && normalized.All(Uri.IsHexDigit))
+        {
+            return normalized.ToUpperInvariant();
+        }
+
         try
         {
             return OfficeColor.Parse(color!).ToArgbHex();
@@ -60,6 +73,9 @@ internal static class OfficeColorUtilities
             throw new PSArgumentException(exception.Message, parameterName);
         }
     }
+
+    internal static bool IsNone(string? color)
+        => string.Equals(color?.Trim(), "None", StringComparison.OrdinalIgnoreCase);
 
     internal static PdfColor? ToPdfColor(string? color, string parameterName = "Color")
     {

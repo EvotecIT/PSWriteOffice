@@ -46,7 +46,7 @@ public sealed class NewOfficeTextRunCommand : PSCmdlet
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
-    /// <summary>Run background or highlight color. Named colors, hexadecimal colors, and the Word highlight sentinel None are accepted.</summary>
+    /// <summary>Run background or highlight color. Named colors and hexadecimal colors are accepted; None clears the background or highlight where supported.</summary>
     [Parameter]
     [Alias("HighlightColor", "FillColor")]
     [OfficeColorArgumentTransformation(AllowNone = true)]

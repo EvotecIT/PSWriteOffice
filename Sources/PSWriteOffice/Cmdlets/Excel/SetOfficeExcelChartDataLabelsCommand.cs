@@ -66,7 +66,7 @@ public sealed class SetOfficeExcelChartDataLabelsCommand : PSWriteOffice.Cmdlets
 
     /// <summary>Optional label text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
@@ -76,13 +76,13 @@ public sealed class SetOfficeExcelChartDataLabelsCommand : PSWriteOffice.Cmdlets
 
     /// <summary>Optional label fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Optional label line color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 

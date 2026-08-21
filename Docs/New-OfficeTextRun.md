@@ -28,7 +28,7 @@ New-OfficeTextRun -BackgroundColor 'Value'
 ## PARAMETERS
 
 ### -BackgroundColor
-Run background or highlight color. Named colors, hexadecimal colors, and the Word highlight sentinel None are accepted.
+Run background or highlight color. Named colors and hexadecimal colors are accepted; None clears the background or highlight where supported.
 
 ```yaml
 Type: String

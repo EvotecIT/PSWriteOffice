@@ -64,19 +64,19 @@ public sealed class SetOfficeExcelCellCommand : PSWriteOffice.Cmdlets.OfficeMuta
 
     /// <summary>Solid background color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>Gradient start color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? GradientFrom { get; set; }
 
     /// <summary>Gradient end color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? GradientTo { get; set; }
 

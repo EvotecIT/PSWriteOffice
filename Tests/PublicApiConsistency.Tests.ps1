@@ -562,17 +562,28 @@ Describe 'PSWriteOffice public API consistency' {
 
         $colorParameters | Should -Not -BeNullOrEmpty
         foreach ($entry in $colorParameters) {
-            @($entry.Parameter.Attributes | Where-Object { $_.TypeId.Name -eq 'OfficeColorArgumentTransformationAttribute' }) |
-                Should -HaveCount 1 -Because "$($entry.Command) -$($entry.Parameter.Name) should accept the same named and hexadecimal color language"
+            $transformations = @($entry.Parameter.Attributes | Where-Object { $_.TypeId.Name -eq 'OfficeColorArgumentTransformationAttribute' })
+            $transformations | Should -HaveCount 1 -Because "$($entry.Command) -$($entry.Parameter.Name) should accept the same named and hexadecimal color language"
+            if ($entry.Command -like '*OfficeExcel*' -and $entry.Command -notlike '*ImageOptions') {
+                $transformations[0].UseExcelArgb | Should -BeTrue -Because "$($entry.Command) -$($entry.Parameter.Name) should normalize shorthand without reordering legacy Excel ARGB"
+            }
             @($entry.Parameter.Attributes | Where-Object { $_.TypeId.Name -eq 'ArgumentCompleterAttribute' }) |
                 Should -HaveCount 1 -Because "$($entry.Command) -$($entry.Parameter.Name) should offer named color completion"
         }
 
         (New-OfficeTextRun -Text 'status' -Color Red).Color | Should -Be '#FF0000'
         (New-OfficeTextRun -Text 'status' -Color '#abc').Color | Should -Be '#AABBCC'
-        (New-OfficeTextRun -Text 'status' -Color '#abcd').Color | Should -Be '#AABBCCDD'
+        (New-OfficeTextRun -Text 'status' -Color '#abcd').Color | Should -Be '#abcd'
+        (New-OfficeTextRun -Text 'status' -Color '#FF4F81BD').Color | Should -Be '#FF4F81BD'
         (New-OfficeTextRun -Text 'status' -BackgroundColor None).BackgroundColor | Should -Be 'None'
         { New-OfficeTextRun -Text 'status' -Color 'not-a-color' -ErrorAction Stop } | Should -Throw '*known Office color name*'
+
+        $excelColorTransform = @((Get-Command Set-OfficeExcelCell).Parameters.BackgroundColor.Attributes |
+                Where-Object { $_.TypeId.Name -eq 'OfficeColorArgumentTransformationAttribute' })[0]
+        $excelColorTransform.UseExcelArgb | Should -BeTrue
+        $excelColorTransform.Transform($ExecutionContext, '#abc') | Should -Be '#AABBCC'
+        $excelColorTransform.Transform($ExecutionContext, '#abcd') | Should -Be '#DDAABBCC'
+        $excelColorTransform.Transform($ExecutionContext, '#FF4F81BD') | Should -Be '#FF4F81BD'
 
         $input = 'New-OfficeTextRun -Color Re'
         $completion = [System.Management.Automation.CommandCompletion]::CompleteInput($input, $input.Length, $null)

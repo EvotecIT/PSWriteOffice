@@ -241,7 +241,7 @@ Describe 'PDF cmdlets' {
                 , @(
                     PdfTableCell -Run @(
                         PdfTextRun 'Build '
-                        PdfTextRun 'Ready' -Color SeaGreen -Bold
+                        PdfTextRun 'Ready' -Color SeaGreen -BackgroundColor None -Bold
                     ) -ColumnSpan 2 -FillColor AliceBlue
                 )
                 , @(

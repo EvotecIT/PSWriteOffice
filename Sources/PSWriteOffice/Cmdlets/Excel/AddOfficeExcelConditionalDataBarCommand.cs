@@ -63,7 +63,7 @@ public sealed class AddOfficeExcelConditionalDataBarCommand : PSCmdlet
 
     /// <summary>Bar color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, Position = 1)]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string Color { get; set; } = string.Empty;
 

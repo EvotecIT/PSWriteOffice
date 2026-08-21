@@ -153037,7 +153037,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="HighlightColor,FillColor">
           <maml:name>BackgroundColor</maml:name>
           <maml:description>
-            <maml:para>Run background or highlight color. Named colors, hexadecimal colors, and the Word highlight sentinel None are accepted.</maml:para>
+            <maml:para>Run background or highlight color. Named colors and hexadecimal colors are accepted; None clears the background or highlight where supported.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -153244,7 +153244,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="HighlightColor,FillColor">
         <maml:name>BackgroundColor</maml:name>
         <maml:description>
-          <maml:para>Run background or highlight color. Named colors, hexadecimal colors, and the Word highlight sentinel None are accepted.</maml:para>
+          <maml:para>Run background or highlight color. Named colors and hexadecimal colors are accepted; None clears the background or highlight where supported.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>

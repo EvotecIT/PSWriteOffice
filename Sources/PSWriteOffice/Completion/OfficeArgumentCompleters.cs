@@ -23,11 +23,14 @@ internal static class OfficeCompletionResultFactory
     }
 }
 
-/// <summary>Normalizes named Office colors and hexadecimal shorthand to portable RGB or RGBA notation.</summary>
+/// <summary>Normalizes named Office colors to portable hexadecimal values while preserving caller-supplied hex notation.</summary>
 public sealed class OfficeColorArgumentTransformationAttribute : ArgumentTransformationAttribute
 {
-    /// <summary>Allow the Word highlight sentinel <c>None</c> in addition to color values.</summary>
+    /// <summary>Allow the <c>None</c> sentinel in addition to color values.</summary>
     public bool AllowNone { get; set; }
+
+    /// <summary>Normalize shorthand and named colors to Excel-compatible RGB or ARGB notation while preserving legacy eight-digit ARGB values.</summary>
+    public bool UseExcelArgb { get; set; }
 
     /// <inheritdoc />
     public override object Transform(EngineIntrinsics engineIntrinsics, object inputData)
@@ -54,12 +57,26 @@ public sealed class OfficeColorArgumentTransformationAttribute : ArgumentTransfo
             return "None";
         }
 
+        var hex = trimmed.TrimStart('#');
+        if ((hex.Length == 3 || hex.Length == 4 || hex.Length == 6 || hex.Length == 8) && hex.All(Uri.IsHexDigit))
+        {
+            if (hex.Length == 8 || (!UseExcelArgb && hex.Length == 4))
+            {
+                return trimmed;
+            }
+
+            var parsedHex = OfficeColor.Parse(trimmed);
+            return parsedHex.A == byte.MaxValue
+                ? "#" + parsedHex.ToRgbHex()
+                : "#" + parsedHex.ToArgbHex();
+        }
+
         if (!OfficeColor.TryParse(trimmed, out var color))
         {
             throw new PSArgumentException($"Color must be a known Office color name or a 3, 4, 6, or 8 digit hexadecimal value. Received '{value}'.");
         }
 
-        return color.A == byte.MaxValue ? "#" + color.ToRgbHex() : "#" + color.ToHex();
+        return color.A == byte.MaxValue ? "#" + color.ToRgbHex() : "#" + color.ToArgbHex();
     }
 }
 
@@ -83,7 +100,7 @@ public sealed class OfficeColorArgumentCompleter : IArgumentCompleter
         OfficeCompletionResultFactory.Complete(Names, wordToComplete, "Named Office color; #RGB, #RRGGBB, and alpha-bearing hex values are also accepted.");
 }
 
-/// <summary>Completes Word highlight colors, including the canonical <c>None</c> sentinel.</summary>
+/// <summary>Completes background and highlight colors, including the canonical <c>None</c> sentinel.</summary>
 public sealed class OfficeHighlightColorArgumentCompleter : IArgumentCompleter
 {
     private static readonly string[] Names = OfficeColorArgumentCompleter.Names.Concat(new[] { "None" }).ToArray();
@@ -95,7 +112,7 @@ public sealed class OfficeHighlightColorArgumentCompleter : IArgumentCompleter
         string wordToComplete,
         CommandAst commandAst,
         IDictionary fakeBoundParameters) =>
-        OfficeCompletionResultFactory.Complete(Names, wordToComplete, "Named Office color, hexadecimal color, or None to clear Word highlighting.");
+        OfficeCompletionResultFactory.Complete(Names, wordToComplete, "Named Office color, hexadecimal color, or None to clear the run background or highlight.");
 }
 
 /// <summary>Completes known PDF page sizes while retaining the Custom size option.</summary>

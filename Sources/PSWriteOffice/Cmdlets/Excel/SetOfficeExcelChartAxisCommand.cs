@@ -102,13 +102,13 @@ public sealed class SetOfficeExcelChartAxisCommand : PSWriteOffice.Cmdlets.Offic
 
     /// <summary>Optional category gridline color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? CategoryGridlineColor { get; set; }
 
     /// <summary>Optional value gridline color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? ValueGridlineColor { get; set; }
 

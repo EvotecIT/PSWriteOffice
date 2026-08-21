@@ -71,7 +71,7 @@ public sealed class SetOfficeExcelChartTrendlineCommand : PSWriteOffice.Cmdlets.
 
     /// <summary>Trendline line color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 

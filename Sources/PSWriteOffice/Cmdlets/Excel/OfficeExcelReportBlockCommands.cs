@@ -187,7 +187,7 @@ public sealed class AddOfficeExcelReportKpiRowCommand : PSWriteOffice.Cmdlets.Of
 
     /// <summary>Optional fill color for KPI labels.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LabelFillColor { get; set; }
 
@@ -237,7 +237,7 @@ public sealed class AddOfficeExcelReportLegendCommand : PSWriteOffice.Cmdlets.Of
 
     /// <summary>Optional header fill color.</summary>
     [Parameter]
-    [OfficeColorArgumentTransformation]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
     [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? HeaderFillColor { get; set; }
 
