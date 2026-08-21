@@ -93,6 +93,8 @@ $docsPlan = Export-OfficeWordGoogleDocument -Path .\Report.docx -PlanOnly
 $sheetsBatch = Export-OfficeExcelGoogleSpreadsheet -Path .\Data.xlsx -AsBatch
 ```
 
+PSWriteOffice owns the document-workflow side of email: reading or writing standalone message and mailbox artifacts, and searching supported mail sources through the normalized `OfficeIMO.Reader` model. [Mailozaurr](https://github.com/EvotecIT/Mailozaurr) owns operational email and mailbox management, including transport, authentication, mailbox/store lifecycle, PST/OST import and conversion, querying, export, and delivery. Use PSWriteOffice when mail is an input to a report or mixed-document search; use Mailozaurr to acquire, manage, convert, or send the mail, then pass ordinary paths and attachments between the modules.
+
 Confluence writes can be reviewed before a session or tenant is involved:
 
 ```powershell

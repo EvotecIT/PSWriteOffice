@@ -42,6 +42,8 @@ Five commands create, read, convert, and save ODT, ODS, and ODP artifacts throug
 
 Four commands load and save messages and mailbox artifacts through OfficeIMO.Email. The underlying engine covers multiple message, personal-information, store, and address-book families; exact support and diagnostics belong to the generated command/API reference.
 
+The module boundary is deliberate. PSWriteOffice treats email as document content: it reads or writes supported artifacts and lets OfficeIMO.Reader normalize mail sources for mixed-format search and reporting. [Mailozaurr](https://github.com/EvotecIT/Mailozaurr) owns transport, authentication, mailbox/store lifecycle, PST/OST import and conversion, querying, export, and delivery. Workflows can use Mailozaurr to acquire or deliver content and pass ordinary paths or attachments to PSWriteOffice without either module duplicating the other's operational responsibilities.
+
 ## AsciiDoc and LaTeX
 
 Each family provides four bounded interoperability commands for reading, saving, and bridging through Markdown. These are explicit profiles, not a claim to implement every extension or package in the wider AsciiDoc or TeX ecosystems.
