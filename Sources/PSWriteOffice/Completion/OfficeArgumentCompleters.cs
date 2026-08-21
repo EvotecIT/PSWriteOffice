@@ -23,7 +23,7 @@ internal static class OfficeCompletionResultFactory
     }
 }
 
-/// <summary>Normalizes named Office colors to portable hexadecimal values while preserving caller-supplied hex notation.</summary>
+/// <summary>Normalizes named Office colors and hexadecimal shorthand to portable RGB or RGBA notation.</summary>
 public sealed class OfficeColorArgumentTransformationAttribute : ArgumentTransformationAttribute
 {
     /// <summary>Allow the Word highlight sentinel <c>None</c> in addition to color values.</summary>
@@ -54,18 +54,12 @@ public sealed class OfficeColorArgumentTransformationAttribute : ArgumentTransfo
             return "None";
         }
 
-        var hex = trimmed.TrimStart('#');
-        if ((hex.Length == 3 || hex.Length == 4 || hex.Length == 6 || hex.Length == 8) && hex.All(Uri.IsHexDigit))
-        {
-            return trimmed;
-        }
-
         if (!OfficeColor.TryParse(trimmed, out var color))
         {
             throw new PSArgumentException($"Color must be a known Office color name or a 3, 4, 6, or 8 digit hexadecimal value. Received '{value}'.");
         }
 
-        return color.A == byte.MaxValue ? "#" + color.ToRgbHex() : "#" + color.ToArgbHex();
+        return color.A == byte.MaxValue ? "#" + color.ToRgbHex() : "#" + color.ToHex();
     }
 }
 

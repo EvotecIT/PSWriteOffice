@@ -2,6 +2,7 @@ using System;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
+using PSWriteOffice.Services.Text;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -76,7 +77,7 @@ public sealed class AddOfficeExcelConditionalDataBarCommand : PSCmdlet
         var sheet = ResolveSheet();
         string targetRange = ExcelTargetRangeResolver.Resolve(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent, PivotTableName, !PivotWholeTable.IsPresent);
 
-        sheet.AddConditionalDataBar(targetRange, NormalizeColor(Color));
+        sheet.AddConditionalDataBar(targetRange, OfficeColorUtilities.ToExcelArgbHex(Color)!);
 
         if (PassThru.IsPresent)
         {
@@ -100,24 +101,4 @@ public sealed class AddOfficeExcelConditionalDataBarCommand : PSCmdlet
         return context.RequireSheet();
     }
 
-    private static string NormalizeColor(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new PSArgumentException("Color cannot be empty.");
-        }
-
-        var trimmed = value.Trim().TrimStart('#');
-        if (trimmed.Length == 6)
-        {
-            return "FF" + trimmed.ToUpperInvariant();
-        }
-
-        if (trimmed.Length == 8)
-        {
-            return trimmed.ToUpperInvariant();
-        }
-
-        throw new PSArgumentException("Color must be in #RRGGBB or FFRRGGBB format.");
-    }
 }

@@ -569,6 +569,8 @@ Describe 'PSWriteOffice public API consistency' {
         }
 
         (New-OfficeTextRun -Text 'status' -Color Red).Color | Should -Be '#FF0000'
+        (New-OfficeTextRun -Text 'status' -Color '#abc').Color | Should -Be '#AABBCC'
+        (New-OfficeTextRun -Text 'status' -Color '#abcd').Color | Should -Be '#AABBCCDD'
         (New-OfficeTextRun -Text 'status' -BackgroundColor None).BackgroundColor | Should -Be 'None'
         { New-OfficeTextRun -Text 'status' -Color 'not-a-color' -ErrorAction Stop } | Should -Throw '*known Office color name*'
 
