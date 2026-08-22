@@ -28,6 +28,7 @@ public sealed class GetOfficePowerPointLayoutCommand : PSCmdlet
 
     /// <summary>Slide master index.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int Master { get; set; }
 
     /// <inheritdoc />

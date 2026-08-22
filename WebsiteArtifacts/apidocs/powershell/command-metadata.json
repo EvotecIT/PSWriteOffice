@@ -39,8 +39,8 @@
         "ExcelConditionalColorScale"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalColorScaleCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalColorScaleCommand.cs#L17"
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalColorScaleCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelConditionalDataBar",
@@ -49,8 +49,8 @@
         "ExcelConditionalDataBar"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalDataBarCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalDataBarCommand.cs#L17"
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/AddOfficeExcelConditionalDataBarCommand.cs#L18"
     },
     {
       "name": "Add-OfficeExcelConditionalIconSet",
@@ -171,8 +171,8 @@
         "ExcelReportKpiRow"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs",
-      "sourceLine": 179,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs#L179"
+      "sourceLine": 178,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs#L178"
     },
     {
       "name": "Add-OfficeExcelReportLegend",
@@ -181,8 +181,8 @@
         "ExcelReportLegend"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs",
-      "sourceLine": 218,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs#L218"
+      "sourceLine": 219,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs#L219"
     },
     {
       "name": "Add-OfficeExcelReportParagraph",
@@ -231,8 +231,8 @@
         "ExcelReportTable"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs",
-      "sourceLine": 275,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs#L275"
+      "sourceLine": 278,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/OfficeExcelReportBlockCommands.cs#L278"
     },
     {
       "name": "Add-OfficeExcelReportTitle",
@@ -3141,7 +3141,8 @@
       "name": "Import-OfficeVisioStencil",
       "kind": "Cmdlet",
       "aliases": [
-        "Import-VisioStencil"
+        "Import-VisioStencil",
+        "VisioStencilImport"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visio/ImportOfficeVisioStencilCommand.cs",
       "sourceLine": 20,
@@ -3349,7 +3350,8 @@
       "name": "New-OfficeExcel",
       "kind": "Cmdlet",
       "aliases": [
-        "ExcelNew"
+        "ExcelNew",
+        "OfficeExcel"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/NewOfficeExcelCommand.cs",
       "sourceLine": 30,
@@ -3417,7 +3419,8 @@
       "name": "New-OfficeMarkdown",
       "kind": "Cmdlet",
       "aliases": [
-        "MarkdownNew"
+        "MarkdownNew",
+        "OfficeMarkdown"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Markdown/NewOfficeMarkdownCommand.cs",
       "sourceLine": 33,
@@ -3434,15 +3437,19 @@
     {
       "name": "New-OfficeOpenDocument",
       "kind": "Cmdlet",
-      "aliases": [],
+      "aliases": [
+        "OfficeOpenDocument",
+        "OpenDocumentNew"
+      ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/OpenDocument/NewOfficeOpenDocumentCommand.cs",
-      "sourceLine": 31,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/OpenDocument/NewOfficeOpenDocumentCommand.cs#L31"
+      "sourceLine": 32,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/OpenDocument/NewOfficeOpenDocumentCommand.cs#L32"
     },
     {
       "name": "New-OfficePdf",
       "kind": "Cmdlet",
       "aliases": [
+        "OfficePdf",
         "PdfNew"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficePdfCommand.cs",
@@ -3541,6 +3548,7 @@
       "name": "New-OfficePowerPoint",
       "kind": "Cmdlet",
       "aliases": [
+        "OfficePowerPoint",
         "PowerPointNew",
         "PptNew"
       ],
@@ -3594,6 +3602,7 @@
       "name": "New-OfficeRtf",
       "kind": "Cmdlet",
       "aliases": [
+        "OfficeRtf",
         "RtfNew"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfCommand.cs",
@@ -3627,6 +3636,7 @@
       "name": "New-OfficeVisio",
       "kind": "Cmdlet",
       "aliases": [
+        "OfficeVisio",
         "VisioNew"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Visio/NewOfficeVisioCommand.cs",
@@ -3655,6 +3665,7 @@
       "name": "New-OfficeWord",
       "kind": "Cmdlet",
       "aliases": [
+        "OfficeWord",
         "WordNew"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/NewOfficeWordCommand.cs",
@@ -4568,8 +4579,8 @@
         "PptLayoutPlaceholderTextStyle"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextStyleCommand.cs",
-      "sourceLine": 30,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextStyleCommand.cs#L30"
+      "sourceLine": 31,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointLayoutPlaceholderTextStyleCommand.cs#L31"
     },
     {
       "name": "Set-OfficePowerPointNotes",
@@ -4665,8 +4676,8 @@
         "PptThemeColor"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeColorCommand.cs",
-      "sourceLine": 27,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeColorCommand.cs#L27"
+      "sourceLine": 28,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/SetOfficePowerPointThemeColorCommand.cs#L28"
     },
     {
       "name": "Set-OfficePowerPointThemeFonts",

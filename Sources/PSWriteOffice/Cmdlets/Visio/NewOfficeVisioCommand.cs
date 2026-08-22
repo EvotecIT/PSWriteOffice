@@ -10,7 +10,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Create a simple service map.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\ServiceMap.vsdx -Title 'Service map' -RequestRecalcOnOpen {
+///   <code>OfficeVisio -Path .\ServiceMap.vsdx -Title 'Service map' -RequestRecalcOnOpen {
 ///     VisioRectangle -Key web -Text 'Web' -X 1 -Y 4 -FillColor LightBlue
 ///     VisioRectangle -Key api -Text 'API' -X 4 -Y 4 -FillColor LightGreen
 ///     VisioConnector -From web -To api -EndArrow Triangle -Label 'calls'
@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 ///   <para>Creates an editable .vsdx diagram with two shapes and a connector.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeVisio", SupportsShouldProcess = true)]
-[Alias("VisioNew")]
+[Alias("OfficeVisio", "VisioNew")]
 [OutputType(typeof(VisioDocument), typeof(FileInfo))]
 public sealed class NewOfficeVisioCommand : PSCmdlet {
     /// <summary>Destination .vsdx path.</summary>

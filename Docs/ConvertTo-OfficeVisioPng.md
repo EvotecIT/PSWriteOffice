@@ -26,7 +26,7 @@ Exports a Visio document page to native dependency-free PNG.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
+PS> OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
             ConvertTo-OfficeVisioPng -Path .\ServiceMap.vsdx -OutputPath .\ServiceMap.png -PixelsPerInch 144
 ```
 

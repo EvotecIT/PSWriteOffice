@@ -72,7 +72,7 @@ public sealed class NewOfficeExcelDashboardCommand : PSCmdlet {
 
     /// <summary>Built-in table style.</summary>
     [Parameter]
-    public string TableStyle { get; set; } = "TableStyleMedium9";
+    public ExcelTableStyle TableStyle { get; set; } = ExcelTableStyle.TableStyleMedium9;
 
     /// <summary>Disable AutoFilter dropdowns on the generated table.</summary>
     [Parameter]
@@ -115,9 +115,7 @@ public sealed class NewOfficeExcelDashboardCommand : PSCmdlet {
     protected override void EndProcessing() {
         var rows = TableInputCollector.RequireRows(_items, nameof(InputObject));
         var table = ExcelTabularInputService.ToDataTable(rows, TableName);
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style)) {
-            throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
-        }
+        var style = TableStyle;
 
         using var workbook = ExcelWorkbookCommandService.ResolveWorkbook(this, ParameterSetName, Path, Document, readOnly: false);
 

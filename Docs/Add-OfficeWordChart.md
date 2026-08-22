@@ -11,17 +11,17 @@ Adds a chart to a Word document.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeWordChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Type <WordChartType>] [-WidthPixels <int>] [-HeightPixels <int>] [-Title <string>] [-SeriesColor <string[]>] [-Legend] [-LegendPosition <string>] [-XAxisTitle <string>] [-YAxisTitle <string>] [-FitToPageWidth] [-WidthFraction <double>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Type <WordChartType>] [-WidthPixels <int>] [-HeightPixels <int>] [-Title <string>] [-SeriesColor <string[]>] [-Legend] [-LegendPosition <OfficeChartLegendPosition>] [-XAxisTitle <string>] [-YAxisTitle <string>] [-FitToPageWidth] [-WidthFraction <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeWordChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Document <WordDocument>] [-Type <WordChartType>] [-WidthPixels <int>] [-HeightPixels <int>] [-Title <string>] [-SeriesColor <string[]>] [-Legend] [-LegendPosition <string>] [-XAxisTitle <string>] [-YAxisTitle <string>] [-FitToPageWidth] [-WidthFraction <double>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Document <WordDocument>] [-Type <WordChartType>] [-WidthPixels <int>] [-HeightPixels <int>] [-Title <string>] [-SeriesColor <string[]>] [-Legend] [-LegendPosition <OfficeChartLegendPosition>] [-XAxisTitle <string>] [-YAxisTitle <string>] [-FitToPageWidth] [-WidthFraction <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Paragraph
 ```powershell
-Add-OfficeWordChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Paragraph <WordParagraph>] [-Type <WordChartType>] [-WidthPixels <int>] [-HeightPixels <int>] [-Title <string>] [-SeriesColor <string[]>] [-Legend] [-LegendPosition <string>] [-XAxisTitle <string>] [-YAxisTitle <string>] [-FitToPageWidth] [-WidthFraction <double>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordChart -InputObject <Object[]> -CategoryProperty <string> -SeriesProperty <string[]> [-Paragraph <WordParagraph>] [-Type <WordChartType>] [-WidthPixels <int>] [-HeightPixels <int>] [-Title <string>] [-SeriesColor <string[]>] [-Legend] [-LegendPosition <OfficeChartLegendPosition>] [-XAxisTitle <string>] [-YAxisTitle <string>] [-FitToPageWidth] [-WidthFraction <double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -161,10 +161,10 @@ Accept wildcard characters: False
 Legend position when -Legend is used.
 
 ```yaml
-Type: String
+Type: OfficeChartLegendPosition
 Parameter Sets: Context, Document, Paragraph
 Aliases: None
-Possible values: Left, Right, Top, Bottom, TopRight
+Possible values: Bottom, TopRight, Left, Right, Top
 
 Required: False
 Position: named

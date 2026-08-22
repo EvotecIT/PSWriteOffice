@@ -13,7 +13,10 @@ public abstract class OfficeImageOptionsCommandBase<TOptions> : PSCmdlet where T
     /// <summary>Maximum output height in pixels.</summary>
     [Parameter] [ValidateRange(1, int.MaxValue)] public int? MaximumOutputHeight { get; set; }
     /// <summary>Background color name or hex value.</summary>
-    [Parameter] public string? BackgroundColor { get; set; }
+    [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
+    public string? BackgroundColor { get; set; }
     /// <summary>Target output density in dots per inch.</summary>
     [Parameter] [ValidateRange(double.Epsilon, 65535d)] public double? TargetDpi { get; set; }
     /// <summary>Maximum pixels allocated for one raster image.</summary>

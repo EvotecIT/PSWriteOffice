@@ -26,7 +26,7 @@ Adds a connector between two Visio shapes.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\Flow.vsdx {
+PS> OfficeVisio -Path .\Flow.vsdx {
     VisioRectangle -Key source -Text 'Source' -X 1 -Y 4
     VisioRectangle -Key target -Text 'Target' -X 4 -Y 4
     VisioConnector -From source -To target -Kind RightAngle -EndArrow Triangle -Label 'sync'
@@ -166,7 +166,7 @@ Accept wildcard characters: False
 ```
 
 ### -LinePattern
-Line pattern.
+Native Visio line-pattern index: 0 hides the line, 1 is solid, and 2 through 23 select built-in patterns.
 
 ```yaml
 Type: Int32
@@ -198,7 +198,7 @@ Accept wildcard characters: False
 ```
 
 ### -Page
-Target page. Optional inside VisioPage or New-OfficeVisio.
+Target page. Optional inside VisioPage or OfficeVisio.
 
 ```yaml
 Type: VisioPage

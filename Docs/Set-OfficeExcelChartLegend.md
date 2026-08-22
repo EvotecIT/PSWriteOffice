@@ -11,7 +11,7 @@ Configures legend visibility and styling for an Excel chart.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelChartLegend -Chart <ExcelChart> [-Position <string>] [-Overlay <bool>] [-Hide] [-FontSizePoints <Double>] [-Bold <Boolean>] [-Italic <Boolean>] [-Color <string>] [-FontName <string>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelChartLegend -Chart <ExcelChart> [-Position <OfficeChartLegendPosition>] [-Overlay <bool>] [-Hide] [-FontSizePoints <Double>] [-Bold <Boolean>] [-Italic <Boolean>] [-Color <string>] [-FontName <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -61,7 +61,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Optional legend text color in hex format.
+Optional legend text color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -176,10 +176,10 @@ Accept wildcard characters: False
 Legend position.
 
 ```yaml
-Type: String
+Type: OfficeChartLegendPosition
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Bottom, Left, Right, Top, TopRight
+Possible values: Bottom, TopRight, Left, Right, Top
 
 Required: False
 Position: named

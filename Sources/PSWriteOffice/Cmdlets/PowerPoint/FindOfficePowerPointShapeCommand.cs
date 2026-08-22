@@ -82,8 +82,7 @@ public sealed class FindOfficePowerPointShapeCommand : PSCmdlet
 
     /// <summary>Optional shape kind filter such as TextBox or Table.</summary>
     [Parameter]
-    [ValidateSet("TextBox", "Picture", "Table", "Chart", "AutoShape", "GroupShape")]
-    public string[]? Kind { get; set; }
+    public OfficePowerPointShapeKind[]? Kind { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
@@ -137,7 +136,7 @@ public sealed class FindOfficePowerPointShapeCommand : PSCmdlet
             return false;
         }
 
-        if (Kind != null && Kind.Length > 0 && !Kind.Contains(info.Kind, StringComparer.OrdinalIgnoreCase))
+        if (Kind != null && Kind.Length > 0 && !Kind.Any(kind => string.Equals(kind.ToString(), info.Kind, StringComparison.OrdinalIgnoreCase)))
         {
             return false;
         }

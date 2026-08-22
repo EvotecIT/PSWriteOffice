@@ -30,10 +30,14 @@ public sealed class AddOfficeExcelReportSheetCommand : PSCmdlet
 
     /// <summary>Override the section-header fill color.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? SectionHeaderFillColor { get; set; }
 
     /// <summary>Override the key-cell fill color used by KPI and property blocks.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? KeyFillColor { get; set; }
 
     /// <summary>Skip composer auto-fit finalization.</summary>

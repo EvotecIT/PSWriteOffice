@@ -30,13 +30,11 @@ public sealed class AddOfficeWordTabStopCommand : PSCmdlet
 
     /// <summary>Tab alignment.</summary>
     [Parameter]
-    [ValidateSet("Left", "Center", "Right", "Decimal", "Bar", "Clear")]
-    public string Alignment { get; set; } = "Left";
+    public WordTabAlignment Alignment { get; set; } = WordTabAlignment.Left;
 
     /// <summary>Leader character.</summary>
     [Parameter]
-    [ValidateSet("None", "Dot", "Hyphen", "Underscore", "Heavy", "MiddleDot")]
-    public string Leader { get; set; } = "None";
+    public WordTabLeader Leader { get; set; } = WordTabLeader.None;
 
     /// <summary>Emit the created tab stop.</summary>
     [Parameter]
@@ -46,7 +44,7 @@ public sealed class AddOfficeWordTabStopCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var paragraph = ResolveParagraph();
-        var tabStop = paragraph.AddTabStop(Position, ResolveAlignment(), ResolveLeader());
+        var tabStop = paragraph.AddTabStop(Position, Alignment, Leader);
 
         if (PassThru.IsPresent)
         {
@@ -72,29 +70,4 @@ public sealed class AddOfficeWordTabStopCommand : PSCmdlet
         return document.AddParagraph();
     }
 
-    private WordTabAlignment ResolveAlignment()
-    {
-        return Alignment switch
-        {
-            "Center" => WordTabAlignment.Center,
-            "Right" => WordTabAlignment.Right,
-            "Decimal" => WordTabAlignment.Decimal,
-            "Bar" => WordTabAlignment.Bar,
-            "Clear" => WordTabAlignment.Clear,
-            _ => WordTabAlignment.Left
-        };
-    }
-
-    private WordTabLeader ResolveLeader()
-    {
-        return Leader switch
-        {
-            "Dot" => WordTabLeader.Dot,
-            "Hyphen" => WordTabLeader.Hyphen,
-            "Underscore" => WordTabLeader.Underscore,
-            "Heavy" => WordTabLeader.Heavy,
-            "MiddleDot" => WordTabLeader.MiddleDot,
-            _ => WordTabLeader.None
-        };
-    }
 }

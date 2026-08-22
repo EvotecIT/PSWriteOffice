@@ -53,7 +53,7 @@ Accept wildcard characters: False
 ```
 
 ### -CategoryGridlineColor
-Optional category gridline color in hex format.
+Optional category gridline color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -293,7 +293,7 @@ Accept wildcard characters: False
 ```
 
 ### -ValueGridlineColor
-Optional value gridline color in hex format.
+Optional value gridline color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

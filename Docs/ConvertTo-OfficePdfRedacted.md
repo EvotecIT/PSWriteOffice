@@ -62,7 +62,7 @@ Accept wildcard characters: False
 ```
 
 ### -FillColor
-Redaction fill color in #RRGGBB format. Defaults to black.
+Redaction fill color. Named colors and hexadecimal values are accepted. Defaults to black.
 
 ```yaml
 Type: String

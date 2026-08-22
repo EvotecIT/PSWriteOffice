@@ -52,8 +52,10 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
     [Parameter]
     public WordUnderlineStyle? Underline { get; set; }
 
-    /// <summary>Run color (#RRGGBB).</summary>
+    /// <summary>Run color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Render text with strikethrough.</summary>

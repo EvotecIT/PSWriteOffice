@@ -11,7 +11,7 @@ Sets text in a slide placeholder.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePowerPointPlaceholderText -PlaceholderType <string> -Text <string> [-Slide <PowerPointSlide>] [-Index <UInt32>] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
+Set-OfficePowerPointPlaceholderText -PlaceholderType <PowerPointPlaceholderType> -Text <string> [-Slide <PowerPointSlide>] [-Index <UInt32>] [-IgnoreMissing] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -84,10 +84,10 @@ Accept wildcard characters: False
 Placeholder type to target.
 
 ```yaml
-Type: String
+Type: PowerPointPlaceholderType
 Parameter Sets: __AllParameterSets
 Aliases: Type
-Possible values:
+Possible values: Title, Body, CenteredTitle, SubTitle, DateAndTime, SlideNumber, Footer, Header, Object, Chart, Table, ClipArt, Diagram, Media, SlideImage, Picture
 
 Required: True
 Position: named

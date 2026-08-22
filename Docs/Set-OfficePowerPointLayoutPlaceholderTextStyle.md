@@ -11,7 +11,7 @@ Sets layout placeholder text style and bullet/numbering settings.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePowerPointLayoutPlaceholderTextStyle -Layout <int> -PlaceholderType <string> [-Presentation <PowerPointPresentation>] [-Master <int>] [-Index <UInt32>] [-Style <string>] [-FontSize <Int32>] [-FontName <string>] [-Color <string>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <Boolean>] [-HighlightColor <string>] [-Level <Int32>] [-BulletChar <string>] [-Numbering <string>] [-CreateIfMissing] [-PassThru] [<CommonParameters>]
+Set-OfficePowerPointLayoutPlaceholderTextStyle -Layout <int> -PlaceholderType <PowerPointPlaceholderType> [-Presentation <PowerPointPresentation>] [-Master <int>] [-Index <UInt32>] [-Style <string>] [-FontSize <Int32>] [-FontName <string>] [-Color <string>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <Boolean>] [-HighlightColor <string>] [-Level <Int32>] [-BulletChar <string>] [-Numbering <PowerPointNumberingScheme>] [-CreateIfMissing] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -71,7 +71,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Text color in hex (e.g. 1F4E79).
+Text color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -135,7 +135,7 @@ Accept wildcard characters: False
 ```
 
 ### -HighlightColor
-Highlight color in hex (e.g. FFF59D).
+Highlight color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -234,10 +234,10 @@ Accept wildcard characters: False
 Optional numbering scheme name (e.g. ArabicPeriod, RomanUpper).
 
 ```yaml
-Type: String
+Type: PowerPointNumberingScheme
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: AlphaLowerCharacterParenBoth, AlphaUpperCharacterParenBoth, AlphaLowerCharacterParenR, AlphaUpperCharacterParenR, AlphaLowerCharacterPeriod, AlphaUpperCharacterPeriod, ArabicParenBoth, ArabicParenR, ArabicPeriod, ArabicPlain, RomanLowerCharacterParenBoth, RomanUpperCharacterParenBoth, RomanLowerCharacterParenR, RomanUpperCharacterParenR, RomanLowerCharacterPeriod, RomanUpperCharacterPeriod, CircleNumberDoubleBytePlain, CircleNumberWingdingsBlackPlain, CircleNumberWingdingsWhitePlain, ArabicDoubleBytePeriod, ArabicDoubleBytePlain, EastAsianSimplifiedChinesePeriod, EastAsianSimplifiedChinesePlain, EastAsianTraditionalChinesePeriod, EastAsianTraditionalChinesePlain, EastAsianJapaneseDoubleBytePeriod, EastAsianJapaneseKoreanPlain, EastAsianJapaneseKoreanPeriod, Arabic1Minus, Arabic2Minus, Hebrew2Minus, ThaiAlphaPeriod, ThaiAlphaParenthesisRight, ThaiAlphaParenthesisBoth, ThaiNumberPeriod, ThaiNumberParenthesisRight, ThaiNumberParenthesisBoth, HindiAlphaPeriod, HindiNumPeriod, HindiNumberParenthesisRight, HindiAlpha1Period
 
 Required: False
 Position: named
@@ -266,10 +266,10 @@ Accept wildcard characters: False
 Placeholder type to target.
 
 ```yaml
-Type: String
+Type: PowerPointPlaceholderType
 Parameter Sets: __AllParameterSets
 Aliases: Type
-Possible values:
+Possible values: Title, Body, CenteredTitle, SubTitle, DateAndTime, SlideNumber, Footer, Header, Object, Chart, Table, ClipArt, Diagram, Media, SlideImage, Picture
 
 Required: True
 Position: named
@@ -301,7 +301,7 @@ Named style preset (Title, Subtitle, Body, Caption, Emphasis).
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Title, Subtitle, Body, Caption, Emphasis
 
 Required: False
 Position: named

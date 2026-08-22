@@ -54,7 +54,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Optional heading color in #RRGGBB format.
+Optional heading color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

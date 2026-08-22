@@ -39,7 +39,7 @@ Adds a visual divider between generated PDF sections.
 ## PARAMETERS
 
 ### -Color
-Rule color in #RRGGBB format.
+Rule color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

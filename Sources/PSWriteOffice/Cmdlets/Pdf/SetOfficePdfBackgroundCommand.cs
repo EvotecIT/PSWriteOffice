@@ -27,8 +27,10 @@ public sealed class SetOfficePdfBackgroundCommand : PSCmdlet
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
-    /// <summary>Background color in #RRGGBB format.</summary>
+    /// <summary>Background color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Clear the generated PDF page background color.</summary>

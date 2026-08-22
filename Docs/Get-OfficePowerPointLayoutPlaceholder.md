@@ -11,7 +11,7 @@ Gets layout placeholder metadata for a slide.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePowerPointLayoutPlaceholder [-Slide <PowerPointSlide>] [-PlaceholderType <string>] [-Index <UInt32>] [<CommonParameters>]
+Get-OfficePowerPointLayoutPlaceholder [-Slide <PowerPointSlide>] [-PlaceholderType <PowerPointPlaceholderType>] [-Index <UInt32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,10 +55,10 @@ Accept wildcard characters: False
 Placeholder type to filter on.
 
 ```yaml
-Type: String
+Type: PowerPointPlaceholderType
 Parameter Sets: __AllParameterSets
 Aliases: Type
-Possible values:
+Possible values: Title, Body, CenteredTitle, SubTitle, DateAndTime, SlideNumber, Footer, Header, Object, Chart, Table, ClipArt, Diagram, Media, SlideImage, Picture
 
 Required: False
 Position: named

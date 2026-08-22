@@ -11,7 +11,7 @@ Exports preview artwork from a Visio stencil package into a browsable HTML galle
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficeVisioStencilPreviewGallery [-Path] <string> [-OutputDirectory] <string> [-Title <string>] [-MasterName <string[]>] [-IncludeUnsupportedMasters] [-NoLearnMasterDimensions] [-PreviewDirectoryName <string>] [-IndexFileName <string>] [-NoIndex] [-NoThumbnails] [-ThumbnailDirectoryName <string>] [-ThumbnailWidth <int>] [-ThumbnailHeight <int>] [-DefaultWidth <double>] [-DefaultHeight <double>] [<CommonParameters>]
+Export-OfficeVisioStencilPreviewGallery [-Path] <string> [-OutputDirectory] <string> [-Title <string>] [-MasterName <string[]>] [-IncludeUnsupportedMasters] [-NoLearnMasterDimensions] [-PreviewDirectoryName <string>] [-IndexFileName <string>] [-NoIndex] [-NoThumbnails] [-ThumbnailDirectoryName <string>] [-ThumbnailWidth <int>] [-ThumbnailHeight <int>] [-DefaultWidth <double>] [-DefaultHeight <double>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,7 +21,7 @@ Exports preview artwork from a Visio stencil package into a browsable HTML galle
 
 ### EXAMPLE 1
 ```powershell
-PS> $gallery = Export-OfficeVisioStencilPreviewGallery -Path .\MyShapes.vssx -OutputDirectory .\StencilGallery -Title 'Custom stencil previews'
+PS> $gallery = Export-OfficeVisioStencilPreviewGallery -Path .\MyShapes.vssx -OutputDirectory .\StencilGallery -Title 'Custom stencil previews' -PassThru
 $gallery | Select-Object PackagePath, IndexPath, BrowserRenderableCount, ThumbnailCount
 ```
 
@@ -168,6 +168,22 @@ Possible values:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThru
+Emit the structured gallery result after the files are written.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Group related shapes in a container.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\Architecture.vsdx {
+///   <code>OfficeVisio -Path .\Architecture.vsdx {
 ///     VisioRectangle -Key api -Text 'API' -X 2 -Y 4
 ///     VisioRectangle -Key worker -Text 'Worker' -X 4 -Y 4
 ///     VisioContainer -Id app -Text 'Application tier' -ShapeId api,worker -FillColor '#F8FAFC'
@@ -29,7 +29,7 @@ public sealed class AddOfficeVisioContainerCommand : PSWriteOffice.Cmdlets.Offic
     [Parameter(Position = 0, ValueFromPipeline = true)]
     public object? InputObject { get; set; }
 
-    /// <summary>Page that owns the member shapes. Optional inside New-OfficeVisio/VisioPage DSL scopes.</summary>
+    /// <summary>Page that owns the member shapes. Optional inside OfficeVisio/VisioPage DSL scopes.</summary>
     [Parameter]
     public VisioPage? Page { get; set; }
 
@@ -58,10 +58,14 @@ public sealed class AddOfficeVisioContainerCommand : PSWriteOffice.Cmdlets.Offic
 
     /// <summary>Container fill color.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Container line color.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Container line weight in inches.</summary>
@@ -69,12 +73,12 @@ public sealed class AddOfficeVisioContainerCommand : PSWriteOffice.Cmdlets.Offic
     [ValidateRange(0, double.MaxValue)]
     public double? LineWeight { get; set; }
 
-    /// <summary>Native Visio container style identifier.</summary>
+    /// <summary>Native Visio container gallery identifier. Zero selects the default/no explicit gallery style.</summary>
     [Parameter]
     [ValidateRange(0, int.MaxValue)]
     public int? ContainerStyle { get; set; }
 
-    /// <summary>Native Visio heading style identifier.</summary>
+    /// <summary>Native Visio heading gallery identifier. Zero disables the heading style.</summary>
     [Parameter]
     [ValidateRange(0, int.MaxValue)]
     public int? HeadingStyle { get; set; }

@@ -29,6 +29,7 @@ public sealed class AddOfficeMarkdownCalloutCommand : PSCmdlet
 
     /// <summary>Callout kind (e.g. note, tip, warning).</summary>
     [Parameter(Mandatory = true, Position = 0)]
+    [ArgumentCompleter(typeof(OfficeMarkdownCalloutKindArgumentCompleter))]
     public string Kind { get; set; } = "note";
 
     /// <summary>Callout title.</summary>

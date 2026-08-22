@@ -42,7 +42,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <para>Shows the preferred high-level PDF report authoring shape.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficePdf", DefaultParameterSetName = ParameterSetPath, SupportsShouldProcess = true)]
-[Alias("PdfNew")]
+[Alias("OfficePdf", "PdfNew")]
 [OutputType(typeof(PdfDocument), typeof(FileInfo))]
 public sealed class NewOfficePdfCommand : PSCmdlet {
     private const string ParameterSetPath = "Path";

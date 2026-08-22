@@ -34,7 +34,7 @@ Applies data bars to column D.
 ## PARAMETERS
 
 ### -Color
-Bar color in hex (#RRGGBB or FFRRGGBB).
+Bar color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

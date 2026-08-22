@@ -21,7 +21,7 @@ Creates an OfficeIMO-authored Visio-native container around existing shapes.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\Architecture.vsdx {
+PS> OfficeVisio -Path .\Architecture.vsdx {
     VisioRectangle -Key api -Text 'API' -X 2 -Y 4
     VisioRectangle -Key worker -Text 'Worker' -X 4 -Y 4
     VisioContainer -Id app -Text 'Application tier' -ShapeId api,worker -FillColor '#F8FAFC'
@@ -33,7 +33,7 @@ Creates a native Visio container around previously keyed shapes.
 ## PARAMETERS
 
 ### -ContainerStyle
-Native Visio container style identifier.
+Native Visio container gallery identifier. Zero selects the default/no explicit gallery style.
 
 ```yaml
 Type: Int32
@@ -81,7 +81,7 @@ Accept wildcard characters: False
 ```
 
 ### -HeadingStyle
-Native Visio heading style identifier.
+Native Visio heading gallery identifier. Zero disables the heading style.
 
 ```yaml
 Type: Int32
@@ -241,7 +241,7 @@ Accept wildcard characters: False
 ```
 
 ### -Page
-Page that owns the member shapes. Optional inside New-OfficeVisio/VisioPage DSL scopes.
+Page that owns the member shapes. Optional inside OfficeVisio/VisioPage DSL scopes.
 
 ```yaml
 Type: VisioPage

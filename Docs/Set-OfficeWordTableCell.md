@@ -11,7 +11,7 @@ Updates OfficeIMO Word table-cell content, layout, and merge settings.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordTableCell [-Cell] <WordTableCell> [-Text <string>] [-ShadingFillColor <string>] [-ShadingPattern <string>] [-Width <Int32>] [-WidthType <string>] [-TextDirection <WordTextDirection>] [-WrapText <Boolean>] [-FitText <Boolean>] [-MergeRight <Int32>] [-MergeDown <Int32>] [-SplitHorizontal <Int32>] [-SplitVertical <Int32>] [-CopyParagraphs] [-PassThru] [<CommonParameters>]
+Set-OfficeWordTableCell [-Cell] <WordTableCell> [-Text <string>] [-ShadingFillColor <string>] [-ShadingPattern <WordShadingPattern>] [-Width <Int32>] [-WidthType <WordTableWidthUnit>] [-TextDirection <WordTextDirection>] [-WrapText <Boolean>] [-FitText <Boolean>] [-MergeRight <Int32>] [-MergeDown <Int32>] [-SplitHorizontal <Int32>] [-SplitVertical <Int32>] [-CopyParagraphs] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -154,7 +154,7 @@ Accept wildcard characters: False
 ```
 
 ### -ShadingFillColor
-Cell shading fill color as #RRGGBB.
+Cell shading fill color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -173,7 +173,7 @@ Accept wildcard characters: False
 Cell shading pattern.
 
 ```yaml
-Type: String
+Type: WordShadingPattern
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Nil, Clear, Solid, HorizontalStripe, VerticalStripe, ReverseDiagonalStripe, DiagonalStripe, HorizontalCross, DiagonalCross, ThinHorizontalStripe, ThinVerticalStripe, ThinReverseDiagonalStripe, ThinDiagonalStripe, ThinHorizontalCross, ThinDiagonalCross, Percent5, Percent10, Percent12, Percent15, Percent20, Percent25, Percent30, Percent35, Percent37, Percent40, Percent45, Percent50, Percent55, Percent60, Percent62, Percent65, Percent70, Percent75, Percent80, Percent85, Percent87, Percent90, Percent95
@@ -269,7 +269,7 @@ Accept wildcard characters: False
 Cell width unit type.
 
 ```yaml
-Type: String
+Type: WordTableWidthUnit
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: Nil, Pct, Dxa, Auto

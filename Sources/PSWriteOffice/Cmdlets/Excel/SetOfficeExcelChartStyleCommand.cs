@@ -20,10 +20,12 @@ public sealed class SetOfficeExcelChartStyleCommand : PSWriteOffice.Cmdlets.Offi
 
     /// <summary>Chart style identifier.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int StyleId { get; set; } = 251;
 
     /// <summary>Chart color style identifier.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int ColorStyleId { get; set; } = 10;
 
     /// <inheritdoc />

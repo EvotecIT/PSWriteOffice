@@ -2818,8 +2818,8 @@ Describe 'Excel DSL surface' {
                 Invoke-OfficeExcelSort -Header 'Region'
                 Set-OfficeExcelFreeze -TopRows 1
                 Add-OfficeExcelConditionalRule -Range 'B2:B4' -Operator GreaterThan -Formula1 '150'
-                Add-OfficeExcelConditionalDataBar -Range 'B2:B4' -Color '#92D050'
-                Add-OfficeExcelConditionalColorScale -Range 'C2:C4' -StartColor '#FEE599' -EndColor '#6AA84F'
+                Add-OfficeExcelConditionalDataBar -Range 'B2:B4' -Color '#FF4F81BD'
+                Add-OfficeExcelConditionalColorScale -Range 'C2:C4' -StartColor '#FE9' -EndColor '#6A84'
                 Add-OfficeExcelConditionalIconSet -Range 'C2:C4'
                 Add-OfficeExcelChart -TableName 'Sales' -Row 6 -Column 1 -Type ColumnClustered -Title 'Sales'
                 Add-OfficeExcelImage -Address 'I1' -Path $imagePath -WidthPixels 64 -HeightPixels 64
@@ -2831,6 +2831,11 @@ Describe 'Excel DSL surface' {
         }
 
         Test-Path $path | Should -BeTrue
+
+        $conditionalXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
+        $conditionalXml | Should -Match 'rgb="FF4F81BD"'
+        $conditionalXml | Should -Match 'rgb="FFFFEE99"'
+        $conditionalXml | Should -Match 'rgb="4466AA88"'
 
         $doc = Get-OfficeExcel -Path $path -ReadOnly
         try {

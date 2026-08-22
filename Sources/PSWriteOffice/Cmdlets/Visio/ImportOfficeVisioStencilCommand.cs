@@ -8,14 +8,14 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Register a catalog for DSL use.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\Flow.vsdx -UseMastersByDefault {
-///     Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
+///   <code>OfficeVisio -Path .\Flow.vsdx -UseMastersByDefault {
+///     VisioStencilImport -BuiltIn Flowchart -Name Flow -Default
 ///     VisioStencil -Stencil process -Key step -Text 'Step' -X 2 -Y 4
 /// }</code>
 ///   <para>Registers the flowchart catalog and makes it the default for later VisioStencil calls.</para>
 /// </example>
 [Cmdlet(VerbsData.Import, "OfficeVisioStencil", DefaultParameterSetName = CatalogParameterSet)]
-[Alias("Import-VisioStencil")]
+[Alias("VisioStencilImport", "Import-VisioStencil")]
 [OutputType(typeof(VisioStencilCatalog))]
 public sealed class ImportOfficeVisioStencilCommand : PSCmdlet
 {

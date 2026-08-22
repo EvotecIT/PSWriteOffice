@@ -66,6 +66,8 @@ public sealed class SetOfficeExcelRowCommand : PSWriteOffice.Cmdlets.OfficeMutat
 
     /// <summary>Apply a background color across the target row span.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>First 1-based column affected by style options.</summary>

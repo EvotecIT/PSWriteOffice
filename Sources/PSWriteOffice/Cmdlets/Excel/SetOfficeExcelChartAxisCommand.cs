@@ -100,12 +100,16 @@ public sealed class SetOfficeExcelChartAxisCommand : PSWriteOffice.Cmdlets.Offic
     [Parameter]
     public SwitchParameter ShowValueMinorGridlines { get; set; }
 
-    /// <summary>Optional category gridline color in hex format.</summary>
+    /// <summary>Optional category gridline color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? CategoryGridlineColor { get; set; }
 
-    /// <summary>Optional value gridline color in hex format.</summary>
+    /// <summary>Optional value gridline color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? ValueGridlineColor { get; set; }
 
     /// <summary>Optional gridline width in points.</summary>

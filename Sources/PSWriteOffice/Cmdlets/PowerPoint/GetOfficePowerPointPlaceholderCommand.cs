@@ -31,7 +31,7 @@ public sealed class GetOfficePowerPointPlaceholderCommand : PSCmdlet
     /// <summary>Placeholder type to filter on.</summary>
     [Parameter]
     [Alias("Type")]
-    public string? PlaceholderType { get; set; }
+    public PowerPointPlaceholderType? PlaceholderType { get; set; }
 
     /// <summary>Optional placeholder index.</summary>
     [Parameter]
@@ -42,32 +42,17 @@ public sealed class GetOfficePowerPointPlaceholderCommand : PSCmdlet
     {
         var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
 
-        if (string.IsNullOrWhiteSpace(PlaceholderType))
+        if (!PlaceholderType.HasValue)
         {
             WriteObject(slide.Placeholders, enumerateCollection: true);
             return;
         }
 
-        if (!TryResolvePlaceholderType(PlaceholderType, out var placeholderType))
-        {
-            throw new PSArgumentException($"Unknown placeholder type '{PlaceholderType}'.", nameof(PlaceholderType));
-        }
-
-        var placeholder = slide.GetPlaceholder(placeholderType, Index);
+        var placeholder = slide.GetPlaceholder(PlaceholderType.Value, Index);
         if (placeholder != null)
         {
             WriteObject(placeholder);
         }
     }
 
-    private static bool TryResolvePlaceholderType(string? placeholderType, out PowerPointPlaceholderType value)
-    {
-        value = default;
-        if (string.IsNullOrWhiteSpace(placeholderType))
-        {
-            return false;
-        }
-
-        return Enum.TryParse(placeholderType, true, out value);
-    }
 }

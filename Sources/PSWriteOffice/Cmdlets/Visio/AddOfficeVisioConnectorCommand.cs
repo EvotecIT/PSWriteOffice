@@ -10,7 +10,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Connect two keyed shapes.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\Flow.vsdx {
+///   <code>OfficeVisio -Path .\Flow.vsdx {
 ///     VisioRectangle -Key source -Text 'Source' -X 1 -Y 4
 ///     VisioRectangle -Key target -Text 'Target' -X 4 -Y 4
 ///     VisioConnector -From source -To target -Kind RightAngle -EndArrow Triangle -Label 'sync'
@@ -24,7 +24,7 @@ public sealed class AddOfficeVisioConnectorCommand : PSWriteOffice.Cmdlets.Offic
     private const string ByKeyParameterSet = "ByKey";
     private const string ByShapeParameterSet = "ByShape";
 
-    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>New-OfficeVisio</c>.</summary>
+    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioPage? Page { get; set; }
 
@@ -62,14 +62,17 @@ public sealed class AddOfficeVisioConnectorCommand : PSWriteOffice.Cmdlets.Offic
 
     /// <summary>Line color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Line weight.</summary>
     [Parameter]
     public double? LineWeight { get; set; }
 
-    /// <summary>Line pattern.</summary>
+    /// <summary>Native Visio line-pattern index: 0 hides the line, 1 is solid, and 2 through 23 select built-in patterns.</summary>
     [Parameter]
+    [ValidateRange(0, 23)]
     public int? LinePattern { get; set; }
 
     /// <summary>Begin arrow style.</summary>

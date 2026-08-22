@@ -12,7 +12,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Export a diagram to SVG.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
+///   <code>OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
 /// ConvertTo-OfficeVisioSvg -Path .\ServiceMap.vsdx -OutputPath .\ServiceMap.svg -Transparent</code>
 ///   <para>Creates a diagram and exports the first page to dependency-free SVG.</para>
 /// </example>
@@ -47,6 +47,8 @@ public sealed class ConvertToOfficeVisioSvgCommand : PSCmdlet {
 
     /// <summary>Background color name or hex value. Use -Transparent for transparent output.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>Use transparent SVG background.</summary>

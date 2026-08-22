@@ -47,7 +47,7 @@ Adds a logo behind existing content as a watermark.
 ## PARAMETERS
 
 ### -Color
-Text color in #RRGGBB format.
+Text color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

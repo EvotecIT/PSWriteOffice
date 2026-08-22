@@ -78,8 +78,10 @@ public sealed class AddOfficePdfRowCommand : PSCmdlet
     [Parameter]
     public SwitchParameter KeepWithNext { get; set; }
 
-    /// <summary>Optional vertical separator color between columns in #RRGGBB format.</summary>
+    /// <summary>Optional vertical separator color between columns.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? ColumnSeparatorColor { get; set; }
 
     /// <summary>Optional vertical separator width in PDF points.</summary>

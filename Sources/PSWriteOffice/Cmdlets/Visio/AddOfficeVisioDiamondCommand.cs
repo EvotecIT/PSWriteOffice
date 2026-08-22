@@ -8,7 +8,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Add a decision shape.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\Flow.vsdx {
+///   <code>OfficeVisio -Path .\Flow.vsdx {
 ///     VisioDiamond -Key review -Text 'Approved?' -X 4 -Y 4 -Width 1.2 -Height 1 -FillColor '#FEF3C7'
 /// }</code>
 ///   <para>Adds a decision diamond to the active Visio page.</para>
@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Alias("VisioDiamond")]
 [OutputType(typeof(VisioShape))]
 public sealed class AddOfficeVisioDiamondCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
-    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>New-OfficeVisio</c>.</summary>
+    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioPage? Page { get; set; }
 
@@ -55,10 +55,14 @@ public sealed class AddOfficeVisioDiamondCommand : PSWriteOffice.Cmdlets.OfficeM
 
     /// <summary>Fill color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Line color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Line weight.</summary>

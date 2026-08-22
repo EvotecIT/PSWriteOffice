@@ -36,8 +36,8 @@ Registers a stencil catalog with the active Visio DSL scope.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\Flow.vsdx -UseMastersByDefault {
-    Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
+PS> OfficeVisio -Path .\Flow.vsdx -UseMastersByDefault {
+    VisioStencilImport -BuiltIn Flowchart -Name Flow -Default
     VisioStencil -Stencil process -Key step -Text 'Step' -X 2 -Y 4
 }
 ```

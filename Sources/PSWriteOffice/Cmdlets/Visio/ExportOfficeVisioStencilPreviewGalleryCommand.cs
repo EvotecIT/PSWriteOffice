@@ -8,11 +8,11 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Create a stencil preview gallery.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$gallery = Export-OfficeVisioStencilPreviewGallery -Path .\MyShapes.vssx -OutputDirectory .\StencilGallery -Title 'Custom stencil previews'
+///   <code>$gallery = Export-OfficeVisioStencilPreviewGallery -Path .\MyShapes.vssx -OutputDirectory .\StencilGallery -Title 'Custom stencil previews' -PassThru
 /// $gallery | Select-Object PackagePath, IndexPath, BrowserRenderableCount, ThumbnailCount</code>
 ///   <para>Extracts preview artwork from package-backed masters and writes preview files plus an HTML index.</para>
 /// </example>
-[Cmdlet(VerbsData.Export, "OfficeVisioStencilPreviewGallery")]
+[Cmdlet(VerbsData.Export, "OfficeVisioStencilPreviewGallery", SupportsShouldProcess = true)]
 [Alias("Export-VisioStencilPreviewGallery")]
 [OutputType(typeof(VisioStencilPreviewGallery))]
 public sealed class ExportOfficeVisioStencilPreviewGalleryCommand : PSCmdlet
@@ -78,11 +78,20 @@ public sealed class ExportOfficeVisioStencilPreviewGalleryCommand : PSCmdlet
     [Parameter]
     public double DefaultHeight { get; set; } = 0.9;
 
+    /// <summary>Emit the structured gallery result after the files are written.</summary>
+    [Parameter]
+    public SwitchParameter PassThru { get; set; }
+
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
         var path = VisioCommandUtilities.ResolvePath(this, Path);
         var outputDirectory = VisioCommandUtilities.ResolvePath(this, OutputDirectory);
+        if (!ShouldProcess(outputDirectory, "Export Visio stencil preview gallery"))
+        {
+            return;
+        }
+
         var packageOptions = VisioStencilCommandUtilities.BuildPackageLoadOptions(
             null,
             null,
@@ -107,6 +116,10 @@ public sealed class ExportOfficeVisioStencilPreviewGalleryCommand : PSCmdlet
             ThumbnailHeight = ThumbnailHeight
         };
 
-        WriteObject(VisioStencilPackageCatalog.CreatePreviewGallery(path, outputDirectory, packageOptions, galleryOptions));
+        var result = VisioStencilPackageCatalog.CreatePreviewGallery(path, outputDirectory, packageOptions, galleryOptions);
+        if (PassThru.IsPresent)
+        {
+            WriteObject(result);
+        }
     }
 }

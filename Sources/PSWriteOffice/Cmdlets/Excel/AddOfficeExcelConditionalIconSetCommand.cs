@@ -63,7 +63,7 @@ public sealed class AddOfficeExcelConditionalIconSetCommand : PSCmdlet
 
     /// <summary>Icon set to apply.</summary>
     [Parameter]
-    public string IconSet { get; set; } = "ThreeTrafficLights1";
+    public ExcelIconSet IconSet { get; set; } = ExcelIconSet.ThreeTrafficLights1;
 
     /// <summary>Show the underlying values.</summary>
     [Parameter]
@@ -93,16 +93,11 @@ public sealed class AddOfficeExcelConditionalIconSetCommand : PSCmdlet
             throw new PSArgumentException("Provide either PercentThresholds or NumberThresholds, not both.");
         }
 
-        if (!OpenXmlValueParser.TryParse<ExcelIconSet>(IconSet, out var iconSet))
-        {
-            throw new PSArgumentException($"Unknown icon set '{IconSet}'.", nameof(IconSet));
-        }
-
         var sheet = ResolveSheet();
         string targetRange = ExcelTargetRangeResolver.Resolve(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent, PivotTableName, !PivotWholeTable.IsPresent);
         sheet.AddConditionalIconSet(
             targetRange,
-            iconSet,
+            IconSet,
             showValue: ShowValue,
             reverseIconOrder: Reverse,
             percentThresholds: PercentThresholds,

@@ -11,7 +11,7 @@ Configures data labels and optional styling for an Excel chart.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeExcelChartDataLabels -Chart <ExcelChart> [-ShowValue <bool>] [-ShowCategoryName <bool>] [-ShowSeriesName <bool>] [-ShowLegendKey <bool>] [-ShowPercent <bool>] [-Position <string>] [-NumberFormat <string>] [-SourceLinked <bool>] [-FontSizePoints <Double>] [-Bold <Boolean>] [-Italic <Boolean>] [-Color <string>] [-FontName <string>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-NoFill] [-NoLine] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelChartDataLabels -Chart <ExcelChart> [-ShowValue <bool>] [-ShowCategoryName <bool>] [-ShowSeriesName <bool>] [-ShowLegendKey <bool>] [-ShowPercent <bool>] [-Position <OfficeChartDataLabelPosition>] [-NumberFormat <string>] [-SourceLinked <bool>] [-FontSizePoints <Double>] [-Bold <Boolean>] [-Italic <Boolean>] [-Color <string>] [-FontName <string>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-NoFill] [-NoLine] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -61,7 +61,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Optional label text color in hex format.
+Optional label text color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -77,7 +77,7 @@ Accept wildcard characters: False
 ```
 
 ### -FillColor
-Optional label fill color in hex format.
+Optional label fill color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -141,7 +141,7 @@ Accept wildcard characters: False
 ```
 
 ### -LineColor
-Optional label line color in hex format.
+Optional label line color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -240,7 +240,7 @@ Accept wildcard characters: False
 Optional data label position.
 
 ```yaml
-Type: String
+Type: OfficeChartDataLabelPosition
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: BestFit, Bottom, Center, InsideBase, InsideEnd, Left, OutsideEnd, Right, Top

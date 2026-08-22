@@ -50,7 +50,7 @@ Accept wildcard characters: False
 ```
 
 ### -EndColor
-End color in hex (#RRGGBB or FFRRGGBB).
+End color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -210,7 +210,7 @@ Accept wildcard characters: False
 ```
 
 ### -StartColor
-Start color in hex (#RRGGBB or FFRRGGBB).
+Start color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

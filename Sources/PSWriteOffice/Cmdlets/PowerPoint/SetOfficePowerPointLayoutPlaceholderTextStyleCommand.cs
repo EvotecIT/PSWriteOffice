@@ -1,6 +1,7 @@
 using System;
 using System.Management.Automation;
 using DocumentFormat.OpenXml.Presentation;
+using OfficeIMO.Drawing;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.PowerPoint;
@@ -35,16 +36,18 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
 
     /// <summary>Slide master index.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int Master { get; set; } = 0;
 
     /// <summary>Layout index within the master.</summary>
     [Parameter(Mandatory = true)]
+    [ValidateRange(0, int.MaxValue)]
     public int Layout { get; set; }
 
     /// <summary>Placeholder type to target.</summary>
     [Parameter(Mandatory = true)]
     [Alias("Type")]
-    public string PlaceholderType { get; set; } = string.Empty;
+    public PowerPointPlaceholderType PlaceholderType { get; set; }
 
     /// <summary>Optional placeholder index.</summary>
     [Parameter]
@@ -52,6 +55,7 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
 
     /// <summary>Named style preset (Title, Subtitle, Body, Caption, Emphasis).</summary>
     [Parameter]
+    [ValidateSet("Title", "Subtitle", "Body", "Caption", "Emphasis")]
     public string? Style { get; set; }
 
     /// <summary>Font size in points.</summary>
@@ -62,8 +66,10 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
     [Parameter]
     public string? FontName { get; set; }
 
-    /// <summary>Text color in hex (e.g. 1F4E79).</summary>
+    /// <summary>Text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Apply bold formatting.</summary>
@@ -78,8 +84,10 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
     [Parameter]
     public bool? Underline { get; set; }
 
-    /// <summary>Highlight color in hex (e.g. FFF59D).</summary>
+    /// <summary>Highlight color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? HighlightColor { get; set; }
 
     /// <summary>Paragraph level (0-8) to set before applying style.</summary>
@@ -92,7 +100,7 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
 
     /// <summary>Optional numbering scheme name (e.g. ArabicPeriod, RomanUpper).</summary>
     [Parameter]
-    public string? Numbering { get; set; }
+    public PowerPointNumberingScheme? Numbering { get; set; }
 
     /// <summary>Create the placeholder if it is missing.</summary>
     [Parameter]
@@ -108,12 +116,7 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
         PowerPointPresentation? presentation = null;
         try
         {
-            if (!OpenXmlValueParser.TryParse<PowerPointPlaceholderType>(PlaceholderType, out var placeholderType))
-            {
-                throw new PSArgumentException($"Unknown placeholder type '{PlaceholderType}'.", nameof(PlaceholderType));
-            }
-
-            if (!string.IsNullOrWhiteSpace(Numbering) && !string.IsNullOrWhiteSpace(BulletChar))
+            if (Numbering.HasValue && !string.IsNullOrWhiteSpace(BulletChar))
             {
                 throw new PSArgumentException("Specify either Numbering or BulletChar, not both.");
             }
@@ -131,7 +134,7 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
             presentation.SetLayoutPlaceholderTextStyle(
                 Master,
                 Layout,
-                placeholderType,
+                PlaceholderType,
                 style,
                 Index,
                 Level,
@@ -141,7 +144,7 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
 
             if (PassThru.IsPresent)
             {
-                var textBox = presentation.GetLayoutPlaceholderTextBox(Master, Layout, placeholderType, Index);
+                var textBox = presentation.GetLayoutPlaceholderTextBox(Master, Layout, PlaceholderType, Index);
                 if (textBox != null)
                 {
                     WriteObject(textBox);
@@ -211,24 +214,14 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
 
         bool hasBulletSettings = Level != null
                                  || !string.IsNullOrWhiteSpace(BulletChar)
-                                 || !string.IsNullOrWhiteSpace(Numbering);
+                                 || Numbering.HasValue;
 
         return hasStyleName || hasStyleOverrides || hasBulletSettings;
     }
 
     private PowerPointNumberingScheme? ResolveNumbering()
     {
-        if (string.IsNullOrWhiteSpace(Numbering))
-        {
-            return null;
-        }
-
-        if (!OpenXmlValueParser.TryParse<PowerPointNumberingScheme>(Numbering, out var numbering))
-        {
-            throw new PSArgumentException($"Unknown numbering scheme '{Numbering}'.", nameof(Numbering));
-        }
-
-        return numbering;
+        return Numbering;
     }
 
     private char? ResolveBulletChar()
@@ -243,14 +236,11 @@ public sealed class SetOfficePowerPointLayoutPlaceholderTextStyleCommand : PSCmd
 
     private static string NormalizeColor(string? color)
     {
-        var trimmed = color?.Trim();
-        if (trimmed == null || trimmed.Length == 0)
+        if (string.IsNullOrWhiteSpace(color))
         {
             return string.Empty;
         }
 
-        return trimmed.StartsWith("#", StringComparison.Ordinal)
-            ? trimmed.Substring(1)
-            : trimmed;
+        return OfficeColor.Parse(color!).ToRgbHex().ToLowerInvariant();
     }
 }

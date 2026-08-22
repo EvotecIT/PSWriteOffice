@@ -11,7 +11,7 @@ Updates styling on Word text.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordTextStyle [[-InputObject] <WordParagraph>] [-Text <string>] [-Style <WordCharacterStyles>] [-StyleId <string>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <string>] [-Color <string>] [-FontSize <Int32>] [-FontFamily <string>] [-Highlight <string>] [-Strike <Boolean>] [-DoubleStrike <Boolean>] [-CapsStyle <WordCapsStyle>] [-Spacing <Int32>] [-Outline <Boolean>] [-Shadow <Boolean>] [-Emboss <Boolean>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordTextStyle [[-InputObject] <WordParagraph>] [-Text <string>] [-Style <WordCharacterStyles>] [-StyleId <string>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <WordUnderlineStyle>] [-Color <string>] [-FontSize <Int32>] [-FontFamily <string>] [-Highlight <WordHighlightColor>] [-Strike <Boolean>] [-DoubleStrike <Boolean>] [-CapsStyle <WordCapsStyle>] [-Spacing <Int32>] [-Outline <Boolean>] [-Shadow <Boolean>] [-Emboss <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -61,7 +61,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Text color as #RRGGBB.
+Text color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -144,10 +144,10 @@ Accept wildcard characters: False
 Highlight color.
 
 ```yaml
-Type: String
+Type: WordHighlightColor
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Black, Blue, Cyan, Green, Magenta, Red, Yellow, White, DarkBlue, DarkCyan, DarkGreen, DarkMagenta, DarkRed, DarkYellow, DarkGray, LightGray, None
 
 Required: False
 Position: named
@@ -320,10 +320,10 @@ Accept wildcard characters: False
 Underline style to apply.
 
 ```yaml
-Type: String
+Type: WordUnderlineStyle
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Single, Words, Double, Thick, Dotted, DottedHeavy, Dash, DashedHeavy, DashLong, DashLongHeavy, DotDash, DashDotHeavy, DotDotDash, DashDotDotHeavy, Wave, WavyHeavy, WavyDouble, None
 
 Required: False
 Position: named

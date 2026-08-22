@@ -34,10 +34,12 @@ public class AddOfficePowerPointSlideCommand : PSWriteOffice.Cmdlets.OfficeMutat
 
     /// <summary>Slide master index to use.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int Master { get; set; } = 0;
 
     /// <summary>Layout index to use (matches the template’s built-in layouts).</summary>
     [Parameter(ParameterSetName = ParameterSetIndex)]
+    [ValidateRange(0, int.MaxValue)]
     public int Layout { get; set; } = 1;
 
     /// <summary>Layout name to use (case-insensitive by default).</summary>

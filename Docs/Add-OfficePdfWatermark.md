@@ -38,7 +38,7 @@ Adds a text watermark while generating the PDF.
 ## PARAMETERS
 
 ### -Color
-Optional watermark color in #RRGGBB format.
+Optional watermark color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

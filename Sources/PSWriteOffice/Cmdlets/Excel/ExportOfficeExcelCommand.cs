@@ -54,7 +54,7 @@ public sealed partial class ExportOfficeExcelCommand : PSCmdlet
 
     /// <summary>Built-in Excel table style name.</summary>
     [Parameter]
-    public string TableStyle { get; set; } = "TableStyleMedium9";
+    public ExcelTableStyle TableStyle { get; set; } = ExcelTableStyle.TableStyleMedium9;
 
     /// <summary>Emphasize the first table column when the selected style supports it.</summary>
     [Parameter]
@@ -340,10 +340,7 @@ public sealed partial class ExportOfficeExcelCommand : PSCmdlet
             throw new PSArgumentException("Use either -AppendToTable or -NoTable, but not both.");
         }
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
-        {
-            throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
-        }
+        var style = TableStyle;
 
         var columnFormatPlan = BuildColumnFormatPlan();
 

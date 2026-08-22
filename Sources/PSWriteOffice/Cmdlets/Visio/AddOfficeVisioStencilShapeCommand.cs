@@ -11,8 +11,8 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Add built-in flowchart stencil shapes.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\StencilFlow.vsdx -UseMastersByDefault {
-///     Import-OfficeVisioStencil -BuiltIn Flowchart -Name Flow -Default
+///   <code>OfficeVisio -Path .\StencilFlow.vsdx -UseMastersByDefault {
+///     VisioStencilImport -BuiltIn Flowchart -Name Flow -Default
 ///     VisioStencil -Catalog Flow -Stencil process -Key intake -Text 'Intake' -X 1.5 -Y 4
 /// }</code>
 ///   <para>Registers a built-in catalog and places a stencil shape on the active page.</para>
@@ -25,7 +25,7 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSWriteOffice.Cmdlets.Of
     private const string CatalogNameParameterSet = "CatalogName";
     private const string BuiltInParameterSet = "BuiltIn";
 
-    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>New-OfficeVisio</c>.</summary>
+    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioPage? Page { get; set; }
 
@@ -81,22 +81,28 @@ public sealed class AddOfficeVisioStencilShapeCommand : PSWriteOffice.Cmdlets.Of
 
     /// <summary>Fill color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Line color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Line weight.</summary>
     [Parameter]
     public double? LineWeight { get; set; }
 
-    /// <summary>Line pattern.</summary>
+    /// <summary>Native Visio line-pattern index: 0 hides the line, 1 is solid, and 2 through 23 select built-in patterns.</summary>
     [Parameter]
+    [ValidateRange(0, 23)]
     public int? LinePattern { get; set; }
 
-    /// <summary>Fill pattern.</summary>
+    /// <summary>Native Visio fill-pattern index: 0 has no fill, 1 is solid, and 2 through 40 select built-in patterns.</summary>
     [Parameter]
+    [ValidateRange(0, 40)]
     public int? FillPattern { get; set; }
 
     /// <summary>Shape angle in radians.</summary>

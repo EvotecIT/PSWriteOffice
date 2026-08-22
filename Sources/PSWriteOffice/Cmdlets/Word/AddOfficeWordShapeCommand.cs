@@ -53,12 +53,16 @@ public sealed class AddOfficeWordShapeCommand : PSCmdlet
     [ValidateRange(0, double.MaxValue)]
     public double? Top { get; set; }
 
-    /// <summary>Fill color as #RRGGBB.</summary>
+    /// <summary>Fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
-    /// <summary>Stroke color as #RRGGBB.</summary>
+    /// <summary>Stroke color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? StrokeColor { get; set; }
 
     /// <summary>Stroke width in points.</summary>

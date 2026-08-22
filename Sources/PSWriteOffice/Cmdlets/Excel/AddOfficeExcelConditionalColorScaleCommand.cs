@@ -2,6 +2,7 @@ using System;
 using System.Management.Automation;
 using OfficeIMO.Excel;
 using PSWriteOffice.Services.Excel;
+using PSWriteOffice.Services.Text;
 
 namespace PSWriteOffice.Cmdlets.Excel;
 
@@ -60,12 +61,16 @@ public sealed class AddOfficeExcelConditionalColorScaleCommand : PSCmdlet
     [Parameter]
     public SwitchParameter IncludeHeader { get; set; }
 
-    /// <summary>Start color in hex (#RRGGBB or FFRRGGBB).</summary>
+    /// <summary>Start color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, Position = 1)]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string StartColor { get; set; } = string.Empty;
 
-    /// <summary>End color in hex (#RRGGBB or FFRRGGBB).</summary>
+    /// <summary>End color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(Mandatory = true, Position = 2)]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string EndColor { get; set; } = string.Empty;
 
     /// <summary>Emit the range after applying the format.</summary>
@@ -78,7 +83,10 @@ public sealed class AddOfficeExcelConditionalColorScaleCommand : PSCmdlet
         var sheet = ResolveSheet();
         string targetRange = ExcelTargetRangeResolver.Resolve(sheet, Range, HeaderName, TableName, HeaderRow, IncludeHeader.IsPresent, PivotTableName, !PivotWholeTable.IsPresent);
 
-        sheet.AddConditionalColorScale(targetRange, NormalizeColor(StartColor), NormalizeColor(EndColor));
+        sheet.AddConditionalColorScale(
+            targetRange,
+            OfficeColorUtilities.ToExcelArgbHex(StartColor)!,
+            OfficeColorUtilities.ToExcelArgbHex(EndColor)!);
 
         if (PassThru.IsPresent)
         {
@@ -102,24 +110,4 @@ public sealed class AddOfficeExcelConditionalColorScaleCommand : PSCmdlet
         return context.RequireSheet();
     }
 
-    private static string NormalizeColor(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new PSArgumentException("Color cannot be empty.");
-        }
-
-        var trimmed = value.Trim().TrimStart('#');
-        if (trimmed.Length == 6)
-        {
-            return "FF" + trimmed.ToUpperInvariant();
-        }
-
-        if (trimmed.Length == 8)
-        {
-            return trimmed.ToUpperInvariant();
-        }
-
-        throw new PSArgumentException("Color must be in #RRGGBB or FFRRGGBB format.");
-    }
 }

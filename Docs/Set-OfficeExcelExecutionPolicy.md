@@ -11,12 +11,12 @@ Configures OfficeIMO Excel execution and validation behavior for a workbook.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Set-OfficeExcelExecutionPolicy [-Mode <string>] [-ParallelThreshold <Int32>] [-MaxDegreeOfParallelism <Int32>] [-WorksheetValidation <string>] [-Diagnostics] [-DisableAutoFitImmediateSave] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelExecutionPolicy [-Mode <ExcelExecutionMode>] [-ParallelThreshold <Int32>] [-MaxDegreeOfParallelism <Int32>] [-WorksheetValidation <ExcelWorksheetValidationMode>] [-Diagnostics] [-DisableAutoFitImmediateSave] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeExcelExecutionPolicy [-Document] <ExcelDocument> [-Mode <string>] [-ParallelThreshold <Int32>] [-MaxDegreeOfParallelism <Int32>] [-WorksheetValidation <string>] [-Diagnostics] [-DisableAutoFitImmediateSave] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelExecutionPolicy [-Document] <ExcelDocument> [-Mode <ExcelExecutionMode>] [-ParallelThreshold <Int32>] [-MaxDegreeOfParallelism <Int32>] [-WorksheetValidation <ExcelWorksheetValidationMode>] [-Diagnostics] [-DisableAutoFitImmediateSave] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -101,7 +101,7 @@ Accept wildcard characters: False
 Execution mode for large operations.
 
 ```yaml
-Type: String
+Type: ExcelExecutionMode
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Automatic, Sequential, Parallel
@@ -149,7 +149,7 @@ Accept wildcard characters: False
 Worksheet validation mode for write operations.
 
 ```yaml
-Type: String
+Type: ExcelWorksheetValidationMode
 Parameter Sets: Context, Document
 Aliases: None
 Possible values: Disabled, DiagnosticsOnly, DebugOnly, Always

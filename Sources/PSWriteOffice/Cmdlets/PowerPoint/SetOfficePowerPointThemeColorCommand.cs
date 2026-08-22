@@ -5,6 +5,7 @@ using System.Management.Automation;
 using OfficeIMO.PowerPoint;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.PowerPoint;
+using PSWriteOffice.Services.Text;
 
 namespace PSWriteOffice.Cmdlets.PowerPoint;
 
@@ -37,16 +38,19 @@ public sealed class SetOfficePowerPointThemeColorCommand : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetSingle)]
     public PowerPointThemeColor Color { get; set; }
 
-    /// <summary>Hex color value (for example C00000 or #C00000).</summary>
+    /// <summary>Named or hexadecimal color value.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetSingle)]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string Value { get; set; } = string.Empty;
 
-    /// <summary>Hashtable of theme color names to hex values.</summary>
+    /// <summary>Hashtable of theme color names to named or hexadecimal color values.</summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetMultiple)]
     public Hashtable Colors { get; set; } = null!;
 
     /// <summary>Slide master index to update when not using <see cref="AllMasters"/>.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int Master { get; set; }
 
     /// <summary>Apply the changes across all slide masters.</summary>
@@ -125,6 +129,6 @@ public sealed class SetOfficePowerPointThemeColorCommand : PSCmdlet
             throw new PSArgumentException("Provide a non-empty color value.");
         }
 
-        return color.Trim().TrimStart('#').ToUpperInvariant();
+        return OfficeColorUtilities.ToRgbHex(color, nameof(Value))!.ToUpperInvariant();
     }
 }

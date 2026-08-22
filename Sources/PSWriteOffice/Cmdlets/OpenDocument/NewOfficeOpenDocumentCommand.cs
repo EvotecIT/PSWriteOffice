@@ -27,6 +27,7 @@ namespace PSWriteOffice.Cmdlets.OpenDocument;
 /// }</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeOpenDocument", SupportsShouldProcess = true)]
+[Alias("OfficeOpenDocument", "OpenDocumentNew")]
 [OutputType(typeof(OdfDocument), typeof(FileInfo))]
 public sealed class NewOfficeOpenDocumentCommand : PSCmdlet {
     /// <summary>OpenDocument text, spreadsheet, or presentation kind.</summary>

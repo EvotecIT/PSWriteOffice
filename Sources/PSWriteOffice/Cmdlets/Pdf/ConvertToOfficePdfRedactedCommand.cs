@@ -71,8 +71,10 @@ public sealed class ConvertToOfficePdfRedactedCommand : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetText)]
     public SwitchParameter MatchCase { get; set; }
 
-    /// <summary>Redaction fill color in #RRGGBB format. Defaults to black.</summary>
+    /// <summary>Redaction fill color. Named colors and hexadecimal values are accepted. Defaults to black.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Paint only areas that match text or annotations in the redaction plan.</summary>

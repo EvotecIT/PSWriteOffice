@@ -21,7 +21,7 @@ Adds a page to a Visio document and optionally executes nested DSL content.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\Workbook.vsdx {
+PS> OfficeVisio -Path .\Workbook.vsdx {
     VisioPage -Name 'Architecture' {
         VisioRectangle -Key api -Text 'API' -X 2 -Y 4
     }
@@ -49,7 +49,7 @@ Accept wildcard characters: False
 ```
 
 ### -Document
-Target Visio document. Optional inside New-OfficeVisio.
+Target Visio document. Optional inside OfficeVisio.
 
 ```yaml
 Type: VisioDocument

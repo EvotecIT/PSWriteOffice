@@ -8,7 +8,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 /// <example>
 ///   <summary>Add a labeled process box.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>New-OfficeVisio -Path .\Flow.vsdx {
+///   <code>OfficeVisio -Path .\Flow.vsdx {
 ///     VisioRectangle -Key intake -Text 'Intake' -X 1.5 -Y 4 -Width 1.7 -Height 0.8 -FillColor '#E0F2FE'
 /// }</code>
 ///   <para>Adds a rectangle and registers a key for later connector commands.</para>
@@ -17,7 +17,7 @@ namespace PSWriteOffice.Cmdlets.Visio;
 [Alias("VisioRectangle", "VisioRect")]
 [OutputType(typeof(VisioShape))]
 public sealed class AddOfficeVisioRectangleCommand : PSWriteOffice.Cmdlets.OfficeMutationCmdlet {
-    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>New-OfficeVisio</c>.</summary>
+    /// <summary>Target page. Optional inside <c>VisioPage</c> or <c>OfficeVisio</c>.</summary>
     [Parameter(ValueFromPipeline = true)]
     public VisioPage? Page { get; set; }
 
@@ -59,22 +59,28 @@ public sealed class AddOfficeVisioRectangleCommand : PSWriteOffice.Cmdlets.Offic
 
     /// <summary>Fill color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Line color name or hex value.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Line weight.</summary>
     [Parameter]
     public double? LineWeight { get; set; }
 
-    /// <summary>Line pattern.</summary>
+    /// <summary>Native Visio line-pattern index: 0 hides the line, 1 is solid, and 2 through 23 select built-in patterns.</summary>
     [Parameter]
+    [ValidateRange(0, 23)]
     public int? LinePattern { get; set; }
 
-    /// <summary>Fill pattern.</summary>
+    /// <summary>Native Visio fill-pattern index: 0 has no fill, 1 is solid, and 2 through 40 select built-in patterns.</summary>
     [Parameter]
+    [ValidateRange(0, 40)]
     public int? FillPattern { get; set; }
 
     /// <summary>Shape angle in radians.</summary>

@@ -11,12 +11,12 @@ Adds sparklines to a worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelSparkline -DataRange <string> -LocationRange <string> [-Type <string>] [-ShowMarkers] [-ShowHighLow] [-ShowFirstLast] [-ShowNegative] [-ShowAxis] [-SeriesColor <string>] [-AxisColor <string>] [-NegativeColor <string>] [-MarkersColor <string>] [-HighColor <string>] [-LowColor <string>] [-FirstColor <string>] [-LastColor <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSparkline -DataRange <string> -LocationRange <string> [-Type <ExcelSparklineType>] [-ShowMarkers] [-ShowHighLow] [-ShowFirstLast] [-ShowNegative] [-ShowAxis] [-SeriesColor <string>] [-AxisColor <string>] [-NegativeColor <string>] [-MarkersColor <string>] [-HighColor <string>] [-LowColor <string>] [-FirstColor <string>] [-LastColor <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelSparkline -Document <ExcelDocument> -DataRange <string> -LocationRange <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Type <string>] [-ShowMarkers] [-ShowHighLow] [-ShowFirstLast] [-ShowNegative] [-ShowAxis] [-SeriesColor <string>] [-AxisColor <string>] [-NegativeColor <string>] [-MarkersColor <string>] [-HighColor <string>] [-LowColor <string>] [-FirstColor <string>] [-LastColor <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelSparkline -Document <ExcelDocument> -DataRange <string> -LocationRange <string> [-Sheet <string>] [-SheetIndex <Int32>] [-Type <ExcelSparklineType>] [-ShowMarkers] [-ShowHighLow] [-ShowFirstLast] [-ShowNegative] [-ShowAxis] [-SeriesColor <string>] [-AxisColor <string>] [-NegativeColor <string>] [-MarkersColor <string>] [-HighColor <string>] [-LowColor <string>] [-FirstColor <string>] [-LastColor <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,7 +34,7 @@ Creates a line sparkline in N2 using B2:M2.
 ## PARAMETERS
 
 ### -AxisColor
-Axis color (#RRGGBB or #AARRGGBB).
+Axis color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -82,7 +82,7 @@ Accept wildcard characters: False
 ```
 
 ### -FirstColor
-First point color (#RRGGBB or #AARRGGBB).
+First point color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -98,7 +98,7 @@ Accept wildcard characters: False
 ```
 
 ### -HighColor
-High point color (#RRGGBB or #AARRGGBB).
+High point color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -114,7 +114,7 @@ Accept wildcard characters: False
 ```
 
 ### -LastColor
-Last point color (#RRGGBB or #AARRGGBB).
+Last point color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -146,7 +146,7 @@ Accept wildcard characters: False
 ```
 
 ### -LowColor
-Low point color (#RRGGBB or #AARRGGBB).
+Low point color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -162,7 +162,7 @@ Accept wildcard characters: False
 ```
 
 ### -MarkersColor
-Markers color (#RRGGBB or #AARRGGBB).
+Markers color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -178,7 +178,7 @@ Accept wildcard characters: False
 ```
 
 ### -NegativeColor
-Negative point color (#RRGGBB or #AARRGGBB).
+Negative point color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -210,7 +210,7 @@ Accept wildcard characters: False
 ```
 
 ### -SeriesColor
-Series color (#RRGGBB or #AARRGGBB).
+Series color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -341,10 +341,10 @@ Accept wildcard characters: False
 Sparkline type (Line, Column, WinLoss).
 
 ```yaml
-Type: String
+Type: ExcelSparklineType
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: Line, Column, Stacked
 
 Required: False
 Position: named

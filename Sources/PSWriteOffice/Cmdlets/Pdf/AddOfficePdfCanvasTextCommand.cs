@@ -60,6 +60,8 @@ public sealed class AddOfficePdfCanvasTextCommand : PSWriteOffice.Cmdlets.Office
 
     /// <summary>Default text color. Named and hexadecimal colors are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Text alignment within the positioned rectangle.</summary>
@@ -92,6 +94,8 @@ public sealed class AddOfficePdfCanvasTextCommand : PSWriteOffice.Cmdlets.Office
 
     /// <summary>Background color for plain -Text input.</summary>
     [Parameter(ParameterSetName = ParameterSetText)]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>Standard PDF font for plain -Text input.</summary>

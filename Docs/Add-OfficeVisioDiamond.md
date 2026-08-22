@@ -21,7 +21,7 @@ Adds a diamond shape to the current Visio page.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\Flow.vsdx {
+PS> OfficeVisio -Path .\Flow.vsdx {
     VisioDiamond -Key review -Text 'Approved?' -X 4 -Y 4 -Width 1.2 -Height 1 -FillColor '#FEF3C7'
 }
 ```
@@ -127,7 +127,7 @@ Accept wildcard characters: False
 ```
 
 ### -Page
-Target page. Optional inside VisioPage or New-OfficeVisio.
+Target page. Optional inside VisioPage or OfficeVisio.
 
 ```yaml
 Type: VisioPage

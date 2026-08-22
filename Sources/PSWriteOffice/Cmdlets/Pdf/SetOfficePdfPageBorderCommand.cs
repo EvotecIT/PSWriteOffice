@@ -27,8 +27,10 @@ public sealed class SetOfficePdfPageBorderCommand : PSCmdlet
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
-    /// <summary>Border color in #RRGGBB format.</summary>
+    /// <summary>Border color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Border stroke width in PDF points.</summary>

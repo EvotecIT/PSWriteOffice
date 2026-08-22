@@ -22,8 +22,7 @@ public sealed class SetOfficeExcelChartLegendCommand : PSWriteOffice.Cmdlets.Off
 
     /// <summary>Legend position.</summary>
     [Parameter]
-    [ValidateSet("Bottom", "Left", "Right", "Top", "TopRight")]
-    public string Position { get; set; } = "Right";
+    public OfficeChartLegendPosition Position { get; set; } = OfficeChartLegendPosition.Right;
 
     /// <summary>Overlay the legend on the chart area.</summary>
     [Parameter]
@@ -45,8 +44,10 @@ public sealed class SetOfficeExcelChartLegendCommand : PSWriteOffice.Cmdlets.Off
     [Parameter]
     public bool? Italic { get; set; }
 
-    /// <summary>Optional legend text color in hex format.</summary>
+    /// <summary>Optional legend text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Optional legend font name.</summary>
@@ -59,7 +60,7 @@ public sealed class SetOfficeExcelChartLegendCommand : PSWriteOffice.Cmdlets.Off
             if (Hide.IsPresent) {
                 Chart.HideLegend();
             } else {
-                Chart.SetLegend(ResolveLegendPosition(Position), Overlay);
+                Chart.SetLegend(Position, Overlay);
             }
 
             if (FontSizePoints.HasValue || Bold.HasValue || Italic.HasValue ||
@@ -73,14 +74,4 @@ public sealed class SetOfficeExcelChartLegendCommand : PSWriteOffice.Cmdlets.Off
         }
     }
 
-    private static OfficeChartLegendPosition ResolveLegendPosition(string value) {
-        return value switch {
-            "Bottom" => OfficeChartLegendPosition.Bottom,
-            "Left" => OfficeChartLegendPosition.Left,
-            "Right" => OfficeChartLegendPosition.Right,
-            "Top" => OfficeChartLegendPosition.Top,
-            "TopRight" => OfficeChartLegendPosition.TopRight,
-            _ => throw new PSArgumentException($"Unsupported legend position '{value}'.")
-        };
-    }
 }

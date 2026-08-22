@@ -79,7 +79,7 @@ Accept wildcard characters: False
 ```
 
 ### -ColumnSeparatorColor
-Optional vertical separator color between columns in #RRGGBB format.
+Optional vertical separator color between columns.
 
 ```yaml
 Type: String

@@ -26,8 +26,7 @@ public sealed class SetOfficeExcelExecutionPolicyCommand : PSCmdlet
 
     /// <summary>Execution mode for large operations.</summary>
     [Parameter]
-    [ValidateSet("Automatic", "Sequential", "Parallel")]
-    public string? Mode { get; set; }
+    public ExcelExecutionMode? Mode { get; set; }
 
     /// <summary>Global item threshold above which Automatic mode switches to Parallel.</summary>
     [Parameter]
@@ -41,8 +40,7 @@ public sealed class SetOfficeExcelExecutionPolicyCommand : PSCmdlet
 
     /// <summary>Worksheet validation mode for write operations.</summary>
     [Parameter]
-    [ValidateSet("Disabled", "DiagnosticsOnly", "DebugOnly", "Always")]
-    public string? WorksheetValidation { get; set; }
+    public ExcelWorksheetValidationMode? WorksheetValidation { get; set; }
 
     /// <summary>Request diagnostics-aware validation without wiring verbose callbacks.</summary>
     [Parameter]
@@ -62,10 +60,7 @@ public sealed class SetOfficeExcelExecutionPolicyCommand : PSCmdlet
         var document = Document ?? ExcelDslContext.Require(this).Document;
         var policy = document.Execution;
 
-        if (!string.IsNullOrWhiteSpace(Mode))
-        {
-            policy.Mode = ParseEnum<ExcelExecutionMode>(Mode!, nameof(Mode));
-        }
+        if (Mode.HasValue) policy.Mode = Mode.Value;
 
         if (ParallelThreshold.HasValue)
         {
@@ -77,10 +72,7 @@ public sealed class SetOfficeExcelExecutionPolicyCommand : PSCmdlet
             policy.MaxDegreeOfParallelism = MaxDegreeOfParallelism.Value;
         }
 
-        if (!string.IsNullOrWhiteSpace(WorksheetValidation))
-        {
-            policy.WorksheetValidation = ParseEnum<ExcelWorksheetValidationMode>(WorksheetValidation!, nameof(WorksheetValidation));
-        }
+        if (WorksheetValidation.HasValue) policy.WorksheetValidation = WorksheetValidation.Value;
 
         if (Diagnostics.IsPresent)
         {
@@ -98,13 +90,4 @@ public sealed class SetOfficeExcelExecutionPolicyCommand : PSCmdlet
         }
     }
 
-    private static T ParseEnum<T>(string value, string parameterName) where T : struct
-    {
-        if (Enum.TryParse<T>(value, ignoreCase: true, out var parsed))
-        {
-            return parsed;
-        }
-
-        throw new ArgumentException($"Invalid {parameterName} value '{value}'.", parameterName);
-    }
 }

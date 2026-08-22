@@ -11,12 +11,12 @@ Adds or replaces an Excel chart series trendline.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesIndex <int> -Type <string> [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesIndex <int> -Type <OfficeChartTrendlineType> [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesName <string> -Type <string> [-IgnoreCase <bool>] [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelChartTrendline -Chart <ExcelChart> -SeriesName <string> -Type <OfficeChartTrendlineType> [-IgnoreCase <bool>] [-Order <Int32>] [-Period <Int32>] [-Forward <Double>] [-Backward <Double>] [-Intercept <Double>] [-DisplayEquation] [-DisplayRSquared] [-LineColor <string>] [-LineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -146,7 +146,7 @@ Accept wildcard characters: False
 ```
 
 ### -LineColor
-Trendline line color in hex format.
+Trendline line color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -261,10 +261,10 @@ Accept wildcard characters: False
 Trendline type.
 
 ```yaml
-Type: String
+Type: OfficeChartTrendlineType
 Parameter Sets: Index, Name
 Aliases: None
-Possible values:
+Possible values: Exponential, Linear, Logarithmic, MovingAverage, Polynomial, Power
 
 Required: True
 Position: named

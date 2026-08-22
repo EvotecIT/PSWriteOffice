@@ -32,6 +32,8 @@ public sealed class SetOfficeExcelSheetTabColorCommand : PSCmdlet
 
     /// <summary>Named color, RGB hex, or RGBA hex value.</summary>
     [Parameter(Position = 0)]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Clear the worksheet tab color.</summary>

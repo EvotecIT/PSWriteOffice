@@ -12,9 +12,9 @@ $path = Join-Path $OutputDirectory 'Example-Visio-NetworkTopology.vsdx'
 $svgPath = Join-Path $OutputDirectory 'Example-Visio-NetworkTopology.svg'
 $pngPath = Join-Path $OutputDirectory 'Example-Visio-NetworkTopology.png'
 
-New-OfficeVisio -Path $path -Title 'Branch office topology' -Author 'PSWriteOffice' -Width 11 -Height 7 -UseMastersByDefault -RequestRecalcOnOpen {
-    Import-OfficeVisioStencil -BuiltIn Network -Name Net -Default
-    Import-OfficeVisioStencil -BuiltIn Infrastructure -Name Infra
+OfficeVisio -Path $path -Title 'Branch office topology' -Author 'PSWriteOffice' -Width 11 -Height 7 -UseMastersByDefault -RequestRecalcOnOpen {
+    VisioStencilImport -BuiltIn Network -Name Net -Default
+    VisioStencilImport -BuiltIn Infrastructure -Name Infra
 
     VisioTextBox 'Branch office network' -X 5.5 -Y 6.35 -Width 4.5 -Height 0.42 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
     VisioTextBox 'Zones, devices, and traffic paths from the OfficeIMO network stencil catalog.' -X 5.5 -Y 5.98 -Width 6.4 -Height 0.28 -FillColor '#FFFFFF' -LineColor '#FFFFFF'

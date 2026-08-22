@@ -11,7 +11,7 @@ Saves an OfficeIMO LaTeX document.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeLatex [-Document] <LatexDocument> [-Path] <string> [-Options <LatexWriterOptions>] [-Mode <LatexWriterMode>] [-LineEnding <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Save-OfficeLatex [-Document] <LatexDocument> [-Path] <string> [-Options <LatexWriterOptions>] [-Mode <LatexWriterMode>] [-LineEnding <OfficeLineEnding>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,7 +48,7 @@ Accept wildcard characters: False
 Canonical line ending: LF, CRLF, or CR. Omit it to retain the source preference.
 
 ```yaml
-Type: String
+Type: OfficeLineEnding
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: LF, CRLF, CR

@@ -23,7 +23,10 @@ public sealed class NewOfficePdfVisualComparisonOptionsCommand : PSCmdlet {
     /// <summary>Page alignment used for differently sized renders.</summary>
     [Parameter] public PdfVisualPageAlignment? Alignment { get; set; }
     /// <summary>Background color name or hex value.</summary>
-    [Parameter] public string? BackgroundColor { get; set; }
+    [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
+    public string? BackgroundColor { get; set; }
     /// <summary>Maximum pages compared.</summary>
     [Parameter] [ValidateRange(1, int.MaxValue)] public int? MaxPages { get; set; }
     /// <summary>Maximum pixels accepted per rendered image.</summary>

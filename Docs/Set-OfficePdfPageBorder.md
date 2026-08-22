@@ -53,7 +53,7 @@ Accept wildcard characters: False
 ```
 
 ### -Color
-Border color in #RRGGBB format.
+Border color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

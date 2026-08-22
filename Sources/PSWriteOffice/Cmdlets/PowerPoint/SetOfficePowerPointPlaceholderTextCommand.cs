@@ -30,7 +30,7 @@ public sealed class SetOfficePowerPointPlaceholderTextCommand : PSCmdlet
     /// <summary>Placeholder type to target.</summary>
     [Parameter(Mandatory = true)]
     [Alias("Type")]
-    public string PlaceholderType { get; set; } = string.Empty;
+    public PowerPointPlaceholderType PlaceholderType { get; set; }
 
     /// <summary>Optional placeholder index.</summary>
     [Parameter]
@@ -53,13 +53,8 @@ public sealed class SetOfficePowerPointPlaceholderTextCommand : PSCmdlet
     {
         try
         {
-            if (!OpenXmlValueParser.TryParse<PowerPointPlaceholderType>(PlaceholderType, out var placeholderType))
-            {
-                throw new PSArgumentException($"Unknown placeholder type '{PlaceholderType}'.", nameof(PlaceholderType));
-            }
-
             var slide = Slide ?? PowerPointDslContext.Require(this).RequireSlide();
-            var placeholder = slide.GetPlaceholder(placeholderType, Index);
+            var placeholder = slide.GetPlaceholder(PlaceholderType, Index);
             if (placeholder == null)
             {
                 if (IgnoreMissing.IsPresent)

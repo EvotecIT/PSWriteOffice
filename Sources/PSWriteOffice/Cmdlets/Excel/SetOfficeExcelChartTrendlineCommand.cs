@@ -39,7 +39,7 @@ public sealed class SetOfficeExcelChartTrendlineCommand : PSWriteOffice.Cmdlets.
 
     /// <summary>Trendline type.</summary>
     [Parameter(Mandatory = true)]
-    public string Type { get; set; } = string.Empty;
+    public OfficeChartTrendlineType Type { get; set; }
 
     /// <summary>Polynomial order.</summary>
     [Parameter]
@@ -69,8 +69,10 @@ public sealed class SetOfficeExcelChartTrendlineCommand : PSWriteOffice.Cmdlets.
     [Parameter]
     public SwitchParameter DisplayRSquared { get; set; }
 
-    /// <summary>Trendline line color in hex format.</summary>
+    /// <summary>Trendline line color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Trendline line width in points.</summary>
@@ -80,14 +82,10 @@ public sealed class SetOfficeExcelChartTrendlineCommand : PSWriteOffice.Cmdlets.
     /// <inheritdoc />
     protected override void ProcessRecord() {
         try {
-            if (!OpenXmlValueParser.TryParse(Type, out OfficeChartTrendlineType trendlineType)) {
-                throw new PSArgumentException($"Unknown trendline type '{Type}'.");
-            }
-
             if (ParameterSetName == ParameterSetSeriesName) {
-                Chart.SetSeriesTrendline(SeriesName, trendlineType, Order, Period, Forward, Backward, Intercept, DisplayEquation.IsPresent, DisplayRSquared.IsPresent, LineColor, LineWidthPoints, IgnoreCase);
+                Chart.SetSeriesTrendline(SeriesName, Type, Order, Period, Forward, Backward, Intercept, DisplayEquation.IsPresent, DisplayRSquared.IsPresent, LineColor, LineWidthPoints, IgnoreCase);
             } else {
-                Chart.SetSeriesTrendline(SeriesIndex, trendlineType, Order, Period, Forward, Backward, Intercept, DisplayEquation.IsPresent, DisplayRSquared.IsPresent, LineColor, LineWidthPoints);
+                Chart.SetSeriesTrendline(SeriesIndex, Type, Order, Period, Forward, Backward, Intercept, DisplayEquation.IsPresent, DisplayRSquared.IsPresent, LineColor, LineWidthPoints);
             }
 
             WritePassThru(Chart);

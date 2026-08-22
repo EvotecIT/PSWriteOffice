@@ -11,17 +11,17 @@ Adds explicit workbook package metadata such as connection or query-table XML.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelPackageMetadata -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelPackageMetadata -Kind <OfficeExcelPackageMetadataKind> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Add-OfficeExcelPackageMetadata [-Path] <string> -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelPackageMetadata [-Path] <string> -Kind <OfficeExcelPackageMetadataKind> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelPackageMetadata -Document <ExcelDocument> -Kind <string> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficeExcelPackageMetadata -Document <ExcelDocument> -Kind <OfficeExcelPackageMetadataKind> -Xml <string> [-WorksheetName <string>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -59,7 +59,7 @@ Accept wildcard characters: False
 Metadata kind to add.
 
 ```yaml
-Type: String
+Type: OfficeExcelPackageMetadataKind
 Parameter Sets: Context, Path, Document
 Aliases: None
 Possible values: Connection, QueryTable

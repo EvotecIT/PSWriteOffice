@@ -27,7 +27,7 @@ public sealed class OfficeTextRunSpec
     /// <summary>Text color. Named colors and hexadecimal colors are accepted.</summary>
     public string? Color { get; set; }
 
-    /// <summary>Run background or highlight color. Named colors and hexadecimal colors are accepted.</summary>
+    /// <summary>Run background or highlight color. Named colors and hexadecimal colors are accepted; None clears the background or highlight where supported.</summary>
     public string? BackgroundColor { get; set; }
 
     /// <summary>Font size in points.</summary>

@@ -79,8 +79,10 @@ public sealed class AddOfficePdfStampCommand : PSWriteOffice.Cmdlets.OfficeMutat
     [Parameter(ParameterSetName = ParameterSetText)]
     public double FontSize { get; set; } = 24;
 
-    /// <summary>Text color in #RRGGBB format.</summary>
+    /// <summary>Text color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter(ParameterSetName = ParameterSetText)]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Rendered image width in PDF points.</summary>

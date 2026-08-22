@@ -35,8 +35,8 @@ if ($sampleStencils.Count -eq 0) {
     throw "No stencil masters were discovered in $StencilPackagePath."
 }
 
-New-OfficeVisio -Path $path -Title 'Package-backed stencils' -Author 'PSWriteOffice' -Width 10 -Height 6.5 -UseMastersByDefault -RequestRecalcOnOpen {
-    Import-OfficeVisioStencil -Catalog $catalog -Name Package -Default
+OfficeVisio -Path $path -Title 'Package-backed stencils' -Author 'PSWriteOffice' -Width 10 -Height 6.5 -UseMastersByDefault -RequestRecalcOnOpen {
+    VisioStencilImport -Catalog $catalog -Name Package -Default
     VisioTextBox 'Package-backed stencil import' -X 5 -Y 5.8 -Width 4.6 -Height 0.38 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
     VisioTextBox "Loaded from $([System.IO.Path]::GetFileName($StencilPackagePath))" -X 5 -Y 5.42 -Width 5.2 -Height 0.26 -FillColor '#FFFFFF' -LineColor '#FFFFFF'
 

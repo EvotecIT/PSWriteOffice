@@ -80,7 +80,9 @@ internal static class PowerPointTextRunService
             ? spec.FontName
             : null;
         run.Color = OfficeColorUtilities.ToRgbHex(spec.Color);
-        run.HighlightColor = OfficeColorUtilities.ToRgbHex(spec.BackgroundColor);
+        run.HighlightColor = OfficeColorUtilities.IsNone(spec.BackgroundColor)
+            ? null
+            : OfficeColorUtilities.ToRgbHex(spec.BackgroundColor);
         ApplyBaseline(run, spec.Baseline);
         run.ClearHyperlink();
 

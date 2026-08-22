@@ -630,6 +630,7 @@ Describe 'Word DSL surface' {
             WordParagraph -Run @(
                 WordTextRun 'Highlight ' -BackgroundColor Yellow
                 WordTextRun 'Shaded' -BackgroundColor LightPink
+                WordTextRun ' Plain' -BackgroundColor None
             )
             WordParagraph -Run @(
                 WordTextRun 'x'
@@ -671,7 +672,7 @@ Describe 'Word DSL surface' {
         $text = ($documentXml.GetElementsByTagName('t', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') | ForEach-Object { $_.InnerText }) -join ''
         $text | Should -Match 'Status: Ready'
         $text | Should -Match 'Same formatting'
-        $text | Should -Match 'Highlight Shaded'
+        $text | Should -Match 'Highlight Shaded Plain'
         $text | Should -Match 'x2 H2O'
         $text | Should -Match 'Styled link'
         $text | Should -Match 'Build Ready'

@@ -11,7 +11,7 @@ Sets page-level PDF properties and writes a new PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficePdfPage -Path <string> -OutputPath <string> [-PageRange <string>] [-Rotation <int>] [-BoxName <string>] [-Left <Double>] [-Bottom <Double>] [-Right <Double>] [-Top <Double>] [-PageSize <string>] [-Width <Double>] [-Height <Double>] [-Landscape] [-ResizeMode <PdfPageResizeMode>] [-ResizeMargin <Double>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-OfficePdfPage -Path <string> -OutputPath <string> [-PageRange <string>] [-Rotation <int>] [-BoxName <PdfPageBoundaryBox>] [-Left <Double>] [-Bottom <Double>] [-Right <Double>] [-Top <Double>] [-PageSize <string>] [-Width <Double>] [-Height <Double>] [-Landscape] [-ResizeMode <PdfPageResizeMode>] [-ResizeMargin <Double>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -52,7 +52,7 @@ Accept wildcard characters: False
 Page boundary box to set. Supported values are MediaBox, CropBox, BleedBox, TrimBox, and ArtBox.
 
 ```yaml
-Type: String
+Type: PdfPageBoundaryBox
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: MediaBox, CropBox, BleedBox, TrimBox, ArtBox

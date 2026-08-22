@@ -71,7 +71,7 @@ Accept wildcard characters: False
 ```
 
 ### -FillColor
-Fill color in #RRGGBB format.
+Fill color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -215,7 +215,7 @@ Accept wildcard characters: False
 ```
 
 ### -StrokeColor
-Stroke color in #RRGGBB format.
+Stroke color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String

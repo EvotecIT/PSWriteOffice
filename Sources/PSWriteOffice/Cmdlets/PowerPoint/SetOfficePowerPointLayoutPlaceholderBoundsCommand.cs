@@ -34,16 +34,18 @@ public sealed class SetOfficePowerPointLayoutPlaceholderBoundsCommand : PSCmdlet
 
     /// <summary>Slide master index.</summary>
     [Parameter]
+    [ValidateRange(0, int.MaxValue)]
     public int Master { get; set; } = 0;
 
     /// <summary>Layout index within the master.</summary>
     [Parameter(Mandatory = true)]
+    [ValidateRange(0, int.MaxValue)]
     public int Layout { get; set; }
 
     /// <summary>Placeholder type to target.</summary>
     [Parameter(Mandatory = true)]
     [Alias("Type")]
-    public string PlaceholderType { get; set; } = string.Empty;
+    public PowerPointPlaceholderType PlaceholderType { get; set; }
 
     /// <summary>Optional placeholder index.</summary>
     [Parameter]
@@ -79,18 +81,13 @@ public sealed class SetOfficePowerPointLayoutPlaceholderBoundsCommand : PSCmdlet
         PowerPointPresentation? presentation = null;
         try
         {
-            if (!OpenXmlValueParser.TryParse<PowerPointPlaceholderType>(PlaceholderType, out var placeholderType))
-            {
-                throw new PSArgumentException($"Unknown placeholder type '{PlaceholderType}'.", nameof(PlaceholderType));
-            }
-
             var bounds = PowerPointLayoutBox.FromPoints(Left, Top, Width, Height);
             presentation = Presentation ?? PowerPointDslContext.Require(this).Presentation;
-            presentation.SetLayoutPlaceholderBounds(Master, Layout, placeholderType, bounds, Index, CreateIfMissing.IsPresent);
+            presentation.SetLayoutPlaceholderBounds(Master, Layout, PlaceholderType, bounds, Index, CreateIfMissing.IsPresent);
 
             if (PassThru.IsPresent)
             {
-                var textBox = presentation.GetLayoutPlaceholderTextBox(Master, Layout, placeholderType, Index);
+                var textBox = presentation.GetLayoutPlaceholderTextBox(Master, Layout, PlaceholderType, Index);
                 if (textBox != null)
                 {
                     WriteObject(textBox);

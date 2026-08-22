@@ -11,17 +11,17 @@ Sets page setup options on Word sections.
 ## SYNTAX
 ### Current (Default)
 ```powershell
-Set-OfficeWordPageSetup [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordPageSetup [-PageSize <WordPageSize>] [-Orientation <OfficePageOrientation>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Section
 ```powershell
-Set-OfficeWordPageSetup -Section <WordSection> [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordPageSetup -Section <WordSection> [-PageSize <WordPageSize>] [-Orientation <OfficePageOrientation>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Set-OfficeWordPageSetup -Document <WordDocument> [-Index <int[]>] [-PageSize <WordPageSize>] [-Orientation <string>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordPageSetup -Document <WordDocument> [-Index <int[]>] [-PageSize <WordPageSize>] [-Orientation <OfficePageOrientation>] [-Margin <WordMargin>] [-Left <Int32>] [-Right <Int32>] [-Top <Int32>] [-Bottom <Int32>] [-Header <Int32>] [-Footer <Int32>] [-Gutter <Int32>] [-Columns <Int32>] [-ColumnSpacing <Int32>] [-ColumnSeparator <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -218,7 +218,7 @@ Accept wildcard characters: False
 Page orientation.
 
 ```yaml
-Type: String
+Type: OfficePageOrientation
 Parameter Sets: Current, Section, Document
 Aliases: None
 Possible values: Portrait, Landscape

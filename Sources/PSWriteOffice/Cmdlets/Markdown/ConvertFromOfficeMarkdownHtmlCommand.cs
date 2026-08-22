@@ -115,6 +115,7 @@ public sealed class ConvertFromOfficeMarkdownHtmlCommand : PSCmdlet
 
     /// <summary>Markdown line ending: CRLF, LF, CR, or a literal line ending string.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeLineEndingArgumentCompleter))]
     public string? LineEnding { get; set; }
 
     /// <summary>Unordered list marker: '-', '*', or '+'.</summary>

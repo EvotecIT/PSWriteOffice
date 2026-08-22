@@ -26,7 +26,7 @@ Creates a deterministic inspection snapshot for a Visio document.
 
 ### EXAMPLE 1
 ```powershell
-PS> New-OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
+PS> OfficeVisio -Path .\ServiceMap.vsdx { VisioRectangle -Text 'API' -X 2 -Y 4 }
             Get-OfficeVisioInfo -Path .\ServiceMap.vsdx -AsText
 ```
 

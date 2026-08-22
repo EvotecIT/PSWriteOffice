@@ -11,12 +11,12 @@ Adds a conditional formatting rule to the current worksheet.
 ## SYNTAX
 ### Context (Default)
 ```powershell
-Add-OfficeExcelConditionalRule [[-Range] <string>] [[-Operator] <string>] [[-Formula1] <string>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-RuleType <string>] [-Formula2 <string>] [-Text <string>] [-Rank <uint>] [-Percent] [-EqualAverage] [-StandardDeviation <UInt32>] [-TimePeriod <string>] [-StopIfTrue] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelConditionalRule [[-Range] <string>] [[-Operator] <ExcelConditionalFormattingOperator>] [[-Formula1] <string>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-RuleType <OfficeExcelConditionalRuleType>] [-Formula2 <string>] [-Text <string>] [-Rank <uint>] [-Percent] [-EqualAverage] [-StandardDeviation <UInt32>] [-TimePeriod <ExcelConditionalTimePeriod>] [-StopIfTrue] [-PassThru] [<CommonParameters>]
 ```
 
 ### Document
 ```powershell
-Add-OfficeExcelConditionalRule [[-Range] <string>] [[-Operator] <string>] [[-Formula1] <string>] -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-RuleType <string>] [-Formula2 <string>] [-Text <string>] [-Rank <uint>] [-Percent] [-EqualAverage] [-StandardDeviation <UInt32>] [-TimePeriod <string>] [-StopIfTrue] [-PassThru] [<CommonParameters>]
+Add-OfficeExcelConditionalRule [[-Range] <string>] [[-Operator] <ExcelConditionalFormattingOperator>] [[-Formula1] <string>] -Document <ExcelDocument> [-Sheet <string>] [-SheetIndex <Int32>] [-HeaderName <string>] [-TableName <string>] [-PivotTableName <string>] [-PivotWholeTable] [-HeaderRow <int>] [-IncludeHeader] [-RuleType <OfficeExcelConditionalRuleType>] [-Formula2 <string>] [-Text <string>] [-Rank <uint>] [-Percent] [-EqualAverage] [-StandardDeviation <UInt32>] [-TimePeriod <ExcelConditionalTimePeriod>] [-StopIfTrue] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -149,10 +149,10 @@ Accept wildcard characters: False
 Conditional formatting operator.
 
 ```yaml
-Type: String
+Type: ExcelConditionalFormattingOperator
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: LessThan, LessThanOrEqual, Equal, NotEqual, GreaterThanOrEqual, GreaterThan, Between, NotBetween, ContainsText, NotContains, BeginsWith, EndsWith
 
 Required: False
 Position: 1
@@ -261,7 +261,7 @@ Accept wildcard characters: False
 Rule type to author.
 
 ```yaml
-Type: String
+Type: OfficeExcelConditionalRuleType
 Parameter Sets: Context, Document
 Aliases: Type
 Possible values: CellIs, Expression, Formula, DuplicateValues, UniqueValues, Top, Top10, Bottom, Bottom10, AboveAverage, BelowAverage, ContainsText, NotContainsText, BeginsWith, EndsWith, ContainsBlanks, NotContainsBlanks, ContainsErrors, NotContainsErrors, TimePeriod
@@ -373,10 +373,10 @@ Accept wildcard characters: False
 Time period used by time-period rules.
 
 ```yaml
-Type: String
+Type: ExcelConditionalTimePeriod
 Parameter Sets: Context, Document
 Aliases: None
-Possible values:
+Possible values: Today, Yesterday, Tomorrow, Last7Days, ThisMonth, LastMonth, NextMonth, ThisWeek, LastWeek, NextWeek
 
 Required: False
 Position: named

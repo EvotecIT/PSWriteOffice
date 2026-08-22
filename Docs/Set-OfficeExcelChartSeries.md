@@ -11,12 +11,12 @@ Configures Excel chart series colors, line style, and markers.
 ## SYNTAX
 ### Index (Default)
 ```powershell
-Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesIndex <int> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <string>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesIndex <int> [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <OfficeChartMarkerShape>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Name
 ```powershell
-Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesName <string> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <string>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
+Set-OfficeExcelChartSeries -Chart <ExcelChart> -SeriesName <string> [-IgnoreCase <bool>] [-FillColor <string>] [-LineColor <string>] [-LineWidthPoints <Double>] [-MarkerStyle <OfficeChartMarkerShape>] [-MarkerSize <Int32>] [-MarkerFillColor <string>] [-MarkerLineColor <string>] [-MarkerLineWidthPoints <Double>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,7 +50,7 @@ Accept wildcard characters: False
 ```
 
 ### -FillColor
-Series fill color in hex format.
+Series fill color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -82,7 +82,7 @@ Accept wildcard characters: False
 ```
 
 ### -LineColor
-Series line color in hex format.
+Series line color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -114,7 +114,7 @@ Accept wildcard characters: False
 ```
 
 ### -MarkerFillColor
-Marker fill color in hex format.
+Marker fill color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -130,7 +130,7 @@ Accept wildcard characters: False
 ```
 
 ### -MarkerLineColor
-Marker line color in hex format.
+Marker line color. Named colors and hexadecimal values are accepted.
 
 ```yaml
 Type: String
@@ -181,10 +181,10 @@ Accept wildcard characters: False
 Marker style name.
 
 ```yaml
-Type: String
+Type: OfficeChartMarkerShape
 Parameter Sets: Index, Name
 Aliases: None
-Possible values:
+Possible values: Auto, Circle, Dash, Diamond, Dot, None, Picture, Plus, Square, Star, Triangle, X
 
 Required: False
 Position: named

@@ -11,7 +11,7 @@ Renders a semantic deck plan through OfficeIMO PowerPoint designer helpers.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePowerPointDesignerDeck -Plan <PowerPointDeckPlan> [-Presentation <PowerPointPresentation>] [-AccentColor <string>] [-Seed <string>] [-Purpose <string>] [-Name <string>] [-Eyebrow <string>] [-FooterLeft <string>] [-FooterRight <string>] [-CreativeDirectionPack <string>] [-LayoutStrategy <string>] [-AlternativeCount <int>] [-NoApplyTheme] [-Preview] [-PassThru] [<CommonParameters>]
+Add-OfficePowerPointDesignerDeck -Plan <PowerPointDeckPlan> [-Presentation <PowerPointPresentation>] [-AccentColor <string>] [-Seed <string>] [-Purpose <string>] [-Name <string>] [-Eyebrow <string>] [-FooterLeft <string>] [-FooterRight <string>] [-CreativeDirectionPack <PowerPointCreativeDirectionPack>] [-LayoutStrategy <PowerPointAutoLayoutStrategy>] [-AlternativeCount <int>] [-NoApplyTheme] [-Preview] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -73,10 +73,10 @@ Accept wildcard characters: False
 Creative direction pack name, such as Boardroom, FieldProof, TechnicalMap, or QuietAppendix.
 
 ```yaml
-Type: String
+Type: PowerPointCreativeDirectionPack
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: Auto, Boardroom, FieldProof, EditorialCaseStudy, TechnicalMap, QuietAppendix
 
 Required: False
 Position: named
@@ -137,10 +137,10 @@ Accept wildcard characters: False
 Auto layout strategy, such as ContentFirst, DesignFirst, Compact, or VisualFirst.
 
 ```yaml
-Type: String
+Type: PowerPointAutoLayoutStrategy
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: ContentFirst, DesignFirst, Compact, VisualFirst
 
 Required: False
 Position: named

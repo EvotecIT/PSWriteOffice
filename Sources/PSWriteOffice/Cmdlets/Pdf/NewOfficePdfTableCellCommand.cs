@@ -40,11 +40,15 @@ public sealed class NewOfficePdfTableCellCommand : PSCmdlet
     /// <summary>Cell text color. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
     [Alias("Color", "FontColor")]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? TextColor { get; set; }
 
     /// <summary>Cell fill color. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
     [Alias("BackgroundColor", "CellFill")]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
     /// <summary>Cell font size in PDF points.</summary>
@@ -66,6 +70,7 @@ public sealed class NewOfficePdfTableCellCommand : PSCmdlet
 
     /// <summary>Optional underline style name. PDF table rendering treats any supported value as underline.</summary>
     [Parameter]
+    [ArgumentCompleter(typeof(OfficeUnderlineStyleArgumentCompleter))]
     public string? UnderlineStyle { get; set; }
 
     /// <summary>Render the cell text with strikethrough.</summary>

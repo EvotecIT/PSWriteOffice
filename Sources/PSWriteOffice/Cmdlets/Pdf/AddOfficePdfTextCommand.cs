@@ -58,10 +58,14 @@ public sealed class AddOfficePdfTextCommand : PSCmdlet
 
     /// <summary>Default paragraph color. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? Color { get; set; }
 
     /// <summary>Run background color for -Text input. Named colors and hexadecimal colors are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? BackgroundColor { get; set; }
 
     /// <summary>Font size for -Text input in PDF points.</summary>

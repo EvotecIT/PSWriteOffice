@@ -33,7 +33,7 @@ public sealed class AddOfficeExcelDataSetCommand : PSCmdlet
 
     /// <summary>Built-in table style to apply.</summary>
     [Parameter]
-    public string TableStyle { get; set; } = "TableStyleMedium9";
+    public ExcelTableStyle TableStyle { get; set; } = ExcelTableStyle.TableStyleMedium9;
 
     /// <summary>Emphasize the first table column when the selected style supports it.</summary>
     [Parameter]
@@ -71,16 +71,11 @@ public sealed class AddOfficeExcelDataSetCommand : PSCmdlet
             throw new PSArgumentNullException(nameof(DataSet));
         }
 
-        if (!Enum.TryParse(TableStyle, ignoreCase: true, out ExcelTableStyle style))
-        {
-            throw new PSArgumentException($"Unknown table style '{TableStyle}'.", nameof(TableStyle));
-        }
-
         var context = ExcelDslContext.Require(this);
         var results = context.Document.InsertDataSet(
             DataSet,
             createTables: !NoTable.IsPresent,
-            tableStyle: style,
+            tableStyle: TableStyle,
             includeHeaders: !NoHeader.IsPresent,
             includeAutoFilter: !NoAutoFilter.IsPresent,
             autoFit: AutoFit.IsPresent);
@@ -93,7 +88,7 @@ public sealed class AddOfficeExcelDataSetCommand : PSCmdlet
                 ExcelTableStyleOptionService.Apply(
                     sheet,
                     result.Range,
-                    style,
+                    TableStyle,
                     ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowFirstColumn), ShowFirstColumn),
                     ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(ShowLastColumn), ShowLastColumn),
                     ExcelTableStyleOptionService.IsSwitchPresent(this, nameof(NoRowStripes), NoRowStripes),

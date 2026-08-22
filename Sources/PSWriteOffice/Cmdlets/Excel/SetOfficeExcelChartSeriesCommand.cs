@@ -37,12 +37,16 @@ public sealed class SetOfficeExcelChartSeriesCommand : PSWriteOffice.Cmdlets.Off
     [Parameter(ParameterSetName = ParameterSetSeriesName)]
     public bool IgnoreCase { get; set; } = true;
 
-    /// <summary>Series fill color in hex format.</summary>
+    /// <summary>Series fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
-    /// <summary>Series line color in hex format.</summary>
+    /// <summary>Series line color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? LineColor { get; set; }
 
     /// <summary>Series line width in points.</summary>
@@ -51,18 +55,22 @@ public sealed class SetOfficeExcelChartSeriesCommand : PSWriteOffice.Cmdlets.Off
 
     /// <summary>Marker style name.</summary>
     [Parameter]
-    public string? MarkerStyle { get; set; }
+    public OfficeChartMarkerShape? MarkerStyle { get; set; }
 
     /// <summary>Marker size.</summary>
     [Parameter]
     public int? MarkerSize { get; set; }
 
-    /// <summary>Marker fill color in hex format.</summary>
+    /// <summary>Marker fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? MarkerFillColor { get; set; }
 
-    /// <summary>Marker line color in hex format.</summary>
+    /// <summary>Marker line color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation(UseExcelArgb = true)]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? MarkerLineColor { get; set; }
 
     /// <summary>Marker line width in points.</summary>
@@ -94,14 +102,10 @@ public sealed class SetOfficeExcelChartSeriesCommand : PSWriteOffice.Cmdlets.Off
                 }
             }
 
-            var markerStyleName = string.IsNullOrWhiteSpace(MarkerStyle) ? "Circle" : MarkerStyle!;
-            bool markerRequested = !string.IsNullOrWhiteSpace(MarkerStyle) || MarkerSize.HasValue ||
+            var markerStyle = MarkerStyle ?? OfficeChartMarkerShape.Circle;
+            bool markerRequested = MarkerStyle.HasValue || MarkerSize.HasValue ||
                 !string.IsNullOrWhiteSpace(MarkerFillColor) || !string.IsNullOrWhiteSpace(MarkerLineColor) || MarkerLineWidthPoints.HasValue;
             if (markerRequested) {
-                if (!OpenXmlValueParser.TryParse(markerStyleName, out OfficeChartMarkerShape markerStyle)) {
-                    throw new PSArgumentException($"Unknown MarkerStyle '{MarkerStyle}'.");
-                }
-
                 if (ParameterSetName == ParameterSetSeriesName) {
                     Chart.SetSeriesMarker(SeriesName, markerStyle, MarkerSize, MarkerFillColor, MarkerLineColor, MarkerLineWidthPoints, IgnoreCase);
                 } else {

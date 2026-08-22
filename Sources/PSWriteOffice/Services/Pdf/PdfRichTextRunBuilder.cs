@@ -95,7 +95,7 @@ internal static class PdfRichTextRunBuilder
         }
 
         var color = PdfCommandUtilities.ParseColor(run.Color);
-        var backgroundColor = PdfCommandUtilities.ParseColor(run.BackgroundColor);
+        var backgroundColor = ParseOptionalBackgroundColor(run.BackgroundColor);
         var font = GetNullableEnum<PdfStandardFont>(run.FontName);
         var baseline = GetEnum(run.Baseline, PdfTextBaseline.Normal);
 
@@ -129,7 +129,7 @@ internal static class PdfRichTextRunBuilder
             font: GetNullableEnum<PdfStandardFont>(run.FontName),
             tabLeader: GetEnum(run.TabLeader, PdfTabLeaderStyle.None),
             tabAlignment: GetEnum(run.TabAlignment, PdfTabAlignment.Left),
-            backgroundColor: PdfCommandUtilities.ParseColor(run.BackgroundColor));
+            backgroundColor: ParseOptionalBackgroundColor(run.BackgroundColor));
     }
 
     private static void AddText(PdfParagraphBuilder builder, string text, string? linkUri, string? linkDestinationName, string? linkContents, PdfColor? color, bool underline)
@@ -223,4 +223,7 @@ internal static class PdfRichTextRunBuilder
 
         return (TEnum)Enum.Parse(typeof(TEnum), value!, ignoreCase: true);
     }
+
+    private static PdfColor? ParseOptionalBackgroundColor(string? color)
+        => OfficeColorUtilities.IsNone(color) ? null : PdfCommandUtilities.ParseColor(color);
 }

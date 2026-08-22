@@ -29,7 +29,7 @@ Applies a light highlight when the quantity column exceeds 10.
 ## PARAMETERS
 
 ### -BackgroundColor
-Row highlight color applied when the predicate matches (ARGB hex).
+Row highlight color applied when the predicate matches.
 
 ```yaml
 Type: String

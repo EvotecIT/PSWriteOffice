@@ -71,12 +71,16 @@ public sealed class AddOfficePdfBackgroundShapeCommand : PSCmdlet
     [Parameter]
     public double OffsetX { get; set; }
 
-    /// <summary>Fill color in #RRGGBB format.</summary>
+    /// <summary>Fill color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? FillColor { get; set; }
 
-    /// <summary>Stroke color in #RRGGBB format.</summary>
+    /// <summary>Stroke color. Named colors and hexadecimal values are accepted.</summary>
     [Parameter]
+    [OfficeColorArgumentTransformation]
+    [ArgumentCompleter(typeof(OfficeColorArgumentCompleter))]
     public string? StrokeColor { get; set; }
 
     /// <summary>Stroke width in PDF points.</summary>
