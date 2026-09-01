@@ -27033,7 +27033,7 @@ They are rendered behind generated content and should usually use restrained opa
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -27249,7 +27249,7 @@ They are rendered behind generated content and should usually use restrained opa
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -30507,9 +30507,9 @@ page area from the supplied coordinates.</maml:para>
           <maml:description>
             <maml:para>Optional bounded read settings for the target PDF.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -30555,9 +30555,9 @@ page area from the supplied coordinates.</maml:para>
           <maml:description>
             <maml:para>Optional bounded read settings for the imported source PDF.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -30779,9 +30779,9 @@ page area from the supplied coordinates.</maml:para>
         <maml:description>
           <maml:para>Optional bounded read settings for the target PDF.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -30827,9 +30827,9 @@ page area from the supplied coordinates.</maml:para>
         <maml:description>
           <maml:para>Optional bounded read settings for the imported source PDF.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -36580,7 +36580,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -36667,7 +36667,7 @@ URI links and bookmark links are supported; a single run cannot target both.</ma
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -58995,7 +58995,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -59022,7 +59022,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -61035,9 +61035,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Optional bounded read settings for the actual document.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -61119,9 +61119,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Optional bounded read settings for the expected document.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -61158,9 +61158,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Optional bounded read settings for the actual document.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -61242,9 +61242,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Optional bounded read settings for the expected document.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -74597,9 +74597,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Optional bounded PDF parsing and password settings.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -74672,9 +74672,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Optional bounded PDF parsing and password settings.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -74708,6 +74708,337 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <dev:code>$result = ConvertTo-OfficePdfSanitized -Path .\Input.pdf -OutputPath .\Safe.pdf</dev:code>
         <dev:remarks>
           <maml:para>Writes the proven full-rewrite result and returns findings, mutation plan, and quarantine data.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>ConvertTo-OfficePdfSearchable</command:name>
+      <command:verb>ConvertTo</command:verb>
+      <command:noun>OfficePdfSearchable</command:noun>
+      <maml:description>
+        <maml:para>Creates a searchable PDF by adding invisible text from a discovered local OCR runtime.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Creates a searchable PDF by adding invisible text from a discovered local OCR runtime.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>ConvertTo-OfficePdfSearchable</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Overwrite an existing destination file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Language</maml:name>
+          <maml:description>
+            <maml:para>Tesseract language expression, such as eng or eng+pol. The default is eng.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MinimumConfidence</maml:name>
+          <maml:description>
+            <maml:para>Minimum normalized confidence accepted for searchable text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>NoLanguageDownload</maml:name>
+          <maml:description>
+            <maml:para>Do not download checksum-pinned curated language data when a requested language is missing.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeOcrOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeOcrOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Destination PDF path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Return the complete searchable-PDF OCR result instead of the output file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Source PDF path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RenderDpi</maml:name>
+          <maml:description>
+            <maml:para>PDF page render resolution used for recognition.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TessdataDirectory</maml:name>
+          <maml:description>
+            <maml:para>Explicit directory containing Tesseract trained-data files.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TesseractPath</maml:name>
+          <maml:description>
+            <maml:para>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Overwrite an existing destination file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Language</maml:name>
+        <maml:description>
+          <maml:para>Tesseract language expression, such as eng or eng+pol. The default is eng.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MinimumConfidence</maml:name>
+        <maml:description>
+          <maml:para>Minimum normalized confidence accepted for searchable text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>NoLanguageDownload</maml:name>
+        <maml:description>
+          <maml:para>Do not download checksum-pinned curated language data when a requested language is missing.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeOcrOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeOcrOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="None">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Destination PDF path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Return the complete searchable-PDF OCR result instead of the output file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Source PDF path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>RenderDpi</maml:name>
+        <maml:description>
+          <maml:para>PDF page render resolution used for recognition.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TessdataDirectory</maml:name>
+        <maml:description>
+          <maml:para>Explicit directory containing Tesseract trained-data files.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TesseractPath</maml:name>
+        <maml:description>
+          <maml:para>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.IO.FileInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Pdf.PdfSearchableOcrResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Make a scanned PDF searchable.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Scan-Searchable.pdf</dev:code>
+        <dev:remarks>
+          <maml:para>Preserves visible page content and writes geometry-aligned invisible English text.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Recognize an English and Polish document and inspect the OCR evidence.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Searchable.pdf -Language eng+pol -PassThru</dev:code>
+        <dev:remarks>
+          <maml:para>Returns recognition, filtering, page, provider, and model evidence instead of the output file.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -88754,9 +89085,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Optional bounded PDF parsing settings.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -88872,9 +89203,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>Optional bounded PDF parsing settings.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -89045,9 +89376,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Optional bounded PDF parsing settings.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -89184,9 +89515,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>Optional bounded PDF parsing settings.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -89317,9 +89648,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Optional bounded PDF parsing and password settings.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -89392,9 +89723,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>Optional bounded PDF parsing and password settings.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -109315,6 +109646,241 @@ extraction, hashing, and chunk shaping.</maml:para>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>Get-OfficeImageText</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>OfficeImageText</command:noun>
+      <maml:description>
+        <maml:para>Recognizes text in an image with automatic local OCR runtime discovery.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Recognizes text in an image with automatic local OCR runtime discovery.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-OfficeImageText</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Language</maml:name>
+          <maml:description>
+            <maml:para>Tesseract language expression, such as eng or eng+pol. The default is eng.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>NoLanguageDownload</maml:name>
+          <maml:description>
+            <maml:para>Do not download checksum-pinned curated language data when a requested language is missing.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeOcrOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeOcrOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Return the complete OCR result instead of recognized text only.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>PNG, JPEG, TIFF, BMP, GIF, WebP, or JPEG 2000 image path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TessdataDirectory</maml:name>
+          <maml:description>
+            <maml:para>Explicit directory containing Tesseract trained-data files.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TesseractPath</maml:name>
+          <maml:description>
+            <maml:para>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Language</maml:name>
+        <maml:description>
+          <maml:para>Tesseract language expression, such as eng or eng+pol. The default is eng.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>NoLanguageDownload</maml:name>
+        <maml:description>
+          <maml:para>Do not download checksum-pinned curated language data when a requested language is missing.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeOcrOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeOcrOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Return the complete OCR result instead of recognized text only.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>PNG, JPEG, TIFF, BMP, GIF, WebP, or JPEG 2000 image path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TessdataDirectory</maml:name>
+        <maml:description>
+          <maml:para>Explicit directory containing Tesseract trained-data files.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TesseractPath</maml:name>
+        <maml:description>
+          <maml:para>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Reader.OfficeOcrEngineResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Read English text from an image.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeImageText -Path .\Scan.png</dev:code>
+        <dev:remarks>
+          <maml:para>Returns recognized text and automatically uses an installed Tesseract runtime.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Read English and Polish text with recognition evidence.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficeImageText -Path .\Scan.png -Language eng+pol -PassThru</dev:code>
+        <dev:remarks>
+          <maml:para>Returns the full OCR result, including confidence, word geometry, provider, model, and diagnostics.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>Get-OfficeLatex</command:name>
       <command:verb>Get</command:verb>
       <command:noun>OfficeLatex</command:noun>
@@ -113956,7 +114522,7 @@ extraction, hashing, and chunk shaping.</maml:para>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
         <dev:code>$pdf = Get-OfficePdf -Path .\Examples\Documents\Report.pdf&#xD;
-            $pdf.Read.Text() | Select-Object -First 1</dev:code>
+            $pdf.Read().Text | Select-Object -First 1</dev:code>
         <dev:remarks>
           <maml:para>Returns the OfficeIMO.Pdf document object for advanced readback or operations.</maml:para>
         </dev:remarks>
@@ -114605,6 +115171,7 @@ Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact wit
             <command:parameterValue required="false" variableLength="false">PdfUaValidator</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Mustang</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfXValidator</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfExternalValidatorKind[]</maml:name>
@@ -114657,6 +115224,8 @@ Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact wit
             <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfComplianceProfile</maml:name>
@@ -114793,6 +115362,7 @@ Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact wit
             <command:parameterValue required="false" variableLength="false">PdfUaValidator</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Mustang</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfXValidator</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfExternalValidatorKind[]</maml:name>
@@ -114881,6 +115451,8 @@ Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact wit
             <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfComplianceProfile</maml:name>
@@ -115029,6 +115601,7 @@ Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact wit
           <command:parameterValue required="false" variableLength="false">PdfUaValidator</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Mustang</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Custom</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfXValidator</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>PdfExternalValidatorKind[]</maml:name>
@@ -115096,12 +115669,12 @@ Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact wit
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Profile</maml:name>
         <maml:description>
           <maml:para>Compliance profile to assess. When omitted, the document's configured profile is used.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">PdfComplianceProfile</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfComplianceProfile</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">None</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PdfA2B</command:parameterValue>
@@ -115117,6 +115690,8 @@ Use PdfExternalValidationResult.PassedForArtifact or FromExitCodeForArtifact wit
           <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>PdfComplianceProfile</maml:name>
@@ -116041,9 +116616,9 @@ and existing PDFs before follow-up operations such as splitting, stamping, or me
           <maml:description>
             <maml:para>Optional bounded PDF parsing settings.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -116116,9 +116691,9 @@ and existing PDFs before follow-up operations such as splitting, stamping, or me
         <maml:description>
           <maml:para>Optional bounded PDF parsing settings.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -130146,9 +130721,9 @@ the script needs to work with list objects directly instead of using a text sear
           <maml:description>
             <maml:para>Optional bounded PDF parsing and password settings for the source form.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -130257,9 +130832,9 @@ the script needs to work with list objects directly instead of using a text sear
           <maml:description>
             <maml:para>Optional bounded PDF parsing and password settings for the source form.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -130368,9 +130943,9 @@ the script needs to work with list objects directly instead of using a text sear
         <maml:description>
           <maml:para>Optional bounded PDF parsing and password settings for the source form.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -134118,9 +134693,9 @@ the script needs to work with list objects directly instead of using a text sear
           <maml:description>
             <maml:para>Optional bounded PDF parsing settings.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfReadOptions</maml:name>
+            <maml:name>PdfLoadOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -134193,9 +134768,9 @@ the script needs to work with list objects directly instead of using a text sear
         <maml:description>
           <maml:para>Optional bounded PDF parsing settings.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfLoadOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfReadOptions</maml:name>
+          <maml:name>PdfLoadOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -140710,7 +141285,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>BackgroundColor</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for background color.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -140782,7 +141357,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumDegreeOfParallelism</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -140794,7 +141369,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputCount</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output count.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -140806,7 +141381,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputHeight</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output height.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -140818,7 +141393,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputWidth</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output width.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -140830,7 +141405,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -140854,7 +141429,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalEncodedBytes</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -140866,7 +141441,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -140878,7 +141453,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RasterOverflowBehavior</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for raster overflow behavior.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
           <command:parameterValueGroup>
@@ -140894,7 +141469,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RenderTimeoutSeconds</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for render timeout seconds.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -140906,7 +141481,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Scale</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for scale.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -140954,7 +141529,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TargetDpi</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for target dpi.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -140966,7 +141541,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TextShapingLanguage</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for text shaping language.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -140981,7 +141556,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>BackgroundColor</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for background color.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -141053,7 +141628,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumDegreeOfParallelism</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -141065,7 +141640,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputCount</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output count.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -141077,7 +141652,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputHeight</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output height.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -141089,7 +141664,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputWidth</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output width.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -141101,7 +141676,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -141125,7 +141700,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalEncodedBytes</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -141137,7 +141712,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -141149,7 +141724,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RasterOverflowBehavior</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for raster overflow behavior.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
         <command:parameterValueGroup>
@@ -141165,7 +141740,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RenderTimeoutSeconds</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for render timeout seconds.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -141177,7 +141752,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Scale</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for scale.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -141225,7 +141800,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TargetDpi</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for target dpi.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -141237,7 +141812,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TextShapingLanguage</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for text shaping language.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -142346,7 +142921,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>BackgroundColor</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for background color.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -142430,7 +143005,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumDegreeOfParallelism</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -142442,7 +143017,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputCount</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output count.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -142454,7 +143029,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputHeight</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output height.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -142466,7 +143041,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputWidth</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output width.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -142478,7 +143053,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -142502,7 +143077,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalEncodedBytes</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -142514,7 +143089,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -142526,7 +143101,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RasterOverflowBehavior</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for raster overflow behavior.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
           <command:parameterValueGroup>
@@ -142542,7 +143117,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RenderTimeoutSeconds</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for render timeout seconds.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -142554,7 +143129,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Scale</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for scale.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -142602,7 +143177,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TargetDpi</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for target dpi.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -142614,7 +143189,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TextShapingLanguage</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for text shaping language.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -142641,7 +143216,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>BackgroundColor</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for background color.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -142725,7 +143300,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumDegreeOfParallelism</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -142737,7 +143312,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputCount</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output count.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -142749,7 +143324,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputHeight</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output height.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -142761,7 +143336,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputWidth</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output width.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -142773,7 +143348,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -142797,7 +143372,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalEncodedBytes</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -142809,7 +143384,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -142821,7 +143396,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RasterOverflowBehavior</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for raster overflow behavior.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
         <command:parameterValueGroup>
@@ -142837,7 +143412,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RenderTimeoutSeconds</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for render timeout seconds.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -142849,7 +143424,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Scale</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for scale.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -142897,7 +143472,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TargetDpi</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for target dpi.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -142909,7 +143484,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TextShapingLanguage</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for text shaping language.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -143176,7 +143751,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>BackgroundColor</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for background color.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -143276,7 +143851,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumDegreeOfParallelism</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -143288,7 +143863,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputCount</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output count.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -143300,7 +143875,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputHeight</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output height.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -143312,7 +143887,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputWidth</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output width.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -143324,7 +143899,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -143336,7 +143911,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalEncodedBytes</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -143348,7 +143923,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -143424,7 +143999,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RasterOverflowBehavior</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for raster overflow behavior.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
           <command:parameterValueGroup>
@@ -143440,7 +144015,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RenderTimeoutSeconds</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for render timeout seconds.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -143464,7 +144039,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Scale</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for scale.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -143476,7 +144051,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TargetDpi</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for target dpi.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -143488,7 +144063,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TextShapingLanguage</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for text shaping language.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -143527,7 +144102,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>BackgroundColor</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for background color.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -143627,7 +144202,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumDegreeOfParallelism</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -143639,7 +144214,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputCount</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output count.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -143651,7 +144226,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputHeight</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output height.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -143663,7 +144238,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputWidth</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output width.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -143675,7 +144250,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -143687,7 +144262,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalEncodedBytes</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -143699,7 +144274,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -143775,7 +144350,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RasterOverflowBehavior</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for raster overflow behavior.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
         <command:parameterValueGroup>
@@ -143791,7 +144366,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RenderTimeoutSeconds</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for render timeout seconds.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -143815,7 +144390,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Scale</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for scale.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -143827,7 +144402,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TargetDpi</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for target dpi.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -143839,7 +144414,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TextShapingLanguage</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for text shaping language.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -147008,7 +147583,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>BackgroundColor</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for background color.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -147020,7 +147595,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumDegreeOfParallelism</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -147032,7 +147607,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputCount</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output count.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -147044,7 +147619,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputHeight</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output height.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -147056,7 +147631,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputWidth</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output width.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -147068,7 +147643,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -147080,7 +147655,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalEncodedBytes</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -147092,7 +147667,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -147104,7 +147679,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RasterOverflowBehavior</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for raster overflow behavior.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
           <command:parameterValueGroup>
@@ -147120,7 +147695,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RenderTimeoutSeconds</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for render timeout seconds.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -147132,7 +147707,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Scale</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for scale.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -147144,7 +147719,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TargetDpi</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for target dpi.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -147156,7 +147731,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TextShapingLanguage</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for text shaping language.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -147183,7 +147758,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>BackgroundColor</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for background color.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -147195,7 +147770,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumDegreeOfParallelism</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -147207,7 +147782,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputCount</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output count.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -147219,7 +147794,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputHeight</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output height.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -147231,7 +147806,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputWidth</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output width.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -147243,7 +147818,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -147255,7 +147830,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalEncodedBytes</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -147267,7 +147842,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -147279,7 +147854,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RasterOverflowBehavior</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for raster overflow behavior.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
         <command:parameterValueGroup>
@@ -147295,7 +147870,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RenderTimeoutSeconds</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for render timeout seconds.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -147307,7 +147882,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Scale</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for scale.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -147319,7 +147894,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TargetDpi</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for target dpi.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -147331,7 +147906,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TextShapingLanguage</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for text shaping language.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -150924,7 +151499,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>BackgroundColor</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for background color.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -151044,7 +151619,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumDegreeOfParallelism</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -151056,7 +151631,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputCount</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output count.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -151068,7 +151643,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputHeight</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output height.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -151080,7 +151655,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputWidth</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output width.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -151092,7 +151667,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -151104,7 +151679,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalEncodedBytes</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -151116,7 +151691,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -151128,7 +151703,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RasterOverflowBehavior</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for raster overflow behavior.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
           <command:parameterValueGroup>
@@ -151144,7 +151719,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RenderTimeoutSeconds</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for render timeout seconds.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -151156,7 +151731,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Scale</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for scale.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -151180,7 +151755,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TargetDpi</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for target dpi.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -151192,7 +151767,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TextShapingLanguage</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for text shaping language.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -151207,7 +151782,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>BackgroundColor</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for background color.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -151327,7 +151902,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumDegreeOfParallelism</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -151339,7 +151914,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputCount</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output count.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -151351,7 +151926,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputHeight</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output height.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -151363,7 +151938,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputWidth</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output width.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -151375,7 +151950,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -151387,7 +151962,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalEncodedBytes</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -151399,7 +151974,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -151411,7 +151986,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RasterOverflowBehavior</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for raster overflow behavior.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
         <command:parameterValueGroup>
@@ -151427,7 +152002,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RenderTimeoutSeconds</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for render timeout seconds.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -151439,7 +152014,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Scale</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for scale.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -151463,7 +152038,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TargetDpi</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for target dpi.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -151475,7 +152050,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TextShapingLanguage</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for text shaping language.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -154005,7 +154580,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>BackgroundColor</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for background color.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -154029,7 +154604,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumDegreeOfParallelism</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -154041,7 +154616,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputCount</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output count.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -154053,7 +154628,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputHeight</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output height.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -154065,7 +154640,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputWidth</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output width.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -154077,7 +154652,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -154089,7 +154664,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalEncodedBytes</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -154101,7 +154676,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -154137,7 +154712,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RasterOverflowBehavior</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for raster overflow behavior.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
           <command:parameterValueGroup>
@@ -154189,7 +154764,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RenderTimeoutSeconds</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for render timeout seconds.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -154213,7 +154788,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Scale</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for scale.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -154237,7 +154812,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TargetDpi</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for target dpi.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -154249,7 +154824,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TextShapingLanguage</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for text shaping language.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -154264,7 +154839,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>BackgroundColor</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for background color.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -154288,7 +154863,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumDegreeOfParallelism</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -154300,7 +154875,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputCount</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output count.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -154312,7 +154887,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputHeight</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output height.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -154324,7 +154899,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputWidth</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output width.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -154336,7 +154911,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -154348,7 +154923,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalEncodedBytes</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -154360,7 +154935,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -154396,7 +154971,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RasterOverflowBehavior</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for raster overflow behavior.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
         <command:parameterValueGroup>
@@ -154448,7 +155023,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RenderTimeoutSeconds</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for render timeout seconds.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -154472,7 +155047,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Scale</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for scale.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -154496,7 +155071,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TargetDpi</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for target dpi.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -154508,7 +155083,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TextShapingLanguage</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for text shaping language.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -155596,7 +156171,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>BackgroundColor</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for background color.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -155620,7 +156195,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumDegreeOfParallelism</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -155632,7 +156207,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputCount</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output count.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -155644,7 +156219,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputHeight</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output height.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -155656,7 +156231,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumOutputWidth</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum output width.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -155668,7 +156243,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -155680,7 +156255,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalEncodedBytes</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -155692,7 +156267,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaximumTotalRasterPixels</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -155728,7 +156303,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RasterOverflowBehavior</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for raster overflow behavior.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
           <command:parameterValueGroup>
@@ -155744,7 +156319,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>RenderTimeoutSeconds</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for render timeout seconds.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -155756,7 +156331,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Scale</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for scale.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -155768,7 +156343,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TargetDpi</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for target dpi.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -155780,7 +156355,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TextShapingLanguage</maml:name>
           <maml:description>
-            <maml:para></maml:para>
+            <maml:para>Specifies a value for text shaping language.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -155795,7 +156370,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>BackgroundColor</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for background color.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -155819,7 +156394,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumDegreeOfParallelism</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum degree of parallelism.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -155831,7 +156406,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputCount</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output count.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -155843,7 +156418,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputHeight</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output height.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -155855,7 +156430,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumOutputWidth</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum output width.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -155867,7 +156442,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -155879,7 +156454,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalEncodedBytes</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total encoded bytes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -155891,7 +156466,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaximumTotalRasterPixels</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for maximum total raster pixels.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -155927,7 +156502,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RasterOverflowBehavior</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for raster overflow behavior.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">OfficeRasterOverflowBehavior</command:parameterValue>
         <command:parameterValueGroup>
@@ -155943,7 +156518,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RenderTimeoutSeconds</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for render timeout seconds.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -155955,7 +156530,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Scale</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for scale.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -155967,7 +156542,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TargetDpi</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for target dpi.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -155979,7 +156554,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TextShapingLanguage</maml:name>
         <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Specifies a value for text shaping language.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -184215,7 +184790,7 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -184266,7 +184841,7 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -184424,7 +184999,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -184504,7 +185079,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -184675,6 +185250,8 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
             <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfComplianceProfile</maml:name>
@@ -184688,7 +185265,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Compliance options must be declared inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -184754,6 +185331,8 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
             <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfComplianceProfile</maml:name>
@@ -184767,7 +185346,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Compliance options must be declared inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -184833,6 +185412,8 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
           <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>PdfComplianceProfile</maml:name>
@@ -184963,6 +185544,8 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
             <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfComplianceProfile</maml:name>
@@ -185032,7 +185615,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -185086,6 +185669,8 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
             <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>PdfComplianceProfile</maml:name>
@@ -185155,7 +185740,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -185209,6 +185794,8 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
           <command:parameterValue required="false" variableLength="false">PdfA4E</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PdfA4F</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">PdfUa2</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfX1A2003</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfX4</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>PdfComplianceProfile</maml:name>
@@ -185404,7 +185991,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -185486,7 +186073,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -186031,7 +186618,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -186113,7 +186700,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -187359,7 +187946,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -187465,7 +188052,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -187712,7 +188299,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -187847,7 +188434,7 @@ With -Path and -OutputPath, it rewrites an existing PDF with updated metadata un
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
@@ -188280,7 +188867,7 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+            <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
           <dev:type>
@@ -188325,7 +188912,7 @@ Apply a theme near the start of a New-OfficePdf script block so later content in
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</maml:para>
+          <maml:para>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
         <dev:type>
