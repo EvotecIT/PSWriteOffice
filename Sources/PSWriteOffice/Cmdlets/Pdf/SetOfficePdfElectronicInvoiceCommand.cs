@@ -23,7 +23,7 @@ public sealed class SetOfficePdfElectronicInvoiceCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.</summary>
+    /// <summary>Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -66,7 +66,7 @@ public sealed class SetOfficePdfElectronicInvoiceCommand : PSCmdlet
 
         if (ParameterSetName == ParameterSetDocument)
         {
-            throw new PSNotSupportedException("OfficeIMO 3.2 requires electronic-invoice options before PDF creation. Use PdfElectronicInvoice inside New-OfficePdf.");
+            throw new PSNotSupportedException("Electronic-invoice options must be supplied before PDF creation. Use PdfElectronicInvoice inside New-OfficePdf.");
         }
 
         var invoicePath = PdfCommandUtilities.ResolvePath(this, Path);

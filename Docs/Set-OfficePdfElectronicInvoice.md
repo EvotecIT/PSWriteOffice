@@ -69,7 +69,7 @@ Accept wildcard characters: False
 ```
 
 ### -Document
-Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.
+Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf.
 
 ```yaml
 Type: PdfDocument

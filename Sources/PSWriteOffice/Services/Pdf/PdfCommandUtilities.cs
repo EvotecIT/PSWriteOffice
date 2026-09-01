@@ -144,7 +144,7 @@ internal static class PdfCommandUtilities
         if (parameterSetName == documentParameterSet)
         {
             throw new PSNotSupportedException(
-                $"{cmdlet.MyInvocation.InvocationName} defines page composition and cannot update an already-built PdfDocument with OfficeIMO 3.2. Use it inside New-OfficePdf {{ ... }}.");
+                $"{cmdlet.MyInvocation.InvocationName} defines page composition and cannot update an already-built PdfDocument. Use it inside New-OfficePdf {{ ... }}.");
         }
 
         RejectDeferredPassThru(cmdlet);

@@ -22,7 +22,7 @@ public sealed class ClearOfficePdfBackgroundShapeCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</summary>
+    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 

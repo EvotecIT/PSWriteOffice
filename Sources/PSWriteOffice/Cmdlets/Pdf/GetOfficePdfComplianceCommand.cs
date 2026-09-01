@@ -111,7 +111,7 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
 
         var document = Document ?? throw new PSArgumentNullException(
             nameof(Document),
-            "OfficeIMO 3.2 builds New-OfficePdf content as one composition. Run Get-OfficePdfCompliance on the document returned by New-OfficePdf.");
+            "New-OfficePdf builds content as one composition. Run Get-OfficePdfCompliance on the document returned by New-OfficePdf.");
         var profile = Profile ?? document.AssessCompliance().Profile;
         WriteObject(Proof.IsPresent
             ? AssessProof(document, profile)

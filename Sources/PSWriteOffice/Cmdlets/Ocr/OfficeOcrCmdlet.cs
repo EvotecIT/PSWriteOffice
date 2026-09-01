@@ -51,6 +51,7 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
 
         var effective = new OfficeOcrOptions
         {
+            OutputConflictPolicy = source.OutputConflictPolicy,
             Tesseract = source.Tesseract.Clone(),
             Pdf = source.Pdf.Clone(),
             LanguageData = new TesseractLanguageDataOptions

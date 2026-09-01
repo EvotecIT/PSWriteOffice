@@ -1,6 +1,7 @@
 using System.IO;
 using System.Management.Automation;
 using System.Threading.Tasks;
+using OfficeIMO;
 using OfficeIMO.Pdf;
 using OfficeIMO.Reader.Ocr;
 using PSWriteOffice.Services.Pdf;
@@ -63,6 +64,9 @@ public sealed class ConvertToOfficePdfSearchableCommand : OfficeOcrCmdlet
         }
 
         OfficeOcrOptions options = CreateOptions();
+        options.OutputConflictPolicy = Force.IsPresent
+            ? OfficeConversionFileConflictPolicy.Replace
+            : OfficeConversionFileConflictPolicy.FailIfExists;
         if (RenderDpi.HasValue)
         {
             options.Pdf.Dpi = RenderDpi.Value;

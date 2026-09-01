@@ -39,7 +39,7 @@ Applies OfficeIMO.Pdf compliance groundwork during composition, saves the PDF, t
 ## PARAMETERS
 
 ### -Document
-Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.
+Compatibility parameter. Compliance options must be declared inside New-OfficePdf.
 
 ```yaml
 Type: PdfDocument

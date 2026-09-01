@@ -93,4 +93,33 @@ Describe 'Easy local OCR commands' {
         Test-Path -LiteralPath $outputPath | Should -BeTrue
         Get-OfficePdfText -Path $outputPath | Should -Match 'OfficeIMO OCR'
     }
+
+    It 'preserves an existing searchable PDF destination unless Force is supplied' {
+        $runtime = New-TestTesseract -Directory $TestDrive
+        $inputPath = Join-Path $TestDrive 'force-input.pdf'
+        $outputPath = Join-Path $TestDrive 'force-output.pdf'
+        $imagePath = Join-Path $PSScriptRoot 'Assets\CellImage.png'
+
+        New-OfficePdf -Path $inputPath {
+            PdfImage -Path $imagePath -Width 180 -Height 120
+        }
+        [IO.File]::WriteAllText($outputPath, 'caller-owned')
+
+        {
+            ConvertTo-OfficePdfSearchable `
+                -Path $inputPath `
+                -OutputPath $outputPath `
+                -TesseractPath $runtime `
+                -NoLanguageDownload
+        } | Should -Throw
+        [IO.File]::ReadAllText($outputPath) | Should -Be 'caller-owned'
+
+        ConvertTo-OfficePdfSearchable `
+            -Path $inputPath `
+            -OutputPath $outputPath `
+            -TesseractPath $runtime `
+            -NoLanguageDownload `
+            -Force
+        Get-OfficePdfText -Path $outputPath | Should -Match 'OfficeIMO OCR'
+    }
 }
