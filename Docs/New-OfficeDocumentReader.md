@@ -11,7 +11,7 @@ Creates an immutable fully configured OfficeIMO document reader.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeDocumentReader [-UseTesseract] [-TesseractExecutablePath <string>] [-TesseractLanguage <string>] [-TesseractDataPath <string>] [-TesseractDpi <Int32>] [-TesseractTimeoutSeconds <Int32>] [-MaxStoreItems <Int32>] [-AllStoreItems] [-MaxConcurrentReads <Int32>] [-ProcessorFailureBehavior <OfficeDocumentProcessorFailureBehavior>] [<CommonParameters>]
+New-OfficeDocumentReader [-UseTesseract] [-TesseractExecutablePath <string>] [-OcrLanguage <OfficeOcrLanguage[]>] [-TesseractLanguage <string>] [-TesseractDataPath <string>] [-TesseractDpi <Int32>] [-TesseractTimeoutSeconds <Int32>] [-MaxStoreItems <Int32>] [-AllStoreItems] [-MaxConcurrentReads <Int32>] [-ProcessorFailureBehavior <OfficeDocumentProcessorFailureBehavior>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,7 +21,7 @@ Creates an immutable fully configured OfficeIMO document reader.
 
 ### EXAMPLE 1
 ```powershell
-PS> $reader = New-OfficeDocumentReader -TesseractLanguage 'eng+pol' -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic
+PS> $reader = New-OfficeDocumentReader -OcrLanguage English, Polish -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic
 ```
 
 The returned reader can be supplied to every PSWriteOffice Reader command.
@@ -68,6 +68,22 @@ Type: Int32
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -OcrLanguage
+Friendly OCR languages used by the built-in Tesseract adapter.
+
+```yaml
+Type: OfficeOcrLanguage[]
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: English, Polish
 
 Required: False
 Position: named
@@ -141,7 +157,7 @@ Accept wildcard characters: False
 ```
 
 ### -TesseractLanguage
-Tesseract language expression such as eng or eng+pol.
+Advanced raw Tesseract expression for caller-installed custom trained-data models.
 
 ```yaml
 Type: String

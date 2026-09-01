@@ -74740,14 +74740,18 @@ cells. This keeps existing-document editing simple without forcing callers back 
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Language</maml:name>
           <maml:description>
-            <maml:para>Tesseract language expression, such as eng or eng+pol. The default is eng.</maml:para>
+            <maml:para>Friendly OCR languages. Supply more than one value to recognize multilingual content.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>OfficeOcrLanguage[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -74849,6 +74853,18 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TesseractLanguageExpression</maml:name>
+          <maml:description>
+            <maml:para>Advanced raw Tesseract expression for caller-installed custom trained-data models.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TesseractPath</maml:name>
           <maml:description>
             <maml:para>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</maml:para>
@@ -74875,14 +74891,18 @@ cells. This keeps existing-document editing simple without forcing callers back 
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Language</maml:name>
         <maml:description>
-          <maml:para>Tesseract language expression, such as eng or eng+pol. The default is eng.</maml:para>
+          <maml:para>Friendly OCR languages. Supply more than one value to recognize multilingual content.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>String</maml:name>
+          <maml:name>OfficeOcrLanguage[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -74984,6 +75004,18 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TesseractLanguageExpression</maml:name>
+        <maml:description>
+          <maml:para>Advanced raw Tesseract expression for caller-installed custom trained-data models.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TesseractPath</maml:name>
         <maml:description>
           <maml:para>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</maml:para>
@@ -75036,7 +75068,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Searchable.pdf -Language eng+pol -PassThru</dev:code>
+        <dev:code>ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Searchable.pdf -Language English, Polish -PassThru</dev:code>
         <dev:remarks>
           <maml:para>Returns recognition, filtering, page, provider, and model evidence instead of the output file.</maml:para>
         </dev:remarks>
@@ -109659,14 +109691,18 @@ extraction, hashing, and chunk shaping.</maml:para>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
         <maml:name>Get-OfficeImageText</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Language</maml:name>
           <maml:description>
-            <maml:para>Tesseract language expression, such as eng or eng+pol. The default is eng.</maml:para>
+            <maml:para>Friendly OCR languages. Supply more than one value to recognize multilingual content.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>OfficeOcrLanguage[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -109732,6 +109768,18 @@ extraction, hashing, and chunk shaping.</maml:para>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TesseractLanguageExpression</maml:name>
+          <maml:description>
+            <maml:para>Advanced raw Tesseract expression for caller-installed custom trained-data models.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TesseractPath</maml:name>
           <maml:description>
             <maml:para>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</maml:para>
@@ -109746,14 +109794,18 @@ extraction, hashing, and chunk shaping.</maml:para>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Language</maml:name>
         <maml:description>
-          <maml:para>Tesseract language expression, such as eng or eng+pol. The default is eng.</maml:para>
+          <maml:para>Friendly OCR languages. Supply more than one value to recognize multilingual content.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>String</maml:name>
+          <maml:name>OfficeOcrLanguage[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -109819,6 +109871,18 @@ extraction, hashing, and chunk shaping.</maml:para>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TesseractLanguageExpression</maml:name>
+        <maml:description>
+          <maml:para>Advanced raw Tesseract expression for caller-installed custom trained-data models.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TesseractPath</maml:name>
         <maml:description>
           <maml:para>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</maml:para>
@@ -109871,7 +109935,7 @@ extraction, hashing, and chunk shaping.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>Get-OfficeImageText -Path .\Scan.png -Language eng+pol -PassThru</dev:code>
+        <dev:code>Get-OfficeImageText -Path .\Scan.png -Language English, Polish -PassThru</dev:code>
         <dev:remarks>
           <maml:para>Returns the full OCR result, including confidence, word geometry, provider, model, and diagnostics.</maml:para>
         </dev:remarks>
@@ -137605,6 +137669,22 @@ This does not discover, bypass, or crack a missing password.</maml:para>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>OcrLanguage</maml:name>
+          <maml:description>
+            <maml:para>Friendly OCR languages used by the built-in Tesseract adapter.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>OfficeOcrLanguage[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ProcessorFailureBehavior</maml:name>
           <maml:description>
@@ -137661,7 +137741,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>TesseractLanguage</maml:name>
           <maml:description>
-            <maml:para>Tesseract language expression such as eng or eng+pol.</maml:para>
+            <maml:para>Advanced raw Tesseract expression for caller-installed custom trained-data models.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -137733,6 +137813,22 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>OcrLanguage</maml:name>
+        <maml:description>
+          <maml:para>Friendly OCR languages used by the built-in Tesseract adapter.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>OfficeOcrLanguage[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ProcessorFailureBehavior</maml:name>
         <maml:description>
@@ -137789,7 +137885,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>TesseractLanguage</maml:name>
         <maml:description>
-          <maml:para>Tesseract language expression such as eng or eng+pol.</maml:para>
+          <maml:para>Advanced raw Tesseract expression for caller-installed custom trained-data models.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -137848,7 +137944,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$reader = New-OfficeDocumentReader -TesseractLanguage 'eng+pol' -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic</dev:code>
+        <dev:code>$reader = New-OfficeDocumentReader -OcrLanguage English, Polish -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic</dev:code>
         <dev:remarks>
           <maml:para>The returned reader can be supplied to every PSWriteOffice Reader command.</maml:para>
         </dev:remarks>

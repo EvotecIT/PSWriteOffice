@@ -11,7 +11,7 @@ Recognizes text in an image with automatic local OCR runtime discovery.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeImageText [-Path] <string> [-PassThru] [-Options <OfficeOcrOptions>] [-Language <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [<CommonParameters>]
+Get-OfficeImageText [-Path] <string> [-PassThru] [-Options <OfficeOcrOptions>] [-Language <OfficeOcrLanguage[]>] [-TesseractLanguageExpression <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,7 +28,7 @@ Returns recognized text and automatically uses an installed Tesseract runtime.
 
 ### EXAMPLE 2
 ```powershell
-PS> Get-OfficeImageText -Path .\Scan.png -Language eng+pol -PassThru
+PS> Get-OfficeImageText -Path .\Scan.png -Language English, Polish -PassThru
 ```
 
 Returns the full OCR result, including confidence, word geometry, provider, model, and diagnostics.
@@ -36,13 +36,13 @@ Returns the full OCR result, including confidence, word geometry, provider, mode
 ## PARAMETERS
 
 ### -Language
-Tesseract language expression, such as eng or eng+pol. The default is eng.
+Friendly OCR languages. Supply more than one value to recognize multilingual content.
 
 ```yaml
-Type: String
+Type: OfficeOcrLanguage[]
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: English, Polish
 
 Required: False
 Position: named
@@ -117,6 +117,22 @@ Accept wildcard characters: False
 
 ### -TessdataDirectory
 Explicit directory containing Tesseract trained-data files.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TesseractLanguageExpression
+Advanced raw Tesseract expression for caller-installed custom trained-data models.
 
 ```yaml
 Type: String

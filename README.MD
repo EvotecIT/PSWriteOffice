@@ -188,7 +188,7 @@ $text = Get-OfficeImageText -Path .\Scanned-Page.png
 ConvertTo-OfficePdfSearchable `
     -Path .\Scanned-Report.pdf `
     -OutputPath .\Scanned-Report-Searchable.pdf `
-    -Language eng+pol
+    -Language English, Polish
 
 Get-OfficePdfText -Path .\Scanned-Report-Searchable.pdf
 ```

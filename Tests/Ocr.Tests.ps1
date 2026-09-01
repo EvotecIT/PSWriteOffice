@@ -56,12 +56,22 @@ printf '5\t1\t1\t1\t1\t2\t140\t12\t72\t24\t94.0\tOCR\n' >> "${2}.tsv"
 }
 
 Describe 'Easy local OCR commands' {
+    It 'exposes discoverable typed language choices' {
+        $parameter = (Get-Command Get-OfficeImageText).Parameters['Language']
+        $parameter.ParameterType.FullName | Should -Be 'OfficeIMO.Reader.Ocr.OfficeOcrLanguage[]'
+        $languageType = $parameter.ParameterType.GetElementType()
+        $languageType.GetEnumNames() | Should -Contain 'English'
+        $languageType.GetEnumNames() | Should -Contain 'Polish'
+        (Get-Command New-OfficeDocumentReader).Parameters['OcrLanguage'].ParameterType.FullName |
+            Should -Be 'OfficeIMO.Reader.Ocr.OfficeOcrLanguage[]'
+    }
+
     It 'recognizes image text with runtime and word evidence' {
         $runtime = New-TestTesseract -Directory $TestDrive
         $result = Get-OfficeImageText `
             -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') `
             -TesseractPath $runtime `
-            -Language eng+pol `
+            -Language English, Polish `
             -NoLanguageDownload `
             -PassThru
 
@@ -69,6 +79,48 @@ Describe 'Easy local OCR commands' {
         $result.Provider | Should -Be 'tesseract-cli'
         $result.Model | Should -Be 'tessdata:eng+pol'
         @($result.Spans).Count | Should -BeGreaterThan 0
+    }
+
+    It 'preserves legacy options and lets friendly language parameters override them' {
+        $runtime = New-TestTesseract -Directory $TestDrive
+        $optionsType = (Get-Command Get-OfficeImageText).Parameters['Options'].ParameterType
+        $options = [Activator]::CreateInstance($optionsType)
+        $options.Tesseract.Language = 'pol'
+
+        $legacyResult = Get-OfficeImageText `
+            -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') `
+            -Options $options `
+            -TesseractPath $runtime `
+            -NoLanguageDownload `
+            -PassThru
+        $legacyResult.Model | Should -Be 'tessdata:pol'
+
+        $friendlyResult = Get-OfficeImageText `
+            -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') `
+            -Options $options `
+            -TesseractPath $runtime `
+            -Language English, Polish `
+            -NoLanguageDownload `
+            -PassThru
+        $friendlyResult.Model | Should -Be 'tessdata:eng+pol'
+
+        $rawResult = Get-OfficeImageText `
+            -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') `
+            -Options $options `
+            -TesseractPath $runtime `
+            -TesseractLanguageExpression 'eng+pol' `
+            -NoLanguageDownload `
+            -PassThru
+        $rawResult.Model | Should -Be 'tessdata:eng+pol'
+
+        {
+            Get-OfficeImageText `
+                -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') `
+                -TesseractPath $runtime `
+                -Language English `
+                -TesseractLanguageExpression 'eng+pol' `
+                -NoLanguageDownload
+        } | Should -Throw
     }
 
     It 'writes a searchable PDF whose OCR text is readable' {

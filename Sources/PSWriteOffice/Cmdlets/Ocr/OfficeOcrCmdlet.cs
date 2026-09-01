@@ -11,10 +11,15 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
     [Parameter]
     public OfficeOcrOptions? Options { get; set; }
 
-    /// <summary>Tesseract language expression, such as eng or eng+pol. The default is eng.</summary>
+    /// <summary>Friendly OCR languages. Supply more than one value to recognize multilingual content.</summary>
     [Parameter]
     [ValidateNotNullOrEmpty]
-    public string? Language { get; set; }
+    public OfficeOcrLanguage[]? Language { get; set; }
+
+    /// <summary>Advanced raw Tesseract expression for caller-installed custom trained-data models.</summary>
+    [Parameter]
+    [ValidateNotNullOrEmpty]
+    public string? TesseractLanguageExpression { get; set; }
 
     /// <summary>Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.</summary>
     [Parameter]
@@ -51,6 +56,8 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
 
         var effective = new OfficeOcrOptions
         {
+            Languages = source.Languages,
+            CustomLanguageExpression = source.CustomLanguageExpression,
             OutputConflictPolicy = source.OutputConflictPolicy,
             Tesseract = source.Tesseract.Clone(),
             Pdf = source.Pdf.Clone(),
@@ -65,7 +72,16 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
 
         if (MyInvocation.BoundParameters.ContainsKey(nameof(Language)))
         {
-            effective.Tesseract.Language = Language;
+            effective.Languages = CombineLanguages(Language);
+            effective.CustomLanguageExpression = null;
+            effective.Tesseract.Language = "eng";
+        }
+
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(TesseractLanguageExpression)))
+        {
+            effective.Languages = OfficeOcrLanguage.English;
+            effective.CustomLanguageExpression = TesseractLanguageExpression;
+            effective.Tesseract.Language = "eng";
         }
 
         if (MyInvocation.BoundParameters.ContainsKey(nameof(TesseractPath)))
@@ -84,5 +100,27 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
         }
 
         return effective;
+    }
+
+    private OfficeOcrLanguage CombineLanguages(OfficeOcrLanguage[]? languages)
+    {
+        if (languages == null || languages.Length == 0)
+        {
+            throw new PSArgumentException("Select at least one OCR language.", nameof(Language));
+        }
+        if (MyInvocation.BoundParameters.ContainsKey(nameof(TesseractLanguageExpression)))
+        {
+            throw new PSArgumentException(
+                "Use -Language or the advanced -TesseractLanguageExpression parameter, not both.",
+                nameof(Language));
+        }
+
+        OfficeOcrLanguage combined = 0;
+        foreach (OfficeOcrLanguage language in languages)
+        {
+            combined |= language;
+        }
+        _ = combined.ToTesseractExpression();
+        return combined;
     }
 }

@@ -16,7 +16,7 @@ namespace PSWriteOffice.Cmdlets.Ocr;
 /// <example>
 ///   <summary>Read English and Polish text with recognition evidence.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>Get-OfficeImageText -Path .\Scan.png -Language eng+pol -PassThru</code>
+///   <code>Get-OfficeImageText -Path .\Scan.png -Language English, Polish -PassThru</code>
 ///   <para>Returns the full OCR result, including confidence, word geometry, provider, model, and diagnostics.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeImageText")]

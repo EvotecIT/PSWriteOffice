@@ -3,7 +3,7 @@ $inputPdf = '.\Scanned-Report.pdf'
 $outputPdf = '.\Scanned-Report-Searchable.pdf'
 
 # Returns text directly. Add -PassThru for confidence, geometry, provider, and diagnostics.
-$recognizedText = Get-OfficeImageText -Path $imagePath -Language eng+pol
+$recognizedText = Get-OfficeImageText -Path $imagePath -Language English, Polish
 $recognizedText
 
 # Tesseract is discovered automatically. Missing curated English or Polish data is
@@ -11,6 +11,6 @@ $recognizedText
 ConvertTo-OfficePdfSearchable `
     -Path $inputPdf `
     -OutputPath $outputPdf `
-    -Language eng+pol
+    -Language English, Polish
 
 Get-OfficePdfText -Path $outputPdf

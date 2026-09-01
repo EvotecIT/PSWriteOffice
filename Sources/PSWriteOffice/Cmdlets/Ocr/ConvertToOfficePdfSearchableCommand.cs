@@ -18,7 +18,7 @@ namespace PSWriteOffice.Cmdlets.Ocr;
 /// <example>
 ///   <summary>Recognize an English and Polish document and inspect the OCR evidence.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Searchable.pdf -Language eng+pol -PassThru</code>
+///   <code>ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Searchable.pdf -Language English, Polish -PassThru</code>
 ///   <para>Returns recognition, filtering, page, provider, and model evidence instead of the output file.</para>
 /// </example>
 [Cmdlet(VerbsData.ConvertTo, "OfficePdfSearchable", SupportsShouldProcess = true)]

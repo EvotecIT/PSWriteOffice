@@ -11,7 +11,7 @@ Creates a searchable PDF by adding invisible text from a discovered local OCR ru
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfSearchable [-Path] <string> [-OutputPath] <string> [-Force] [-PassThru] [-RenderDpi <Double>] [-MinimumConfidence <Double>] [-Options <OfficeOcrOptions>] [-Language <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfSearchable [-Path] <string> [-OutputPath] <string> [-Force] [-PassThru] [-RenderDpi <Double>] [-MinimumConfidence <Double>] [-Options <OfficeOcrOptions>] [-Language <OfficeOcrLanguage[]>] [-TesseractLanguageExpression <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,7 +28,7 @@ Preserves visible page content and writes geometry-aligned invisible English tex
 
 ### EXAMPLE 2
 ```powershell
-PS> ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Searchable.pdf -Language eng+pol -PassThru
+PS> ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Searchable.pdf -Language English, Polish -PassThru
 ```
 
 Returns recognition, filtering, page, provider, and model evidence instead of the output file.
@@ -52,13 +52,13 @@ Accept wildcard characters: False
 ```
 
 ### -Language
-Tesseract language expression, such as eng or eng+pol. The default is eng.
+Friendly OCR languages. Supply more than one value to recognize multilingual content.
 
 ```yaml
-Type: String
+Type: OfficeOcrLanguage[]
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values:
+Possible values: English, Polish
 
 Required: False
 Position: named
@@ -181,6 +181,22 @@ Accept wildcard characters: False
 
 ### -TessdataDirectory
 Explicit directory containing Tesseract trained-data files.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TesseractLanguageExpression
+Advanced raw Tesseract expression for caller-installed custom trained-data models.
 
 ```yaml
 Type: String

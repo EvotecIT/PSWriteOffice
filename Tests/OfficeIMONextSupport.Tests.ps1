@@ -39,6 +39,7 @@ Describe 'Expanded OfficeIMO support' {
         (Get-Command New-OfficeDocumentReader).Parameters.Keys | Should -Contain 'ProcessOcrOptions'
         (Get-Command Invoke-OfficePdfOcrMerge).Parameters.Keys | Should -Contain 'Provider'
         (Get-Command Get-OfficeImageText).Parameters.Keys | Should -Contain 'Language'
+        (Get-Command Get-OfficeImageText).Parameters.Keys | Should -Contain 'TesseractLanguageExpression'
         (Get-Command Get-OfficeImageText).Parameters.Keys | Should -Contain 'NoLanguageDownload'
         (Get-Command ConvertTo-OfficePdfSearchable).Parameters.Keys | Should -Contain 'RenderDpi'
         (Get-Command ConvertTo-OfficePdfSearchable).Parameters.Keys | Should -Contain 'MinimumConfidence'

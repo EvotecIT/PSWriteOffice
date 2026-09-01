@@ -4,6 +4,7 @@ using System.Linq;
 using System.Management.Automation;
 using OfficeIMO.Reader;
 using OfficeIMO.Reader.All;
+using OfficeIMO.Reader.Ocr;
 using OfficeIMO.Reader.Ocr.Process;
 using OfficeIMO.Reader.Ocr.Tesseract;
 using PSWriteOffice.Services.Reader;
@@ -14,7 +15,7 @@ namespace PSWriteOffice.Cmdlets.Reader;
 /// <example>
 ///   <summary>Create a reader with OCR and a resilient processor policy.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$reader = New-OfficeDocumentReader -TesseractLanguage 'eng+pol' -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic</code>
+///   <code>$reader = New-OfficeDocumentReader -OcrLanguage English, Polish -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic</code>
 ///   <para>The returned reader can be supplied to every PSWriteOffice Reader command.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeDocumentReader")]
@@ -53,7 +54,12 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
     [Parameter]
     public string? TesseractExecutablePath { get; set; }
 
-    /// <summary>Tesseract language expression such as eng or eng+pol.</summary>
+    /// <summary>Friendly OCR languages used by the built-in Tesseract adapter.</summary>
+    [Parameter]
+    [ValidateNotNullOrEmpty]
+    public OfficeOcrLanguage[]? OcrLanguage { get; set; }
+
+    /// <summary>Advanced raw Tesseract expression for caller-installed custom trained-data models.</summary>
     [Parameter]
     public string? TesseractLanguage { get; set; }
 
@@ -100,7 +106,8 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
         {
             var tesseract = new TesseractOcrEngineOptions();
             if (!string.IsNullOrWhiteSpace(TesseractExecutablePath)) tesseract.ExecutablePath = TesseractExecutablePath!;
-            if (!string.IsNullOrWhiteSpace(TesseractLanguage)) tesseract.Language = TesseractLanguage!;
+            if (OcrLanguage is { Length: > 0 }) tesseract.Language = CombineLanguages(OcrLanguage).ToTesseractExpression();
+            else if (!string.IsNullOrWhiteSpace(TesseractLanguage)) tesseract.Language = TesseractLanguage!;
             if (!string.IsNullOrWhiteSpace(TesseractDataPath)) tesseract.TessdataDirectory = TesseractDataPath!;
             if (TesseractDpi.HasValue) tesseract.Dpi = TesseractDpi.Value;
             if (TesseractTimeoutSeconds.HasValue) tesseract.Timeout = TimeSpan.FromSeconds(TesseractTimeoutSeconds.Value);
@@ -129,6 +136,7 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
     {
         return UseTesseract.IsPresent ||
                !string.IsNullOrWhiteSpace(TesseractExecutablePath) ||
+               OcrLanguage is { Length: > 0 } ||
                !string.IsNullOrWhiteSpace(TesseractLanguage) ||
                !string.IsNullOrWhiteSpace(TesseractDataPath) ||
                TesseractDpi.HasValue ||
@@ -151,5 +159,18 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
             throw new PSArgumentException(
                 "Use PowerShell Tesseract parameters or the advanced -TesseractOptions object, not both.");
         }
+        if (OcrLanguage is { Length: > 0 } && !string.IsNullOrWhiteSpace(TesseractLanguage))
+        {
+            throw new PSArgumentException(
+                "Use -OcrLanguage or the advanced -TesseractLanguage parameter, not both.");
+        }
+    }
+
+    private static OfficeOcrLanguage CombineLanguages(IEnumerable<OfficeOcrLanguage> languages)
+    {
+        OfficeOcrLanguage combined = 0;
+        foreach (OfficeOcrLanguage language in languages) combined |= language;
+        _ = combined.ToTesseractExpression();
+        return combined;
     }
 }
