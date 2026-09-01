@@ -78,7 +78,7 @@ public sealed class ConvertToOfficePdfOptimizedCommand : PSCmdlet
         };
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfOptimizationActionResult result = PdfDocument.Open(
+        PdfOptimizationActionResult result = PdfDocument.Load(
             inputPath,
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent)).Optimization.Apply(options);
         result.ToDocument().Save(outputPath).RequireSuccess();

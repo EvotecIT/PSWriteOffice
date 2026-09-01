@@ -559,6 +559,9 @@ Applies explicit or text-matched PDF redactions and writes a new PDF.
 ### [ConvertTo-OfficePdfSanitized](ConvertTo-OfficePdfSanitized.md)
 Removes or quarantines active PDF content and embedded payloads with post-save proof.
 
+### [ConvertTo-OfficePdfSearchable](ConvertTo-OfficePdfSearchable.md)
+Creates a searchable PDF by adding invisible text from a discovered local OCR runtime.
+
 ### [ConvertTo-OfficePdfTextRun](ConvertTo-OfficePdfTextRun.md)
 Converts reusable Office text run specifications to native PDF text runs.
 
@@ -804,6 +807,9 @@ Gets worksheet view settings such as frozen panes and gridline visibility.
 
 ### [Get-OfficeExcelWriteReservation](Get-OfficeExcelWriteReservation.md)
 Gets workbook write-reservation metadata.
+
+### [Get-OfficeImageText](Get-OfficeImageText.md)
+Recognizes text in an image with automatic local OCR runtime discovery.
 
 ### [Get-OfficeLatex](Get-OfficeLatex.md)
 Parses a LaTeX file or source string into OfficeIMO's native document model.

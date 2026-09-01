@@ -19,7 +19,7 @@ Describe 'PDF cmdlets' {
         (Get-OfficePdfPreflight -Path $encryptedPath).CanRead | Should -BeFalse
         (Get-OfficePdfPreflight -Path $encryptedPath -Password 'open').CanRead | Should -BeTrue
         Get-OfficePdfText -Path $encryptedPath -Password 'open' | Should -Match 'Secret PDF Text'
-        (Get-OfficePdf -Path $encryptedPath -Password 'open').Read.Text() | Should -Match 'Secret PDF Text'
+        (Get-OfficePdf -Path $encryptedPath -Password 'open').Read().Text | Should -Match 'Secret PDF Text'
         ConvertTo-OfficePdfMarkdown -Path $encryptedPath -Password 'open' | Should -Match 'Secret PDF Text'
     }
 

@@ -38,7 +38,7 @@ public sealed class GetOfficePdfFormFieldCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var fields = PdfDocument
-            .Open(
+            .Load(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Inspect()

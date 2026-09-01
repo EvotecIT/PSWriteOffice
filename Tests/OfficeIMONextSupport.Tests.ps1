@@ -21,6 +21,7 @@ Describe 'Expanded OfficeIMO support' {
             'ConvertTo-OfficePdfWord', 'ConvertTo-OfficePdfExcel', 'ConvertTo-OfficePdfPowerPoint',
             'Export-OfficePdfXfdf', 'Import-OfficePdfXfdf', 'Compare-OfficePdfVisual',
             'Get-OfficePdfInteractionMap', 'Export-OfficePdfLayoutOverlay', 'Invoke-OfficePdfOcrMerge',
+            'Get-OfficeImageText', 'ConvertTo-OfficePdfSearchable',
             'Test-OfficePdfRewrite', 'New-OfficeOpenDocument', 'Get-OfficeOpenDocument',
             'Save-OfficeOpenDocument', 'ConvertTo-OfficeOpenDocument', 'ConvertFrom-OfficeOpenDocument',
             'Get-OfficeEmail', 'Save-OfficeEmail', 'Get-OfficeEmailMailbox', 'Save-OfficeEmailMailbox',
@@ -37,6 +38,10 @@ Describe 'Expanded OfficeIMO support' {
         (Get-Command New-OfficeDocumentReader).Parameters.Keys | Should -Contain 'TesseractOptions'
         (Get-Command New-OfficeDocumentReader).Parameters.Keys | Should -Contain 'ProcessOcrOptions'
         (Get-Command Invoke-OfficePdfOcrMerge).Parameters.Keys | Should -Contain 'Provider'
+        (Get-Command Get-OfficeImageText).Parameters.Keys | Should -Contain 'Language'
+        (Get-Command Get-OfficeImageText).Parameters.Keys | Should -Contain 'NoLanguageDownload'
+        (Get-Command ConvertTo-OfficePdfSearchable).Parameters.Keys | Should -Contain 'RenderDpi'
+        (Get-Command ConvertTo-OfficePdfSearchable).Parameters.Keys | Should -Contain 'MinimumConfidence'
         (Get-Command Import-OfficePdfXfdf).Parameters.Keys | Should -Contain 'MaxXfdfBytes'
         (Get-Command Import-OfficePdfXfdf).Parameters.Keys | Should -Contain 'ReadOptions'
         (Get-Command Export-OfficePdfXfdf).Parameters.Keys | Should -Contain 'ReadOptions'
@@ -505,7 +510,7 @@ Describe 'Expanded OfficeIMO support' {
             Should -Throw '*configured limit*'
         Test-Path -LiteralPath $boundedOutput | Should -BeFalse
 
-        $pdfReadOptionsType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Pdf' -TypeName 'OfficeIMO.Pdf.PdfReadOptions' -CommandName 'Compare-OfficePdfVisual'
+        $pdfReadOptionsType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Pdf' -TypeName 'OfficeIMO.Pdf.PdfLoadOptions' -CommandName 'Compare-OfficePdfVisual'
         $differenceReadOptions = [Activator]::CreateInstance($pdfReadOptionsType)
         $differenceReadOptions.Limits.MaxInputBytes = 1
         { Compare-OfficePdfVisual -ReferencePath $pdfPath -DifferencePath $pdfPath -DifferenceReadOptions $differenceReadOptions -ErrorAction Stop } |

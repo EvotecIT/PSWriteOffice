@@ -89,7 +89,7 @@ public sealed class SetOfficePdfFormCommand : PSWriteOffice.Cmdlets.OfficeMutati
                 GenerateAppearanceStreams = !KeepNeedAppearances.IsPresent
             };
             PdfDocument
-                .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
+                .Load(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
                 .Forms.AppendRevision(PdfCommandUtilities.ConvertFieldValues(Field), options)
                 .Save(outputPath)
                 .RequireSuccess();
@@ -97,7 +97,7 @@ public sealed class SetOfficePdfFormCommand : PSWriteOffice.Cmdlets.OfficeMutati
             return;
         }
 
-        var document = PdfDocument.Open(
+        var document = PdfDocument.Load(
             inputPath,
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);

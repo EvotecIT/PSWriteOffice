@@ -100,7 +100,7 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     {
         if (ParameterSetName == ParameterSetPath)
         {
-            var pathDocument = PdfDocument.Open(
+            var pathDocument = PdfDocument.Load(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
             WriteObject(Proof.IsPresent

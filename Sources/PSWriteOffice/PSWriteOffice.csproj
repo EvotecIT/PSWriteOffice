@@ -11,7 +11,7 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <OfficeIMOVersion>3.2.6</OfficeIMOVersion>
+        <OfficeIMOVersion>3.3.0</OfficeIMOVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -68,6 +68,7 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.All\OfficeIMO.Reader.All.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Ocr\OfficeIMO.Reader.Ocr.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Ocr.Process\OfficeIMO.Reader.Ocr.Process.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Ocr.Tesseract\OfficeIMO.Reader.Ocr.Tesseract.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj" />
@@ -112,6 +113,7 @@
         <PackageReference Include="OfficeIMO.CSV" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Word.Html" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Reader.All" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Reader.Ocr" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Reader.Ocr.Process" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Reader.Ocr.Tesseract" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Visio" Version="$(OfficeIMOVersion)" />

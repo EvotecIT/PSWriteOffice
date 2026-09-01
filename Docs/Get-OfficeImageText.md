@@ -4,31 +4,55 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Export-OfficePdfXfdf
+# Get-OfficeImageText
 ## SYNOPSIS
-Exports readable PDF form field values as XFDF.
+Recognizes text in an image with automatic local OCR runtime discovery.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfXfdf [-Path] <string> [[-OutputPath] <string>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Get-OfficeImageText [-Path] <string> [-PassThru] [-Options <OfficeOcrOptions>] [-Language <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Exports readable PDF form field values as XFDF.
+Recognizes text in an image with automatic local OCR runtime discovery.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Export-OfficePdfXfdf -Path 'C:\Path'
+PS> Get-OfficeImageText -Path .\Scan.png
 ```
 
+Returns recognized text and automatically uses an installed Tesseract runtime.
+
+### EXAMPLE 2
+```powershell
+PS> Get-OfficeImageText -Path .\Scan.png -Language eng+pol -PassThru
+```
+
+Returns the full OCR result, including confidence, word geometry, provider, model, and diagnostics.
 
 ## PARAMETERS
 
-### -IgnorePermissionRestrictions
-After successful password authentication, explicitly ignore owner-imposed form-reading restrictions.
+### -Language
+Tesseract language expression, such as eng or eng+pol. The default is eng.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoLanguageDownload
+Do not download checksum-pinned curated language data when a requested language is missing.
 
 ```yaml
 Type: SwitchParameter
@@ -43,43 +67,27 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -OutputPath
-Optional XFDF output path. Without it, the command returns XML.
+### -Options
+Advanced OfficeIMO OCR options. Convenience parameters override matching values.
 
 ```yaml
-Type: String
+Type: OfficeOcrOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
 Required: False
-Position: 1
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -PassThru
-Return the written file.
+Return the complete OCR result instead of recognized text only.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Password
-Password used to authenticate an encrypted PDF.
-
-```yaml
-Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -92,7 +100,23 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-Source PDF path.
+PNG, JPEG, TIFF, BMP, GIF, WebP, or JPEG 2000 image path.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -TessdataDirectory
+Explicit directory containing Tesseract trained-data files.
 
 ```yaml
 Type: String
@@ -100,18 +124,18 @@ Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
-Required: True
-Position: 0
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ReadOptions
-Optional bounded PDF parsing and password settings.
+### -TesseractPath
+Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.
 
 ```yaml
-Type: PdfLoadOptions
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -128,12 +152,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.String`
 
 ## OUTPUTS
 
 - `System.String`
-- `System.IO.FileInfo`
+- `OfficeIMO.Reader.OfficeOcrEngineResult`
 
 ## RELATED LINKS
 

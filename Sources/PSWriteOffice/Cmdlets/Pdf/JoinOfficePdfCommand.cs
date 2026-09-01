@@ -121,7 +121,7 @@ public sealed class JoinOfficePdfCommand : PSCmdlet
 
         var passwords = ResolvePasswords(Path.Length);
         var documents = Path
-            .Select((path, index) => PdfDocument.Open(
+            .Select((path, index) => PdfDocument.Load(
                 PdfCommandUtilities.ResolvePath(this, path),
                 PdfCommandUtilities.CreateReadOptions(passwords[index], IgnorePermissionRestrictions.IsPresent)))
             .ToArray();

@@ -31,7 +31,7 @@ Use the [scenario-driven example library](Examples/README.md) for complete Word,
 | Word | Mature | Creation and editing, comparison and redlines, comments and revision reports, HTML/Markdown/OpenDocument conversion, Google Docs planning/export, and PNG/SVG rendering |
 | Excel | Advanced | Sheets, tables, formulas, validation, charts, pivots, comments, navigation, explicit readers, OpenDocument conversion, Google Sheets planning/export, and PNG/SVG rendering |
 | PowerPoint | Advanced | Slides, layouts, themes, notes, sections, transitions, import/copy, accessibility and preflight inspection, OpenDocument conversion, and PNG/SVG rendering |
-| PDF | Advanced | Composition, forms, sanitization, XFDF, visual comparison, interaction maps, layout overlays, OCR merge, rewrite proof, extraction, editable Word/Excel/PowerPoint reconstruction, compliance inspection, and PNG/SVG rendering |
+| PDF | Advanced | Composition, forms, sanitization, XFDF, visual comparison, interaction maps, layout overlays, searchable-PDF OCR, rewrite proof, extraction, editable Word/Excel/PowerPoint reconstruction, compliance inspection, and PNG/SVG rendering |
 | OpenDocument | Native | Create, load, save, and convert ODT, ODS, and ODP with conversion diagnostics and fail-on-loss controls |
 | Email | Native | Read and write EML, Apple Mail EMLX, MSG, and TNEF; read and write mbox mailboxes with bounded diagnostics |
 | RTF | Solid | Create/read/update `.rtf`, replace text, append paragraphs, edit document properties, convert RTF to Word/HTML/PDF, convert Word/HTML to RTF, and read semantic chunks through Reader |
@@ -175,6 +175,25 @@ $document | Close-OfficeWord
 # Capture a mutation result only when it is useful.
 $slide = Add-OfficePowerPointSlide -Presentation $presentation -PassThru
 ```
+
+### OCR images and scanned PDFs
+
+Install Tesseract once with your operating-system package manager. PSWriteOffice then discovers it automatically, validates the runtime and requested languages, and can download checksum-pinned English or Polish language data when the installed runtime does not provide it.
+
+```powershell
+# Plain text is the default output.
+$text = Get-OfficeImageText -Path .\Scanned-Page.png
+
+# Add invisible, geometry-aligned text without changing the visible scan.
+ConvertTo-OfficePdfSearchable `
+    -Path .\Scanned-Report.pdf `
+    -OutputPath .\Scanned-Report-Searchable.pdf `
+    -Language eng+pol
+
+Get-OfficePdfText -Path .\Scanned-Report-Searchable.pdf
+```
+
+Use `-PassThru` on either OCR command when you need confidence, word geometry, modified pages, provider/model provenance, or diagnostics. Use `-TesseractPath` or `-TessdataDirectory` for an explicitly managed runtime, and `-NoLanguageDownload` when the machine must remain offline. PSWriteOffice does not install native OCR executables or place community native binaries in the module.
 
 ### Word
 

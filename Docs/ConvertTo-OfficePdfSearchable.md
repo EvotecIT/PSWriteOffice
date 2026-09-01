@@ -4,47 +4,39 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Export-OfficePdfLayoutOverlay
+# ConvertTo-OfficePdfSearchable
 ## SYNOPSIS
-Exports PDF word, line, region, and reading-order diagnostics as PNG or SVG.
+Creates a searchable PDF by adding invisible text from a discovered local OCR runtime.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfLayoutOverlay [-Path] <string> [-OutputPath] <string> [-Page <int>] [-Format <OfficeImageExportFormat>] [-Scale <double>] [-Options <PdfLayoutDebugOverlayOptions>] [-LayoutOptions <PdfTextLayoutOptions>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfSearchable [-Path] <string> [-OutputPath] <string> [-Force] [-PassThru] [-RenderDpi <Double>] [-MinimumConfidence <Double>] [-Options <OfficeOcrOptions>] [-Language <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Exports PDF word, line, region, and reading-order diagnostics as PNG or SVG.
+Creates a searchable PDF by adding invisible text from a discovered local OCR runtime.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> $result = Export-OfficePdfLayoutOverlay -Path .\Report.pdf -OutputPath .\Report-layout.svg -Page 1 -Format Svg -PassThru
+PS> ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Scan-Searchable.pdf
 ```
 
+Preserves visible page content and writes geometry-aligned invisible English text.
+
+### EXAMPLE 2
+```powershell
+PS> ConvertTo-OfficePdfSearchable -Path .\Scan.pdf -OutputPath .\Searchable.pdf -Language eng+pol -PassThru
+```
+
+Returns recognition, filtering, page, provider, and model evidence instead of the output file.
 
 ## PARAMETERS
 
-### -Format
-Output image format. Layout overlays support only PNG and SVG.
-
-```yaml
-Type: OfficeImageExportFormat
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: Png, Svg
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -IgnorePermissionRestrictions
-After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
+### -Force
+Overwrite an existing destination file.
 
 ```yaml
 Type: SwitchParameter
@@ -59,11 +51,43 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -LayoutOptions
-Optional text layout settings.
+### -Language
+Tesseract language expression, such as eng or eng+pol. The default is eng.
 
 ```yaml
-Type: PdfTextLayoutOptions
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MinimumConfidence
+Minimum normalized confidence accepted for searchable text.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoLanguageDownload
+Do not download checksum-pinned curated language data when a requested language is missing.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -76,10 +100,10 @@ Accept wildcard characters: False
 ```
 
 ### -Options
-Optional overlay elements, colors, and limits.
+Advanced OfficeIMO OCR options. Convenience parameters override matching values.
 
 ```yaml
-Type: PdfLayoutDebugOverlayOptions
+Type: OfficeOcrOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -92,7 +116,7 @@ Accept wildcard characters: False
 ```
 
 ### -OutputPath
-Destination PNG or SVG path.
+Destination PDF path.
 
 ```yaml
 Type: String
@@ -107,43 +131,11 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Page
-One-based page number.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -PassThru
-Emit the structured image export result.
+Return the complete searchable-PDF OCR result instead of the output file.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Password
-Password used to authenticate an encrypted PDF.
-
-```yaml
-Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -161,21 +153,21 @@ Source PDF path.
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: FilePath
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -ReadOptions
-Optional bounded PDF parsing settings.
+### -RenderDpi
+PDF page render resolution used for recognition.
 
 ```yaml
-Type: PdfLoadOptions
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -187,11 +179,27 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Scale
-Output scale.
+### -TessdataDirectory
+Explicit directory containing Tesseract trained-data files.
 
 ```yaml
-Type: Double
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TesseractPath
+Explicit Tesseract executable path. By default OfficeIMO securely discovers an installed runtime.
+
+```yaml
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -208,11 +216,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.String`
 
 ## OUTPUTS
 
-- `OfficeIMO.Drawing.OfficeImageExportResult`
+- `System.IO.FileInfo`
+- `OfficeIMO.Pdf.PdfSearchableOcrResult`
 
 ## RELATED LINKS
 

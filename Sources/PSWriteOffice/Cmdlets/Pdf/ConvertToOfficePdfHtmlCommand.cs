@@ -151,11 +151,9 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
         return options;
     }
 
-    private PdfLogicalDocument LoadLogicalDocument(string path)
+    private PdfDocumentReadResult LoadLogicalDocument(string path)
     {
         var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
-        return readOptions == null
-            ? PdfLogicalDocument.Load(path)
-            : PdfLogicalDocument.From(PdfReadDocument.Open(path, readOptions));
+        return PdfCommandUtilities.LoadDocument(path, readOptions).Read();
     }
 }

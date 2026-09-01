@@ -189,7 +189,7 @@ External validator families whose result should be attached to the proof report.
 Type: PdfExternalValidatorKind[]
 Parameter Sets: Document, Path
 Aliases: None
-Possible values: VeraPdf, PdfUaValidator, Mustang, Custom
+Possible values: VeraPdf, PdfUaValidator, Mustang, Custom, PdfXValidator
 
 Required: False
 Position: named
@@ -285,9 +285,9 @@ Compliance profile to assess. When omitted, the document's configured profile is
 Type: PdfComplianceProfile
 Parameter Sets: Document, Path
 Aliases: None
-Possible values: None, PdfA2B, PdfA2U, PdfA2A, PdfA3B, PdfA3U, PdfA3A, PdfUa1, FacturX, Zugferd, PdfA4, PdfA4E, PdfA4F, PdfUa2
+Possible values: None, PdfA2B, PdfA2U, PdfA2A, PdfA3B, PdfA3U, PdfA3A, PdfUa1, FacturX, Zugferd, PdfA4, PdfA4E, PdfA4F, PdfUa2, PdfX1A2003, PdfX4
 
-Required: True
+Required: False
 Position: named
 Default value: None
 Accept pipeline input: False

@@ -24,7 +24,7 @@ public sealed class InvokeOfficePdfOcrMergeCommand : AsyncPSCmdlet
 
     /// <summary>Optional bounded PDF parsing settings.</summary>
     [Parameter]
-    public PdfReadOptions? ReadOptions { get; set; }
+    public PdfLoadOptions? ReadOptions { get; set; }
 
     /// <summary>Password used to authenticate an encrypted PDF.</summary>
     [Parameter]
@@ -42,6 +42,6 @@ public sealed class InvokeOfficePdfOcrMergeCommand : AsyncPSCmdlet
             Password,
             IgnorePermissionRestrictions.IsPresent);
         var document = PdfCommandUtilities.LoadDocument(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), readOptions);
-        WriteObject(await document.Read.OcrAsync(Provider, Options, readOptions, CancelToken).ConfigureAwait(false));
+        WriteObject(await document.Ocr.ReadAsync(Provider, Options, CancelToken).ConfigureAwait(false));
     }
 }
