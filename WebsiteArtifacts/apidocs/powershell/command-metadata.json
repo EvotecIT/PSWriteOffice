@@ -1785,6 +1785,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ConvertToOfficePdfSanitizedCommand.cs#L17"
     },
     {
+      "name": "ConvertTo-OfficePdfSearchable",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Ocr/ConvertToOfficePdfSearchableCommand.cs",
+      "sourceLine": 27,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Ocr/ConvertToOfficePdfSearchableCommand.cs#L27"
+    },
+    {
       "name": "ConvertTo-OfficePdfTextRun",
       "kind": "Cmdlet",
       "aliases": [
@@ -2523,6 +2531,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelWriteReservationCommand.cs",
       "sourceLine": 17,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Excel/GetOfficeExcelWriteReservationCommand.cs#L17"
+    },
+    {
+      "name": "Get-OfficeImageText",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Ocr/GetOfficeImageTextCommand.cs",
+      "sourceLine": 25,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Ocr/GetOfficeImageTextCommand.cs#L25"
     },
     {
       "name": "Get-OfficeLatex",
@@ -3303,8 +3319,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Reader/NewOfficeDocumentReaderCommand.cs",
-      "sourceLine": 22,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Reader/NewOfficeDocumentReaderCommand.cs#L22"
+      "sourceLine": 23,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Reader/NewOfficeDocumentReaderCommand.cs#L23"
     },
     {
       "name": "New-OfficeEmailMailboxReaderOptions",
@@ -3757,6 +3773,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/PublishOfficeConfluencePageCommand.cs",
       "sourceLine": 25,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/PublishOfficeConfluencePageCommand.cs#L25"
+    },
+    {
+      "name": "Read-OfficePdf",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ReadOfficePdfCommand.cs",
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ReadOfficePdfCommand.cs#L20"
     },
     {
       "name": "Remove-OfficeConfluencePage",

@@ -36,7 +36,7 @@ PSWriteOffice is the PowerShell surface for OfficeIMO. Use these guides to choos
   - [Merge and split PDF pages](/docs/pswriteoffice/pdf-merge-split-pages/)
   - [Position PDF text and graphics](/docs/pswriteoffice/pdf-positioned-content/)
   - [Redact, sanitize, and optimize](/docs/pswriteoffice/pdf-redact-sanitize/)
-- [Reader and extraction](/docs/pswriteoffice/reader/)
+- [Reader, extraction, and OCR](/docs/pswriteoffice/reader/)
   - [Search a mixed document corpus](/docs/pswriteoffice/reader-search-corpus/)
   - [Extract chunks, tables, and assets](/docs/pswriteoffice/reader-chunks-tables/)
 - [Confluence Cloud publishing](/docs/pswriteoffice/confluence/)

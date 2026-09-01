@@ -12,11 +12,11 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | --- | ---: | --- |
 | Excel | 162 | [Excel automation](/docs/pswriteoffice/excel/) |
 | Word | 97 | [Word automation](/docs/pswriteoffice/word/) |
-| PDF | 91 | [PDF automation](/docs/pswriteoffice/pdf/) |
+| PDF | 93 | [PDF automation](/docs/pswriteoffice/pdf/) |
 | PowerPoint | 61 | [PowerPoint automation](/docs/pswriteoffice/powerpoint/) |
 | Markdown | 26 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Visio | 24 | [Visio diagrams](/docs/pswriteoffice/visio/) |
-| Reader and extraction | 14 | [Reader and extraction](/docs/pswriteoffice/reader/) |
+| Reader, extraction, and OCR | 15 | [Reader, extraction, and OCR](/docs/pswriteoffice/reader/) |
 | Confluence Cloud | 7 | [Confluence Cloud publishing](/docs/pswriteoffice/confluence/) |
 | RTF | 6 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | CSV | 5 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |

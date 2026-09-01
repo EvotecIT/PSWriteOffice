@@ -74749,6 +74749,32 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Arabic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChineseSimplified</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChineseTraditional</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Czech</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Danish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dutch</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Finnish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">French</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">German</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Greek</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hebrew</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hindi</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hungarian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Italian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Japanese</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Korean</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Norwegian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Portuguese</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Romanian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Russian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Slovak</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Spanish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Swedish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Turkish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ukrainian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>OfficeOcrLanguage[]</maml:name>
@@ -74900,6 +74926,32 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Arabic</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChineseSimplified</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChineseTraditional</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Czech</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Danish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dutch</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Finnish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">French</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">German</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Greek</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hebrew</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hindi</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hungarian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Italian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Japanese</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Korean</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Norwegian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Portuguese</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Romanian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Russian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Slovak</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Spanish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Swedish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Turkish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ukrainian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>OfficeOcrLanguage[]</maml:name>
@@ -109700,6 +109752,32 @@ extraction, hashing, and chunk shaping.</maml:para>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Arabic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChineseSimplified</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChineseTraditional</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Czech</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Danish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dutch</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Finnish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">French</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">German</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Greek</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hebrew</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hindi</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hungarian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Italian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Japanese</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Korean</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Norwegian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Portuguese</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Romanian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Russian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Slovak</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Spanish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Swedish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Turkish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ukrainian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>OfficeOcrLanguage[]</maml:name>
@@ -109803,6 +109881,32 @@ extraction, hashing, and chunk shaping.</maml:para>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Arabic</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChineseSimplified</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChineseTraditional</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Czech</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Danish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dutch</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Finnish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">French</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">German</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Greek</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hebrew</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hindi</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hungarian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Italian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Japanese</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Korean</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Norwegian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Portuguese</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Romanian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Russian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Slovak</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Spanish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Swedish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Turkish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ukrainian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>OfficeOcrLanguage[]</maml:name>
@@ -137678,6 +137782,32 @@ This does not discover, bypass, or crack a missing password.</maml:para>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Arabic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChineseSimplified</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ChineseTraditional</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Czech</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Danish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Dutch</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Finnish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">French</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">German</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Greek</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hebrew</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hindi</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Hungarian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Italian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Japanese</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Korean</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Norwegian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Portuguese</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Romanian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Russian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Slovak</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Spanish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Swedish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Turkish</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Ukrainian</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
             <maml:name>OfficeOcrLanguage[]</maml:name>
@@ -137822,6 +137952,32 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Arabic</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChineseSimplified</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ChineseTraditional</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Czech</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Danish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Dutch</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Finnish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">French</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">German</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Greek</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hebrew</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hindi</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Hungarian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Italian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Japanese</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Korean</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Norwegian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Portuguese</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Romanian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Russian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Slovak</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Spanish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Swedish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Turkish</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Ukrainian</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
           <maml:name>OfficeOcrLanguage[]</maml:name>
@@ -159892,6 +160048,286 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <dev:code>Publish-OfficeConfluencePage -Session $session -PageId 123 -Title 'Daily status' -VersionNumber 8 -Content $markdown -VersionMessage 'automation refresh'</dev:code>
         <dev:remarks>
           <maml:para>The version number must be the next Confluence page version.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Read-OfficePdf</command:name>
+      <command:verb>Read</command:verb>
+      <command:noun>OfficePdf</command:noun>
+      <maml:description>
+        <maml:para>Reads a PDF into OfficeIMO.Pdf's canonical structured document model.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Reads a PDF into OfficeIMO.Pdf's canonical structured document model.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="Path">
+        <maml:name>Read-OfficePdf</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IgnorePermissionRestrictions</maml:name>
+          <maml:description>
+            <maml:para>After successful password authentication, explicitly ignore owner-imposed usage restrictions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Advanced structured-read settings. Friendly parameters override the corresponding setting when explicitly supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfReadOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PageRange</maml:name>
+          <maml:description>
+            <maml:para>Optional page ranges such as 1-3,5.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password used to open a Standard password-encrypted PDF.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>PDF file path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Profile</maml:name>
+          <maml:description>
+            <maml:para>Semantic reconstruction profile. Structured is the default; Fast omits optional document-wide enrichment.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfReadProfile</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Fast</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Structured</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>PdfReadProfile</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Document">
+        <maml:name>Read-OfficePdf</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>Document</maml:name>
+          <maml:description>
+            <maml:para>An existing OfficeIMO.Pdf document, such as output from Get-OfficePdf.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfDocument</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Advanced structured-read settings. Friendly parameters override the corresponding setting when explicitly supplied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfReadOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PageRange</maml:name>
+          <maml:description>
+            <maml:para>Optional page ranges such as 1-3,5.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Profile</maml:name>
+          <maml:description>
+            <maml:para>Semantic reconstruction profile. Structured is the default; Fast omits optional document-wide enrichment.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfReadProfile</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Fast</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Structured</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>PdfReadProfile</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <maml:name>Document</maml:name>
+        <maml:description>
+          <maml:para>An existing OfficeIMO.Pdf document, such as output from Get-OfficePdf.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">PdfDocument</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfDocument</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IgnorePermissionRestrictions</maml:name>
+        <maml:description>
+          <maml:para>After successful password authentication, explicitly ignore owner-imposed usage restrictions.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Advanced structured-read settings. Friendly parameters override the corresponding setting when explicitly supplied.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfReadOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfReadOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PageRange</maml:name>
+        <maml:description>
+          <maml:para>Optional page ranges such as 1-3,5.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Password</maml:name>
+        <maml:description>
+          <maml:para>Password used to open a Standard password-encrypted PDF.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>PDF file path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Profile</maml:name>
+        <maml:description>
+          <maml:para>Semantic reconstruction profile. Structured is the default; Fast omits optional document-wide enrichment.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfReadProfile</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Fast</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Structured</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>PdfReadProfile</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>OfficeIMO.Pdf.PdfDocument</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Pdf.PdfDocumentReadResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Read paragraphs and tables from a PDF.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$logical = Read-OfficePdf -Path .\Examples\Documents\Report.pdf -Profile Structured&#xD;
+            foreach ($page in $logical.Pages) {&#xD;
+                $page.Paragraphs | ForEach-Object { $_.Text }&#xD;
+                $page.Tables | Select-Object @{ Name = 'Page'; Expression = { $page.PageNumber } }, @{ Name = 'Rows'; Expression = { $_.Rows.Count } }&#xD;
+            }</dev:code>
+        <dev:remarks>
+          <maml:para>Returns the canonical OfficeIMO.Pdf result, including typed pages, paragraphs, tables, images, and diagnostics.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

@@ -1,10 +1,10 @@
 ---
-title: "Reader and Document Extraction"
-description: "Detect formats and extract normalized documents, chunks, hierarchy, tables, visuals, assets, and ingest results. Includes examples and cmdlet links."
+title: "Reader, Document Extraction, and OCR"
+description: "Detect formats and extract normalized documents, chunks, hierarchy, tables, visuals, assets, OCR text, and ingest results. Includes examples and cmdlet links."
 layout: docs
 ---
 
-Reader is the cross-format path for search, review, ingestion, migration, and AI preparation. Its 13 exported commands expose the normalized OfficeIMO.Reader model without forcing the caller to switch on every native document type.
+Reader is the cross-format path for search, review, ingestion, migration, OCR, and AI preparation. Its 15 exported commands expose the normalized OfficeIMO.Reader model and the easy local image OCR entry point without forcing the caller to switch on every native document type.
 
 ## What Reader returns
 
@@ -17,6 +17,7 @@ Reader is the cross-format path for search, review, ingestion, migration, and AI
 - `Get-OfficeDocumentTable`, `Get-OfficeDocumentVisual`, and `Get-OfficeDocumentAsset` return non-text material explicitly.
 - `Get-OfficeDocumentBatch` and `Get-OfficeDocumentIngest` support pipeline-scale processing.
 - `Search-OfficeDocument` searches the normalized result.
+- `Get-OfficeImageText` performs local image OCR and can return either plain text or the canonical typed OCR result.
 
 ## Choose Reader versus a native family
 

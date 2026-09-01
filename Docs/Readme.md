@@ -1225,6 +1225,9 @@ Protects a Word document with a password.
 ### [Publish-OfficeConfluencePage](Publish-OfficeConfluencePage.md)
 Plans, creates, or updates a Confluence Cloud page.
 
+### [Read-OfficePdf](Read-OfficePdf.md)
+Reads a PDF into OfficeIMO.Pdf's canonical structured document model.
+
 ### [Remove-OfficeConfluencePage](Remove-OfficeConfluencePage.md)
 Plans or deletes a Confluence Cloud page.
 

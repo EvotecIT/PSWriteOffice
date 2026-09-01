@@ -51,10 +51,10 @@ $familyDefinitions = @(
         match = { param($name) $name -match 'OfficePdf|OfficeDocumentPdf' }
     }
     [ordered]@{
-        id = 'reader'; title = 'Reader and extraction'; description = 'Detect formats and extract normalized documents, chunks, tables, visuals, assets, and ingest results.'
+        id = 'reader'; title = 'Reader, extraction, and OCR'; description = 'Detect formats and extract normalized documents, chunks, tables, visuals, assets, OCR text, and ingest results.'
         docs = 'reader'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Reader'
         samples = @('New-OfficeDocumentReader', 'Get-OfficeDocumentChunk', 'Get-OfficeDocumentTable', 'Search-OfficeDocument')
-        match = { param($name) ($name -match 'OfficeDocument' -and $name -notin 'Get-OfficeDocumentPageMarkdown', 'Export-OfficeDocumentPdf') -or $name -match 'OfficeReader' }
+        match = { param($name) ($name -match 'OfficeDocument' -and $name -notin 'Get-OfficeDocumentPageMarkdown', 'Export-OfficeDocumentPdf') -or $name -match 'OfficeReader|OfficeImageText' }
     }
     [ordered]@{
         id = 'confluence'; title = 'Confluence Cloud'; description = 'Plan and publish pages, preserve managed sections, and transfer attachments through OfficeIMO.Confluence.'

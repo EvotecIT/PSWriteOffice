@@ -58,7 +58,7 @@ Friendly OCR languages. Supply more than one value to recognize multilingual con
 Type: OfficeOcrLanguage[]
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: English, Polish
+Possible values: English, Polish, Arabic, ChineseSimplified, ChineseTraditional, Czech, Danish, Dutch, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Italian, Japanese, Korean, Norwegian, Portuguese, Romanian, Russian, Slovak, Spanish, Swedish, Turkish, Ukrainian, Vietnamese
 
 Required: False
 Position: named
