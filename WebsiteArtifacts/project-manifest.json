@@ -19,7 +19,7 @@
   },
   "artifacts": {
     "api": "WebsiteArtifacts/apidocs",
-    "docs": "Website/content/project-docs/docs",
+    "docs": "Website/content/project-docs",
     "examples": "Website/content/examples",
     "documentationCatalog": "WebsiteArtifacts/documentation/command-catalog.json"
   }
