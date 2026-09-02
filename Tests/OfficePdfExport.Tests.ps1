@@ -110,9 +110,10 @@ Describe 'Office document PDF exports' {
             -PdfConversionReportVariable markdownPdfReport
 
         Test-Path -LiteralPath $pdf | Should -BeTrue
-        $markdownPdfWarnings | Should -Not -BeNull
+        Get-Variable -Name markdownPdfWarnings -ErrorAction Stop | Should -Not -BeNull
+        @($markdownPdfWarnings).Count | Should -Be 0
         $markdownPdfReport | Should -Not -BeNull
-        $markdownPdfReport.Warnings | Should -Not -BeNull
+        @($markdownPdfReport.Warnings).Count | Should -Be 0
     }
 
     It 'resolves relative Markdown images from the source file directory' {
