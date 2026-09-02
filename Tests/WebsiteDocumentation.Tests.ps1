@@ -113,7 +113,9 @@ Describe 'PSWriteOffice website documentation catalog' {
         $project.surfaces.docs | Should -BeTrue
         $project.surfaces.examples | Should -BeTrue
         $project.surfaces.apiPowerShell | Should -BeTrue
+        $project.artifacts.docs | Should -Be 'Website/content/project-docs'
         Test-Path -LiteralPath (Join-Path $script:repoRoot $project.artifacts.docs) | Should -BeTrue
+        Test-Path -LiteralPath (Join-Path $script:repoRoot $project.artifacts.docs 'docs\_index.md') | Should -BeTrue
         Test-Path -LiteralPath (Join-Path $script:repoRoot $project.artifacts.examples) | Should -BeTrue
         Test-Path -LiteralPath (Join-Path $script:repoRoot $project.artifacts.documentationCatalog) | Should -BeTrue
     }
