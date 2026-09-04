@@ -3423,9 +3423,10 @@ Describe 'Excel DSL surface' {
         $worksheetXml = Read-XlsxEntryText -Path $path -Entry 'xl/worksheets/sheet1.xml'
         $worksheetXml | Should -Match 't="inlineStr"'
         $worksheetXml | Should -Match '<(?:\w+:)?rPr>'
-        $worksheetXml | Should -Match '<(?:\w+:)?b\s*/?>'
-        $worksheetXml | Should -Match '<(?:\w+:)?i\s*/?>'
-        $worksheetXml | Should -Match '<(?:\w+:)?u\s*/?>'
+        [xml] $worksheetDocument = $worksheetXml
+        @($worksheetDocument.SelectNodes("//*[local-name()='rPr']/*[local-name()='b' and (not(@val) or @val='1' or @val='true')]")).Count | Should -BeGreaterThan 0
+        @($worksheetDocument.SelectNodes("//*[local-name()='rPr']/*[local-name()='i' and (not(@val) or @val='1' or @val='true')]")).Count | Should -BeGreaterThan 0
+        @($worksheetDocument.SelectNodes("//*[local-name()='rPr']/*[local-name()='u' and (not(@val) or @val='single')]")).Count | Should -BeGreaterThan 0
         $worksheetXml | Should -Match 'rgb="FFFF0000"'
     }
 

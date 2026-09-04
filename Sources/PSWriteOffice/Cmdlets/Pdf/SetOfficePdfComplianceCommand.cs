@@ -24,7 +24,7 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>Compatibility parameter. Compliance options must be declared inside New-OfficePdf with OfficeIMO 3.2.</summary>
+    /// <summary>Compatibility parameter. Compliance options must be declared inside New-OfficePdf.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -49,7 +49,7 @@ public sealed class SetOfficePdfComplianceCommand : PSCmdlet
     {
         if (ParameterSetName == ParameterSetDocument)
         {
-            throw new PSNotSupportedException("OfficeIMO 3.2 requires document-wide compliance options before PDF creation. Use PdfCompliance inside New-OfficePdf.");
+            throw new PSNotSupportedException("Document-wide compliance options must be supplied before PDF creation. Use PdfCompliance inside New-OfficePdf.");
         }
 
         PdfCommandUtilities.ConfigureOptions(this, options =>

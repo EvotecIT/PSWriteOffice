@@ -100,7 +100,7 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
     {
         if (ParameterSetName == ParameterSetPath)
         {
-            var pathDocument = PdfDocument.Open(
+            var pathDocument = PdfDocument.Load(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
             WriteObject(Proof.IsPresent
@@ -111,7 +111,7 @@ public sealed class GetOfficePdfComplianceCommand : PSCmdlet
 
         var document = Document ?? throw new PSArgumentNullException(
             nameof(Document),
-            "OfficeIMO 3.2 builds New-OfficePdf content as one composition. Run Get-OfficePdfCompliance on the document returned by New-OfficePdf.");
+            "New-OfficePdf builds content as one composition. Run Get-OfficePdfCompliance on the document returned by New-OfficePdf.");
         var profile = Profile ?? document.AssessCompliance().Profile;
         WriteObject(Proof.IsPresent
             ? AssessProof(document, profile)

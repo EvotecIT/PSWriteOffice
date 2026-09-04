@@ -1,6 +1,7 @@
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
@@ -49,27 +50,34 @@ public sealed class GetOfficePdfImageCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
-        var document = PdfDocument.Open(
+        var document = PdfDocument.Load(
             inputPath,
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
+        var images = string.IsNullOrWhiteSpace(PageRange)
+            ? document.Images.Extract()
+            : document.Images.Extract(PageRange!);
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory!);
             PdfCommandUtilities.EnsureOutputDirectory(outputDirectory);
-            var paths = string.IsNullOrWhiteSpace(PageRange)
-                ? document.Read.SaveImages(outputDirectory, BaseName)
-                : document.Read.SaveImages(outputDirectory, PdfPageSelection.Parse(PageRange!), BaseName);
-            foreach (var path in paths)
+            int savedIndex = 0;
+            foreach (var image in images)
             {
-                WriteObject(new FileInfo(path));
+                if (!image.IsImageFile || string.IsNullOrWhiteSpace(image.FileExtension))
+                {
+                    continue;
+                }
+
+                savedIndex++;
+                string extension = image.FileExtension!.TrimStart('.');
+                string fileName = $"{BaseName}-{savedIndex:D4}.{extension}";
+                string outputPath = AtomicFileWriter.WriteUnique(outputDirectory, fileName, image.Bytes);
+                WriteObject(new FileInfo(outputPath));
             }
 
             return;
         }
 
-        var images = string.IsNullOrWhiteSpace(PageRange)
-            ? document.Read.Images()
-            : document.Read.Images(PageRange!);
         foreach (var image in images)
         {
             WriteObject(image);

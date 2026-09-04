@@ -89,9 +89,7 @@ internal static class PdfCommandUtilities
 
     internal static string GetSafeFileName(string fileName)
     {
-        var invalid = Path.GetInvalidFileNameChars();
-        var safe = new string(fileName.Select(character => invalid.Contains(character) ? '_' : character).ToArray());
-        return string.IsNullOrWhiteSpace(safe) ? "attachment.bin" : safe;
+        return AtomicFileWriter.GetSafeFileName(fileName, "attachment.bin");
     }
 
     internal static string GetUniquePath(string directory, string fileName)
@@ -144,7 +142,7 @@ internal static class PdfCommandUtilities
         if (parameterSetName == documentParameterSet)
         {
             throw new PSNotSupportedException(
-                $"{cmdlet.MyInvocation.InvocationName} defines page composition and cannot update an already-built PdfDocument with OfficeIMO 3.2. Use it inside New-OfficePdf {{ ... }}.");
+                $"{cmdlet.MyInvocation.InvocationName} defines page composition and cannot update an already-built PdfDocument. Use it inside New-OfficePdf {{ ... }}.");
         }
 
         RejectDeferredPassThru(cmdlet);
@@ -190,13 +188,13 @@ internal static class PdfCommandUtilities
             $"{cmdlet.MyInvocation.InvocationName} cannot emit a PdfDocument before New-OfficePdf finishes composition. Remove -PassThru inside the PDF DSL and use the document returned by New-OfficePdf.");
     }
 
-    internal static PdfReadOptions? CreateReadOptions(string? password, bool ignorePermissionRestrictions = false)
+    internal static PdfLoadOptions? CreateReadOptions(string? password, bool ignorePermissionRestrictions = false)
     {
         return CreateReadOptions(null, password, ignorePermissionRestrictions);
     }
 
-    internal static PdfReadOptions? CreateReadOptions(
-        PdfReadOptions? readOptions,
+    internal static PdfLoadOptions? CreateReadOptions(
+        PdfLoadOptions? readOptions,
         string? password,
         bool ignorePermissionRestrictions = false)
     {
@@ -205,25 +203,27 @@ internal static class PdfCommandUtilities
             return null;
         }
 
-        var effective = readOptions ?? PdfReadOptions.Default;
-        return new PdfReadOptions
+        var effective = readOptions ?? PdfLoadOptions.Default;
+        return new PdfLoadOptions
         {
             ParsingMode = effective.ParsingMode,
             Limits = effective.Limits,
+            AesCryptographyProvider = effective.AesCryptographyProvider,
             Password = string.IsNullOrEmpty(password) ? effective.Password : password,
             PermissionPolicy = ignorePermissionRestrictions
                 ? PdfPermissionPolicy.IgnoreRestrictions
                 : effective.PermissionPolicy,
             PreferToUnicode = effective.PreferToUnicode,
             UseWinAnsiFallback = effective.UseWinAnsiFallback,
-            AdjustKerningFromTJ = effective.AdjustKerningFromTJ
+            AdjustKerningFromTJ = effective.AdjustKerningFromTJ,
+            IncludeArtifactText = effective.IncludeArtifactText
         };
     }
 
     /// <summary>Loads a fluent PDF through OfficeIMO's bounded, single-snapshot path API.</summary>
-    internal static PdfDocument LoadDocument(string path, PdfReadOptions? readOptions = null)
+    internal static PdfDocument LoadDocument(string path, PdfLoadOptions? readOptions = null)
     {
-        return PdfDocument.Open(path, readOptions);
+        return PdfDocument.Load(path, readOptions);
     }
 
     internal static ErrorRecord CreateConversionErrorRecord(
@@ -249,7 +249,7 @@ internal static class PdfCommandUtilities
     }
 
     /// <summary>Opens a PDF stream only after enforcing the configured input-byte budget.</summary>
-    internal static FileStream OpenBoundedReadStream(string path, PdfReadOptions? readOptions = null)
+    internal static FileStream OpenBoundedReadStream(string path, PdfLoadOptions? readOptions = null)
     {
         var fullPath = Path.GetFullPath(path);
         var maxInputBytes = (readOptions?.Limits ?? new PdfReadLimits()).MaxInputBytes;

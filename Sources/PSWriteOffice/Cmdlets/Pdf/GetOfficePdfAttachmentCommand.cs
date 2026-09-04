@@ -1,6 +1,7 @@
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
@@ -44,9 +45,9 @@ public sealed class GetOfficePdfAttachmentCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var attachments = PdfDocument.Open(
+        var attachments = PdfDocument.Load(
             PdfCommandUtilities.ResolvePath(this, Path),
-            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent)).Read.Attachments();
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent)).Attachments.Extract();
         string? outputDirectory = null;
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
@@ -70,8 +71,7 @@ public sealed class GetOfficePdfAttachmentCommand : PSCmdlet
             var fileName = !string.IsNullOrWhiteSpace(attachment.UnicodeFileName)
                 ? attachment.UnicodeFileName!
                 : attachment.FileName;
-            var outputPath = PdfCommandUtilities.GetUniquePath(outputDirectory, fileName);
-            File.WriteAllBytes(outputPath, attachment.Bytes);
+            var outputPath = AtomicFileWriter.WriteUnique(outputDirectory, fileName, attachment.Bytes);
             WriteObject(new FileInfo(outputPath));
         }
     }

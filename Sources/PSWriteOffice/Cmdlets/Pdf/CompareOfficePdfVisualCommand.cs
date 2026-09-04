@@ -34,11 +34,11 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
 
     /// <summary>Optional bounded read settings for the expected document.</summary>
     [Parameter]
-    public PdfReadOptions? ReferenceReadOptions { get; set; }
+    public PdfLoadOptions? ReferenceReadOptions { get; set; }
 
     /// <summary>Optional bounded read settings for the actual document.</summary>
     [Parameter]
-    public PdfReadOptions? DifferenceReadOptions { get; set; }
+    public PdfLoadOptions? DifferenceReadOptions { get; set; }
 
     /// <summary>Password used to authenticate the expected PDF.</summary>
     [Parameter]

@@ -8,6 +8,85 @@ BeforeAll {
 }
 
 Describe 'PDF cmdlets' {
+    It 'returns the canonical structured PDF model for paths and document pipelines' {
+        $path = Join-Path $TestDrive 'structured-read.pdf'
+        New-OfficePdf -Path $path {
+            PdfHeading 'Structured PDF report'
+            PdfParagraph 'Canonical paragraph marker'
+            PdfImage -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') -Width 120 -Height 80
+            PdfTable -InputObject @(
+                [pscustomobject]@{ Service = 'Reader'; Status = 'Ready' }
+                [pscustomobject]@{ Service = 'OCR'; Status = 'Ready' }
+            )
+        } | Out-Null
+
+        $logical = Read-OfficePdf -Path $path -Profile Structured
+        $logical.GetType().FullName | Should -Be 'OfficeIMO.Pdf.PdfDocumentReadResult'
+        @($logical.Pages).Count | Should -BeGreaterThan 0
+        $logical.Text | Should -Match 'Canonical paragraph marker'
+        @($logical.Tables).Count | Should -BeGreaterThan 0
+        @($logical.Tables.Rows).Count | Should -BeGreaterThan 0
+        @($logical.Images).Count | Should -BeGreaterThan 0
+
+        $images = @(Get-OfficePdfImage -Path $path)
+        $images.Count | Should -BeGreaterThan 0
+        $images[0].GetType().FullName | Should -Be 'OfficeIMO.Pdf.PdfExtractedImage'
+
+        $fromPipeline = Get-OfficePdf -Path $path | Read-OfficePdf -PageRange '1'
+        $fromPipeline.GetType().FullName | Should -Be 'OfficeIMO.Pdf.PdfDocumentReadResult'
+        @($fromPipeline.Pages).Count | Should -Be 1
+        $fromPipeline.Text | Should -Match 'Canonical paragraph marker'
+    }
+
+    It 'extracts images without replacing an existing destination' {
+        $path = Join-Path $TestDrive 'image-extraction-source.pdf'
+        New-OfficePdf -Path $path {
+            PdfImage -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') -Width 120 -Height 80
+        } | Out-Null
+
+        $outputDirectory = Join-Path $TestDrive 'extracted-images'
+        New-Item -ItemType Directory -Path $outputDirectory | Out-Null
+        $firstImage = @(Get-OfficePdfImage -Path $path)[0]
+        $extension = $firstImage.FileExtension.TrimStart('.')
+        $existingPath = Join-Path $outputDirectory "proof-0001.$extension"
+        [IO.File]::WriteAllText($existingPath, 'keep this file')
+
+        $written = @(Get-OfficePdfImage -Path $path -OutputDirectory $outputDirectory -BaseName proof)
+
+        $written.Count | Should -Be 1
+        $written[0].Name | Should -Be "proof-0001-2.$extension"
+        [IO.File]::ReadAllText($existingPath) | Should -Be 'keep this file'
+        $written[0].Length | Should -BeGreaterThan 0
+        @(Get-ChildItem -LiteralPath $outputDirectory -Filter '*.tmp').Count | Should -Be 0
+    }
+
+    It 'preserves advanced PDF read options unless a friendly parameter is supplied' {
+        $path = Join-Path $TestDrive 'structured-read-options.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'First page marker'
+            PdfPageBreak
+            PdfParagraph 'Second page marker'
+        } | Out-Null
+
+        $command = Get-Command Read-OfficePdf
+        $optionsType = $command.Parameters['Options'].ParameterType
+        $profileType = $command.Parameters['Profile'].ParameterType
+        $pageSelectionType = $optionsType.GetProperty('PageSelection').PropertyType
+        $options = [Activator]::CreateInstance($optionsType)
+        $options.Profile = [Enum]::Parse($profileType, 'Fast')
+        $options.PageSelection = $pageSelectionType.GetMethod('Parse', [type[]]@([string])).Invoke($null, @('2'))
+
+        $fromOptions = Read-OfficePdf -Path $path -Options $options
+        $fromOptions.Profile.ToString() | Should -Be 'Fast'
+        @($fromOptions.Pages).Count | Should -Be 1
+        $fromOptions.Pages[0].PageNumber | Should -Be 2
+
+        $overridden = Read-OfficePdf -Path $path -Options $options -Profile Structured -PageRange '1'
+        $overridden.Profile.ToString() | Should -Be 'Structured'
+        @($overridden.Pages).Count | Should -Be 1
+        $overridden.Pages[0].PageNumber | Should -Be 1
+    }
+
     It 'supports passwords for encrypted PDF read cmdlets' {
         $encryptedPath = Join-Path $TestDrive 'encrypted.pdf'
         [IO.File]::WriteAllBytes($encryptedPath, [Convert]::FromBase64String('JVBERi0xLjQKJT8/Pz8KMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAzMDAgMjAwXSAvUmVzb3VyY2VzIDw8IC9Gb250IDw8IC9GMSA0IDAgUiA+PiA+PiAvQ29udGVudHMgNSAwIFIgPj4KZW5kb2JqCjQgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNlRm9udCAvSGVsdmV0aWNhID4+CmVuZG9iago1IDAgb2JqCjw8IC9MZW5ndGggNDYgPj4Kc3RyZWFtCi8xB1rv33VvGaaV2g01B7caayy3ttoqyqa6Fkx+aapdiBLgquqJCxhp8zWpAXQKZW5kc3RyZWFtCmVuZG9iago2IDAgb2JqCjw8IC9GaWx0ZXIgL1N0YW5kYXJkIC9WIDEgL1IgMiAvTGVuZ3RoIDQwIC9PIDw4RUVCMDk1ODE5NjYyQTc3NDQ0MkZCMDcyRTNEOUYxOUU5RDEzMEVDMDlBNEQwMDYxRTc4RkU5MjBGN0FCNjJGPiAvVSA8QjFFNzY0MTI2QzQ4RDI4RDkwNTI1NTk1MjAwREQ4MTg3NEI4NkZFMUNBNTRCQTAxODZFNThCRTJDMzU5ODhEQz4gL1AgLTQgPj4KZW5kb2JqCnhyZWYKMCA3CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDY0IDAwMDAwIG4gCjAwMDAwMDAxMjEgMDAwMDAgbiAKMDAwMDAwMDI0NyAwMDAwMCBuIAowMDAwMDAwMzE3IDAwMDAwIG4gCjAwMDAwMDA0MTMgMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA3IC9Sb290IDEgMCBSIC9FbmNyeXB0IDYgMCBSIC9JRCBbPDEwNDVBODdDMjIxODRFQzE5MTRBQ0Y2NjMxRDI3NDAzPiA8MTA0NUE4N0MyMjE4NEVDMTkxNEFDRjY2MzFEMjc0MDM+XSA+PgpzdGFydHhyZWYKNjE5CiUlRU9GCg=='))
@@ -19,7 +98,7 @@ Describe 'PDF cmdlets' {
         (Get-OfficePdfPreflight -Path $encryptedPath).CanRead | Should -BeFalse
         (Get-OfficePdfPreflight -Path $encryptedPath -Password 'open').CanRead | Should -BeTrue
         Get-OfficePdfText -Path $encryptedPath -Password 'open' | Should -Match 'Secret PDF Text'
-        (Get-OfficePdf -Path $encryptedPath -Password 'open').Read.Text() | Should -Match 'Secret PDF Text'
+        (Get-OfficePdf -Path $encryptedPath -Password 'open').Read().Text | Should -Match 'Secret PDF Text'
         ConvertTo-OfficePdfMarkdown -Path $encryptedPath -Password 'open' | Should -Match 'Secret PDF Text'
     }
 
@@ -683,6 +762,25 @@ Describe 'PDF cmdlets' {
         $outputs[1].Name | Should -Be 'page-002.pdf'
         $outputs[2].Name | Should -Be 'page-003.pdf'
         Get-OfficePdfText -Path $outputs[1].FullName | Should -Match 'Encrypted page two'
+    }
+
+    It 'does not replace an existing split destination' {
+        $path = Join-Path $TestDrive 'split-collision-source.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'Collision-safe split output'
+        } | Out-Null
+
+        $outputDirectory = Join-Path $TestDrive 'split-collision-output'
+        New-Item -ItemType Directory -Path $outputDirectory | Out-Null
+        $existingPath = Join-Path $outputDirectory 'page-1.pdf'
+        [IO.File]::WriteAllText($existingPath, 'keep this file')
+
+        $written = @(Split-OfficePdf -Path $path -OutputDirectory $outputDirectory)
+
+        $written.Count | Should -Be 1
+        $written[0].Name | Should -Be 'page-1-2.pdf'
+        [IO.File]::ReadAllText($existingPath) | Should -Be 'keep this file'
+        Get-OfficePdfText -Path $written[0].FullName | Should -Match 'Collision-safe split output'
     }
 
     It 'does not create split output directories when WhatIf skips writes' {

@@ -56,9 +56,13 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Open(
+        var document = PdfDocument.Load(
             PdfCommandUtilities.ResolvePath(this, Path),
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
+        var semanticOptions = string.IsNullOrWhiteSpace(PageRange)
+            ? null
+            : new PdfReadOptions { PageSelection = PdfPageSelection.Parse(PageRange!) };
+        PdfDocumentReadResult result = document.Read(semanticOptions);
         if (AsTextBlock.IsPresent)
         {
             if (AsMarkdown.IsPresent || ByPage.IsPresent)
@@ -66,9 +70,7 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
                 throw new PSArgumentException("-AsTextBlock cannot be combined with -AsMarkdown or -ByPage.", nameof(AsTextBlock));
             }
 
-            var blocks = string.IsNullOrWhiteSpace(PageRange)
-                ? document.Read.TextBlocks()
-                : document.Read.TextBlocks(PageRange!);
+            var blocks = result.TextBlocks;
 
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
@@ -95,9 +97,13 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
                 throw new PSArgumentException("-ByPage is supported for plain text extraction only.", nameof(ByPage));
             }
 
-            var pages = string.IsNullOrWhiteSpace(PageRange)
-                ? document.Read.TextByPage()
-                : document.Read.TextByPage(PageRange!);
+            var pages = result.Pages
+                .Select(page => new
+                {
+                    page.PageNumber,
+                    Text = string.Join(System.Environment.NewLine, page.TextBlocks.Select(block => block.Text))
+                })
+                .ToArray();
 
             if (!string.IsNullOrWhiteSpace(OutputPath))
             {
@@ -108,25 +114,23 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
                 }
 
                 PdfCommandUtilities.EnsureDirectory(outputPath);
-                File.WriteAllText(outputPath, string.Join("\f", pages));
+                File.WriteAllText(outputPath, string.Join("\f", pages.Select(page => page.Text)));
                 WriteObject(new FileInfo(outputPath));
                 return;
             }
 
-            for (var index = 0; index < pages.Count; index++)
+            for (var index = 0; index < pages.Length; index++)
             {
                 var item = new PSObject();
-                item.Properties.Add(new PSNoteProperty("PageNumber", index + 1));
-                item.Properties.Add(new PSNoteProperty("Text", pages[index]));
+                item.Properties.Add(new PSNoteProperty("PageNumber", pages[index].PageNumber));
+                item.Properties.Add(new PSNoteProperty("Text", pages[index].Text));
                 WriteObject(item);
             }
 
             return;
         }
 
-        var text = AsMarkdown.IsPresent
-            ? string.IsNullOrWhiteSpace(PageRange) ? document.Read.Markdown() : document.Read.Markdown(PageRange!)
-            : string.IsNullOrWhiteSpace(PageRange) ? document.Read.Text() : document.Read.Text(PageRange!);
+        var text = AsMarkdown.IsPresent ? result.ToMarkdown() : result.Text;
 
         if (!string.IsNullOrWhiteSpace(OutputPath))
         {

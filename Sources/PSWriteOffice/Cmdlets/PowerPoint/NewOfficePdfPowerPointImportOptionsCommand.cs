@@ -60,7 +60,10 @@ public sealed class NewOfficePdfPowerPointImportOptionsCommand : PSCmdlet {
     protected override void ProcessRecord() {
         var options = new PdfPowerPointImportOptions();
         if (Mode.HasValue) options.Mode = Mode.Value;
-        if (!string.IsNullOrWhiteSpace(PageRange)) options.PageSelection = PdfPageSelection.Parse(PageRange!);
+        if (!string.IsNullOrWhiteSpace(PageRange))
+        {
+            options.ReadOptions = new PdfReadOptions { PageSelection = PdfPageSelection.Parse(PageRange!) };
+        }
         if (Dpi.HasValue) options.Dpi = Dpi.Value;
         if (MaxPages.HasValue) options.MaxPages = MaxPages.Value;
         if (MaxPixelsPerPage.HasValue) options.MaxPixelsPerPage = MaxPixelsPerPage.Value;

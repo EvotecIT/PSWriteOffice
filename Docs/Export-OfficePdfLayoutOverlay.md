@@ -11,7 +11,7 @@ Exports PDF word, line, region, and reading-order diagnostics as PNG or SVG.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfLayoutOverlay [-Path] <string> [-OutputPath] <string> [-Page <int>] [-Format <OfficeImageExportFormat>] [-Scale <double>] [-Options <PdfLayoutDebugOverlayOptions>] [-LayoutOptions <PdfTextLayoutOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePdfLayoutOverlay [-Path] <string> [-OutputPath] <string> [-Page <int>] [-Format <OfficeImageExportFormat>] [-Scale <double>] [-Options <PdfLayoutDebugOverlayOptions>] [-LayoutOptions <PdfTextLayoutOptions>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -175,7 +175,7 @@ Accept wildcard characters: False
 Optional bounded PDF parsing settings.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

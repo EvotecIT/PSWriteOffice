@@ -253,7 +253,7 @@ public sealed class ConvertToOfficeRtfCommand : PSCmdlet
     private void ConvertPdf()
     {
         var sourcePath = PdfCommandUtilities.ResolvePath(this, PdfPath);
-        var document = PdfLogicalDocument.Load(sourcePath).ToRtfDocument();
+        var document = PdfCommandUtilities.LoadDocument(sourcePath).Read().ToRtfDocument();
         if (string.IsNullOrWhiteSpace(OutputPath))
         {
             WriteObject(document.ToRtf());

@@ -11,7 +11,7 @@ Overlays or underlays one source PDF page on selected pages of another PDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Add-OfficePdfPageOverlay -Path <string> -SourcePath <string> -OutputPath <string> [-SourcePageNumber <int>] [-PageRange <string>] [-Fit <PdfPageOverlayFit>] [-HorizontalAlign <PdfAlign>] [-VerticalAlign <PdfVerticalAlign>] [-X <Double>] [-Y <Double>] [-Width <Double>] [-Height <Double>] [-Opacity <double>] [-Underlay] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-SourcePassword <string>] [-IgnoreSourcePermissionRestrictions] [-SourceReadOptions <PdfReadOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-OfficePdfPageOverlay -Path <string> -SourcePath <string> -OutputPath <string> [-SourcePageNumber <int>] [-PageRange <string>] [-Fit <PdfPageOverlayFit>] [-HorizontalAlign <PdfAlign>] [-VerticalAlign <PdfVerticalAlign>] [-X <Double>] [-Y <Double>] [-Width <Double>] [-Height <Double>] [-Opacity <double>] [-Underlay] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-SourcePassword <string>] [-IgnoreSourcePermissionRestrictions] [-SourceReadOptions <PdfLoadOptions>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -209,7 +209,7 @@ Accept wildcard characters: False
 Optional bounded read settings for the target PDF.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -273,7 +273,7 @@ Accept wildcard characters: False
 Optional bounded read settings for the imported source PDF.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

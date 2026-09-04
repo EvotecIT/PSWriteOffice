@@ -74,7 +74,7 @@ public sealed class AddOfficePdfCanvasCommand : PSWriteOffice.Cmdlets.OfficeMuta
         }
 
         var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), readOptions);
+        var document = PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path), readOptions);
         PdfOptions? renderingOptions = null;
         if (ConfigureRendering is not null) {
             renderingOptions = new PdfOptions();

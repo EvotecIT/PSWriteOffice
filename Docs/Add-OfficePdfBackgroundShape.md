@@ -55,7 +55,7 @@ Accept wildcard characters: False
 ```
 
 ### -Document
-Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.
+Compatibility parameter. Page composition is supported only inside New-OfficePdf.
 
 ```yaml
 Type: PdfDocument

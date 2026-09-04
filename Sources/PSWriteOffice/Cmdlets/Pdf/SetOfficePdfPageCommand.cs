@@ -124,7 +124,7 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
                 throw new PSArgumentException("Use page resize, rotation, or box editing as separate Set-OfficePdfPage operations.");
             }
 
-            PdfDocument.Open(inputPath, readOptions).Pages.Resize(resizeOptions, pages).Save(outputPath).RequireSuccess();
+            PdfDocument.Load(inputPath, readOptions).Pages.Resize(resizeOptions, pages).Save(outputPath).RequireSuccess();
             WritePassThru(new FileInfo(outputPath));
             return;
         }
@@ -135,7 +135,7 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
             }
 
             PdfDocument
-                .Open(inputPath, readOptions)
+                .Load(inputPath, readOptions)
                 .Pages.SetPageBox(
                     BoxName.Value,
                     Left.Value,
@@ -153,7 +153,7 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
             throw new PSArgumentException("Provide -Rotation, -BoxName with coordinates, or page resize options.");
         }
 
-        var document = PdfDocument.Open(inputPath, readOptions);
+        var document = PdfDocument.Load(inputPath, readOptions);
         var result = string.IsNullOrWhiteSpace(PageRange)
             ? document.Pages.Rotate(Rotation)
             : document.Pages.Rotate(Rotation, PageRange!);

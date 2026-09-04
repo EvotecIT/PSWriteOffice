@@ -39,7 +39,7 @@ Uses the PDF report theme for generated content.
 ## PARAMETERS
 
 ### -Document
-Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.
+Compatibility parameter. Page composition is supported only inside New-OfficePdf.
 
 ```yaml
 Type: PdfDocument

@@ -7,7 +7,7 @@ Locale: en-US
 ---
 # PSWriteOffice Module
 ## Description
-PowerShell module to create, convert, read, inspect, and export Office, PDF, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, Visio, and Confluence content without Microsoft Office installed. Powered by OfficeIMO.*.
+PowerShell module to create, convert, read, inspect, and export Office, PDF, iWork, OneNote, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, Visio, and Confluence content without Microsoft Office installed. Powered by OfficeIMO.*.
 
 ## PSWriteOffice Cmdlets
 ### [Add-OfficeExcelAutoFilter](Add-OfficeExcelAutoFilter.md)
@@ -487,11 +487,17 @@ Converts Markdown to native AsciiDoc with fidelity diagnostics.
 ### [ConvertFrom-OfficeCsv](ConvertFrom-OfficeCsv.md)
 Converts CSV text to PSCustomObjects or dictionaries.
 
+### [ConvertFrom-OfficeIWork](ConvertFrom-OfficeIWork.md)
+Converts Pages, Numbers, or Keynote into the matching editable Microsoft Office format.
+
 ### [ConvertFrom-OfficeLatexMarkdown](ConvertFrom-OfficeLatexMarkdown.md)
 Converts Markdown to native LaTeX with fidelity diagnostics.
 
 ### [ConvertFrom-OfficeMarkdownHtml](ConvertFrom-OfficeMarkdownHtml.md)
 Converts HTML content to Markdown.
+
+### [ConvertFrom-OfficeOneNote](ConvertFrom-OfficeOneNote.md)
+Converts an offline OneNote section or notebook to semantic Markdown, HTML, or PDF.
 
 ### [ConvertFrom-OfficeOpenDocument](ConvertFrom-OfficeOpenDocument.md)
 Converts native ODT, ODS, or ODP content to Word, Excel, or PowerPoint with fidelity evidence.
@@ -558,6 +564,9 @@ Applies explicit or text-matched PDF redactions and writes a new PDF.
 
 ### [ConvertTo-OfficePdfSanitized](ConvertTo-OfficePdfSanitized.md)
 Removes or quarantines active PDF content and embedded payloads with post-save proof.
+
+### [ConvertTo-OfficePdfSearchable](ConvertTo-OfficePdfSearchable.md)
+Creates a searchable PDF by adding invisible text from a discovered local OCR runtime.
 
 ### [ConvertTo-OfficePdfTextRun](ConvertTo-OfficePdfTextRun.md)
 Converts reusable Office text run specifications to native PDF text runs.
@@ -805,6 +814,12 @@ Gets worksheet view settings such as frozen panes and gridline visibility.
 ### [Get-OfficeExcelWriteReservation](Get-OfficeExcelWriteReservation.md)
 Gets workbook write-reservation metadata.
 
+### [Get-OfficeImageText](Get-OfficeImageText.md)
+Recognizes text in an image with automatic local OCR runtime discovery.
+
+### [Get-OfficeIWork](Get-OfficeIWork.md)
+Reads a modern Apple Pages, Numbers, or Keynote package without launching iWork.
+
 ### [Get-OfficeLatex](Get-OfficeLatex.md)
 Parses a LaTeX file or source string into OfficeIMO's native document model.
 
@@ -823,8 +838,14 @@ Gets the OfficeIMO.Markdown object tree from Markdown content.
 ### [Get-OfficeMarkdownTable](Get-OfficeMarkdownTable.md)
 Gets Markdown tables from a Markdown document.
 
+### [Get-OfficeOneNote](Get-OfficeOneNote.md)
+Reads an offline OneNote section, notebook hierarchy, or packaged notebook.
+
 ### [Get-OfficeOpenDocument](Get-OfficeOpenDocument.md)
 Loads a native ODT, ODS, or ODP document.
+
+### [Get-OfficePackageSecurity](Get-OfficePackageSecurity.md)
+Inspects an Open XML or compound Office package without opening active content.
 
 ### [Get-OfficePdf](Get-OfficePdf.md)
 Opens an existing PDF as an OfficeIMO.Pdf document.
@@ -915,6 +936,9 @@ Gets theme information for a PowerPoint presentation master.
 
 ### [Get-OfficeProtectionCapability](Get-OfficeProtectionCapability.md)
 Returns OfficeIMO's machine-readable protected-content support contract.
+
+### [Get-OfficeProvenance](Get-OfficeProvenance.md)
+Collects structural, text-integrity, and optional provider verification evidence for a file.
 
 ### [Get-OfficeRtf](Get-OfficeRtf.md)
 Reads RTF into OfficeIMO's semantic and lossless syntax models.
@@ -1218,6 +1242,9 @@ Protects a Word document with a password.
 
 ### [Publish-OfficeConfluencePage](Publish-OfficeConfluencePage.md)
 Plans, creates, or updates a Confluence Cloud page.
+
+### [Read-OfficePdf](Read-OfficePdf.md)
+Reads a PDF into OfficeIMO.Pdf's canonical structured document model.
 
 ### [Remove-OfficeConfluencePage](Remove-OfficeConfluencePage.md)
 Plans or deletes a Confluence Cloud page.

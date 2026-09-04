@@ -40,7 +40,7 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
 
     /// <summary>Optional bounded PDF parsing settings.</summary>
     [Parameter]
-    public PdfReadOptions? ReadOptions { get; set; }
+    public PdfLoadOptions? ReadOptions { get; set; }
 
     /// <summary>Password used to authenticate an encrypted PDF.</summary>
     [Parameter]
@@ -68,7 +68,7 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
             IgnorePermissionRestrictions.IsPresent);
         var document = PdfCommandUtilities.LoadDocument(input, readOptions);
         var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
-        var pages = document.Read.ExportImages(Format, options, selection, readOptions);
+        var pages = document.Render.ExportImages(Format, options, selection);
         for (int index = 0; index < pages.Count; index++)
         {
             var page = pages[index];

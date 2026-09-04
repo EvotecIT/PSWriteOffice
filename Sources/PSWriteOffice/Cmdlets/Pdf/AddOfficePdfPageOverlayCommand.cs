@@ -78,7 +78,7 @@ public sealed class AddOfficePdfPageOverlayCommand : PSWriteOffice.Cmdlets.Offic
 
     /// <summary>Optional bounded read settings for the target PDF.</summary>
     [Parameter]
-    public PdfReadOptions? ReadOptions { get; set; }
+    public PdfLoadOptions? ReadOptions { get; set; }
 
     /// <summary>Password used to authenticate the target PDF.</summary>
     [Parameter]
@@ -98,7 +98,7 @@ public sealed class AddOfficePdfPageOverlayCommand : PSWriteOffice.Cmdlets.Offic
 
     /// <summary>Optional bounded read settings for the imported source PDF.</summary>
     [Parameter]
-    public PdfReadOptions? SourceReadOptions { get; set; }
+    public PdfLoadOptions? SourceReadOptions { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord() {

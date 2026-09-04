@@ -92,7 +92,7 @@ public sealed class SetOfficePdfMetadataCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            var inputDocument = PdfDocument.Open(
+            var inputDocument = PdfDocument.Load(
                 inputPath,
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
             var updatedDocument = Incremental.IsPresent

@@ -11,7 +11,7 @@ Compares rendered PDF pages and returns pixel-level review artifacts.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Compare-OfficePdfVisual [-ReferencePath] <string> [-DifferencePath] <string> [-PageRange <string>] [-Options <PdfVisualComparisonOptions>] [-ReferenceReadOptions <PdfReadOptions>] [-DifferenceReadOptions <PdfReadOptions>] [-ReferencePassword <string>] [-IgnoreReferencePermissionRestrictions] [-DifferencePassword <string>] [-IgnoreDifferencePermissionRestrictions] [<CommonParameters>]
+Compare-OfficePdfVisual [-ReferencePath] <string> [-DifferencePath] <string> [-PageRange <string>] [-Options <PdfVisualComparisonOptions>] [-ReferenceReadOptions <PdfLoadOptions>] [-DifferenceReadOptions <PdfLoadOptions>] [-ReferencePassword <string>] [-IgnoreReferencePermissionRestrictions] [-DifferencePassword <string>] [-IgnoreDifferencePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -65,7 +65,7 @@ Accept wildcard characters: False
 Optional bounded read settings for the actual document.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -177,7 +177,7 @@ Accept wildcard characters: False
 Optional bounded read settings for the expected document.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
