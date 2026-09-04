@@ -58,12 +58,12 @@ printf '5\t1\t1\t1\t1\t2\t140\t12\t72\t24\t94.0\tOCR\n' >> "${2}.tsv"
 Describe 'Easy local OCR commands' {
     It 'exposes discoverable typed language choices' {
         $parameter = (Get-Command Get-OfficeImageText).Parameters['Language']
-        $parameter.ParameterType.FullName | Should -Be 'OfficeIMO.Reader.Ocr.OfficeOcrLanguage[]'
+        $parameter.ParameterType.FullName | Should -Be 'OfficeIMO.Ocr.Tesseract.TesseractOcrLanguage[]'
         $languageType = $parameter.ParameterType.GetElementType()
         $languageType.GetEnumNames() | Should -Contain 'English'
         $languageType.GetEnumNames() | Should -Contain 'Polish'
         (Get-Command New-OfficeDocumentReader).Parameters['OcrLanguage'].ParameterType.FullName |
-            Should -Be 'OfficeIMO.Reader.Ocr.OfficeOcrLanguage[]'
+            Should -Be 'OfficeIMO.Ocr.Tesseract.TesseractOcrLanguage[]'
     }
 
     It 'recognizes image text with runtime and word evidence' {
@@ -81,11 +81,24 @@ Describe 'Easy local OCR commands' {
         @($result.Spans).Count | Should -BeGreaterThan 0
     }
 
-    It 'preserves legacy options and lets friendly language parameters override them' {
+    It 'rejects unsupported image formats before discovering an OCR runtime' {
+        $unsupportedPath = Join-Path $TestDrive 'not-an-image.txt'
+        [IO.File]::WriteAllText($unsupportedPath, 'This is not an OCR image.')
+
+        {
+            Get-OfficeImageText `
+                -Path $unsupportedPath `
+                -TesseractPath 'definitely-missing-tesseract-for-pswriteoffice' `
+                -NoLanguageDownload `
+                -ErrorAction Stop
+        } | Should -Throw '*supports PNG, JPEG, TIFF, BMP, GIF, WebP, and JPEG 2000*'
+    }
+
+    It 'preserves session options and lets friendly language parameters override them' {
         $runtime = New-TestTesseract -Directory $TestDrive
         $optionsType = (Get-Command Get-OfficeImageText).Parameters['Options'].ParameterType
         $options = [Activator]::CreateInstance($optionsType)
-        $options.Tesseract.Language = 'pol'
+        $options.Engine.Language = 'pol'
 
         $legacyResult = Get-OfficeImageText `
             -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') `

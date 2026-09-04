@@ -1,6 +1,5 @@
 using System.Management.Automation;
-using OfficeIMO.Reader.Ocr;
-using OfficeIMO.Reader.Ocr.Tesseract;
+using OfficeIMO.Ocr.Tesseract;
 
 namespace PSWriteOffice.Cmdlets.Ocr;
 
@@ -9,12 +8,12 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
 {
     /// <summary>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</summary>
     [Parameter]
-    public OfficeOcrOptions? Options { get; set; }
+    public TesseractOcrSessionOptions? Options { get; set; }
 
     /// <summary>Friendly OCR languages. Supply more than one value to recognize multilingual content.</summary>
     [Parameter]
     [ValidateNotNullOrEmpty]
-    public OfficeOcrLanguage[]? Language { get; set; }
+    public TesseractOcrLanguage[]? Language { get; set; }
 
     /// <summary>Advanced raw Tesseract expression for caller-installed custom trained-data models.</summary>
     [Parameter]
@@ -36,17 +35,12 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
     public SwitchParameter NoLanguageDownload { get; set; }
 
     /// <summary>Builds an independent options snapshot and applies bound convenience parameters.</summary>
-    protected OfficeOcrOptions CreateOptions()
+    protected TesseractOcrSessionOptions CreateSessionOptions()
     {
-        OfficeOcrOptions source = Options ?? new OfficeOcrOptions();
-        if (source.Tesseract == null)
+        TesseractOcrSessionOptions source = Options ?? new TesseractOcrSessionOptions();
+        if (source.Engine == null)
         {
-            throw new PSArgumentException("Options.Tesseract cannot be null.", nameof(Options));
-        }
-
-        if (source.Pdf == null)
-        {
-            throw new PSArgumentException("Options.Pdf cannot be null.", nameof(Options));
+            throw new PSArgumentException("Options.Engine cannot be null.", nameof(Options));
         }
 
         if (source.LanguageData == null)
@@ -54,13 +48,11 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
             throw new PSArgumentException("Options.LanguageData cannot be null.", nameof(Options));
         }
 
-        var effective = new OfficeOcrOptions
+        var effective = new TesseractOcrSessionOptions
         {
             Languages = source.Languages,
             CustomLanguageExpression = source.CustomLanguageExpression,
-            OutputConflictPolicy = source.OutputConflictPolicy,
-            Tesseract = source.Tesseract.Clone(),
-            Pdf = source.Pdf.Clone(),
+            Engine = source.Engine.Clone(),
             LanguageData = new TesseractLanguageDataOptions
             {
                 CacheDirectory = source.LanguageData.CacheDirectory,
@@ -74,24 +66,24 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
         {
             effective.Languages = CombineLanguages(Language);
             effective.CustomLanguageExpression = null;
-            effective.Tesseract.Language = "eng";
+            effective.Engine.Language = "eng";
         }
 
         if (MyInvocation.BoundParameters.ContainsKey(nameof(TesseractLanguageExpression)))
         {
-            effective.Languages = OfficeOcrLanguage.English;
+            effective.Languages = TesseractOcrLanguage.English;
             effective.CustomLanguageExpression = TesseractLanguageExpression;
-            effective.Tesseract.Language = "eng";
+            effective.Engine.Language = "eng";
         }
 
         if (MyInvocation.BoundParameters.ContainsKey(nameof(TesseractPath)))
         {
-            effective.Tesseract.ExecutablePath = TesseractPath!;
+            effective.Engine.ExecutablePath = TesseractPath!;
         }
 
         if (MyInvocation.BoundParameters.ContainsKey(nameof(TessdataDirectory)))
         {
-            effective.Tesseract.TessdataDirectory = TessdataDirectory;
+            effective.Engine.TessdataDirectory = TessdataDirectory;
         }
 
         if (NoLanguageDownload.IsPresent)
@@ -102,7 +94,7 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
         return effective;
     }
 
-    private OfficeOcrLanguage CombineLanguages(OfficeOcrLanguage[]? languages)
+    private TesseractOcrLanguage CombineLanguages(TesseractOcrLanguage[]? languages)
     {
         if (languages == null || languages.Length == 0)
         {
@@ -115,8 +107,8 @@ public abstract class OfficeOcrCmdlet : AsyncPSCmdlet
                 nameof(Language));
         }
 
-        OfficeOcrLanguage combined = 0;
-        foreach (OfficeOcrLanguage language in languages)
+        TesseractOcrLanguage combined = 0;
+        foreach (TesseractOcrLanguage language in languages)
         {
             combined |= language;
         }

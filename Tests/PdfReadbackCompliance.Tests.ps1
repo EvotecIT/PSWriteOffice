@@ -38,9 +38,10 @@ Describe 'PDF readback and compliance cmdlets' {
         $images.Count | Should -BeGreaterThan 0
         $images[0].Width | Should -BeGreaterThan 0
 
-        $files = @(Get-OfficePdfImage -Path $pdfPath -OutputDirectory $outputDirectory -BaseName 'asset')
+        $files = @(Get-OfficePdfImage -Path $pdfPath -OutputDirectory $outputDirectory -BaseName 'asset:review?')
         $files.Count | Should -BeGreaterThan 0
         Test-Path $files[0].FullName | Should -BeTrue
+        $files[0].Name | Should -Match '^asset_review_-0001\.'
     }
 
     It 'embeds and extracts PDF attachments' {
@@ -62,6 +63,19 @@ Describe 'PDF readback and compliance cmdlets' {
         $files = @(Get-OfficePdfAttachment -Path $pdfPath -OutputDirectory $outputDirectory)
         $files.Count | Should -Be 1
         Get-Content -Raw -Path $files[0].FullName | Should -Be 'Attachment payload'
+    }
+
+    It 'normalizes untrusted extracted file names with portable rules' {
+        $assembly = (Get-Command Get-OfficePdfAttachment).ImplementingType.Assembly
+        $utilities = $assembly.GetType('PSWriteOffice.Services.Pdf.PdfCommandUtilities', $true)
+        $method = $utilities.GetMethod(
+            'GetSafeFileName',
+            [Reflection.BindingFlags]::Static -bor [Reflection.BindingFlags]::NonPublic)
+
+        $method.Invoke($null, @('..\folder/payload:report?.txt')) | Should -Be 'payload_report_.txt'
+        $method.Invoke($null, @('CON.txt')) | Should -Be '_CON.txt'
+        $method.Invoke($null, @('CON.tar.gz')) | Should -Be '_CON.tar.gz'
+        $method.Invoke($null, @('LPT1.backup.txt')) | Should -Be '_LPT1.backup.txt'
     }
 
     It 'keeps context attachments, metadata, and encryption in one generated document' {

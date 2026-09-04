@@ -1,6 +1,7 @@
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
+using PSWriteOffice.Services;
 using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
@@ -70,8 +71,7 @@ public sealed class GetOfficePdfImageCommand : PSCmdlet
                 savedIndex++;
                 string extension = image.FileExtension!.TrimStart('.');
                 string fileName = $"{BaseName}-{savedIndex:D4}.{extension}";
-                string outputPath = PdfCommandUtilities.GetUniquePath(outputDirectory, fileName);
-                File.WriteAllBytes(outputPath, image.Bytes);
+                string outputPath = AtomicFileWriter.WriteUnique(outputDirectory, fileName, image.Bytes);
                 WriteObject(new FileInfo(outputPath));
             }
 

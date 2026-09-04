@@ -85,7 +85,11 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureOutputDirectory(outputDirectory);
-            output.Document.Save(outputPath).RequireSuccess();
+            output.Document
+                .SaveAsync(outputPath, OfficeConversionFileConflictPolicy.FailIfExists, System.Threading.CancellationToken.None)
+                .GetAwaiter()
+                .GetResult()
+                .RequireSuccess();
             WriteObject(new FileInfo(outputPath));
         }
     }

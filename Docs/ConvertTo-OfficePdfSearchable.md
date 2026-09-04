@@ -11,7 +11,7 @@ Creates a searchable PDF by adding invisible text from a discovered local OCR ru
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfSearchable [-Path] <string> [-OutputPath] <string> [-Force] [-PassThru] [-RenderDpi <Double>] [-MinimumConfidence <Double>] [-Options <OfficeOcrOptions>] [-Language <OfficeOcrLanguage[]>] [-TesseractLanguageExpression <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfSearchable [-Path] <string> [-OutputPath] <string> [-Force] [-PassThru] [-RenderDpi <Double>] [-MinimumConfidence <Double>] [-PdfOptions <PdfOcrMergeOptions>] [-Options <TesseractOcrSessionOptions>] [-Language <TesseractOcrLanguage[]>] [-TesseractLanguageExpression <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,7 +55,7 @@ Accept wildcard characters: False
 Friendly OCR languages. Supply more than one value to recognize multilingual content.
 
 ```yaml
-Type: OfficeOcrLanguage[]
+Type: TesseractOcrLanguage[]
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: English, Polish, Arabic, ChineseSimplified, ChineseTraditional, Czech, Danish, Dutch, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Italian, Japanese, Korean, Norwegian, Portuguese, Romanian, Russian, Slovak, Spanish, Swedish, Turkish, Ukrainian, Vietnamese
@@ -103,7 +103,7 @@ Accept wildcard characters: False
 Advanced OfficeIMO OCR options. Convenience parameters override matching values.
 
 ```yaml
-Type: OfficeOcrOptions
+Type: TesseractOcrSessionOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -160,6 +160,22 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -PdfOptions
+Advanced PDF page selection, rendering, confidence, overlap, and resource limits.
+
+```yaml
+Type: PdfOcrMergeOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -237,7 +253,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 - `System.IO.FileInfo`
-- `OfficeIMO.Pdf.PdfSearchableOcrResult`
+- `OfficeIMO.Pdf.Ocr.PdfSearchableOcrResult`
 
 ## RELATED LINKS
 

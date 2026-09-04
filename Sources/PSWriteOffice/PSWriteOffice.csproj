@@ -11,7 +11,7 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <OfficeIMOVersion>3.3.0</OfficeIMOVersion>
+        <OfficeIMOVersion>3.4.0</OfficeIMOVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -68,9 +68,20 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.CSV\OfficeIMO.CSV.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Html\OfficeIMO.Word.Html.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.All\OfficeIMO.Reader.All.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Ocr\OfficeIMO.Ocr.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Ocr\OfficeIMO.Reader.Ocr.csproj" />
-        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Ocr.Process\OfficeIMO.Reader.Ocr.Process.csproj" />
-        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Reader.Ocr.Tesseract\OfficeIMO.Reader.Ocr.Tesseract.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Ocr.Process\OfficeIMO.Ocr.Process.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Ocr.Tesseract\OfficeIMO.Ocr.Tesseract.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Pdf.Ocr\OfficeIMO.Pdf.Ocr.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.IWork\OfficeIMO.IWork.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.IWork\OfficeIMO.Word.IWork.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel.IWork\OfficeIMO.Excel.IWork.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.PowerPoint.IWork\OfficeIMO.PowerPoint.IWork.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.OneNote\OfficeIMO.OneNote.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.OneNote.Markdown\OfficeIMO.OneNote.Markdown.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.OneNote.Html\OfficeIMO.OneNote.Html.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.OneNote.Pdf\OfficeIMO.OneNote.Pdf.csproj" />
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Provenance.C2pa\OfficeIMO.Provenance.C2pa.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Visio\OfficeIMO.Visio.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Rtf\OfficeIMO.Rtf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Word.Rtf\OfficeIMO.Word.Rtf.csproj" />
@@ -113,9 +124,20 @@
         <PackageReference Include="OfficeIMO.CSV" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Word.Html" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Reader.All" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Ocr" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Reader.Ocr" Version="$(OfficeIMOVersion)" />
-        <PackageReference Include="OfficeIMO.Reader.Ocr.Process" Version="$(OfficeIMOVersion)" />
-        <PackageReference Include="OfficeIMO.Reader.Ocr.Tesseract" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Ocr.Process" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Ocr.Tesseract" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Pdf.Ocr" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.IWork" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Word.IWork" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Excel.IWork" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.PowerPoint.IWork" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.OneNote" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.OneNote.Markdown" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.OneNote.Html" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.OneNote.Pdf" Version="$(OfficeIMOVersion)" />
+        <PackageReference Include="OfficeIMO.Provenance.C2pa" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Visio" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Rtf" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Word.Rtf" Version="$(OfficeIMOVersion)" />

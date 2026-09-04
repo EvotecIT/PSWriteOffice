@@ -2,8 +2,9 @@ using System.IO;
 using System.Management.Automation;
 using System.Threading.Tasks;
 using OfficeIMO;
+using OfficeIMO.Ocr.Tesseract;
 using OfficeIMO.Pdf;
-using OfficeIMO.Reader.Ocr;
+using OfficeIMO.Pdf.Ocr;
 using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Ocr;
@@ -53,6 +54,10 @@ public sealed class ConvertToOfficePdfSearchableCommand : OfficeOcrCmdlet
     [ValidateRange(0.0, 1.0)]
     public double? MinimumConfidence { get; set; }
 
+    /// <summary>Advanced PDF page selection, rendering, confidence, overlap, and resource limits.</summary>
+    [Parameter]
+    public PdfOcrMergeOptions? PdfOptions { get; set; }
+
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync()
     {
@@ -63,23 +68,31 @@ public sealed class ConvertToOfficePdfSearchableCommand : OfficeOcrCmdlet
             return;
         }
 
-        OfficeOcrOptions options = CreateOptions();
-        options.OutputConflictPolicy = Force.IsPresent
-            ? OfficeConversionFileConflictPolicy.Replace
-            : OfficeConversionFileConflictPolicy.FailIfExists;
+        TesseractOcrSession session = await TesseractOcr
+            .CreateSessionAsync(CreateSessionOptions(), CancelToken)
+            .ConfigureAwait(false);
+        PdfOcrMergeOptions options = PdfOptions?.Clone() ?? new PdfOcrMergeOptions();
         if (RenderDpi.HasValue)
         {
-            options.Pdf.Dpi = RenderDpi.Value;
+            options.Dpi = RenderDpi.Value;
         }
 
         if (MinimumConfidence.HasValue)
         {
-            options.Pdf.MinimumConfidence = MinimumConfidence.Value;
+            options.MinimumConfidence = MinimumConfidence.Value;
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfSearchableOcrResult result = await OfficeOcr
-            .MakePdfSearchableAsync(inputPath, outputPath, options, CancelToken)
+        PdfDocument document = PdfDocument.Load(inputPath);
+        PdfSearchableOcrResult result = await document
+            .MakeSearchableAsync(session.Engine, options, CancelToken)
+            .ConfigureAwait(false);
+        await result.Document.SaveAsync(
+                outputPath,
+                Force.IsPresent
+                    ? OfficeConversionFileConflictPolicy.Replace
+                    : OfficeConversionFileConflictPolicy.FailIfExists,
+                CancelToken)
             .ConfigureAwait(false);
         WriteObject(PassThru.IsPresent ? result : new FileInfo(outputPath));
     }

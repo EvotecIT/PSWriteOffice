@@ -1,6 +1,8 @@
 using System.Management.Automation;
 using System.Threading.Tasks;
+using OfficeIMO.Ocr;
 using OfficeIMO.Pdf;
+using OfficeIMO.Pdf.Ocr;
 using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
@@ -14,9 +16,10 @@ public sealed class InvokeOfficePdfOcrMergeCommand : AsyncPSCmdlet
     [Parameter(Mandatory = true, Position = 0)]
     public string Path { get; set; } = string.Empty;
 
-    /// <summary>External OCR provider implementation.</summary>
+    /// <summary>Engine-neutral OCR implementation.</summary>
     [Parameter(Mandatory = true)]
-    public IPdfOcrProvider Provider { get; set; } = null!;
+    [Alias("Engine")]
+    public IOcrEngine Provider { get; set; } = null!;
 
     /// <summary>Optional page selection, DPI, confidence, overlap, and limits.</summary>
     [Parameter]
@@ -42,6 +45,6 @@ public sealed class InvokeOfficePdfOcrMergeCommand : AsyncPSCmdlet
             Password,
             IgnorePermissionRestrictions.IsPresent);
         var document = PdfCommandUtilities.LoadDocument(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), readOptions);
-        WriteObject(await document.Ocr.ReadAsync(Provider, Options, CancelToken).ConfigureAwait(false));
+        WriteObject(await document.ReadWithOcrAsync(Provider, Options, CancelToken).ConfigureAwait(false));
     }
 }

@@ -57,6 +57,12 @@ $familyDefinitions = @(
         match = { param($name) ($name -match 'OfficeDocument' -and $name -notin 'Get-OfficeDocumentPageMarkdown', 'Export-OfficeDocumentPdf') -or $name -match 'OfficeReader|OfficeImageText' }
     }
     [ordered]@{
+        id = 'archive-migration'; title = 'Archive migration and evidence'; description = 'Inspect package safety and provenance, convert iWork and offline OneNote content, and retain fidelity evidence.'
+        docs = 'automation-patterns'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples'
+        samples = @('Get-OfficePackageSecurity', 'Get-OfficeProvenance', 'Get-OfficeIWork', 'ConvertFrom-OfficeOneNote')
+        match = { param($name) $name -match 'OfficeIWork|OfficeOneNote|OfficePackageSecurity|OfficeProvenance' }
+    }
+    [ordered]@{
         id = 'confluence'; title = 'Confluence Cloud'; description = 'Plan and publish pages, preserve managed sections, and transfer attachments through OfficeIMO.Confluence.'
         docs = 'confluence'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Confluence'
         samples = @('New-OfficeConfluenceSession', 'Publish-OfficeConfluencePage', 'Set-OfficeConfluenceManagedSection', 'Send-OfficeConfluenceAttachment')

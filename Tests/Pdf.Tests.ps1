@@ -23,10 +23,10 @@ Describe 'PDF cmdlets' {
         $logical = Read-OfficePdf -Path $path -Profile Structured
         $logical.GetType().FullName | Should -Be 'OfficeIMO.Pdf.PdfDocumentReadResult'
         @($logical.Pages).Count | Should -BeGreaterThan 0
-        (@($logical.Pages.Paragraphs.Text) -join ' ') | Should -Match 'Canonical paragraph marker'
-        @($logical.Pages.Tables).Count | Should -BeGreaterThan 0
-        @($logical.Pages.Tables.Rows).Count | Should -BeGreaterThan 0
-        @($logical.Pages.Images).Count | Should -BeGreaterThan 0
+        $logical.Text | Should -Match 'Canonical paragraph marker'
+        @($logical.Tables).Count | Should -BeGreaterThan 0
+        @($logical.Tables.Rows).Count | Should -BeGreaterThan 0
+        @($logical.Images).Count | Should -BeGreaterThan 0
 
         $images = @(Get-OfficePdfImage -Path $path)
         $images.Count | Should -BeGreaterThan 0
@@ -35,7 +35,29 @@ Describe 'PDF cmdlets' {
         $fromPipeline = Get-OfficePdf -Path $path | Read-OfficePdf -PageRange '1'
         $fromPipeline.GetType().FullName | Should -Be 'OfficeIMO.Pdf.PdfDocumentReadResult'
         @($fromPipeline.Pages).Count | Should -Be 1
-        (@($fromPipeline.Pages.Paragraphs.Text) -join ' ') | Should -Match 'Canonical paragraph marker'
+        $fromPipeline.Text | Should -Match 'Canonical paragraph marker'
+    }
+
+    It 'extracts images without replacing an existing destination' {
+        $path = Join-Path $TestDrive 'image-extraction-source.pdf'
+        New-OfficePdf -Path $path {
+            PdfImage -Path (Join-Path $PSScriptRoot 'Assets\CellImage.png') -Width 120 -Height 80
+        } | Out-Null
+
+        $outputDirectory = Join-Path $TestDrive 'extracted-images'
+        New-Item -ItemType Directory -Path $outputDirectory | Out-Null
+        $firstImage = @(Get-OfficePdfImage -Path $path)[0]
+        $extension = $firstImage.FileExtension.TrimStart('.')
+        $existingPath = Join-Path $outputDirectory "proof-0001.$extension"
+        [IO.File]::WriteAllText($existingPath, 'keep this file')
+
+        $written = @(Get-OfficePdfImage -Path $path -OutputDirectory $outputDirectory -BaseName proof)
+
+        $written.Count | Should -Be 1
+        $written[0].Name | Should -Be "proof-0001-2.$extension"
+        [IO.File]::ReadAllText($existingPath) | Should -Be 'keep this file'
+        $written[0].Length | Should -BeGreaterThan 0
+        @(Get-ChildItem -LiteralPath $outputDirectory -Filter '*.tmp').Count | Should -Be 0
     }
 
     It 'preserves advanced PDF read options unless a friendly parameter is supplied' {
@@ -740,6 +762,25 @@ Describe 'PDF cmdlets' {
         $outputs[1].Name | Should -Be 'page-002.pdf'
         $outputs[2].Name | Should -Be 'page-003.pdf'
         Get-OfficePdfText -Path $outputs[1].FullName | Should -Match 'Encrypted page two'
+    }
+
+    It 'does not replace an existing split destination' {
+        $path = Join-Path $TestDrive 'split-collision-source.pdf'
+        New-OfficePdf -Path $path {
+            PdfParagraph 'Collision-safe split output'
+        } | Out-Null
+
+        $outputDirectory = Join-Path $TestDrive 'split-collision-output'
+        New-Item -ItemType Directory -Path $outputDirectory | Out-Null
+        $existingPath = Join-Path $outputDirectory 'page-1.pdf'
+        [IO.File]::WriteAllText($existingPath, 'keep this file')
+
+        $written = @(Split-OfficePdf -Path $path -OutputDirectory $outputDirectory)
+
+        $written.Count | Should -Be 1
+        $written[0].Name | Should -Be 'page-1-2.pdf'
+        [IO.File]::ReadAllText($existingPath) | Should -Be 'keep this file'
+        Get-OfficePdfText -Path $written[0].FullName | Should -Match 'Collision-safe split output'
     }
 
     It 'does not create split output directories when WhatIf skips writes' {

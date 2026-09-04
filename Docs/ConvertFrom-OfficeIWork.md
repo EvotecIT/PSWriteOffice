@@ -4,31 +4,48 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Invoke-OfficePdfOcrMerge
+# ConvertFrom-OfficeIWork
 ## SYNOPSIS
-Runs an external OCR provider and merges recognized words with native PDF text.
+Converts Pages, Numbers, or Keynote into the matching editable Microsoft Office format.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Invoke-OfficePdfOcrMerge [-Path] <string> -Provider <IOcrEngine> [-Options <PdfOcrMergeOptions>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
+ConvertFrom-OfficeIWork [-Path] <string> [-OutputPath] <string> [-ReadOptions <IWorkReadOptions>] [-ConversionOptions <IWorkConversionOptions>] [-FailOnLoss] [-Force] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Runs an external OCR provider and merges recognized words with native PDF text.
+The conversion reports what was reconstructed and what remains iWork-specific instead of implying lossless parity.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Invoke-OfficePdfOcrMerge -Provider 'Value'
+PS> $report = ConvertFrom-OfficeIWork -Path .\Quarterly.numbers -OutputPath .\Quarterly.xlsx -PassThruReport
+$report | Select-Object SourceKind, ProjectionKind, ReconstructedItemCount, HasLoss
 ```
 
 
 ## PARAMETERS
 
-### -IgnorePermissionRestrictions
-After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
+### -ConversionOptions
+Editable-reconstruction or visual-fallback policy.
+
+```yaml
+Type: IWorkConversionOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -FailOnLoss
+Fail when source structures are flattened, omitted, or retained only as preserved records.
 
 ```yaml
 Type: SwitchParameter
@@ -43,11 +60,11 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Options
-Optional page selection, DPI, confidence, overlap, and limits.
+### -Force
+Overwrite an existing destination.
 
 ```yaml
-Type: PdfOcrMergeOptions
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -59,11 +76,27 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Password
-Password used to authenticate an encrypted PDF.
+### -OutputPath
+Destination DOCX, XLSX, or PPTX path matching the detected iWork application.
 
 ```yaml
 Type: String
+Parameter Sets: __AllParameterSets
+Aliases: OutPath
+Possible values:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThruReport
+Return the loss-aware conversion report instead of file information.
+
+```yaml
+Type: SwitchParameter
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -76,42 +109,26 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-Source PDF path.
+Path to a modern Pages, Numbers, or Keynote package or directory bundle.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: FilePath
 Possible values:
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Provider
-Engine-neutral OCR implementation.
-
-```yaml
-Type: IOcrEngine
-Parameter Sets: __AllParameterSets
-Aliases: Engine
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
 ### -ReadOptions
-Optional bounded PDF parsing settings.
+Bounded OfficeIMO iWork read options.
 
 ```yaml
-Type: PdfLoadOptions
+Type: IWorkReadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -128,11 +145,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.String`
 
 ## OUTPUTS
 
-- `OfficeIMO.Pdf.Ocr.PdfOcrMergeResult`
+- `System.IO.FileInfo`
+- `OfficeIMO.IWork.IWorkConversionReport`
 
 ## RELATED LINKS
 

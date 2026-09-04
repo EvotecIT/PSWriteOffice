@@ -4,32 +4,32 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# New-OfficeDocumentReader
+# ConvertFrom-OfficeOneNote
 ## SYNOPSIS
-Creates an immutable fully configured OfficeIMO document reader.
+Converts an offline OneNote section or notebook to semantic Markdown, HTML, or PDF.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeDocumentReader [-UseTesseract] [-TesseractExecutablePath <string>] [-OcrLanguage <TesseractOcrLanguage[]>] [-TesseractLanguage <string>] [-TesseractDataPath <string>] [-TesseractDpi <Int32>] [-TesseractTimeoutSeconds <Int32>] [-MaxStoreItems <Int32>] [-AllStoreItems] [-MaxConcurrentReads <Int32>] [-ProcessorFailureBehavior <OfficeDocumentProcessorFailureBehavior>] [<CommonParameters>]
+ConvertFrom-OfficeOneNote [-Path] <string> [-OutputPath] <string> [-ReadOptions <OneNoteReaderOptions>] [-NotebookOptions <OneNoteNotebookReaderOptions>] [-ProjectionOptions <OneNoteMarkdownOptions>] [-HtmlOptions <HtmlOptions>] [-PdfOptions <OneNotePdfSaveOptions>] [-FailOnLoss] [-Force] [-PassThruReport] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Creates an immutable fully configured OfficeIMO document reader.
+Free-form canvas placement and unsupported native data are reported as conversion evidence rather than silently presented as lossless.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> $reader = New-OfficeDocumentReader -OcrLanguage English, Polish -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic
+PS> $report = ConvertFrom-OfficeOneNote -Path .\Operations.one -OutputPath .\Operations.md -PassThruReport
+$report | Select-Object HasLoss, Diagnostics
 ```
 
-The returned reader can be supplied to every PSWriteOffice Reader command.
 
 ## PARAMETERS
 
-### -AllStoreItems
-Project every matching item from each email store.
+### -FailOnLoss
+Fail when the selected projection reports an approximation or omission.
 
 ```yaml
 Type: SwitchParameter
@@ -44,155 +44,139 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -MaxConcurrentReads
-Maximum asynchronous reads allowed in flight.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaxStoreItems
-Maximum PST, OST, OLM, or EMLX items projected from each store. The default is 1,000.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -OcrLanguage
-Friendly OCR languages used by the built-in Tesseract adapter.
-
-```yaml
-Type: TesseractOcrLanguage[]
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: English, Polish, Arabic, ChineseSimplified, ChineseTraditional, Czech, Danish, Dutch, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Italian, Japanese, Korean, Norwegian, Portuguese, Romanian, Russian, Slovak, Spanish, Swedish, Turkish, Ukrainian, Vietnamese
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProcessorFailureBehavior
-Behavior when a processor fails.
-
-```yaml
-Type: OfficeDocumentProcessorFailureBehavior
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: Throw, ContinueWithDiagnostic, StopWithDiagnostic
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TesseractDataPath
-Optional Tesseract tessdata directory.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TesseractDpi
-Optional input DPI passed to Tesseract.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TesseractExecutablePath
-Tesseract executable path or command name.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TesseractLanguage
-Advanced raw Tesseract expression for caller-installed custom trained-data models.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TesseractTimeoutSeconds
-Maximum Tesseract process duration in seconds. The default is 120.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -UseTesseract
-Enable the built-in Tesseract command-line OCR adapter with default settings.
+### -Force
+Overwrite an existing destination.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -HtmlOptions
+HTML rendering settings used for .html output.
+
+```yaml
+Type: HtmlOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NotebookOptions
+Notebook hierarchy, package, and section-error policy.
+
+```yaml
+Type: OneNoteNotebookReaderOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -OutputPath
+Destination .md, .html, or .pdf path.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: OutPath
+Possible values:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PassThruReport
+Return conversion evidence instead of file information.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Path to a .one section, .onetoc2 notebook index, or .onepkg archive.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: FilePath
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -PdfOptions
+Semantic layout and PDF settings used for .pdf output.
+
+```yaml
+Type: OneNotePdfSaveOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProjectionOptions
+OneNote hierarchy, history, and binary-asset projection settings.
+
+```yaml
+Type: OneNoteMarkdownOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ReadOptions
+Bounded section and revision-store read options.
+
+```yaml
+Type: OneNoteReaderOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -209,11 +193,14 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `None`
+- `System.String`
 
 ## OUTPUTS
 
-- `OfficeIMO.Reader.OfficeDocumentReader`
+- `System.IO.FileInfo`
+- `OfficeIMO.OneNote.Markdown.OneNoteMarkdownConversionReport`
+- `OfficeIMO.Html.HtmlConversionReport`
+- `OfficeIMO.Pdf.PdfDocumentConversionResult`
 
 ## RELATED LINKS
 

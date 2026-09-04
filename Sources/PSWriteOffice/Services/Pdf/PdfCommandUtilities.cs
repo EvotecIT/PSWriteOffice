@@ -89,9 +89,7 @@ internal static class PdfCommandUtilities
 
     internal static string GetSafeFileName(string fileName)
     {
-        var invalid = Path.GetInvalidFileNameChars();
-        var safe = new string(fileName.Select(character => invalid.Contains(character) ? '_' : character).ToArray());
-        return string.IsNullOrWhiteSpace(safe) ? "attachment.bin" : safe;
+        return AtomicFileWriter.GetSafeFileName(fileName, "attachment.bin");
     }
 
     internal static string GetUniquePath(string directory, string fileName)
@@ -210,13 +208,15 @@ internal static class PdfCommandUtilities
         {
             ParsingMode = effective.ParsingMode,
             Limits = effective.Limits,
+            AesCryptographyProvider = effective.AesCryptographyProvider,
             Password = string.IsNullOrEmpty(password) ? effective.Password : password,
             PermissionPolicy = ignorePermissionRestrictions
                 ? PdfPermissionPolicy.IgnoreRestrictions
                 : effective.PermissionPolicy,
             PreferToUnicode = effective.PreferToUnicode,
             UseWinAnsiFallback = effective.UseWinAnsiFallback,
-            AdjustKerningFromTJ = effective.AdjustKerningFromTJ
+            AdjustKerningFromTJ = effective.AdjustKerningFromTJ,
+            IncludeArtifactText = effective.IncludeArtifactText
         };
     }
 

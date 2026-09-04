@@ -11,7 +11,7 @@ Recognizes text in an image with automatic local OCR runtime discovery.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficeImageText [-Path] <string> [-PassThru] [-Options <OfficeOcrOptions>] [-Language <OfficeOcrLanguage[]>] [-TesseractLanguageExpression <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [<CommonParameters>]
+Get-OfficeImageText [-Path] <string> [-PassThru] [-Options <TesseractOcrSessionOptions>] [-Language <TesseractOcrLanguage[]>] [-TesseractLanguageExpression <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,7 +39,7 @@ Returns the full OCR result, including confidence, word geometry, provider, mode
 Friendly OCR languages. Supply more than one value to recognize multilingual content.
 
 ```yaml
-Type: OfficeOcrLanguage[]
+Type: TesseractOcrLanguage[]
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values: English, Polish, Arabic, ChineseSimplified, ChineseTraditional, Czech, Danish, Dutch, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Italian, Japanese, Korean, Norwegian, Portuguese, Romanian, Russian, Slovak, Spanish, Swedish, Turkish, Ukrainian, Vietnamese
@@ -71,7 +71,7 @@ Accept wildcard characters: False
 Advanced OfficeIMO OCR options. Convenience parameters override matching values.
 
 ```yaml
-Type: OfficeOcrOptions
+Type: TesseractOcrSessionOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -173,7 +173,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 - `System.String`
-- `OfficeIMO.Reader.OfficeOcrEngineResult`
+- `OfficeIMO.Ocr.OcrResult`
 
 ## RELATED LINKS
 

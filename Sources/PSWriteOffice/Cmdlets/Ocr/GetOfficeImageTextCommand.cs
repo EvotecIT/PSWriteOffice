@@ -1,7 +1,7 @@
 using System.Management.Automation;
 using System.Threading.Tasks;
-using OfficeIMO.Reader;
-using OfficeIMO.Reader.Ocr;
+using OfficeIMO.Ocr;
+using OfficeIMO.Ocr.Tesseract;
 using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Ocr;
@@ -21,7 +21,7 @@ namespace PSWriteOffice.Cmdlets.Ocr;
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficeImageText")]
 [OutputType(typeof(string))]
-[OutputType(typeof(OfficeOcrEngineResult))]
+[OutputType(typeof(OcrResult))]
 public sealed class GetOfficeImageTextCommand : OfficeOcrCmdlet
 {
     /// <summary>PNG, JPEG, TIFF, BMP, GIF, WebP, or JPEG 2000 image path.</summary>
@@ -37,9 +37,32 @@ public sealed class GetOfficeImageTextCommand : OfficeOcrCmdlet
     protected override async Task ProcessRecordAsync()
     {
         string inputPath = PdfCommandUtilities.ResolveExistingFilePath(this, Path);
-        OfficeOcrEngineResult result = await OfficeOcr
-            .ReadTextAsync(inputPath, CreateOptions(), CancelToken)
+        ValidateSupportedImagePath(inputPath);
+        OcrResult result = await TesseractOcr
+            .RecognizeFileAsync(inputPath, CreateSessionOptions(), CancelToken)
             .ConfigureAwait(false);
         WriteObject(PassThru.IsPresent ? result : result.Text);
+    }
+
+    private static void ValidateSupportedImagePath(string path)
+    {
+        switch (System.IO.Path.GetExtension(path).ToLowerInvariant())
+        {
+            case ".png":
+            case ".jpg":
+            case ".jpeg":
+            case ".tif":
+            case ".tiff":
+            case ".bmp":
+            case ".gif":
+            case ".webp":
+            case ".jp2":
+            case ".j2k":
+                return;
+            default:
+                throw new PSArgumentException(
+                    "Tesseract OCR supports PNG, JPEG, TIFF, BMP, GIF, WebP, and JPEG 2000 image files.",
+                    nameof(Path));
+        }
     }
 }

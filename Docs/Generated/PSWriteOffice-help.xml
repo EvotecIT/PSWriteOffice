@@ -62822,6 +62822,232 @@ cells. This keeps existing-document editing simple without forcing callers back 
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>ConvertFrom-OfficeIWork</command:name>
+      <command:verb>ConvertFrom</command:verb>
+      <command:noun>OfficeIWork</command:noun>
+      <maml:description>
+        <maml:para>Converts Pages, Numbers, or Keynote into the matching editable Microsoft Office format.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The conversion reports what was reconstructed and what remains iWork-specific instead of implying lossless parity.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>ConvertFrom-OfficeIWork</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ConversionOptions</maml:name>
+          <maml:description>
+            <maml:para>Editable-reconstruction or visual-fallback policy.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">IWorkConversionOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>IWorkConversionOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>FailOnLoss</maml:name>
+          <maml:description>
+            <maml:para>Fail when source structures are flattened, omitted, or retained only as preserved records.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Overwrite an existing destination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Destination DOCX, XLSX, or PPTX path matching the detected iWork application.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThruReport</maml:name>
+          <maml:description>
+            <maml:para>Return the loss-aware conversion report instead of file information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Path to a modern Pages, Numbers, or Keynote package or directory bundle.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ReadOptions</maml:name>
+          <maml:description>
+            <maml:para>Bounded OfficeIMO iWork read options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">IWorkReadOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>IWorkReadOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ConversionOptions</maml:name>
+        <maml:description>
+          <maml:para>Editable-reconstruction or visual-fallback policy.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">IWorkConversionOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>IWorkConversionOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>FailOnLoss</maml:name>
+        <maml:description>
+          <maml:para>Fail when source structures are flattened, omitted, or retained only as preserved records.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Overwrite an existing destination.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Destination DOCX, XLSX, or PPTX path matching the detected iWork application.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThruReport</maml:name>
+        <maml:description>
+          <maml:para>Return the loss-aware conversion report instead of file information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Path to a modern Pages, Numbers, or Keynote package or directory bundle.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ReadOptions</maml:name>
+        <maml:description>
+          <maml:para>Bounded OfficeIMO iWork read options.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">IWorkReadOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>IWorkReadOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.IO.FileInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.IWork.IWorkConversionReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Convert Numbers to Excel and retain fidelity evidence.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$report = ConvertFrom-OfficeIWork -Path .\Quarterly.numbers -OutputPath .\Quarterly.xlsx -PassThruReport&#xD;
+            $report | Select-Object SourceKind, ProjectionKind, ReconstructedItemCount, HasLoss</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>ConvertFrom-OfficeLatexMarkdown</command:name>
       <command:verb>ConvertFrom</command:verb>
       <command:noun>OfficeLatexMarkdown</command:noun>
@@ -63930,6 +64156,314 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <dev:code>$doc = ConvertFrom-OfficeMarkdownHtml -Path .\report.html -AsDocument</dev:code>
         <dev:remarks>
           <maml:para>Returns a Markdown document for further editing or rendering.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>ConvertFrom-OfficeOneNote</command:name>
+      <command:verb>ConvertFrom</command:verb>
+      <command:noun>OfficeOneNote</command:noun>
+      <maml:description>
+        <maml:para>Converts an offline OneNote section or notebook to semantic Markdown, HTML, or PDF.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Free-form canvas placement and unsupported native data are reported as conversion evidence rather than silently presented as lossless.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>ConvertFrom-OfficeOneNote</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>FailOnLoss</maml:name>
+          <maml:description>
+            <maml:para>Fail when the selected projection reports an approximation or omission.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Overwrite an existing destination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>HtmlOptions</maml:name>
+          <maml:description>
+            <maml:para>HTML rendering settings used for .html output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">HtmlOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>HtmlOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>NotebookOptions</maml:name>
+          <maml:description>
+            <maml:para>Notebook hierarchy, package, and section-error policy.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OneNoteNotebookReaderOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OneNoteNotebookReaderOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+          <maml:name>OutputPath</maml:name>
+          <maml:description>
+            <maml:para>Destination .md, .html, or .pdf path.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PassThruReport</maml:name>
+          <maml:description>
+            <maml:para>Return conversion evidence instead of file information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Path to a .one section, .onetoc2 notebook index, or .onepkg archive.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PdfOptions</maml:name>
+          <maml:description>
+            <maml:para>Semantic layout and PDF settings used for .pdf output.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OneNotePdfSaveOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OneNotePdfSaveOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ProjectionOptions</maml:name>
+          <maml:description>
+            <maml:para>OneNote hierarchy, history, and binary-asset projection settings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OneNoteMarkdownOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OneNoteMarkdownOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ReadOptions</maml:name>
+          <maml:description>
+            <maml:para>Bounded section and revision-store read options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OneNoteReaderOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OneNoteReaderOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>FailOnLoss</maml:name>
+        <maml:description>
+          <maml:para>Fail when the selected projection reports an approximation or omission.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Overwrite an existing destination.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>HtmlOptions</maml:name>
+        <maml:description>
+          <maml:para>HTML rendering settings used for .html output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">HtmlOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>HtmlOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>NotebookOptions</maml:name>
+        <maml:description>
+          <maml:para>Notebook hierarchy, package, and section-error policy.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OneNoteNotebookReaderOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OneNoteNotebookReaderOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="OutPath">
+        <maml:name>OutputPath</maml:name>
+        <maml:description>
+          <maml:para>Destination .md, .html, or .pdf path.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PassThruReport</maml:name>
+        <maml:description>
+          <maml:para>Return conversion evidence instead of file information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Path to a .one section, .onetoc2 notebook index, or .onepkg archive.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PdfOptions</maml:name>
+        <maml:description>
+          <maml:para>Semantic layout and PDF settings used for .pdf output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OneNotePdfSaveOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OneNotePdfSaveOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ProjectionOptions</maml:name>
+        <maml:description>
+          <maml:para>OneNote hierarchy, history, and binary-asset projection settings.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OneNoteMarkdownOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OneNoteMarkdownOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ReadOptions</maml:name>
+        <maml:description>
+          <maml:para>Bounded section and revision-store read options.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OneNoteReaderOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OneNoteReaderOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.IO.FileInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.OneNote.Markdown.OneNoteMarkdownConversionReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Html.HtmlConversionReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Pdf.PdfDocumentConversionResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Convert a OneNote section to Markdown and inspect fidelity evidence.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$report = ConvertFrom-OfficeOneNote -Path .\Operations.one -OutputPath .\Operations.md -PassThruReport&#xD;
+            $report | Select-Object HasLoss, Diagnostics</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -74745,7 +75279,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Friendly OCR languages. Supply more than one value to recognize multilingual content.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TesseractOcrLanguage[]</command:parameterValue>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
@@ -74777,7 +75311,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
             <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
-            <maml:name>OfficeOcrLanguage[]</maml:name>
+            <maml:name>TesseractOcrLanguage[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -74811,9 +75345,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">OfficeOcrOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TesseractOcrSessionOptions</command:parameterValue>
           <dev:type>
-            <maml:name>OfficeOcrOptions</maml:name>
+            <maml:name>TesseractOcrSessionOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -74850,6 +75384,18 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PdfOptions</maml:name>
+          <maml:description>
+            <maml:para>Advanced PDF page selection, rendering, confidence, overlap, and resource limits.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfOcrMergeOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfOcrMergeOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -74922,7 +75468,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Friendly OCR languages. Supply more than one value to recognize multilingual content.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">TesseractOcrLanguage[]</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
@@ -74954,7 +75500,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
-          <maml:name>OfficeOcrLanguage[]</maml:name>
+          <maml:name>TesseractOcrLanguage[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -74988,9 +75534,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">OfficeOcrOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">TesseractOcrSessionOptions</command:parameterValue>
         <dev:type>
-          <maml:name>OfficeOcrOptions</maml:name>
+          <maml:name>TesseractOcrSessionOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -75027,6 +75573,18 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PdfOptions</maml:name>
+        <maml:description>
+          <maml:para>Advanced PDF page selection, rendering, confidence, overlap, and resource limits.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfOcrMergeOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfOcrMergeOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -75095,7 +75653,7 @@ cells. This keeps existing-document editing simple without forcing callers back 
       </command:returnValue>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Pdf.PdfSearchableOcrResult</maml:name>
+          <maml:name>OfficeIMO.Pdf.Ocr.PdfSearchableOcrResult</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -109748,7 +110306,7 @@ extraction, hashing, and chunk shaping.</maml:para>
           <maml:description>
             <maml:para>Friendly OCR languages. Supply more than one value to recognize multilingual content.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TesseractOcrLanguage[]</command:parameterValue>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
@@ -109780,7 +110338,7 @@ extraction, hashing, and chunk shaping.</maml:para>
             <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
-            <maml:name>OfficeOcrLanguage[]</maml:name>
+            <maml:name>TesseractOcrLanguage[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -109802,9 +110360,9 @@ extraction, hashing, and chunk shaping.</maml:para>
           <maml:description>
             <maml:para>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">OfficeOcrOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TesseractOcrSessionOptions</command:parameterValue>
           <dev:type>
-            <maml:name>OfficeOcrOptions</maml:name>
+            <maml:name>TesseractOcrSessionOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -109877,7 +110435,7 @@ extraction, hashing, and chunk shaping.</maml:para>
         <maml:description>
           <maml:para>Friendly OCR languages. Supply more than one value to recognize multilingual content.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">TesseractOcrLanguage[]</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
@@ -109909,7 +110467,7 @@ extraction, hashing, and chunk shaping.</maml:para>
           <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
-          <maml:name>OfficeOcrLanguage[]</maml:name>
+          <maml:name>TesseractOcrLanguage[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -109931,9 +110489,9 @@ extraction, hashing, and chunk shaping.</maml:para>
         <maml:description>
           <maml:para>Advanced OfficeIMO OCR options. Convenience parameters override matching values.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">OfficeOcrOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">TesseractOcrSessionOptions</command:parameterValue>
         <dev:type>
-          <maml:name>OfficeOcrOptions</maml:name>
+          <maml:name>TesseractOcrSessionOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -110014,7 +110572,7 @@ extraction, hashing, and chunk shaping.</maml:para>
       </command:returnValue>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Reader.OfficeOcrEngineResult</maml:name>
+          <maml:name>OfficeIMO.Ocr.OcrResult</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -110042,6 +110600,142 @@ extraction, hashing, and chunk shaping.</maml:para>
         <dev:code>Get-OfficeImageText -Path .\Scan.png -Language English, Polish -PassThru</dev:code>
         <dev:remarks>
           <maml:para>Returns the full OCR result, including confidence, word geometry, provider, model, and diagnostics.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Get-OfficeIWork</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>OfficeIWork</command:noun>
+      <maml:description>
+        <maml:para>Reads a modern Apple Pages, Numbers, or Keynote package without launching iWork.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Reads a modern Apple Pages, Numbers, or Keynote package without launching iWork.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-OfficeIWork</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Kind</maml:name>
+          <maml:description>
+            <maml:para>Optional expected application kind; a mismatch is rejected.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">IWorkDocumentKind</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Pages</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Numbers</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Keynote</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>IWorkDocumentKind</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Bounded OfficeIMO iWork read options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">IWorkReadOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>IWorkReadOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Path to a modern Pages, Numbers, or Keynote package or directory bundle.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Kind</maml:name>
+        <maml:description>
+          <maml:para>Optional expected application kind; a mismatch is rejected.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">IWorkDocumentKind</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Pages</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Numbers</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Keynote</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>IWorkDocumentKind</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Bounded OfficeIMO iWork read options.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">IWorkReadOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>IWorkReadOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Path to a modern Pages, Numbers, or Keynote package or directory bundle.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.IWork.IWorkSourceDocument</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Inspect an iWork source before deciding how to convert it.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$source = Get-OfficeIWork -Path .\Quarterly.numbers&#xD;
+            $source | Select-Object Kind, ContainerKind, BuildVersions&#xD;
+            $source.ReadNumbers().Sheets | Select-Object Name</dev:code>
+        <dev:remarks>
+          <maml:para>Returns OfficeIMO's bounded, loss-aware source model.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -114223,6 +114917,136 @@ extraction, hashing, and chunk shaping.</maml:para>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>Get-OfficeOneNote</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>OfficeOneNote</command:noun>
+      <maml:description>
+        <maml:para>Reads an offline OneNote section, notebook hierarchy, or packaged notebook.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Reads an offline OneNote section, notebook hierarchy, or packaged notebook.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-OfficeOneNote</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>NotebookOptions</maml:name>
+          <maml:description>
+            <maml:para>Notebook hierarchy, package, and section-error policy.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OneNoteNotebookReaderOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OneNoteNotebookReaderOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Bounded section and revision-store read options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OneNoteReaderOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OneNoteReaderOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Path to a .one section, .onetoc2 notebook index, or .onepkg archive.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>NotebookOptions</maml:name>
+        <maml:description>
+          <maml:para>Notebook hierarchy, package, and section-error policy.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OneNoteNotebookReaderOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OneNoteNotebookReaderOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Bounded section and revision-store read options.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OneNoteReaderOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OneNoteReaderOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Path to a .one section, .onetoc2 notebook index, or .onepkg archive.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.OneNote.OneNoteSection</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.OneNote.OneNoteNotebook</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Read a OneNote section and inspect its pages.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$section = Get-OfficeOneNote -Path .\Operations.one&#xD;
+            $section.Pages | Select-Object Title, CreatedUtc, LastModifiedUtc</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>Get-OfficeOpenDocument</command:name>
       <command:verb>Get</command:verb>
       <command:noun>OfficeOpenDocument</command:noun>
@@ -114568,6 +115392,156 @@ extraction, hashing, and chunk shaping.</maml:para>
         <dev:code>Get-OfficeOpenDocument -Path 'C:\Path'</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Get-OfficePackageSecurity</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>OfficePackageSecurity</command:noun>
+      <maml:description>
+        <maml:para>Inspects an Open XML or compound Office package without opening active content.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Inspects an Open XML or compound Office package without opening active content.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-OfficePackageSecurity</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Custom package size, expansion, and active-content policy.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficePackageSecurityOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficePackageSecurityOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Path to an Open XML or compound Office package.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ThrowOnViolation</maml:name>
+          <maml:description>
+            <maml:para>Throw on the first policy violation instead of returning only the report.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Untrusted</maml:name>
+          <maml:description>
+            <maml:para>Use the bounded policy that rejects macros, embedded payloads, ActiveX, and external relationships.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Custom package size, expansion, and active-content policy.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficePackageSecurityOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficePackageSecurityOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Path to an Open XML or compound Office package.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ThrowOnViolation</maml:name>
+        <maml:description>
+          <maml:para>Throw on the first policy violation instead of returning only the report.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Untrusted</maml:name>
+        <maml:description>
+          <maml:para>Use the bounded policy that rejects macros, embedded payloads, ActiveX, and external relationships.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.OfficePackageSecurityReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Inventory active content and reject it under an untrusted-input policy.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$report = Get-OfficePackageSecurity -Path .\Incoming\Report.xlsm -Untrusted&#xD;
+            $report | Select-Object IsValid, MacroPartCount, EmbeddedPayloadPartCount, ExternalRelationshipCount&#xD;
+            $report.Findings | Format-Table Severity, Rule, PartName, Message</dev:code>
+        <dev:remarks>
+          <maml:para>Returns observations and policy violations; it does not execute package content.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -120217,6 +121191,167 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
         <dev:code>Get-OfficeProtectionCapability -IncompleteOnly | Format-Table FormatId, Kind, Open, Create, Validate</dev:code>
         <dev:remarks>
           <maml:para>Shows formats whose encrypted, signed, restricted, or obfuscated workflows still have unsupported operations.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Get-OfficeProvenance</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>OfficeProvenance</command:noun>
+      <maml:description>
+        <maml:para>Collects structural, text-integrity, and optional provider verification evidence for a file.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The result keeps carrier discovery, cryptographic verification, and provider signals separate; it does not infer authorship from their presence or absence.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-OfficeProvenance</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>C2paToolPath</maml:name>
+          <maml:description>
+            <maml:para>Explicit c2patool executable path or controlled command name used for cryptographic verification.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Structural, text-integrity, and provider verification limits and policy.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">OfficeProvenanceAssessmentOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>OfficeProvenanceAssessmentOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Asset or document path to inspect.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SignalDetector</maml:name>
+          <maml:description>
+            <maml:para>Optional provider-specific watermark or disclosure detectors.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">IOfficeProvenanceSignalDetector[]</command:parameterValue>
+          <dev:type>
+            <maml:name>IOfficeProvenanceSignalDetector[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>C2paToolPath</maml:name>
+        <maml:description>
+          <maml:para>Explicit c2patool executable path or controlled command name used for cryptographic verification.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Structural, text-integrity, and provider verification limits and policy.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">OfficeProvenanceAssessmentOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>OfficeProvenanceAssessmentOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="FilePath">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Asset or document path to inspect.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SignalDetector</maml:name>
+        <maml:description>
+          <maml:para>Optional provider-specific watermark or disclosure detectors.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">IOfficeProvenanceSignalDetector[]</command:parameterValue>
+        <dev:type>
+          <maml:name>IOfficeProvenanceSignalDetector[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Provenance.OfficeProvenanceAssessmentReport</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Inspect embedded provenance without invoking an external verifier.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$evidence = Get-OfficeProvenance -Path .\Published\cover.png&#xD;
+            $evidence.Structural | Select-Object Format, HasC2paManifest&#xD;
+            $evidence.TextIntegrity</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Ask an explicitly supplied c2patool installation to verify Content Credentials.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$evidence = Get-OfficeProvenance -Path .\Published\cover.png -C2paToolPath C:\Tools\c2patool.exe&#xD;
+            $evidence.Verification | Select-Object Status, ProviderName, Findings</dev:code>
+        <dev:remarks>
+          <maml:para>Network access remains disabled unless enabled in the supplied assessment options.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -134844,14 +135979,14 @@ the script needs to work with list objects directly instead of using a text sear
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Engine">
           <maml:name>Provider</maml:name>
           <maml:description>
-            <maml:para>External OCR provider implementation.</maml:para>
+            <maml:para>Engine-neutral OCR implementation.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">IPdfOcrProvider</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">IOcrEngine</command:parameterValue>
           <dev:type>
-            <maml:name>IPdfOcrProvider</maml:name>
+            <maml:name>IOcrEngine</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -134919,14 +136054,14 @@ the script needs to work with list objects directly instead of using a text sear
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Engine">
         <maml:name>Provider</maml:name>
         <maml:description>
-          <maml:para>External OCR provider implementation.</maml:para>
+          <maml:para>Engine-neutral OCR implementation.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">IPdfOcrProvider</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">IOcrEngine</command:parameterValue>
         <dev:type>
-          <maml:name>IPdfOcrProvider</maml:name>
+          <maml:name>IOcrEngine</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -134954,7 +136089,7 @@ the script needs to work with list objects directly instead of using a text sear
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Pdf.PdfOcrMergeResult</maml:name>
+          <maml:name>OfficeIMO.Pdf.Ocr.PdfOcrMergeResult</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -137778,7 +138913,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
           <maml:description>
             <maml:para>Friendly OCR languages used by the built-in Tesseract adapter.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">TesseractOcrLanguage[]</command:parameterValue>
           <command:parameterValueGroup>
             <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
             <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
@@ -137810,7 +138945,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
             <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
           </command:parameterValueGroup>
           <dev:type>
-            <maml:name>OfficeOcrLanguage[]</maml:name>
+            <maml:name>TesseractOcrLanguage[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -137948,7 +139083,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <maml:description>
           <maml:para>Friendly OCR languages used by the built-in Tesseract adapter.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">OfficeOcrLanguage[]</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">TesseractOcrLanguage[]</command:parameterValue>
         <command:parameterValueGroup>
           <command:parameterValue required="false" variableLength="false">English</command:parameterValue>
           <command:parameterValue required="false" variableLength="false">Polish</command:parameterValue>
@@ -137980,7 +139115,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
           <command:parameterValue required="false" variableLength="false">Vietnamese</command:parameterValue>
         </command:parameterValueGroup>
         <dev:type>
-          <maml:name>OfficeOcrLanguage[]</maml:name>
+          <maml:name>TesseractOcrLanguage[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
