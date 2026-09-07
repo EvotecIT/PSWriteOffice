@@ -21,6 +21,7 @@
 
     <ItemGroup>
         <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
+        <InternalsVisibleTo Include="PSWriteOffice.Tests" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">

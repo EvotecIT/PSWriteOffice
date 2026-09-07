@@ -13,20 +13,34 @@ internal static class AtomicFileWriter
             throw new ArgumentNullException(nameof(bytes));
         }
 
+        return WriteUnique(directory, fileName, temporaryPath => WriteTemporary(temporaryPath, bytes));
+    }
+
+    internal static string WriteUnique(string directory, string fileName, Action<string> writeTemporaryFile)
+    {
+        if (writeTemporaryFile == null)
+        {
+            throw new ArgumentNullException(nameof(writeTemporaryFile));
+        }
+
         Directory.CreateDirectory(directory);
         var safeName = GetSafeFileName(fileName);
         var extension = Path.GetExtension(safeName);
         var stem = Path.GetFileNameWithoutExtension(safeName);
+        var temporaryPath = CreateTemporaryPath(directory, safeName);
 
-        for (var index = 1; ; index++)
+        try
         {
-            var candidateName = index == 1 ? safeName : $"{stem}-{index}{extension}";
-            var candidatePath = Path.Combine(directory, candidateName);
-            var temporaryPath = CreateTemporaryPath(directory, candidateName);
-
-            try
+            writeTemporaryFile(temporaryPath);
+            if (!File.Exists(temporaryPath))
             {
-                WriteTemporary(temporaryPath, bytes);
+                throw new IOException($"The output writer did not create temporary file '{temporaryPath}'.");
+            }
+
+            for (var index = 1; ; index++)
+            {
+                var candidateName = index == 1 ? safeName : $"{stem}-{index}{extension}";
+                var candidatePath = Path.Combine(directory, candidateName);
                 try
                 {
                     File.Move(temporaryPath, candidatePath);
@@ -37,10 +51,10 @@ internal static class AtomicFileWriter
                     // Another writer won this name. Retry with the next deterministic suffix.
                 }
             }
-            finally
-            {
-                DeleteTemporary(temporaryPath);
-            }
+        }
+        finally
+        {
+            DeleteTemporary(temporaryPath);
         }
     }
 

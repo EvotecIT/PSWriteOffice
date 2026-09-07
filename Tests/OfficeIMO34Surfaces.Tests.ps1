@@ -94,6 +94,26 @@ Describe 'OfficeIMO 3.4 PowerShell surfaces' {
             Should -Throw '*either through -ProjectionOptions or through -PdfOptions*'
     }
 
+    It 'rejects OneNote renderer options for a different output format' -TestCases @(
+        @{ Parameter = 'HtmlOptions'; Extension = '.md'; Message = '*HtmlOptions can only be used with .html output*' }
+        @{ Parameter = 'HtmlOptions'; Extension = '.pdf'; Message = '*HtmlOptions can only be used with .html output*' }
+        @{ Parameter = 'PdfOptions'; Extension = '.md'; Message = '*PdfOptions can only be used with .pdf output*' }
+        @{ Parameter = 'PdfOptions'; Extension = '.html'; Message = '*PdfOptions can only be used with .pdf output*' }
+    ) {
+        param($Parameter, $Extension, $Message)
+
+        $command = Get-Command ConvertFrom-OfficeOneNote
+        $options = [Activator]::CreateInstance($command.Parameters[$Parameter].ParameterType)
+        $arguments = @{
+            Path = Join-Path $TestDrive 'unused.one'
+            OutputPath = Join-Path $TestDrive ("mismatched-options$Extension")
+            ErrorAction = 'Stop'
+        }
+        $arguments[$Parameter] = $options
+
+        { ConvertFrom-OfficeOneNote @arguments } | Should -Throw $Message
+    }
+
     It 'keeps structural package inspection separate from active-content policy' {
         $path = Join-Path $TestDrive 'security.docx'
         New-OfficeWord -Path $path {

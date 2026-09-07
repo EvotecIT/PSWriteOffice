@@ -78,6 +78,16 @@ public sealed class ConvertFromOfficeOneNoteCommand : PSCmdlet
             throw new PSArgumentException("OutputPath must use the .md, .html, or .pdf extension.", nameof(OutputPath));
         }
 
+        if (HtmlOptions != null && extension != ".html")
+        {
+            throw new PSArgumentException("HtmlOptions can only be used with .html output.", nameof(HtmlOptions));
+        }
+
+        if (PdfOptions != null && extension != ".pdf")
+        {
+            throw new PSArgumentException("PdfOptions can only be used with .pdf output.", nameof(PdfOptions));
+        }
+
         if (extension == ".pdf" && PdfOptions != null && ProjectionOptions != null)
         {
             throw new PSArgumentException("Specify OneNote projection settings either through -ProjectionOptions or through -PdfOptions, not both.");
