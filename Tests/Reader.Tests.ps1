@@ -330,8 +330,10 @@ Describe 'Reader cmdlets' {
     }
 
     It 'creates configurable readers without requiring OfficeIMO option objects' {
+        $runtime = New-TestTesseractExecutable -Directory $TestDrive
         $reader = New-OfficeDocumentReader -TesseractLanguage 'eng+pol' `
-            -TesseractTimeoutSeconds 30 -MaxStoreItems 2500 -MaxConcurrentReads 2
+            -TesseractExecutablePath $runtime -TesseractTimeoutSeconds 30 `
+            -MaxStoreItems 2500 -MaxConcurrentReads 2
 
         $reader | Should -Not -BeNullOrEmpty
         $reader.MaxConcurrentReads | Should -Be 2
