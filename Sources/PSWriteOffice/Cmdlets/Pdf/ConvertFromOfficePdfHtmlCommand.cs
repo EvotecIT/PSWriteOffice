@@ -62,7 +62,7 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet {
 
     /// <summary>Optional OfficeIMO HTML to PDF save options.</summary>
     [Parameter]
-    public HtmlPdfSaveOptions? Options { get; set; }
+    public HtmlToPdfOptions? Options { get; set; }
 
     /// <summary>Open the PDF after saving.</summary>
     [Parameter]
@@ -121,7 +121,7 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet {
         }
 
         string preparedHtml = ApplyStylesheets(html);
-        HtmlPdfSaveOptions options = BuildOptions(htmlFileDirectory);
+        HtmlToPdfOptions options = BuildOptions(htmlFileDirectory);
         HtmlConversionDocument document = HtmlConversionDocument.Parse(preparedHtml, new HtmlConversionDocumentOptions {
             Profile = Profile,
             Trust = TrustedDocumentProfile.IsPresent ? HtmlInputTrust.Trusted : HtmlInputTrust.Untrusted,
@@ -146,17 +146,17 @@ public sealed class ConvertFromOfficePdfHtmlCommand : PSCmdlet {
             return;
         }
 
-        WriteObject(document.ToPdf(options), enumerateCollection: false);
+        WriteObject(document.ToPdfBytes(options), enumerateCollection: false);
     }
 
-    private HtmlPdfSaveOptions BuildOptions(string? htmlFileDirectory) {
-        HtmlPdfSaveOptions options = Options?.ClonePdf() ?? new HtmlPdfSaveOptions();
+    private HtmlToPdfOptions BuildOptions(string? htmlFileDirectory) {
+        HtmlToPdfOptions options = Options?.ClonePdf() ?? new HtmlToPdfOptions();
 
         ApplyResourceOptions(options, htmlFileDirectory);
         return options;
     }
 
-    private void ApplyResourceOptions(HtmlPdfSaveOptions options, string? htmlFileDirectory) {
+    private void ApplyResourceOptions(HtmlToPdfOptions options, string? htmlFileDirectory) {
         string? resolvedBasePath = null;
         if (!string.IsNullOrWhiteSpace(BasePath)) {
             resolvedBasePath = PdfCommandUtilities.ResolvePath(this, BasePath!);

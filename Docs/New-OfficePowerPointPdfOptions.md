@@ -357,7 +357,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.Pdf.PowerPointPdfSaveOptions`
+- `OfficeIMO.PowerPoint.Pdf.PowerPointToPdfOptions`
 
 ## RELATED LINKS
 

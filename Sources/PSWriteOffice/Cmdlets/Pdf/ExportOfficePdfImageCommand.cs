@@ -40,7 +40,7 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
 
     /// <summary>Optional bounded PDF parsing settings.</summary>
     [Parameter]
-    public PdfReadOptions? ReadOptions { get; set; }
+    public PdfLoadOptions? ReadOptions { get; set; }
 
     /// <summary>Password used to authenticate an encrypted PDF.</summary>
     [Parameter]
@@ -57,18 +57,18 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-        var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-        if (!ShouldProcess(output, $"Export PDF pages as {Format}")) return;
-        Directory.CreateDirectory(output);
         var options = Options ?? new PdfImageExportOptions();
         var readOptions = PdfCommandUtilities.CreateReadOptions(
             ReadOptions,
             Password,
             IgnorePermissionRestrictions.IsPresent);
-        var document = PdfCommandUtilities.LoadDocument(input, readOptions);
         var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
-        var pages = document.Read.ExportImages(Format, options, selection, readOptions);
+        var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+        if (!ShouldProcess(output, $"Export PDF pages as {Format}")) return;
+        Directory.CreateDirectory(output);
+        var document = PdfCommandUtilities.LoadDocument(input, readOptions);
+        var pages = document.Render.ExportImages(Format, options, selection);
         for (int index = 0; index < pages.Count; index++)
         {
             var page = pages[index];

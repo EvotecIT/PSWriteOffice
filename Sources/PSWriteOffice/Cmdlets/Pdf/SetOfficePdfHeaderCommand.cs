@@ -42,7 +42,7 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</summary>
+    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -51,7 +51,7 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
     public string? Text { get; set; }
 
     /// <summary>
-    /// Advanced header composer. The script receives a <see cref="PdfHeaderCompose"/> and can configure
+    /// Advanced header composer. The script receives a <see cref="PdfHeaderBuilder"/> and can configure
     /// default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
     /// </summary>
     [Parameter]
@@ -107,7 +107,7 @@ public sealed class SetOfficePdfHeaderCommand : PSCmdlet
         }
     }
 
-    private void ApplyAlignment(PdfHeaderCompose header)
+    private void ApplyAlignment(PdfHeaderBuilder header)
     {
         switch (Align)
         {

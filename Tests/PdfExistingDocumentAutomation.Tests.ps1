@@ -20,6 +20,7 @@ Describe 'Authenticated PDF automation' {
             'ConvertTo-OfficePdfOptimized',
             'ConvertTo-OfficePdfRedacted',
             'ConvertTo-OfficePdfSanitized',
+            'ConvertTo-OfficePdfSearchable',
             'Copy-OfficePdfPage',
             'Export-OfficePdfImage',
             'Export-OfficePdfLayoutOverlay',
@@ -62,6 +63,7 @@ Describe 'Authenticated PDF automation' {
         $overlayParameters = (Get-Command Add-OfficePdfPageOverlay).Parameters.Keys
         $overlayParameters | Should -Contain 'ReadOptions'
         $overlayParameters | Should -Contain 'SourceReadOptions'
+        (Get-Command ConvertTo-OfficePdfSearchable).Parameters.Keys | Should -Contain 'ReadOptions'
 
         foreach ($name in @('Compare-OfficePdfVisual', 'Test-OfficePdfRewrite')) {
             $parameters = (Get-Command $name).Parameters.Keys

@@ -9,12 +9,13 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// <example>
 ///   <summary>Reconstruct headings, paragraphs, lists, and tables.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$options = New-OfficePdfWordImportOptions -ImportHeadings -ImportParagraphs -ImportLists -ImportTables
+///   <code>$options = New-OfficePdfToWordOptions -ImportHeadings -ImportParagraphs -ImportLists -ImportTables
 /// ConvertTo-OfficePdfWord -Path .\Source.pdf -OutputPath .\Rebuilt.docx -Options $options</code>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficePdfWordImportOptions")]
-[OutputType(typeof(PdfWordImportOptions))]
-public sealed class NewOfficePdfWordImportOptionsCommand : PSCmdlet {
+[Cmdlet(VerbsCommon.New, "OfficePdfToWordOptions")]
+[Alias("New-OfficePdfWordImportOptions")]
+[OutputType(typeof(PdfToWordOptions))]
+public sealed class NewOfficePdfToWordOptionsCommand : PSCmdlet {
     /// <summary>Use the built-in tables-only import profile.</summary>
     [Parameter] public SwitchParameter TablesOnly { get; set; }
     /// <summary>Copy PDF metadata into Word properties.</summary>
@@ -64,7 +65,7 @@ public sealed class NewOfficePdfWordImportOptionsCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        PdfWordImportOptions options = TablesOnly.IsPresent ? PdfWordImportOptions.CreateTablesOnly() : new PdfWordImportOptions();
+        PdfToWordOptions options = TablesOnly.IsPresent ? PdfToWordOptions.CreateTablesOnly() : new PdfToWordOptions();
         Apply(nameof(IncludeMetadata), value => options.IncludeMetadata = value);
         Apply(nameof(PreservePageBreaks), value => options.PreservePageBreaks = value);
         Apply(nameof(IncludeEmptyPages), value => options.IncludeEmptyPages = value);

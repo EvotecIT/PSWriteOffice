@@ -34,7 +34,7 @@ public sealed class GetOfficePdfFontCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         foreach (var font in PdfDocument
-                     .Open(
+                     .Load(
                          PdfCommandUtilities.ResolvePath(this, Path),
                          PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
                      .Diagnostics()

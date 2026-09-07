@@ -38,7 +38,7 @@ Clears generated page background shapes while the PDF page is being composed.
 ## PARAMETERS
 
 ### -Document
-Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.
+Compatibility parameter. Page composition is supported only inside New-OfficePdf.
 
 ```yaml
 Type: PdfDocument

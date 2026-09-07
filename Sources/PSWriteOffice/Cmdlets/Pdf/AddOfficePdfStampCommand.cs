@@ -109,7 +109,7 @@ public sealed class AddOfficePdfStampCommand : PSWriteOffice.Cmdlets.OfficeMutat
         }
 
         var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
-        var document = PdfDocument.Open(PdfCommandUtilities.ResolvePath(this, Path), readOptions);
+        var document = PdfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path), readOptions);
         PdfDocument result = ParameterSetName == ParameterSetImage
             ? StampImage(document)
             : StampText(document);

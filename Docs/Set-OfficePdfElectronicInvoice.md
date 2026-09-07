@@ -69,7 +69,7 @@ Accept wildcard characters: False
 ```
 
 ### -Document
-Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf with OfficeIMO 3.2.
+Compatibility parameter. Electronic-invoice options must be declared inside New-OfficePdf.
 
 ```yaml
 Type: PdfDocument
@@ -123,7 +123,7 @@ E-invoice profile to prepare.
 Type: PdfComplianceProfile
 Parameter Sets: Context, Document
 Aliases: None
-Possible values: None, PdfA2B, PdfA2U, PdfA2A, PdfA3B, PdfA3U, PdfA3A, PdfUa1, FacturX, Zugferd, PdfA4, PdfA4E, PdfA4F, PdfUa2
+Possible values: None, PdfA2B, PdfA2U, PdfA2A, PdfA3B, PdfA3U, PdfA3A, PdfUa1, FacturX, Zugferd, PdfA4, PdfA4E, PdfA4F, PdfUa2, PdfX1A2003, PdfX4
 
 Required: False
 Position: named

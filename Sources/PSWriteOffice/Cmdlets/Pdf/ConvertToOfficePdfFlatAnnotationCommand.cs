@@ -36,7 +36,7 @@ public sealed class ConvertToOfficePdfFlatAnnotationCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var result = PdfDocument.Open(
+        var result = PdfDocument.Load(
             PdfCommandUtilities.ResolvePath(this, Path),
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent)).FlattenVisualAnnotations();
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);

@@ -24,7 +24,7 @@ public sealed class GetOfficePdfInteractionMapCommand : PSCmdlet
 
     /// <summary>Optional bounded PDF parsing settings.</summary>
     [Parameter]
-    public PdfReadOptions? ReadOptions { get; set; }
+    public PdfLoadOptions? ReadOptions { get; set; }
 
     /// <summary>Password used to authenticate an encrypted PDF.</summary>
     [Parameter]
@@ -41,7 +41,8 @@ public sealed class GetOfficePdfInteractionMapCommand : PSCmdlet
             ReadOptions,
             Password,
             IgnorePermissionRestrictions.IsPresent);
-        WriteObject(PdfCommandUtilities.LoadDocument(
-            SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), readOptions).Read.Interactions(Page, Options, readOptions));
+        var document = PdfCommandUtilities.LoadDocument(
+            SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path), readOptions);
+        WriteObject(PdfPageInteractionMap.Create(document.ToBytes(), Page, Options, readOptions));
     }
 }

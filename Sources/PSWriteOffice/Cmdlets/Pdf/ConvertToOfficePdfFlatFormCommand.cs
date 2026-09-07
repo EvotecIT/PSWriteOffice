@@ -49,7 +49,7 @@ public sealed class ConvertToOfficePdfFlatFormCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, keepNeedAppearances: false);
-        var document = PdfDocument.Open(
+        var document = PdfDocument.Load(
             PdfCommandUtilities.ResolvePath(this, Path),
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var result = formOptions == null

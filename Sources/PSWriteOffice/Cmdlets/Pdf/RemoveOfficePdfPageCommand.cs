@@ -48,7 +48,7 @@ public sealed class RemoveOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMut
         }
 
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfDocument.Open(
+        PdfDocument.Load(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Pages.Delete(PageRange).Save(outputPath).RequireSuccess();

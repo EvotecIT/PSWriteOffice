@@ -40,9 +40,9 @@ internal static partial class ExcelDocumentService
             Directory.CreateDirectory(directory);
         }
 
-        var temporaryPath = Path.Combine(
+        var temporaryPath = AtomicFileWriter.CreateTemporaryPath(
             directory ?? Directory.GetCurrentDirectory(),
-            "." + Path.GetFileName(targetPath) + "." + Guid.NewGuid().ToString("N") + ".tmp");
+            Path.GetFileName(targetPath));
         try
         {
             ExcelDataSetImportResult result;

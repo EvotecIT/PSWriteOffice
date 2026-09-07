@@ -34,11 +34,11 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
 
     /// <summary>Optional bounded read settings for the expected document.</summary>
     [Parameter]
-    public PdfReadOptions? ReferenceReadOptions { get; set; }
+    public PdfLoadOptions? ReferenceReadOptions { get; set; }
 
     /// <summary>Optional bounded read settings for the actual document.</summary>
     [Parameter]
-    public PdfReadOptions? DifferenceReadOptions { get; set; }
+    public PdfLoadOptions? DifferenceReadOptions { get; set; }
 
     /// <summary>Password used to authenticate the expected PDF.</summary>
     [Parameter]
@@ -59,6 +59,7 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
         var expected = PdfCommandUtilities.LoadDocument(
             SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath),
             PdfCommandUtilities.CreateReadOptions(
@@ -71,7 +72,6 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
                 DifferenceReadOptions,
                 DifferencePassword,
                 IgnoreDifferencePermissionRestrictions.IsPresent));
-        var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
         WriteObject(expected.Proof.CompareVisual(actual, selection, Options));
     }
 }

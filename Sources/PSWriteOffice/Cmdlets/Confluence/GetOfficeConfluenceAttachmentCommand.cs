@@ -4,6 +4,7 @@ using System.IO;
 using System.Management.Automation;
 using System.Threading.Tasks;
 using OfficeIMO.Confluence;
+using PSWriteOffice.Services;
 
 namespace PSWriteOffice.Cmdlets.Confluence;
 
@@ -90,7 +91,7 @@ public sealed class GetOfficeConfluenceAttachmentCommand : AsyncPSCmdlet
                 directory = Directory.GetCurrentDirectory();
             }
 
-            string temporaryPath = Path.Combine(directory, "." + Path.GetFileName(path) + "." + Guid.NewGuid().ToString("N") + ".tmp");
+            string temporaryPath = AtomicFileWriter.CreateTemporaryPath(directory, Path.GetFileName(path));
             try
             {
                 using (var destination = new FileStream(

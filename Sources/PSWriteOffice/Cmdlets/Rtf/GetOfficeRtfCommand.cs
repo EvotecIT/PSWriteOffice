@@ -34,7 +34,7 @@ public sealed class GetOfficeRtfCommand : PSCmdlet
     {
         var result = ParameterSetName == ParameterSetText
             ? RtfDocument.Read(Text)
-            : RtfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path));
+            : RtfDocument.LoadResult(PdfCommandUtilities.ResolvePath(this, Path));
         WriteObject(result);
     }
 }

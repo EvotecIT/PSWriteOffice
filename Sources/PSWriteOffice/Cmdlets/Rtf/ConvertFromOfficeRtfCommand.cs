@@ -209,7 +209,7 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
 
     private void ConvertToPdf()
     {
-        var options = new RtfPdfSaveOptions
+        var options = new RtfToPdfOptions
         {
             IncludeHiddenText = IncludeHiddenText.IsPresent,
             IncludeImages = !ExcludeImages.IsPresent,
@@ -273,7 +273,7 @@ public sealed class ConvertFromOfficeRtfCommand : PSCmdlet
     private RtfDocument LoadRtfDocument()
     {
         return ParameterSetName == ParameterSetPath
-            ? RtfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path), encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)).Document
+            ? RtfDocument.Load(PdfCommandUtilities.ResolvePath(this, Path), encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: false))
             : RtfDocument.Read(Text).Document;
     }
 

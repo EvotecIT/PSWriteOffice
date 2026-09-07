@@ -73,7 +73,7 @@ Accept wildcard characters: False
 ```
 
 ### -Compose
-Advanced footer composer. The script receives a PdfFooterCompose and can configure
+Advanced footer composer. The script receives a PdfFooterBuilder and can configure
 default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
 
 ```yaml
@@ -90,7 +90,7 @@ Accept wildcard characters: False
 ```
 
 ### -Document
-Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.
+Compatibility parameter. Page composition is supported only inside New-OfficePdf.
 
 ```yaml
 Type: PdfDocument

@@ -34,7 +34,7 @@ public sealed class GetOfficePdfOptimizationCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         WriteObject(PdfDocument
-            .Open(
+            .Load(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Optimization.Analyze());

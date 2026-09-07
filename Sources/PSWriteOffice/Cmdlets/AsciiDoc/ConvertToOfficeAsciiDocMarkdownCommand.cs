@@ -39,7 +39,7 @@ public sealed class ConvertToOfficeAsciiDocMarkdownCommand : PSCmdlet
         var document = Document;
         if (ParameterSetName == ParameterSetPath)
         {
-            var parsed = AsciiDocDocument.Load(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path));
+            var parsed = AsciiDocDocument.LoadResult(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path));
             if (FailOnLoss.IsPresent && (!parsed.IsLossless || parsed.HasErrors))
             {
                 throw new InvalidDataException("AsciiDoc parsing reported errors or could not retain the complete source losslessly.");

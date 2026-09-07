@@ -11,7 +11,7 @@ Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contrac
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfImage [-Path] <string> [-OutputPath] <string> [-PageRange <string>] [-Format <OfficeImageExportFormat>] [-Options <PdfImageExportOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePdfImage [-Path] <string> [-OutputPath] <string> [-PageRange <string>] [-Format <OfficeImageExportFormat>] [-Options <PdfImageExportOptions>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -160,7 +160,7 @@ Accept wildcard characters: False
 Optional bounded PDF parsing settings.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

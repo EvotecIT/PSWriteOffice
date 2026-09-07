@@ -29,7 +29,7 @@ Describe 'Office document PDF exports' {
             -Title 'Service report' `
             -IncludePageNumbers `
             -DefaultTableBorders:$false
-        $word.GetType().FullName | Should -Be 'OfficeIMO.Word.Pdf.WordPdfSaveOptions'
+        $word.GetType().FullName | Should -Be 'OfficeIMO.Word.Pdf.WordToPdfOptions'
         $word.Title | Should -Be 'Service report'
         $word.IncludePageNumbers | Should -BeTrue
         $word.DefaultTableBorders | Should -BeFalse
@@ -39,7 +39,7 @@ Describe 'Office document PDF exports' {
             -UseWorksheetCharts `
             -UseWorksheetImages:$false `
             -MaxRowsPerSheet 50
-        $excel.GetType().FullName | Should -Be 'OfficeIMO.Excel.Pdf.ExcelPdfSaveOptions'
+        $excel.GetType().FullName | Should -Be 'OfficeIMO.Excel.Pdf.ExcelToPdfOptions'
         @($excel.SheetNames) | Should -Be @('Summary', 'Services')
         $excel.UseWorksheetCharts | Should -BeTrue
         $excel.UseWorksheetImages | Should -BeFalse
@@ -50,7 +50,7 @@ Describe 'Office document PDF exports' {
             -HandoutSlidesPerPage 3 `
             -IncludeSpeakerNotes `
             -IncludeHiddenSlides:$false
-        $powerPoint.GetType().FullName | Should -Be 'OfficeIMO.PowerPoint.Pdf.PowerPointPdfSaveOptions'
+        $powerPoint.GetType().FullName | Should -Be 'OfficeIMO.PowerPoint.Pdf.PowerPointToPdfOptions'
         $powerPoint.PageLayout.ToString() | Should -Be 'Handouts'
         $powerPoint.HandoutSlidesPerPage | Should -Be 3
         $powerPoint.IncludeSpeakerNotes | Should -BeTrue
@@ -60,7 +60,7 @@ Describe 'Office document PDF exports' {
             -IncludeImages `
             -IncludeTables:$false `
             -MaximumSystemFontFamilies 32
-        $rtf.GetType().FullName | Should -Be 'OfficeIMO.Rtf.Pdf.RtfPdfSaveOptions'
+        $rtf.GetType().FullName | Should -Be 'OfficeIMO.Rtf.Pdf.RtfToPdfOptions'
         $rtf.IncludeImages | Should -BeTrue
         $rtf.IncludeTables | Should -BeFalse
         $rtf.MaximumSystemFontFamilies | Should -Be 32
@@ -110,9 +110,10 @@ Describe 'Office document PDF exports' {
             -PdfConversionReportVariable markdownPdfReport
 
         Test-Path -LiteralPath $pdf | Should -BeTrue
-        $markdownPdfWarnings | Should -Not -BeNull
+        Get-Variable -Name markdownPdfWarnings -ErrorAction Stop | Should -Not -BeNull
+        @($markdownPdfWarnings).Count | Should -Be 0
         $markdownPdfReport | Should -Not -BeNull
-        $markdownPdfReport.Warnings | Should -Not -BeNull
+        @($markdownPdfReport.Warnings).Count | Should -Be 0
     }
 
     It 'resolves relative Markdown images from the source file directory' {

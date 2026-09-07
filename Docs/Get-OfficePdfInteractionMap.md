@@ -11,7 +11,7 @@ Builds text-selection and interactive hit regions for one PDF page.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Get-OfficePdfInteractionMap [-Path] <string> [-Page <int>] [-Options <PdfPageInteractionOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
+Get-OfficePdfInteractionMap [-Path] <string> [-Page <int>] [-Options <PdfPageInteractionOptions>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -111,7 +111,7 @@ Accept wildcard characters: False
 Optional bounded PDF parsing settings.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

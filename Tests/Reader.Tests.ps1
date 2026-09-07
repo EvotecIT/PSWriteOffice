@@ -69,6 +69,21 @@ Describe 'Reader cmdlets' {
         }
     }
 
+    It 'rejects conflicting advanced OCR sources before provisioning either runtime' {
+        $command = Get-Command New-OfficeDocumentReader
+        $tesseractOptions = [Activator]::CreateInstance($command.Parameters['TesseractOptions'].ParameterType)
+        $tesseractOptions.Engine.ExecutablePath = 'definitely-missing-tesseract-for-pswriteoffice'
+        $processOptions = [Activator]::CreateInstance($command.Parameters['ProcessOcrOptions'].ParameterType)
+        $processOptions.FileName = 'unused-process-ocr-provider'
+
+        {
+            New-OfficeDocumentReader `
+                -TesseractOptions $tesseractOptions `
+                -ProcessOcrOptions $processOptions `
+                -ErrorAction Stop
+        } | Should -Throw '*Specify only one OCR source*'
+    }
+
     It 'accepts a caller-configured immutable Reader' {
         $handlerId = 'pswriteoffice.test.custom'
         $registrationType = Get-TestPSWriteOfficeType -AssemblyName 'OfficeIMO.Reader.Core' -TypeName 'OfficeIMO.Reader.ReaderHandlerRegistration' -CommandName 'Get-OfficeDocumentCapability'
@@ -315,8 +330,10 @@ Describe 'Reader cmdlets' {
     }
 
     It 'creates configurable readers without requiring OfficeIMO option objects' {
+        $runtime = New-TestTesseractExecutable -Directory $TestDrive
         $reader = New-OfficeDocumentReader -TesseractLanguage 'eng+pol' `
-            -TesseractTimeoutSeconds 30 -MaxStoreItems 2500 -MaxConcurrentReads 2
+            -TesseractExecutablePath $runtime -TesseractTimeoutSeconds 30 `
+            -MaxStoreItems 2500 -MaxConcurrentReads 2
 
         $reader | Should -Not -BeNullOrEmpty
         $reader.MaxConcurrentReads | Should -Be 2

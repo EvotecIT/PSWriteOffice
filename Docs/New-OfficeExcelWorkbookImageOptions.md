@@ -29,7 +29,7 @@ Export-OfficeExcelImage -Path .\Workbook.xlsx -OutputPath .\Sheets -Options $opt
 ## PARAMETERS
 
 ### -BackgroundColor
-{{ Fill BackgroundColor Description }}
+Specifies a value for background color.
 
 ```yaml
 Type: String
@@ -141,7 +141,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumDegreeOfParallelism
-{{ Fill MaximumDegreeOfParallelism Description }}
+Specifies a value for maximum degree of parallelism.
 
 ```yaml
 Type: Int32
@@ -157,7 +157,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumOutputCount
-{{ Fill MaximumOutputCount Description }}
+Specifies a value for maximum output count.
 
 ```yaml
 Type: Int32
@@ -173,7 +173,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumOutputHeight
-{{ Fill MaximumOutputHeight Description }}
+Specifies a value for maximum output height.
 
 ```yaml
 Type: Int32
@@ -189,7 +189,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumOutputWidth
-{{ Fill MaximumOutputWidth Description }}
+Specifies a value for maximum output width.
 
 ```yaml
 Type: Int32
@@ -205,7 +205,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumRasterPixels
-{{ Fill MaximumRasterPixels Description }}
+Specifies a value for maximum raster pixels.
 
 ```yaml
 Type: Int64
@@ -237,7 +237,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumTotalEncodedBytes
-{{ Fill MaximumTotalEncodedBytes Description }}
+Specifies a value for maximum total encoded bytes.
 
 ```yaml
 Type: Int64
@@ -253,7 +253,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumTotalRasterPixels
-{{ Fill MaximumTotalRasterPixels Description }}
+Specifies a value for maximum total raster pixels.
 
 ```yaml
 Type: Int64
@@ -269,7 +269,7 @@ Accept wildcard characters: False
 ```
 
 ### -RasterOverflowBehavior
-{{ Fill RasterOverflowBehavior Description }}
+Specifies a value for raster overflow behavior.
 
 ```yaml
 Type: OfficeRasterOverflowBehavior
@@ -285,7 +285,7 @@ Accept wildcard characters: False
 ```
 
 ### -RenderTimeoutSeconds
-{{ Fill RenderTimeoutSeconds Description }}
+Specifies a value for render timeout seconds.
 
 ```yaml
 Type: Double
@@ -301,7 +301,7 @@ Accept wildcard characters: False
 ```
 
 ### -Scale
-{{ Fill Scale Description }}
+Specifies a value for scale.
 
 ```yaml
 Type: Double
@@ -365,7 +365,7 @@ Accept wildcard characters: False
 ```
 
 ### -TargetDpi
-{{ Fill TargetDpi Description }}
+Specifies a value for target dpi.
 
 ```yaml
 Type: Double
@@ -381,7 +381,7 @@ Accept wildcard characters: False
 ```
 
 ### -TextShapingLanguage
-{{ Fill TextShapingLanguage Description }}
+Specifies a value for text shaping language.
 
 ```yaml
 Type: String

@@ -9,7 +9,7 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <summary>Open a PDF for OfficeIMO.Pdf operations.</summary>
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$pdf = Get-OfficePdf -Path .\Examples\Documents\Report.pdf
-/// $pdf.Read.Text() | Select-Object -First 1</code>
+/// $pdf.Read().Text | Select-Object -First 1</code>
 ///   <para>Returns the OfficeIMO.Pdf document object for advanced readback or operations.</para>
 /// </example>
 [Cmdlet(VerbsCommon.Get, "OfficePdf")]
@@ -32,7 +32,7 @@ public sealed class GetOfficePdfCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        WriteObject(PdfDocument.Open(
+        WriteObject(PdfDocument.Load(
             PdfCommandUtilities.ResolvePath(this, Path),
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent)));
     }

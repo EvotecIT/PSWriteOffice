@@ -11,7 +11,7 @@ namespace PSWriteOffice.Cmdlets.Rtf;
 /// Export-OfficeDocumentPdf -InputPath .\Report.rtf -Path .\Report.pdf -RtfOptions $options</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeRtfPdfOptions")]
-[OutputType(typeof(RtfPdfSaveOptions))]
+[OutputType(typeof(RtfToPdfOptions))]
 public sealed class NewOfficeRtfPdfOptionsCommand : PSCmdlet {
     /// <summary>Underlying low-level OfficeIMO PDF options.</summary>
     [Parameter]
@@ -66,7 +66,7 @@ public sealed class NewOfficeRtfPdfOptionsCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var options = new RtfPdfSaveOptions();
+        var options = new RtfToPdfOptions();
         if (PdfOptions != null) options.PdfOptions = PdfOptions;
         SetBoundSwitch(nameof(IncludeHiddenText), IncludeHiddenText, value => options.IncludeHiddenText = value);
         SetBoundSwitch(nameof(IncludeImages), IncludeImages, value => options.IncludeImages = value);

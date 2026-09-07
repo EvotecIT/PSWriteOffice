@@ -1,6 +1,6 @@
 # PSWriteOffice
 
-PowerShell-first document automation for Office, PDF, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, Reader, and Visio, built on top of `OfficeIMO.*`.
+PowerShell-first document automation for Office, PDF, iWork, OneNote, OpenDocument, email, Markdown, AsciiDoc, LaTeX, CSV, Reader, and Visio, built on top of `OfficeIMO.*`.
 
 📦 PowerShell Gallery
 
@@ -20,7 +20,7 @@ PowerShell-first document automation for Office, PDF, OpenDocument, email, Markd
 
 The goal is simple: make Office document automation feel native in PowerShell without requiring Microsoft Office on the machine.
 
-Start here when you want to create polished documents from PowerShell: workbooks with tables, charts, links, images, pivots, and navigation; Word reports with sections, headers, footers, tables, charts, and conversions; PowerPoint decks with reusable slides, notes, sections, themes, and transitions; PDFs with composition, extraction, forms, stamps, and metadata; RTF documents and bridges; Markdown and CSV workflows; Visio diagrams; and unified readback for existing files.
+Start here when you want to create polished documents from PowerShell: workbooks with tables, charts, links, images, pivots, and navigation; Word reports with sections, headers, footers, tables, charts, and conversions; PowerPoint decks with reusable slides, notes, sections, themes, and transitions; PDFs with composition, extraction, forms, stamps, and metadata; iWork and offline OneNote migration; package and provenance inspection; RTF documents and bridges; Markdown and CSV workflows; Visio diagrams; and unified readback for existing files.
 
 Use the [scenario-driven example library](Examples/README.md) for complete Word, Excel, PowerPoint, PDF, Markdown, Visio, RTF, CSV, Reader, and multi-format scripts.
 
@@ -31,7 +31,9 @@ Use the [scenario-driven example library](Examples/README.md) for complete Word,
 | Word | Mature | Creation and editing, comparison and redlines, comments and revision reports, HTML/Markdown/OpenDocument conversion, Google Docs planning/export, and PNG/SVG rendering |
 | Excel | Advanced | Sheets, tables, formulas, validation, charts, pivots, comments, navigation, explicit readers, OpenDocument conversion, Google Sheets planning/export, and PNG/SVG rendering |
 | PowerPoint | Advanced | Slides, layouts, themes, notes, sections, transitions, import/copy, accessibility and preflight inspection, OpenDocument conversion, and PNG/SVG rendering |
-| PDF | Advanced | Composition, forms, sanitization, XFDF, visual comparison, interaction maps, layout overlays, OCR merge, rewrite proof, extraction, editable Word/Excel/PowerPoint reconstruction, compliance inspection, and PNG/SVG rendering |
+| PDF | Advanced | Composition, forms, sanitization, XFDF, visual comparison, interaction maps, layout overlays, searchable-PDF OCR, rewrite proof, extraction, editable Word/Excel/PowerPoint reconstruction, compliance inspection, and PNG/SVG rendering |
+| iWork | New | Inspect modern Pages, Numbers, and Keynote packages and reconstruct editable DOCX, XLSX, or PPTX output with explicit fidelity reports |
+| OneNote | New | Read offline sections, notebook indexes, and packaged notebooks; project them to Markdown, HTML, or PDF with loss evidence |
 | OpenDocument | Native | Create, load, save, and convert ODT, ODS, and ODP with conversion diagnostics and fail-on-loss controls |
 | Email | Native | Read and write EML, Apple Mail EMLX, MSG, and TNEF; read and write mbox mailboxes with bounded diagnostics |
 | RTF | Solid | Create/read/update `.rtf`, replace text, append paragraphs, edit document properties, convert RTF to Word/HTML/PDF, convert Word/HTML to RTF, and read semantic chunks through Reader |
@@ -40,6 +42,7 @@ Use the [scenario-driven example library](Examples/README.md) for complete Word,
 | Reader | Advanced | Mixed-format discovery and resilient search across Office, OpenDocument, PST/OST and other email sources, PDF, markup, archives, and text formats, plus structured extraction, hierarchy, processors, and OCR adapters |
 | Visio | New | DSL diagram creation, built-in and package-backed stencils, create/load/save `.vsdx`, inspect diagrams, generate galleries, export stencil preview galleries, and export SVG/PNG through `OfficeIMO.Visio` |
 | Confluence Cloud | New | ADF and storage-format page reads, dry-run create/update plans, loss-aware Markdown/HTML conversion, managed sections, and attachment transfer |
+| Package and provenance evidence | New | Inspect Open XML and compound-package active content under bounded policies; collect structural, text-integrity, and optional C2PA provider evidence without inferring authorship |
 
 ## Advanced document workflows
 
@@ -175,6 +178,53 @@ $document | Close-OfficeWord
 # Capture a mutation result only when it is useful.
 $slide = Add-OfficePowerPointSlide -Presentation $presentation -PassThru
 ```
+
+### OCR images and scanned PDFs
+
+Install Tesseract once with your operating-system package manager. PSWriteOffice then discovers it automatically, validates the runtime and requested languages, and can download checksum-pinned English or Polish language data when the installed runtime does not provide it.
+
+```powershell
+# Plain text is the default output.
+$text = Get-OfficeImageText -Path .\Scanned-Page.png
+
+# Add invisible, geometry-aligned text without changing the visible scan.
+ConvertTo-OfficePdfSearchable `
+    -Path .\Scanned-Report.pdf `
+    -OutputPath .\Scanned-Report-Searchable.pdf `
+    -Language English, Polish
+
+Get-OfficePdfText -Path .\Scanned-Report-Searchable.pdf
+```
+
+Use `-PassThru` on either OCR command when you need confidence, word geometry, modified pages, provider/model provenance, or diagnostics. Use `-TesseractPath` or `-TessdataDirectory` for an explicitly managed runtime, and `-NoLanguageDownload` when the machine must remain offline. PSWriteOffice does not install native OCR executables or place community native binaries in the module.
+
+### Inspect and convert mixed archives
+
+Inspect active-content indicators before opening an incoming Office package:
+
+```powershell
+$security = Get-OfficePackageSecurity -Path .\Incoming\Quarterly.xlsm -Untrusted
+$security | Select-Object IsValid, MacroPartCount, EmbeddedPayloadPartCount, ExternalRelationshipCount
+$security.Findings | Format-Table Severity, Rule, PartName, Message
+```
+
+Convert iWork and offline OneNote content while keeping the fidelity report:
+
+```powershell
+$iWorkReport = ConvertFrom-OfficeIWork `
+    -Path .\Archive\Quarterly.numbers `
+    -OutputPath .\Review\Quarterly.xlsx `
+    -PassThruReport
+
+$oneNoteReport = ConvertFrom-OfficeOneNote `
+    -Path .\Archive\Operations.onepkg `
+    -OutputPath .\Review\Operations.md `
+    -PassThruReport
+
+$iWorkReport, $oneNoteReport | Select-Object HasLoss, Diagnostics
+```
+
+`Get-OfficeProvenance` keeps structural carrier discovery, text-integrity observations, and optional provider verification separate. A missing signature or unavailable verifier is not presented as proof of authorship.
 
 ### Word
 

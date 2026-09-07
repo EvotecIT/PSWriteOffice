@@ -43,9 +43,9 @@ Describe 'PSWriteOffice public API consistency' {
             @{ Command = 'Resolve-OfficeWordRevision'; Parameter = 'Filter'; Builder = 'New-OfficeWordRevisionFilter' }
             @{ Command = 'Get-OfficeDocumentHierarchy'; Parameter = 'ChunkingOptions'; Builder = 'New-OfficeReaderHierarchyOptions' }
             @{ Command = 'Compare-OfficePdfVisual'; Parameter = 'Options'; Builder = 'New-OfficePdfVisualComparisonOptions' }
-            @{ Command = 'ConvertTo-OfficePdfWord'; Parameter = 'Options'; Builder = 'New-OfficePdfWordImportOptions' }
+            @{ Command = 'ConvertTo-OfficePdfWord'; Parameter = 'Options'; Builder = 'New-OfficePdfToWordOptions' }
             @{ Command = 'ConvertTo-OfficePdfExcel'; Parameter = 'Options'; Builder = 'New-OfficePdfExcelImportOptions' }
-            @{ Command = 'ConvertTo-OfficePdfPowerPoint'; Parameter = 'Options'; Builder = 'New-OfficePdfPowerPointImportOptions' }
+            @{ Command = 'ConvertTo-OfficePdfPowerPoint'; Parameter = 'Options'; Builder = 'New-OfficePdfToPowerPointOptions' }
             @{ Command = 'ConvertTo-OfficeOpenDocument'; Parameter = 'WordOptions'; Builder = 'New-OfficeWordOpenDocumentOptions' }
             @{ Command = 'ConvertTo-OfficeOpenDocument'; Parameter = 'ExcelOptions'; Builder = 'New-OfficeExcelOpenDocumentOptions' }
             @{ Command = 'ConvertTo-OfficeOpenDocument'; Parameter = 'PowerPointOptions'; Builder = 'New-OfficePowerPointOpenDocumentOptions' }
@@ -510,6 +510,19 @@ Describe 'PSWriteOffice public API consistency' {
         }
 
         (Get-Command VisioStencilImport).ResolvedCommandName | Should -Be 'Import-OfficeVisioStencil'
+    }
+
+    It 'preserves published PDF import option builders as compatibility aliases' {
+        $aliases = [ordered]@{
+            'New-OfficePdfWordImportOptions' = 'New-OfficePdfToWordOptions'
+            'New-OfficePdfPowerPointImportOptions' = 'New-OfficePdfToPowerPointOptions'
+        }
+
+        foreach ($entry in $aliases.GetEnumerator()) {
+            $alias = Get-Command $entry.Key
+            $alias | Should -BeOfType System.Management.Automation.AliasInfo
+            $alias.ResolvedCommandName | Should -Be $entry.Value
+        }
     }
 
     It 'uses enum parameter types for closed value domains' {

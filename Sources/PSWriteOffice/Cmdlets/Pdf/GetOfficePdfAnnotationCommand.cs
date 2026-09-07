@@ -38,7 +38,7 @@ public sealed class GetOfficePdfAnnotationCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         foreach (var annotation in PdfDocument
-                     .Open(
+                     .Load(
                          PdfCommandUtilities.ResolvePath(this, Path),
                          PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
                      .Inspect()

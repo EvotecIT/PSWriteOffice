@@ -36,11 +36,11 @@ public sealed class GetOfficeLatexCommand : PSCmdlet
         {
             var path = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
             if (!File.Exists(path)) throw new FileNotFoundException($"File '{path}' was not found.", path);
-            result = LatexDocument.Load(path, Options);
+            result = LatexDocument.LoadResult(path, Options);
         }
         else
         {
-            result = LatexDocument.Parse(Text ?? string.Empty, Options);
+            result = LatexDocument.ParseResult(Text ?? string.Empty, Options);
         }
         WriteObject(AsResult.IsPresent ? result : result.Document);
     }

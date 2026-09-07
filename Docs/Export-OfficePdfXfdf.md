@@ -11,7 +11,7 @@ Exports readable PDF form field values as XFDF.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Export-OfficePdfXfdf [-Path] <string> [[-OutputPath] <string>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficePdfXfdf [-Path] <string> [[-OutputPath] <string>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -111,7 +111,7 @@ Accept wildcard characters: False
 Optional bounded PDF parsing and password settings.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

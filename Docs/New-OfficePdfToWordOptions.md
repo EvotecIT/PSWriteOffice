@@ -4,14 +4,14 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# New-OfficePdfWordImportOptions
+# New-OfficePdfToWordOptions
 ## SYNOPSIS
 Creates discoverable PDF-to-Word reconstruction settings.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficePdfWordImportOptions [-TablesOnly] [-IncludeMetadata] [-PreservePageBreaks] [-IncludeEmptyPages] [-ImportHeadings] [-ImportParagraphs] [-UseSharedPageReadingOrder] [-ImportLists] [-ImportTables] [-ImportUriLinks] [-ImportInternalLinks] [-BookmarkPrefix <string>] [-AllowedHyperlinkUriScheme <string[]>] [-ImportImages] [-PreserveImagePlacementSize] [-IncludeImagePlaceholders] [-IncludeFormFieldPlaceholders] [-MaxTableRows <Int32>] [-TableStyle <WordTableStyle>] [-RepeatHeaderRows] [-FitTablesToPageWidth] [-AlignNumericColumns] [-EmptyDocumentMessage <string>] [<CommonParameters>]
+New-OfficePdfToWordOptions [-TablesOnly] [-IncludeMetadata] [-PreservePageBreaks] [-IncludeEmptyPages] [-ImportHeadings] [-ImportParagraphs] [-UseSharedPageReadingOrder] [-ImportLists] [-ImportTables] [-ImportUriLinks] [-ImportInternalLinks] [-BookmarkPrefix <string>] [-AllowedHyperlinkUriScheme <string[]>] [-ImportImages] [-PreserveImagePlacementSize] [-IncludeImagePlaceholders] [-IncludeFormFieldPlaceholders] [-MaxTableRows <Int32>] [-TableStyle <WordTableStyle>] [-RepeatHeaderRows] [-FitTablesToPageWidth] [-AlignNumericColumns] [-EmptyDocumentMessage <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,7 +21,7 @@ Creates discoverable PDF-to-Word reconstruction settings.
 
 ### EXAMPLE 1
 ```powershell
-PS> $options = New-OfficePdfWordImportOptions -ImportHeadings -ImportParagraphs -ImportLists -ImportTables
+PS> $options = New-OfficePdfToWordOptions -ImportHeadings -ImportParagraphs -ImportLists -ImportTables
 ConvertTo-OfficePdfWord -Path .\Source.pdf -OutputPath .\Rebuilt.docx -Options $options
 ```
 
@@ -405,7 +405,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Word.Pdf.PdfWordImportOptions`
+- `OfficeIMO.Word.Pdf.PdfToWordOptions`
 
 ## RELATED LINKS
 

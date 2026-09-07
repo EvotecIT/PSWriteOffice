@@ -11,7 +11,7 @@ Runs an external OCR provider and merges recognized words with native PDF text.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Invoke-OfficePdfOcrMerge [-Path] <string> -Provider <IPdfOcrProvider> [-Options <PdfOcrMergeOptions>] [-ReadOptions <PdfReadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
+Invoke-OfficePdfOcrMerge [-Path] <string> -Provider <IOcrEngine> [-Options <PdfOcrMergeOptions>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -92,12 +92,12 @@ Accept wildcard characters: False
 ```
 
 ### -Provider
-External OCR provider implementation.
+Engine-neutral OCR implementation.
 
 ```yaml
-Type: IPdfOcrProvider
+Type: IOcrEngine
 Parameter Sets: __AllParameterSets
-Aliases: None
+Aliases: Engine
 Possible values:
 
 Required: True
@@ -111,7 +111,7 @@ Accept wildcard characters: False
 Optional bounded PDF parsing settings.
 
 ```yaml
-Type: PdfReadOptions
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -132,7 +132,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Pdf.PdfOcrMergeResult`
+- `OfficeIMO.Pdf.Ocr.PdfOcrMergeResult`
 
 ## RELATED LINKS
 

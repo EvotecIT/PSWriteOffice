@@ -41,7 +41,7 @@ public sealed class ConvertToOfficePdfWordCommand : PSCmdlet
 
     /// <summary>Advanced OfficeIMO PDF-to-Word reconstruction options.</summary>
     [Parameter]
-    public PdfWordImportOptions? Options { get; set; }
+    public PdfToWordOptions? Options { get; set; }
 
     /// <summary>Overwrite an existing output file.</summary>
     [Parameter]
@@ -76,7 +76,9 @@ public sealed class ConvertToOfficePdfWordCommand : PSCmdlet
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
             outputOperation = true;
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            var report = document.SaveAsWord(outputPath, Options);
+            var outputResult = document.SaveAsWord(outputPath, Options).RequireSuccess();
+            var report = outputResult.Report
+                ?? throw new InvalidOperationException("PDF-to-Word conversion completed without a conversion report.");
             if (Open.IsPresent)
             {
                 FileOpenService.Open(outputPath);

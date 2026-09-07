@@ -11,7 +11,7 @@ Converts a PDF file to HTML through the first-party OfficeIMO HTML/PDF adapter.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfHtml [-Path] <string> [-PageRange <string>] [-Password <string>] [-IgnorePermissionRestrictions] [-OutputPath <string>] [-Profile <PdfHtmlProfile>] [-ImageExportMode <PdfHtmlImageExportMode>] [-MaxEmbeddedImageBytes <Int64>] [-NoMetadata] [-NoPageContainers] [-NoImagePlaceholders] [-IncludeLinkAnnotations] [-IncludeFormWidgets] [-Fragment] [-DocumentTitleFallback <string>] [-Options <PdfHtmlSaveOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfHtml [-Path] <string> [-PageRange <string>] [-Password <string>] [-IgnorePermissionRestrictions] [-OutputPath <string>] [-Profile <PdfHtmlProfile>] [-ImageExportMode <PdfHtmlImageExportMode>] [-MaxEmbeddedImageBytes <Int64>] [-NoMetadata] [-NoPageContainers] [-NoImagePlaceholders] [-IncludeLinkAnnotations] [-IncludeFormWidgets] [-Fragment] [-DocumentTitleFallback <string>] [-Options <PdfToHtmlOptions>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -193,7 +193,7 @@ Accept wildcard characters: False
 Optional OfficeIMO PDF to HTML save options.
 
 ```yaml
-Type: PdfHtmlSaveOptions
+Type: PdfToHtmlOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

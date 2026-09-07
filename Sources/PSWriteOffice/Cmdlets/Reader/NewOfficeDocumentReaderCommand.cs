@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using System.Threading.Tasks;
+using OfficeIMO.Ocr;
+using OfficeIMO.Ocr.Process;
+using OfficeIMO.Ocr.Tesseract;
 using OfficeIMO.Reader;
 using OfficeIMO.Reader.All;
-using OfficeIMO.Reader.Ocr.Process;
-using OfficeIMO.Reader.Ocr.Tesseract;
 using PSWriteOffice.Services.Reader;
 
 namespace PSWriteOffice.Cmdlets.Reader;
@@ -14,12 +16,12 @@ namespace PSWriteOffice.Cmdlets.Reader;
 /// <example>
 ///   <summary>Create a reader with OCR and a resilient processor policy.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$reader = New-OfficeDocumentReader -TesseractLanguage 'eng+pol' -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic</code>
+///   <code>$reader = New-OfficeDocumentReader -OcrLanguage English, Polish -MaxStoreItems 5000 -ProcessorFailureBehavior ContinueWithDiagnostic</code>
 ///   <para>The returned reader can be supplied to every PSWriteOffice Reader command.</para>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeDocumentReader")]
 [OutputType(typeof(OfficeDocumentReader))]
-public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
+public sealed class NewOfficeDocumentReaderCommand : AsyncPSCmdlet
 {
     /// <summary>Advanced format-specific settings supplied by a .NET host.</summary>
     [Parameter(DontShow = true)]
@@ -31,15 +33,15 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
 
     /// <summary>Caller-provided OCR engine.</summary>
     [Parameter(DontShow = true)]
-    public IOfficeOcrEngine? OcrEngine { get; set; }
+    public IOcrEngine? OcrEngine { get; set; }
 
     /// <summary>Configure the built-in Tesseract command-line OCR adapter.</summary>
     [Parameter(DontShow = true)]
-    public TesseractOcrEngineOptions? TesseractOptions { get; set; }
+    public TesseractOcrSessionOptions? TesseractOptions { get; set; }
 
     /// <summary>Configure the generic JSON file-protocol OCR process adapter.</summary>
     [Parameter(DontShow = true)]
-    public ProcessOfficeOcrEngineOptions? ProcessOcrOptions { get; set; }
+    public ProcessOcrEngineOptions? ProcessOcrOptions { get; set; }
 
     /// <summary>Optional OCR execution limits and merge behavior.</summary>
     [Parameter(DontShow = true)]
@@ -53,7 +55,12 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
     [Parameter]
     public string? TesseractExecutablePath { get; set; }
 
-    /// <summary>Tesseract language expression such as eng or eng+pol.</summary>
+    /// <summary>Friendly OCR languages used by the built-in Tesseract adapter.</summary>
+    [Parameter]
+    [ValidateNotNullOrEmpty]
+    public TesseractOcrLanguage[]? OcrLanguage { get; set; }
+
+    /// <summary>Advanced raw Tesseract expression for caller-installed custom trained-data models.</summary>
     [Parameter]
     public string? TesseractLanguage { get; set; }
 
@@ -90,28 +97,28 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
     public OfficeDocumentProcessorFailureBehavior ProcessorFailureBehavior { get; set; } = OfficeDocumentProcessorFailureBehavior.Throw;
 
     /// <inheritdoc />
-    protected override void ProcessRecord()
+    protected override async Task ProcessRecordAsync()
     {
         ValidatePowerShellParameters();
-        var configuredOcr = new List<IOfficeOcrEngine>();
+        var configuredOcr = new List<IOcrEngine>();
         if (OcrEngine != null) configuredOcr.Add(OcrEngine);
-        if (TesseractOptions != null) configuredOcr.Add(new TesseractOcrEngine(TesseractOptions));
+        if (TesseractOptions != null)
+        {
+            configuredOcr.Add((await TesseractOcr.CreateSessionAsync(TesseractOptions, CancelToken).ConfigureAwait(false)).Engine);
+        }
         if (HasPowerShellTesseractConfiguration())
         {
-            var tesseract = new TesseractOcrEngineOptions();
-            if (!string.IsNullOrWhiteSpace(TesseractExecutablePath)) tesseract.ExecutablePath = TesseractExecutablePath!;
-            if (!string.IsNullOrWhiteSpace(TesseractLanguage)) tesseract.Language = TesseractLanguage!;
-            if (!string.IsNullOrWhiteSpace(TesseractDataPath)) tesseract.TessdataDirectory = TesseractDataPath!;
-            if (TesseractDpi.HasValue) tesseract.Dpi = TesseractDpi.Value;
-            if (TesseractTimeoutSeconds.HasValue) tesseract.Timeout = TimeSpan.FromSeconds(TesseractTimeoutSeconds.Value);
-            configuredOcr.Add(new TesseractOcrEngine(tesseract));
+            var sessionOptions = new TesseractOcrSessionOptions();
+            var engineOptions = sessionOptions.Engine;
+            if (!string.IsNullOrWhiteSpace(TesseractExecutablePath)) engineOptions.ExecutablePath = TesseractExecutablePath!;
+            if (OcrLanguage is { Length: > 0 }) sessionOptions.Languages = CombineLanguages(OcrLanguage);
+            else if (!string.IsNullOrWhiteSpace(TesseractLanguage)) sessionOptions.CustomLanguageExpression = TesseractLanguage!;
+            if (!string.IsNullOrWhiteSpace(TesseractDataPath)) engineOptions.TessdataDirectory = TesseractDataPath!;
+            if (TesseractDpi.HasValue) engineOptions.Dpi = TesseractDpi.Value;
+            if (TesseractTimeoutSeconds.HasValue) engineOptions.Timeout = TimeSpan.FromSeconds(TesseractTimeoutSeconds.Value);
+            configuredOcr.Add((await TesseractOcr.CreateSessionAsync(sessionOptions, CancelToken).ConfigureAwait(false)).Engine);
         }
-        if (ProcessOcrOptions != null) configuredOcr.Add(new ProcessOfficeOcrEngine(ProcessOcrOptions));
-        if (configuredOcr.Count > 1)
-        {
-            throw new PSArgumentException("Specify only one of -OcrEngine, -TesseractOptions, or -ProcessOcrOptions.");
-        }
-
+        if (ProcessOcrOptions != null) configuredOcr.Add(new ProcessOcrEngine(ProcessOcrOptions));
         int? storeItemLimit = AllStoreItems.IsPresent ? int.MaxValue : MaxStoreItems;
         var powerShellConfiguration = ReaderCommandUtilities.BuildSearchConfiguration(
             includePageLocations: false,
@@ -129,6 +136,7 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
     {
         return UseTesseract.IsPresent ||
                !string.IsNullOrWhiteSpace(TesseractExecutablePath) ||
+               OcrLanguage is { Length: > 0 } ||
                !string.IsNullOrWhiteSpace(TesseractLanguage) ||
                !string.IsNullOrWhiteSpace(TesseractDataPath) ||
                TesseractDpi.HasValue ||
@@ -151,5 +159,29 @@ public sealed class NewOfficeDocumentReaderCommand : PSCmdlet
             throw new PSArgumentException(
                 "Use PowerShell Tesseract parameters or the advanced -TesseractOptions object, not both.");
         }
+        if (OcrLanguage is { Length: > 0 } && !string.IsNullOrWhiteSpace(TesseractLanguage))
+        {
+            throw new PSArgumentException(
+                "Use -OcrLanguage or the advanced -TesseractLanguage parameter, not both.");
+        }
+
+        var ocrConfigurationCount = 0;
+        if (OcrEngine != null) ocrConfigurationCount++;
+        if (TesseractOptions != null) ocrConfigurationCount++;
+        if (HasPowerShellTesseractConfiguration()) ocrConfigurationCount++;
+        if (ProcessOcrOptions != null) ocrConfigurationCount++;
+        if (ocrConfigurationCount > 1)
+        {
+            throw new PSArgumentException(
+                "Specify only one OCR source: -OcrEngine, -TesseractOptions, -ProcessOcrOptions, or the public Tesseract parameters.");
+        }
+    }
+
+    private static TesseractOcrLanguage CombineLanguages(IEnumerable<TesseractOcrLanguage> languages)
+    {
+        TesseractOcrLanguage combined = 0;
+        foreach (TesseractOcrLanguage language in languages) combined |= language;
+        _ = combined.ToTesseractExpression();
+        return combined;
     }
 }

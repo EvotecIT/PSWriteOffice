@@ -71,11 +71,12 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        PdfPageSelection[]? pageSelections = ValidateArguments();
         var outputDirectory = PdfCommandUtilities.ResolvePath(this, OutputDirectory);
-        var document = PdfDocument.Open(
+        var document = PdfDocument.Load(
             PdfCommandUtilities.ResolvePath(this, Path),
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
-        var outputs = CreateOutputs(document);
+        var outputs = CreateOutputs(document, pageSelections);
         foreach (var output in outputs)
         {
             var outputPath = PdfCommandUtilities.GetUniquePath(outputDirectory, Prefix + "-" + output.Name + ".pdf");
@@ -85,12 +86,54 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
             }
 
             PdfCommandUtilities.EnsureOutputDirectory(outputDirectory);
-            output.Document.Save(outputPath).RequireSuccess();
+            output.Document
+                .SaveAsync(outputPath, OfficeConversionFileConflictPolicy.FailIfExists, System.Threading.CancellationToken.None)
+                .GetAwaiter()
+                .GetResult()
+                .RequireSuccess();
             WriteObject(new FileInfo(outputPath));
         }
     }
 
-    private IReadOnlyList<PdfSplitOutput> CreateOutputs(PdfDocument document)
+    private IReadOnlyList<PdfSplitOutput> CreateOutputs(
+        PdfDocument document,
+        PdfPageSelection[]? pageSelections)
+    {
+        var pageCount = document.Inspect().PageCount;
+        var indexWidth = GetIndexWidth(pageCount);
+
+        if (PagesPerDocument > 0)
+        {
+            var ranges = GetPageGroups(pageCount, PagesPerDocument);
+            var documents = document.Pages.Split(ranges);
+            return CreateRangeOutputs(documents, ranges, indexWidth);
+        }
+
+        if (pageSelections is { Length: > 0 })
+        {
+            var documents = document.Pages.Split(pageSelections);
+            return documents
+                .Select((pdf, index) => new PdfSplitOutput(pdf, PdfCommandUtilities.GetSafeFileName(PageRange![index])))
+                .ToArray();
+        }
+
+        if (ByBookmark.IsPresent || BookmarkName is { Length: > 0 })
+        {
+            var names = BookmarkName ?? Array.Empty<string>();
+            var ranges = document.Pages.BookmarkPageRanges(names);
+            var documents = document.Pages.Split(ranges.Select(range => range.PageRange));
+            return documents
+                .Select((pdf, index) => new PdfSplitOutput(pdf, PdfCommandUtilities.GetSafeFileName(ranges[index].Title)))
+                .ToArray();
+        }
+
+        var split = document.Pages.Split();
+        return split
+            .Select((pdf, index) => new PdfSplitOutput(pdf, FormatIndex(index + 1, indexWidth)))
+            .ToArray();
+    }
+
+    private PdfPageSelection[]? ValidateArguments()
     {
         var modes = 0;
         if (PagesPerDocument > 0)
@@ -123,39 +166,9 @@ public sealed class SplitOfficePdfCommand : PSCmdlet
             throw new PSArgumentException("-IndexWidth must be greater than zero.", nameof(IndexWidth));
         }
 
-        var pageCount = document.Inspect().PageCount;
-        var indexWidth = GetIndexWidth(pageCount);
-
-        if (PagesPerDocument > 0)
-        {
-            var ranges = GetPageGroups(pageCount, PagesPerDocument);
-            var documents = document.Pages.Split(ranges);
-            return CreateRangeOutputs(documents, ranges, indexWidth);
-        }
-
-        if (PageRange != null && PageRange.Length > 0)
-        {
-            var selections = PageRange.Select(PdfPageSelection.Parse).ToArray();
-            var documents = document.Pages.Split(selections);
-            return documents
-                .Select((pdf, index) => new PdfSplitOutput(pdf, PdfCommandUtilities.GetSafeFileName(PageRange[index])))
-                .ToArray();
-        }
-
-        if (ByBookmark.IsPresent || BookmarkName is { Length: > 0 })
-        {
-            var names = BookmarkName ?? Array.Empty<string>();
-            var ranges = document.Pages.BookmarkPageRanges(names);
-            var documents = document.Pages.Split(ranges.Select(range => range.PageRange));
-            return documents
-                .Select((pdf, index) => new PdfSplitOutput(pdf, PdfCommandUtilities.GetSafeFileName(ranges[index].Title)))
-                .ToArray();
-        }
-
-        var split = document.Pages.Split();
-        return split
-            .Select((pdf, index) => new PdfSplitOutput(pdf, FormatIndex(index + 1, indexWidth)))
-            .ToArray();
+        return PageRange is { Length: > 0 }
+            ? PageRange.Select(PdfPageSelection.Parse).ToArray()
+            : null;
     }
 
     private IReadOnlyList<PdfSplitOutput> CreateRangeOutputs(IReadOnlyList<PdfDocument> documents, IReadOnlyList<PdfPageRange> ranges, int indexWidth)

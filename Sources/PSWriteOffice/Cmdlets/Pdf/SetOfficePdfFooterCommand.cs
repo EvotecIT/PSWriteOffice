@@ -41,7 +41,7 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
     private const string ParameterSetContext = "Context";
     private const string ParameterSetDocument = "Document";
 
-    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf with OfficeIMO 3.2.</summary>
+    /// <summary>Compatibility parameter. Page composition is supported only inside New-OfficePdf.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetDocument)]
     public PdfDocument Document { get; set; } = null!;
 
@@ -50,7 +50,7 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
     public string Text { get; set; } = "Page {page}/{pages}";
 
     /// <summary>
-    /// Advanced footer composer. The script receives a <see cref="PdfFooterCompose"/> and can configure
+    /// Advanced footer composer. The script receives a <see cref="PdfFooterBuilder"/> and can configure
     /// default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
     /// </summary>
     [Parameter]
@@ -100,7 +100,7 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
         }
     }
 
-    private void ApplyAlignment(PdfFooterCompose footer)
+    private void ApplyAlignment(PdfFooterBuilder footer)
     {
         switch (Align)
         {

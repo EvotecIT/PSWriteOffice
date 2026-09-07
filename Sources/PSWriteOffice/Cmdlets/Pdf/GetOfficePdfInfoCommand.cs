@@ -38,7 +38,7 @@ public sealed class GetOfficePdfInfoCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         WriteObject(PdfDocument
-            .Open(
+            .Load(
                 PdfCommandUtilities.ResolvePath(this, Path),
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
             .Inspect());

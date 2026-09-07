@@ -229,7 +229,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Rtf.Pdf.RtfPdfSaveOptions`
+- `OfficeIMO.Rtf.Pdf.RtfToPdfOptions`
 
 ## RELATED LINKS
 

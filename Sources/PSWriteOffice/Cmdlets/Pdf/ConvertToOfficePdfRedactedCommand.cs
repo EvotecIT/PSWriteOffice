@@ -105,7 +105,7 @@ public sealed class ConvertToOfficePdfRedactedCommand : PSCmdlet
             PaintUnmatchedAreas = !OnlyPaintMatches.IsPresent
         };
 
-        var document = PdfDocument.Open(
+        var document = PdfDocument.Load(
             inputPath,
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
 

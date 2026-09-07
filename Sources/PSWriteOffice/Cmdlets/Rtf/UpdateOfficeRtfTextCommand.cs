@@ -77,7 +77,7 @@ public sealed class UpdateOfficeRtfTextCommand : PSCmdlet
             return;
         }
 
-        var editor = RtfDocument.Load(sourcePath).EditLossless();
+        var editor = RtfDocument.LoadResult(sourcePath).EditLossless();
         if (!string.IsNullOrEmpty(OldText))
         {
             editor.ReplaceText(

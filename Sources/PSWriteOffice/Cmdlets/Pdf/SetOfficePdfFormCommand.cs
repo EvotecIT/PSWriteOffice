@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
@@ -64,8 +65,62 @@ public sealed class SetOfficePdfFormCommand : PSWriteOffice.Cmdlets.OfficeMutati
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
+        ValidateOperation();
+        IReadOnlyDictionary<string, string>? fieldValues = Field is { Count: > 0 }
+            ? PdfCommandUtilities.ConvertFieldValues(Field)
+            : null;
         var inputPath = PdfCommandUtilities.ResolvePath(this, Path);
         var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (Incremental.IsPresent) {
+            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write incrementally updated PDF form")) {
+                return;
+            }
+
+            PdfCommandUtilities.EnsureDirectory(outputPath);
+            var options = new PdfIncrementalFormFieldUpdateOptions {
+                KeepNeedAppearances = KeepNeedAppearances.IsPresent,
+                GenerateAppearanceStreams = !KeepNeedAppearances.IsPresent
+            };
+            PdfDocument
+                .Load(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
+                .Forms.AppendRevision(fieldValues!, options)
+                .Save(outputPath)
+                .RequireSuccess();
+            WritePassThru(new FileInfo(outputPath));
+            return;
+        }
+
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated PDF form")) {
+            return;
+        }
+
+        var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
+        var document = PdfDocument.Load(
+            inputPath,
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
+        PdfDocument result;
+        if (Field == null || Field.Count == 0) {
+            result = formOptions == null
+                ? document.Forms.Flatten()
+                : document.Forms.Flatten(formOptions);
+        } else {
+            if (Flatten.IsPresent) {
+                result = formOptions == null
+                    ? document.Forms.FillAndFlatten(fieldValues!)
+                    : document.Forms.FillAndFlatten(fieldValues!, formOptions);
+            } else {
+                result = formOptions == null
+                    ? document.Forms.Fill(fieldValues!)
+                    : document.Forms.Fill(fieldValues!, formOptions);
+            }
+        }
+
+        PdfCommandUtilities.EnsureDirectory(outputPath);
+        result.Save(outputPath).RequireSuccess();
+        WritePassThru(new FileInfo(outputPath));
+    }
+
+    private void ValidateOperation() {
         if (Incremental.IsPresent) {
             if (Flatten.IsPresent) {
                 throw new PSArgumentException("-Incremental cannot be combined with -Flatten because flattening requires a full rewrite.");
@@ -79,56 +134,11 @@ public sealed class SetOfficePdfFormCommand : PSWriteOffice.Cmdlets.OfficeMutati
                 throw new PSArgumentException("Provide -Field values when using -Incremental.", nameof(Field));
             }
 
-            if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write incrementally updated PDF form")) {
-                return;
-            }
-
-            PdfCommandUtilities.EnsureDirectory(outputPath);
-            var options = new PdfIncrementalFormFieldUpdateOptions {
-                KeepNeedAppearances = KeepNeedAppearances.IsPresent,
-                GenerateAppearanceStreams = !KeepNeedAppearances.IsPresent
-            };
-            PdfDocument
-                .Open(inputPath, PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent))
-                .Forms.AppendRevision(PdfCommandUtilities.ConvertFieldValues(Field), options)
-                .Save(outputPath)
-                .RequireSuccess();
-            WritePassThru(new FileInfo(outputPath));
             return;
         }
 
-        var document = PdfDocument.Open(
-            inputPath,
-            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
-        var formOptions = PdfCommandUtilities.CreateFormFillerOptions(this, AppearanceFontPath, AppearanceFontFamilyName, KeepNeedAppearances.IsPresent);
-        PdfDocument result;
-        if (Field == null || Field.Count == 0) {
-            if (!Flatten.IsPresent) {
-                throw new PSArgumentException("Provide -Field values or use -Flatten.", nameof(Field));
-            }
-
-            result = formOptions == null
-                ? document.Forms.Flatten()
-                : document.Forms.Flatten(formOptions);
-        } else {
-            var values = PdfCommandUtilities.ConvertFieldValues(Field);
-            if (Flatten.IsPresent) {
-                result = formOptions == null
-                    ? document.Forms.FillAndFlatten(values)
-                    : document.Forms.FillAndFlatten(values, formOptions);
-            } else {
-                result = formOptions == null
-                    ? document.Forms.Fill(values)
-                    : document.Forms.Fill(values, formOptions);
-            }
+        if ((Field == null || Field.Count == 0) && !Flatten.IsPresent) {
+            throw new PSArgumentException("Provide -Field values or use -Flatten.", nameof(Field));
         }
-
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated PDF form")) {
-            return;
-        }
-
-        PdfCommandUtilities.EnsureDirectory(outputPath);
-        result.Save(outputPath).RequireSuccess();
-        WritePassThru(new FileInfo(outputPath));
     }
 }

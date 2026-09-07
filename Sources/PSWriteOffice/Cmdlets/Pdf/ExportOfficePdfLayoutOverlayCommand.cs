@@ -49,7 +49,7 @@ public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
 
     /// <summary>Optional bounded PDF parsing settings.</summary>
     [Parameter]
-    public PdfReadOptions? ReadOptions { get; set; }
+    public PdfLoadOptions? ReadOptions { get; set; }
 
     /// <summary>Password used to authenticate an encrypted PDF.</summary>
     [Parameter]
@@ -73,7 +73,7 @@ public sealed class ExportOfficePdfLayoutOverlayCommand : PSCmdlet
             ReadOptions,
             Password,
             IgnorePermissionRestrictions.IsPresent);
-        var drawing = PdfCommandUtilities.LoadDocument(input, readOptions).Read.LayoutDebugOverlay(Page, Options, LayoutOptions, readOptions);
+        var drawing = PdfCommandUtilities.LoadDocument(input, readOptions).Render.LayoutDebugOverlay(Page, Options, LayoutOptions, readOptions);
         var bytes = Format switch
         {
             OfficeImageExportFormat.Svg => OfficeDrawingSvgExporter.ToSvgBytes(drawing, Scale, OfficeSvgSizeUnit.Pixel),

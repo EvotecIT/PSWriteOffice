@@ -117,7 +117,7 @@ public sealed class AddOfficePdfRowCommand : PSCmdlet
             foreach (var column in Column)
             {
                 var width = PdfRowColumnBuilder.GetWidth(column, defaultWidth);
-                row.Column(width, compose => PdfRowColumnBuilder.AddContent(compose, column));
+                row.PercentColumn(width, compose => PdfRowColumnBuilder.AddContent(compose, column));
             }
         }));
 

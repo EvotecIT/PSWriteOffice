@@ -38,7 +38,7 @@ public sealed class ImportOfficePdfXfdfCommand : PSCmdlet
 
     /// <summary>Optional bounded PDF parsing and password settings for the source form.</summary>
     [Parameter]
-    public PdfReadOptions? ReadOptions { get; set; }
+    public PdfLoadOptions? ReadOptions { get; set; }
 
     /// <summary>Password used to authenticate the source form.</summary>
     [Parameter]
