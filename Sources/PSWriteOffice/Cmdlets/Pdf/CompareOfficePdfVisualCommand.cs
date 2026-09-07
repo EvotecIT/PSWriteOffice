@@ -59,6 +59,7 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
         var expected = PdfCommandUtilities.LoadDocument(
             SessionState.Path.GetUnresolvedProviderPathFromPSPath(ReferencePath),
             PdfCommandUtilities.CreateReadOptions(
@@ -71,7 +72,6 @@ public sealed class CompareOfficePdfVisualCommand : PSCmdlet
                 DifferenceReadOptions,
                 DifferencePassword,
                 IgnoreDifferencePermissionRestrictions.IsPresent));
-        var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
         WriteObject(expected.Proof.CompareVisual(actual, selection, Options));
     }
 }

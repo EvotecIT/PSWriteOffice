@@ -36,8 +36,7 @@ Describe 'Easy local OCR commands' {
     }
 
     It 'rejects unsupported image formats before discovering an OCR runtime' {
-        $unsupportedPath = Join-Path $TestDrive 'not-an-image.txt'
-        [IO.File]::WriteAllText($unsupportedPath, 'This is not an OCR image.')
+        $unsupportedPath = Join-Path $TestDrive 'missing-image.txt'
 
         {
             Get-OfficeImageText `
@@ -46,6 +45,31 @@ Describe 'Easy local OCR commands' {
                 -NoLanguageDownload `
                 -ErrorAction Stop
         } | Should -Throw '*supports PNG, JPEG, TIFF, BMP, GIF, WebP, and JPEG 2000*'
+    }
+
+    It 'validates OCR session options before opening input files' {
+        $missingImage = Join-Path $TestDrive 'missing-image.png'
+        $missingPdf = Join-Path $TestDrive 'missing-input.pdf'
+        $outputPdf = Join-Path $TestDrive 'missing-output.pdf'
+
+        {
+            Get-OfficeImageText `
+                -Path $missingImage `
+                -Language English `
+                -TesseractLanguageExpression 'eng' `
+                -NoLanguageDownload `
+                -ErrorAction Stop
+        } | Should -Throw '*Use -Language or the advanced -TesseractLanguageExpression parameter, not both*'
+
+        {
+            ConvertTo-OfficePdfSearchable `
+                -Path $missingPdf `
+                -OutputPath $outputPdf `
+                -Language English `
+                -TesseractLanguageExpression 'eng' `
+                -NoLanguageDownload `
+                -ErrorAction Stop
+        } | Should -Throw '*Use -Language or the advanced -TesseractLanguageExpression parameter, not both*'
     }
 
     It 'preserves session options and lets friendly language parameters override them' {
@@ -111,6 +135,60 @@ Describe 'Easy local OCR commands' {
         $result.AddedWordCount | Should -Be 2
         Test-Path -LiteralPath $outputPath | Should -BeTrue
         Get-OfficePdfText -Path $outputPath | Should -Match 'OfficeIMO OCR'
+    }
+
+    It 'loads password-encrypted PDFs for searchable OCR' {
+        $runtime = New-TestTesseractExecutable -Directory $TestDrive
+        $inputPath = Join-Path $TestDrive 'encrypted-scan.pdf'
+        $outputPath = Join-Path $TestDrive 'encrypted-searchable.pdf'
+        $imagePath = Join-Path $PSScriptRoot 'Assets\CellImage.png'
+
+        New-OfficePdf -Path $inputPath -Password 'open' {
+            PdfImage -Path $imagePath -Width 180 -Height 120
+        }
+
+        {
+            ConvertTo-OfficePdfSearchable `
+                -Path $inputPath `
+                -OutputPath $outputPath `
+                -Password 'wrong' `
+                -TesseractPath $runtime `
+                -NoLanguageDownload `
+                -ErrorAction Stop
+        } | Should -Throw
+
+        $result = ConvertTo-OfficePdfSearchable `
+            -Path $inputPath `
+            -OutputPath $outputPath `
+            -Password 'open' `
+            -TesseractPath $runtime `
+            -NoLanguageDownload `
+            -PassThru
+
+        $result.WasModified | Should -BeTrue
+        Get-OfficePdfText -Path $outputPath -Password 'open' | Should -Match 'OfficeIMO OCR'
+    }
+
+    It 'fails instead of reporting output when the destination appears during OCR' {
+        $inputPath = Join-Path $TestDrive 'late-destination-input.pdf'
+        $outputPath = Join-Path $TestDrive 'late-destination-output.pdf'
+        $runtime = New-TestTesseractExecutable -Directory $TestDrive -CreateFilePath $outputPath
+        $imagePath = Join-Path $PSScriptRoot 'Assets\CellImage.png'
+
+        New-OfficePdf -Path $inputPath {
+            PdfImage -Path $imagePath -Width 180 -Height 120
+        }
+
+        {
+            ConvertTo-OfficePdfSearchable `
+                -Path $inputPath `
+                -OutputPath $outputPath `
+                -TesseractPath $runtime `
+                -NoLanguageDownload `
+                -ErrorAction Stop
+        } | Should -Throw
+
+        [IO.File]::ReadAllText($outputPath).Trim() | Should -Be 'late destination'
     }
 
     It 'preserves an existing searchable PDF destination unless Force is supplied' {

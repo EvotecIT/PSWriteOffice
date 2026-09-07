@@ -58,19 +58,22 @@ public sealed class ConvertToOfficePdfSearchableCommand : OfficeOcrCmdlet
     [Parameter]
     public PdfOcrMergeOptions? PdfOptions { get; set; }
 
+    /// <summary>Optional bounded PDF parsing settings.</summary>
+    [Parameter]
+    public PdfLoadOptions? ReadOptions { get; set; }
+
+    /// <summary>Password used to authenticate an encrypted PDF.</summary>
+    [Parameter]
+    public string? Password { get; set; }
+
+    /// <summary>After successful password authentication, explicitly ignore owner-imposed extraction restrictions.</summary>
+    [Parameter]
+    public SwitchParameter IgnorePermissionRestrictions { get; set; }
+
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync()
     {
-        string inputPath = PdfCommandUtilities.ResolveExistingFilePath(this, Path);
-        string outputPath = PdfCommandUtilities.ResolveOutputFilePath(this, OutputPath, ".pdf", Force.IsPresent);
-        if (!ShouldProcess(outputPath, "Create searchable PDF"))
-        {
-            return;
-        }
-
-        TesseractOcrSession session = await TesseractOcr
-            .CreateSessionAsync(CreateSessionOptions(), CancelToken)
-            .ConfigureAwait(false);
+        TesseractOcrSessionOptions sessionOptions = CreateSessionOptions();
         PdfOcrMergeOptions options = PdfOptions?.Clone() ?? new PdfOcrMergeOptions();
         if (RenderDpi.HasValue)
         {
@@ -82,18 +85,33 @@ public sealed class ConvertToOfficePdfSearchableCommand : OfficeOcrCmdlet
             options.MinimumConfidence = MinimumConfidence.Value;
         }
 
+        string inputPath = PdfCommandUtilities.ResolveExistingFilePath(this, Path);
+        string outputPath = PdfCommandUtilities.ResolveOutputFilePath(this, OutputPath, ".pdf", Force.IsPresent);
+        if (!ShouldProcess(outputPath, "Create searchable PDF"))
+        {
+            return;
+        }
+
+        TesseractOcrSession session = await TesseractOcr
+            .CreateSessionAsync(sessionOptions, CancelToken)
+            .ConfigureAwait(false);
         PdfCommandUtilities.EnsureDirectory(outputPath);
-        PdfDocument document = PdfDocument.Load(inputPath);
+        PdfLoadOptions? readOptions = PdfCommandUtilities.CreateReadOptions(
+            ReadOptions,
+            Password,
+            IgnorePermissionRestrictions.IsPresent);
+        PdfDocument document = PdfCommandUtilities.LoadDocument(inputPath, readOptions);
         PdfSearchableOcrResult result = await document
             .MakeSearchableAsync(session.Engine, options, CancelToken)
             .ConfigureAwait(false);
-        await result.Document.SaveAsync(
+        var saveResult = await result.Document.SaveAsync(
                 outputPath,
                 Force.IsPresent
                     ? OfficeConversionFileConflictPolicy.Replace
                     : OfficeConversionFileConflictPolicy.FailIfExists,
                 CancelToken)
             .ConfigureAwait(false);
+        saveResult.RequireSuccess();
         WriteObject(PassThru.IsPresent ? result : new FileInfo(outputPath));
     }
 }

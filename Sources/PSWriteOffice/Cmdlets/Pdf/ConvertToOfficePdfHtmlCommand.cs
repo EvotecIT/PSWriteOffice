@@ -92,8 +92,8 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
     {
         try
         {
-            string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
             PdfToHtmlOptions options = BuildOptions();
+            string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
             string html = LoadLogicalDocument(inputPath).ToHtml(options);
 
             if (!string.IsNullOrWhiteSpace(OutputPath))

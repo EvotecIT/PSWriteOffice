@@ -42,12 +42,12 @@ public sealed class ConvertToOfficePdfMarkdownCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var document = PdfDocument.Load(
-            PdfCommandUtilities.ResolvePath(this, Path),
-            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var readOptions = string.IsNullOrWhiteSpace(PageRange)
             ? null
             : new PdfReadOptions { PageSelection = PdfPageSelection.Parse(PageRange!) };
+        var document = PdfDocument.Load(
+            PdfCommandUtilities.ResolvePath(this, Path),
+            PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
         var markdown = document.Read(readOptions).ToMarkdown();
 
         if (!string.IsNullOrWhiteSpace(OutputPath))

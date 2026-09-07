@@ -60,6 +60,47 @@ Describe 'PDF cmdlets' {
         @(Get-ChildItem -LiteralPath $outputDirectory -Filter '.*.tmp*').Count | Should -Be 0
     }
 
+    It 'rejects incompatible text modes before opening the PDF' {
+        $missingPath = Join-Path $TestDrive 'missing-text-source.pdf'
+
+        { Get-OfficePdfText -Path $missingPath -AsTextBlock -AsMarkdown -ErrorAction Stop } |
+            Should -Throw '*-AsTextBlock cannot be combined*'
+        { Get-OfficePdfText -Path $missingPath -AsTextBlock -ByPage -ErrorAction Stop } |
+            Should -Throw '*-AsTextBlock cannot be combined*'
+        { Get-OfficePdfText -Path $missingPath -ByPage -AsMarkdown -ErrorAction Stop } |
+            Should -Throw '*-ByPage is supported for plain text extraction only*'
+    }
+
+    It 'validates PDF operations and page selections before path I/O' {
+        $missingPath = Join-Path $TestDrive 'missing-source.pdf'
+        $outputPath = Join-Path $TestDrive 'validation-output.pdf'
+        $exportDirectory = Join-Path $TestDrive 'validation-export'
+        $joinDirectory = Join-Path $TestDrive 'validation-join'
+        $joinPath = Join-Path $joinDirectory 'joined.pdf'
+
+        { Split-OfficePdf -Path $missingPath -OutputDirectory $exportDirectory -PagesPerDocument -1 -ErrorAction Stop } |
+            Should -Throw '*-PagesPerDocument must be greater than zero*'
+        { Split-OfficePdf -Path $missingPath -OutputDirectory $exportDirectory -PageRange 'invalid' -ErrorAction Stop } |
+            Should -Throw '*page*'
+        { Set-OfficePdfForm -Path $missingPath -OutputPath $outputPath -ErrorAction Stop } |
+            Should -Throw '*Provide -Field values or use -Flatten*'
+        { Set-OfficePdfPage -Path $missingPath -OutputPath $outputPath -ErrorAction Stop } |
+            Should -Throw '*Provide -Rotation, -BoxName with coordinates, or page resize options*'
+        { Compare-OfficePdfVisual -ReferencePath $missingPath -DifferencePath $missingPath -PageRange 'invalid' -ErrorAction Stop } |
+            Should -Throw '*page*'
+        { ConvertTo-OfficePdfMarkdown -Path $missingPath -PageRange 'invalid' -ErrorAction Stop } |
+            Should -Throw '*page*'
+        { Export-OfficePdfImage -Path $missingPath -OutputPath $exportDirectory -PageRange 'invalid' -ErrorAction Stop } |
+            Should -Throw '*page*'
+        { Join-OfficePdf -Path $missingPath, $missingPath -Password 'one', 'two', 'three' -OutputPath $joinPath -ErrorAction Stop } |
+            Should -Throw '*one -Password value or one value for every -Path source*'
+        { ConvertTo-OfficePdfHtml -Path $missingPath -PageRange 'invalid' -ErrorAction Stop } |
+            Should -Throw '*page*'
+
+        Test-Path -LiteralPath $exportDirectory | Should -BeFalse
+        Test-Path -LiteralPath $joinDirectory | Should -BeFalse
+    }
+
     It 'preserves advanced PDF read options unless a friendly parameter is supplied' {
         $path = Join-Path $TestDrive 'structured-read-options.pdf'
         New-OfficePdf -Path $path {

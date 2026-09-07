@@ -31,7 +31,9 @@ function New-TestOfficeImageFile {
 function New-TestTesseractExecutable {
     param(
         [Parameter(Mandatory)]
-        [string] $Directory
+        [string] $Directory,
+
+        [string] $CreateFilePath
     )
 
     $onWindows = $PSVersionTable.PSEdition -eq 'Desktop' -or $IsWindows
@@ -49,12 +51,19 @@ if "%~1"=="--list-langs" (
   echo pol
   exit /b 0
 )
+__SIDE_EFFECT__
 set "output=%~2.tsv"
 >"%output%" echo level	page_num	block_num	par_num	line_num	word_num	left	top	width	height	conf	text
 >>"%output%" echo 5	1	1	1	1	1	10	12	120	24	96.0	OfficeIMO
 >>"%output%" echo 5	1	1	1	1	2	140	12	72	24	94.0	OCR
 exit /b 0
-'@ -replace "`r?`n", [Environment]::NewLine
+'@
+        $sideEffect = if ($CreateFilePath) {
+            '>' + '"' + $CreateFilePath + '" echo late destination'
+        } else {
+            ''
+        }
+        $content = $content.Replace('__SIDE_EFFECT__', $sideEffect) -replace "`r?`n", [Environment]::NewLine
         [IO.File]::WriteAllText($path, $content, [Text.Encoding]::ASCII)
         return $path
     }
@@ -72,10 +81,20 @@ if [ "$1" = "--list-langs" ]; then
   echo "pol"
   exit 0
 fi
+__SIDE_EFFECT__
 printf 'level\tpage_num\tblock_num\tpar_num\tline_num\tword_num\tleft\ttop\twidth\theight\tconf\ttext\n' > "${2}.tsv"
 printf '5\t1\t1\t1\t1\t1\t10\t12\t120\t24\t96.0\tOfficeIMO\n' >> "${2}.tsv"
 printf '5\t1\t1\t1\t1\t2\t140\t12\t72\t24\t94.0\tOCR\n' >> "${2}.tsv"
-'@ -replace "`r?`n", "`n"
+'@
+    if ($CreateFilePath -and $CreateFilePath.Contains("'")) {
+        throw 'The test side-effect path cannot contain a single quote.'
+    }
+    $sideEffect = if ($CreateFilePath) {
+        "printf '%s' 'late destination' > '$CreateFilePath'"
+    } else {
+        ''
+    }
+    $content = $content.Replace('__SIDE_EFFECT__', $sideEffect) -replace "`r?`n", "`n"
     [IO.File]::WriteAllText($path, $content, [Text.Encoding]::ASCII)
     & chmod '+x' $path
     return $path

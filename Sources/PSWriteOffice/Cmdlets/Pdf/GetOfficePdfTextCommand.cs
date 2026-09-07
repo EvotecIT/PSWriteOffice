@@ -56,6 +56,16 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
+        if (AsTextBlock.IsPresent && (AsMarkdown.IsPresent || ByPage.IsPresent))
+        {
+            throw new PSArgumentException("-AsTextBlock cannot be combined with -AsMarkdown or -ByPage.", nameof(AsTextBlock));
+        }
+
+        if (ByPage.IsPresent && AsMarkdown.IsPresent)
+        {
+            throw new PSArgumentException("-ByPage is supported for plain text extraction only.", nameof(ByPage));
+        }
+
         var document = PdfDocument.Load(
             PdfCommandUtilities.ResolvePath(this, Path),
             PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
@@ -65,11 +75,6 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
         PdfDocumentReadResult result = document.Read(semanticOptions);
         if (AsTextBlock.IsPresent)
         {
-            if (AsMarkdown.IsPresent || ByPage.IsPresent)
-            {
-                throw new PSArgumentException("-AsTextBlock cannot be combined with -AsMarkdown or -ByPage.", nameof(AsTextBlock));
-            }
-
             var blocks = result.TextBlocks;
 
             if (!string.IsNullOrWhiteSpace(OutputPath))
@@ -92,11 +97,6 @@ public sealed class GetOfficePdfTextCommand : PSCmdlet
 
         if (ByPage.IsPresent)
         {
-            if (AsMarkdown.IsPresent)
-            {
-                throw new PSArgumentException("-ByPage is supported for plain text extraction only.", nameof(ByPage));
-            }
-
             var pages = result.Pages
                 .Select(page => new
                 {

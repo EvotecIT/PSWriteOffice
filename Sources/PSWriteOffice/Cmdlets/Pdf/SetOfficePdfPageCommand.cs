@@ -94,14 +94,6 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated PDF pages")) {
-            return;
-        }
-
-        PdfCommandUtilities.EnsureDirectory(outputPath);
-        string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
-        var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
         int[] pages = string.IsNullOrWhiteSpace(PageRange)
             ? Array.Empty<int>()
             : PdfPageRange.ParseMany(PageRange!).SelectMany(ExpandPageRange).Distinct().ToArray();
@@ -118,39 +110,41 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
             Landscape.IsPresent ||
             MyInvocation.BoundParameters.ContainsKey(nameof(ResizeMode)) ||
             ResizeMargin.HasValue);
+        ValidateOperation(resizeOptions);
+
+        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write updated PDF pages")) {
+            return;
+        }
+
+        PdfCommandUtilities.EnsureDirectory(outputPath);
+        string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        var readOptions = PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent);
 
         if (resizeOptions != null) {
-            if (BoxName.HasValue || MyInvocation.BoundParameters.ContainsKey(nameof(Rotation))) {
-                throw new PSArgumentException("Use page resize, rotation, or box editing as separate Set-OfficePdfPage operations.");
-            }
-
             PdfDocument.Load(inputPath, readOptions).Pages.Resize(resizeOptions, pages).Save(outputPath).RequireSuccess();
             WritePassThru(new FileInfo(outputPath));
             return;
         }
 
-        if (BoxName.HasValue) {
-            if (!Left.HasValue || !Bottom.HasValue || !Right.HasValue || !Top.HasValue) {
-                throw new PSArgumentException("-BoxName requires -Left, -Bottom, -Right, and -Top.");
-            }
-
+        if (BoxName is PdfPageBoundaryBox boxName &&
+            Left is double left &&
+            Bottom is double bottom &&
+            Right is double right &&
+            Top is double top) {
             PdfDocument
                 .Load(inputPath, readOptions)
                 .Pages.SetPageBox(
-                    BoxName.Value,
-                    Left.Value,
-                    Bottom.Value,
-                    Right.Value,
-                    Top.Value,
+                    boxName,
+                    left,
+                    bottom,
+                    right,
+                    top,
                     pages)
                 .Save(outputPath)
                 .RequireSuccess();
             WritePassThru(new FileInfo(outputPath));
             return;
-        }
-
-        if (!MyInvocation.BoundParameters.ContainsKey(nameof(Rotation))) {
-            throw new PSArgumentException("Provide -Rotation, -BoxName with coordinates, or page resize options.");
         }
 
         var document = PdfDocument.Load(inputPath, readOptions);
@@ -159,6 +153,28 @@ public sealed class SetOfficePdfPageCommand : PSWriteOffice.Cmdlets.OfficeMutati
             : document.Pages.Rotate(Rotation, PageRange!);
         result.Save(outputPath).RequireSuccess();
         WritePassThru(new FileInfo(outputPath));
+    }
+
+    private void ValidateOperation(PdfPageResizeOptions? resizeOptions) {
+        if (resizeOptions != null) {
+            if (BoxName.HasValue || MyInvocation.BoundParameters.ContainsKey(nameof(Rotation))) {
+                throw new PSArgumentException("Use page resize, rotation, or box editing as separate Set-OfficePdfPage operations.");
+            }
+
+            return;
+        }
+
+        if (BoxName.HasValue) {
+            if (!Left.HasValue || !Bottom.HasValue || !Right.HasValue || !Top.HasValue) {
+                throw new PSArgumentException("-BoxName requires -Left, -Bottom, -Right, and -Top.");
+            }
+
+            return;
+        }
+
+        if (!MyInvocation.BoundParameters.ContainsKey(nameof(Rotation))) {
+            throw new PSArgumentException("Provide -Rotation, -BoxName with coordinates, or page resize options.");
+        }
     }
 
     private static int[] ExpandPageRange(PdfPageRange range) {

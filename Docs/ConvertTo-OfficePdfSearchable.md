@@ -11,7 +11,7 @@ Creates a searchable PDF by adding invisible text from a discovered local OCR ru
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-ConvertTo-OfficePdfSearchable [-Path] <string> [-OutputPath] <string> [-Force] [-PassThru] [-RenderDpi <Double>] [-MinimumConfidence <Double>] [-PdfOptions <PdfOcrMergeOptions>] [-Options <TesseractOcrSessionOptions>] [-Language <TesseractOcrLanguage[]>] [-TesseractLanguageExpression <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [-WhatIf] [-Confirm] [<CommonParameters>]
+ConvertTo-OfficePdfSearchable [-Path] <string> [-OutputPath] <string> [-Force] [-PassThru] [-RenderDpi <Double>] [-MinimumConfidence <Double>] [-PdfOptions <PdfOcrMergeOptions>] [-ReadOptions <PdfLoadOptions>] [-Password <string>] [-IgnorePermissionRestrictions] [-Options <TesseractOcrSessionOptions>] [-Language <TesseractOcrLanguage[]>] [-TesseractLanguageExpression <string>] [-TesseractPath <string>] [-TessdataDirectory <string>] [-NoLanguageDownload] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,6 +37,22 @@ Returns recognition, filtering, page, provider, and model evidence instead of th
 
 ### -Force
 Overwrite an existing destination file.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -IgnorePermissionRestrictions
+After successful password authentication, explicitly ignore owner-imposed extraction restrictions.
 
 ```yaml
 Type: SwitchParameter
@@ -147,6 +163,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Password
+Password used to authenticate an encrypted PDF.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Path
 Source PDF path.
 
@@ -168,6 +200,22 @@ Advanced PDF page selection, rendering, confidence, overlap, and resource limits
 
 ```yaml
 Type: PdfOcrMergeOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ReadOptions
+Optional bounded PDF parsing settings.
+
+```yaml
+Type: PdfLoadOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

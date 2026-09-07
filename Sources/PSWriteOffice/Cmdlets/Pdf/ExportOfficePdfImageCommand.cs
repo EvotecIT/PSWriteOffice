@@ -57,17 +57,17 @@ public sealed class ExportOfficePdfImageCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
-        var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
-        if (!ShouldProcess(output, $"Export PDF pages as {Format}")) return;
-        Directory.CreateDirectory(output);
         var options = Options ?? new PdfImageExportOptions();
         var readOptions = PdfCommandUtilities.CreateReadOptions(
             ReadOptions,
             Password,
             IgnorePermissionRestrictions.IsPresent);
-        var document = PdfCommandUtilities.LoadDocument(input, readOptions);
         var selection = string.IsNullOrWhiteSpace(PageRange) ? null : PdfPageSelection.Parse(PageRange!);
+        var input = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
+        var output = SessionState.Path.GetUnresolvedProviderPathFromPSPath(OutputPath);
+        if (!ShouldProcess(output, $"Export PDF pages as {Format}")) return;
+        Directory.CreateDirectory(output);
+        var document = PdfCommandUtilities.LoadDocument(input, readOptions);
         var pages = document.Render.ExportImages(Format, options, selection);
         for (int index = 0; index < pages.Count; index++)
         {

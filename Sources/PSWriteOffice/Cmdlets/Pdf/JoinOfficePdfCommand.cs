@@ -93,13 +93,12 @@ public sealed class JoinOfficePdfCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
-        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write joined PDF"))
+        if (Path.Length == 0)
         {
-            return;
+            throw new PSArgumentException("Provide at least one input PDF path.", nameof(Path));
         }
 
-        PdfCommandUtilities.EnsureDirectory(outputPath);
+        var passwords = ResolvePasswords(Path.Length);
         var resizeOptions = PdfCommandUtilities.CreatePageResizeOptions(
             PageSize,
             Width,
@@ -114,12 +113,13 @@ public sealed class JoinOfficePdfCommand : PSCmdlet
             MyInvocation.BoundParameters.ContainsKey(nameof(ResizeMode)) ||
             ResizeMargin.HasValue);
 
-        if (Path.Length == 0)
+        var outputPath = PdfCommandUtilities.ResolvePath(this, OutputPath);
+        if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Write joined PDF"))
         {
-            throw new PSArgumentException("Provide at least one input PDF path.", nameof(Path));
+            return;
         }
 
-        var passwords = ResolvePasswords(Path.Length);
+        PdfCommandUtilities.EnsureDirectory(outputPath);
         var documents = Path
             .Select((path, index) => PdfDocument.Load(
                 PdfCommandUtilities.ResolvePath(this, path),

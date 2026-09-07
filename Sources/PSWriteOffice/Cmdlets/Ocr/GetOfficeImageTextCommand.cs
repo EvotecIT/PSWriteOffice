@@ -36,10 +36,11 @@ public sealed class GetOfficeImageTextCommand : OfficeOcrCmdlet
     /// <inheritdoc />
     protected override async Task ProcessRecordAsync()
     {
+        TesseractOcrSessionOptions sessionOptions = CreateSessionOptions();
+        ValidateSupportedImagePath(Path);
         string inputPath = PdfCommandUtilities.ResolveExistingFilePath(this, Path);
-        ValidateSupportedImagePath(inputPath);
         OcrResult result = await TesseractOcr
-            .RecognizeFileAsync(inputPath, CreateSessionOptions(), CancelToken)
+            .RecognizeFileAsync(inputPath, sessionOptions, CancelToken)
             .ConfigureAwait(false);
         WriteObject(PassThru.IsPresent ? result : result.Text);
     }
