@@ -57,4 +57,97 @@ public sealed class AtomicFileWriterTests
             Directory.Delete(directory, recursive: true);
         }
     }
+
+    [Fact]
+    public void WriteUnique_keeps_temporary_name_within_component_limit()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), $"PSWriteOffice-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+
+        try
+        {
+            var fileName = new string('a', 220) + ".bin";
+
+            var outputPath = AtomicFileWriter.WriteUnique(directory, fileName, Encoding.UTF8.GetBytes("payload"));
+
+            Assert.Equal(fileName, Path.GetFileName(outputPath));
+            Assert.Equal("payload", File.ReadAllText(outputPath));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void WriteUnique_keeps_collision_name_within_component_limit()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), $"PSWriteOffice-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+
+        try
+        {
+            var fileName = new string('a', 251) + ".bin";
+            File.WriteAllText(Path.Combine(directory, fileName), "existing");
+
+            var outputPath = AtomicFileWriter.WriteUnique(directory, fileName, Encoding.UTF8.GetBytes("payload"));
+            var outputName = Path.GetFileName(outputPath);
+
+            Assert.Equal(255, outputName.Length);
+            Assert.Equal(new string('a', 249) + "-2.bin", outputName);
+            Assert.Equal("payload", File.ReadAllText(outputPath));
+            Assert.Equal("existing", File.ReadAllText(Path.Combine(directory, fileName)));
+            Assert.Empty(Directory.GetFiles(directory, ".*.tmp*"));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void WriteUnique_keeps_unicode_collision_name_within_portable_byte_limit()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), $"PSWriteOffice-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+
+        try
+        {
+            var fileName = new string('\u00e9', 125) + ".bin";
+            File.WriteAllText(Path.Combine(directory, fileName), "existing");
+
+            var outputPath = AtomicFileWriter.WriteUnique(directory, fileName, Encoding.UTF8.GetBytes("payload"));
+            var outputName = Path.GetFileName(outputPath);
+
+            Assert.True(Encoding.UTF8.GetByteCount(outputName) <= 255);
+            Assert.EndsWith("-2.bin", outputName, StringComparison.Ordinal);
+            Assert.Equal("payload", File.ReadAllText(outputPath));
+            Assert.Equal("existing", File.ReadAllText(Path.Combine(directory, fileName)));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Write_keeps_temporary_name_within_component_limit()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), $"PSWriteOffice-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+
+        try
+        {
+            var fileName = new string('a', 220) + ".pdf";
+            var outputPath = Path.Combine(directory, fileName);
+
+            AtomicFileWriter.Write(outputPath, Encoding.UTF8.GetBytes("payload"), overwrite: false);
+
+            Assert.Equal("payload", File.ReadAllText(outputPath));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
 }

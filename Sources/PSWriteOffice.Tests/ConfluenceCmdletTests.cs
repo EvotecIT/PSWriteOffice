@@ -139,7 +139,46 @@ public sealed class ConfluenceCmdletTests
             Assert.False(powerShell.HadErrors, string.Join(Environment.NewLine, powerShell.Streams.Error));
             Assert.IsType<FileInfo>(Assert.Single(output).BaseObject);
             Assert.Equal("new-streamed", File.ReadAllText(path));
-            Assert.Empty(Directory.GetFiles(directory, ".*.tmp"));
+            Assert.Empty(Directory.GetFiles(directory, ".*.tmp*"));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void AttachmentDownloadDeletesTemporaryFileWhenStreamingFails()
+    {
+        string directory = Path.Combine(Path.GetTempPath(), "PSWriteOffice.Confluence." + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        string path = Path.Combine(directory, "report.txt");
+        try
+        {
+            using var httpClient = new HttpClient(new FailingResponseHandler());
+            var session = new ConfluenceSession(
+                new ConfluenceBearerCredentialSource("token"),
+                new ConfluenceSessionOptions {
+                    SiteUri = new Uri("https://example.atlassian.net/"),
+                    HttpClient = httpClient
+                });
+            using var runspace = CreateRunspace(
+                "Get-OfficeConfluenceAttachment",
+                typeof(GetOfficeConfluenceAttachmentCommand));
+            using var powerShell = PowerShell.Create();
+            powerShell.Runspace = runspace;
+            powerShell
+                .AddCommand("Get-OfficeConfluenceAttachment")
+                .AddParameter("Session", session)
+                .AddParameter("PageId", "123")
+                .AddParameter("AttachmentId", "a1")
+                .AddParameter("OutFile", path);
+
+            var exception = Assert.Throws<CmdletInvocationException>(() => powerShell.Invoke());
+
+            Assert.IsType<HttpRequestException>(exception.InnerException);
+            Assert.False(File.Exists(path));
+            Assert.Empty(Directory.GetFiles(directory, ".*.tmp*"));
         }
         finally
         {
@@ -227,5 +266,26 @@ public sealed class ConfluenceCmdletTests
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(_content) });
+    }
+
+    private sealed class FailingResponseHandler : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new FailingContent() });
+    }
+
+    private sealed class FailingContent : HttpContent
+    {
+        protected override async Task SerializeToStreamAsync(Stream stream, TransportContext? context)
+        {
+            await stream.WriteAsync(Encoding.UTF8.GetBytes("partial"));
+            throw new IOException("Simulated streaming failure.");
+        }
+
+        protected override bool TryComputeLength(out long length)
+        {
+            length = -1;
+            return false;
+        }
     }
 }

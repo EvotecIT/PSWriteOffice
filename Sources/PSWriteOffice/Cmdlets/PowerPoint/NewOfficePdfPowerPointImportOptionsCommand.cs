@@ -13,6 +13,7 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// ConvertTo-OfficePdfPowerPoint -Path .\Source.pdf -OutputPath .\Slides.pptx -Options $options</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficePdfToPowerPointOptions")]
+[Alias("New-OfficePdfPowerPointImportOptions")]
 [OutputType(typeof(PdfToPowerPointOptions))]
 public sealed class NewOfficePdfToPowerPointOptionsCommand : PSCmdlet {
     /// <summary>Visual, editable-table, hybrid, editable-content, or automatic import mode.</summary>

@@ -57,7 +57,7 @@ Describe 'PDF cmdlets' {
         $written[0].Name | Should -Be "proof-0001-2.$extension"
         [IO.File]::ReadAllText($existingPath) | Should -Be 'keep this file'
         $written[0].Length | Should -BeGreaterThan 0
-        @(Get-ChildItem -LiteralPath $outputDirectory -Filter '*.tmp').Count | Should -Be 0
+        @(Get-ChildItem -LiteralPath $outputDirectory -Filter '.*.tmp*').Count | Should -Be 0
     }
 
     It 'preserves advanced PDF read options unless a friendly parameter is supplied' {

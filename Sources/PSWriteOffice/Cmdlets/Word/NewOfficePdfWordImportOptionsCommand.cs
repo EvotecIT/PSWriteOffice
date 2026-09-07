@@ -13,6 +13,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// ConvertTo-OfficePdfWord -Path .\Source.pdf -OutputPath .\Rebuilt.docx -Options $options</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficePdfToWordOptions")]
+[Alias("New-OfficePdfWordImportOptions")]
 [OutputType(typeof(PdfToWordOptions))]
 public sealed class NewOfficePdfToWordOptionsCommand : PSCmdlet {
     /// <summary>Use the built-in tables-only import profile.</summary>

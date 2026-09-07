@@ -1,11 +1,15 @@
 using System;
+using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace PSWriteOffice.Services;
 
 /// <summary>Commits task output through same-directory temporary files.</summary>
 internal static class AtomicFileWriter
 {
+    private const int MaxPortableFileNameLength = 255;
+
     internal static string WriteUnique(string directory, string fileName, byte[] bytes)
     {
         if (bytes == null)
@@ -39,7 +43,9 @@ internal static class AtomicFileWriter
 
             for (var index = 1; ; index++)
             {
-                var candidateName = index == 1 ? safeName : $"{stem}-{index}{extension}";
+                var candidateName = index == 1
+                    ? safeName
+                    : CreateCollisionCandidateName(stem, extension, index);
                 var candidatePath = Path.Combine(directory, candidateName);
                 try
                 {
@@ -165,11 +171,61 @@ internal static class AtomicFileWriter
         return false;
     }
 
-    private static string CreateTemporaryPath(string directory, string fileName)
+    internal static string CreateTemporaryPath(string directory, string fileName)
     {
         var extension = Path.GetExtension(fileName);
-        var stem = Path.GetFileNameWithoutExtension(fileName);
-        return Path.Combine(directory, $".{stem}.{Guid.NewGuid():N}.tmp{extension}");
+        var temporaryExtension = extension.Length <= 16 ? extension : string.Empty;
+        return Path.Combine(directory, $".{Guid.NewGuid():N}.tmp{temporaryExtension}");
+    }
+
+    private static string CreateCollisionCandidateName(string stem, string extension, int index)
+    {
+        var suffix = "-" + index.ToString(CultureInfo.InvariantCulture);
+        var maximumStemLength = MaxPortableFileNameLength - extension.Length - suffix.Length;
+        var maximumStemBytes = MaxPortableFileNameLength -
+            Encoding.UTF8.GetByteCount(extension) -
+            Encoding.UTF8.GetByteCount(suffix);
+        if (maximumStemLength > 0 && maximumStemBytes > 0)
+        {
+            var candidateStem = TruncateToPortableComponent(stem, maximumStemLength, maximumStemBytes);
+            return candidateStem + suffix + extension;
+        }
+
+        var fileName = stem + extension;
+        var prefix = TruncateToPortableComponent(
+            fileName,
+            MaxPortableFileNameLength - suffix.Length,
+            MaxPortableFileNameLength - Encoding.UTF8.GetByteCount(suffix));
+        return prefix + suffix;
+    }
+
+    private static string TruncateToPortableComponent(string value, int maximumLength, int maximumUtf8Bytes)
+    {
+        var length = 0;
+        var utf8Bytes = 0;
+        while (length < value.Length)
+        {
+            var characterLength = char.IsHighSurrogate(value[length]) &&
+                length + 1 < value.Length &&
+                char.IsLowSurrogate(value[length + 1])
+                    ? 2
+                    : 1;
+            if (length + characterLength > maximumLength)
+            {
+                break;
+            }
+
+            var characterBytes = Encoding.UTF8.GetByteCount(value.Substring(length, characterLength));
+            if (utf8Bytes + characterBytes > maximumUtf8Bytes)
+            {
+                break;
+            }
+
+            length += characterLength;
+            utf8Bytes += characterBytes;
+        }
+
+        return length == value.Length ? value : value.Substring(0, length);
     }
 
     private static void WriteTemporary(string path, byte[] bytes)

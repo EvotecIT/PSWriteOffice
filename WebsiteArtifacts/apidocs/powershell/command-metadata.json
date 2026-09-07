@@ -2165,8 +2165,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/GetOfficeConfluenceAttachmentCommand.cs",
-      "sourceLine": 19,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/GetOfficeConfluenceAttachmentCommand.cs#L19"
+      "sourceLine": 20,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/GetOfficeConfluenceAttachmentCommand.cs#L20"
     },
     {
       "name": "Get-OfficeConfluencePage",
@@ -3587,18 +3587,22 @@
     {
       "name": "New-OfficePdfToPowerPointOptions",
       "kind": "Cmdlet",
-      "aliases": [],
+      "aliases": [
+        "New-OfficePdfPowerPointImportOptions"
+      ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePdfPowerPointImportOptionsCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePdfPowerPointImportOptionsCommand.cs#L17"
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/NewOfficePdfPowerPointImportOptionsCommand.cs#L18"
     },
     {
       "name": "New-OfficePdfToWordOptions",
       "kind": "Cmdlet",
-      "aliases": [],
+      "aliases": [
+        "New-OfficePdfWordImportOptions"
+      ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Word/NewOfficePdfWordImportOptionsCommand.cs",
-      "sourceLine": 17,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/NewOfficePdfWordImportOptionsCommand.cs#L17"
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Word/NewOfficePdfWordImportOptionsCommand.cs#L18"
     },
     {
       "name": "New-OfficePdfVisualComparisonOptions",

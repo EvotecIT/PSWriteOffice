@@ -1569,7 +1569,7 @@ Describe 'Excel DSL surface' {
             Should -Throw
 
         (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash | Should -Be $beforeHash
-        @(Get-ChildItem -LiteralPath $TestDrive -Filter '.ExportOfficeExcelDataReaderFailure.xlsx.*.tmp').Count |
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter '.*.tmp.xlsx').Count |
             Should -Be 0
         $rows = @(Import-OfficeExcel -Path $path -WorksheetName 'Data')
         $rows.Count | Should -Be 1
@@ -1593,7 +1593,7 @@ Describe 'Excel DSL surface' {
 
         [System.IO.File]::ReadAllText($path) | Should -Be 'late destination'
         $reader.IsClosed | Should -BeFalse
-        @(Get-ChildItem -LiteralPath $TestDrive -Filter '.ExportOfficeExcelDataReaderNoClobberRace.xlsx.*.tmp').Count |
+        @(Get-ChildItem -LiteralPath $TestDrive -Filter '.*.tmp.xlsx').Count |
             Should -Be 0
     }
 

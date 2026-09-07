@@ -512,6 +512,19 @@ Describe 'PSWriteOffice public API consistency' {
         (Get-Command VisioStencilImport).ResolvedCommandName | Should -Be 'Import-OfficeVisioStencil'
     }
 
+    It 'preserves published PDF import option builders as compatibility aliases' {
+        $aliases = [ordered]@{
+            'New-OfficePdfWordImportOptions' = 'New-OfficePdfToWordOptions'
+            'New-OfficePdfPowerPointImportOptions' = 'New-OfficePdfToPowerPointOptions'
+        }
+
+        foreach ($entry in $aliases.GetEnumerator()) {
+            $alias = Get-Command $entry.Key
+            $alias | Should -BeOfType System.Management.Automation.AliasInfo
+            $alias.ResolvedCommandName | Should -Be $entry.Value
+        }
+    }
+
     It 'uses enum parameter types for closed value domains' {
         $contracts = @(
             @{ Command = 'Add-OfficeExcelTable'; Parameter = 'TableStyle'; Type = 'ExcelTableStyle' }
