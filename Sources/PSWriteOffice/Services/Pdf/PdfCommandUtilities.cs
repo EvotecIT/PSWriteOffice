@@ -105,7 +105,7 @@ internal static class PdfCommandUtilities
         var stem = Path.GetFileNameWithoutExtension(safeName);
         for (var index = 2; ; index++)
         {
-            path = Path.Combine(directory, $"{stem}-{index}{extension}");
+            path = Path.Combine(directory, AtomicFileWriter.CreateCollisionCandidateName(stem, extension, index));
             if (!File.Exists(path))
             {
                 return path;

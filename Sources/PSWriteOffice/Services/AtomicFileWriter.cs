@@ -119,7 +119,7 @@ internal static class AtomicFileWriter
     {
         if (string.IsNullOrWhiteSpace(fileName))
         {
-            return fallbackName;
+            fileName = fallbackName;
         }
 
         var separatorIndex = Math.Max(fileName.LastIndexOf('/'), fileName.LastIndexOf('\\'));
@@ -141,7 +141,7 @@ internal static class AtomicFileWriter
         var safeName = new string(characters).TrimEnd(' ', '.');
         if (string.IsNullOrWhiteSpace(safeName) || safeName == "." || safeName == "..")
         {
-            return fallbackName;
+            safeName = fallbackName;
         }
 
         var firstDotIndex = safeName.IndexOf('.');
@@ -150,7 +150,10 @@ internal static class AtomicFileWriter
         {
             safeName = "_" + safeName;
         }
-        return safeName;
+        return CreatePortableCandidateName(
+            Path.GetFileNameWithoutExtension(safeName),
+            Path.GetExtension(safeName),
+            suffix: string.Empty);
     }
 
     private static bool IsReservedWindowsFileName(string stem)
@@ -178,9 +181,14 @@ internal static class AtomicFileWriter
         return Path.Combine(directory, $".{Guid.NewGuid():N}.tmp{temporaryExtension}");
     }
 
-    private static string CreateCollisionCandidateName(string stem, string extension, int index)
+    internal static string CreateCollisionCandidateName(string stem, string extension, int index)
     {
         var suffix = "-" + index.ToString(CultureInfo.InvariantCulture);
+        return CreatePortableCandidateName(stem, extension, suffix);
+    }
+
+    private static string CreatePortableCandidateName(string stem, string extension, string suffix)
+    {
         var maximumStemLength = MaxPortableFileNameLength - extension.Length - suffix.Length;
         var maximumStemBytes = MaxPortableFileNameLength -
             Encoding.UTF8.GetByteCount(extension) -
